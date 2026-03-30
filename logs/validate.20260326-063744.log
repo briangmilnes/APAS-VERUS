@@ -1,0 +1,66 @@
+error: function body check: Resource limit (rlimit) exceeded
+   --> src/Chap26/ETSPStEph.rs:156:11
+    |
+156 |       proof fn lemma_combined_cycle(
+    |  ___________^
+157 | |         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+158 | |         ln_i: int, rn_i: int, best_li: int, best_ri: int,
+159 | |         el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+160 | |     )
+    | |_____^
+
+note: Analyzing prover log for (profile rerun) lib::Chap26::ETSPStEph::ETSPStEph::lemma_combined_cycle ...
+
+Z3 4.12.5
+note: Log analysis complete for (profile rerun) lib::Chap26::ETSPStEph::ETSPStEph::lemma_combined_cycle
+
+note: Profile statistics for lib::Chap26::ETSPStEph::ETSPStEph::lemma_combined_cycle
+
+note: Observed 5,707 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 40149813150 (Instantiated 5,497 times - 96% of the total, cost 7303950) top 1 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPStEph.rs:111:35
+    |
+111 |           forall|i: int| #![trigger tour[i]] 0 <= i < tour.len() ==>
+    |  _________-                         ^^^^^^^
+112 | |             spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
+    | |_________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 22968 (Instantiated 132 times - 2% of the total, cost 174) top 2 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPStEph.rs:173:39
+    |
+173 |               forall|k: int| #![trigger combined[k]] 0 <= k < ln_i - 1 ==>
+    |  _____________-                         ^^^^^^^^^^^
+174 | |                 combined[k] == lt[((best_li + 1 + k) % ln_i)],
+    | |_____________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 4356 (Instantiated 66 times - 1% of the total, cost 66) top 3 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPStEph.rs:176:39
+    |
+176 |               forall|m: int| #![trigger combined[(ln_i + m)]] 0 <= m < rn_i - 1 ==>
+    |  _____________-                         ^^^^^^^^^^^^^^^^^^^^
+177 | |                 combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)],
+    | |______________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 960 (Instantiated 6 times - 0% of the total, cost 160) top 4 of 5 user-level quantifiers.
+      
+   --> src/Chap26/ETSPStEph.rs:185:42
+    |
+185 |         assert forall|i: int| #![trigger combined[i]] 0 <= i < n implies
+    |         ------                           ^^^^^^^^^^^
+    |         |
+    |         Triggers selected for this quantifier
+
+note: Cost * Instantiations: 36 (Instantiated 6 times - 0% of the total, cost 6) top 5 of 5 user-level quantifiers.
+      
+ --> vstd/seq_lib.rs:3206:0
+  |
+  = note: Triggers selected for this quantifier
+
+verification results:: 1933 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s

@@ -1,0 +1,212 @@
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:604:20
+    |
+604 |                 if feq(elem, x) {
+    |                    ^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:215:18
+    |
+215 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:41:13
+   |
+41 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+42 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+43 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+68 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:807:21
+    |
+807 |                     lemma_cloned_view_eq(*elem, c);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:88:32
+    |
+ 88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+    |                                --------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:878:21
+    |
+878 |                     lemma_cloned_view_eq(*elem, c);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:88:32
+    |
+ 88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+    |                                --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:41:13
+   |
+41 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+42 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+43 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+68 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+   |                                ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+cloned(elem, c) ✔
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:658:21
+    |
+658 |                 if !feq(elem, x) {
+    |                     ^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:215:18
+    |
+215 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:663:25
+    |
+663 |                         lemma_cloned_view_eq(*elem, c);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:88:32
+    |
+ 88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+    |                                --------------------- failed precondition
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1346:34
+     |
+ 416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+     |                      -------------------------------- failed precondition
+...
+1346 |                 let other_find = other.find(&pair.0);
+     |                                  ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:416:22
+    |
+416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+other.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1328:46
+     |
+1328 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4487 verified, 5 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 96s

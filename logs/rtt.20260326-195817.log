@@ -1,0 +1,45 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0425]: cannot find function `dfs_finish_order` in this scope
+   --> src/Chap55/SCCStEph.rs:136:17
+    |
+136 |                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+    |                 ^^^^^^^^^^^^^^^^
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap55/TopoSortStPer.rs:144:5
+    |
+144 | /     fn dfs_finish_order(
+145 | |         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+146 | |         visited: &mut Vec<bool>,
+147 | |         finish_order: &mut Vec<usize>,
+...   |
+236 | |         finish_order.push(vertex);
+237 | |     }
+    | |_____^ `crate::Chap55::TopoSortStPer::TopoSortStPer::dfs_finish_order`: not accessible
+    |
+   ::: src/Chap55/SCCStPer.rs:82:5
+    |
+ 82 | /     fn dfs_finish_order(
+ 83 | |         graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
+ 84 | |         visited: &mut Vec<bool>,
+ 85 | |         finish_order: &mut Vec<usize>,
+...   |
+171 | |         finish_order.push(vertex);
+172 | |     }
+    | |_____^ `crate::Chap55::SCCStPer::SCCStPer::dfs_finish_order`: not accessible
+help: a local variable with a similar name exists
+    |
+136 -                 dfs_finish_order(graph, &mut visited, &mut finish_order, start);
+136 +                 finish_order(graph, &mut visited, &mut finish_order, start);
+    |
+help: consider importing this function
+    |
+  8 +     use crate::Chap55::TopoSortStEph::TopoSortStEph::dfs_finish_order;
+    |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 1 previous error
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

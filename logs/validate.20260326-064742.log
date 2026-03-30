@@ -1,0 +1,10 @@
+error[E0425]: cannot find function `lemma_combined_cycle` in this scope
+   --> src/Chap26/ETSPStEph.rs:467:13
+    |
+467 |             lemma_combined_cycle(
+    |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s

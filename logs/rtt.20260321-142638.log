@@ -1,0 +1,19 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0432]: unresolved import `vstd::pervasive::cloned`
+  --> src/Chap38/BSTParaStEph.rs:27:9
+   |
+27 |     use vstd::pervasive::cloned;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ no `cloned` in `pervasive`
+
+error[E0432]: unresolved import `vstd::pervasive::cloned`
+  --> src/Chap38/BSTParaMtEph.rs:27:9
+   |
+27 |     use vstd::pervasive::cloned;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ no `cloned` in `pervasive`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 2 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

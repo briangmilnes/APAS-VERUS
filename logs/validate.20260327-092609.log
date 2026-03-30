@@ -1,0 +1,208 @@
+error: expected `,`
+   --> src/Chap62/StarPartitionMtEph.rs:214:23
+    |
+214 |             decreases ne - k,
+    |                       ^^
+
+error[E0432]: unresolved import `crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition`
+  --> src/Chap62/StarContractionMtEph.rs:21:9
+   |
+21 |     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `parallel_star_partition` in `Chap62::StarPartitionMtEph::StarPartitionMtEph`
+
+error: cannot find macro `verus` in this scope
+  --> src/Chap57/DijkstraStEphF64.rs:24:5
+   |
+24 |     verus! {
+   |     ^^^^^
+   |
+   = note: macro `crate::Chap11::FibonacciMtEphRecomputes::FibFork::verus` exists but is inaccessible
+help: consider importing one of these macros
+   |
+14 +     use verus_builtin_macros::verus;
+   |
+14 +     use vstd::prelude::verus;
+   |
+
+error: cannot find macro `verus` in this scope
+  --> src/Chap58/BellmanFordStEphF64.rs:13:5
+   |
+13 |     verus! {
+   |     ^^^^^
+   |
+   = note: macro `crate::Chap11::FibonacciMtEphRecomputes::FibFork::verus` exists but is inaccessible
+help: consider importing one of these macros
+   |
+17 +     use verus_builtin_macros::verus;
+   |
+17 +     use vstd::prelude::verus;
+   |
+
+error: cannot find macro `verus` in this scope
+  --> src/Chap59/JohnsonStEphF64.rs:14:5
+   |
+14 |     verus! {
+   |     ^^^^^
+   |
+   = note: macro `crate::Chap11::FibonacciMtEphRecomputes::FibFork::verus` exists but is inaccessible
+help: consider importing one of these macros
+   |
+12 +     use verus_builtin_macros::verus;
+   |
+12 +     use vstd::prelude::verus;
+   |
+
+error: cannot find macro `verus` in this scope
+  --> src/Chap59/JohnsonMtEphF64.rs:14:5
+   |
+14 |     verus! {
+   |     ^^^^^
+   |
+   = note: macro `crate::Chap11::FibonacciMtEphRecomputes::FibFork::verus` exists but is inaccessible
+help: consider importing one of these macros
+   |
+12 +     use verus_builtin_macros::verus;
+   |
+12 +     use vstd::prelude::verus;
+   |
+
+error[E0425]: cannot find type `PQEntry` in this scope
+  --> src/Chap57/DijkstraStEphF64.rs:41:25
+   |
+41 |     impl PartialOrd for PQEntry {
+   |                         ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+14 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+   |
+14 +     use crate::Chap65::PrimStEph::PrimStEph::PQEntry;
+   |
+
+error[E0425]: cannot find type `PQEntry` in this scope
+  --> src/Chap57/DijkstraStEphF64.rs:47:18
+   |
+47 |     impl Ord for PQEntry {
+   |                  ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+14 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+   |
+14 +     use crate::Chap65::PrimStEph::PrimStEph::PQEntry;
+   |
+
+error[E0425]: cannot find type `PQEntry` in this scope
+  --> src/Chap57/DijkstraStEphF64.rs:54:30
+   |
+54 |     impl std::fmt::Debug for PQEntry {
+   |                              ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+14 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+   |
+14 +     use crate::Chap65::PrimStEph::PrimStEph::PQEntry;
+   |
+
+error[E0425]: cannot find type `PQEntry` in this scope
+  --> src/Chap57/DijkstraStEphF64.rs:63:32
+   |
+63 |     impl std::fmt::Display for PQEntry {
+   |                                ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+14 +     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry;
+   |
+14 +     use crate::Chap65::PrimStEph::PrimStEph::PQEntry;
+   |
+
+error[E0425]: cannot find function `obeys_key_model` in this scope
+  --> src/Chap64/SpanTreeMtEph.rs:79:17
+   |
+79 |                 obeys_key_model::<V>(),
+   |                 ^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 8 +     use vstd::std_specs::hash::obeys_key_model;
+   |
+
+error[E0425]: cannot find function `obeys_key_model` in this scope
+   --> src/Chap64/SpanTreeMtEph.rs:113:21
+    |
+113 |                     obeys_key_model::<V>(),
+    |                     ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  8 +     use vstd::std_specs::hash::obeys_key_model;
+    |
+
+error[E0425]: cannot find function `obeys_key_model` in this scope
+   --> src/Chap64/SpanTreeMtEph.rs:123:25
+    |
+123 |                         obeys_key_model::<V>(),
+    |                         ^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  8 +     use vstd::std_specs::hash::obeys_key_model;
+    |
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:70:17
+   |
+70 |                 dist(0.0), dist(2.5), dist(5.0), inf,
+   |                 ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:70:28
+   |
+70 |                 dist(0.0), dist(2.5), dist(5.0), inf,
+   |                            ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:70:39
+   |
+70 |                 dist(0.0), dist(2.5), dist(5.0), inf,
+   |                                       ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:73:22
+   |
+73 |                 inf, dist(0.0), dist(1.5), inf,
+   |                      ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:73:33
+   |
+73 |                 inf, dist(0.0), dist(1.5), inf,
+   |                                 ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:76:27
+   |
+76 |                 inf, inf, dist(0.0), dist(0.5),
+   |                           ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:76:38
+   |
+76 |                 inf, inf, dist(0.0), dist(0.5),
+   |                                      ^^^^ not found in this scope
+
+error[E0425]: cannot find function `dist` in this scope
+  --> src/Chap56/Example56_1.rs:79:32
+   |
+79 |                 inf, inf, inf, dist(0.0),
+   |                                ^^^^ not found in this scope
+
+error: aborting due to 21 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 699MB, peak z3 RSS: 0MB, min free: 21302MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 0s

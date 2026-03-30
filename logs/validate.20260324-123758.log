@@ -1,0 +1,9 @@
+error: trait method implementation cannot declare requires clauses; these can only be inherited from the trait declaration
+  --> src/experiments/iter_requires_on_external_trait.rs:42:9
+   |
+42 |         fn next(&mut self) -> (result: Option<T>)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 48s

@@ -1,0 +1,15 @@
+error[E0252]: the name `view_ord_consistent` is defined multiple times
+  --> src/Chap43/AugOrderedTableStEph.rs:29:9
+   |
+26 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         -------------------------------------------------------------- previous import of the value `view_ord_consistent` here
+...
+29 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `view_ord_consistent` reimported here
+   |
+   = note: `view_ord_consistent` must be defined only once in the value namespace of this module
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0252`.
+Elapsed: 8s

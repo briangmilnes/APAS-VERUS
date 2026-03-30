@@ -1,0 +1,423 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:17
+    |
+471 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:335:13
+    |
+335 |             locked_val.union(other_ref);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_ref.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_ref.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:479:13
+    |
+479 |             locked_val.join(other_inner);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_inner.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_inner.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:783:32
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+783 |                         left = left.insert(v);
+    |                                ^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:823:33
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+823 |                         right = right.insert(v);
+    |                                 ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap43/OrderedSetStPer.rs:89:17
+   |
+89 |                 self@.len() + 1 < usize::MAX as nat,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_orderedsetstper_wf() ✔
+clip(nat, left.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:929:30
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+929 |                     result = result.insert(v);
+    |                              ^^^^^^^^^^^^^^^^
+
+note: 
+
+result.spec_orderedsetstper_wf() ✔
+clip(nat, result.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1102:28
+     |
+  89 |                 self@.len() + 1 < usize::MAX as nat,
+     |                 ----------------------------------- failed precondition
+...
+1102 |                     left = left.insert(v);
+     |                            ^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1126:29
+     |
+  89 |                 self@.len() + 1 < usize::MAX as nat,
+     |                 ----------------------------------- failed precondition
+...
+1126 |                     right = right.insert(v);
+     |                             ^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_orderedsetstper_wf() ✔
+clip(nat, left.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:377:26
+    |
+377 |                 result = result.insert(pair.0.clone(), new_v);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:411:30
+    |
+411 |                     result = result.insert(pair.0.clone(), pair.1.clone());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStPer.rs:152:31
+    |
+152 |             let visited_new = visited.union(&frontier);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStPer.rs:169:33
+    |
+169 |                 new_neighbors = new_neighbors.union(&neighbors);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_neighbors.spec_avltreesetstper_wf() ✔
+neighbors.spec_avltreesetstper_wf() ✔
+clip(nat, new_neighbors.view().len() + neighbors.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:144:31
+    |
+144 |             let visited_new = visited.union(&frontier);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:162:33
+    |
+162 |                 new_neighbors = new_neighbors.union(&neighbors);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_neighbors.spec_avltreesetsteph_wf() ✔
+neighbors.spec_avltreesetsteph_wf() ✔
+clip(nat, new_neighbors.view().len() + neighbors.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:162:31
+    |
+162 |             let visited_new = visited.union(&AVLTreeSetStPer::singleton(v.clone()));
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:182:40
+    |
+182 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:208:26
+    |
+208 |             priorities = priorities.union(&AVLTreeSetStPer::singleton(Pair(vref.clone(), p)));
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+tmp%.spec_avltreesetstper_wf() ✔
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:250:32
+    |
+250 |             initial_frontier = initial_frontier.union(&AVLTreeSetStPer::singleton(entry));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:135:17
+    |
+135 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+tmp%.spec_avltreesetstper_wf() ✔
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:171:31
+    |
+171 |             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v.clone()));
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:192:40
+    |
+192 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:219:26
+    |
+219 |             priorities = priorities.union(&AVLTreeSetStEph::singleton(Pair(vref.clone(), p)));
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+tmp%.spec_avltreesetsteph_wf() ✔
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/PQMinStEph.rs:262:32
+    |
+262 |             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 self@.len() + other@.len() < usize::MAX as nat,
+    |                 ---------------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetsteph_wf() ✔
+tmp%.spec_avltreesetsteph_wf() ✔
+clip(nat, tmp%.view().len() + tmp%.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarContractionStEph.rs:142:13
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarContractionStEph.rs:142:37
+    |
+142 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+    |                                     ^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap62/StarContractionStEph.rs:82:13
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+  --> src/Chap62/StarContractionStEph.rs:82:37
+   |
+82 |             exists|s: &SetStEph<V>| s@ == graph@.V && s.spec_setsteph_wf() && base.ensures((s,), result),
+   |                                     ^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:168:13
+    |
+168 | /             forall |d: int| 0 <= d < table.current_size as int
+169 | |                 ==> !spec_flat_has_key(
+170 | |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+171 | |                     *key),
+    | |_________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:170:34
+    |
+170 |                     table.table@[spec_tri_probe(h as int, d, table.current_size as int)],
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:468:38
+    |
+468 |                         table.table@[spec_tri_probe(h as int, d, table.current_size as int)], key) by {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+
+verification results:: 4466 verified, 19 errors
+error: aborting due to 21 previous errors; 2 warnings emitted
+
+Elapsed: 62s

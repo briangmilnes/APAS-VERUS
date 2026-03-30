@@ -1,0 +1,37 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/experiments/mut_struct_quantifier_limit.rs:63:11
+   |
+63 |       proof fn lemma_mutation_preserves_wf<V: View + Eq + Hash + Clone>(
+   |  ___________^
+64 | |         old_s: &FourFieldStruct<V>,
+65 | |         new_s: &FourFieldStruct<V>,
+66 | |         key: <V as View>::V,
+67 | |         val: V,
+68 | |     )
+   | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/experiments/mut_struct_quantifier_limit.rs:86:5
+   |
+86 | /     fn mutate_and_prove<V: View + Eq + Hash + Clone>(
+87 | |         s: &mut FourFieldStruct<V>,
+88 | |         key: &V,
+89 | |         val: V,
+90 | |     )
+   | |_____^
+
+
+thread '<unnamed>' (2642322) panicked at air/src/smt_process.rs:93:17:
+Got too many empty lines!
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (2642301) panicked at air/src/smt_process.rs:213:34:
+internal error: Z3 reader thread failure: RecvError
+
+thread '<unnamed>' (2642301) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+error: aborting due to 2 previous errors
+
+Elapsed: 212s
+Sampled Memory Usage: peak rust_verify RSS: 482MB, peak z3 RSS: 17770MB, min free: 3622MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 2s

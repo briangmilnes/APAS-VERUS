@@ -1,0 +1,60 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0599]: no method named `clone_view` found for reference `&Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>` in the current scope
+   --> src/Chap65/KruskalStEph.rs:235:34
+    |
+235 |                 edges_vec.push(e.clone_view());
+    |                                  ^^^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ClonePreservesView` which provides `clone_view` is implemented but not in scope; perhaps you want to import it
+    |
+  9 +     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    |
+help: there is a method `clone` with a similar name
+    |
+235 -                 edges_vec.push(e.clone_view());
+235 +                 edges_vec.push(e.clone());
+    |
+
+error[E0599]: no method named `clone_view` found for struct `Types::Types::LabEdge<V, L>` in the current scope
+   --> src/vstdplus/clone_view.rs:97:12
+    |
+ 97 |         fn clone_view(&self) -> Self;
+    |            ---------- the method is available for `Types::Types::LabEdge<V, vstdplus::float::float::WrappedF64>` here
+    |
+   ::: src/Types.rs:92:5
+    |
+ 92 |     pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
+    |     ----------------------------------------- method `clone_view` not found for this struct
+    |
+   ::: src/Chap65/KruskalStEph.rs:263:37
+    |
+263 |             let edge = edges_vec[i].clone_view();
+    |                                     ^^^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: some of the expressions' fields have a method of the same name
+   --> src/Chap65/KruskalStEph.rs:263:37
+    |
+263 |             let edge = edges_vec[i].0.clone_view();
+    |                                     ++
+263 |             let edge = edges_vec[i].1.clone_view();
+    |                                     ++
+help: trait `ClonePreservesView` which provides `clone_view` is implemented but not in scope; perhaps you want to import it
+   --> src/Chap65/KruskalStEph.rs:9:5
+    |
+  9 +     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    |
+help: there is a method `clone` with a similar name
+   --> src/Chap65/KruskalStEph.rs:263:37
+    |
+263 -             let edge = edges_vec[i].clone_view();
+263 +             let edge = edges_vec[i].clone();
+    |
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `apas-verus` (lib test) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib) due to 2 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 7s

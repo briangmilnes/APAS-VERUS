@@ -1,0 +1,29 @@
+error: this file contains an unclosed delimiter
+   --> src/Chap52/AdjTableGraphStEph.rs:937:3
+    |
+  3 | pub mod AdjTableGraphStEph {
+    |                            - unclosed delimiter
+...
+ 24 |     verus! {
+    |            - unclosed delimiter
+...
+286 |     impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
+    |                                                                             - unclosed delimiter
+...
+506 |         fn delete_vertex(&mut self, v: &V) {
+    |                                            - unclosed delimiter
+...
+575 |                 if let Some(ns_ref) = self.adj.find_ref(&u) {
+    |                                                             - this delimiter might not be properly closed...
+...
+761 |         }
+    |         - ...as it matches this but it has different indentation
+...
+937 | }
+    |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22715MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

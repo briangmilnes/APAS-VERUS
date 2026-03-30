@@ -1,0 +1,218 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEphSlice.rs:364:21
+    |
+364 | /                     forall|k: int| 0 <= k < j as int ==>
+365 | |                         #[trigger] out@[k] == left@[k],
+    | |______________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEphSlice.rs:380:21
+    |
+380 | /                     forall|k: int| 0 <= k < j as int ==>
+381 | |                         #[trigger] out@[(sl + k) as int] == mid@[k],
+    | |___________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEphSlice.rs:398:21
+    |
+398 | /                     forall|k: int| 0 <= k < j as int ==>
+399 | |                         #[trigger] out@[(sl + el + k) as int] == right@[k],
+    | |__________________________________________________________________________^
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:527:28
+    |
+527 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:539:28
+    |
+539 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:549:24
+    |
+549 |                 assert(sorted_left@.len() == left_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:550:24
+    |
+550 |                 assert(sorted_right@.len() == right_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+v.view() =~= sorted_elems 
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:520:32
+    |
+520 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:532:32
+    |
+532 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:660:28
+    |
+660 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:672:28
+    |
+672 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:682:24
+    |
+682 |                 assert(sorted_left@.len() == left_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:683:24
+    |
+683 |                 assert(sorted_right@.len() == right_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+v.view() =~= sorted_elems 
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:653:32
+    |
+653 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:665:32
+    |
+665 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:793:28
+    |
+793 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:805:28
+    |
+805 |                     assert(v@ =~= sorted_elems);
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:815:24
+    |
+815 |                 assert(sorted_left@.len() == left_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:816:24
+    |
+816 |                 assert(sorted_right@.len() == right_view.len());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+v.view() =~= sorted_elems 
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:786:32
+    |
+786 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEphSlice.rs:798:32
+    |
+798 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>())
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:425:21
+    |
+425 | /                     forall|j: int| 0 <= j < right@.len() ==>
+426 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:468:32
+    |
+468 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:475:32
+    |
+475 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:46:9
+   |
+46 |         assert(0.0f32 <= x && 0.0f32 <= y
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied
+  --> src/experiments/f32_ieee_total_order.rs:54:9
+   |
+54 |         assert(0.0f32 <= x ==> x + 0.0f32 == x) by(bit_vector);
+   |         ^^^^^^
+
+error: bitvector assertion not satisfied: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+  --> src/experiments/f32_ieee_total_order.rs:63:9
+   |
+63 |         assert(0.0f32 <= a && 0.0f32 <= b && 0.0f32 <= c
+   |         ^^^^^^
+
+verification results:: 866 verified, 10 errors
+error: aborting due to 19 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 9203MB, peak z3 RSS: 444MB, min free: 13423MB
+Sampled CPU Usage: rust_verify: 199s, z3 children: 136s

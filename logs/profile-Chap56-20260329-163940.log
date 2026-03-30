@@ -1,0 +1,183 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::AllPairsResultStPerF64::AllPairsResultStPerF64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice ...
+
+note: Log analysis complete for module Chap56::AllPairsResultStPerF64::AllPairsResultStPerF64
+
+note: Log analysis complete for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice
+
+note: Log analysis complete for module Chap56::AllPairsResultStEphF64::AllPairsResultStEphF64
+
+note: Analyzing prover log for module Chap56::AllPairsResultStEphI64::AllPairsResultStEphI64 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap56::AllPairsResultStEphI64::AllPairsResultStEphI64
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::AllPairsResultStPerI64::AllPairsResultStPerI64 ...
+
+note: Log analysis complete for module Chap56::AllPairsResultStPerI64::AllPairsResultStPerI64
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph ...
+
+note: Log analysis complete for module Chap56::PathWeightUtilsStEph::PathWeightUtilsStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::PathWeightUtilsStPer::PathWeightUtilsStPer ...
+
+note: Analyzing prover log for module Chap56::SSSPResultStEphF64::SSSPResultStEphF64 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap56::PathWeightUtilsStPer::PathWeightUtilsStPer
+
+note: Log analysis complete for module Chap56::SSSPResultStEphF64::SSSPResultStEphF64
+
+note: Analyzing prover log for module Chap56::SSSPResultStEphI64::SSSPResultStEphI64 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap56::SSSPResultStEphI64::SSSPResultStEphI64
+
+Z3 4.12.5
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStPer::ArraySeqStPer ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStEph::ArraySeqStEph ...
+
+note: Analyzing prover log for module vstdplus::accept ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::accept
+
+note: Analyzing prover log for module Types::Types ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::SSSPResultStPerF64::SSSPResultStPerF64 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Types::Types
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap56::SSSPResultStPerI64::SSSPResultStPerI64 ...
+
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap56::SSSPResultStPerF64::SSSPResultStPerF64
+
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+note: Log analysis complete for module Chap56::SSSPResultStPerI64::SSSPResultStPerI64
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+note: Log analysis complete for module Chap19::ArraySeqStPer::ArraySeqStPer
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+note: Log analysis complete for module Chap19::ArraySeqStEph::ArraySeqStEph
+
+note: Analyzing prover log for module Chap19::ArraySeqMtEph::ArraySeqMtEph ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::float::float ...
+
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::float::float
+
+note: Log analysis complete for module vstdplus::feq::feq
+
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+Error parsing line 613914 (SubpatNoBlame([t161308])): "[new-match] 0x593fce1fd498 #28922 #28921 #25759 #24504 #14713 ; #25484 (#24873 #28963) (#24680 #24680) (#24873 #28963) #26516 (#28963 #29393) (#26152 #23712) (#20741 #26462) #24734 (#24873 #29393) (#14713 #14713) (#23490 #23490)"
+Error parsing line 613943 (UnknownFingerprint(Fingerprint(98130576004248))): "[instance] 0x593fce1fd498 ; 4"
+Error parsing line 613950 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 670446 (SubpatNoBlame([t7076])): "[new-match] 0x593fce01eaf8 #8981 #5517 #23216 #23151 #10085 #7641 #4291 ; #28366 (#15936 #15936) (#18818 #30665) (#4291 #4291) (#4291 #4291) (#7641 #7641) (#7641 #7641) (#14468 #25231) (#25231 #25231) (#14468 #27610) (#4291 #4291) (#4291 #4291) (#7641 #7641) (#7641 #7641)"
+Error parsing line 670500 (UnknownFingerprint(Fingerprint(98130574043896))): "[instance] 0x593fce01eaf8 ; 3"
+Error parsing line 670508 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+note: Log analysis complete for module Chap19::ArraySeqMtEph::ArraySeqMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+note: Log analysis complete for module vstdplus::seq::seq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+note: Log analysis complete for module vstdplus::seq_set
+
+verification results:: 941 verified, 0 errors

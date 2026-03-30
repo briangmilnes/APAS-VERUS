@@ -1,0 +1,35 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1346:34
+     |
+ 416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+     |                      -------------------------------- failed precondition
+...
+1346 |                 let other_find = other.find(&pair.0);
+     |                                  ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:416:22
+    |
+416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+other.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1328:46
+     |
+1328 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4491 verified, 1 errors
+error: aborting due to 1 previous error
+

@@ -1,0 +1,164 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap30::Probability::Probability ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap30::Probability::Probability
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph ...
+
+note: Analyzing prover log for module Chap50::OptBinSearchTreeMtPer::OptBinSearchTreeMtPer ...
+
+Z3 4.12.5
+Error parsing line 31042 (SubpatNoBlame([t2020])): "[new-match] 0x5f29cbca3b38 #1670 #1667 #3842 #3851 #3847 ; #3822 (#2423 #2423) #3813 (#3842 #3842) #3658 (#3765 #3538)"
+Error parsing line 31071 (UnknownFingerprint(Fingerprint(104633117326136))): "[instance] 0x5f29cbca3b38 ; 1"
+Error parsing line 31075 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 29651 (SubpatNoBlame([t2002])): "[new-match] 0x62540c947358 #1662 #1659 #3688 #3687 #3738 ; #2352 (#3681 #3681) #3662 (#3688 #3688) #3495 (#3631 #3497)"
+Error parsing line 29680 (UnknownFingerprint(Fingerprint(108113127830360))): "[instance] 0x62540c947358 ; 1"
+Error parsing line 29684 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph
+
+note: Log analysis complete for module Chap50::OptBinSearchTreeMtPer::OptBinSearchTreeMtPer
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::OptBinSearchTreeStEph::OptBinSearchTreeStEph ...
+
+Error parsing line 29314 (SubpatNoBlame([t1936])): "[new-match] 0x5773976cf3f8 #1595 #1592 #3609 #3629 #3638 ; #3600 (#3610 #3610) #3602 (#3609 #3609) #3351 (#3555 #3353)"
+Error parsing line 29367 (UnknownFingerprint(Fingerprint(96153973355512))): "[instance] 0x5773976cf3f8 ; 1"
+Error parsing line 29371 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::OptBinSearchTreeStPer::OptBinSearchTreeStPer ...
+
+Error parsing line 28443 (SubpatNoBlame([t1930])): "[new-match] 0x6494c5b2bb08 #1589 #1586 #3587 #3596 #2276 ; #3590 (#3588 #3588) #3539 (#3587 #3587) #3384 (#3489 #3389)"
+Error parsing line 28496 (UnknownFingerprint(Fingerprint(110590134762248))): "[instance] 0x6494c5b2bb08 ; 1"
+Error parsing line 28500 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap50::OptBinSearchTreeStEph::OptBinSearchTreeStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::MatrixChainStPer::MatrixChainStPer ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::MatrixChainStEph::MatrixChainStEph ...
+
+note: Log analysis complete for module Chap50::OptBinSearchTreeStPer::OptBinSearchTreeStPer
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::MatrixChainMtEph::MatrixChainMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap50::MatrixChainMtPer::MatrixChainMtPer ...
+
+note: Log analysis complete for module Chap50::MatrixChainStPer::MatrixChainStPer
+
+note: Log analysis complete for module Chap50::MatrixChainStEph::MatrixChainStEph
+
+note: Log analysis complete for module Chap50::MatrixChainMtPer::MatrixChainMtPer
+
+note: Log analysis complete for module Chap50::MatrixChainMtEph::MatrixChainMtEph
+
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+Z3 4.12.5
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::accept ...
+
+note: Log analysis complete for module vstdplus::accept
+
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+Z3 4.12.5
+note: Analyzing prover log for module Types::Types ...
+
+note: Log analysis complete for module Types::Types
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+note: Log analysis complete for module vstdplus::feq::feq
+
+note: Analyzing prover log for module vstdplus::float::float ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::float::float
+
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+note: Log analysis complete for module vstdplus::seq::seq
+
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+note: Log analysis complete for module vstdplus::seq_set
+
+verification results:: 795 verified, 0 errors

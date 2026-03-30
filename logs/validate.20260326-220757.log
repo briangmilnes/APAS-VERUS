@@ -1,0 +1,18 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1116:13
+     |
+1116 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1317:21
+     |
+1317 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+verification results:: 5202 verified, 0 errors
+warning: 2 warnings emitted
+
+Elapsed: 126s
+Sampled Memory Usage: peak rust_verify RSS: 8335MB, peak z3 RSS: 2771MB, min free: 11744MB
+Sampled CPU Usage: rust_verify: 186s, z3 children: 166s

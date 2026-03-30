@@ -1,0 +1,133 @@
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:20:17
+   |
+18 |     proof fn test_reflexive(x: f64)
+   |           ------------------------- at the end of the function body
+19 |         requires x.is_finite_spec(),
+20 |         ensures x.ieee_le(x),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+old(x) ieee_float old(x) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:27:17
+   |
+24 |     proof fn test_transitive(x: f64, y: f64, z: f64)
+   |           ------------------------------------------ at the end of the function body
+...
+27 |         ensures x.ieee_le(z),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+old(x) ieee_float old(z) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:34:17
+   |
+31 |     proof fn test_antisymmetric(x: f64, y: f64)
+   |           ------------------------------------- at the end of the function body
+...
+34 |         ensures x.ieee_eq(y),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+old(x) ieee_float old(y) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:40:17
+   |
+38 |     proof fn test_total(x: f64, y: f64)
+   |           ----------------------------- at the end of the function body
+39 |         requires x.is_finite_spec(), y.is_finite_spec(),
+40 |         ensures x.ieee_le(y) || y.ieee_le(x),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+!(old(x) ieee_float old(y)) ==>
+    old(y) ieee_float old(x) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:47:17
+   |
+45 |     proof fn test_add_identity(a: f64)
+   |           ---------------------------- at the end of the function body
+46 |         requires a.is_finite_spec(),
+47 |         ensures a.ieee_add(0.0).ieee_eq(a),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+(old(a) ieee_float '0') ieee_float old(a) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:66:17
+   |
+64 |     proof fn total_order_reflexive(x: f64)
+   |           -------------------------------- at the end of the function body
+65 |         requires x.is_finite_spec(),
+66 |         ensures f64_le(x, x),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+f64_le(old(x), old(x))
+|   old(x) ieee_float old(x) 
++---
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:73:17
+   |
+70 |     proof fn total_order_transitive(x: f64, y: f64, z: f64)
+   |           ------------------------------------------------- at the end of the function body
+...
+73 |         ensures f64_le(x, z),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+f64_le(old(x), old(z))
+|   old(x) ieee_float old(z) 
++---
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:80:17
+   |
+77 |     proof fn total_order_antisymmetric(x: f64, y: f64)
+   |           -------------------------------------------- at the end of the function body
+...
+80 |         ensures x.ieee_eq(y),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+old(x) ieee_float old(y) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:86:17
+   |
+84 |     proof fn total_order_total(x: f64, y: f64)
+   |           ------------------------------------ at the end of the function body
+85 |         requires x.is_finite_spec(), y.is_finite_spec(),
+86 |         ensures f64_le(x, y) || f64_le(y, x),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+!(f64_le(old(x), old(y))) ==>
+    f64_le(old(y), old(x))
+    |   old(y) ieee_float old(x) 
+    +---
+
+verification results:: 651 verified, 9 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 475MB, peak z3 RSS: 48MB, min free: 22987MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 1s

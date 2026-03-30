@@ -1,0 +1,3010 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0433]: failed to resolve: could not find `WeightedDirGraphMtEphFloat` in `Chap06`
+ --> tests/Chap59/TestJohnsonMtEphF64.rs:3:25
+  |
+3 | use apas_verus::Chap06::WeightedDirGraphMtEphFloat::WeightedDirGraphMtEphFloat::*;
+  |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ could not find `WeightedDirGraphMtEphFloat` in `Chap06`
+
+error[E0433]: failed to resolve: could not find `EdgeSetGraphMtPer` in `Chap52`
+ --> tests/Chap52/TestEdgeSetGraphMtPer.rs:5:25
+  |
+5 | use apas_verus::Chap52::EdgeSetGraphMtPer::EdgeSetGraphMtPer::*;
+  |                         ^^^^^^^^^^^^^^^^^ could not find `EdgeSetGraphMtPer` in `Chap52`
+
+error[E0433]: failed to resolve: could not find `Example56_1` in `Chap56`
+ --> tests/Chap56/TestExample56_1.rs:4:25
+  |
+4 | use apas_verus::Chap56::Example56_1::Example56_1::*;
+  |                         ^^^^^^^^^^^ could not find `Example56_1` in `Chap56`
+
+error[E0433]: failed to resolve: could not find `GraphSearchMtPer` in `Chap53`
+ --> tests/Chap53/TestGraphSearchMtPer.rs:5:25
+  |
+5 | use apas_verus::Chap53::GraphSearchMtPer::GraphSearchMtPer::*;
+  |                         ^^^^^^^^^^^^^^^^ could not find `GraphSearchMtPer` in `Chap53`
+
+error[E0433]: failed to resolve: could not find `AdjTableGraphMtPer` in `Chap52`
+ --> tests/Chap52/TestAdjTableGraphMtPer.rs:5:25
+  |
+5 | use apas_verus::Chap52::AdjTableGraphMtPer::AdjTableGraphMtPer::*;
+  |                         ^^^^^^^^^^^^^^^^^^ could not find `AdjTableGraphMtPer` in `Chap52`
+
+error[E0433]: failed to resolve: could not find `WeightedDirGraphStEphFloat` in `Chap06`
+ --> tests/Chap58/TestBellmanFordStEphF64.rs:6:25
+  |
+6 | use apas_verus::Chap06::WeightedDirGraphStEphFloat::WeightedDirGraphStEphFloat::*;
+  |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^ could not find `WeightedDirGraphStEphFloat` in `Chap06`
+
+error[E0433]: failed to resolve: could not find `JohnsonMtEphF64` in `Chap59`
+ --> tests/Chap59/TestJohnsonMtEphF64.rs:4:25
+  |
+4 | use apas_verus::Chap59::JohnsonMtEphF64::JohnsonMtEphF64::*;
+  |                         ^^^^^^^^^^^^^^^ could not find `JohnsonMtEphF64` in `Chap59`
+
+error[E0433]: failed to resolve: could not find `BellmanFordStEphF64` in `Chap58`
+ --> tests/Chap58/TestBellmanFordStEphF64.rs:7:25
+  |
+7 | use apas_verus::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::*;
+  |                         ^^^^^^^^^^^^^^^^^^^ could not find `BellmanFordStEphF64` in `Chap58`
+
+error[E0433]: failed to resolve: could not find `StarPartitionMtEph` in `Chap62`
+ --> tests/Chap64/TestSpanTreeMtEph.rs:6:25
+  |
+6 | use apas_verus::Chap62::StarPartitionMtEph::StarPartitionMtEph::*;
+  |                         ^^^^^^^^^^^^^^^^^^ could not find `StarPartitionMtEph` in `Chap62`
+
+error[E0433]: failed to resolve: could not find `SpanTreeMtEph` in `Chap64`
+ --> tests/Chap64/TestSpanTreeMtEph.rs:7:25
+  |
+7 | use apas_verus::Chap64::SpanTreeMtEph::SpanTreeMtEph::*;
+  |                         ^^^^^^^^^^^^^ could not find `SpanTreeMtEph` in `Chap64`
+
+error[E0433]: failed to resolve: could not find `QuickSortMtEphSlice` in `Chap36`
+ --> tests/Chap36/TestQuickSortMtEphSlice.rs:7:25
+  |
+7 | use apas_verus::Chap36::QuickSortMtEphSlice::Chapter36MtEphSlice::*;
+  |                         ^^^^^^^^^^^^^^^^^^^ could not find `QuickSortMtEphSlice` in `Chap36`
+
+error[E0432]: unresolved import `ordered_float`
+  --> tests/Chap64/TestTSPApproxStEph.rs:10:5
+   |
+10 | use ordered_float::OrderedFloat;
+   |     ^^^^^^^^^^^^^ use of unresolved module or unlinked crate `ordered_float`
+   |
+   = help: if you wanted to use a crate named `ordered_float`, use `cargo add ordered_float` to add it to your `Cargo.toml`
+
+error[E0432]: unresolved import `ordered_float`
+ --> tests/Chap65/TestPrimStEph.rs:4:5
+  |
+4 | use ordered_float::OrderedFloat;
+  |     ^^^^^^^^^^^^^ use of unresolved module or unlinked crate `ordered_float`
+  |
+  = help: if you wanted to use a crate named `ordered_float`, use `cargo add ordered_float` to add it to your `Cargo.toml`
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphStEphTrait`
+  --> tests/Chap64/TestSpanTreeStEph.rs:19:54
+   |
+19 |     <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges)
+   |                                                      ^^^^^^^^ not found in `UnDirGraphStEphTrait`
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphStEphTrait`
+  --> tests/Chap64/TestSpanTreeStEph.rs:35:54
+   |
+35 |     <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges)
+   |                                                      ^^^^^^^^ not found in `UnDirGraphStEphTrait`
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphStEphTrait`
+  --> tests/Chap64/TestSpanTreeStEph.rs:60:66
+   |
+60 |     let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges);
+   |                                                                  ^^^^^^^^ not found in `UnDirGraphStEphTrait`
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphStEphTrait`
+  --> tests/Chap64/TestSpanTreeStEph.rs:70:66
+   |
+70 |     let graph = <UnDirGraphStEph<N> as UnDirGraphStEphTrait<N>>::FromSets(vertices, edges);
+   |                                                                  ^^^^^^^^ not found in `UnDirGraphStEphTrait`
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphMtEphTrait`
+  --> tests/Chap64/TestSpanTreeMtEph.rs:20:54
+   |
+20 |     <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::FromSets(vertices, edges)
+   |                                                      ^^^^^^^^ not found in `UnDirGraphMtEphTrait`
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeMtEph.rs:29:13
+   |
+29 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap64::SpanTreeStEph::SpanTreeStEph::verify_spanning_tree;
+   |
+
+error[E0425]: cannot find function `verify_spanning_tree` in this scope
+  --> tests/Chap64/TestSpanTreeMtEph.rs:38:13
+   |
+38 |     assert!(verify_spanning_tree(&graph, &tree));
+   |             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 4 + use apas_verus::Chap64::SpanTreeStEph::SpanTreeStEph::verify_spanning_tree;
+   |
+
+error[E0576]: cannot find method or associated constant `FromSets` in trait `UnDirGraphMtEphTrait`
+  --> tests/Chap64/TestSpanTreeMtEph.rs:45:66
+   |
+45 |     let graph = <UnDirGraphMtEph<N> as UnDirGraphMtEphTrait<N>>::FromSets(vertices, edges);
+   |                                                                  ^^^^^^^^ not found in `UnDirGraphMtEphTrait`
+
+error[E0425]: cannot find function `reachable` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:11:25
+   |
+11 |     let reachable_set = reachable(&graph, 1);
+   |                         ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::reachable;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::reachable;
+   |
+
+error[E0425]: cannot find function `reachable` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:24:25
+   |
+24 |     let reachable_set = reachable(&graph, 1);
+   |                         ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::reachable;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::reachable;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:37:18
+   |
+37 |     let result = graph_search(&graph, 1, &SelectAll);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:37:43
+   |
+37 |     let result = graph_search(&graph, 1, &SelectAll);
+   |                                           ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these unit structs
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search_multi` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:51:18
+   |
+51 |     let result = graph_search_multi(&graph, sources, &SelectAll);
+   |                  ^^^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search_multi;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::graph_search_multi;
+   |
+
+error[E0425]: cannot find value `SelectAll` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:51:55
+   |
+51 |     let result = graph_search_multi(&graph, sources, &SelectAll);
+   |                                                       ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these unit structs
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectAll;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::SelectAll;
+   |
+
+error[E0425]: cannot find function `graph_search` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:64:19
+   |
+64 |     let _result = graph_search(&graph, 1, &SelectOne);
+   |                   ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::graph_search;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::graph_search;
+   |
+
+error[E0425]: cannot find value `SelectOne` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:64:44
+   |
+64 |     let _result = graph_search(&graph, 1, &SelectOne);
+   |                                            ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these unit structs
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::SelectOne;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::SelectOne;
+   |
+
+error[E0425]: cannot find function `reachable` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:70:25
+   |
+70 |     let reachable_set = reachable(&graph, 1);
+   |                         ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::reachable;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::reachable;
+   |
+
+error[E0425]: cannot find function `reachable` in this scope
+  --> tests/Chap53/TestGraphSearchMtPer.rs:82:25
+   |
+82 |     let reachable_set = reachable(&graph, 1);
+   |                         ^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these functions
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStEph::GraphSearchStEph::reachable;
+   |
+ 4 + use apas_verus::Chap53::GraphSearchStPer::GraphSearchStPer::reachable;
+   |
+
+error[E0433]: failed to resolve: use of undeclared type `Example56_1S`
+ --> tests/Chap56/TestExample56_1.rs:8:37
+  |
+8 | fn test_example_path_weight_int() { Example56_1S::example_path_weight_int(); }
+  |                                     ^^^^^^^^^^^^ use of undeclared type `Example56_1S`
+
+error[E0433]: failed to resolve: use of undeclared type `Example56_1S`
+  --> tests/Chap56/TestExample56_1.rs:11:39
+   |
+11 | fn test_example_path_weight_float() { Example56_1S::example_path_weight_float(); }
+   |                                       ^^^^^^^^^^^^ use of undeclared type `Example56_1S`
+
+error[E0433]: failed to resolve: use of undeclared type `Example56_1S`
+  --> tests/Chap56/TestExample56_1.rs:14:38
+   |
+14 | fn test_example_negative_weights() { Example56_1S::example_negative_weights(); }
+   |                                      ^^^^^^^^^^^^ use of undeclared type `Example56_1S`
+
+error[E0425]: cannot find function `spanning_tree_star_contraction_mt` in this scope
+  --> tests/Chap64/TestSpanTreeMtEph.rs:26:16
+   |
+26 |     let tree = spanning_tree_star_contraction_mt(&graph, 123);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSplayMtEph.rs:89:23
+    |
+ 89 |     assert_eq!(values.length(), 5);
+    |                       ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0425]: cannot find function `spanning_tree_star_contraction_mt` in this scope
+  --> tests/Chap64/TestSpanTreeMtEph.rs:35:16
+   |
+35 |     let tree = spanning_tree_star_contraction_mt(&graph, 456);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spanning_tree_star_contraction_mt` in this scope
+  --> tests/Chap64/TestSpanTreeMtEph.rs:46:16
+   |
+46 |     let tree = spanning_tree_star_contraction_mt(&graph, 789);
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:157:20
+    |
+157 |     assert_eq!(seq.length(), 4);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0277]: the trait bound `apas_verus::Chap65::UnionFindStEph::UnionFindStEph::UnionFindStEph<i32>: Default` is not satisfied
+   --> tests/Chap65/TestUnionFindStEph.rs:292:39
+    |
+292 |     let mut uf: UnionFindStEph<i32> = Default::default();
+    |                                       ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `apas_verus::Chap65::UnionFindStEph::UnionFindStEph::UnionFindStEph<i32>`
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTRBMtEph.rs:89:23
+    |
+ 89 |     assert_eq!(values.length(), 5);
+    |                       ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:158:21
+    |
+158 |     assert_eq!(*seq.nth(0), 1);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:22:34
+   |
+22 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut first);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:26:34
+   |
+26 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut median3);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:30:34
+   |
+30 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_random(&mut random);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:37:34
+   |
+37 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut empty);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:41:34
+   |
+41 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut single);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:45:34
+   |
+45 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_random(&mut sorted);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:49:34
+   |
+49 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut reversed);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:53:34
+   |
+53 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut pair);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:60:34
+   |
+60 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut descending);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:66:34
+   |
+66 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_random(&mut random_seq);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:94:34
+   |
+94 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut seq);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:99:34
+   |
+99 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut seq_med);
+   |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:220:53
+    |
+220 |                 | 0 => <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_first(&mut seq),
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSplayMtEph.rs:100:23
+    |
+100 |     assert_eq!(values.length(), 3);
+    |                       ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:221:53
+    |
+221 |                 | 1 => <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut seq),
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:222:53
+    |
+222 |                 | _ => <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_random(&mut seq),
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `Chapter36MtSliceTrait` in this scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:291:34
+    |
+291 |     <ArraySeqMtEphSliceS<i32> as Chapter36MtSliceTrait<i32>>::quick_sort_mt_median3(&mut seq);
+    |                                  ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:159:21
+    |
+159 |     assert_eq!(*seq.nth(1), 3);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTRBMtEph.rs:100:23
+    |
+100 |     assert_eq!(values.length(), 3);
+    |                       ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+Some errors have detailed explanations: E0425, E0433, E0576.
+For more information about this error, try `rustc --explain E0433`.
+For more information about an error, try `rustc --explain E0425`.
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:160:21
+    |
+160 |     assert_eq!(*seq.nth(2), 5);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:161:21
+    |
+161 |     assert_eq!(*seq.nth(3), 7);
+    |                     ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+For more information about this error, try `rustc --explain E0576`.
+error: could not compile `apas-verus` (test "TestExample56_1") due to 4 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (test "TestSpanTreeMtEph") due to 9 previous errors
+error: could not compile `apas-verus` (test "TestSpanTreeStEph") due to 4 previous errors
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSplayMtEph.rs:171:22
+    |
+171 |     assert_eq!(evens.length(), 5);
+    |                      ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTRBMtEph.rs:186:22
+    |
+186 |     assert_eq!(evens.length(), 5);
+    |                      ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+Some errors have detailed explanations: E0425, E0433.
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSplayMtEph.rs:182:20
+    |
+182 |     assert_eq!(all.length(), 3);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `map_vertices` found for struct `apas_verus::Chap52::AdjSeqGraphMtPer::AdjSeqGraphMtPer::AdjSeqGraphMtPer` in the current scope
+  --> tests/Chap52/TestAdjSeqGraphMtPer.rs:66:16
+   |
+66 |     let g2 = g.map_vertices(|v| v * 2);
+   |                ^^^^^^^^^^^^
+   |
+help: there is a method `num_vertices` with a similar name, but with different arguments
+  --> src/Chap52/AdjSeqGraphMtPer.rs:92:9
+   |
+92 | /         fn num_vertices(&self) -> (n: N)
+93 | |             requires self.spec_adjseqgraphmtper_wf()
+94 | |             ensures n as nat == self.spec_num_vertices();
+   | |_________________________________________________________^
+
+error: could not compile `apas-verus` (test "TestGraphSearchMtPer") due to 11 previous errors
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTRBMtEph.rs:197:20
+    |
+197 |     assert_eq!(all.length(), 3);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `map_vertices` found for struct `apas_verus::Chap52::AdjSeqGraphMtPer::AdjSeqGraphMtPer::AdjSeqGraphMtPer` in the current scope
+  --> tests/Chap52/TestAdjSeqGraphMtPer.rs:75:16
+   |
+75 |     let g2 = g.map_vertices(|v| v);
+   |                ^^^^^^^^^^^^
+   |
+help: there is a method `num_vertices` with a similar name, but with different arguments
+  --> src/Chap52/AdjSeqGraphMtPer.rs:92:9
+   |
+92 | /         fn num_vertices(&self) -> (n: N)
+93 | |             requires self.spec_adjseqgraphmtper_wf()
+94 | |             ensures n as nat == self.spec_num_vertices();
+   | |_________________________________________________________^
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSplayMtEph.rs:193:21
+    |
+193 |     assert_eq!(none.length(), 0);
+    |                     ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTRBMtEph.rs:208:21
+    |
+208 |     assert_eq!(none.length(), 0);
+    |                     ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<{integer}>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `size` found for reference `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<{integer}>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:293:21
+    |
+293 |     assert_eq!(tree.size(), 3);
+    |                     ^^^^ method not found in `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<{integer}>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTSplayMtEphTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:10:13
+   |
+10 |     let g = AdjTableGraphMtPer::<N>::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+For more information about this error, try `rustc --explain E0432`.
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:17:13
+   |
+17 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0599]: no method named `map_vertices` found for struct `apas_verus::Chap52::AdjSeqGraphMtPer::AdjSeqGraphMtPer::AdjSeqGraphMtPer` in the current scope
+  --> tests/Chap52/TestAdjSeqGraphMtPer.rs:84:16
+   |
+84 |     let g2 = g.map_vertices(|v| v + 10);
+   |                ^^^^^^^^^^^^
+   |
+help: there is a method `num_vertices` with a similar name, but with different arguments
+  --> src/Chap52/AdjSeqGraphMtPer.rs:92:9
+   |
+92 | /         fn num_vertices(&self) -> (n: N)
+93 | |             requires self.spec_adjseqgraphmtper_wf()
+94 | |             ensures n as nat == self.spec_num_vertices();
+   | |_________________________________________________________^
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:28:13
+   |
+28 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+For more information about this error, try `rustc --explain E0277`.
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:10:13
+   |
+10 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:43:13
+   |
+43 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:60:13
+   |
+60 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0599]: no method named `contains` found for reference `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<{integer}>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:294:18
+    |
+294 |     assert!(tree.contains(&5));
+    |                  ^^^^^^^^ method not found in `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<{integer}>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTSplayMtEphTrait` which provides `contains` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:72:13
+   |
+72 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error: could not compile `apas-verus` (test "TestTSPApproxStEph") due to 1 previous error
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+  --> tests/Chap52/TestAdjTableGraphMtPer.rs:95:13
+   |
+95 |     let g = AdjTableGraphMtPer::empty();
+   |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+   --> tests/Chap52/TestAdjTableGraphMtPer.rs:110:13
+    |
+110 |     let g = AdjTableGraphMtPer::empty();
+    |             ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+   --> tests/Chap52/TestAdjTableGraphMtPer.rs:124:14
+    |
+124 |     let g1 = AdjTableGraphMtPer::empty().insert_edge(1, 2).insert_edge(2, 3);
+    |              ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AdjTableGraphMtPer`
+   --> tests/Chap52/TestAdjTableGraphMtPer.rs:135:14
+    |
+135 |     let g1 = AdjTableGraphMtPer::empty().insert_edge(1, 2).insert_edge(2, 3);
+    |              ^^^^^^^^^^^^^^^^^^ use of undeclared type `AdjTableGraphMtPer`
+
+error[E0599]: no method named `map_vertices` found for struct `apas_verus::Chap52::AdjSeqGraphMtPer::AdjSeqGraphMtPer::AdjSeqGraphMtPer` in the current scope
+   --> tests/Chap52/TestAdjSeqGraphMtPer.rs:124:16
+    |
+124 |     let g2 = g.map_vertices(|v| v * 3);
+    |                ^^^^^^^^^^^^
+    |
+help: there is a method `num_vertices` with a similar name, but with different arguments
+   --> src/Chap52/AdjSeqGraphMtPer.rs:92:9
+    |
+ 92 | /         fn num_vertices(&self) -> (n: N)
+ 93 | |             requires self.spec_adjseqgraphmtper_wf()
+ 94 | |             ensures n as nat == self.spec_num_vertices();
+    | |_________________________________________________________^
+
+error: could not compile `apas-verus` (test "TestUnionFindStEph") due to 1 previous error
+error[E0599]: no method named `to_vec` found for reference `&apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:10:85
+   |
+10 | fn to_vec<T: StT + Send + Sync + 'static>(a: &ArraySeqMtEphSliceS<T>) -> Vec<T> { a.to_vec() }
+   |                                                                                     ^^^^^^ method not found in `&apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+   |
+help: one of the expressions' fields has a method of the same name
+   |
+10 | fn to_vec<T: StT + Send + Sync + 'static>(a: &ArraySeqMtEphSliceS<T>) -> Vec<T> { a.data.to_vec() }
+   |                                                                                     +++++
+
+error: could not compile `apas-verus` (test "TestAdjTableGraphMtPer") due to 11 previous errors
+For more information about this error, try `rustc --explain E0599`.
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:26:13
+   |
+26 |     let g = EdgeSetGraphMtPer::from_vertices_and_edges(v, e);
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:36:13
+   |
+36 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:49:13
+   |
+49 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:62:13
+   |
+62 |     let g = EdgeSetGraphMtPer::<i32>::default();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:69:13
+   |
+69 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0599]: no method named `map_vertices` found for struct `apas_verus::Chap52::AdjSeqGraphMtPer::AdjSeqGraphMtPer::AdjSeqGraphMtPer` in the current scope
+   --> tests/Chap52/TestAdjSeqGraphMtPer.rs:133:16
+    |
+133 |     let g2 = g.map_vertices(|v| v % 3);
+    |                ^^^^^^^^^^^^
+    |
+help: there is a method `num_vertices` with a similar name, but with different arguments
+   --> src/Chap52/AdjSeqGraphMtPer.rs:92:9
+    |
+ 92 | /         fn num_vertices(&self) -> (n: N)
+ 93 | |             requires self.spec_adjseqgraphmtper_wf()
+ 94 | |             ensures n as nat == self.spec_num_vertices();
+    | |_________________________________________________________^
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:80:13
+   |
+80 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error: could not compile `apas-verus` (test "TestBSTRBMtEph") due to 5 previous errors
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+  --> tests/Chap52/TestEdgeSetGraphMtPer.rs:92:13
+   |
+92 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+   |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+   --> tests/Chap52/TestEdgeSetGraphMtPer.rs:104:13
+    |
+104 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+    |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+   --> tests/Chap52/TestEdgeSetGraphMtPer.rs:116:13
+    |
+116 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+    |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error[E0433]: failed to resolve: use of undeclared type `EdgeSetGraphMtPer`
+   --> tests/Chap52/TestEdgeSetGraphMtPer.rs:131:13
+    |
+131 |     let g = EdgeSetGraphMtPer::<i32>::empty();
+    |             ^^^^^^^^^^^^^^^^^ use of undeclared type `EdgeSetGraphMtPer`
+
+error: could not compile `apas-verus` (test "TestBSTSplayMtEph") due to 5 previous errors
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:474:20
+    |
+474 |     assert_eq!(seq.length(), 3);
+    |                    ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error: could not compile `apas-verus` (test "TestEdgeSetGraphMtPer") due to 12 previous errors
+error[E0599]: no method named `size` found for reference `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<i32>` in the current scope
+   --> tests/Chap37/TestBSTSetSplayMtEph.rs:483:21
+    |
+483 |     assert_eq!(tree.size(), 1);
+    |                     ^^^^ method not found in `&apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<i32>`
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `BSTSplayMtEphTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+    |
+  4 + use apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait;
+    |
+
+error[E0599]: no method named `clone` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:21:26
+   |
+21 |     let mut first = base.clone();
+   |                          ^^^^^
+   |
+help: there is a method `nth_cloned` with a similar name, but with different arguments
+  --> src/Chap19/ArraySeqMtEphSlice.rs:89:9
+   |
+89 | /         fn nth_cloned(&self, index: usize) -> (elem: T)
+90 | |             requires
+91 | |                 self.spec_arrayseqmtephslice_wf(),
+92 | |                 index < self.spec_len(),
+93 | |                 obeys_feq_clone::<T>(),
+94 | |             ensures elem == self.spec_index(index as int);
+   | |__________________________________________________________^
+
+error: could not compile `apas-verus` (test "TestAdjSeqGraphMtPer") due to 5 previous errors
+error[E0425]: cannot find type `BSTree` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:291:25
+    |
+291 |     test_empty_variant!(BSTree<i32>);
+    |                         ^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+291 |     test_empty_variant!(BSTreeRB<i32>);
+    |                               ++
+
+error[E0425]: cannot find type `BSTreeAVL` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:292:25
+    |
+292 |     test_empty_variant!(BSTreeAVL<i32>);
+    |                         ^^^^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+292 -     test_empty_variant!(BSTreeAVL<i32>);
+292 +     test_empty_variant!(BSTreeRB<i32>);
+    |
+
+error[E0425]: cannot find type `BSTreeBBAlpha` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:294:25
+    |
+294 |     test_empty_variant!(BSTreeBBAlpha<i32>);
+    |                         ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTree` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:323:26
+    |
+323 |     test_single_variant!(BSTree<i32>);
+    |                          ^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+323 |     test_single_variant!(BSTreeRB<i32>);
+    |                                ++
+
+error[E0425]: cannot find type `BSTreeAVL` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:324:26
+    |
+324 |     test_single_variant!(BSTreeAVL<i32>);
+    |                          ^^^^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+324 -     test_single_variant!(BSTreeAVL<i32>);
+324 +     test_single_variant!(BSTreeRB<i32>);
+    |
+
+error[E0425]: cannot find type `BSTreeBBAlpha` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:326:26
+    |
+326 |     test_single_variant!(BSTreeBBAlpha<i32>);
+    |                          ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTree` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:358:29
+    |
+358 |     test_duplicate_variant!(BSTree<i32>);
+    |                             ^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+358 |     test_duplicate_variant!(BSTreeRB<i32>);
+    |                                   ++
+
+error[E0425]: cannot find type `BSTreeAVL` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:359:29
+    |
+359 |     test_duplicate_variant!(BSTreeAVL<i32>);
+    |                             ^^^^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+359 -     test_duplicate_variant!(BSTreeAVL<i32>);
+359 +     test_duplicate_variant!(BSTreeRB<i32>);
+    |
+
+error[E0425]: cannot find type `BSTreeBBAlpha` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:361:29
+    |
+361 |     test_duplicate_variant!(BSTreeBBAlpha<i32>);
+    |                             ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTree` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:678:30
+    |
+678 |     test_concurrent_variant!(BSTree<i32>);
+    |                              ^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+678 |     test_concurrent_variant!(BSTreeRB<i32>);
+    |                                    ++
+
+error[E0425]: cannot find type `BSTreeAVL` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:679:30
+    |
+679 |     test_concurrent_variant!(BSTreeAVL<i32>);
+    |                              ^^^^^^^^^
+    |
+   ::: src/Chap37/BSTRBMtEph.rs:898:5
+    |
+898 |     pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    |     -------------------- similarly named type alias `BSTreeRB` defined here
+    |
+help: a type alias with a similar name exists
+    |
+679 -     test_concurrent_variant!(BSTreeAVL<i32>);
+679 +     test_concurrent_variant!(BSTreeRB<i32>);
+    |
+
+error[E0425]: cannot find type `BSTreeBBAlpha` in this scope
+   --> tests/Chap37/TestBSTMtEph.rs:681:30
+    |
+681 |     test_concurrent_variant!(BSTreeBBAlpha<i32>);
+    |                              ^^^^^^^^^^^^^ not found in this scope
+
+error[E0599]: no method named `clone` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:25:28
+   |
+25 |     let mut median3 = base.clone();
+   |                            ^^^^^
+   |
+help: there is a method `nth_cloned` with a similar name, but with different arguments
+  --> src/Chap19/ArraySeqMtEphSlice.rs:89:9
+   |
+89 | /         fn nth_cloned(&self, index: usize) -> (elem: T)
+90 | |             requires
+91 | |                 self.spec_arrayseqmtephslice_wf(),
+92 | |                 index < self.spec_len(),
+93 | |                 obeys_feq_clone::<T>(),
+94 | |             ensures elem == self.spec_index(index as int);
+   | |__________________________________________________________^
+
+error[E0433]: failed to resolve: use of undeclared type `BSTree`
+  --> tests/Chap37/TestBSTMtEph.rs:14:15
+   |
+14 |     let bst = BSTree::new();
+   |               ^^^^^^ use of undeclared type `BSTree`
+   |
+help: a type alias with a similar name exists
+   |
+14 |     let bst = BSTreeRB::new();
+   |                     ++
+
+error[E0599]: no method named `clone` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:29:27
+   |
+29 |     let mut random = base.clone();
+   |                           ^^^^^
+   |
+help: there is a method `nth_cloned` with a similar name, but with different arguments
+  --> src/Chap19/ArraySeqMtEphSlice.rs:89:9
+   |
+89 | /         fn nth_cloned(&self, index: usize) -> (elem: T)
+90 | |             requires
+91 | |                 self.spec_arrayseqmtephslice_wf(),
+92 | |                 index < self.spec_len(),
+93 | |                 obeys_feq_clone::<T>(),
+94 | |             ensures elem == self.spec_index(index as int);
+   | |__________________________________________________________^
+
+error[E0433]: failed to resolve: use of undeclared type `BSTreeAVL`
+  --> tests/Chap37/TestBSTMtEph.rs:27:15
+   |
+27 |     let bst = BSTreeAVL::new();
+   |               ^^^^^^^^^ use of undeclared type `BSTreeAVL`
+   |
+help: a type alias with a similar name exists
+   |
+27 -     let bst = BSTreeAVL::new();
+27 +     let bst = BSTreeRB::new();
+   |
+
+error: could not compile `apas-verus` (test "TestBSTSetSplayMtEph") due to 9 previous errors
+error[E0433]: failed to resolve: use of undeclared type `BSTreeBBAlpha`
+  --> tests/Chap37/TestBSTMtEph.rs:48:15
+   |
+48 |     let bst = BSTreeBBAlpha::new();
+   |               ^^^^^^^^^^^^^ use of undeclared type `BSTreeBBAlpha`
+
+error: could not compile `apas-verus` (test "TestPrimStEph") due to 1 previous error
+error[E0433]: failed to resolve: use of undeclared type `BSTree`
+  --> tests/Chap37/TestBSTMtEph.rs:70:15
+   |
+70 |     let bst = BSTree::<i32>::new();
+   |               ^^^^^^ use of undeclared type `BSTree`
+   |
+help: a type alias with a similar name exists
+   |
+70 |     let bst = BSTreeRB::<i32>::new();
+   |                     ++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTreeAVL`
+   --> tests/Chap37/TestBSTMtEph.rs:118:15
+    |
+118 |     let bst = BSTreeAVL::<i32>::new();
+    |               ^^^^^^^^^ use of undeclared type `BSTreeAVL`
+    |
+help: a type alias with a similar name exists
+    |
+118 -     let bst = BSTreeAVL::<i32>::new();
+118 +     let bst = BSTreeRB::<i32>::new();
+    |
+
+error[E0599]: no method named `pivot_mt_first` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:73:20
+   |
+73 |     assert_eq!(seq.pivot_mt_first(0, seq.length()), 9);
+   |                    ^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0599]: no method named `pivot_mt_median3` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:76:28
+   |
+76 |     assert_eq!(median_case.pivot_mt_median3(0, median_case.length()), 5);
+   |                            ^^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0425]: cannot find function `bellman_ford` in this scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:18:18
+   |
+18 |     let result = bellman_ford(&graph, 0).unwrap();
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 5 + use apas_verus::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+   |
+
+error[E0425]: cannot find function `bellman_ford` in this scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:36:18
+   |
+36 |     let result = bellman_ford(&graph, 0).unwrap();
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 5 + use apas_verus::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+   |
+
+error[E0425]: cannot find function `bellman_ford` in this scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:54:18
+   |
+54 |     let result = bellman_ford(&graph, 0);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 5 + use apas_verus::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+   |
+
+error[E0425]: cannot find function `bellman_ford` in this scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:71:18
+   |
+71 |     let result = bellman_ford(&graph, 0).unwrap();
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 5 + use apas_verus::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+   |
+
+error[E0425]: cannot find function `bellman_ford` in this scope
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:86:18
+   |
+86 |     let result = bellman_ford(&graph, 0).unwrap();
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 5 + use apas_verus::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
+   |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:188:26
+    |
+188 |     for i in 1..in_order.length() {
+    |                          ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:189:27
+    |
+189 |         assert!(*in_order.nth(i - 1) < *in_order.nth(i));
+    |                           ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `pivot_mt_random` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:79:28
+   |
+79 |     let pivot = random_seq.pivot_mt_random(1, 4);
+   |                            ^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:189:50
+    |
+189 |         assert!(*in_order.nth(i - 1) < *in_order.nth(i));
+    |                                                  ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `BSTreeBBAlpha`
+   --> tests/Chap37/TestBSTMtEph.rs:195:15
+    |
+195 |     let bst = BSTreeBBAlpha::<i32>::new();
+    |               ^^^^^^^^^^^^^ use of undeclared type `BSTreeBBAlpha`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:15:44
+   |
+15 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.5)), WeightedEdge(1, 2, OrderedF64::from(2.5))];
+   |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `pivot_mt_first` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:93:20
+   |
+93 |     assert_eq!(seq.pivot_mt_first(0, seq.length()), 4);
+   |                    ^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:265:26
+    |
+265 |     for i in 1..in_order.length() {
+    |                          ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `pivot_mt_median3` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+  --> tests/Chap36/TestQuickSortMtEphSlice.rs:98:24
+   |
+98 |     assert_eq!(seq_med.pivot_mt_median3(0, seq_med.length()), 7);
+   |                        ^^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:15:87
+   |
+15 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.5)), WeightedEdge(1, 2, OrderedF64::from(2.5))];
+   |                                                                                       ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:266:27
+    |
+266 |         assert!(*in_order.nth(i - 1) < *in_order.nth(i));
+    |                           ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphStEphFloat`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:17:17
+   |
+17 |     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphStEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:20:40
+   |
+20 |     assert_eq!(result.get_distance(0), OrderedF64::from(0.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:21:40
+   |
+21 |     assert_eq!(result.get_distance(1), OrderedF64::from(1.5));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:22:40
+   |
+22 |     assert_eq!(result.get_distance(2), OrderedF64::from(4.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:30:28
+   |
+30 |         WeightedEdge(0, 1, OrderedF64::from(5.0)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:266:50
+    |
+266 |         assert!(*in_order.nth(i - 1) < *in_order.nth(i));
+    |                                                  ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:31:28
+   |
+31 |         WeightedEdge(0, 2, OrderedF64::from(2.0)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:127:26
+    |
+127 |     let vec_result = seq.to_vec();
+    |                          ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+127 |     let vec_result = seq.data.to_vec();
+    |                          +++++
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:285:33
+    |
+285 |             assert_eq!(in_order.length(), 0);
+    |                                 ^^^^^^
+...
+293 |     test_empty_variant!(BSTreeRB<i32>);
+    |     ---------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_empty_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:32:28
+   |
+32 |         WeightedEdge(1, 2, OrderedF64::from(-4.0))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphStEphFloat`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:35:17
+   |
+35 |     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphStEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:38:40
+   |
+38 |     assert_eq!(result.get_distance(0), OrderedF64::from(0.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:39:40
+   |
+39 |     assert_eq!(result.get_distance(1), OrderedF64::from(5.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:40:40
+   |
+40 |     assert_eq!(result.get_distance(2), OrderedF64::from(1.0)); // via 1
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:48:28
+   |
+48 |         WeightedEdge(0, 1, OrderedF64::from(1.0)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:285:33
+    |
+285 |             assert_eq!(in_order.length(), 0);
+    |                                 ^^^^^^
+...
+295 |     test_empty_variant!(BSTreeSplay<i32>);
+    |     ------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_empty_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:131:27
+    |
+131 |     let empty_vec = empty.to_vec();
+    |                           ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+131 |     let empty_vec = empty.data.to_vec();
+    |                           +++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:49:28
+   |
+49 |         WeightedEdge(1, 2, OrderedF64::from(2.0)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:50:28
+   |
+50 |         WeightedEdge(2, 1, OrderedF64::from(-4.0))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphStEphFloat`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:53:17
+   |
+53 |     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphStEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:65:28
+   |
+65 |         WeightedEdge(0, 1, OrderedF64::from(0.5)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:316:33
+    |
+316 |             assert_eq!(in_order.length(), 1);
+    |                                 ^^^^^^
+...
+325 |     test_single_variant!(BSTreeRB<i32>);
+    |     ----------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_single_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:317:34
+    |
+317 |             assert_eq!(*in_order.nth(0), 42);
+    |                                  ^^^
+...
+325 |     test_single_variant!(BSTreeRB<i32>);
+    |     ----------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_single_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:139:20
+    |
+139 |     assert_eq!(seq.to_vec(), data);
+    |                    ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<{integer}>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+139 |     assert_eq!(seq.data.to_vec(), data);
+    |                    +++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:66:28
+   |
+66 |         WeightedEdge(1, 2, OrderedF64::from(1.25)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:316:33
+    |
+316 |             assert_eq!(in_order.length(), 1);
+    |                                 ^^^^^^
+...
+327 |     test_single_variant!(BSTreeSplay<i32>);
+    |     -------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_single_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:67:28
+   |
+67 |         WeightedEdge(2, 3, OrderedF64::from(-0.75))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphStEphFloat`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:70:17
+   |
+70 |     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphStEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:73:40
+   |
+73 |     assert_eq!(result.get_distance(0), OrderedF64::from(0.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:317:34
+    |
+317 |             assert_eq!(*in_order.nth(0), 42);
+    |                                  ^^^
+...
+327 |     test_single_variant!(BSTreeSplay<i32>);
+    |     -------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_single_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:74:40
+   |
+74 |     assert_eq!(result.get_distance(1), OrderedF64::from(0.5));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:75:40
+   |
+75 |     assert_eq!(result.get_distance(2), OrderedF64::from(1.75));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:76:40
+   |
+76 |     assert_eq!(result.get_distance(3), OrderedF64::from(1.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:83:44
+   |
+83 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.0))];
+   |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `clone` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:146:27
+    |
+146 |     let cloned = original.clone();
+    |                           ^^^^^
+    |
+help: there is a method `nth_cloned` with a similar name, but with different arguments
+   --> src/Chap19/ArraySeqMtEphSlice.rs:89:9
+    |
+ 89 | /         fn nth_cloned(&self, index: usize) -> (elem: T)
+ 90 | |             requires
+ 91 | |                 self.spec_arrayseqmtephslice_wf(),
+ 92 | |                 index < self.spec_len(),
+ 93 | |                 obeys_feq_clone::<T>(),
+ 94 | |             ensures elem == self.spec_index(index as int);
+    | |__________________________________________________________^
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphStEphFloat`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:85:17
+   |
+85 |     let graph = WeightedDirGraphStEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphStEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:88:40
+   |
+88 |     assert_eq!(result.get_distance(0), OrderedF64::from(0.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:89:40
+   |
+89 |     assert_eq!(result.get_distance(1), OrderedF64::from(1.0));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap58/TestBellmanFordStEphF64.rs:90:40
+   |
+90 |     assert_eq!(result.get_distance(2), OrderedF64::from(f64::INFINITY));
+   |                                        ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error: could not compile `apas-verus` (test "TestBellmanFordStEphF64") due to 37 previous errors
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:352:34
+    |
+352 |             for i in 1..in_order.length() {
+    |                                  ^^^^^^
+...
+360 |     test_duplicate_variant!(BSTreeRB<i32>);
+    |     -------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:148:25
+    |
+148 |     assert_eq!(original.to_vec(), cloned.to_vec());
+    |                         ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+148 |     assert_eq!(original.data.to_vec(), cloned.to_vec());
+    |                         +++++
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:353:35
+    |
+353 |                 assert!(*in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                   ^^^
+...
+360 |     test_duplicate_variant!(BSTreeRB<i32>);
+    |     -------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:353:59
+    |
+353 |                 assert!(*in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                                           ^^^
+...
+360 |     test_duplicate_variant!(BSTreeRB<i32>);
+    |     -------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:352:34
+    |
+352 |             for i in 1..in_order.length() {
+    |                                  ^^^^^^
+...
+362 |     test_duplicate_variant!(BSTreeSplay<i32>);
+    |     ----------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `pivot_mt_first` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:158:23
+    |
+158 |     assert_eq!(single.pivot_mt_first(0, 1), 42);
+    |                       ^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:353:35
+    |
+353 |                 assert!(*in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                   ^^^
+...
+362 |     test_duplicate_variant!(BSTreeSplay<i32>);
+    |     ----------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:353:59
+    |
+353 |                 assert!(*in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                                           ^^^
+...
+362 |     test_duplicate_variant!(BSTreeSplay<i32>);
+    |     ----------------------------------------- in this macro invocation
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+    = note: this error originates in the macro `test_duplicate_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `BSTree`
+   --> tests/Chap37/TestBSTMtEph.rs:371:24
+    |
+371 |     let bst = Arc::new(BSTree::<i32>::new());
+    |                        ^^^^^^ use of undeclared type `BSTree`
+    |
+help: a type alias with a similar name exists
+    |
+371 |     let bst = Arc::new(BSTreeRB::<i32>::new());
+    |                              ++
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:376:9
+    |
+376 |     let bst1 = Arc::clone(&bst);
+    |         ^^^^
+...
+381 |             bst1.insert(i);
+    |             ---- type must be known at this point
+    |
+help: consider giving `bst1` an explicit type, where the placeholders `_` are specified
+    |
+376 |     let bst1: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `pivot_mt_first` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:161:20
+    |
+161 |     assert_eq!(seq.pivot_mt_first(2, 5), 3); // Should return element at start index
+    |                    ^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:387:9
+    |
+387 |     let bst2 = Arc::clone(&bst);
+    |         ^^^^
+...
+392 |             bst2.insert(i);
+    |             ---- type must be known at this point
+    |
+help: consider giving `bst2` an explicit type, where the placeholders `_` are specified
+    |
+387 |     let bst2: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `pivot_mt_first` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:162:20
+    |
+162 |     assert_eq!(seq.pivot_mt_first(0, 3), 1); // Should return first element in range
+    |                    ^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:398:9
+    |
+398 |     let bst3 = Arc::clone(&bst);
+    |         ^^^^
+...
+404 |             if bst3.contains(&i) {
+    |                ---- type must be known at this point
+    |
+help: consider giving `bst3` an explicit type, where the placeholders `_` are specified
+    |
+398 |     let bst3: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:412:9
+    |
+412 |     let bst4 = Arc::clone(&bst);
+    |         ^^^^
+...
+416 |         bst4.height()
+    |         ---- type must be known at this point
+    |
+help: consider giving `bst4` an explicit type, where the placeholders `_` are specified
+    |
+412 |     let bst4: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `pivot_mt_median3` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:169:24
+    |
+169 |     let median = three.pivot_mt_median3(0, 3);
+    |                        ^^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:419:44
+    |
+419 |     let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
+    |                                            ^  - type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+419 |     let results = handles.into_iter().map(|h: /* Type */| h.join().unwrap()).collect::<Vec<_>>();
+    |                                             ++++++++++++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTreeAVL`
+   --> tests/Chap37/TestBSTMtEph.rs:435:24
+    |
+435 |     let bst = Arc::new(BSTreeAVL::<i32>::new());
+    |                        ^^^^^^^^^ use of undeclared type `BSTreeAVL`
+    |
+help: a type alias with a similar name exists
+    |
+435 -     let bst = Arc::new(BSTreeAVL::<i32>::new());
+435 +     let bst = Arc::new(BSTreeRB::<i32>::new());
+    |
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:441:13
+    |
+441 |         let bst_clone = Arc::clone(&bst);
+    |             ^^^^^^^^^
+...
+452 |                 bst_clone.insert(i as i32);
+    |                 --------- type must be known at this point
+    |
+help: consider giving `bst_clone` an explicit type, where the placeholders `_` are specified
+    |
+441 |         let bst_clone: Arc<T, A> = Arc::clone(&bst);
+    |                      +++++++++++
+
+error[E0599]: no method named `pivot_mt_median3` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:175:28
+    |
+175 |     let median_large = seq.pivot_mt_median3(1, 6); // Range [1, 9, 3, 7, 2]
+    |                            ^^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0599]: no method named `pivot_mt_random` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:187:29
+    |
+187 |             let pivot = seq.pivot_mt_random(start, end);
+    |                             ^^^^^^^^^^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:465:44
+    |
+465 |     let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
+    |                                            ^  - type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+465 |     let results = handles.into_iter().map(|h: /* Type */| h.join().unwrap()).collect::<Vec<_>>();
+    |                                             ++++++++++++
+
+error[E0599]: no method named `length` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:502:42
+    |
+502 |             let is_sorted = (1..in_order.length()).all(|i| *in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                          ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:127:12
+    |
+127 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+134 | |             requires index < self.spec_len()
+135 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:502:70
+    |
+502 |             let is_sorted = (1..in_order.length()).all(|i| *in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                                                      ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:18:18
+   |
+18 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:39:18
+   |
+39 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:50:18
+   |
+50 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:67:18
+   |
+67 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:81:18
+   |
+81 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:95:18
+   |
+95 |     let result = johnson_apsp(&graph);
+   |                  ^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+ 2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+   |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:111:18
+    |
+111 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:123:18
+    |
+123 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:137:18
+    |
+137 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:148:18
+    |
+148 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:165:18
+    |
+165 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0425]: cannot find function `johnson_apsp` in this scope
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:180:18
+    |
+180 |     let result = johnson_apsp(&graph);
+    |                  ^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  2 + use apas_verus::Chap59::JohnsonStEphI64::JohnsonStEphI64::johnson_apsp;
+    |
+
+error[E0599]: no method named `nth` found for struct `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> tests/Chap37/TestBSTMtEph.rs:502:94
+    |
+502 |             let is_sorted = (1..in_order.length()).all(|i| *in_order.nth(i - 1) <= *in_order.nth(i));
+    |                                                                                              ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:133:12
+    |
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<i32>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  2 + use apas_verus::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `BSTreeBBAlpha`
+   --> tests/Chap37/TestBSTMtEph.rs:523:24
+    |
+523 |     let bst = Arc::new(BSTreeBBAlpha::<i32>::new());
+    |                        ^^^^^^^^^^^^^ use of undeclared type `BSTreeBBAlpha`
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:528:9
+    |
+528 |     let bst1 = Arc::clone(&bst);
+    |         ^^^^
+...
+533 |             bst1.insert(i);
+    |             ---- type must be known at this point
+    |
+help: consider giving `bst1` an explicit type, where the placeholders `_` are specified
+    |
+528 |     let bst1: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:225:17
+    |
+225 |             seq.to_vec()
+    |                 ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<{integer}>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+225 |             seq.data.to_vec()
+    |                 +++++
+
+error[E0282]: type annotations needed
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:231:22
+    |
+231 |         let result = handle.join().unwrap();
+    |                      ^^^^^^ cannot infer type
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:539:9
+    |
+539 |     let bst2 = Arc::clone(&bst);
+    |         ^^^^
+...
+544 |             bst2.insert(i);
+    |             ---- type must be known at this point
+    |
+help: consider giving `bst2` an explicit type, where the placeholders `_` are specified
+    |
+539 |     let bst2: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `pivot_mt_first` found for struct `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:249:41
+    |
+249 |             let first_pivot = seq_clone.pivot_mt_first(0, seq_clone.length());
+    |                                         ^^^^^^^^^^^^^^ method not found in `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:12:28
+   |
+12 |         WeightedEdge(0, 1, OrderedF64::from(5.5)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0282]: type annotations needed for `Arc<_, _>`
+   --> tests/Chap37/TestBSTMtEph.rs:550:9
+    |
+550 |     let bst3 = Arc::clone(&bst);
+    |         ^^^^
+...
+556 |             bst3.insert(val);
+    |             ---- type must be known at this point
+    |
+help: consider giving `bst3` an explicit type, where the placeholders `_` are specified
+    |
+550 |     let bst3: Arc<T, A> = Arc::clone(&bst);
+    |             +++++++++++
+
+error[E0599]: no method named `pivot_mt_median3` found for struct `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:250:42
+    |
+250 |             let median_pivot = seq_clone.pivot_mt_median3(2, 8);
+    |                                          ^^^^^^^^^^^^^^^^ method not found in `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:561:44
+    |
+561 |     let results = handles.into_iter().map(|h| h.join().unwrap()).collect::<Vec<_>>();
+    |                                            ^  - type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+561 |     let results = handles.into_iter().map(|h: /* Type */| h.join().unwrap()).collect::<Vec<_>>();
+    |                                             ++++++++++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:13:28
+   |
+13 |         WeightedEdge(1, 2, OrderedF64::from(3.2)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `pivot_mt_random` found for struct `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:251:42
+    |
+251 |             let random_pivot = seq_clone.pivot_mt_random(1, 9);
+    |                                          ^^^^^^^^^^^^^^^ method not found in `Arc<apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>>`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:646:25
+    |
+646 |                         bst_clone.insert(i);
+    |                         ^^^^^^^^^ cannot infer type
+...
+678 |     test_concurrent_variant!(BSTree<i32>);
+    |     ------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0282]: type annotations needed
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:260:22
+    |
+260 |         results.push(handle.join().unwrap());
+    |                      ^^^^^^ cannot infer type
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:14:28
+   |
+14 |         WeightedEdge(0, 2, OrderedF64::from(10.0))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:17:17
+   |
+17 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:20:43
+   |
+20 |     assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:21:43
+   |
+21 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(5.5));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:22:43
+   |
+22 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(8.7));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:24:43
+   |
+24 |     assert_eq!(result.get_distance(1, 1), OrderedF64::from(0.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:25:43
+   |
+25 |     assert_eq!(result.get_distance(1, 2), OrderedF64::from(3.2));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:26:43
+   |
+26 |     assert_eq!(result.get_distance(1, 0), OrderedF64::from(f64::INFINITY));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:33:28
+   |
+33 |         WeightedEdge(0, 1, OrderedF64::from(1.5)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:34:28
+   |
+34 |         WeightedEdge(1, 2, OrderedF64::from(-0.8)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0599]: no method named `to_vec` found for struct `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> tests/Chap36/TestQuickSortMtEphSlice.rs:293:22
+    |
+293 |     let result = seq.to_vec();
+    |                      ^^^^^^ method not found in `apas_verus::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<i32>`
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+293 |     let result = seq.data.to_vec();
+    |                      +++++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:35:28
+   |
+35 |         WeightedEdge(0, 2, OrderedF64::from(1.0))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:38:17
+   |
+38 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:41:43
+   |
+41 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.7));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:49:17
+   |
+49 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:52:43
+   |
+52 |     assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:59:28
+   |
+59 |         WeightedEdge(0, 1, OrderedF64::from(0.5)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:659:63
+    |
+659 |             let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
+    |                                                               ^ cannot infer type
+...
+678 |     test_concurrent_variant!(BSTree<i32>);
+    |     ------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+Some errors have detailed explanations: E0282, E0405, E0433, E0599.
+For more information about an error, try `rustc --explain E0282`.
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:646:25
+    |
+646 |                         bst_clone.insert(i);
+    |                         ^^^^^^^^^ cannot infer type
+...
+679 |     test_concurrent_variant!(BSTreeAVL<i32>);
+    |     ---------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:60:28
+   |
+60 |         WeightedEdge(0, 2, OrderedF64::from(1.5)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error: could not compile `apas-verus` (test "TestQuickSortMtEphSlice") due to 44 previous errors
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:61:28
+   |
+61 |         WeightedEdge(1, 2, OrderedF64::from(-0.25)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:62:28
+   |
+62 |         WeightedEdge(1, 3, OrderedF64::from(1.0)),
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:63:28
+   |
+63 |         WeightedEdge(2, 3, OrderedF64::from(0.5))
+   |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:66:17
+   |
+66 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:69:43
+   |
+69 |     assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:70:43
+   |
+70 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(0.5));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:71:43
+   |
+71 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.25));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:72:43
+   |
+72 |     assert_eq!(result.get_distance(0, 3), OrderedF64::from(0.75));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:78:44
+   |
+78 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(2.5)), WeightedEdge(2, 3, OrderedF64::from(1.8))];
+   |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:659:63
+    |
+659 |             let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
+    |                                                               ^ cannot infer type
+...
+679 |     test_concurrent_variant!(BSTreeAVL<i32>);
+    |     ---------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:78:87
+   |
+78 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(2.5)), WeightedEdge(2, 3, OrderedF64::from(1.8))];
+   |                                                                                       ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:80:17
+   |
+80 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:83:43
+   |
+83 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(2.5));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:84:43
+   |
+84 |     assert_eq!(result.get_distance(2, 3), OrderedF64::from(1.8));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:85:43
+   |
+85 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(f64::INFINITY));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:86:43
+   |
+86 |     assert_eq!(result.get_distance(1, 3), OrderedF64::from(f64::INFINITY));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:646:25
+    |
+646 |                         bst_clone.insert(i);
+    |                         ^^^^^^^^^ cannot infer type
+...
+681 |     test_concurrent_variant!(BSTreeBBAlpha<i32>);
+    |     -------------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:92:44
+   |
+92 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.0)), WeightedEdge(1, 0, OrderedF64::from(2.0))];
+   |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:92:87
+   |
+92 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(1.0)), WeightedEdge(1, 0, OrderedF64::from(2.0))];
+   |                                                                                       ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:94:17
+   |
+94 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:97:43
+   |
+97 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(1.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+  --> tests/Chap59/TestJohnsonMtEphF64.rs:98:43
+   |
+98 |     assert_eq!(result.get_distance(1, 0), OrderedF64::from(2.0));
+   |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:105:28
+    |
+105 |         WeightedEdge(0, 1, OrderedF64::from(1.0)),
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:106:28
+    |
+106 |         WeightedEdge(1, 2, OrderedF64::from(1.0)),
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:107:28
+    |
+107 |         WeightedEdge(2, 0, OrderedF64::from(1.0))
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:110:17
+    |
+110 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:113:43
+    |
+113 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(2.0));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:114:43
+    |
+114 |     assert_eq!(result.get_distance(1, 0), OrderedF64::from(2.0));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:120:44
+    |
+120 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(0.0)), WeightedEdge(1, 2, OrderedF64::from(0.0))];
+    |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0282]: type annotations needed
+   --> tests/Chap37/TestBSTMtEph.rs:659:63
+    |
+659 |             let results: Vec<_> = handles.into_iter().map(|h| h.join().unwrap()).collect();
+    |                                                               ^ cannot infer type
+...
+681 |     test_concurrent_variant!(BSTreeBBAlpha<i32>);
+    |     -------------------------------------------- in this macro invocation
+    |
+    = note: this error originates in the macro `test_concurrent_variant` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:120:87
+    |
+120 |     let edges = SetLit![WeightedEdge(0, 1, OrderedF64::from(0.0)), WeightedEdge(1, 2, OrderedF64::from(0.0))];
+    |                                                                                       ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:122:17
+    |
+122 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:125:43
+    |
+125 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(0.0));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:132:28
+    |
+132 |         WeightedEdge(0, 1, OrderedF64::from(1000.5)),
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0596]: cannot borrow `bst` as mutable, as it is not declared as mutable
+  --> tests/Chap37/TestBSTMtEph.rs:40:9
+   |
+40 |         bst.insert(value);
+   |         ^^^ cannot borrow as mutable
+   |
+help: consider changing this to be mutable
+   |
+38 |     let mut bst = BSTreeRB::new();
+   |         +++
+
+error[E0596]: cannot borrow `bst` as mutable, as it is not declared as mutable
+  --> tests/Chap37/TestBSTMtEph.rs:61:9
+   |
+61 |         bst.insert(value);
+   |         ^^^ cannot borrow as mutable
+   |
+help: consider changing this to be mutable
+   |
+59 |     let mut bst = BSTreeSplay::new();
+   |         +++
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:133:28
+    |
+133 |         WeightedEdge(1, 2, OrderedF64::from(2000.3))
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:136:17
+    |
+136 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:139:43
+    |
+139 |     assert_eq!(result.get_distance(0, 2), OrderedF64::from(3000.8));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:145:44
+    |
+145 |     let edges = SetLit![WeightedEdge(0, 0, OrderedF64::from(1.0)), WeightedEdge(0, 1, OrderedF64::from(2.0))];
+    |                                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0596]: cannot borrow data in an `Arc` as mutable
+   --> tests/Chap37/TestBSTMtEph.rs:589:13
+    |
+589 |             bst1.insert(i);
+    |             ^^^^ cannot borrow as mutable
+    |
+    = help: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Arc<apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<i32>>`
+
+error[E0596]: cannot borrow data in an `Arc` as mutable
+   --> tests/Chap37/TestBSTMtEph.rs:610:13
+    |
+610 |             bst2.insert(i);
+    |             ^^^^ cannot borrow as mutable
+    |
+    = help: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Arc<apas_verus::Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEph<i32>>`
+
+Some errors have detailed explanations: E0282, E0425, E0433, E0596, E0599.
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:145:87
+    |
+145 |     let edges = SetLit![WeightedEdge(0, 0, OrderedF64::from(1.0)), WeightedEdge(0, 1, OrderedF64::from(2.0))];
+    |                                                                                       ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:147:17
+    |
+147 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:150:43
+    |
+150 |     assert_eq!(result.get_distance(0, 0), OrderedF64::from(0.0));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:151:43
+    |
+151 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(2.0));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:159:28
+    |
+159 |         WeightedEdge(0, 1, OrderedF64::from(1.0)),
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error: could not compile `apas-verus` (test "TestBSTMtEph") due to 63 previous errors
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:160:28
+    |
+160 |         WeightedEdge(1, 2, OrderedF64::from(-2.0)),
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:161:28
+    |
+161 |         WeightedEdge(2, 0, OrderedF64::from(-1.0))  // Total cycle: 1 + (-2) + (-1) = -2 < 0
+    |                            ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:164:17
+    |
+164 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:168:43
+    |
+168 |     assert_eq!(result.get_distance(0, 0), OrderedF64::from(f64::INFINITY));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:169:43
+    |
+169 |     assert_eq!(result.get_distance(0, 1), OrderedF64::from(f64::INFINITY));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedF64`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:170:43
+    |
+170 |     assert_eq!(result.get_distance(1, 2), OrderedF64::from(f64::INFINITY));
+    |                                           ^^^^^^^^^^ use of undeclared type `OrderedF64`
+
+error[E0433]: failed to resolve: use of undeclared type `WeightedDirGraphMtEphFloat`
+   --> tests/Chap59/TestJohnsonMtEphF64.rs:179:17
+    |
+179 |     let graph = WeightedDirGraphMtEphFloat::from_weighted_edges(vertices, edges);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ use of undeclared type `WeightedDirGraphMtEphFloat`
+
+error: could not compile `apas-verus` (test "TestJohnsonMtEphF64") due to 80 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 2s

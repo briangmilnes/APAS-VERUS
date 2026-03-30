@@ -1,0 +1,138 @@
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:212:37
+    |
+212 |             spec_acyclic_ord(graph, result.0, result.1)
+    |                                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:212:47
+    |
+212 |             spec_acyclic_ord(graph, result.0, result.1)
+    |                                               ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:215:21
+    |
+215 |                 ==> result.0.contains_key(v))
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:216:43
+    |
+216 |             && (forall|v: int| #[trigger] result.0.contains_key(v)
+    |                                           ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:219:21
+    |
+219 |                 ==> result.0.contains_key(v) && result.0[v] == prev_ord[v])
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:219:49
+    |
+219 |                 ==> result.0.contains_key(v) && result.0[v] == prev_ord[v])
+    |                                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStEph.rs:220:16
+    |
+220 |             && result.1 >= prev_next,
+    |                ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:156:41
+    |
+156 |             spec_acyclic_ord_per(graph, result.0, result.1)
+    |                                         ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:156:51
+    |
+156 |             spec_acyclic_ord_per(graph, result.0, result.1)
+    |                                                   ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:159:21
+    |
+159 |                 ==> result.0.contains_key(v))
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:160:43
+    |
+160 |             && (forall|v: int| #[trigger] result.0.contains_key(v)
+    |                                           ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:163:21
+    |
+163 |                 ==> result.0.contains_key(v) && result.0[v] == prev_ord[v])
+    |                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:163:49
+    |
+163 |                 ==> result.0.contains_key(v) && result.0[v] == prev_ord[v])
+    |                                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/CycleDetectStPer.rs:164:16
+    |
+164 |             && result.1 >= prev_next,
+    |                ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+  --> src/Chap55/SCCStEph.rs:95:13
+   |
+95 |             result.spec_avltreeseqsteph_wf(),
+   |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+  --> src/Chap55/SCCStEph.rs:96:13
+   |
+96 |             result@.len() == graph@.len(),
+   |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+  --> src/Chap55/SCCStEph.rs:97:37
+   |
+97 |             forall|i: int| 0 <= i < result@.len()
+   |                                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+  --> src/Chap55/SCCStEph.rs:98:33
+   |
+98 |                 ==> (#[trigger] result@[i] as int) < graph@.len(),
+   |                                 ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/SCCStPer.rs:180:13
+    |
+180 |             result.spec_avltreeseqstper_wf(),
+    |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/SCCStPer.rs:181:13
+    |
+181 |             result@.len() == graph@.len(),
+    |             ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/SCCStPer.rs:182:37
+    |
+182 |             forall|i: int| 0 <= i < result@.len()
+    |                                     ^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `result` in this scope
+   --> src/Chap55/SCCStPer.rs:183:33
+    |
+183 |                 ==> (#[trigger] result@[i] as int) < graph@.len(),
+    |                                 ^^^^^^ not found in this scope
+
+error: aborting due to 22 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 412MB, peak z3 RSS: 0MB, min free: 21695MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

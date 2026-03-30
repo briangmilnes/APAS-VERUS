@@ -1,0 +1,32 @@
+
+thread '<unnamed>' (2995751) panicked at vir/src/bitvector_to_air.rs:424:37:
+internal error: unexpected float to bits coercion
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (2995751) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+
+thread '<unnamed>' (2995752) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2995754) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2995752) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2995753) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2995754) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2995753) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2995755) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+WARNING: unknown attribute :skol
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22688MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,33 @@
+error: postcondition not satisfied
+   --> src/Chap65/PrimStEph.rs:365:21
+    |
+365 |             ensures result == *self,
+    |                     ^^^^^^^^^^^^^^^ failed this postcondition
+366 |         {
+367 |             PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() }
+    |             --------------------------------------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap65/PrimStEph.rs:365:21
+    |
+365 |             ensures result == *self,
+    |                     ^^^^^^
+
+note: 
+
+result == old(self)
+|   result.priority == old(self).priority ✔
+|   result.vertex == old(self).vertex ✘
+|   result.parent == old(self).parent ✘
+|   |   result.parent is None ==>
+|   |       old(self).parent is None ✔
+|   |   result.parent is Some ==>
+|   |       old(self).parent is Some ✔
+|   |       result.parent.0 == old(self).parent.0 ✘
+|   +---
++---
+
+verification results:: 4793 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 60s

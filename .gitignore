@@ -22,3 +22,9 @@ attic/
 lib.long-type-*.txt
 .verus-log/
 .verus-solver-log/
+
+# Logs — raw Z3 profile data only (GB sized)
+logs/profile/*/*.profile
+logs/profile/*/*.profile.gz
+logs/profile/*/*.graph
+logs/profile/*/*.graph.gz

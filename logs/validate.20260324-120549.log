@@ -1,0 +1,118 @@
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:140:21
+    |
+140 |             ensures self@.dom().finite();
+    |                     ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+362 |         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
+    |         ---------------------------------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().dom().finite() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:415:13
+    |
+415 |             from_st(result)
+    |             ^^^^^^^^^^^^^^^
+...
+740 |         requires inner@.dom().finite()
+    |                  --------------------- failed precondition
+
+note: 
+
+result.view().dom().finite() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:428:13
+    |
+428 |             from_st(result)
+    |             ^^^^^^^^^^^^^^^
+...
+740 |         requires inner@.dom().finite()
+    |                  --------------------- failed precondition
+
+note: 
+
+result.view().dom().finite() 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:189:21
+    |
+189 |             ensures self@.dom().finite();
+    |                     ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+431 |         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
+    |         ------------------------------------------------------------------------------------------ at the end of the function body
+
+note: 
+
+self.view().dom().finite() 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:195:21
+    |
+195 |             ensures self@.dom().finite();
+    |                     ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+448 |         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
+    |         ----------------------------------------------------------------------------------- at the end of the function body
+
+note: 
+
+self.view().dom().finite() 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:200:21
+    |
+200 |             ensures self@.dom().finite();
+    |                     ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+467 |         fn difference(&mut self, other: &Self) {
+    |         -------------------------------------- at the end of the function body
+
+note: 
+
+self.view().dom().finite() 
+    function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:210:21
+    |
+210 |             ensures self@.dom().finite();
+    |                     ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+498 |         fn subtract(&mut self, keys: &ArraySetStEph<K>) {
+    |         ----------------------------------------------- at the end of the function body
+
+note: 
+
+self.view().dom().finite() 
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:610:13
+    |
+610 |             from_st(range)
+    |             ^^^^^^^^^^^^^^
+...
+740 |         requires inner@.dom().finite()
+    |                  --------------------- failed precondition
+
+note: 
+
+range.view().dom().finite() 
+    function is uninterpreted
+
+verification results:: 4427 verified, 8 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 55s

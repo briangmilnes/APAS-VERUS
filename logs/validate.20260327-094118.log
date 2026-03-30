@@ -1,0 +1,183 @@
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:20:17
+   |
+18 |     proof fn test_reflexive(x: f64)
+   |           ------------------------- at the end of the function body
+19 |         requires x.is_finite_spec(),
+20 |         ensures x <= x,
+   |                 ^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+old(x) ieee_float old(x) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:27:17
+   |
+24 |     proof fn test_transitive(x: f64, y: f64, z: f64)
+   |           ------------------------------------------ at the end of the function body
+...
+27 |         ensures x <= z,
+   |                 ^^^^^^ failed this postcondition
+
+note: 
+
+old(x) ieee_float old(z) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:34:17
+   |
+31 |     proof fn test_antisymmetric(x: f64, y: f64)
+   |           ------------------------------------- at the end of the function body
+...
+34 |         ensures x == y,
+   |                 ^^^^^^ failed this postcondition
+
+note: 
+
+old(x) == old(y) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:40:17
+   |
+38 |     proof fn test_total(x: f64, y: f64)
+   |           ----------------------------- at the end of the function body
+39 |         requires x.is_finite_spec(), y.is_finite_spec(),
+40 |         ensures x <= y || y <= x,
+   |                 ^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+!(old(x) ieee_float old(y)) ==>
+    old(y) ieee_float old(x) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:51:17
+   |
+45 |     proof fn test_add_monotone(a: f64, b: f64, c: f64)
+   |           -------------------------------------------- at the end of the function body
+...
+51 |         ensures a + b <= a + c,
+   |                 ^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+(old(a) ieee_float old(b)) ieee_float (old(a) ieee_float old(c)) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:57:17
+   |
+55 |     proof fn test_add_identity(a: f64)
+   |           ---------------------------- at the end of the function body
+56 |         requires a.is_finite_spec(),
+57 |         ensures a + 0.0 == a,
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+(old(a) ieee_float '0') == old(a) 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:64:17
+   |
+64 |         ensures r == (x <= y),
+   |                 ^^^^^^^^^^^^^ failed this postcondition
+65 |     {
+66 |         x <= y
+   |         ------ at the end of the function body
+
+note: diagnostics via expansion
+  --> src/experiments/f64_ieee_total_order.rs:64:17
+   |
+64 |         ensures r == (x <= y),
+   |                 ^    ^^^^^^^^
+
+note: 
+
+r == (old(x) ieee_float old(y))
+|   r ==>
+|       old(x) ieee_float old(y) ✘
+|   old(x) ieee_float old(y) ==>
+|       r ✘
++---
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:72:17
+   |
+70 |     proof fn test_f64_in_spec_set(s: Set<f64>, x: f64)
+   |           -------------------------------------------- at the end of the function body
+71 |         requires x.is_finite_spec(), s.contains(x),
+72 |         ensures s.len() >= 1,
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+old(s).len() >= 1 
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:83:17
+   |
+81 |     proof fn total_order_reflexive(x: f64)
+   |           -------------------------------- at the end of the function body
+82 |         requires x.is_finite_spec(),
+83 |         ensures f64_le(x, x),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+f64_le(old(x), old(x))
+|   old(x) ieee_float old(x) 
++---
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:90:17
+   |
+87 |     proof fn total_order_transitive(x: f64, y: f64, z: f64)
+   |           ------------------------------------------------- at the end of the function body
+...
+90 |         ensures f64_le(x, z),
+   |                 ^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+f64_le(old(x), old(z))
+|   old(x) ieee_float old(z) 
++---
+
+error: postcondition not satisfied
+  --> src/experiments/f64_ieee_total_order.rs:97:17
+   |
+94 |     proof fn total_order_antisymmetric(x: f64, y: f64)
+   |           -------------------------------------------- at the end of the function body
+...
+97 |         ensures x == y,
+   |                 ^^^^^^ failed this postcondition
+
+note: 
+
+old(x) == old(y) 
+
+error: postcondition not satisfied
+   --> src/experiments/f64_ieee_total_order.rs:103:17
+    |
+101 |     proof fn total_order_total(x: f64, y: f64)
+    |           ------------------------------------ at the end of the function body
+102 |         requires x.is_finite_spec(), y.is_finite_spec(),
+103 |         ensures f64_le(x, y) || f64_le(y, x),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+!(f64_le(old(x), old(y))) ==>
+    f64_le(old(y), old(x))
+    |   old(y) ieee_float old(x) 
+    +---
+
+verification results:: 660 verified, 12 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 479MB, peak z3 RSS: 46MB, min free: 23133MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 1s

@@ -1,0 +1,30 @@
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:285:24
+    |
+285 |                 assert(spec_seq_sorted(spec_inorder_values::<T>(base.elements.root)));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_seq_sorted(spec_inorder_values(base.elements.root))
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = j in let tmp%% = spec_inorder_values(base.elements.root).len() in tmp%% <= tmp%% && tmp%% < tmp%% && tmp%% < tmp%% ==>
+|           spec_inorder_values(base.elements.root).index(i).le(spec_inorder_values(base.elements.root).index(j)) 
++---
+
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:296:24
+    |
+296 |                 assert(vals.len() <= 1) by {
+    |                        ^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+vals.len() <= 1 
+
+verification results:: 4487 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 61s

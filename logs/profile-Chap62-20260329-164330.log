@@ -1,0 +1,631 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::KleeneStPer::KleeneStPer ...
+
+note: Log analysis complete for module Chap05::KleeneStPer::KleeneStPer
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::RelationStEph::RelationStEph ...
+
+note: Log analysis complete for module Chap05::RelationStEph::RelationStEph
+
+note: Analyzing prover log for module Chap06::DirGraphStEph::DirGraphStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::MappingStEph::MappingStEph ...
+
+Z3 4.12.5
+Error parsing line 119692 (EnodeRootMismatch(e17859, e14283)): "[new-match] 0x65122e28b738 #2697 #2694 #5518 #15406 #3042 #15426 #3055 ; #18304 (#15295 #15488) #18366 (#5518 #18335) #17861 (#17753 #18023)"
+Error parsing line 119693 (EnodeRootMismatch(e17859, e14283)): "[new-match] 0x65122e28b788 #2685 #2682 #5518 #15406 #3042 #15426 #3055 ; #18304 (#15295 #15488) #18366 (#5518 #18335) #17707 (#17753 #18023)"
+Error parsing line 121341 (EnodeRootMismatch(e17859, e14283)): "[new-match] 0x65122e28bb98 #2697 #2694 #5518 #15406 #3042 #15426 #3055 ; #18304 (#15295 #15488) #18366 (#5518 #18335) #17861 (#17753 #18023)"
+Error parsing line 121342 (EnodeRootMismatch(e17859, e14283)): "[new-match] 0x65122e28bbe8 #2685 #2682 #5518 #15406 #3042 #15426 #3055 ; #18304 (#15295 #15488) #18366 (#5518 #18335) #17707 (#17753 #18023)"
+Error parsing line 121366 (UnknownFingerprint(Fingerprint(111128758238104))): "[instance] 0x65122e28bb98 ; 2"
+Error parsing line 121389 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::SetMtEph::SetMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::SetStEph::SetStEph ...
+
+note: Log analysis complete for module Chap06::DirGraphStEph::DirGraphStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabDirGraphStEph::LabDirGraphStEph ...
+
+note: Log analysis complete for module Chap05::MappingStEph::MappingStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabDirGraphMtEph::LabDirGraphMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::DirGraphMtEph::DirGraphMtEph ...
+
+Error parsing line 337793 (SubpatNoBlame([t5659])): "[new-match] 0x5b01f6201338 #10678 #4605 #25236 #9998 #9997 ; #25297 #25300 (#9997 #9997) (#9998 #9998) (#25236 #25236) #12421 (#9997 #9997) (#9998 #9998) (#25236 #25236) (#12569 #25950)"
+Error parsing line 472126 (SubpatNoBlame([t5659])): "[new-match] 0x5b01f6201338 #10678 #4605 #25024 #9998 #9997 ; #25559 #25554 (#9997 #9997) (#9998 #9998) (#25024 #25024) #24952 (#9997 #9997) (#9998 #9998) (#25024 #25024) (#24903 #15515)"
+note: Log analysis complete for module Chap05::SetStEph::SetStEph
+
+note: Log analysis complete for module Chap05::SetMtEph::SetMtEph
+
+note: Log analysis complete for module Chap06::LabDirGraphStEph::LabDirGraphStEph
+
+note: Log analysis complete for module Chap06::LabDirGraphMtEph::LabDirGraphMtEph
+
+note: Log analysis complete for module Chap06::DirGraphMtEph::DirGraphMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph ...
+
+Error parsing line 385923 (SubpatNoBlame([t5670])): "[new-match] 0x62eeb20be720 #10948 #4614 #24392 #6376 #6395 ; #26480 #26483 (#6395 #6395) (#6376 #6376) (#24392 #24392) #23681 (#6395 #6395) (#6376 #6376) (#24392 #24392) (#25506 #26524)"
+Error parsing line 508258 (SubpatNoBlame([t5670])): "[new-match] 0x62eeb20643a8 #10948 #4614 #33291 #6376 #6395 ; #34824 #34661 (#6395 #6395) (#6376 #6376) (#33291 #33291) #35251 (#6395 #6395) (#6376 #6376) (#6160 #33291) (#35252 #33873)"
+note: Log analysis complete for module Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph ...
+
+note: Log analysis complete for module Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph
+
+note: Analyzing prover log for module Chap06::UnDirGraphStEph::UnDirGraphStEph ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::UnDirGraphMtEph::UnDirGraphMtEph ...
+
+note: Log analysis complete for module Chap06::UnDirGraphStEph::UnDirGraphStEph
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128 ...
+
+note: Log analysis complete for module Chap06::UnDirGraphMtEph::UnDirGraphMtEph
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI32::WeightedDirGraphStEphI32 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI64::WeightedDirGraphStEphI64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI8::WeightedDirGraphStEphI8 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI32::WeightedDirGraphStEphI32
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphIsize::WeightedDirGraphStEphIsize ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI64::WeightedDirGraphStEphI64
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI8::WeightedDirGraphStEphI8
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU16::WeightedDirGraphStEphU16 ...
+
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU128::WeightedDirGraphStEphU128 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphIsize::WeightedDirGraphStEphIsize
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU16::WeightedDirGraphStEphU16
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU128::WeightedDirGraphStEphU128
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32
+
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU64::WeightedDirGraphStEphU64 ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU64::WeightedDirGraphStEphU64
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU8::WeightedDirGraphStEphU8 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice ...
+
+note: Log analysis complete for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice
+
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphUsize::WeightedDirGraphStEphUsize ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU8::WeightedDirGraphStEphU8
+
+note: Analyzing prover log for module Chap62::StarContractionMtEph::StarContractionMtEph ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphUsize::WeightedDirGraphStEphUsize
+
+note: Log analysis complete for module Chap62::StarContractionMtEph::StarContractionMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEph::ArraySeqMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStEph::ArraySeqStEph ...
+
+Error parsing line 668325 (SubpatNoBlame([t174624])): "[new-match] 0x55f7e8d71528 #29698 #29711 #26385 #20926 #14819 ; #25023 (#16773 #29807) (#26381 #26381) (#16773 #29807) #26493 (#29807 #30170) (#21845 #24930) (#24563 #26406) #17566 (#16773 #30170) (#14819 #14819) (#23539 #23539)"
+Error parsing line 724361 (SubpatNoBlame([t7154])): "[new-match] 0x55f7e8bd7620 #9303 #5577 #26292 #28696 #10876 #7994 #7990 ; #28572 (#18207 #18207) (#17445 #31505) (#7990 #7990) (#7990 #7990) (#7994 #7994) (#7994 #7994) (#18442 #25958) (#25958 #25958) (#18442 #29372) (#7990 #7990) (#7990 #7990) (#7994 #7994) (#7994 #7994)"
+Error parsing line 724415 (UnknownFingerprint(Fingerprint(94523250013728))): "[instance] 0x55f7e8bd7620 ; 3"
+Error parsing line 724423 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStPer::ArraySeqStPer ...
+
+note: Log analysis complete for module Chap19::ArraySeqMtEph::ArraySeqMtEph
+
+note: Log analysis complete for module Chap19::ArraySeqStEph::ArraySeqStEph
+
+note: Log analysis complete for module Chap19::ArraySeqStPer::ArraySeqStPer
+
+note: Analyzing prover log for module Chap62::StarContractionStEph::StarContractionStEph ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap62::StarContractionStEph::StarContractionStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap62::StarPartitionStEph::StarPartitionStEph ...
+
+note: Log analysis complete for module Chap62::StarPartitionStEph::StarPartitionStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap62::StarPartitionMtEph::StarPartitionMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+note: Log analysis complete for module Chap62::StarPartitionMtEph::StarPartitionMtEph
+
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+note: Analyzing prover log for module vstdplus::accept ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::accept
+
+note: Analyzing prover log for module Types::Types ...
+
+Z3 4.12.5
+note: Log analysis complete for module Types::Types
+
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+note: Analyzing prover log for module vstdplus::float::float ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+note: Log analysis complete for module vstdplus::float::float
+
+note: Log analysis complete for module vstdplus::feq::feq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::seq::seq
+
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+note: Log analysis complete for module vstdplus::seq_set
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:131:17
+    |
+131 |                 assert forall|j: int| 0 <= j < i as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:132:51
+    |
+132 |                     vertex_to_index@.contains_key(vertices_vec@[j]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:150:21
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:150:61
+    |
+150 |                     exists|j: int| 0 <= j < i as int + 1 && vertices_vec@[j]@ == v_view by {
+    |                                                             ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:124:21
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:124:57
+    |
+124 |                     exists|j: int| 0 <= j < i as int && vertices_vec@[j]@ == v_view,
+    |                                                         ^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:192:17
+    |
+192 |                 assert forall|jj: int| 0 <= jj < j as int + 1 implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:193:46
+    |
+193 |                     coin_flips@.contains_key(vertices_vec@[jj]@) by {
+    |                                              ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:287:29
+    |
+287 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:288:34
+    |
+288 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:329:29
+    |
+329 | ...                   assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:330:34
+    |
+330 | ...                   (th_edges@[s].0 as usize) < nv &&
+    |                        ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:358:17
+    |
+358 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:359:22
+    |
+359 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:231:21
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:231:60
+    |
+231 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:378:13
+    |
+378 |             assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |             ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:379:18
+    |
+379 |                 (th_edges@[s].0 as usize) < nv &&
+    |                  ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:400:17
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:56
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                        ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:400:71
+    |
+400 |                 forall|j2: int| 0 <= j2 < m as int ==> p_vec@[j2]@ == vertices_vec@[j2]@,
+    |                                                                       ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:406:21
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:406:60
+    |
+406 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:503:21
+    |
+503 |                     assert forall|j2: int| 0 <= j2 < nv as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:504:50
+    |
+504 |                         coin_flips@.contains_key(vertices_vec@[j2]@) &&
+    |                                                  ^^^^^^^^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:506:26
+    |
+506 |                          p_vec@[j2]@ == vertices_vec@[j2]@) by {
+    |                          ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:513:21
+    |
+513 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:49
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                 ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:514:64
+    |
+514 |                         (0 <= j2 < nv as int && p_vec@[j2]@ != vertices_vec@[j2]@) implies
+    |                                                                ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:540:17
+    |
+540 |                 assert forall|s: int| 0 <= s < th_edges@.len() implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:541:22
+    |
+541 |                     (th_edges@[s].0 as usize) < nv &&
+    |                      ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:464:17
+    |
+464 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+465 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+466 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:465:51
+    |
+465 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:468:21
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:468:60
+    |
+468 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:615:17
+    |
+615 |                 assert forall|j2: int| 0 <= j2 < q as int implies
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:617:60
+    |
+617 |                     partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
+    |                                                            ^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:632:21
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:632:63
+    |
+632 |                     exists|j2: int| 0 <= j2 < q as int + 1 && vertices_vec@[j2]@ == v_view by {
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:653:21
+    |
+653 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:48
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:654:63
+    |
+654 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:667:21
+    |
+667 |                     assert forall|j2: int|
+    |                     ^^^^^^
+
+note:   trigger 1 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:48
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                ^^^^^^^^^^
+
+note:   trigger 2 of 2:
+   --> src/Chap62/StarPartitionMtEph.rs:668:63
+    |
+668 |                         (0 <= j2 < q as int && p_vec@[j2]@ == vertices_vec@[j2]@) implies
+    |                                                               ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:583:17
+    |
+583 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+584 | |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+585 | |                     vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
+    | |_______________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:584:51
+    |
+584 |                     vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
+    |                                                   ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:587:21
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:587:60
+    |
+587 |                     exists|j2: int| 0 <= j2 < nv as int && vertices_vec@[j2]@ == v_view,
+    |                                                            ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:598:21
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:598:59
+    |
+598 |                     exists|j2: int| 0 <= j2 < q as int && vertices_vec@[j2]@ == v_view,
+    |                                                           ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:695:62
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                                                              ^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarPartitionMtEph.rs:695:25
+    |
+695 |                 let j = choose|j: int| 0 <= j < nv as int && vertices_vec@[j]@ == v_view;
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1238 verified, 0 errors

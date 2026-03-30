@@ -1,0 +1,447 @@
+error[E0433]: failed to resolve: could not find `BSTPlainMtEph` in `Chap37`
+  --> src/Chap37/BSTSetPlainMtEph.rs:12:24
+   |
+12 |     use crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
+   |                        ^^^^^^^^^^^^^ could not find `BSTPlainMtEph` in `Chap37`
+
+error[E0433]: failed to resolve: could not find `BSTAVLMtEph` in `Chap37`
+  --> src/Chap37/BSTSetAVLMtEph.rs:26:24
+   |
+26 |     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
+   |                        ^^^^^^^^^^^ could not find `BSTAVLMtEph` in `Chap37`
+
+error[E0433]: failed to resolve: could not find `BSTRBMtEph` in `Chap37`
+   --> src/Chap37/BSTSetRBMtEph.rs:12:24
+    |
+ 12 |     use crate::Chap37::BSTRBMtEph::BSTRBMtEph::*;
+    |                        ^^^^^^^^^^ could not find `BSTRBMtEph` in `Chap37`
+    |
+note: found an item that was configured out
+   --> src/lib.rs:475:13
+    |
+474 |     #[cfg(feature = "all_chapters")]
+    |           ------------------------ the item is gated behind the `all_chapters` feature
+475 |     pub mod BSTRBMtEph;
+    |             ^^^^^^^^^^
+
+error[E0433]: failed to resolve: could not find `BSTBBAlphaMtEph` in `Chap37`
+  --> src/Chap37/BSTSetBBAlphaMtEph.rs:12:24
+   |
+12 |     use crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;
+   |                        ^^^^^^^^^^^^^^^ could not find `BSTBBAlphaMtEph` in `Chap37`
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+  --> src/Chap37/BSTSetPlainMtEph.rs:18:15
+   |
+18 |         tree: BSTPlainMtEph<T>,
+   |               ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:115:38
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+115 |         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+    |                                      ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTSetPlainMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:123:45
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSetPlainMtEph<T>) -> (values: Vec<T>)
+    |                                                +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:70
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSetPlainMtEph<T>)
+    |                                                                         +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:352:31
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+352 |         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+352 |         fn as_tree(&self) -> &BSTSetPlainMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this scope
+  --> src/Chap37/BSTSetAVLMtEph.rs:34:15
+   |
+34 |         tree: BSTAVLMtEph<T>,
+   |               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this scope
+   --> src/Chap37/BSTSetAVLMtEph.rs:131:38
+    |
+ 33 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
+    |     -------------------------------------------- similarly named struct `BSTSetAVLMtEph` defined here
+...
+131 |         fn as_tree(&self) -> (tree: &BSTAVLMtEph<T>)
+    |                                      ^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+131 |         fn as_tree(&self) -> (tree: &BSTSetAVLMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this scope
+   --> src/Chap37/BSTSetAVLMtEph.rs:141:45
+    |
+ 33 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
+    |     -------------------------------------------- similarly named struct `BSTSetAVLMtEph` defined here
+...
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+141 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSetAVLMtEph<T>) -> (values: Vec<T>)
+    |                                                +++
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this scope
+   --> src/Chap37/BSTSetAVLMtEph.rs:149:70
+    |
+ 33 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
+    |     -------------------------------------------- similarly named struct `BSTSetAVLMtEph` defined here
+...
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTAVLMtEph<T>)
+    |                                                                      ^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+149 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSetAVLMtEph<T>)
+    |                                                                         +++
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this scope
+   --> src/Chap37/BSTSetAVLMtEph.rs:370:31
+    |
+ 33 |     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord> {
+    |     -------------------------------------------- similarly named struct `BSTSetAVLMtEph` defined here
+...
+370 |         fn as_tree(&self) -> &BSTAVLMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+370 |         fn as_tree(&self) -> &BSTSetAVLMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+  --> src/Chap37/BSTSetRBMtEph.rs:19:15
+   |
+19 |         tree: BSTRBMtEph<T>,
+   |               ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:116:38
+    |
+ 18 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+116 |         fn as_tree(&self) -> (tree: &BSTRBMtEph<T>)
+    |                                      ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+116 |         fn as_tree(&self) -> (tree: &BSTSetRBMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:124:58
+    |
+ 18 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+124 |     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
+    |                                                          ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+124 |     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTSetRBMtEph<T>) -> (values: Vec<T>)
+    |                                                             +++
+
+error[E0425]: cannot find type `BSTRBMtEph` in this scope
+   --> src/Chap37/BSTSetRBMtEph.rs:373:31
+    |
+ 18 |     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
+    |     -------------------------------------------------------- similarly named struct `BSTSetRBMtEph` defined here
+...
+373 |         fn as_tree(&self) -> &BSTRBMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+373 |         fn as_tree(&self) -> &BSTSetRBMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0425]: cannot find type `BSTBBAlphaMtEph` in this scope
+  --> src/Chap37/BSTSetBBAlphaMtEph.rs:18:15
+   |
+18 |         tree: BSTBBAlphaMtEph<T>,
+   |               ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTBBAlphaMtEph` in this scope
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:115:38
+    |
+ 17 |     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
+    |     ------------------------------------------------ similarly named struct `BSTSetBBAlphaMtEph` defined here
+...
+115 |         fn as_tree(&self) -> (tree: &BSTBBAlphaMtEph<T>)
+    |                                      ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTSetBBAlphaMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTBBAlphaMtEph` in this scope
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:123:45
+    |
+ 17 |     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
+    |     ------------------------------------------------ similarly named struct `BSTSetBBAlphaMtEph` defined here
+...
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTBBAlphaMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSetBBAlphaMtEph<T>) -> (values: Vec<T>)
+    |                                                +++
+
+error[E0425]: cannot find type `BSTBBAlphaMtEph` in this scope
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:130:70
+    |
+ 17 |     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
+    |     ------------------------------------------------ similarly named struct `BSTSetBBAlphaMtEph` defined here
+...
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTBBAlphaMtEph<T>)
+    |                                                                      ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSetBBAlphaMtEph<T>)
+    |                                                                         +++
+
+error[E0425]: cannot find type `BSTBBAlphaMtEph` in this scope
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:296:31
+    |
+ 17 |     pub struct BSTSetBBAlphaMtEph<T: StTInMtT + Ord> {
+    |     ------------------------------------------------ similarly named struct `BSTSetBBAlphaMtEph` defined here
+...
+296 |         fn as_tree(&self) -> &BSTBBAlphaMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+296 |         fn as_tree(&self) -> &BSTSetBBAlphaMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTPlainMtEph`
+   --> src/Chap37/BSTSetPlainMtEph.rs:133:24
+    |
+133 |         let mut tree = BSTPlainMtEph::new();
+    |                        ^^^^^^^^^^^^^ use of undeclared type `BSTPlainMtEph`
+    |
+help: a struct with a similar name exists
+    |
+133 |         let mut tree = BSTSetPlainMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTPlainMtEph`
+   --> src/Chap37/BSTSetPlainMtEph.rs:146:24
+    |
+146 |         let mut tree = BSTPlainMtEph::new();
+    |                        ^^^^^^^^^^^^^ use of undeclared type `BSTPlainMtEph`
+    |
+help: a struct with a similar name exists
+    |
+146 |         let mut tree = BSTSetPlainMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTPlainMtEph`
+   --> src/Chap37/BSTSetPlainMtEph.rs:167:23
+    |
+167 |                 tree: BSTPlainMtEph::new(),
+    |                       ^^^^^^^^^^^^^ use of undeclared type `BSTPlainMtEph`
+    |
+help: a struct with a similar name exists
+    |
+167 |                 tree: BSTSetPlainMtEph::new(),
+    |                          +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTPlainMtEph`
+   --> src/Chap37/BSTSetPlainMtEph.rs:172:28
+    |
+172 |             let mut tree = BSTPlainMtEph::new();
+    |                            ^^^^^^^^^^^^^ use of undeclared type `BSTPlainMtEph`
+    |
+help: a struct with a similar name exists
+    |
+172 |             let mut tree = BSTSetPlainMtEph::new();
+    |                               +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:152:24
+    |
+152 |         let mut tree = BSTAVLMtEph::new();
+    |                        ^^^^^^^^^^^ use of undeclared type `BSTAVLMtEph`
+    |
+help: a struct with a similar name exists
+    |
+152 |         let mut tree = BSTSetAVLMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:165:24
+    |
+165 |         let mut tree = BSTAVLMtEph::new();
+    |                        ^^^^^^^^^^^ use of undeclared type `BSTAVLMtEph`
+    |
+help: a struct with a similar name exists
+    |
+165 |         let mut tree = BSTSetAVLMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:186:23
+    |
+186 |                 tree: BSTAVLMtEph::new(),
+    |                       ^^^^^^^^^^^ use of undeclared type `BSTAVLMtEph`
+    |
+help: a struct with a similar name exists
+    |
+186 |                 tree: BSTSetAVLMtEph::new(),
+    |                          +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTAVLMtEph`
+   --> src/Chap37/BSTSetAVLMtEph.rs:191:28
+    |
+191 |             let mut tree = BSTAVLMtEph::new();
+    |                            ^^^^^^^^^^^ use of undeclared type `BSTAVLMtEph`
+    |
+help: a struct with a similar name exists
+    |
+191 |             let mut tree = BSTSetAVLMtEph::new();
+    |                               +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:143:24
+    |
+143 |         let mut tree = BSTRBMtEph::new();
+    |                        ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+143 |         let mut tree = BSTSetRBMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:157:23
+    |
+157 |                 tree: BSTRBMtEph::new(),
+    |                       ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+157 |                 tree: BSTSetRBMtEph::new(),
+    |                          +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:162:28
+    |
+162 |             let mut tree = BSTRBMtEph::new();
+    |                            ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+162 |             let mut tree = BSTSetRBMtEph::new();
+    |                               +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTRBMtEph`
+   --> src/Chap37/BSTSetRBMtEph.rs:192:25
+    |
+192 |             self.tree = BSTRBMtEph::from_sorted_slice(&filtered);
+    |                         ^^^^^^^^^^ use of undeclared type `BSTRBMtEph`
+    |
+help: a struct with a similar name exists
+    |
+192 |             self.tree = BSTSetRBMtEph::from_sorted_slice(&filtered);
+    |                            +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTBBAlphaMtEph`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:133:24
+    |
+133 |         let mut tree = BSTBBAlphaMtEph::new();
+    |                        ^^^^^^^^^^^^^^^ use of undeclared type `BSTBBAlphaMtEph`
+    |
+help: a struct with a similar name exists
+    |
+133 |         let mut tree = BSTSetBBAlphaMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTBBAlphaMtEph`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:146:24
+    |
+146 |         let mut tree = BSTBBAlphaMtEph::new();
+    |                        ^^^^^^^^^^^^^^^ use of undeclared type `BSTBBAlphaMtEph`
+    |
+help: a struct with a similar name exists
+    |
+146 |         let mut tree = BSTSetBBAlphaMtEph::new();
+    |                           +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTBBAlphaMtEph`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:167:23
+    |
+167 |                 tree: BSTBBAlphaMtEph::new(),
+    |                       ^^^^^^^^^^^^^^^ use of undeclared type `BSTBBAlphaMtEph`
+    |
+help: a struct with a similar name exists
+    |
+167 |                 tree: BSTSetBBAlphaMtEph::new(),
+    |                          +++
+
+error[E0433]: failed to resolve: use of undeclared type `BSTBBAlphaMtEph`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:172:28
+    |
+172 |             let mut tree = BSTBBAlphaMtEph::new();
+    |                            ^^^^^^^^^^^^^^^ use of undeclared type `BSTBBAlphaMtEph`
+    |
+help: a struct with a similar name exists
+    |
+172 |             let mut tree = BSTSetBBAlphaMtEph::new();
+    |                               +++
+
+error: aborting due to 39 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 12s

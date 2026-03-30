@@ -1,0 +1,24 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:52:14
+   |
+52 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:14
+   |
+56 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+verification results:: 4868 verified, 0 errors
+warning: 3 warnings emitted
+
+Elapsed: 70s
+Sampled Memory Usage: peak rust_verify RSS: 7258MB, peak z3 RSS: 450MB, min free: 16957MB
+Sampled CPU Usage: rust_verify: 163s, z3 children: 107s

@@ -1,0 +1,39 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: cannot use function `lib::Types::Types::Edge::eq` which is ignored because it is either declared outside the verus! macro or it is marked as `external`.
+   --> src/Chap61/VertexMatchingStEph.rs:138:25
+    |
+138 |                     if !(*adj_edge == *edge) {
+    |                         ^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap61/VertexMatchingMtEph.rs:223:17
+    |
+223 |             if !(*adj_edge == *edge) {
+    |                 --------------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<V> [<crate::Types::Types::Edge<V> as std::cmp::PartialEq>::crate::eq] (_0: &crate::Types::Types::Edge<V>, _1: &crate::Types::Types::Edge<V>) -> bool
+            where
+            V: std::cmp::PartialEq + crate::Types::Types::StT,;
+
+error: aborting due to 1 previous error; 3 warnings emitted
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2259MB, peak z3 RSS: 0MB, min free: 20042MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 0s

@@ -1,0 +1,1914 @@
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedTableStEph.rs:9:16
+    |
+  9 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedTableStEph.rs:10:16
+    |
+ 10 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap18` in the crate root
+   --> src/Chap43/OrderedTableStEph.rs:11:16
+    |
+ 11 |     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    |                ^^^^^^ could not find `Chap18` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:302:9
+    |
+301 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap18")))]
+    |                                                 ---------------------------------------------- the item is gated here
+302 | pub mod Chap18 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap19` in the crate root
+   --> src/Chap43/OrderedTableStEph.rs:12:16
+    |
+ 12 |     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+    |                ^^^^^^ could not find `Chap19` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:313:9
+    |
+312 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap19")))]
+    |                                                 ---------------------------------------------- the item is gated here
+313 | pub mod Chap19 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/OrderedTableStEph.rs:13:16
+    |
+ 13 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:25:16
+    |
+ 25 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:26:16
+    |
+ 26 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:27:16
+    |
+ 27 |     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:29:16
+    |
+ 29 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap19` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:893:16
+    |
+893 |     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+    |                ^^^^^^ could not find `Chap19` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:313:9
+    |
+312 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap19")))]
+    |                                                 ---------------------------------------------- the item is gated here
+313 | pub mod Chap19 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:894:16
+    |
+894 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap18` in the crate root
+   --> src/Chap43/OrderedTableMtEph.rs:895:16
+    |
+895 |     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |                ^^^^^^ could not find `Chap18` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:302:9
+    |
+301 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap18")))]
+    |                                                 ---------------------------------------------- the item is gated here
+302 | pub mod Chap18 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/AugOrderedTableStEph.rs:22:16
+    |
+ 22 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/AugOrderedTableStEph.rs:23:16
+    |
+ 23 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap42` in the crate root
+   --> src/Chap43/AugOrderedTableStEph.rs:24:16
+    |
+ 24 |     use crate::Chap42::TableStEph::TableStEph::*;
+    |                ^^^^^^ could not find `Chap42` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:455:9
+    |
+454 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap42")))]
+    |                                                 ---------------------------------------------- the item is gated here
+455 | pub mod Chap42 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/AugOrderedTableStEph.rs:26:16
+    |
+ 26 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/AugOrderedTableMtEph.rs:25:16
+    |
+ 25 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/AugOrderedTableMtEph.rs:26:16
+    |
+ 26 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/AugOrderedTableMtEph.rs:28:16
+    |
+ 28 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedTableStPer.rs:9:16
+    |
+  9 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedTableStPer.rs:10:16
+    |
+ 10 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap18` in the crate root
+   --> src/Chap43/OrderedTableStPer.rs:11:16
+    |
+ 11 |     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    |                ^^^^^^ could not find `Chap18` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:302:9
+    |
+301 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap18")))]
+    |                                                 ---------------------------------------------- the item is gated here
+302 | pub mod Chap18 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap19` in the crate root
+   --> src/Chap43/OrderedTableStPer.rs:12:16
+    |
+ 12 |     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+    |                ^^^^^^ could not find `Chap19` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:313:9
+    |
+312 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap19")))]
+    |                                                 ---------------------------------------------- the item is gated here
+313 | pub mod Chap19 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/OrderedTableStPer.rs:13:16
+    |
+ 13 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/AugOrderedTableStPer.rs:23:16
+    |
+ 23 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/AugOrderedTableStPer.rs:24:16
+    |
+ 24 |     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/AugOrderedTableStPer.rs:27:16
+    |
+ 27 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedSetStEph.rs:31:16
+    |
+ 31 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedSetStEph.rs:32:16
+    |
+ 32 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/OrderedSetStEph.rs:33:16
+    |
+ 33 |     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/OrderedSetStPer.rs:30:16
+    |
+ 30 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap38` in the crate root
+   --> src/Chap43/OrderedSetStPer.rs:31:16
+    |
+ 31 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
+    |                ^^^^^^ could not find `Chap38` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:421:9
+    |
+420 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap38")))]
+    |                                                 ---------------------------------------------- the item is gated here
+421 | pub mod Chap38 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap41` in the crate root
+   --> src/Chap43/OrderedSetStPer.rs:32:16
+    |
+ 32 |     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
+    |                ^^^^^^ could not find `Chap41` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:443:9
+    |
+442 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
+    |                                                 ---------------------------------------------- the item is gated here
+443 | pub mod Chap41 {
+    |         ^^^^^^
+
+error[E0433]: failed to resolve: could not find `Chap37` in the crate root
+   --> src/Chap43/Example43_1.rs:6:16
+    |
+  6 |     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
+    |                ^^^^^^ could not find `Chap37` in the crate root
+    |
+note: found an item that was configured out
+   --> src/lib.rs:398:9
+    |
+397 | #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap37")))]
+    |                                                 ---------------------------------------------- the item is gated here
+398 | pub mod Chap37 {
+    |         ^^^^^^
+
+error[E0432]: unresolved import `crate::ParaPair`
+  --> src/Chap43/AugOrderedTableMtEph.rs:40:39
+   |
+40 |     use crate::{OrderedTableMtEphLit, ParaPair};
+   |                                       ^^^^^^^^ no `ParaPair` in the root
+
+error[E0425]: cannot find type `ParamBST` in this scope
+  --> src/Chap43/OrderedTableStEph.rs:54:19
+   |
+54 |         pub tree: ParamBST<Pair<K, V>>,
+   |                   ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:606:38
+    |
+606 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:611:50
+    |
+611 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:716:39
+    |
+716 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:725:39
+    |
+725 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:734:42
+    |
+734 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:990:16
+    |
+990 |         tree: &ParamBST<Pair<K, V>>,
+    |                ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1276:38
+     |
+1276 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+     |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1335:50
+     |
+1335 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+     |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2369:39
+     |
+2369 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+     |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2489:39
+     |
+2489 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+     |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2609:42
+     |
+2609 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+     |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3937:18
+     |
+3937 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+     |                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:158:38
+    |
+158 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:163:74
+    |
+163 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+    |                                                                          ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:216:39
+    |
+216 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:221:39
+    |
+221 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:232:42
+    |
+232 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:406:38
+    |
+406 |         fn domain(&self) -> (domain: ArraySetStEph<K>) {
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:419:74
+    |
+419 |         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+    |                                                                          ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:503:39
+    |
+503 |         fn restrict(&mut self, keys: &ArraySetStEph<K>) {
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:516:39
+    |
+516 |         fn subtract(&mut self, keys: &ArraySetStEph<K>) {
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:539:42
+    |
+539 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:845:18
+    |
+845 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+    |                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:193:38
+    |
+193 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:198:50
+    |
+198 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:291:39
+    |
+291 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:299:39
+    |
+299 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:307:42
+    |
+307 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:518:38
+    |
+518 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:524:50
+    |
+524 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:600:39
+    |
+600 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:607:39
+    |
+607 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:614:42
+    |
+614 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:197:38
+    |
+197 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:203:20
+    |
+203 |             keys: &ArraySetStEph<K>,
+    |                    ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:257:39
+    |
+257 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:262:39
+    |
+262 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:272:42
+    |
+272 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:460:38
+    |
+460 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:469:20
+    |
+469 |             keys: &ArraySetStEph<K>,
+    |                    ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:544:39
+    |
+544 |         fn restrict(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:552:39
+    |
+552 |         fn subtract(&mut self, keys: &ArraySetStEph<K>)
+    |                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableMtEph.rs:567:42
+    |
+567 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+  --> src/Chap43/OrderedTableStPer.rs:56:19
+   |
+56 |         pub tree: ParamBST<Pair<K, V>>,
+   |                   ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:355:16
+    |
+355 |         tree: &ParamBST<Pair<K, V>>,
+    |                ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:491:36
+    |
+491 |         fn domain(&self) -> (keys: ArraySetStEph<K>)
+    |                                    ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:495:50
+    |
+495 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (table: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:579:35
+    |
+579 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:586:35
+    |
+586 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:593:47
+    |
+593 |         fn collect(&self) -> (sorted_entries: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                               ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:954:38
+    |
+954 |         fn domain(&self) -> (domain: ArraySetStEph<K>) {
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1011:50
+     |
+1011 |         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
+     |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1906:35
+     |
+1906 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
+     |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:2006:35
+     |
+2006 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
+     |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:2106:42
+     |
+2106 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
+     |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:3387:18
+     |
+3387 |         entries: AVLTreeSeqStPerS<Pair<K, V>>,
+     |                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:189:38
+    |
+189 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:194:50
+    |
+194 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:295:35
+    |
+295 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:305:35
+    |
+305 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:315:42
+    |
+315 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:544:38
+    |
+544 |         fn domain(&self) -> (domain: ArraySetStEph<K>)
+    |                                      ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:550:50
+    |
+550 |         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:653:35
+    |
+653 |         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySetStEph` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:670:35
+    |
+670 |         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/AugOrderedTableStPer.rs:687:42
+    |
+687 |         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
+    |                                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStEph` in this scope
+  --> src/Chap43/OrderedSetStEph.rs:55:23
+   |
+55 |         pub base_set: AVLTreeSetStEph<T>,
+   |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:108:42
+    |
+108 |     fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
+    |                                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:171:41
+    |
+171 |     fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
+    |                                         ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:300:35
+    |
+300 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+    |                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:308:26
+    |
+308 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:559:35
+    |
+559 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+    |                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:601:26
+    |
+601 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStEph` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:752:52
+    |
+ 54 |     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- similarly named struct `OrderedSetStEph` defined here
+...
+752 |             let left = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: left_tree } };
+    |                                                    ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+752 -             let left = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: left_tree } };
+752 +             let left = OrderedSetStEph { base_set: OrderedSetStEph { tree: left_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStEph` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:753:53
+    |
+ 54 |     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- similarly named struct `OrderedSetStEph` defined here
+...
+753 |             let right = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: right_tree } };
+    |                                                     ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+753 -             let right = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: right_tree } };
+753 +             let right = OrderedSetStEph { base_set: OrderedSetStEph { tree: right_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStEph` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:816:41
+    |
+ 54 |     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- similarly named struct `OrderedSetStEph` defined here
+...
+816 |             OrderedSetStEph { base_set: AVLTreeSetStEph { tree: result_tree } }
+    |                                         ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+816 -             OrderedSetStEph { base_set: AVLTreeSetStEph { tree: result_tree } }
+816 +             OrderedSetStEph { base_set: OrderedSetStEph { tree: result_tree } }
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStEph` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:895:56
+    |
+ 54 |     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- similarly named struct `OrderedSetStEph` defined here
+...
+895 |                 let left = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: left_tree } };
+    |                                                        ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+895 -                 let left = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: left_tree } };
+895 +                 let left = OrderedSetStEph { base_set: OrderedSetStEph { tree: left_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStEph` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:896:57
+    |
+ 54 |     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- similarly named struct `OrderedSetStEph` defined here
+...
+896 |                 let right = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: right_with_pivot } };
+    |                                                         ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+896 -                 let right = OrderedSetStEph { base_set: AVLTreeSetStEph { tree: right_with_pivot } };
+896 +                 let right = OrderedSetStEph { base_set: OrderedSetStEph { tree: right_with_pivot } };
+    |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap43/OrderedSetStPer.rs:58:23
+   |
+58 |         pub base_set: AVLTreeSetStPer<T>,
+   |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:111:42
+    |
+111 |     fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
+    |                                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ParamBST` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:166:41
+    |
+166 |     fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
+    |                                         ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:280:35
+    |
+280 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+    |                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:288:26
+    |
+288 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:537:35
+    |
+537 |         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
+    |                                   ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSeqStPerS` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:572:26
+    |
+572 |         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
+    |                          ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:705:52
+    |
+ 57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+705 |             let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                    ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+705 -             let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+705 +             let left = OrderedSetStPer { base_set: OrderedSetStPer { tree: left_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:706:53
+    |
+ 57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+706 |             let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_tree } };
+    |                                                     ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+706 -             let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_tree } };
+706 +             let right = OrderedSetStPer { base_set: OrderedSetStPer { tree: right_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:766:41
+    |
+ 57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+766 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: result_tree } }
+    |                                         ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+766 -             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: result_tree } }
+766 +             OrderedSetStPer { base_set: OrderedSetStPer { tree: result_tree } }
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:839:56
+    |
+ 57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+839 |                 let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                        ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+839 -                 let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+839 +                 let left = OrderedSetStPer { base_set: OrderedSetStPer { tree: left_tree } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:840:57
+    |
+ 57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+840 |                 let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_with_pivot } };
+    |                                                         ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+840 -                 let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_with_pivot } };
+840 +                 let right = OrderedSetStPer { base_set: OrderedSetStPer { tree: right_with_pivot } };
+    |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1019:41
+     |
+  57 |     pub struct OrderedSetStPer<T: StT + Ord> {
+     |     ---------------------------------------- similarly named struct `OrderedSetStPer` defined here
+...
+1019 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: ParamBST::new() } }
+     |                                         ^^^^^^^^^^^^^^^
+     |
+help: a struct with a similar name exists
+     |
+1019 -             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: ParamBST::new() } }
+1019 +             OrderedSetStPer { base_set: OrderedSetStPer { tree: ParamBST::new() } }
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1099:24
+     |
+1099 |             let tree = ParamBST::<Pair<K, V>>::new();
+     |                        ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1109:23
+     |
+1109 |             let bst = ParamBST::singleton(Pair(k, v));
+     |                       ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+    --> src/Chap43/OrderedTableStEph.rs:1280:30
+     |
+1280 |             let mut domain = ArraySetStEph::empty();
+     |                              ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1345:28
+     |
+1345 |             let mut tree = ParamBST::<Pair<K, V>>::new();
+     |                            ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1476:32
+     |
+1476 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1673:32
+     |
+1673 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:1879:32
+     |
+1879 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:2247:32
+     |
+2247 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:2376:32
+     |
+2376 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:2496:32
+     |
+2496 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+    --> src/Chap43/OrderedTableStEph.rs:2635:29
+     |
+2635 |             let collected = AVLTreeSeqStPerS::from_vec(out);
+     |                             ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3060:33
+     |
+3060 |             let mut left_tree = ParamBST::<Pair<K, V>>::new();
+     |                                 ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3061:34
+     |
+3061 |             let mut right_tree = ParamBST::<Pair<K, V>>::new();
+     |                                  ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3311:32
+     |
+3311 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3616:33
+     |
+3616 |             let mut left_tree = ParamBST::<Pair<K, V>>::new();
+     |                                 ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3617:34
+     |
+3617 |             let mut right_tree = ParamBST::<Pair<K, V>>::new();
+     |                                  ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStEph.rs:3963:24
+     |
+3963 |         let mut tree = ParamBST::<Pair<K, V>>::new();
+     |                        ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+   --> src/Chap43/OrderedTableStPer.rs:837:24
+    |
+837 |             let tree = ParamBST::<Pair<K, V>>::new();
+    |                        ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+   --> src/Chap43/OrderedTableStPer.rs:848:23
+    |
+848 |             let bst = ParamBST::singleton(Pair(k, v));
+    |                       ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySetStEph`
+   --> src/Chap43/OrderedTableStPer.rs:957:30
+    |
+957 |             let mut domain = ArraySetStEph::empty();
+    |                              ^^^^^^^^^^^^^ use of undeclared type `ArraySetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1020:28
+     |
+1020 |             let mut tree = ParamBST::<Pair<K, V>>::new();
+     |                            ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1140:32
+     |
+1140 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1324:32
+     |
+1324 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1478:32
+     |
+1478 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1804:32
+     |
+1804 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:1910:32
+     |
+1910 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:2010:32
+     |
+2010 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+    --> src/Chap43/OrderedTableStPer.rs:2127:29
+     |
+2127 |             let collected = AVLTreeSeqStPerS::from_vec(out);
+     |                             ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:2537:33
+     |
+2537 |             let mut left_tree = ParamBST::<Pair<K, V>>::new();
+     |                                 ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:2538:34
+     |
+2538 |             let mut right_tree = ParamBST::<Pair<K, V>>::new();
+     |                                  ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:2758:32
+     |
+2758 |             let mut new_tree = ParamBST::<Pair<K, V>>::new();
+     |                                ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:3049:33
+     |
+3049 |             let mut left_tree = ParamBST::<Pair<K, V>>::new();
+     |                                 ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:3050:34
+     |
+3050 |             let mut right_tree = ParamBST::<Pair<K, V>>::new();
+     |                                  ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedTableStPer.rs:3400:24
+     |
+3400 |         let mut tree = ParamBST::<Pair<K, V>>::new();
+     |                        ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStEph.rs:121:13
+    |
+121 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStEph.rs:122:13
+    |
+122 |             Exposed::Node(left, key, right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStEph.rs:183:13
+    |
+183 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStEph.rs:184:13
+    |
+184 |             Exposed::Node(left, key, right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStEph`
+   --> src/Chap43/OrderedSetStEph.rs:509:41
+    |
+509 |             OrderedSetStEph { base_set: AVLTreeSetStEph::empty() }
+    |                                         ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+509 -             OrderedSetStEph { base_set: AVLTreeSetStEph::empty() }
+509 +             OrderedSetStEph { base_set: OrderedSetStEph::empty() }
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStEph`
+   --> src/Chap43/OrderedSetStEph.rs:515:41
+    |
+515 |             OrderedSetStEph { base_set: AVLTreeSetStEph::singleton(x) }
+    |                                         ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+515 -             OrderedSetStEph { base_set: AVLTreeSetStEph::singleton(x) }
+515 +             OrderedSetStEph { base_set: OrderedSetStEph::singleton(x) }
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+   --> src/Chap43/OrderedSetStEph.rs:566:26
+    |
+566 |             let result = AVLTreeSeqStPerS::from_vec(elements);
+    |                          ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+    --> src/Chap43/OrderedSetStEph.rs:1050:19
+     |
+1050 |         let seq = AVLTreeSeqStPerS::from_vec(elements);
+     |                   ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStPer.rs:124:13
+    |
+124 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStPer.rs:125:13
+    |
+125 |             Exposed::Node(left, key, right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStPer.rs:178:13
+    |
+178 |             Exposed::Leaf => None,
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `Exposed`
+   --> src/Chap43/OrderedSetStPer.rs:179:13
+    |
+179 |             Exposed::Node(left, key, right) => {
+    |             ^^^^^^^ use of undeclared type `Exposed`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedSetStPer.rs:491:41
+    |
+491 |             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
+    |                                         ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+491 -             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
+491 +             OrderedSetStPer { base_set: OrderedSetStPer::empty() }
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedSetStPer.rs:497:41
+    |
+497 |             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
+    |                                         ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+497 -             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
+497 +             OrderedSetStPer { base_set: OrderedSetStPer::singleton(x) }
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+   --> src/Chap43/OrderedSetStPer.rs:544:26
+    |
+544 |             let result = AVLTreeSeqStPerS::from_vec(elements);
+    |                          ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSeqStPerS`
+   --> src/Chap43/OrderedSetStPer.rs:890:19
+    |
+890 |         let seq = AVLTreeSeqStPerS::from_vec(elements);
+    |                   ^^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSeqStPerS`
+
+error[E0433]: failed to resolve: use of undeclared type `ParamBST`
+    --> src/Chap43/OrderedSetStPer.rs:1019:65
+     |
+1019 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: ParamBST::new() } }
+     |                                                                 ^^^^^^^^ use of undeclared type `ParamBST`
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:211:13
+    |
+211 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:552:17
+    |
+552 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:555:17
+    |
+555 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:619:17
+    |
+619 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:622:17
+    |
+622 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStEph.rs:996:13
+    |
+996 |             view_ord_consistent::<K>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1017:17
+     |
+1017 |                 view_ord_consistent::<K>(),
+     |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1079:16
+     |
+1079 |             && view_ord_consistent::<Pair<K, V>>()
+     |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1082:16
+     |
+1082 |             && view_ord_consistent::<K>()
+     |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1365:21
+     |
+1365 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1490:21
+     |
+1490 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1575:24
+     |
+1575 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1637:24
+     |
+1637 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1702:21
+     |
+1702 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1859:24
+     |
+1859 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:1905:21
+     |
+1905 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2073:21
+     |
+2073 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2280:21
+     |
+2280 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2364:24
+     |
+2364 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2407:21
+     |
+2407 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2484:24
+     |
+2484 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2527:21
+     |
+2527 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2604:24
+     |
+2604 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3074:21
+     |
+3074 |                     view_ord_consistent::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3084:21
+     |
+3084 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3291:24
+     |
+3291 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3325:21
+     |
+3325 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3405:24
+     |
+3405 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3631:21
+     |
+3631 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3791:24
+     |
+3791 |                 assert(view_ord_consistent::<K>());
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3944:13
+     |
+3944 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3947:13
+     |
+3947 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3973:17
+     |
+3973 |                 view_ord_consistent::<Pair<K, V>>(),
+     |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:202:13
+    |
+202 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:361:13
+    |
+361 |             view_ord_consistent::<K>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:382:17
+    |
+382 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:451:17
+    |
+451 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:454:17
+    |
+454 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:461:17
+    |
+461 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:464:17
+    |
+464 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:502:17
+    |
+502 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:505:17
+    |
+505 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:813:16
+    |
+813 |             && view_ord_consistent::<Pair<K, V>>()
+    |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:816:16
+    |
+816 |             && view_ord_consistent::<K>()
+    |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:824:16
+    |
+824 |             && view_ord_consistent::<K>()
+    |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1040:21
+     |
+1040 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1154:21
+     |
+1154 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1348:21
+     |
+1348 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1515:21
+     |
+1515 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1625:21
+     |
+1625 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1831:21
+     |
+1831 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1935:21
+     |
+1935 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:2035:21
+     |
+2035 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:2557:21
+     |
+2557 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:2772:21
+     |
+2772 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:3064:21
+     |
+3064 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:3394:13
+     |
+3394 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:3410:17
+     |
+3410 |                 view_ord_consistent::<Pair<K, V>>(),
+     |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+  --> src/Chap43/OrderedSetStEph.rs:98:13
+   |
+98 |             view_ord_consistent::<T>(),
+   |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:112:13
+    |
+112 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:175:13
+    |
+175 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:235:17
+    |
+235 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:243:17
+    |
+243 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:313:17
+    |
+313 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStEph.rs:500:16
+    |
+500 |             && view_ord_consistent::<T>()
+    |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1046:13
+     |
+1046 |             view_ord_consistent::<T>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:101:13
+    |
+101 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:115:13
+    |
+115 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:170:13
+    |
+170 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:230:17
+    |
+230 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:236:17
+    |
+236 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:293:17
+    |
+293 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:482:16
+    |
+482 |             && view_ord_consistent::<T>()
+    |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap43/OrderedSetStPer.rs:886:13
+    |
+886 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 252 previous errors
+
+Some errors have detailed explanations: E0422, E0425, E0432, E0433.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1127MB, peak z3 RSS: 0MB, min free: 24278MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

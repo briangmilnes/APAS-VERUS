@@ -1,0 +1,59 @@
+error[E0034]: multiple applicable items in scope
+   --> src/experiments/trait_rec_vs_iter.rs:130:12
+    |
+130 |         fn sum(&self) -> (total: u64)
+    |            ^^^ multiple `VERUS_SPEC__sum` found
+    |
+note: candidate #1 is defined in the trait `experiments::trait_rec_vs_iter::trait_rec_vs_iter::IterStackTrait`
+   --> src/experiments/trait_rec_vs_iter.rs:65:9
+    |
+ 65 |         fn sum(&self) -> (total: u64)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in the trait `experiments::trait_rec_vs_iter::trait_rec_vs_iter::RecStackTrait`
+   --> src/experiments/trait_rec_vs_iter.rs:130:9
+    |
+130 |         fn sum(&self) -> (total: u64)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: disambiguate the method for candidate #1
+    |
+130 -         fn sum(&self) -> (total: u64)
+131 -             requires
+132 -                 self.spec_stack_wf(),
+133 -                 self@.len() <= u64::MAX,
+134 -                 spec_sum(self@, self@.len() as int) <= u64::MAX,
+135 -             ensures total == spec_sum(self@, self@.len() as int);
+130 +         fn sum(&experiments::trait_rec_vs_iter::trait_rec_vs_iter::IterStackTrait::VERUS_SPEC__sum(&self) total == spec_sum(self@, self@.len() as int);
+    |
+help: disambiguate the method for candidate #2
+    |
+130 -         fn sum(&self) -> (total: u64)
+131 -             requires
+132 -                 self.spec_stack_wf(),
+133 -                 self@.len() <= u64::MAX,
+134 -                 spec_sum(self@, self@.len() as int) <= u64::MAX,
+135 -             ensures total == spec_sum(self@, self@.len() as int);
+130 +         fn sum(&experiments::trait_rec_vs_iter::trait_rec_vs_iter::RecStackTrait::VERUS_SPEC__sum(&self) total == spec_sum(self@, self@.len() as int);
+    |
+
+error[E0599]: no function or associated item named `new` found for struct `experiments::trait_rec_vs_iter::trait_rec_vs_iter::Stack` in the current scope
+  --> src/experiments/trait_rec_caller.rs:23:28
+   |
+23 |         let mut s = Stack::new();
+   |                            ^^^ function or associated item not found in `experiments::trait_rec_vs_iter::trait_rec_vs_iter::Stack`
+   |
+  ::: src/experiments/trait_rec_vs_iter.rs:41:5
+   |
+41 |     pub struct Stack {
+   |     ---------------- function or associated item `new` not found for this struct
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `IterStackTrait` which provides `new` is implemented but not in scope; perhaps you want to import it
+   |
+11 +     use crate::experiments::trait_rec_vs_iter::trait_rec_vs_iter::IterStackTrait;
+   |
+
+error: aborting due to 2 previous errors
+
+Some errors have detailed explanations: E0034, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 1s

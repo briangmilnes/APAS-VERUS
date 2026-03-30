@@ -1,0 +1,52 @@
+error: possible arithmetic underflow/overflow
+   --> src/experiments/trait_rec_vs_iter.rs:137:25
+    |
+137 |                 total = total + self.elements[i];
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/experiments/trait_rec_vs_iter.rs:137:25
+    |
+137 |                 total = total + self.elements[i];
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+0 <= tmp% + tmp% ✔
+tmp% + tmp% < 18446744073709551616 ✘
+
+error: assertion failed
+   --> src/experiments/trait_rec_vs_iter.rs:164:16
+    |
+164 |         assert(spec_sum(s@, 3) == 60);
+    |                ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_sum(s.view(), 3) == 60 
+
+error: assertion failed
+   --> src/experiments/trait_rec_vs_iter.rs:175:16
+    |
+175 |         assert(spec_sum(s@, 3) == 60);
+    |                ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_sum(s.view(), 3) == 60 
+
+error: assertion failed
+   --> src/experiments/trait_rec_vs_iter.rs:187:16
+    |
+187 |         assert(spec_sum(r@, 1) == 5);
+    |                ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_sum(r.view(), 1) == 5 
+
+verification results:: 4487 verified, 4 errors
+error: aborting due to 4 previous errors
+

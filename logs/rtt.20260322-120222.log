@@ -1,0 +1,12 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0576]: cannot find method or associated constant `insert_with_probe` in trait `FlatHashTable`
+   --> tests/Chap47/TestLinProbFlatHashTable.rs:145:100
+    |
+145 |     <LinProbFlatHashTableStEph as FlatHashTable<i32, String, FlatEntry<i32, String>, (), HashFn>>::insert_with_probe(
+    |                                                                                                    ^^^^^^^^^^^^^^^^^ not found in `FlatHashTable`
+
+For more information about this error, try `rustc --explain E0576`.
+error: could not compile `apas-verus` (test "TestLinProbFlatHashTable") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 2s

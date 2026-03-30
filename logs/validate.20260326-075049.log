@@ -1,0 +1,2123 @@
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:39:18
+   |
+39 |         pub adj: OrderedTableStEph<V, AVLTreeSetStEph<V>>,
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+  --> src/Chap43/OrderedTableStEph.rs:53:57
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:177:9
+    |
+177 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+   --> src/Chap41/AVLTreeSetStEph.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableStEph.rs:53:57
+    |
+ 53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:42:18
+   |
+42 |         pub adj: OrderedTableStPer<V, AVLTreeSetStPer<V>>,
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+  --> src/Chap43/OrderedTableStPer.rs:55:57
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:149:9
+    |
+149 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:177:30
+    |
+177 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+   --> src/Chap41/AVLTreeSetStEph.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableStEph.rs:53:57
+    |
+ 53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:149:30
+    |
+149 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:92:30
+   |
+92 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+  --> src/Chap43/OrderedTableStEph.rs:53:57
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:69:30
+   |
+69 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
+   |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+  --> src/Chap43/OrderedTableStPer.rs:55:57
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:55:29
+   |
+55 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:59:100
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:29
+   |
+56 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+56 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:59:100
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:90:52
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:94:53
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                                     ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:98:56
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                                        ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphStPer.rs:102:58
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                          ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:39:9
+   |
+36 |     #[derive(Clone)]
+   |              ----- in this derive macro expansion
+...
+39 |         pub adj: OrderedTableStEph<V, AVLTreeSetStEph<V>>,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+  --> src/Chap43/OrderedTableStEph.rs:53:57
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0599]: the method `view` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:95:26
+   |
+95 |                     table@.dom().contains(u)
+   |                          ^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStEph.rs:53:5
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStEph.rs:61:33
+   |
+61 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStEph<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-12208604943156223645.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |
+
+error[E0599]: the method `view` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:96:40
+   |
+96 |                     && #[trigger] table@.index(u).contains(v)
+   |                                        ^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStEph.rs:53:5
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStEph.rs:61:33
+   |
+61 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStEph<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-12208604943156223645.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |
+
+error[E0599]: the method `view` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:97:30
+   |
+97 |                     ==> table@.dom().contains(v),
+   |                              ^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStEph.rs:53:5
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStEph.rs:61:33
+   |
+61 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStEph<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-12208604943156223645.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStEph.rs:92:23
+   |
+92 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
+   |                       ^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+  --> src/Chap41/AVLTreeSetStEph.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+  --> src/Chap43/OrderedTableStEph.rs:53:57
+   |
+53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0599]: the method `view` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:164:21
+    |
+164 |             self.adj@
+    |                     ^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:53:5
+    |
+ 53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStEph.rs:61:33
+    |
+ 61 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStEph<K, V> {
+    |                                 ^^^  ----     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStEph.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:173:22
+    |
+173 |                 adj: OrderedTableStEph::empty(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+   --> src/Chap41/AVLTreeSetStEph.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableStEph.rs:53:57
+    |
+ 53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:173:22
+     |
+ 173 |                 adj: OrderedTableStEph::empty(),
+     |                      ^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+     |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+    --> src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: the trait `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait<K, V>` is implemented for `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`
+    --> src/Chap43/OrderedTableStEph.rs:1071:5
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required for `OrderedTableStEph<V, AVLTreeSetStEph<V>>` to implement `OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+    --> src/Chap43/OrderedTableStEph.rs:1071:38
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ---  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStEph.rs:177:115
+    |
+177 |         fn from_table(table: OrderedTableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) { AdjTableGraphStEph { adj: table } }
+    |                                                                                                                   ^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>`
+   --> src/Chap41/AVLTreeSetStEph.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableStEph.rs:53:57
+    |
+ 53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStEph`
+
+error[E0599]: the method `size` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:179:48
+     |
+ 179 |         fn num_vertices(&self) -> N { self.adj.size() }
+     |                                                ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `domain` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:182:35
+     |
+ 182 |             let domain = self.adj.domain();
+     |                                   ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `domain` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:192:51
+     |
+ 192 |                 if let Some(neighbors) = self.adj.find(&v) {
+     |                                                   ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:193:30
+    |
+193 |                     count += neighbors.size();
+    |                              ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `domain` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:203:35
+     |
+ 203 |             let domain = self.adj.domain();
+     |                                   ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `domain` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:225:28
+     |
+ 225 |             match self.adj.find(u) {
+     |                            ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:226:36
+    |
+226 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:236:28
+     |
+ 236 |             match self.adj.find(u) {
+     |                            ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:237:36
+    |
+237 |                 Some(neighbors) => neighbors.clone(),
+    |                                    ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:247:22
+     |
+ 247 |             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+     |                      ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:247:59
+    |
+247 |             self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+    |                                                           ^^^        --- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+247 |             self.adj.insert(v, AVLTreeSetStEph::empty(), |old: /* Type */, _new| old.clone());
+    |                                                              ++++++++++++
+
+error[E0599]: the method `domain` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:254:35
+     |
+ 254 |             let domain = self.adj.domain();
+     |                                   ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `domain` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `delete` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:258:22
+     |
+ 258 |             self.adj.delete(&v_clone);
+     |                      ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `delete` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:264:51
+     |
+ 264 |                 if let Some(neighbors) = self.adj.find(&u) {
+     |                                                   ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:265:41
+    |
+265 |                     let mut neighbors = neighbors.clone();
+    |                                         ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:267:30
+     |
+ 267 |                     self.adj.insert(u, neighbors, |_old, new| new.clone());
+     |                              ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:267:58
+    |
+267 |                     self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |                                                          ^^^  --- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+267 |                     self.adj.insert(u, neighbors, |_old, new: /* Type */| new.clone());
+    |                                                             ++++++++++++
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:279:44
+     |
+ 279 |             let neighbors = match self.adj.find(&u) {
+     |                                            ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:281:34
+    |
+281 |                     let mut ns = ns.clone();
+    |                                  ^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:287:22
+     |
+ 287 |             self.adj.insert(u, neighbors, |_old, new| new.clone());
+     |                      ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:287:50
+    |
+287 |             self.adj.insert(u, neighbors, |_old, new| new.clone());
+    |                                                  ^^^  --- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+287 |             self.adj.insert(u, neighbors, |_old, new: /* Type */| new.clone());
+    |                                                     ++++++++++++
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:288:25
+     |
+ 288 |             if self.adj.find(&v).is_none() {
+     |                         ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:289:26
+     |
+ 289 |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+     |                          ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:289:63
+    |
+289 |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old, _new| old.clone());
+    |                                                               ^^^        --- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+289 |                 self.adj.insert(v, AVLTreeSetStEph::empty(), |old: /* Type */, _new| old.clone());
+    |                                                                  ++++++++++++
+
+error[E0599]: the method `find` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:298:47
+     |
+ 298 |             if let Some(neighbors) = self.adj.find(u) {
+     |                                               ^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:299:37
+    |
+299 |                 let mut neighbors = neighbors.clone();
+    |                                     ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStEph<V, AVLTreeSetStEph<V>>`, but its trait bounds were not satisfied
+    --> src/Chap52/AdjTableGraphStEph.rs:301:26
+     |
+ 301 |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+     |                          ^^^^^^ method cannot be called on `OrderedTableStEph<V, AVLTreeSetStEph<V>>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:55:5
+     |
+  55 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |     ---------------------------------------- doesn't satisfy `_: Ord`
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:53:5
+     |
+  53 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<V, AVLTreeSetStEph<V>>`
+     |
+note: trait bound `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>: std::cmp::Ord` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1071:33
+     |
+1071 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                                 ^^^  ----------------------------     -----------------------
+     |                                 |
+     |                                 unsatisfied trait bound introduced here
+     = note: the full name for the type has been written to 'lib.long-type-3593469324909828725.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+    -->  src/Chap41/AVLTreeSetStEph.rs:55:1
+     |
+  55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+  56 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+     |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStEph.rs:301:62
+    |
+301 |                 self.adj.insert(u.clone(), neighbors, |_old, new| new.clone());
+    |                                                              ^^^  --- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+301 |                 self.adj.insert(u.clone(), neighbors, |_old, new: /* Type */| new.clone());
+    |                                                                 ++++++++++++
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:42:9
+   |
+39 |     #[derive(Clone)]
+   |              ----- in this derive macro expansion
+...
+42 |         pub adj: OrderedTableStPer<V, AVLTreeSetStPer<V>>,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+  --> src/Chap43/OrderedTableStPer.rs:55:57
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:62:50
+    |
+ 62 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<V, AVLTreeSetStPer<V>>>(),
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: the trait `std::cmp::Ord` is implemented for `Types::Types::Pair<K, V>`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^
+note: required for `Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>` to implement `std::cmp::Ord`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^ unsatisfied trait bound introduced in this `derive` macro
+note: required by a bound in `vstd::laws_cmp::obeys_cmp_spec`
+   --> vstd/laws_cmp.rs:47:0
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:63:39
+    |
+ 63 |                 view_ord_consistent::<Pair<V, AVLTreeSetStPer<V>>>(),
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: the trait `std::cmp::Ord` is implemented for `Types::Types::Pair<K, V>`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^
+note: required for `Types::Types::Pair<V, Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>>` to implement `std::cmp::Ord`
+   --> src/Types.rs:102:54
+    |
+102 |     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+    |                                                      ^^^ unsatisfied trait bound introduced in this `derive` macro
+note: required by a bound in `Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent`
+   --> src/Chap38/BSTParaStEph.rs:149:51
+    |
+149 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+    |                                                   ^^^ required by this bound in `view_ord_consistent`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:64:53
+   |
+64 |                 spec_pair_key_determines_order::<V, AVLTreeSetStPer<V>>(),
+   |                                                     ^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::spec_pair_key_determines_order`
+  --> src/Chap43/OrderedTableStPer.rs:87:76
+   |
+87 |     pub open spec fn spec_pair_key_determines_order<K: StT + Ord, V: StT + Ord>() -> bool {
+   |                                                                            ^^^ required by this bound in `spec_pair_key_determines_order`
+
+error[E0599]: the method `view` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:72:26
+   |
+72 |                     table@.dom().contains(u)
+   |                          ^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStPer.rs:55:5
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStPer.rs:63:33
+   |
+63 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-4069538078206668181.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |
+
+error[E0599]: the method `view` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:73:40
+   |
+73 |                     && #[trigger] table@.index(u).contains(v)
+   |                                        ^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStPer.rs:55:5
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStPer.rs:63:33
+   |
+63 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-4069538078206668181.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |
+
+error[E0599]: the method `view` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:74:30
+   |
+74 |                     ==> table@.dom().contains(v),
+   |                              ^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ---------------------------------------- doesn't satisfy `_: Ord`
+   |
+  ::: src/Chap43/OrderedTableStPer.rs:55:5
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+  --> src/Chap43/OrderedTableStPer.rs:63:33
+   |
+63 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
+   |                                 ^^^  ----     -----------------------
+   |                                 |
+   |                                 unsatisfied trait bound introduced here
+   = note: the full name for the type has been written to 'lib.long-type-4069538078206668181.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:1
+   |
+55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+  --> src/Chap52/AdjTableGraphStPer.rs:69:23
+   |
+69 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
+   |                       ^^^^^ unsatisfied trait bound
+   |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+  --> src/Chap41/AVLTreeSetStPer.rs:55:5
+   |
+55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+  --> src/Chap43/OrderedTableStPer.rs:55:57
+   |
+55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+   |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0599]: the method `view` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:136:21
+    |
+136 |             self.adj@
+    |                     ^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:63:33
+    |
+ 63 |     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:145:22
+    |
+145 |                 adj: OrderedTableStPer::empty(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:145:22
+    |
+145 |                 adj: OrderedTableStPer::empty(),
+    |                      ^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: the trait `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait<K, V>` is implemented for `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`
+   --> src/Chap43/OrderedTableStPer.rs:805:5
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required for `OrderedTableStPer<V, AVLTreeSetStPer<V>>` to implement `OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+   --> src/Chap43/OrderedTableStPer.rs:805:38
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ---  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:149:115
+    |
+149 |         fn from_table(table: OrderedTableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) { AdjTableGraphStPer { adj: table } }
+    |                                                                                                                   ^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0599]: the method `size` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:151:48
+    |
+151 |         fn num_vertices(&self) -> N { self.adj.size() }
+    |                                                ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0599]: the method `domain` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:154:35
+    |
+154 |             let domain = self.adj.domain();
+    |                                   ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `domain` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0599]: the method `find` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:164:51
+    |
+164 |                 if let Some(neighbors) = self.adj.find(&v) {
+    |                                                   ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:165:30
+    |
+165 |                     count += neighbors.size();
+    |                              ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `domain` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:175:39
+    |
+175 |             let domain_set = self.adj.domain();
+    |                                       ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `domain` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0599]: the method `find` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:197:28
+    |
+197 |             match self.adj.find(u) {
+    |                            ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:198:36
+    |
+198 |                 Some(neighbors) => neighbors.find(v),
+    |                                    ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `find` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:208:28
+    |
+208 |             match self.adj.find(u) {
+    |                            ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:209:36
+    |
+209 |                 Some(neighbors) => neighbors.clone(),
+    |                                    ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:219:36
+    |
+219 |             let new_adj = self.adj.insert(v, AVLTreeSetStPer::empty());
+    |                                    ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:220:39
+    |
+220 |             AdjTableGraphStPer { adj: new_adj }
+    |                                       ^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0599]: the method `delete` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:227:36
+    |
+227 |             let new_adj = self.adj.delete(&v_clone);
+    |                                    ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `delete` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:239:41
+    |
+239 |                     let new_neighbors = neighbors.delete(&v_clone);
+    |                                         ^^^^^^^^^ cannot infer type
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:244:39
+    |
+244 |             AdjTableGraphStPer { adj: result_adj }
+    |                                       ^^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0599]: the method `find` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:253:44
+    |
+253 |             let neighbors = match self.adj.find(&u) {
+    |                                            ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:254:29
+    |
+254 |                 Some(ns) => ns.insert(v.clone()),
+    |                             ^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:257:36
+    |
+257 |             let new_adj = self.adj.insert(u, neighbors);
+    |                                    ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:263:39
+    |
+263 |             AdjTableGraphStPer { adj: final_adj }
+    |                                       ^^^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0599]: the method `find` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:271:28
+    |
+271 |             match self.adj.find(u) {
+    |                            ^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphStPer.rs:273:41
+    |
+273 |                     let new_neighbors = neighbors.delete(v);
+    |                                         ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert` exists for struct `OrderedTableStPer<V, AVLTreeSetStPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:274:44
+    |
+274 |                     let new_adj = self.adj.insert(u.clone(), new_neighbors);
+    |                                            ^^^^^^ method cannot be called on `OrderedTableStPer<V, AVLTreeSetStPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: Ord`
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:55:5
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |     -------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<V, AVLTreeSetStPer<V>>`
+    |
+note: trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` was not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:805:33
+    |
+805 |     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    |                                 ^^^  ----------------------------     -----------------------
+    |                                 |
+    |                                 unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-1041821627478192201.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>` with `#[derive(Eq, Ord, PartialEq, PartialOrd)]`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:1
+    |
+ 55 +     #[derive(Eq, Ord, PartialEq, PartialOrd)]
+ 56 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |
+
+error[E0277]: the trait bound `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>: std::cmp::Ord` is not satisfied
+   --> src/Chap52/AdjTableGraphStPer.rs:275:47
+    |
+275 |                     AdjTableGraphStPer { adj: new_adj }
+    |                                               ^^^^^^^ unsatisfied trait bound
+    |
+help: the trait `std::cmp::Ord` is not implemented for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<V>`
+   --> src/Chap41/AVLTreeSetStPer.rs:55:5
+    |
+ 55 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer`
+   --> src/Chap43/OrderedTableStPer.rs:55:57
+    |
+ 55 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    |                                                         ^^^ required by this bound in `OrderedTableStPer`
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:56:13
+   |
+56 |             ensures out.spec_edgesetgraphsteph_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:55:24
+   |
+55 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+55 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:66:13
+   |
+66 |             ensures out.spec_edgesetgraphsteph_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStEph.rs:59:95
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
+   |                                                                                               ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:57:13
+   |
+57 |             ensures out.spec_edgesetgraphstper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+56 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:24
+   |
+56 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+56 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:66:13
+   |
+66 |             ensures out.spec_edgesetgraphstper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:59:95
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                               ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+59 |         fn from_vertices_and_edges(v: AVLTreeSetStPer<V>, e: AVLTreeSetStPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:92:13
+   |
+92 |             ensures updated.spec_edgesetgraphstper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:90:43
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                           ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+90 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:96:13
+   |
+96 |             ensures updated.spec_edgesetgraphstper_wf(), !updated.vertices@.contains(v@);
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:94:44
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                            ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+94 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0615]: attempted to take value of method `vertices` on type `Self`
+  --> src/Chap52/EdgeSetGraphStPer.rs:96:67
+   |
+96 |             ensures updated.spec_edgesetgraphstper_wf(), !updated.vertices@.contains(v@);
+   |                                                                   ^^^^^^^^ method, not a field
+   |
+help: use parentheses to call the method
+   |
+96 |             ensures updated.spec_edgesetgraphstper_wf(), !updated.vertices()@.contains(v@);
+   |                                                                           ++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphStPer.rs:100:13
+    |
+100 |             ensures updated.spec_edgesetgraphstper_wf();
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+ 98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphStPer.rs:98:47
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                               ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+98 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphStPer.rs:104:13
+    |
+104 |             ensures updated.spec_edgesetgraphstper_wf();
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphStPer.rs:102:49
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                 ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+102 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`
+   --> src/Chap53/GraphSearchMtPer.rs:144:33
+    |
+144 |             let nlen = frontier.elements.length();
+    |                                 ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `locked_set`, `ghost_set_view`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`
+   --> src/Chap53/GraphSearchMtPer.rs:149:45
+    |
+149 |                     nlen as nat == frontier.elements.spec_seq().len(),
+    |                                             ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `locked_set`, `ghost_set_view`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`
+   --> src/Chap53/GraphSearchMtPer.rs:154:34
+    |
+154 |                 let v = frontier.elements.nth(i);
+    |                                  ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `locked_set`, `ghost_set_view`
+
+error: aborting due to 107 previous errors
+
+Some errors have detailed explanations: E0277, E0282, E0599, E0609, E0615.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 949MB, peak z3 RSS: 0MB, min free: 24020MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

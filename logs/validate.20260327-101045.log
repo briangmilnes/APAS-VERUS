@@ -1,0 +1,45 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+
+thread '<unnamed>' (2974090) panicked at vir/src/bitvector_to_air.rs:424:37:
+internal error: unexpected float to bits coercion
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (2974090) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+
+thread '<unnamed>' (2974098) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974105) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974116) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974092) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974099) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974091) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2974094) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+warning: 2 warnings emitted
+
+Elapsed: 71s
+Sampled Memory Usage: peak rust_verify RSS: 8351MB, peak z3 RSS: 459MB, min free: 14203MB
+Sampled CPU Usage: rust_verify: 178s, z3 children: 120s

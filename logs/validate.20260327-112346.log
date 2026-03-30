@@ -1,0 +1,60 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error[E0507]: cannot move out of `*edge` which is behind a shared reference
+  --> src/Chap61/VertexMatchingStEph.rs:69:41
+   |
+69 |                 let _ = matching.insert(*edge);
+   |                                         ^^^^^ move occurs because `*edge` has type `Types::Types::Edge<V>`, which does not implement the `Copy` trait
+   |
+help: consider cloning the value if the performance cost is acceptable
+   |
+69 -                 let _ = matching.insert(*edge);
+69 +                 let _ = matching.insert(edge.clone());
+   |
+
+error[E0507]: cannot move out of `*edge` which is behind a shared reference
+   --> src/Chap61/VertexMatchingStEph.rs:104:31
+    |
+104 |             edge_coins.insert(*edge, random_bool_seeded(&mut rng));
+    |                               ^^^^^ move occurs because `*edge` has type `Types::Types::Edge<V>`, which does not implement the `Copy` trait
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+104 -             edge_coins.insert(*edge, random_bool_seeded(&mut rng));
+104 +             edge_coins.insert(edge.clone(), random_bool_seeded(&mut rng));
+    |
+
+error[E0507]: cannot move out of `*edge` which is behind a shared reference
+   --> src/Chap61/VertexMatchingStEph.rs:153:45
+    |
+153 |                     let _ = matching.insert(*edge);
+    |                                             ^^^^^ move occurs because `*edge` has type `Types::Types::Edge<V>`, which does not implement the `Copy` trait
+    |
+help: consider cloning the value if the performance cost is acceptable
+    |
+153 -                     let _ = matching.insert(*edge);
+153 +                     let _ = matching.insert(edge.clone());
+    |
+
+error: aborting due to 3 previous errors; 3 warnings emitted
+
+For more information about this error, try `rustc --explain E0507`.
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 2979MB, peak z3 RSS: 0MB, min free: 20630MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 0s

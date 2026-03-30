@@ -1,0 +1,273 @@
+error: prefix `pub` is unknown
+    --> src/Chap43/OrderedTableStEph.rs:3203:5
+     |
+3203 |     pub#[verifier::loop_isolation(false)]
+     |     ^^^ unknown prefix
+     |
+     = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+     |
+3203 |     pub #[verifier::loop_isolation(false)]
+     |        +
+
+error: expected curly braces or `;`
+   --> src/Chap43/OrderedTableStEph.rs:227:95
+    |
+227 |             requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(),, obeys_view_eq::<K>()
+    |                                                                                               ^
+
+error: expected curly braces or `;`
+   --> src/Chap43/AugOrderedTableStEph.rs:271:101
+    |
+271 |             requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(),, obeys_view_eq::<K>()
+    |                                                                                                     ^
+
+error[E0252]: the name `obeys_feq_full_trigger` is defined multiple times
+  --> src/Chap37/AVLTreeSeqStPer.rs:31:92
+   |
+29 |     use crate::vstdplus::feq::feq::{feq, obeys_feq_full_trigger};
+   |                                          ---------------------- previous import of the value `obeys_feq_full_trigger` here
+30 |     #[cfg(verus_keep_ghost)]
+31 |     use crate::vstdplus::feq::feq::{lemma_cloned_view_eq, obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger};
+   |                                                                                            ^^^^^^^^^^^^^^^^^^^^^^ `obeys_feq_full_trigger` reimported here
+   |
+   = note: `obeys_feq_full_trigger` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `obeys_feq_full_trigger` is defined multiple times
+  --> src/Chap41/ArraySetStEph.rs:38:53
+   |
+36 |     use crate::vstdplus::feq::feq::{feq, obeys_feq_full_trigger};
+   |                                          ---------------------- previous import of the value `obeys_feq_full_trigger` here
+37 |     #[cfg(verus_keep_ghost)]
+38 |     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_clo...
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ `obeys_feq_full_trigger` reimported here
+   |
+   = note: `obeys_feq_full_trigger` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `obeys_feq_full_trigger` is defined multiple times
+  --> src/Chap41/AVLTreeSetStEph.rs:34:53
+   |
+32 |     use crate::vstdplus::feq::feq::{feq, obeys_feq_full_trigger};
+   |                                          ---------------------- previous import of the value `obeys_feq_full_trigger` here
+33 |     #[cfg(verus_keep_ghost)]
+34 |     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ `obeys_feq_full_trigger` reimported here
+   |
+   = note: `obeys_feq_full_trigger` must be defined only once in the value namespace of this module
+
+error[E0252]: the name `obeys_feq_full_trigger` is defined multiple times
+  --> src/Chap41/AVLTreeSetStPer.rs:29:53
+   |
+27 |     use crate::vstdplus::feq::feq::{feq, obeys_feq_full_trigger};
+   |                                          ---------------------- previous import of the value `obeys_feq_full_trigger` here
+28 |     #[cfg(verus_keep_ghost)]
+29 |     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
+   |                                                     ^^^^^^^^^^^^^^^^^^^^^^ `obeys_feq_full_trigger` reimported here
+   |
+   = note: `obeys_feq_full_trigger` must be defined only once in the value namespace of this module
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3255:46
+     |
+3255 |     impl<K: StT + Ord, V: StT> PartialEq for OrderedTableStEph<K, V> {
+     |                                              ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3266:47
+     |
+3266 |     impl<K: StT + Ord, V: StT> fmt::Debug for OrderedTableStEph<K, V> {
+     |                                               ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:3272:49
+     |
+3272 |     impl<K: StT + Ord, V: StT> fmt::Display for OrderedTableStEph<K, V> {
+     |                                                 ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:50:46
+   |
+50 |     impl<K: MtKey, V: MtVal> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+   |                                              ^^^^^^^^^^^^^^^^^
+...
+58 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+   |     ------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+   |
+help: a struct with a similar name exists
+   |
+50 -     impl<K: MtKey, V: MtVal> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+50 +     impl<K: MtKey, V: MtVal> RwLockPredicate<OrderedTableMtEph<K, V>> for OrderedTableMtEphInv {
+   |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:51:35
+   |
+51 |         open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+   |                                   ^^^^^^^^^^^^^^^^^
+...
+58 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+   |     ------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+   |
+help: a struct with a similar name exists
+   |
+51 -         open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+51 +         open spec fn inv(self, v: OrderedTableMtEph<K, V>) -> bool {
+   |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+  --> src/Chap43/OrderedTableMtEph.rs:59:34
+   |
+59 |         pub locked_table: RwLock<OrderedTableStEph<K, V>, OrderedTableMtEphInv>,
+   |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `OrderedTableStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:610:30
+    |
+ 58 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+    |     ------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+...
+610 |             let left_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(left_entries) };
+    |                              ^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+610 -             let left_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(left_entries) };
+610 +             let left_inner = OrderedTableMtEph { base_seq: AVLTreeSeqStEphS::from_vec(left_entries) };
+    |
+
+error[E0422]: cannot find struct, variant or union type `OrderedTableStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:611:31
+    |
+ 58 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+    |     ------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+...
+611 |             let right_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(right_entries) };
+    |                               ^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+611 -             let right_inner = OrderedTableStEph { base_seq: AVLTreeSeqStEphS::from_vec(right_entries) };
+611 +             let right_inner = OrderedTableMtEph { base_seq: AVLTreeSeqStEphS::from_vec(right_entries) };
+    |
+
+error[E0425]: cannot find type `OrderedTableStEph` in this scope
+   --> src/Chap43/OrderedTableMtEph.rs:762:43
+    |
+ 58 |     pub struct OrderedTableMtEph<K: MtKey, V: MtVal> {
+    |     ------------------------------------------------ similarly named struct `OrderedTableMtEph` defined here
+...
+762 |     fn from_st<K: MtKey, V: MtVal>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+    |                                           ^^^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+762 -     fn from_st<K: MtKey, V: MtVal>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+762 +     fn from_st<K: MtKey, V: MtVal>(inner: OrderedTableMtEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+    |
+
+error[E0425]: cannot find function `from_sorted_entries` in module `crate::Chap43::OrderedTableStEph::OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:788:74
+    |
+788 |         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
+    |                                                                          ^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap43::OrderedTableStEph::OrderedTableStEph`
+    |
+help: consider importing one of these functions
+    |
+ 22 +     use crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStEph::TableStEph::from_sorted_entries;
+    |
+ 22 +     use crate::Chap42::TableStPer::TableStPer::from_sorted_entries;
+    |
+ 22 +     use crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::from_sorted_entries;
+    |
+    = and 1 other candidate
+help: if you import `from_sorted_entries`, refer to it directly
+    |
+788 -         let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
+788 +         let inner = from_sorted_entries(entries);
+    |
+
+error[E0425]: cannot find type `AugOrderedTableStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:865:49
+    |
+865 |     impl<K: StT + Ord, V: StT, F> PartialEq for AugOrderedTableStEph<K, V, F>
+    |                                                 ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AugOrderedTableStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:875:47
+    |
+875 |     impl<K: StT + Ord, V: StT, F> Display for AugOrderedTableStEph<K, V, F>
+    |                                               ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AugOrderedTableStEph` in this scope
+   --> src/Chap43/AugOrderedTableStEph.rs:889:45
+    |
+889 |     impl<K: StT + Ord, V: StT, F> Debug for AugOrderedTableStEph<K, V, F>
+    |                                             ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:326:14
+    |
+326 |  let inner = OrderedTableStEph::empty();
+    |              ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+326 -  let inner = OrderedTableStEph::empty();
+326 +  let inner = OrderedTableMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:332:25
+    |
+332 |             let inner = OrderedTableStEph::singleton(k, v);
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+332 -             let inner = OrderedTableStEph::singleton(k, v);
+332 +             let inner = OrderedTableMtEph::singleton(k, v);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:396:25
+    |
+396 |             let inner = OrderedTableStEph::tabulate(f, keys);
+    |                         ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+396 -             let inner = OrderedTableStEph::tabulate(f, keys);
+396 +             let inner = OrderedTableMtEph::tabulate(f, keys);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:605:29
+    |
+605 |             let empty_val = OrderedTableStEph::empty();
+    |                             ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+605 -             let empty_val = OrderedTableStEph::empty();
+605 +             let empty_val = OrderedTableMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedTableStEph`
+   --> src/Chap43/OrderedTableMtEph.rs:665:29
+    |
+665 |             let empty_val = OrderedTableStEph::empty();
+    |                             ^^^^^^^^^^^^^^^^^ use of undeclared type `OrderedTableStEph`
+    |
+help: a struct with a similar name exists
+    |
+665 -             let empty_val = OrderedTableStEph::empty();
+665 +             let empty_val = OrderedTableMtEph::empty();
+    |
+
+error: aborting due to 25 previous errors
+
+Some errors have detailed explanations: E0252, E0422, E0425, E0433.
+For more information about an error, try `rustc --explain E0252`.
+Elapsed: 11s

@@ -1,0 +1,24 @@
+error[E0432]: unresolved import `crate::prelude_verus`
+   --> src/standards/helper_function_placement_standard.rs:142:12
+    |
+142 | use crate::prelude_verus::*;
+    |            ^^^^^^^^^^^^^ could not find `prelude_verus` in the crate root
+
+error: cannot find macro `verus` in this scope
+   --> src/standards/helper_function_placement_standard.rs:144:1
+    |
+144 | verus! {
+    | ^^^^^
+    |
+    = note: macro `crate::Chap11::FibonacciMtEphRecomputes::FibFork::verus` exists but is inaccessible
+help: consider importing one of these macros
+    |
+142 + use verus_builtin_macros::verus;
+    |
+142 + use vstd::prelude::verus;
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 9s

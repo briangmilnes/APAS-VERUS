@@ -1,0 +1,65 @@
+error: assertion failed
+   --> src/Chap35/OrderStatSelectStEph.rs:248:17
+    |
+248 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: assertion failed
+   --> src/Chap35/OrderStatSelectStPer.rs:247:17
+    |
+247 |                 T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+sorted_left.index(j).le(pivot) ✔
+!(sorted_left.index(j) == pivot) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:541:21
+    |
+541 | /                     forall|j: int| 0 <= j < right@.len() ==>
+542 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:584:32
+    |
+584 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:591:32
+    |
+591 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+verification results:: 4432 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 54s

@@ -1,0 +1,191 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+Z3 4.12.5
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+Z3 4.12.5
+note: Analyzing prover log for module Types::Types ...
+
+note: Log analysis complete for module Types::Types
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::accept ...
+
+note: Log analysis complete for module vstdplus::accept
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::LinkedListStPer::LinkedListStPer ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::LinkedListStEph::LinkedListStEph ...
+
+Error parsing line 381568 (SubpatNoBlame([t6318])): "[new-match] 0x5ae3b96b3ab0 #7526 #4938 #3513 #17205 #17567 #3363 #3359 ; #15230 (#11844 #11844) (#2299 #18018) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363) (#16204 #15230) (#15230 #15230) (#16204 #12723) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363)"
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+Error parsing line 381819 (UnknownFingerprint(Fingerprint(99934114888368))): "[instance] 0x5ae3b96b3ab0 ; 2"
+Error parsing line 381825 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 384558 (SubpatNoBlame([t6318])): "[new-match] 0x5ae3b96c4b68 #7526 #4938 #3513 #17205 #17567 #3363 #3359 ; #15230 (#11844 #11844) (#2299 #18018) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363) (#16204 #15230) (#15230 #15230) (#16204 #12723) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363)"
+Error parsing line 384772 (UnknownFingerprint(Fingerprint(99934114958184))): "[instance] 0x5ae3b96c4b68 ; 2"
+Error parsing line 384778 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 387470 (SubpatNoBlame([t6318])): "[new-match] 0x5ae3b9475f68 #7526 #4938 #3513 #17205 #17567 #3363 #3359 ; #15230 (#11844 #11844) (#2299 #18018) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363) (#16204 #15230) (#15230 #15230) (#16204 #12723) (#3359 #3359) (#3359 #3359) (#3363 #3363) (#3363 #3363)"
+Error parsing line 387646 (UnknownFingerprint(Fingerprint(99934112538472))): "[instance] 0x5ae3b9475f68 ; 2"
+Error parsing line 387652 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqStPer::ArraySeqStPer ...
+
+note: Log analysis complete for module Chap18::LinkedListStPer::LinkedListStPer
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqStEph::ArraySeqStEph ...
+
+Error parsing line 398798 (SubpatNoBlame([t6431])): "[new-match] 0x5e30f9987928 #7121 #4959 #3443 #18575 #19233 #3124 #5906 ; #19052 (#1992 #1992) (#7911 #15219) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124) (#8202 #19052) (#19052 #19052) (#8202 #13523) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124)"
+Error parsing line 399026 (UnknownFingerprint(Fingerprint(103564438960424))): "[instance] 0x5e30f9987928 ; 2"
+Error parsing line 399032 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 401699 (SubpatNoBlame([t6431])): "[new-match] 0x5e30f99a2e28 #7121 #4959 #3443 #18575 #19233 #3124 #5906 ; #19052 (#1992 #1992) (#7911 #15219) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124) (#8202 #19052) (#19052 #19052) (#8202 #13523) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124)"
+Error parsing line 401863 (UnknownFingerprint(Fingerprint(103564439072296))): "[instance] 0x5e30f99a2e28 ; 2"
+Error parsing line 401869 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 404565 (SubpatNoBlame([t6431])): "[new-match] 0x5e30f99a75e0 #7121 #4959 #3443 #18575 #19233 #3124 #5906 ; #19052 (#1992 #1992) (#7911 #15219) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124) (#8202 #19052) (#19052 #19052) (#8202 #13523) (#5906 #5906) (#5906 #5906) (#3124 #3124) (#3124 #3124)"
+Error parsing line 404717 (UnknownFingerprint(Fingerprint(103564439090656))): "[instance] 0x5e30f99a75e0 ; 2"
+Error parsing line 404723 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqMtPer::ArraySeqMtPer ...
+
+note: Log analysis complete for module Chap18::LinkedListStEph::LinkedListStEph
+
+Error parsing line 399505 (SubpatNoBlame([t6880])): "[new-match] 0x5ba26cc93af0 #7838 #5328 #3775 #20163 #20205 #6534 #6530 ; #21050 (#12911 #12911) (#8648 #16406) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534) (#10931 #21050) (#21050 #21050) (#10931 #19415) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534)"
+Error parsing line 399723 (UnknownFingerprint(Fingerprint(100753167956720))): "[instance] 0x5ba26cc93af0 ; 2"
+Error parsing line 399729 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 402349 (SubpatNoBlame([t6880])): "[new-match] 0x5ba26cd2c9b8 #7838 #5328 #3775 #20163 #20205 #6534 #6530 ; #21050 (#12911 #12911) (#8648 #16406) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534) (#10931 #21050) (#21050 #21050) (#10931 #19415) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534)"
+Error parsing line 402512 (UnknownFingerprint(Fingerprint(100753168583096))): "[instance] 0x5ba26cd2c9b8 ; 2"
+Error parsing line 402518 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 405235 (SubpatNoBlame([t6880])): "[new-match] 0x5ba26cbb0dc0 #7838 #5328 #3775 #20163 #20205 #6534 #6530 ; #21050 (#12911 #12911) (#8648 #16406) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534) (#10931 #21050) (#21050 #21050) (#10931 #19415) (#6530 #6530) (#6530 #6530) (#6534 #6534) (#6534 #6534)"
+Error parsing line 405386 (UnknownFingerprint(Fingerprint(100753167027648))): "[instance] 0x5ba26cbb0dc0 ; 2"
+Error parsing line 405392 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::ArraySeqStPer::ArraySeqStPer
+
+Error parsing line 309170 (SubpatNoBlame([t6880])): "[new-match] 0x6242e4ce6cd0 #7890 #5384 #3751 #16634 #13945 #3527 #3536 ; #16636 (#12891 #12891) (#2392 #16277) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527) (#17571 #16636) (#16636 #16636) (#17571 #16568) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527)"
+Error parsing line 309410 (UnknownFingerprint(Fingerprint(108039446097104))): "[instance] 0x6242e4ce6cd0 ; 2"
+Error parsing line 309416 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 312214 (SubpatNoBlame([t6880])): "[new-match] 0x6242e4cf1100 #7890 #5384 #3751 #16634 #13945 #3527 #3536 ; #16636 (#12891 #12891) (#2392 #16277) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527) (#17571 #16636) (#16636 #16636) (#17571 #16568) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527)"
+Error parsing line 312381 (UnknownFingerprint(Fingerprint(108039446139136))): "[instance] 0x6242e4cf1100 ; 2"
+Error parsing line 312387 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 315083 (SubpatNoBlame([t6880])): "[new-match] 0x6242e49b9818 #7890 #5384 #3751 #16634 #13945 #3527 #3536 ; #16636 (#12891 #12891) (#2392 #16277) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527) (#17571 #16636) (#16636 #16636) (#17571 #16568) (#3536 #3536) (#3536 #3536) (#3527 #3527) (#3527 #3527)"
+Error parsing line 315238 (UnknownFingerprint(Fingerprint(108039442765848))): "[instance] 0x6242e49b9818 ; 2"
+Error parsing line 315244 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 513597 (SubpatNoBlame([t137110])): "[new-match] 0x6242e4b7ec28 #19332 #21299 #13966 #19809 #21882 ; #22071 (#21877 #24587) (#21129 #21129) (#21877 #24587) #16284 (#24587 #24543) (#22152 #15640) (#23724 #2100) #21575 (#21877 #24543) (#21882 #21882) (#21638 #21638)"
+Error parsing line 513626 (UnknownFingerprint(Fingerprint(108039444622376))): "[instance] 0x6242e4b7ec28 ; 4"
+Error parsing line 513633 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap18::ArraySeqStEph::ArraySeqStEph
+
+note: Log analysis complete for module Chap18::ArraySeqMtPer::ArraySeqMtPer
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeqMtEph::ArraySeqMtEph ...
+
+Error parsing line 480247 (SubpatNoBlame([t7188])): "[new-match] 0x6427d28dc068 #8147 #5598 #4019 #15106 #23897 #3705 #3700 ; #19808 (#13876 #13876) (#8841 #19856) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705) (#3177 #19808) (#19808 #19808) (#3177 #25074) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705)"
+Error parsing line 480562 (UnknownFingerprint(Fingerprint(110122199007336))): "[instance] 0x6427d28dc068 ; 5"
+Error parsing line 480568 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 483750 (SubpatNoBlame([t7188])): "[new-match] 0x6427d288d0a0 #8147 #5598 #4019 #15106 #23897 #3705 #3700 ; #19808 (#13876 #13876) (#8841 #19856) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705) (#3177 #19808) (#19808 #19808) (#3177 #25074) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705)"
+Error parsing line 490210 (SubpatNoBlame([t7188])): "[new-match] 0x6427d2a0f110 #8147 #5598 #4019 #15106 #23897 #3705 #3700 ; #19808 (#13876 #13876) (#8841 #19856) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705) (#3177 #19808) (#19808 #19808) (#3177 #25074) (#3700 #3700) (#3700 #3700) (#3705 #3705) (#3705 #3705)"
+Error parsing line 490412 (UnknownFingerprint(Fingerprint(110122200264976))): "[instance] 0x6427d2a0f110 ; 5"
+Error parsing line 490418 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 706958 (SubpatNoBlame([t187025])): "[new-match] 0x6427d29320c0 #31901 #31874 #25707 #26265 #26735 ; #16891 (#25497 #31820) (#27443 #27443) (#25497 #31820) #31372 (#31820 #32216) (#30835 #12722) (#27282 #27070) #14342 (#25497 #32216) (#26735 #26735) (#25806 #25806)"
+Error parsing line 706987 (UnknownFingerprint(Fingerprint(110122199359680))): "[instance] 0x6427d29320c0 ; 4"
+Error parsing line 706994 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap18::ArraySeq::ArraySeq ...
+
+note: Log analysis complete for module Chap18::ArraySeqMtEph::ArraySeqMtEph
+
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::float::float ...
+
+note: Log analysis complete for module vstdplus::float::float
+
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::feq::feq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap18::ArraySeq::ArraySeq
+
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::seq::seq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+note: Log analysis complete for module vstdplus::seq_set
+
+verification results:: 981 verified, 0 errors

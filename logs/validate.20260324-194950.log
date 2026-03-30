@@ -1,0 +1,84 @@
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:695:43
+    |
+695 |                 let left_link = node.left.clone();
+    |                                           ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:696:45
+    |
+696 |                 let right_link = node.right.clone();
+    |                                             ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:719:43
+    |
+719 |                 let left_link = node.left.clone();
+    |                                           ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:720:45
+    |
+720 |                 let right_link = node.right.clone();
+    |                                             ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:773:43
+    |
+773 |                 let left_link = node.left.clone();
+    |                                           ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:774:45
+    |
+774 |                 let right_link = node.right.clone();
+    |                                             ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:805:43
+    |
+805 |                 let left_link = node.left.clone();
+    |                                           ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error[E0599]: the method `clone` exists for enum `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>`, but its trait bounds were not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:806:45
+    |
+806 |                 let right_link = node.right.clone();
+    |                                             ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+    = note: the following trait bounds were not satisfied:
+            `std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>: std::clone::Clone`
+            which is required by `std::option::Option<std::boxed::Box<Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>>>: std::clone::Clone`
+
+error: aborting due to 8 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 14s

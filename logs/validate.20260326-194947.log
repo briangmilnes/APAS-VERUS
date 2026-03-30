@@ -1,0 +1,44 @@
+error[E0425]: cannot find type `N` in this scope
+  --> src/Chap21/Algorithm21_5.rs:54:48
+   |
+54 |                     .contains(#[trigger] (p as N)),
+   |                                                ^
+   |
+  --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+   |
+   = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+   |
+54 -                     .contains(#[trigger] (p as N)),
+54 +                     .contains(#[trigger] (p as O)),
+   |
+help: you might be missing a type parameter
+   |
+46 |     pub fn primes_bf<N>(n: usize) -> (primes: ArraySeqStPerS<usize>)
+   |                     +++
+
+error[E0425]: cannot find type `B` in this scope
+   --> src/Chap21/Exercise21_8.rs:113:17
+    |
+113 |             |v: B| v,
+    |                 ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+113 -             |v: B| v,
+113 +             |v: O| v,
+    |
+help: you might be missing a type parameter
+    |
+109 |     proof fn lemma_filter_len_eq_divisor_count<B>(n: int, k: int)
+    |                                               +++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 597MB, peak z3 RSS: 0MB, min free: 22421MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

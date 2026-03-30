@@ -1,0 +1,18 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0432]: unresolved import `crate::experiments::trait_rec_vs_iter::trait_rec_vs_iter::spec_sum`
+  --> src/experiments/trait_rec_caller.rs:13:31
+   |
+13 |         StackTrait, RecStack, spec_sum,
+   |                               ^^^^^^^^ no `spec_sum` in `experiments::trait_rec_vs_iter::trait_rec_vs_iter`
+
+error[E0432]: unresolved import `crate::experiments::trait_rec_vs_iter::trait_rec_vs_iter::spec_sum`
+  --> src/experiments/trait_iter_caller.rs:13:32
+   |
+13 |         StackTrait, IterStack, spec_sum,
+   |                                ^^^^^^^^ no `spec_sum` in `experiments::trait_rec_vs_iter::trait_rec_vs_iter`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 2 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101

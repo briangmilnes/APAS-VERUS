@@ -1,0 +1,292 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:34:14
+   |
+34 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:38:14
+   |
+38 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:178:28
+    |
+178 |               let filtered = self.edges.filter(
+    |  ____________________________^
+179 | |                 |edge| edge.0 == u_clone,
+180 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+181 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:228:17
+    |
+228 | /                 forall|x: T, keep: bool|
+229 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:201:21
+    |
+201 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+202 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStPer.rs:203:21
+    |
+203 | /                     forall|j: int| 0 <= j < i ==>
+204 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:215:29
+    |
+215 |                 neighbors = neighbors.insert(v);
+    |                             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:290:17
+    |
+290 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:290:17
+    |
+290 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbors.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:112:58
+    |
+112 |               ensures updated.spec_edgesetgraphstper_wf(), !updated.spec_vertices().contains(v@);
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+275 | /             EdgeSetGraphStPer {
+276 | |                 vertices: new_vertices,
+277 | |                 edges: new_edges,
+278 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:247:21
+    |
+247 |               ensures !updated.vertices@.contains(v@)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+275 | /             EdgeSetGraphStPer {
+276 | |                 vertices: new_vertices,
+277 | |                 edges: new_edges,
+278 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:252:29
+    |
+252 |               let new_edges = self.edges.filter(
+    |  _____________________________^
+253 | |                 |edge| {
+254 | |                     let Pair(u, w) = edge;
+255 | |                     *u != v_clone && *w != v_clone
+256 | |                 },
+257 | |                 Ghost(|p: (V::V, V::V)| p.0 != v_view && p.1 != v_view),
+258 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:228:17
+    |
+228 | /                 forall|x: T, keep: bool|
+229 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:271:28
+    |
+271 |                     assert(new_vertices@.contains(a));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap52/EdgeSetGraphStPer.rs:272:28
+    |
+272 |                     assert(new_vertices@.contains(b));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:229:48
+    |
+229 |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    |                                                ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_avltreesetstper_wf() ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+forall |t|
+    ClosureReq(tmp%%, (t)) ✔
+forall |x, keep|
+    ClosureEns(tmp%%, (x), keep) ==>
+        keep == tmp%(x.view()) ✘
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStPer.rs:119:21
+    |
+119 |               ensures updated.spec_edgesetgraphstper_wf();
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+284 | /             EdgeSetGraphStPer {
+285 | |                 vertices: new_vertices,
+286 | |                 edges: new_edges,
+287 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return.spec_edgesetgraphstper_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:187:28
+    |
+187 |               let filtered = self.edges.filter(
+    |  ____________________________^
+188 | |                 |edge| edge.0 == u_clone,
+189 | |                 Ghost(|v: (V::V, V::V)| v.0 == u@),
+190 | |             );
+    | |_____________^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:235:17
+    |
+235 | /                 forall|x: T, keep: bool|
+236 | |                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
+    | |____________________________________________________________________- failed precondition
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:210:21
+    |
+210 | /                     forall|v: <V as View>::V| #[trigger] neighbors@.contains(v) ==>
+211 | |                         self.edges@.contains((u@, v)),
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/EdgeSetGraphStEph.rs:212:21
+    |
+212 | /                     forall|j: int| 0 <= j < i ==>
+213 | |                         #[trigger] neighbors@.contains(seq@[j].1),
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:224:17
+    |
+224 |                 neighbors.insert(v);
+    |                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:297:17
+    |
+297 |                 old(self)@.len() + 1 < usize::MAX as nat,
+    |                 ---------------------------------------- failed precondition
+
+note: 
+
+neighbors.spec_avltreesetsteph_wf() ✔
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+clip(nat, neighbors.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:114:21
+    |
+114 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+248 |         fn insert_vertex(&mut self, v: V) { self.vertices.insert(v); }
+    |         --------------------------------- at the end of the function body
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:119:21
+    |
+119 |             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+275 |             while j < to_remove.len()
+    |             ------------------------- at the end of the function body
+
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphStEph.rs:278:21
+    |
+278 |                     !self.spec_vertices().contains(v@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/EdgeSetGraphStEph.rs:119:21
+    |
+119 |             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+!(self.spec_vertices().contains(old(v).view())) ✔
+!(self.spec_vertices().contains(old(v).view())) ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:127:21
+    |
+127 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+289 |         fn insert_edge(&mut self, u: V, v: V) {
+    |         ------------------------------------- at the end of the function body
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap52/EdgeSetGraphStEph.rs:132:21
+    |
+132 |             ensures self.spec_edgesetgraphsteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+295 |         fn delete_edge(&mut self, u: &V, v: &V) { self.edges.delete(&Pair(u.clone(), v.clone())); }
+    |         --------------------------------------- at the end of the function body
+
+note: 
+
+self.spec_edgesetgraphsteph_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 4759 verified, 8 errors
+error: aborting due to 19 previous errors; 3 warnings emitted
+
+Elapsed: 62s
+Sampled Memory Usage: peak rust_verify RSS: 6984MB, peak z3 RSS: 407MB, min free: 18037MB
+Sampled CPU Usage: rust_verify: 153s, z3 children: 112s

@@ -1,0 +1,132 @@
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/DFSStEph.rs:11:110
+    |
+ 11 | ...pec_toposortsteph_wf, spec_reachable, lemma_set_true_decreases_num_false};
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/DFSStPer.rs:11:71
+    |
+ 11 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/TopoSortStPer.rs:11:71
+    |
+ 11 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/CycleDetectStEph.rs:10:107
+    |
+ 10 | ..., spec_toposortsteph_wf, spec_is_dag, lemma_set_true_decreases_num_false};
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/CycleDetectStPer.rs:10:71
+    |
+ 10 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false};
+    |                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/SCCStEph.rs:13:48
+    |
+ 13 |         spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error[E0603]: function `lemma_set_true_decreases_num_false` is private
+   --> src/Chap55/SCCStPer.rs:13:25
+    |
+ 13 |         spec_num_false, lemma_set_true_decreases_num_false,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `lemma_set_true_decreases_num_false` is defined here
+   --> src/Chap55/TopoSortStEph.rs:119:11
+    |
+119 |       proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
+    |  ___________^
+120 | |         requires
+121 | |             0 <= idx < s.len(),
+122 | |             !s[idx],
+...   |
+134 | |     }
+    | |_____^
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0603`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 516MB, peak z3 RSS: 0MB, min free: 24430MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

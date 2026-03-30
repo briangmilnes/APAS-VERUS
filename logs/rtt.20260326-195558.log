@@ -1,0 +1,124 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_reachable`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_has_edge`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_path`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_false_num_false_eq_len`
+  --> src/Chap55/DFSStEph.rs:11:55
+   |
+11 | ...::{spec_num_false, spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
+   |       ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_false_num_false_eq_len` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |               |              |             |                                   |
+   |       |               |                      |               |              |             |                                   no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |               |              |             no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |               |              no `spec_is_path` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |               no `spec_has_edge` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      no `spec_reachable` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_false_num_false_eq_len`
+  --> src/Chap55/DFSStPer.rs:11:55
+   |
+11 | ...tEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
+   |           ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_false_num_false_eq_len` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |           |               |                                   |
+   |           |               |                                   no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |           |               no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |           no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_reachable_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_has_edge_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_path_per`
+  --> src/Chap55/DFSStPer.rs:12:55
+   |
+12 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_toposortstper_wf, spec_reachable_per, spec_has_edge_per, spec_is_path_per};
+   |                                                       ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^ no `spec_is_path_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                      |                   |
+   |                                                       |                      |                   no `spec_has_edge_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                      no `spec_reachable_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       no `spec_toposortstper_wf` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_false_num_false_eq_len`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_true_num_false_zero`
+  --> src/Chap55/TopoSortStPer.rs:11:55
+   |
+11 | ...::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_all_true_num_false_zero};
+   |       ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_true_num_false_zero` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                                   |                            |
+   |       |               |                                   |                            no `lemma_all_false_num_false_eq_len` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                                   no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_dag`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_has_edge`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_is_path`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`
+  --> src/Chap55/CycleDetectStEph.rs:10:55
+   |
+10 | ...::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+   |       ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |            |              |             |
+   |       |               |                      |            |              |             no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |            |              no `spec_is_path` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      |            no `spec_has_edge` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               |                      no `spec_is_dag` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       |               no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |       no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`
+  --> src/Chap55/CycleDetectStPer.rs:10:55
+   |
+10 |     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+   |                                                       ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       |               |
+   |                                                       |               no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                                                       no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_dag_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_has_edge_per`, `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_is_path_per`
+  --> src/Chap55/CycleDetectStPer.rs:11:55
+   |
+11 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_is_dag_per, spec_has_edge_per, spec_is_path_per};
+   |                                                       ^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^ no `spec_is_path_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       |                |
+   |                                                       |                no `spec_has_edge_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+   |                                                       no `spec_is_dag_per` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+error[E0432]: unresolved import `crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path`
+  --> src/Chap55/CycleDetectStPer.rs:12:9
+   |
+12 |     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_in_path` in `Chap55::CycleDetectStEph::CycleDetectStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_toposortsteph_wf`, `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_true_num_false_zero`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_false_num_false_eq_len`
+  --> src/Chap55/SCCStEph.rs:13:9
+   |
+13 |         spec_toposortsteph_wf, spec_num_false, lemma_set_true_decreases_num_false,
+   |         ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |         |                      |
+   |         |                      no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |         no `spec_toposortsteph_wf` in `Chap55::TopoSortStEph::TopoSortStEph`
+14 |         lemma_set_true_num_false_eq,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+15 |         dfs_finish_order, lemma_all_true_num_false_zero, lemma_all_false_num_false_eq_len,
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_false_num_false_eq_len` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |                           |
+   |                           no `lemma_all_true_num_false_zero` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved imports `crate::Chap55::TopoSortStEph::TopoSortStEph::spec_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_decreases_num_false`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_set_true_num_false_eq`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_true_num_false_zero`, `crate::Chap55::TopoSortStEph::TopoSortStEph::lemma_all_false_num_false_eq_len`
+  --> src/Chap55/SCCStPer.rs:13:9
+   |
+13 |         spec_num_false, lemma_set_true_decreases_num_false,
+   |         ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_set_true_decreases_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |         |
+   |         no `spec_num_false` in `Chap55::TopoSortStEph::TopoSortStEph`
+14 |         lemma_set_true_num_false_eq, lemma_all_true_num_false_zero,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_true_num_false_zero` in `Chap55::TopoSortStEph::TopoSortStEph`
+   |         |
+   |         no `lemma_set_true_num_false_eq` in `Chap55::TopoSortStEph::TopoSortStEph`
+15 |         lemma_all_false_num_false_eq_len,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_all_false_num_false_eq_len` in `Chap55::TopoSortStEph::TopoSortStEph`
+
+error[E0432]: unresolved import `crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf`
+  --> src/Chap55/SCCStPer.rs:17:9
+   |
+17 |     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_toposortstper_wf` in `Chap55::TopoSortStPer::TopoSortStPer`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `apas-verus` (lib) due to 11 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 11 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 9s

@@ -591,8 +591,7 @@ All scripts live in `scripts/`, auto-detect the worktree root, and strip ANSI es
 | 5 | `scripts/holes.sh` | `holes.sh [dir-or-file]` | Proof hole detection |
 | 6 | `scripts/merge-agent.sh` | `merge-agent.sh <branch>` | Merge an agent branch (validate separately after) |
 | 7 | `scripts/reset-agent-to-main.sh` | `reset-agent-to-main.sh` | Reset agent branch to `origin/main` + force push |
-| 8 | `scripts/profile.sh` | `profile.sh [isolate ChapNN]` | Z3 profiling (capture-profiles) |
-| 9 | `scripts/profile-summary.sh` | `profile-summary.sh <dir-or-file>` | Parse Z3 traces, show instantiation counts |
+| 8 | `scripts/profile.sh` | `profile.sh [isolate ChapNN \| summary <dir>]` | Z3 profiling + instantiation summary |
 
 ### Verification
 

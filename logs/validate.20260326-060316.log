@@ -1,0 +1,648 @@
+error[E0308]: mismatched types
+   --> src/Chap26/ETSPMtEph.rs:620:46
+    |
+618 |     pub trait ETSPPointTrait {
+    |     ------------------------ found this type parameter
+619 |         fn distance(&self, other: &Point) -> (d: f64)
+620 |             ensures d == spec_point_distance(*self, *other);
+    |                          ------------------- ^^^^^ expected `Point`, found type parameter `Self`
+    |                          |
+    |                          arguments to this function are incorrect
+    |
+    = note:      expected struct `Chap26::ETSPMtEph::ETSPMtEph::Point`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap26/ETSPMtEph.rs:83:22
+    |
+ 83 |     pub open spec fn spec_point_distance(a: Point, b: Point) -> f64 {
+    |                      ^^^^^^^^^^^^^^^^^^^ --------
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:356:71
+    |
+356 |             spec_seq_sorted_per(spec_inorder_values_per(self.base_set.elements.root))
+    |                                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:460:37
+    |
+460 |             let len = self.base_set.elements.length();
+    |                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:461:35
+    |
+461 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedSetStPer.rs:462:23
+    |
+349 |     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |          - expected this type parameter
+...
+462 |             if len == 0 {
+    |                       ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:465:47
+    |
+465 |                 let first_ref = self.base_set.elements.nth(0);
+    |                                               ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:476:39
+    |
+476 |                         self.base_set.elements.spec_avltreeseqstper_wf(),
+    |                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:477:39
+    |
+477 |                         self.base_set.elements@.no_duplicates(),
+    |                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:478:53
+    |
+478 |                         len as nat == self.base_set.elements@.len(),
+    |                                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:483:76
+    |
+483 | ...                   0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+    |                                                                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:485:51
+    |
+485 |                         min_val@ == self.base_set.elements@[min_idx],
+    |                                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:490:50
+    |
+490 |                     let elem_ref = self.base_set.elements.nth(i);
+    |                                                  ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:521:46
+    |
+521 |                         assert(self.base_set.elements@.to_set().contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:522:46
+    |
+522 |                         assert(self.base_set.elements@.contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:523:71
+    |
+523 |                         let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+    |                                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:524:46
+    |
+524 | ...                   && self.base_set.elements@[j] == t@;
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:544:37
+    |
+544 |             let len = self.base_set.elements.length();
+    |                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:545:35
+    |
+545 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedSetStPer.rs:546:23
+    |
+349 |     impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |          - expected this type parameter
+...
+546 |             if len == 0 {
+    |                       ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:549:47
+    |
+549 |                 let first_ref = self.base_set.elements.nth(0);
+    |                                               ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:560:39
+    |
+560 |                         self.base_set.elements.spec_avltreeseqstper_wf(),
+    |                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:561:39
+    |
+561 |                         self.base_set.elements@.no_duplicates(),
+    |                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:562:53
+    |
+562 |                         len as nat == self.base_set.elements@.len(),
+    |                                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:567:76
+    |
+567 | ...                   0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+    |                                                                      ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:569:51
+    |
+569 |                         max_val@ == self.base_set.elements@[max_idx],
+    |                                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:574:50
+    |
+574 |                     let elem_ref = self.base_set.elements.nth(i);
+    |                                                  ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:605:46
+    |
+605 |                         assert(self.base_set.elements@.to_set().contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:606:46
+    |
+606 |                         assert(self.base_set.elements@.contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:607:71
+    |
+607 |                         let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+    |                                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:608:46
+    |
+608 | ...                   && self.base_set.elements@[j] == t@;
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:628:37
+    |
+628 |             let len = self.base_set.elements.length();
+    |                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:629:35
+    |
+629 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:637:35
+    |
+637 |                     self.base_set.elements.spec_avltreeseqstper_wf(),
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:638:35
+    |
+638 |                     self.base_set.elements@.no_duplicates(),
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:639:49
+    |
+639 |                     len as nat == self.base_set.elements@.len(),
+    |                                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:643:72
+    |
+643 |                         0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+    |                                                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:656:46
+    |
+656 |                 let elem_ref = self.base_set.elements.nth(i);
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:669:58
+    |
+669 | ...                   let best_ref = self.base_set.elements.nth(best_pos);
+    |                                                    ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:711:48
+    |
+711 |                 let result_ref = self.base_set.elements.nth(best_pos);
+    |                                                ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:719:46
+    |
+719 |                         assert(self.base_set.elements@.to_set().contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:720:46
+    |
+720 |                         assert(self.base_set.elements@.contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:721:71
+    |
+721 |                         let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+    |                                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:722:46
+    |
+722 | ...                   && self.base_set.elements@[j] == t@;
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:742:37
+    |
+742 |             let len = self.base_set.elements.length();
+    |                                     ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:743:35
+    |
+743 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:751:35
+    |
+751 |                     self.base_set.elements.spec_avltreeseqstper_wf(),
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:752:35
+    |
+752 |                     self.base_set.elements@.no_duplicates(),
+    |                                   ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:753:49
+    |
+753 |                     len as nat == self.base_set.elements@.len(),
+    |                                                 ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:757:72
+    |
+757 |                         0 <= j < i ==> ghost_vals[j]@ == self.base_set.elements@[j],
+    |                                                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:770:46
+    |
+770 |                 let elem_ref = self.base_set.elements.nth(i);
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:783:58
+    |
+783 | ...                   let best_ref = self.base_set.elements.nth(best_pos);
+    |                                                    ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:825:48
+    |
+825 |                 let result_ref = self.base_set.elements.nth(best_pos);
+    |                                                ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:833:46
+    |
+833 |                         assert(self.base_set.elements@.to_set().contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:834:46
+    |
+834 |                         assert(self.base_set.elements@.contains(t@));
+    |                                              ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:835:71
+    |
+835 |                         let j = choose|j: int| 0 <= j < self.base_set.elements@.len()
+    |                                                                       ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:836:46
+    |
+836 | ...                   && self.base_set.elements@[j] == t@;
+    |                                        ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+   --> src/Chap43/OrderedSetStPer.rs:855:43
+    |
+855 |             let elements = &self.base_set.elements;
+    |                                           ^^^^^^^^ unknown field
+    |
+    = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1033:35
+     |
+1033 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+     |                                   ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1034:43
+     |
+1034 |             let elements = &self.base_set.elements;
+     |                                           ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1107:35
+     |
+1107 |             let n = self.base_set.elements.length();
+     |                                   ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1108:35
+     |
+1108 |             proof { self.base_set.elements@.unique_seq_to_set(); }
+     |                                   ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1109:45
+     |
+1109 |             let ghost elems = self.base_set.elements@;
+     |                                             ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1116:35
+     |
+1116 |                     self.base_set.elements.spec_avltreeseqstper_wf(),
+     |                                   ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1119:45
+     |
+1119 |                     elems =~= self.base_set.elements@,
+     |                                             ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1137:46
+     |
+1137 |                 let elem_ref = self.base_set.elements.nth(j);
+     |                                              ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1201:39
+     |
+1201 |                 proof { self.base_set.elements@.unique_seq_to_set(); }
+     |                                       ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1202:42
+     |
+1202 |                 let elem = self.base_set.elements.nth(i);
+     |                                          ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1206:42
+     |
+1206 |                     assert(self.base_set.elements@.to_set().contains(result@));
+     |                                          ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1209:80
+     |
+1209 |                     lemma_inorder_values_maps_to_views_per::<T>(&self.base_set.elements.root);
+     |                                                                                ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1210:75
+     |
+1210 |                     let vals = spec_inorder_values_per::<T>(self.base_set.elements.root);
+     |                                                                           ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1211:47
+     |
+1211 |                     let views = self.base_set.elements@;
+     |                                               ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1302:43
+     |
+1302 |             let elements = &self.base_set.elements;
+     |                                           ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1448:40
+     |
+1448 |                 it@.1 == self.base_set.elements@,
+     |                                        ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1451:37
+     |
+1451 |             let len = self.base_set.elements.length();
+     |                                     ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1452:55
+     |
+1452 |             OrderedSetStPerIter { seq: &self.base_set.elements, pos: 0, len }
+     |                                                       ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1568:40
+     |
+1568 |                 it@.1 == self.base_set.elements@,
+     |                                        ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1571:37
+     |
+1571 |             let len = self.base_set.elements.length();
+     |                                     ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error[E0609]: no field `elements` on type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1572:55
+     |
+1572 |             OrderedSetStPerIter { seq: &self.base_set.elements, pos: 0, len }
+     |                                                       ^^^^^^^^ unknown field
+     |
+     = note: available field is: `tree`
+
+error: aborting due to 78 previous errors
+
+Some errors have detailed explanations: E0308, E0609.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 14s

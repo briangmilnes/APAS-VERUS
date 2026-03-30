@@ -1,0 +1,681 @@
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeq.rs:231:74
+    |
+231 |             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+767 |  AVLTreeS { root: None, next_key: 0 }
+    |  ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeq.rs:231:74
+    |
+231 |             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_avltreeseq_seq() =~= empty() ✔
+%return.spec_avltreeseq_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeq.rs:255:17
+    |
+255 |                 tree.spec_avltreeseq_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+817 |             AVLTreeS { root, next_key: 1 }
+    |             ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeq.rs:255:17
+    |
+255 |                 tree.spec_avltreeseq_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_avltreeseq_seq() =~= empty().push(old(item).view()) ✔
+%return.spec_avltreeseq_seq().len() == 1 ✔
+%return.spec_avltreeseq_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeq.rs:692:25
+    |
+692 |                 proof { lemma_cloned_view_eq::<T>(n.value, cloned); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:88:32
+    |
+ 88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+    |                                --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:41:13
+   |
+41 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+42 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+43 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+68 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+   |                                ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+cloned(tmp%, cloned) ✔
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeq.rs:739:22
+    |
+739 |             let eq = feq(ai, bi);
+    |                      ^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:215:18
+    |
+215 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:41:13
+   |
+41 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+42 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+43 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+68 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+69 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqStEph.rs:682:22
+    |
+682 |             let eq = feq(ai, bi);
+    |                      ^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:215:18
+    |
+215 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqStPer.rs:625:22
+    |
+625 |             let eq = feq(ai, bi);
+    |                      ^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:215:18
+    |
+215 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: postcondition not satisfied
+   --> src/Chap42/TableStPer.rs:411:17
+    |
+411 |                 tabulated.spec_tablestper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+749 |             TableStPer { entries }
+    |             ---------------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap42/TableStPer.rs:694:25
+    |
+694 |                 proof { lemma_cloned_view_eq::<K>(*key, key_clone); }
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:88:32
+    |
+ 88 |         requires cloned(x, y), obeys_feq_full::<T>(),
+    |                                --------------------- failed precondition
+
+note: 
+
+cloned(key, key_clone) ✔
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap42/TableStPer.rs:762:21
+    |
+762 | /                     forall|j: int| 0 <= j < i as int ==>
+763 | |                         (#[trigger] new_entries@[j]).0@ == old_view[j].0,
+    | |________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap42/TableStPer.rs:834:21
+    |
+834 | /                     forall|j: int| 0 <= j < sources.len() ==>
+835 | |                         0 <= #[trigger] sources[j] < self_view.len()
+836 | |                         && self_view[sources[j]].0 == kept@[j].0@
+837 | |                         && self_view[sources[j]].1 == kept@[j].1@,
+    | |_________________________________________________________________^
+
+error: invariant not satisfied before loop
+   --> src/Chap42/TableStPer.rs:993:25
+    |
+993 |                         obeys_view_eq::<K>(),
+    |                         ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap42/TableStPer.rs:1637:21
+     |
+1637 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap42/TableStPer.rs:1352:25
+     |
+1352 |                         obeys_view_eq::<K>(),
+     |                         ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap42/TableStPer.rs:1463:21
+     |
+1463 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap42/TableStPer.rs:1506:21
+     |
+1506 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:279:25
+    |
+279 |             let found = inner.find(k);
+    |                         ^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:418:61
+    |
+418 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                             -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:418:61
+    |
+418 |             requires self.spec_orderedtablestper_find_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                                                             ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_find_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+obeys_feq_full() ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:288:26
+    |
+288 |             let result = inner.insert(k, v);
+    |                          ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:429:17
+    |
+429 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:429:17
+    |
+429 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, inner.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:300:26
+    |
+300 |             let result = inner.delete(k);
+    |                          ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:441:17
+    |
+441 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:441:17
+    |
+441 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_feq_clone() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:377:26
+    |
+377 |                 result = result.insert(pair.0.clone(), new_v);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:429:17
+    |
+429 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:414:30
+    |
+414 |                     result = result.insert(pair.0.clone(), pair.1.clone());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:429:17
+    |
+429 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:468:38
+    |
+468 |             let (left, val, right) = inner.split_key(k);
+    |                                      ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:608:17
+    |
+608 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:608:17
+    |
+608 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:483:26
+    |
+483 |             let result = OrderedTableStPer::join_key(self_inner, other_inner);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:629:17
+    |
+629 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:629:17
+    |
+629 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self_inner.spec_orderedtablestper_wf() ✔
+other_inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+clip(nat, self_inner.view().dom().len() + other_inner.view().dom().len()) < UnsignedMax.Exec(usize::BITS) ✔
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:506:24
+    |
+506 |             let rank = inner.rank_key(k);
+    |                        ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:651:17
+    |
+651 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:651:17
+    |
+651 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:517:28
+    |
+517 |             let selected = inner.select_key(i);
+    |                            ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:662:17
+    |
+662 |                 obeys_view_eq::<K>(),
+    |                 -------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:662:17
+    |
+662 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStEph.rs:981:24
+    |
+981 |                 assert(tabulated.spec_orderedtablesteph_wf());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:41:13
+    |
+ 41 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 42 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 43 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 68 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 69 |         &&& obeys_feq_view::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 80 |         obeys_feq_full::<T>() && obeys_feq_full::<U>()
+    |                                  ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:466:16
+    |
+466 |             && obeys_feq_fulls::<K, V>()
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tabulated.spec_orderedtablesteph_wf()
+|   tabulated.base_seq.spec_avltreeseqsteph_wf() ✔
+|   spec_keys_no_dups(tabulated.base_seq.view()) ✔
+|   tabulated.base_seq.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✘
+|   |   obeys_feq_full() ✔
+|   |   obeys_feq_full() ✘
+|   |   |   obeys_feq_properties() ✘
+|   |   |   |   feq_reflexive() ✘
+|   |   |   |   |   forall |x|
+|   |   |   |   |       x.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_symmetric() ✘
+|   |   |   |   |   forall |x, y|
+|   |   |   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_transitive() ✘
+|   |   |   |   |   forall |x, y, z|
+|   |   |   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |   |   |           x.eq_spec(z) 
+|   |   |   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   |   |   +---
+|   |   |   +---
+|   |   |   obeys_feq_view() ✘
+|   |   |   |   forall |x, y|
+|   |   |   |       x.eq_spec(y) ==>
+|   |   |   |           x.view() == y.view() 
+|   |   |   +---
+|   |   |   obeys_feq_view_injective() 
+|   |   |   obeys_feq_clone() 
+|   |   |   obeys_feq_eq() 
+|   |   +---
+|   +---
+|   obeys_feq_full() 
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3215:13
+     |
+3215 |             cloned.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3246 |         OrderedTableStEph { base_seq: tree }
+     |         ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/vstdplus/feq.rs:41:13
+     |
+  41 |         &&& feq_reflexive::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^
+  42 |         &&& feq_symmetric::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^
+  43 |         &&& feq_transitive::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^^
+...
+  68 |         &&& obeys_feq_properties::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  69 |         &&& obeys_feq_view::<T>()
+     |             ^^^^^^^^^^^^^^^^^^^^^
+...
+  80 |         obeys_feq_full::<T>() && obeys_feq_full::<U>()
+     |         ^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:466:16
+     |
+ 466 |             && obeys_feq_fulls::<K, V>()
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3215 |             cloned.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+cloned.view().dom().finite() ✔
+cloned.view() =~= spec_entries_to_map(old(entries).view()) ✔
+cloned.spec_orderedtablesteph_wf() ✘
+|   cloned.base_seq.spec_avltreeseqsteph_wf() ✔
+|   spec_keys_no_dups(cloned.base_seq.view()) ✔
+|   cloned.base_seq.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✘
+|   |   obeys_feq_full() ✘
+|   |   |   obeys_feq_properties() ✘
+|   |   |   |   feq_reflexive() ✘
+|   |   |   |   |   forall |x|
+|   |   |   |   |       x.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_symmetric() ✘
+|   |   |   |   |   forall |x, y|
+|   |   |   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   |   |   +---
+|   |   |   |   feq_transitive() ✘
+|   |   |   |   |   forall |x, y, z|
+|   |   |   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |   |   |           x.eq_spec(z) 
+|   |   |   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   |   |   +---
+|   |   |   +---
+|   |   |   obeys_feq_view() ✘
+|   |   |   |   forall |x, y|
+|   |   |   |       x.eq_spec(y) ==>
+|   |   |   |           x.view() == y.view() 
+|   |   |   +---
+|   |   |   obeys_feq_view_injective() 
+|   |   |   obeys_feq_clone() 
+|   |   |   obeys_feq_eq() 
+|   |   +---
+|   |   obeys_feq_full() 
+|   +---
+|   obeys_feq_full() 
++---
+
+verification results:: 4337 verified, 26 errors
+error: aborting due to 26 previous errors
+
+Elapsed: 53s

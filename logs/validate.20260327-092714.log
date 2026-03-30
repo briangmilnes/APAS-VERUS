@@ -1,0 +1,12 @@
+error[E0433]: failed to resolve: could not find `StarContractionMtEph` in `Chap62`
+  --> src/Chap63/ConnectivityMtEph.rs:23:24
+   |
+23 |     use crate::Chap62::StarContractionMtEph::StarContractionMtEph::star_contract_mt;
+   |                        ^^^^^^^^^^^^^^^^^^^^ could not find `StarContractionMtEph` in `Chap62`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0433`.
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 595MB, peak z3 RSS: 0MB, min free: 21767MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

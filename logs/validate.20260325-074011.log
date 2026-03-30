@@ -1,0 +1,10 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap65/PrimStEph.rs:37:14
+   |
+37 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+verification results:: 4786 verified, 0 errors
+warning: 1 warning emitted
+
+Elapsed: 101s

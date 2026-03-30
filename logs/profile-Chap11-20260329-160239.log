@@ -1,0 +1,9 @@
+error[E0432]: unresolved import `crate::ParaPair`
+  --> src/Chap11/FibonacciMtPerAllThreads.rs:12:9
+   |
+12 |     use crate::ParaPair;
+   |         ^^^^^^^^^^^^^^^ no `ParaPair` in the root
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0432`.

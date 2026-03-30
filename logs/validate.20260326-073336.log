@@ -1,0 +1,56 @@
+error: expected one of `!`, `(`, `)`, `+`, `,`, `::`, or `<`, found `:`
+  --> src/Chap44/DocumentIndex.rs:79:46
+   |
+52 |     pub trait DocumentIndexTrait {
+   |                                  - while parsing this item list starting here
+...
+79 |         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
+   |                                              ^ expected one of 7 possible tokens
+...
+96 |     }
+   |     - the item list ends here
+
+error[E0407]: method `to_seq` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:164:9
+    |
+164 | /         fn to_seq(docs: &DocumentSet) -> ArraySeqStPerS<DocumentId> {
+165 | |             let avl_seq = docs.to_seq();
+166 | |             let mut array_seq = ArraySeqStPerS::empty();
+...   |
+174 | |             array_seq
+175 | |         }
+    | |_________^ not a member of trait `DocumentIndexTrait`
+
+error[E0407]: method `empty` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:177:9
+    |
+177 | /         fn empty() -> Self {
+178 | |             DocumentIndex {
+179 | |                 word_to_docs: TableStPer::empty(),
+180 | |             }
+181 | |         }
+    | |_________^ not a member of trait `DocumentIndexTrait`
+
+error[E0407]: method `get_all_words` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:183:9
+    |
+183 | /         fn get_all_words(&self) -> ArraySeqStPerS<Word> {
+184 | |             let entries = self.word_to_docs.collect();
+185 | |             let mut words = ArraySeqStPerS::empty();
+...   |
+193 | |             words
+194 | |         }
+    | |_________^ not a member of trait `DocumentIndexTrait`
+
+error[E0407]: method `word_count` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:196:9
+    |
+196 |         fn word_count(&self) -> usize { self.word_to_docs.size() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not a member of trait `DocumentIndexTrait`
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0407`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 399MB, peak z3 RSS: 0MB, min free: 22060MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

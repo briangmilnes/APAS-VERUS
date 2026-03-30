@@ -1,0 +1,219 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:17
+    |
+471 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:331:13
+    |
+331 |             locked_val.union(other_ref);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_ref.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_ref.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:475:13
+    |
+475 |             locked_val.join(other_inner);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_inner.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_inner.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:286:26
+    |
+286 |             let result = inner.insert(k, v);
+    |                          ^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+clip(nat, inner.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:374:26
+    |
+374 |                 result = result.insert(pair.0.clone(), new_v);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:407:30
+    |
+407 |                     result = result.insert(pair.0.clone(), pair.1.clone());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStPer.rs:431:17
+    |
+431 |                 self@.dom().len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_orderedtablestper_wf() ✔
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+clip(nat, tmp%.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:779:32
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+779 |                         left = left.insert(v);
+    |                                ^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:818:33
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+818 |                         right = right.insert(v);
+    |                                 ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap43/OrderedSetStPer.rs:89:17
+   |
+89 |                 self@.len() + 1 < usize::MAX as nat,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_orderedsetstper_wf() ✔
+clip(nat, left.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:921:30
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+921 |                     result = result.insert(v);
+    |                              ^^^^^^^^^^^^^^^^
+
+note: 
+
+result.spec_orderedsetstper_wf() ✔
+clip(nat, result.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1092:28
+     |
+  89 |                 self@.len() + 1 < usize::MAX as nat,
+     |                 ----------------------------------- failed precondition
+...
+1092 |                     left = left.insert(v);
+     |                            ^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1115:29
+     |
+  89 |                 self@.len() + 1 < usize::MAX as nat,
+     |                 ----------------------------------- failed precondition
+...
+1115 |                     right = right.insert(v);
+     |                             ^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_orderedsetstper_wf() ✔
+clip(nat, left.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:859:36
+    |
+859 |                     let inserted = deleted.insert(new_pair);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:156:17
+    |
+156 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetStPer.rs:156:17
+    |
+156 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+deleted.spec_avltreesetstper_wf() ✔
+clip(nat, deleted.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStEph.rs:144:31
+    |
+144 |             let visited_new = visited.union(&frontier);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |           

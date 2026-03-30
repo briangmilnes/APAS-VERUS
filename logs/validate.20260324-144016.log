@@ -1,0 +1,23 @@
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:21:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/standards/table_of_contents_standard.rs:466:13
+    |
+466 |             equal
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:21:38
+
+note: 
+
+obeys_eq_spec() ==>
+    equal == old(self).eq_spec(old(other)) ✘
+equal == (old(self).view() == old(other).view()) ✔
+
+verification results:: 4442 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 85s

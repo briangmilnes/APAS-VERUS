@@ -1,0 +1,25 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap45/TestBinaryHeapPQ.rs:280:37
+    |
+280 |         assert_eq!(*sorted.nth(i as N), expected_val);
+    |                                     ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+280 -         assert_eq!(*sorted.nth(i as N), expected_val);
+280 +         assert_eq!(*sorted.nth(i as O), expected_val);
+    |
+help: you might be missing a type parameter
+    |
+265 | fn test_heapsort_via_extract<N>() {
+    |                             +++
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestBinaryHeapPQ") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 10s

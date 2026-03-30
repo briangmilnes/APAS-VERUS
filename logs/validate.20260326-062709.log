@@ -1,0 +1,51 @@
+error: postcondition not satisfied
+   --> src/Chap21/Problem21_3.rs:44:13
+    |
+ 44 |             n > 0  ==> points.seq@.len() == n as int * n as int * n as int,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+116 |         ArraySeqStPerS { seq: v }
+    |         ------------------------- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+  --> src/Chap21/Problem21_3.rs:76:21
+   |
+76 |                     v@.len() == v_len_before + (y as int - 1) * n as int,
+   |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+  --> src/Chap21/Problem21_3.rs:95:25
+   |
+95 |                         v@.len() <= nnn as int,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+  --> src/Chap21/Problem21_3.rs:95:25
+   |
+95 |                         v@.len() <= nnn as int,
+   |                         ^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap21/Problem21_3.rs:44:24
+   |
+44 |             n > 0  ==> points.seq@.len() == n as int * n as int * n as int,
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(n) == 0 ==>
+    points.seq.view().len() == 0 ✔
+old(n) > 0 ==>
+    points.seq.view().len() == old(n) * old(n) * old(n) ✘
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = points.seq.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        points.seq.view().index(k).0 < old(n) ✔
+        1 <= points.seq.view().index(k).1.0 ✔
+        points.seq.view().index(k).1.0 <= old(n) ✔
+        2 <= points.seq.view().index(k).1.1 ✔
+        points.seq.view().index(k).1.1 <= old(n) + 1 ✔
+
+verification results:: 1857 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 17s

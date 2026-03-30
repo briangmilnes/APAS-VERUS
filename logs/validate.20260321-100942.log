@@ -1,0 +1,612 @@
+error: expected square brackets
+  --> src/Chap41/AVLTreeSetStPer.rs:34:2
+   |
+34 | #![verifier::loop_isolation(false)]
+   |  ^
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+    --> src/Chap41/AVLTreeSetStPer.rs:1044:44
+     |
+1044 |     impl<T: StT + Ord> std::fmt::Debug for AVLTreeSetStPer<T> {
+     |                                            ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:64:5
+     |
+  64 |     pub struct AVLTreeSeqStPerS<T: StT> {
+     |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+     |
+help: a struct with a similar name exists
+     |
+1044 -     impl<T: StT + Ord> std::fmt::Debug for AVLTreeSetStPer<T> {
+1044 +     impl<T: StT + Ord> std::fmt::Debug for AVLTreeSeqStPerS<T> {
+     |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+    --> src/Chap41/AVLTreeSetStPer.rs:1057:36
+     |
+1057 |     impl<T: StT + Ord> Display for AVLTreeSetStPer<T> {
+     |                                    ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:64:5
+     |
+  64 |     pub struct AVLTreeSeqStPerS<T: StT> {
+     |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+     |
+help: a struct with a similar name exists
+     |
+1057 -     impl<T: StT + Ord> Display for AVLTreeSetStPer<T> {
+1057 +     impl<T: StT + Ord> Display for AVLTreeSeqStPerS<T> {
+     |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap43/OrderedTableStPer.rs:50:23
+   |
+50 |         pub base_set: AVLTreeSetStPer<Pair<K, V>>,
+   |                       ^^^^^^^^^^^^^^^
+   |
+  ::: src/Chap37/AVLTreeSeqStPer.rs:64:5
+   |
+64 |     pub struct AVLTreeSeqStPerS<T: StT> {
+   |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+   |
+help: a struct with a similar name exists
+   |
+50 -         pub base_set: AVLTreeSetStPer<Pair<K, V>>,
+50 +         pub base_set: AVLTreeSeqStPerS<Pair<K, V>>,
+   |
+
+error[E0422]: cannot find struct, variant or union type `AVLTreeSetStPer` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:925:27
+    |
+925 |                 base_set: AVLTreeSetStPer { elements: copy_elements },
+    |                           ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:64:5
+    |
+ 64 |     pub struct AVLTreeSeqStPerS<T: StT> {
+    |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+    |
+help: a struct with a similar name exists
+    |
+925 -                 base_set: AVLTreeSetStPer { elements: copy_elements },
+925 +                 base_set: AVLTreeSeqStPerS { elements: copy_elements },
+    |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap43/OrderedSetStPer.rs:47:23
+   |
+47 |         pub base_set: AVLTreeSetStPer<T>,
+   |                       ^^^^^^^^^^^^^^^
+   |
+  ::: src/Chap37/AVLTreeSeqStPer.rs:64:5
+   |
+64 |     pub struct AVLTreeSeqStPerS<T: StT> {
+   |     ----------------------------------- similarly named struct `AVLTreeSeqStPerS` defined here
+   |
+help: a struct with a similar name exists
+   |
+47 -         pub base_set: AVLTreeSetStPer<T>,
+47 +         pub base_set: AVLTreeSeqStPerS<T>,
+   |
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:24:22
+   |
+24 |         pub visited: AVLTreeSetStPer<V>,
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:25:25
+   |
+25 |         pub priorities: AVLTreeSetStPer<Pair<V, P>>,     // (vertex, priority)
+   |                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:26:28
+   |
+26 |         pub parent: Option<AVLTreeSetStPer<Pair<V, V>>>, // (child, parent)
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:45:26
+   |
+45 |             G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:59:26
+   |
+59 |             G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:57:52
+   |
+57 |         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+   |                                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:50:34
+   |
+50 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:65:34
+   |
+65 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:79:28
+   |
+79 |         where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:83:28
+   |
+83 |         where G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P,
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:82:52
+   |
+82 |         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF) -> (search: PQMinResult<V, P>)
+   |                                                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:90:22
+   |
+90 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/PQMinStPer.rs:95:30
+   |
+95 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:105:20
+    |
+105 |         frontier: &AVLTreeSetStPer<Pair<Pair<P, V>, V>>,
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:125:60
+    |
+125 |     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
+    |                                                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:128:23
+    |
+128 |         visited_init: AVLTreeSetStPer<V>,
+    |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:129:24
+    |
+129 |         frontier_init: AVLTreeSetStPer<Pair<Pair<P, V>, V>>,
+    |                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:130:20
+    |
+130 |     ) -> (result: (AVLTreeSetStPer<V>, AVLTreeSetStPer<Pair<V, P>>))
+    |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:130:40
+    |
+130 |     ) -> (result: (AVLTreeSetStPer<V>, AVLTreeSetStPer<Pair<V, P>>))
+    |                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:136:30
+    |
+136 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:152:34
+    |
+152 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:221:22
+    |
+221 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:217:18
+    |
+217 |         sources: AVLTreeSetStPer<V>,
+    |                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:227:30
+    |
+227 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/PQMinStPer.rs:244:34
+    |
+244 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:22:22
+   |
+22 |         pub visited: AVLTreeSetStPer<V>,
+   |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:23:28
+   |
+23 |         pub parent: Option<AVLTreeSetStPer<Pair<V, V>>>, // (child, parent) edges
+   |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:37:37
+   |
+37 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B))
+   |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:37:72
+   |
+37 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B))
+   |                                                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:49:26
+   |
+49 |             G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:60:26
+   |
+60 |             G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:58:57
+   |
+58 |         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> (search: SearchResult<V>)
+   |                                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:72:26
+   |
+72 |             G: Fn(&V) -> AVLTreeSetStPer<V>,
+   |                          ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:70:110
+   |
+70 |         fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetStPer<V>)
+   |                                                                                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:53:34
+   |
+53 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:65:34
+   |
+65 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:75:34
+   |
+75 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+   |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:81:37
+   |
+81 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) { (frontier.clone(), false) }
+   |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:81:72
+   |
+81 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) { (frontier.clone(), false) }
+   |                                                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:85:37
+   |
+85 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
+   |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+  --> src/Chap53/GraphSearchStPer.rs:85:72
+   |
+85 |         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, B)) {
+   |                                                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:112:22
+    |
+112 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:116:30
+    |
+116 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:125:56
+    |
+125 |     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
+    |                                                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:128:23
+    |
+128 |         visited_init: AVLTreeSetStPer<V>,
+    |                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:129:24
+    |
+129 |         frontier_init: AVLTreeSetStPer<V>,
+    |                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:130:24
+    |
+130 |     ) -> (visited_all: AVLTreeSetStPer<V>)
+    |                        ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:135:30
+    |
+135 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:150:34
+    |
+150 |                 forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:164:38
+    |
+164 |                     forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:189:22
+    |
+189 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:185:18
+    |
+185 |         sources: AVLTreeSetStPer<V>,
+    |                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:194:30
+    |
+194 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:203:28
+    |
+203 |         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
+    |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:207:28
+    |
+207 |         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
+    |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:206:57
+    |
+206 |         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S) -> (search: SearchResult<V>)
+    |                                                         ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:211:28
+    |
+211 |         where G: Fn(&V) -> AVLTreeSetStPer<V>,
+    |                            ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:210:66
+    |
+210 |         fn reachable<G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
+    |                                                                  ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:220:22
+    |
+220 |         G: Fn(&V) -> AVLTreeSetStPer<V>,
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:218:80
+    |
+218 |     pub fn reachable<V: StT + Ord, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetStPer<V>)
+    |                                                                                ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `AVLTreeSetStPer` in this scope
+   --> src/Chap53/GraphSearchStPer.rs:223:30
+    |
+223 |             forall|v: &V, r: AVLTreeSetStPer<V>| #[trigger] graph.ensures((v,), r) ==> r.spec_avltreesetstper_wf(),
+    |                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedTableStPer.rs:702:24
+    |
+702 |             let base = AVLTreeSetStPer::empty();
+    |                        ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+702 -             let base = AVLTreeSetStPer::empty();
+702 +             let base = AVLTreeSeqStPerS::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedTableStPer.rs:712:24
+    |
+712 |             let base = AVLTreeSetStPer::singleton(pair);
+    |                        ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+712 -             let base = AVLTreeSetStPer::singleton(pair);
+712 +             let base = AVLTreeSeqStPerS::singleton(pair);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+    --> src/Chap43/OrderedTableStPer.rs:3159:20
+     |
+3159 |         let base = AVLTreeSetStPer::from_seq(entries);
+     |                    ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+     |
+help: a struct with a similar name exists
+     |
+3159 -         let base = AVLTreeSetStPer::from_seq(entries);
+3159 +         let base = AVLTreeSeqStPerS::from_seq(entries);
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedSetStPer.rs:256:27
+    |
+256 |                 base_set: AVLTreeSetStPer::empty(),
+    |                           ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+256 -                 base_set: AVLTreeSetStPer::empty(),
+256 +                 base_set: AVLTreeSeqStPerS::empty(),
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedSetStPer.rs:264:27
+    |
+264 |                 base_set: AVLTreeSetStPer::singleton(x),
+    |                           ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+264 -                 base_set: AVLTreeSetStPer::singleton(x),
+264 +                 base_set: AVLTreeSeqStPerS::singleton(x),
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap43/OrderedSetStPer.rs:335:27
+    |
+335 |                 base_set: AVLTreeSetStPer::from_seq(seq),
+    |                           ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+    |
+help: a struct with a similar name exists
+    |
+335 -                 base_set: AVLTreeSetStPer::from_seq(seq),
+335 +                 base_set: AVLTreeSeqStPerS::from_seq(seq),
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:100:23
+    |
+100 |         let sources = AVLTreeSetStPer::singleton(source);
+    |                       ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:160:53
+    |
+160 |             let frontier_new = frontier.difference(&AVLTreeSetStPer::singleton(entry));
+    |                                                     ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:162:46
+    |
+162 |             let visited_new = visited.union(&AVLTreeSetStPer::singleton(v.clone()));
+    |                                              ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:182:64
+    |
+182 |                     frontier_updated = frontier_updated.union(&AVLTreeSetStPer::singleton(neighbor_entry));
+    |                                                                ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:192:30
+    |
+192 |         let mut priorities = AVLTreeSetStPer::empty();
+    |                              ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:208:44
+    |
+208 |             priorities = priorities.union(&AVLTreeSetStPer::singleton(Pair(vref.clone(), p)));
+    |                                            ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:232:36
+    |
+232 |         let mut initial_frontier = AVLTreeSetStPer::empty();
+    |                                    ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/PQMinStPer.rs:250:56
+    |
+250 |             initial_frontier = initial_frontier.union(&AVLTreeSetStPer::singleton(entry));
+    |                                                        ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+  --> src/Chap53/GraphSearchStPer.rs:88:18
+   |
+88 |                 (AVLTreeSetStPer::empty(), false)
+   |                  ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+  --> src/Chap53/GraphSearchStPer.rs:98:30
+   |
+98 |                 let result = AVLTreeSetStPer::singleton(first);
+   |                              ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/GraphSearchStPer.rs:119:23
+    |
+119 |         let sources = AVLTreeSetStPer::singleton(source);
+    |                       ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/GraphSearchStPer.rs:154:37
+    |
+154 |             let mut new_neighbors = AVLTreeSetStPer::empty();
+    |                                     ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error[E0433]: failed to resolve: use of undeclared type `AVLTreeSetStPer`
+   --> src/Chap53/GraphSearchStPer.rs:197:61
+    |
+197 |         let visited = graph_search_explore(graph, strategy, AVLTreeSetStPer::empty(), sources);
+    |                                                             ^^^^^^^^^^^^^^^ use of undeclared type `AVLTreeSetStPer`
+
+error: aborting due to 86 previous errors
+
+Some errors have detailed explanations: E0422, E0425, E0433.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 18s

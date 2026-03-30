@@ -1,0 +1,63 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap40/TestBSTReducedStEph.rs:419:47
+    |
+419 |     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::identity(), 0);
+    |                                               ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+419 -     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::identity(), 0);
+419 +     assert_eq!(<CountOp<i32> as ReduceOp<i32, O>>::identity(), 0);
+    |
+help: you might be missing a type parameter
+    |
+418 | fn test_countop_trait<N>() {
+    |                      +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap40/TestBSTReducedStEph.rs:420:47
+    |
+420 |     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::combine(3, 7), 10);
+    |                                               ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+420 -     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::combine(3, 7), 10);
+420 +     assert_eq!(<CountOp<i32> as ReduceOp<i32, O>>::combine(3, 7), 10);
+    |
+help: you might be missing a type parameter
+    |
+418 | fn test_countop_trait<N>() {
+    |                      +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap40/TestBSTReducedStEph.rs:421:47
+    |
+421 |     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::lift(&42), 1);
+    |                                               ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+421 -     assert_eq!(<CountOp<i32> as ReduceOp<i32, N>>::lift(&42), 1);
+421 +     assert_eq!(<CountOp<i32> as ReduceOp<i32, O>>::lift(&42), 1);
+    |
+help: you might be missing a type parameter
+    |
+418 | fn test_countop_trait<N>() {
+    |                      +++
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestBSTReducedStEph") due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 4s

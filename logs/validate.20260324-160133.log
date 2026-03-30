@@ -1,0 +1,95 @@
+error[E0433]: failed to resolve: could not find `BSTPlainMtEph` in `Chap37`
+  --> src/Chap37/BSTSetPlainMtEph.rs:12:24
+   |
+12 |     use crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
+   |                        ^^^^^^^^^^^^^ could not find `BSTPlainMtEph` in `Chap37`
+
+error[E0433]: failed to resolve: could not find `BSTAVLMtEph` in `Chap37`
+  --> src/Chap37/BSTSetAVLMtEph.rs:26:24
+   |
+26 |     use crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::*;
+   |                        ^^^^^^^^^^^ could not find `BSTAVLMtEph` in `Chap37`
+
+error[E0433]: failed to resolve: could not find `BSTRBMtEph` in `Chap37`
+   --> src/Chap37/BSTSetRBMtEph.rs:12:24
+    |
+ 12 |     use crate::Chap37::BSTRBMtEph::BSTRBMtEph::*;
+    |                        ^^^^^^^^^^ could not find `BSTRBMtEph` in `Chap37`
+    |
+note: found an item that was configured out
+   --> src/lib.rs:475:13
+    |
+474 |     #[cfg(feature = "all_chapters")]
+    |           ------------------------ the item is gated behind the `all_chapters` feature
+475 |     pub mod BSTRBMtEph;
+    |             ^^^^^^^^^^
+
+error[E0433]: failed to resolve: could not find `BSTBBAlphaMtEph` in `Chap37`
+  --> src/Chap37/BSTSetBBAlphaMtEph.rs:12:24
+   |
+12 |     use crate::Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::*;
+   |                        ^^^^^^^^^^^^^^^ could not find `BSTBBAlphaMtEph` in `Chap37`
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+  --> src/Chap37/BSTSetPlainMtEph.rs:18:15
+   |
+18 |         tree: BSTPlainMtEph<T>,
+   |               ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:115:38
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+115 |         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
+    |                                      ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+115 |         fn as_tree(&self) -> (tree: &BSTSetPlainMtEph<T>)
+    |                                         +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:123:45
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
+    |                                             ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+123 |     fn values_vec<T: StTInMtT + Ord>(tree: &BSTSetPlainMtEph<T>) -> (values: Vec<T>)
+    |                                                +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:130:70
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+130 |     fn rebuild_from_vec<T: StTInMtT + Ord>(values: Vec<T>) -> (tree: BSTSetPlainMtEph<T>)
+    |                                                                         +++
+
+error[E0425]: cannot find type `BSTPlainMtEph` in this scope
+   --> src/Chap37/BSTSetPlainMtEph.rs:352:31
+    |
+ 17 |     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord> {
+    |     ---------------------------------------------- similarly named struct `BSTSetPlainMtEph` defined here
+...
+352 |         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
+    |                               ^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+352 |         fn as_tree(&self) -> &BSTSetPlainMtEph<T> { &self.tree }
+    |                                  +++
+
+error[E0425]: cannot find type `BSTAVLMtEph` in this s

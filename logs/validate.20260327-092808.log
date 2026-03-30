@@ -1,0 +1,675 @@
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:82:29
+   |
+82 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:111:52
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+    |                                                    ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:53
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |                                                     ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:56
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+    |                                                        ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:58
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                          ^^^^ doesn't have a size known at compile-time
+    |
+    = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:53:29
+   |
+53 |         fn empty() -> (out: Self)
+   |                             ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:56:100
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:87:52
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                                    ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:91:53
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                                     ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:95:56
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                                        ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:99:58
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+   |                                                          ^^^^ doesn't have a size known at compile-time
+   |
+   = note: the return type of a function must have a statically known size
+help: consider further restricting `Self`
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                               ++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap26/ETSPMtEph.rs:620:46
+    |
+618 |     pub trait ETSPPointTrait {
+    |     ------------------------ found this type parameter
+619 |         fn distance(&self, other: &Point) -> (d: f64)
+620 |             ensures d == spec_point_distance(*self, *other);
+    |                          ------------------- ^^^^^ expected `Point`, found type parameter `Self`
+    |                          |
+    |                          arguments to this function are incorrect
+    |
+    = note:      expected struct `Chap26::ETSPMtEph::ETSPMtEph::Point`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap26/ETSPMtEph.rs:83:22
+    |
+ 83 |     pub open spec fn spec_point_distance(a: Point, b: Point) -> f64 {
+    |                      ^^^^^^^^^^^^^^^^^^^ --------
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:525:28
+    |
+525 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+525 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:537:28
+    |
+537 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+537 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:658:28
+    |
+658 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+658 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:670:28
+    |
+670 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+670 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:791:28
+    |
+791 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+791 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:803:28
+    |
+803 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_vec`, perhaps you need to implement one of them:
+            candidate #1: `Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQTrait`
+            candidate #2: `Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQTrait`
+            candidate #3: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapNodeTrait`
+            candidate #4: `Chap45::LeftistHeapPQ::LeftistHeapPQ::LeftistHeapPQTrait`
+            candidate #5: `Chap45::SortedListPQ::SortedListPQ::SortedListPQTrait`
+            candidate #6: `Chap45::UnsortedListPQ::UnsortedListPQ::UnsortedListPQTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+803 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:89:13
+   |
+89 |             ensures out.spec_adjtablegraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/AdjTableGraphMtPer.rs:82:24
+   |
+82 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+82 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:113:13
+    |
+113 |             ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:111:43
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+    |                                           ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+111 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:117:13
+    |
+117 |             ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:115:44
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+    |                                            ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+115 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:121:13
+    |
+121 |             ensures
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:119:47
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+    |                                               ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+119 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:129:13
+    |
+129 |             ensures
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/AdjTableGraphMtPer.rs:127:49
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+    |                                                 ^^^^^^^ doesn't have a size known at compile-time
+    |
+    = note: all function arguments must have a statically known size
+    = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+    |
+127 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjTableGraphMtPer.rs:173:36
+    |
+173 |                 let v = domain_seq.nth(i).clone();
+    |                                    ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:62:5
+    |
+ 62 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+133 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<V>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:127:9
+    |
+127 | /         fn length(&self) -> (len: usize)
+128 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+  8 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:54:13
+   |
+54 |             ensures out.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:53:24
+   |
+53 |         fn empty() -> (out: Self)
+   |                        ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+53 |         fn empty() -> (out: Self where Self: std::marker::Sized)
+   |                                  ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:63:13
+   |
+63 |             ensures out.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:56:95
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+   |                                                                                               ^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+56 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self where Self: std::marker::Sized)
+   |                                                                                                         ++++++++++++++++++++++++++++++
+
+error[E0615]: attempted to take value of method `edges` on type `&Self`
+  --> src/Chap52/EdgeSetGraphMtPer.rs:82:69
+   |
+82 |             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges@.contains((u@, v)));
+   |                                                                     ^^^^^ method, not a field
+   |
+help: use parentheses to call the method
+   |
+82 |             ensures neighbors@ == Set::new(|v: <V as View>::V| self.edges()@.contains((u@, v)));
+   |                                                                          ++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:89:13
+   |
+89 |             ensures updated.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:87:43
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self)
+   |                                           ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+87 |         fn insert_vertex(&self, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                         ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:93:13
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:91:44
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self)
+   |                                            ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+91 |         fn delete_vertex(&self, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                          ++++++++++++++++++++++++++++++
+
+error[E0615]: attempted to take value of method `vertices` on type `Self`
+  --> src/Chap52/EdgeSetGraphMtPer.rs:93:67
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices@.contains(v@);
+   |                                                                   ^^^^^^^^ method, not a field
+   |
+help: use parentheses to call the method
+   |
+93 |             ensures updated.spec_edgesetgraphmtper_wf(), !updated.vertices()@.contains(v@);
+   |                                                                           ++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:97:13
+   |
+97 |             ensures updated.spec_edgesetgraphmtper_wf();
+   |             ^^^^^^^ doesn't have a size known at compile-time
+   |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+  --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:95:47
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
+   |                                               ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+95 |         fn insert_edge(&self, u: V, v: V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                             ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+   --> src/Chap52/EdgeSetGraphMtPer.rs:101:13
+    |
+101 |             ensures updated.spec_edgesetgraphmtper_wf();
+    |             ^^^^^^^ doesn't have a size known at compile-time
+    |
+note: required by an implicit `Sized` bound in `vstd::prelude::constrain_type`
+   --> builtin/src/lib.rs:245:0
+help: consider further restricting `Self`
+    |
+ 99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+    |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: the size for values of type `Self` cannot be known at compilation time
+  --> src/Chap52/EdgeSetGraphMtPer.rs:99:49
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
+   |                                                 ^^^^^^^ doesn't have a size known at compile-time
+   |
+   = note: all function arguments must have a statically known size
+   = help: unsized fn params are gated as an unstable feature
+help: consider further restricting `Self`
+   |
+99 |         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self where Self: std::marker::Sized)
+   |                                                               ++++++++++++++++++++++++++++++
+
+error[E0277]: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` doesn't implement `std::fmt::Debug`
+   --> src/Chap61/EdgeContractionMtEph.rs:100:64
+    |
+100 |         let vertex_to_block = Arc::try_unwrap(vertex_to_block).unwrap().into_inner().unwrap();
+    |                                                                ^^^^^^ the trait `std::fmt::Debug` is not implemented for `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>`
+    |
+    = note: add `#[derive(Debug)]` to `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` or manually `impl std::fmt::Debug for vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>`
+help: the trait `std::fmt::Debug` is implemented for `std::sync::Arc<T, A>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/sync.rs:3700:0
+    = note: required for `Mutex<HashMapWithViewPlus<V, V>>` to implement `std::fmt::Debug`
+    = note: 1 redundant requirement hidden
+    = note: required for `Arc<Mutex<HashMapWithViewPlus<V, V>>>` to implement `std::fmt::Debug`
+note: required by a bound in `std::result::Result::<T, E>::unwrap`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/result.rs:1227:4
+    = note: the full name for the type has been written to 'lib.long-type-16965167770025158634.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlus<V, V>` with `#[derive(Debug)]`
+   --> src/vstdplus/hash_map_with_view_plus.rs:41:1
+    |
+ 41 + #[derive(Debug)]
+ 42 | pub struct HashMapWithViewPlus<Key: View + Eq + Hash, Value> {
+    |
+
+error[E0277]: the trait bound `V: std::hash::Hash` is not satisfied
+   --> src/Chap61/VertexMatchingMtEph.rs:92:40
+    |
+ 92 |         requires valid_key_type_Edge::<V>(),
+    |                                        ^ the trait `std::hash::Hash` is not implemented for `V`
+    |
+note: required by a bound in `Types::Types::valid_key_type_Edge`
+   --> src/Types.rs:180:51
+    |
+180 |     pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
+    |                                                   ^^^^ required by this bound in `valid_key_type_Edge`
+help: consider further restricting type parameter `V` with trait `Hash`
+    |
+ 88 |     fn flip_coins_parallel<V: StT + MtT + 'static + std::hash::Hash>(
+    |                                                   +++++++++++++++++
+
+error: aborting due to 45 previous errors
+
+Some errors have detailed explanations: E0277, E0308, E0599, E0615.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1056MB, peak z3 RSS: 0MB, min free: 21674MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

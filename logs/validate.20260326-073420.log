@@ -1,0 +1,55 @@
+error: expected `;`, found `ensures`
+  --> src/Chap44/DocumentIndex.rs:79:64
+   |
+79 |         fn to_seq(docs: &DocumentSet) -> ArraySeqStPerS<String>
+   |                                                                ^ help: add `;` here
+80 |             ensures
+   |             ------- unexpected token
+
+error: expected one of `!` or `::`, found `docs`
+  --> src/Chap44/DocumentIndex.rs:81:17
+   |
+52 |     pub trait DocumentIndexTrait {
+   |                                  - while parsing this item list starting here
+...
+80 |             ensures
+   |                    - expected one of `!` or `::`
+81 |                 docs@.finite(),
+   |                 ^^^^ unexpected token
+...
+96 |     }
+   |     - the item list ends here
+
+error[E0407]: method `empty` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:177:9
+    |
+177 | /         fn empty() -> Self {
+178 | |             DocumentIndex {
+179 | |                 word_to_docs: TableStPer::empty(),
+180 | |             }
+181 | |         }
+    | |_________^ not a member of trait `DocumentIndexTrait`
+
+error[E0407]: method `get_all_words` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:183:9
+    |
+183 | /         fn get_all_words(&self) -> ArraySeqStPerS<Word> {
+184 | |             let entries = self.word_to_docs.collect();
+185 | |             let mut words = ArraySeqStPerS::empty();
+...   |
+193 | |             words
+194 | |         }
+    | |_________^ not a member of trait `DocumentIndexTrait`
+
+error[E0407]: method `word_count` is not a member of trait `DocumentIndexTrait`
+   --> src/Chap44/DocumentIndex.rs:196:9
+    |
+196 |         fn word_count(&self) -> usize { self.word_to_docs.size() }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not a member of trait `DocumentIndexTrait`
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0407`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 422MB, peak z3 RSS: 0MB, min free: 22153MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

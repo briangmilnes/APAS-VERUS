@@ -1,0 +1,11 @@
+error: cannot call function `lib::vstdplus::strings::strings::str_to_chars` with mode exec
+   --> src/vstdplus/strings.rs:113:47
+    |
+113 |             chars@ == spec_to_ascii_lowercase(str_to_chars(s)@),
+    |                                               ^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3774MB, peak z3 RSS: 1118MB, min free: 17650MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 45s

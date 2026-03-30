@@ -1,0 +1,40 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:52:14
+   |
+52 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:14
+   |
+56 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:661:5
+    |
+661 | /     fn union_merge<V: StT + Hash>(
+662 | |         uf: &mut UnionFindStEph<V>,
+663 | |         root_u: V,
+664 | |         root_v: V,
+665 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:944:9
+    |
+944 |         fn union(&mut self, u: &V, v: &V) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5127 verified, 2 errors
+error: aborting due to 2 previous errors; 3 warnings emitted
+
+Elapsed: 194s
+Sampled Memory Usage: peak rust_verify RSS: 8047MB, peak z3 RSS: 14224MB, min free: 2980MB
+Sampled CPU Usage: rust_verify: 175s, z3 children: 243s

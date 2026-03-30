@@ -571,8 +571,8 @@ broadcast use {
                             assert(adj_after_delete.dom().contains(k));
                             assert(pre_insert.dom().contains(k));
                         };
-                        assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int implies
-                            (result_adj@.dom().contains(seq@[j]) ==> !result_adj@[seq@[j]].contains(v@))
+                        assert forall|j: int| #![trigger seq@[j]] 0 <= j < (i + 1) as int && result_adj@.dom().contains(seq@[j]) implies
+                            !result_adj@[seq@[j]].contains(v@)
                         by {
                             if j == i as int {
                                 assert(result_adj@[u@] == nn_view);

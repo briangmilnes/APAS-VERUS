@@ -1,0 +1,1133 @@
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:199:17
+    |
+199 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:200:17
+    |
+200 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:211:21
+    |
+211 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:212:21
+    |
+212 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:235:21
+    |
+235 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:236:21
+    |
+236 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:245:25
+    |
+245 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:255:25
+    |
+255 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:258:25
+    |
+258 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:261:25
+    |
+261 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:283:17
+    |
+283 |                 reveal_with_fuel(spec_is_bst_link, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:284:17
+    |
+284 |                 reveal_with_fuel(link_contains, 3);
+    |                 ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:295:21
+    |
+295 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:296:21
+    |
+296 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:319:21
+    |
+319 |                     reveal_with_fuel(spec_is_bst_link, 3);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:320:21
+    |
+320 |                     reveal_with_fuel(link_contains, 4);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:329:25
+    |
+329 |                         reveal_with_fuel(link_contains, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:339:25
+    |
+339 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:342:25
+    |
+342 |                         reveal_with_fuel(spec_is_bst_link, 2);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:345:25
+    |
+345 |                         reveal_with_fuel(link_contains, 4);
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:438:21
+    |
+438 |                     reveal_with_fuel(spec_is_bst_link, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:439:21
+    |
+439 |                     reveal_with_fuel(link_contains, 2);
+    |                     ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:453:29
+    |
+453 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:454:29
+    |
+454 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:466:33
+    |
+466 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:471:33
+    |
+471 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:480:33
+    |
+480 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:495:29
+    |
+495 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:496:29
+    |
+496 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:508:33
+    |
+508 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:513:33
+    |
+513 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:522:33
+    |
+522 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:535:29
+    |
+535 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTRBMtEph.rs:536:29
+    |
+536 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:160:13
+    |
+160 |             reveal_with_fuel(spec_is_bst_link, 4);
+    |             ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:161:13
+    |
+161 |             reveal_with_fuel(link_contains, 4);
+    |             ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:165:25
+    |
+165 |                 proof { reveal_with_fuel(link_contains, 2); }
+    |                         ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:216:29
+    |
+216 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:217:29
+    |
+217 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:223:33
+    |
+223 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:235:33
+    |
+235 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:239:37
+    |
+239 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:251:33
+    |
+251 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:259:37
+    |
+259 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:298:33
+    |
+298 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:299:33
+    |
+299 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:308:37
+    |
+308 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:312:41
+    |
+312 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:336:37
+    |
+336 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:348:37
+    |
+348 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:352:41
+    |
+352 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:363:37
+    |
+363 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:372:41
+    |
+372 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:379:45
+    |
+379 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:390:37
+    |
+390 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:397:33
+    |
+397 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:398:33
+    |
+398 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:403:37
+    |
+403 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:414:37
+    |
+414 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:418:41
+    |
+418 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:424:37
+    |
+424 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:428:41
+    |
+428 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:438:37
+    |
+438 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:483:33
+    |
+483 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:484:33
+    |
+484 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:490:37
+    |
+490 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:503:37
+    |
+503 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:530:37
+    |
+530 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:534:41
+    |
+534 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:545:37
+    |
+545 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:549:41
+    |
+549 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:559:41
+    |
+559 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:575:37
+    |
+575 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:578:37
+    |
+578 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:581:37
+    |
+581 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:596:33
+    |
+596 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:597:33
+    |
+597 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:602:37
+    |
+602 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:612:37
+    |
+612 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:616:41
+    |
+616 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:622:37
+    |
+622 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:629:41
+    |
+629 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:637:37
+    |
+637 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:693:29
+    |
+693 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:694:29
+    |
+694 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:700:33
+    |
+700 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:713:33
+    |
+713 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:717:37
+    |
+717 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:729:33
+    |
+729 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:738:37
+    |
+738 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:777:33
+    |
+777 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:778:33
+    |
+778 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:787:37
+    |
+787 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:791:41
+    |
+791 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:815:37
+    |
+815 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:827:37
+    |
+827 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:831:41
+    |
+831 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:842:37
+    |
+842 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:851:41
+    |
+851 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:858:45
+    |
+858 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:874:37
+    |
+874 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:877:37
+    |
+877 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:880:37
+    |
+880 | ...                   reveal_with_fuel(spec_is_bst_link, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:887:33
+    |
+887 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:888:33
+    |
+888 | ...                   reveal_with_fuel(link_contains, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:893:37
+    |
+893 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:904:37
+    |
+904 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:908:41
+    |
+908 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:914:37
+    |
+914 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:918:41
+    |
+918 | ...                   reveal_with_fuel(link_contains, 2);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:928:37
+    |
+928 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:973:33
+    |
+973 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:974:33
+    |
+974 | ...                   reveal_with_fuel(link_contains, 5);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:980:37
+    |
+980 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+   --> src/Chap37/BSTSplayMtEph.rs:993:37
+    |
+993 | ...                   reveal_with_fuel(link_contains, 3);
+    |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1020:37
+     |
+1020 | ...                   reveal_with_fuel(link_contains, 5);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1024:41
+     |
+1024 | ...                   reveal_with_fuel(link_contains, 2);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1035:37
+     |
+1035 | ...                   reveal_with_fuel(link_contains, 5);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1039:41
+     |
+1039 | ...                   reveal_with_fuel(link_contains, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1049:41
+     |
+1049 | ...                   reveal_with_fuel(link_contains, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1060:37
+     |
+1060 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1075:33
+     |
+1075 | ...                   reveal_with_fuel(spec_is_bst_link, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1076:33
+     |
+1076 | ...                   reveal_with_fuel(link_contains, 4);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1081:37
+     |
+1081 | ...                   reveal_with_fuel(link_contains, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1091:37
+     |
+1091 | ...                   reveal_with_fuel(link_contains, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1095:41
+     |
+1095 | ...                   reveal_with_fuel(link_contains, 2);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1101:37
+     |
+1101 | ...                   reveal_with_fuel(link_contains, 3);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1108:41
+     |
+1108 | ...                   reveal_with_fuel(link_contains, 2);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap37/BSTSplayMtEph.rs:1116:37
+     |
+1116 | ...                   reveal_with_fuel(spec_is_bst_link, 4);
+     |                       ^^^^^^^^^^^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap65/PrimStEph.rs:37:14
+   |
+37 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:257:29
+    |
+257 | ...                   assert forall|x: T| new_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:258:33
+    |
+258 | ...                   T::le(x, node_val) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:260:29
+    |
+260 | ...                   assert forall|x: T| old_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:261:33
+    |
+261 | ...                   T::le(node_val, x) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:281:29
+    |
+281 | ...                   assert forall|x: T| old_left.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:282:33
+    |
+282 | ...                   T::le(x, node_val) && x != node_val by {};
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:283:29
+    |
+283 | ...                   assert forall|x: T| new_right.tree_contains(x) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:284:33
+    |
+284 | ...                   T::le(node_val, x) && x != node_val
+    |                       ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:119:29
+    |
+119 | ...                   assert forall|z: T| old_lr.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:120:33
+    |
+120 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:125:29
+    |
+125 | ...                   assert forall|z: T| right_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:126:33
+    |
+126 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:185:29
+    |
+185 | ...                   assert forall|z: T| old_rl.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:186:33
+    |
+186 | ...                   T::le(x_val, z) && z != x_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTAVLMtEph.rs:191:29
+    |
+191 | ...                   assert forall|z: T| left_sub.tree_contains(z) implies
+    |                       ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTAVLMtEph.rs:192:33
+    |
+192 | ...                   T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:588:31
+    |
+588 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:588:44
+    |
+588 |             min.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:596:25
+    |
+596 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:596:45
+    |
+596 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:614:25
+    |
+614 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:614:45
+    |
+614 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:636:31
+    |
+636 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:636:44
+    |
+636 |             max.is_some() ==> forall|x: T| link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:644:25
+    |
+644 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:644:45
+    |
+644 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, node.key) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap37/BSTRBMtEph.rs:662:25
+    |
+662 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap37/BSTRBMtEph.rs:662:45
+    |
+662 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap37/BSTRBMtEph.rs:662:25
+    |
+662 |                         assert forall|x: T| link_contains(*link, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                         ^^^^^^
+
+verification results:: 4742 verified, 0 errors
+warning: 130 warnings emitted
+
+    Finished `release` profile [optimized] target(s) in 0.02s
+────────────
+ Nextest run ID f5ee53ae-2ba2-4d0d-ad50-0996cb3f2610 with nextest profile: default
+    Starting 157 tests across 37 binaries
+        PASS [   1.325s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_loop_loop
+        PASS [   1.342s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_loop_loop
+        PASS [   1.357s] rust_verify_test::HashSetWithViewPlus hash_set_wvp_for_iter
+        PASS [   1.384s] rust_verify_test::HashMapWithViewPlus hash_map_wvp_for_iter
+        PASS [   1.429s] rust_verify_test::MappingStEph mapping_st_eph_loop_loop
+        PASS [   1.480s] rust_verify_test::MappingStEph mapping_st_eph_for_iter
+        PASS [   1.346s] rust_verify_test::ProveAVLTreeSeq avltreeseq_loop_borrow_iter
+        PASS [   1.372s] rust_verify_test::ProveAVLTreeSeq avltreeseq_for_borrow_iter
+        PASS [   1.333s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_iter
+        PASS [   1.421s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_for_borrow_into
+        PASS [   1.350s] rust_verify_test::ProveAVLTreeSetMtEph avltreesetmteph_loop_borrow_iter
+        PASS [   1.345s] rust_verify_test::ProveArraySeq arrayseq_filter
+        PASS [   1.248s] rust_verify_test::ProveArraySeq arrayseq_iterate_prefixes
+        PASS [   1.269s] rust_verify_test::ProveArraySeq arrayseq_iterate
+        PASS [   1.273s] rust_verify_test::ProveArraySeq arrayseq_map
+        PASS [   1.390s] rust_verify_test::ProveArraySeq arrayseq_for_iter
+        PASS [   1.362s] rust_verify_test::ProveArraySeq arrayseq_loop_loop
+        PASS [   1.351s] rust_verify_test::ProveArraySeq arrayseq_reduce
+        PASS [   1.198s] rust_verify_test::ProveArraySeq arrayseq_tabulate
+        PASS [   1.345s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_for_iter
+        PASS [   1.313s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_for_iter
+        PASS [   1.538s] rust_verify_test::ProveArraySeq arrayseq_scan
+        PASS [   1.547s] rust_verify_test::ProveArraySeq arrayseq_scan_inclusive
+        PASS [   1.383s] rust_verify_test::ProveArraySeqMtEph arrayseqmteph_loop_loop
+        PASS [   1.378s] rust_verify_test::ProveArraySeqMtPer arrayseqmtper_loop_loop
+        PASS [   1.332s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_iter
+        PASS [   1.441s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_borrow_into
+        PASS [   1.346s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_iter
+        PASS [   1.360s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_borrow_into
+        PASS [   1.381s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_for_consume
+        PASS [   1.286s] rust_verify_test::ProveArraySeqStEph arrayseqsteph_loop_consume
+        PASS [   1.234s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_top_down_loop
+        PASS [   1.239s] rust_verify_test::ProveBFSStEph chap54_bfssteph_bottom_up_loop
+        PASS [   1.295s] rust_verify_test::ProveBFSMtEph chap54_bfsmteph_bottom_up_loop
+        PASS [   1.321s] rust_verify_test::ProveArraySeqStPer arrayseqstper_loop_loop
+        PASS [   1.389s] rust_verify_test::ProveArraySeqStPer arrayseqstper_for_iter
+        PASS [   1.219s] rust_verify_test::ProveBFSStEph chap54_bfssteph_top_down_loop
+        PASS [   1.265s] rust_verify_test::ProveBalBinTreeStEph balbintree_inorder_spec_match
+        PASS [   1.387s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_postorder
+        PASS [   1.358s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_preorder
+        PASS [   1.325s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_iter_exhausted
+        PASS [   1.439s] rust_verify_test::ProveBalBinTreeStEph balbintree_for_inorder
+        PASS [   1.329s] rust_verify_test::ProveBalBinTreeStEph balbintree_leaf_traversals_empty
+        PASS [   1.345s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_inorder
+        PASS [   1.290s] rust_verify_test::ProveBalBinTreeStEph balbintree_postorder_spec_match
+        PASS [   1.348s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_preorder
+        PASS [   1.326s] rust_verify_test::ProveBalBinTreeStEph balbintree_preorder_spec_match
+        PASS [   1.381s] rust_verify_test::ProveBalBinTreeStEph balbintree_loop_postorder
+        PASS [   1.295s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_into
+        PASS [   1.374s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_borrow_iter
+        PASS [   1.300s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_into
+        PASS [   1.360s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_for_consume
+        PASS [   1.367s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_borrow_iter
+        PASS [   1.360s] rust_verify_test::ProveChap19ArraySeqMtEph chap19_arrayseqmteph_loop_consume
+        PASS [   1.291s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_into
+        PASS [   1.327s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_loop_borrow_iter
+        PASS [   1.358s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_for_borrow_iter
+        PASS [   1.390s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_iter_over_subslice
+        PASS [   1.364s] rust_verify_test::ProveChap19ArraySeqMtEphSlice slice_operations
+        PASS [   1.385s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_into
+        PASS [   1.315s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_borrow_iter
+        PASS [   1.317s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_into
+        PASS [   1.360s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_borrow_iter
+        PASS [   1.326s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_loop_consume
+        PASS [   1.429s] rust_verify_test::ProveChap19ArraySeqStEph chap19_arrayseqsteph_for_consume
+        PASS [   1.403s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_into
+        PASS [   1.354s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_borrow_iter
+        PASS [   1.386s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_for_consume
+        PASS [   1.318s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_into
+        PASS [   1.330s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_borrow_iter
+        PASS [   1.325s] rust_verify_test::ProveChap19ArraySeqStPer chap19_arrayseqstper_loop_consume
+        PASS [   1.295s] rust_verify_test::ProveKleeneStPer kleene_alphabet
+        PASS [   1.278s] rust_verify_test::ProveKleeneStPer kleene_mem_plus
+        PASS [   1.350s] rust_verify_test::ProveLinkedListStEph linkedliststeph_loop_loop
+        PASS [   1.372s] rust_verify_test::ProveLinkedListStEph linkedliststeph_for_iter
+        PASS [   1.365s] rust_verify_test::ProveLinkedListStPer linkedliststper_for_iter
+        PASS [   1.424s] rust_verify_test::ProveKleeneStPer kleene_mem_star
+        PASS [   1.321s] rust_verify_test::ProveLinkedListStPer linkedliststper_loop_loop
+        PASS [   1.344s] rust_verify_test::ProveMathSeq mathseq_for_borrow_into
+        PASS [   1.315s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_into
+        PASS [   1.339s] rust_verify_test::ProveMathSeq mathseq_for_consume
+        PASS [   1.317s] rust_verify_test::ProveMathSeq mathseq_loop_consume
+        PASS [   1.384s] rust_verify_test::ProveMathSeq mathseq_for_borrow_iter
+        PASS [   1.341s] rust_verify_test::ProveMathSeq mathseq_loop_borrow_iter
+        PASS [   1.372s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_into
+        PASS [   1.398s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_into
+        PASS [   1.386s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_loop_borrow_iter
+        PASS [   1.445s] rust_verify_test::ProveOrderedSetStEph chap43_orderedsetsteph_for_borrow_iter
+        PASS [   1.448s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_into
+        PASS [   1.473s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_for_borrow_iter
+        PASS [   1.370s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_into
+        PASS [   1.413s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_into
+        PASS [   1.445s] rust_verify_test::ProveOrderedTableStEph chap43_orderedtablesteph_loop_borrow_iter
+        PASS [   1.366s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_into
+        PASS [   1.430s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_for_borrow_iter
+        PASS [   1.425s] rust_verify_test::ProveOrderedTableStPer chap43_orderedtablestper_loop_borrow_iter
+        PASS [   1.301s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_into
+        PASS [   1.270s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_iter
+        PASS [   1.299s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_borrow_into
+        PASS [   1.365s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_borrow_iter
+        PASS [   1.363s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_for_consume
+        PASS [   1.324s] rust_verify_test::ProvePrimTreeSeqStPer primtreeseq_loop_consume
+        PASS [   1.361s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_into
+        PASS [   1.333s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_iter
+        PASS [   1.362s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_borrow_into
+        PASS [   1.438s] rust_verify_test::ProveSetMtEph set_mt_eph_for_borrow_iter
+        PASS [   1.316s] rust_verify_test::Provedeep_view_standard deep_view_standard_for_consume
+        PASS [   1.428s] rust_verify_test::ProveSetMtEph set_mt_eph_loop_borrow_iter
+        PASS [   1.270s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_into
+        PASS [   1.201s] rust_verify_test::Provedeep_view_standard deep_view_standard_simple
+        PASS [   1.268s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_borrow_iter
+        PASS [   1.320s] rust_verify_test::Provedeep_view_standard deep_view_standard_loop_consume
+        PASS [   1.299s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_iter
+        PASS [   1.338s] rust_verify_test::Proveiterators_standard iterators_standard_for_borrow_into
+        PASS [   1.370s] rust_verify_test::Proveiterators_standard iterators_standard_for_consume
+        PASS [   1.291s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_iter
+        PASS [   1.342s] rust_verify_test::Proveiterators_standard iterators_standard_loop_borrow_into
+        PASS [   1.332s] rust_verify_test::Provemod_standard mod_standard_for_borrow_iter
+        PASS [   1.388s] rust_verify_test::Proveiterators_standard iterators_standard_loop_consume
+        PASS [   1.412s] rust_verify_test::Provemod_standard mod_standard_for_borrow_into
+        PASS [   1.288s] rust_verify_test::Provemod_standard mod_standard_for_consume
+        PASS [   1.253s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_into
+        PASS [   1.262s] rust_verify_test::Provemod_standard mod_standard_loop_borrow_iter
+        PASS [   1.254s] rust_verify_test::Provemod_standard mod_standard_loop_consume
+        PASS [   1.260s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_into
+        PASS [   1.260s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_borrow_iter
+        PASS [   1.336s] rust_verify_test::Provetable_of_contents_standard toc_standard_for_consume
+        PASS [   1.315s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_into
+        PASS [   1.303s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_borrow_iter
+        PASS [   1.236s] rust_verify_test::Proveusing_closures_standard closures_ghost_spec_fn
+        PASS [   1.311s] rust_verify_test::Provetable_of_contents_standard toc_standard_loop_consume
+        PASS [   1.292s] rust_verify_test::Proveusing_closures_standard closures_inline_requires_ensures
+        PASS [   1.240s] rust_verify_test::Proveusing_closures_standard closures_let_bind_ensures
+        PASS [   1.278s] rust_verify_test::Proveusing_closures_standard closures_map_apply
+        PASS [   1.366s] rust_verify_test::Proveview_standard view_standard_collection
+        PASS [   1.350s] rust_verify_test::Proveview_standard view_standard_for_borrow_into
+        PASS [   1.284s] rust_verify_test::Proveview_standard view_standard_for_consume
+        PASS [   1.363s] rust_verify_test::Proveview_standard view_standard_for_borrow_iter
+        PASS [   1.239s] rust_verify_test::Proveview_standard view_standard_loop_borrow_into
+        PASS [   1.312s] rust_verify_test::Proveview_standard view_standard_loop_borrow_iter
+        PASS [   1.243s] rust_verify_test::Proveview_standard view_standard_loop_consume
+        PASS [   1.252s] rust_verify_test::Proveview_standard view_standard_simple
+        PASS [   1.291s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_iter
+        PASS [   1.350s] rust_verify_test::Provewrapping_iterators_standard wrapping_for_borrow_into
+        PASS [   1.281s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_into
+        PASS [   1.262s] rust_verify_test::Provewrapping_iterators_standard wrapping_loop_borrow_iter
+        PASS [   1.400s] rust_verify_test::RelationStEph relation_st_eph_loop_loop
+        PASS [   1.489s] rust_verify_test::RelationStEph relation_st_eph_for_iter
+        PASS [   1.350s] rust_verify_test::SetMtEph set_mt_eph_from_vec
+        PASS [   1.414s] rust_verify_test::SetMtEph set_mt_eph_for_iter
+        PASS [   1.396s] rust_verify_test::SetMtEph set_mt_eph_loop_loop
+        PASS [   1.405s] rust_verify_test::SetStEph set_st_eph_for_iter
+        PASS [   1.336s] rust_verify_test::SetStEph set_st_eph_from_vec
+        PASS [   1.364s] rust_verify_test::SetStEph set_st_eph_loop_loop
+        PASS [   1.342s] rust_verify_test::prove_MathSeq_iters mathseq_iter_consuming
+        PASS [   1.293s] rust_verify_test::prove_MathSeq_iters mathseq_iter_nested
+        PASS [   1.185s] rust_verify_test::prove_MathSeq_iters mathseq_iter_range
+────────────
+     Summary [  35.348s] 157 tests run: 157 passed, 0 skipped
+Elapsed: 97s

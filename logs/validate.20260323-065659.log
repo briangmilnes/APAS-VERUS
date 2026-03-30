@@ -1,0 +1,47 @@
+error[E0428]: the name `lemma_size_lt_usize_max` is defined multiple times
+   --> src/Chap37/AVLTreeSeqStEph.rs:233:5
+    |
+194 |       proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+    |  ___________-
+195 | |         requires spec_avltreeseqsteph_wf(*link),
+196 | |         ensures spec_cached_size(link) < usize::MAX as nat,
+197 | |         decreases *link,
+...   |
+206 | |     }
+    | |_____- previous definition of the value `lemma_size_lt_usize_max` here
+...
+233 | /     pub proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+234 | |         requires spec_avltreeseqsteph_wf(*link),
+235 | |         ensures spec_cached_size(link) < usize::MAX,
+236 | |         decreases *link,
+...   |
+245 | |     }
+    | |_____^ `lemma_size_lt_usize_max` redefined here
+    |
+    = note: `lemma_size_lt_usize_max` must be defined only once in the value namespace of this module
+
+error[E0428]: the name `lemma_wf_implies_len_bound_steph` is defined multiple times
+   --> src/Chap37/AVLTreeSeqStEph.rs:248:5
+    |
+209 | /     pub proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: &AVLTreeSeqStEphS<T>)
+210 | |         requires s.spec_avltreeseqsteph_wf(),
+211 | |         ensures s@.len() < usize::MAX as nat,
+...   |
+214 | |         lemma_size_eq_inorder_len::<T>(&s.root);
+215 | |     }
+    | |_____- previous definition of the value `lemma_wf_implies_len_bound_steph` here
+...
+248 | /     pub broadcast proof fn lemma_wf_implies_len_bound_steph<T: StT>(s: AVLTreeSeqStEphS<T>)
+249 | |         requires #[trigger] s.spec_avltreeseqsteph_wf(),
+250 | |         ensures s@.len() < usize::MAX,
+...   |
+253 | |         lemma_size_eq_inorder_len::<T>(&s.root);
+254 | |     }
+    | |_____^ `lemma_wf_implies_len_bound_steph` redefined here
+    |
+    = note: `lemma_wf_implies_len_bound_steph` must be defined only once in the value namespace of this module
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0428`.
+Elapsed: 9s

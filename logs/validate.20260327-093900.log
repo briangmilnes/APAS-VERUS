@@ -1,0 +1,51 @@
+error: `core::f64::impl&%0::is_finite` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/experiments/f64_ieee_total_order.rs:18:18
+    |
+ 18 |         requires x.is_finite(),
+    |                  ^^^^^^^^^^^^^
+...
+ 24 |         requires x.is_finite(), y.is_finite(), z.is_finite(),
+    |                  -------------  -------------  -------------
+...
+ 31 |         requires x.is_finite(), y.is_finite(),
+    |                  -------------  -------------
+...
+ 38 |         requires x.is_finite(), y.is_finite(),
+    |                  -------------  -------------
+...
+ 46 |             a.is_finite(), b.is_finite(), c.is_finite(),
+    |             -------------  -------------  -------------
+ 47 |             (a + b).is_finite(),
+    |             -------------------
+ 48 |             (a + c).is_finite(),
+    |             -------------------
+...
+ 55 |         requires a.is_finite(),
+    |                  -------------
+...
+ 62 |         requires x.is_finite(), y.is_finite(),
+    |                  -------------  -------------
+...
+ 70 |         requires x.is_finite(), s.contains(x),
+    |                  -------------
+...
+ 81 |         requires x.is_finite(),
+    |                  -------------
+...
+ 87 |         requires x.is_finite(), y.is_finite(), z.is_finite(),
+    |                  -------------  -------------  -------------
+...
+ 94 |         requires x.is_finite(), y.is_finite(),
+    |                  -------------  -------------
+...
+101 |         requires x.is_finite(), y.is_finite(),
+    |                  -------------  -------------
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification [core::f64::<impl f64>::is_finite] (_0: f64) -> bool;
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23784MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

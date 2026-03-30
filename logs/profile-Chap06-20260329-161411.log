@@ -1,0 +1,249 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::KleeneStPer::KleeneStPer ...
+
+note: Log analysis complete for module Chap05::KleeneStPer::KleeneStPer
+
+note: Analyzing prover log for module Chap05::RelationStEph::RelationStEph ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::MappingStEph::MappingStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::DirGraphStEph::DirGraphStEph ...
+
+note: Log analysis complete for module Chap05::RelationStEph::RelationStEph
+
+Error parsing line 119306 (EnodeRootMismatch(e17815, e14233)): "[new-match] 0x6422ce6ddc70 #2697 #2694 #5435 #15296 #2934 #15316 #3010 ; #18195 (#15185 #15378) #18261 (#5435 #18226) #17470 (#17751 #17914)"
+Error parsing line 119307 (EnodeRootMismatch(e17815, e14233)): "[new-match] 0x6422ce6ddcc0 #2685 #2682 #5435 #15296 #2934 #15316 #3010 ; #18195 (#15185 #15378) #18261 (#5435 #18226) #17595 (#17751 #17914)"
+Error parsing line 119333 (UnknownFingerprint(Fingerprint(110100654972016))): "[instance] 0x6422ce6ddc70 ; 2"
+Error parsing line 119356 (UnmatchedEndOfInstance): "[end-of-instance]"
+Error parsing line 120955 (EnodeRootMismatch(e17815, e14233)): "[new-match] 0x6422ce6de0e8 #2697 #2694 #5435 #15296 #2934 #15316 #3010 ; #18195 (#15185 #15378) #18261 (#5435 #18226) #17470 (#17751 #17914)"
+Error parsing line 120956 (EnodeRootMismatch(e17815, e14233)): "[new-match] 0x6422ce6de138 #2685 #2682 #5435 #15296 #2934 #15316 #3010 ; #18195 (#15185 #15378) #18261 (#5435 #18226) #17595 (#17751 #17914)"
+Error parsing line 120980 (UnknownFingerprint(Fingerprint(110100654973160))): "[instance] 0x6422ce6de0e8 ; 2"
+Error parsing line 121003 (UnmatchedEndOfInstance): "[end-of-instance]"
+note: Log analysis complete for module Chap06::DirGraphStEph::DirGraphStEph
+
+note: Log analysis complete for module Chap05::MappingStEph::MappingStEph
+
+note: Analyzing prover log for module Chap05::SetMtEph::SetMtEph ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap05::SetStEph::SetStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabDirGraphStEph::LabDirGraphStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabDirGraphMtEph::LabDirGraphMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::DirGraphMtEph::DirGraphMtEph ...
+
+Error parsing line 337793 (SubpatNoBlame([t5659])): "[new-match] 0x5cba4acaf6b8 #10678 #4605 #25236 #9998 #9997 ; #25297 #25300 (#9997 #9997) (#9998 #9998) (#25236 #25236) #12421 (#9997 #9997) (#9998 #9998) (#25236 #25236) (#12569 #25950)"
+Error parsing line 472126 (SubpatNoBlame([t5659])): "[new-match] 0x5cba4acaf6b8 #10678 #4605 #25024 #9998 #9997 ; #25559 #25554 (#9997 #9997) (#9998 #9998) (#25024 #25024) #24952 (#9997 #9997) (#9998 #9998) (#25024 #25024) (#24903 #15515)"
+note: Log analysis complete for module Chap05::SetStEph::SetStEph
+
+note: Log analysis complete for module Chap06::LabDirGraphStEph::LabDirGraphStEph
+
+note: Log analysis complete for module Chap05::SetMtEph::SetMtEph
+
+note: Log analysis complete for module Chap06::LabDirGraphMtEph::LabDirGraphMtEph
+
+note: Log analysis complete for module Chap06::DirGraphMtEph::DirGraphMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph ...
+
+Error parsing line 385923 (SubpatNoBlame([t5670])): "[new-match] 0x654a9dc171f0 #10948 #4614 #24392 #6376 #6395 ; #26480 #26483 (#6395 #6395) (#6376 #6376) (#24392 #24392) #23681 (#6395 #6395) (#6376 #6376) (#24392 #24392) (#25506 #26524)"
+Error parsing line 508258 (SubpatNoBlame([t5670])): "[new-match] 0x654a9dbbcd88 #10948 #4614 #33291 #6376 #6395 ; #34824 #34661 (#6395 #6395) (#6376 #6376) (#33291 #33291) #35251 (#6395 #6395) (#6376 #6376) (#6160 #33291) (#35252 #33873)"
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::UnDirGraphMtEph::UnDirGraphMtEph ...
+
+note: Log analysis complete for module Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph
+
+note: Log analysis complete for module Chap06::LabUnDirGraphMtEph::LabUnDirGraphMtEph
+
+note: Log analysis complete for module Chap06::UnDirGraphMtEph::UnDirGraphMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::UnDirGraphStEph::UnDirGraphStEph ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphF64::WeightedDirGraphStEphF64
+
+note: Log analysis complete for module Chap06::UnDirGraphStEph::UnDirGraphStEph
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI128::WeightedDirGraphStEphI128
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI16::WeightedDirGraphStEphI16
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI32::WeightedDirGraphStEphI32 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI32::WeightedDirGraphStEphI32
+
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI8::WeightedDirGraphStEphI8 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphI64::WeightedDirGraphStEphI64 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphIsize::WeightedDirGraphStEphIsize ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU128::WeightedDirGraphStEphU128 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU16::WeightedDirGraphStEphU16 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI8::WeightedDirGraphStEphI8
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphIsize::WeightedDirGraphStEphIsize
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphI64::WeightedDirGraphStEphI64
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU128::WeightedDirGraphStEphU128
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU16::WeightedDirGraphStEphU16
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU64::WeightedDirGraphStEphU64 ...
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU32::WeightedDirGraphStEphU32
+
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+Z3 4.12.5
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU64::WeightedDirGraphStEphU64
+
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphU8::WeightedDirGraphStEphU8 ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Types::Types ...
+
+note: Log analysis complete for module Types::Types
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::accept ...
+
+note: Log analysis complete for module vstdplus::accept
+
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphU8::WeightedDirGraphStEphU8
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap06::WeightedDirGraphStEphUsize::WeightedDirGraphStEphUsize ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+note: Log analysis complete for module vstdplus::feq::feq
+
+note: Analyzing prover log for module vstdplus::float::float ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::float::float
+
+note: Log analysis complete for module Chap06::WeightedDirGraphStEphUsize::WeightedDirGraphStEphUsize
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+Z3 4.12.5
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+note: Log analysis complete for module vstdplus::seq::seq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+note: Log analysis complete for module vstdplus::seq_set
+
+verification results:: 1064 verified, 0 errors

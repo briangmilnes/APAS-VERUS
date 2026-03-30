@@ -1,0 +1,15 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap26/ETSPStEph.rs:156:11
+    |
+156 |       proof fn lemma_combined_cycle(
+    |  ___________^
+157 | |         combined: Seq<Edge>, lt: Seq<Edge>, rt: Seq<Edge>,
+158 | |         ln_i: int, rn_i: int, best_li: int, best_ri: int,
+159 | |         el_from: Point, el_to: Point, er_from: Point, er_to: Point,
+160 | |     )
+    | |_____^
+
+verification results:: 1933 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s

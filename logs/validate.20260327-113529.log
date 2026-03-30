@@ -1,0 +1,102 @@
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:525:28
+    |
+525 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+525 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:537:28
+    |
+537 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+537 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:658:28
+    |
+658 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+658 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:670:28
+    |
+670 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+670 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:791:28
+    |
+791 |                 let v = la.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+791 |                 let v = la.data.to_vec();
+    |                            +++++
+
+error[E0599]: no method named `to_vec` found for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` in the current scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:803:28
+    |
+803 |                 let v = ra.to_vec();
+    |                            ^^^^^^ method not found in `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:53:5
+    |
+ 53 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `to_vec` not found for this struct
+    |
+help: one of the expressions' fields has a method of the same name
+    |
+803 |                 let v = ra.data.to_vec();
+    |                            +++++
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 12646MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,157 @@
+Z3 4.12.5
+note: Analyzing prover log for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler ...
+
+note: Log analysis complete for module Chap02::FibonacciHFScheduler::FibonacciHFScheduler
+
+note: Analyzing prover log for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap27::ReduceContractStEph::ReduceContractStEph ...
+
+Error parsing line 28281 (SubpatNoBlame([t10576])): "[new-match] 0x632ef4c64398 #4612 #4517 #4569 #4413 #1817 ; #4570 (#4428 #4428) (#4566 #4412) (#3618 #4428) #4920 (#4428 #3618) (#4910 #4413) (#4569 #4820) #1768 (#2077 #3618) (#1817 #1817) (#1668 #1668)"
+note: Log analysis complete for module Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice
+
+note: Log analysis complete for module Chap27::ReduceContractStEph::ReduceContractStEph
+
+note: Analyzing prover log for module Chap27::ReduceContractMtEph::ReduceContractMtEph ...
+
+Z3 4.12.5
+Error parsing line 89272 (SubpatNoBlame([t30718])): "[new-match] 0x5c0794fbcf68 #10131 #10281 #9139 #7259 #6559 ; #9133 (#10562 #10562) (#9115 #11226) (#7955 #10562) #9035 (#10562 #7955) (#9036 #7259) (#9139 #9006) #9316 (#1183 #7955) (#6559 #6559) (#10625 #10625)"
+note: Log analysis complete for module Chap27::ReduceContractMtEph::ReduceContractMtEph
+
+note: Analyzing prover log for module ParaPairs::ParaPairs ...
+
+Z3 4.12.5
+Z3 4.12.5
+note: Analyzing prover log for module Chap27::ScanContractMtEph::ScanContractMtEph ...
+
+note: Log analysis complete for module ParaPairs::ParaPairs
+
+Error parsing line 37301 (SubpatNoBlame([t14798])): "[new-match] 0x6258398ad010 #444 #782 #7166 #7086 #3273 ; #7168 (#1947 #1947) (#7162 #6961) (#3351 #1947) #7300 (#1947 #3351) (#7273 #7086) (#7166 #7243) #1774 (#3661 #3351) (#3273 #3273) (#2122 #2122)"
+Error parsing line 37317 (UnknownFingerprint(Fingerprint(108131062042640))): "[instance] 0x6258398ad010 ; 4"
+Error parsing line 37324 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module Chap27::ScanContractStEph::ScanContractStEph ...
+
+Error parsing line 29878 (SubpatNoBlame([t11474])): "[new-match] 0x61018cc3d568 #5084 #5081 #5043 #5350 #2207 ; #5628 (#4901 #4901) (#5630 #5351) (#2348 #4901) #5039 (#4901 #2348) (#5030 #5350) (#5043 #5562) #5161 (#2519 #2348) (#2207 #2207) (#5187 #5187)"
+Error parsing line 29894 (UnknownFingerprint(Fingerprint(106659284505960))): "[instance] 0x61018cc3d568 ; 4"
+Error parsing line 29901 (UnmatchedEndOfInstance): "[end-of-instance]"
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::VecQueue::VecQueue ...
+
+note: Log analysis complete for module Chap27::ScanContractMtEph::ScanContractMtEph
+
+note: Log analysis complete for module vstdplus::VecQueue::VecQueue
+
+Z3 4.12.5
+note: Analyzing prover log for module Types::Types ...
+
+note: Log analysis complete for module Types::Types
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::accept ...
+
+note: Log analysis complete for module Chap27::ScanContractStEph::ScanContractStEph
+
+note: Log analysis complete for module vstdplus::accept
+
+note: Analyzing prover log for module vstdplus::arithmetic::power2_plus::power2_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::arithmetic::power2_plus::power2_plus
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStEph::ArraySeqStEph ...
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqStPer::ArraySeqStPer ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::clone_view::clone_view ...
+
+note: Log analysis complete for module vstdplus::clone_view::clone_view
+
+note: Analyzing prover log for module vstdplus::feq::feq ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::feq::feq
+
+Z3 4.12.5
+note: Analyzing prover log for module Chap19::ArraySeqMtEph::ArraySeqMtEph ...
+
+note: Log analysis complete for module Chap19::ArraySeqStEph::ArraySeqStEph
+
+note: Log analysis complete for module Chap19::ArraySeqStPer::ArraySeqStPer
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::float::float ...
+
+note: Analyzing prover log for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::float::float
+
+note: Log analysis complete for module vstdplus::hash_map_with_view_plus::hash_map_with_view_plus
+
+Error parsing line 575555 (SubpatNoBlame([t157006])): "[new-match] 0x6094fadc7ae8 #28802 #28796 #25629 #25983 #12097 ; #25634 (#25954 #28911) (#25998 #25998) (#25954 #28911) #26526 (#28911 #29154) (#19607 #25984) (#26444 #25630) #26003 (#25954 #29154) (#12097 #12097) (#26146 #26146)"
+Error parsing line 575804 (SubpatNoBlame([t157006])): "[new-match] 0x6094fadc5bc0 #28802 #28796 #25629 #25983 #12097 ; #25634 (#25954 #28911) (#25998 #25998) (#25954 #28911) #26526 (#28911 #29154) (#19607 #25984) (#26444 #25630) #26003 (#25954 #29154) (#12097 #12097) (#26146 #26146)"
+note: Analyzing prover log for module vstdplus::hashed_checked_u32::hash_checked_u32 ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::hashed_checked_u32::hash_checked_u32
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus ...
+
+note: Log analysis complete for module vstdplus::hash_set_with_view_plus::hash_set_with_view_plus
+
+note: Log analysis complete for module Chap19::ArraySeqMtEph::ArraySeqMtEph
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_nat::checked_nat ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::checked_int::checked_int ...
+
+note: Analyzing prover log for module vstdplus::multiset::multiset ...
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::partial_order::partial_order ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::multiset::multiset
+
+note: Log analysis complete for module vstdplus::partial_order::partial_order
+
+note: Log analysis complete for module vstdplus::checked_nat::checked_nat
+
+note: Log analysis complete for module vstdplus::checked_int::checked_int
+
+Z3 4.12.5
+note: Analyzing prover log for lib::vstdplus::seq::seq::lemma_flatten_uniform_len ...
+
+note: Log analysis complete for lib::vstdplus::seq::seq::lemma_flatten_uniform_len
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::smart_ptrs::smart_ptrs ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::smart_ptrs::smart_ptrs
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::seq::seq ...
+
+note: Log analysis complete for module vstdplus::seq::seq
+
+Z3 4.12.5
+note: Analyzing prover log for module vstdplus::total_order::total_order ...
+
+note: Log analysis complete for module vstdplus::total_order::total_order
+
+note: Analyzing prover log for module vstdplus::seq_set ...
+
+Z3 4.12.5
+note: Log analysis complete for module vstdplus::seq_set
+
+verification results:: 854 verified, 0 errors

@@ -1,0 +1,95 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:466:17
+    |
+466 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:471:17
+    |
+471 |                 assert forall |d: int| 0 <= d < table.current_size as int
+    |                 ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:335:13
+    |
+335 |             locked_val.union(other_ref);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:135:17
+    |
+135 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_ref.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_ref.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetMtEph.rs:479:13
+    |
+479 |             locked_val.join(other_inner);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 --------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStEph.rs:229:17
+    |
+229 |                 old(self)@.len() + other@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+locked_val.spec_orderedsetsteph_wf() ✔
+other_inner.spec_orderedsetsteph_wf() ✔
+clip(nat, locked_val.view().len() + other_inner.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:783:32
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+783 |                         left = left.insert(v);
+    |                                ^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:823:33
+    |
+ 89 |                 self@.len() + 1 < usize::MAX as nat,
+    |                 ----------------------------------- failed precondition
+...
+823 |                         right = right.insert(v);
+    |                                 ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+  --> src/Chap43/OrderedSetStPer.rs:89:17
+   |
+89 |                 self@.len() + 1 < usize::MAX as nat,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+left.spec_orderedsetstper_wf() ✔
+clip(nat, left.view().len() + 1) < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:929:30
+    |
+ 89 |                 self@.len() + 1 < us

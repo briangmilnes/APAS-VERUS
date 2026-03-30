@@ -1,0 +1,78 @@
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:79:17
+    |
+ 79 |                 empty.spec_avltreesetstper_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+193 |             empty
+    |             ----- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap41/AVLTreeSetStPer.rs:79:17
+   |
+79 |                 empty.spec_avltreesetstper_wf();
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_avltreesetstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:85:17
+    |
+ 85 |                 tree.spec_avltreesetstper_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+221 |             tree
+    |             ---- at the end of the function body
+
+note: diagnostics via expansion
+  --> src/Chap41/AVLTreeSetStPer.rs:85:17
+   |
+85 |                 tree.spec_avltreesetstper_wf();
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(x).view()) ✔
+%return.spec_avltreesetstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1346:34
+     |
+ 416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+     |                      -------------------------------- failed precondition
+...
+1346 |                 let other_find = other.find(&pair.0);
+     |                                  ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:416:22
+    |
+416 |             requires self.spec_orderedtablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+other.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✔
+obeys_feq_full() ✔
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1328:46
+     |
+1328 |                         &&& result_v1[j]@ == self@[self.base_set.elements@[src].0]
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+verification results:: 4489 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 93s

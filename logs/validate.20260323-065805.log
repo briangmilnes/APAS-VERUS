@@ -1,0 +1,26 @@
+error[E0428]: the name `lemma_size_lt_usize_max` is defined multiple times
+   --> src/Chap37/AVLTreeSeqStEph.rs:224:5
+    |
+194 |       proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+    |  ___________-
+195 | |         requires spec_avltreeseqsteph_wf(*link),
+196 | |         ensures spec_cached_size(link) < usize::MAX as nat,
+197 | |         decreases *link,
+...   |
+206 | |     }
+    | |_____- previous definition of the value `lemma_size_lt_usize_max` here
+...
+224 | /     pub proof fn lemma_size_lt_usize_max<T: StT>(link: &Link<T>)
+225 | |         requires spec_avltreeseqsteph_wf(*link),
+226 | |         ensures spec_cached_size(link) < usize::MAX,
+227 | |         decreases *link,
+...   |
+236 | |     }
+    | |_____^ `lemma_size_lt_usize_max` redefined here
+    |
+    = note: `lemma_size_lt_usize_max` must be defined only once in the value namespace of this module
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0428`.
+Elapsed: 9s

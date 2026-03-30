@@ -1,0 +1,40 @@
+error[E0034]: multiple applicable items in scope
+   --> src/experiments/trait_rec_vs_iter.rs:130:12
+    |
+130 |         fn sum(&self) -> (total: u64)
+    |            ^^^ multiple `VERUS_SPEC__sum` found
+    |
+note: candidate #1 is defined in the trait `experiments::trait_rec_vs_iter::trait_rec_vs_iter::IterStackTrait`
+   --> src/experiments/trait_rec_vs_iter.rs:65:9
+    |
+ 65 |         fn sum(&self) -> (total: u64)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in the trait `experiments::trait_rec_vs_iter::trait_rec_vs_iter::RecStackTrait`
+   --> src/experiments/trait_rec_vs_iter.rs:130:9
+    |
+130 |         fn sum(&self) -> (total: u64)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: disambiguate the method for candidate #1
+    |
+130 -         fn sum(&self) -> (total: u64)
+131 -             requires
+132 -                 self.spec_stack_wf(),
+133 -                 self@.len() <= u64::MAX,
+134 -                 spec_sum(self@, self@.len() as int) <= u64::MAX,
+135 -             ensures total == spec_sum(self@, self@.len() as int);
+130 +         fn sum(&experiments::trait_rec_vs_iter::trait_rec_vs_iter::IterStackTrait::VERUS_SPEC__sum(&self) total == spec_sum(self@, self@.len() as int);
+    |
+help: disambiguate the method for candidate #2
+    |
+130 -         fn sum(&self) -> (total: u64)
+131 -             requires
+132 -                 self.spec_stack_wf(),
+133 -                 self@.len() <= u64::MAX,
+134 -                 spec_sum(self@, self@.len() as int) <= u64::MAX,
+135 -             ensures total == spec_sum(self@, self@.len() as int);
+130 +         fn sum(&experiments::trait_rec_vs_iter::trait_rec_vs_iter::RecStackTrait::VERUS_SPEC__sum(&self) total == spec_sum(self@, self@.len() as int);
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0034`.

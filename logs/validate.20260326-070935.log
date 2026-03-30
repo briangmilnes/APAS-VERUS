@@ -1,0 +1,4 @@
+verification results:: 2667 verified, 0 errors
+Elapsed: 32s
+info: peak rust_verify RSS: 3490MB, peak z3 RSS: 375MB, min free: 19212MB
+info: cpu rust_verify: 67s, cpu z3: 51s

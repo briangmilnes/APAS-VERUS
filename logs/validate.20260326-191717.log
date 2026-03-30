@@ -1,0 +1,79 @@
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStEph.rs:52:14
+   |
+52 |     #[derive(Clone)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/EdgeSetGraphStPer.rs:56:14
+   |
+56 |     #[derive(Clone, PartialEq, Eq)]
+   |              ^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap53/GraphSearchMtPer.rs:23:14
+   |
+23 |     #[derive(Clone)]
+   |              ^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/CycleDetectStPer.rs:432:17
+    |
+432 | /                 forall|j: int| 0 <= j < i as int
+433 | |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    | |_________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/CycleDetectStPer.rs:433:42
+    |
+433 |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap55/CycleDetectStEph.rs:516:17
+    |
+516 | /                 forall|j: int| 0 <= j < i as int
+517 | |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    | |_________________________________________________________________________^
+
+note:   trigger 1 of 1:
+   --> src/Chap55/CycleDetectStEph.rs:517:42
+    |
+517 |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap55/CycleDetectStEph.rs:516:17
+    |
+516 | /                 forall|j: int| 0 <= j < i as int
+517 | |                     ==> !old(ancestors)@[graph@[vertex as int][j] as int],
+    | |_________________________________________________________________________^
+
+verification results:: 5183 verified, 0 errors
+warning: 3 warnings emitted
+
+warning: Outdated syntax for broadcast use.
+         Use curly braces for multiple uses.
+  --> src/Chap65/KruskalStEph.rs:32:5
+   |
+32 | /     broadcast use crate::vstdplus::float::float::group_float_finite_total_order,
+33 | |         crate::Types::Types::group_LabEdge_axioms;
+   | |__________________________________________________^
+
+warning: 1 warning emitted
+
+Elapsed: 114s
+Sampled Memory Usage: peak rust_verify RSS: 8225MB, peak z3 RSS: 3462MB, min free: 11218MB
+Sampled CPU Usage: rust_verify: 184s, z3 children: 183s

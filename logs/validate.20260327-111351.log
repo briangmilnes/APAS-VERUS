@@ -1,0 +1,42 @@
+error[E0277]: the trait bound `V: vstdplus::clone_view::clone_view::ClonePreservesView` is not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:90:30
+    |
+ 90 |         count_components_hof(graph, seed)
+    |         -------------------- ^^^^^ the trait `vstdplus::clone_view::clone_view::ClonePreservesView` is not implemented for `V`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap63::ConnectivityMtEph::ConnectivityMtEph::count_components_hof`
+   --> src/Chap63/ConnectivityMtEph.rs:156:61
+    |
+156 |     pub fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) ->...
+    |                                                             ^^^^^^^^^^^^^^^^^^ required by this bound in `count_components_hof`
+help: consider further restricting type parameter `V` with trait `ClonePreservesView`
+    |
+ 84 |     pub fn count_components_mt<V: StT + MtT + Hash + Ord + 'static + vstdplus::clone_view::clone_view::ClonePreservesView>(graph: &UnDirGraphMtEph<V>, seed: u64) -> (count: usize)
+    |                                                                    ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::clone_view::clone_view::ClonePreservesView` is not satisfied
+   --> src/Chap63/ConnectivityMtEph.rs:117:34
+    |
+117 |         connected_components_hof(graph, seed)
+    |         ------------------------ ^^^^^ the trait `vstdplus::clone_view::clone_view::ClonePreservesView` is not implemented for `V`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap63::ConnectivityMtEph::ConnectivityMtEph::connected_components_hof`
+   --> src/Chap63/ConnectivityMtEph.rs:176:65
+    |
+176 |     pub fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+    |                                                                 ^^^^^^^^^^^^^^^^^^ required by this bound in `connected_components_hof`
+help: consider further restricting type parameter `V` with trait `ClonePreservesView`
+    |
+108 |     pub fn connected_components_mt<V: StT + MtT + Hash + Ord + 'static + vstdplus::clone_view::clone_view::ClonePreservesView>(
+    |                                                                        ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1050MB, peak z3 RSS: 0MB, min free: 22574MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

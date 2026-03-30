@@ -1,0 +1,234 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:244:25
+    |
+244 |     assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+    |                         ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+244 -     assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+244 +     assert!(<BalBinTree<O> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:244:47
+    |
+244 |     assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+    |                                               ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+244 -     assert!(<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&leaf));
+244 +     assert!(<BalBinTree<N> as BalBinTreeTrait<O>>::is_leaf(&leaf));
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:252:26
+    |
+252 |     assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
+    |                          ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+252 -     assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
+252 +     assert!(!<BalBinTree<O> as BalBinTreeTrait<N>>::is_leaf(&node));
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:252:48
+    |
+252 |     assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
+    |                                                ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+252 -     assert!(!<BalBinTree<N> as BalBinTreeTrait<N>>::is_leaf(&node));
+252 +     assert!(!<BalBinTree<N> as BalBinTreeTrait<O>>::is_leaf(&node));
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:253:28
+    |
+253 |     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::size(&node), 1);
+    |                            ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+253 -     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::size(&node), 1);
+253 +     assert_eq!(<BalBinTree<O> as BalBinTreeTrait<N>>::size(&node), 1);
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:253:50
+    |
+253 |     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::size(&node), 1);
+    |                                                  ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+253 -     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::size(&node), 1);
+253 +     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<O>>::size(&node), 1);
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:254:28
+    |
+254 |     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::height(&node), 1);
+    |                            ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+254 -     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::height(&node), 1);
+254 +     assert_eq!(<BalBinTree<O> as BalBinTreeTrait<N>>::height(&node), 1);
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:254:50
+    |
+254 |     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::height(&node), 1);
+    |                                                  ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+254 -     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<N>>::height(&node), 1);
+254 +     assert_eq!(<BalBinTree<N> as BalBinTreeTrait<O>>::height(&node), 1);
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:256:21
+    |
+256 |         <BalBinTree<N> as BalBinTreeTrait<N>>::in_order(&node),
+    |                     ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+256 -         <BalBinTree<N> as BalBinTreeTrait<N>>::in_order(&node),
+256 +         <BalBinTree<O> as BalBinTreeTrait<N>>::in_order(&node),
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:256:43
+    |
+256 |         <BalBinTree<N> as BalBinTreeTrait<N>>::in_order(&node),
+    |                                           ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+256 -         <BalBinTree<N> as BalBinTreeTrait<N>>::in_order(&node),
+256 +         <BalBinTree<N> as BalBinTreeTrait<O>>::in_order(&node),
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:260:21
+    |
+260 |         <BalBinTree<N> as BalBinTreeTrait<N>>::pre_order(&node),
+    |                     ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+260 -         <BalBinTree<N> as BalBinTreeTrait<N>>::pre_order(&node),
+260 +         <BalBinTree<O> as BalBinTreeTrait<N>>::pre_order(&node),
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+error[E0425]: cannot find type `N` in this scope
+   --> tests/Chap23/TestBalBinTreeStEph.rs:260:43
+    |
+260 |         <BalBinTree<N> as BalBinTreeTrait<N>>::pre_order(&node),
+    |                                           ^
+    |
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:396:0
+    |
+    = note: similarly named enum `O` defined here
+help: an enum with a similar name exists
+    |
+260 -         <BalBinTree<N> as BalBinTreeTrait<N>>::pre_order(&node),
+260 +         <BalBinTree<N> as BalBinTreeTrait<O>>::pre_order(&node),
+    |
+help: you might be missing a type parameter
+    |
+240 | fn balbintree_trait_methods<N>() {
+    |                            +++
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestBalBinTreeStEph") due to 12 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 1s

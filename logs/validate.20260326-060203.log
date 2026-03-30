@@ -1,0 +1,12 @@
+error: this file contains an unclosed delimiter
+   --> src/vstdplus/checked_nat_with_checked_view.rs:576:4
+    |
+  7 | pub mod checked_nat_with_checked_view {
+    |                                       - unclosed delimiter
+...
+576 | */
+    |   ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s

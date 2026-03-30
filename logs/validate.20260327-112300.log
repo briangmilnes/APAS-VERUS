@@ -1,0 +1,29 @@
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1125:13
+     |
+1125 |             reveal(spec_uf_wf);
+     |             ^^^^^^
+
+warning: verus-related attribute has no effect because item is already marked external
+    --> src/Chap65/UnionFindStEph.rs:1326:21
+     |
+1326 |                     reveal(spec_uf_wf);
+     |                     ^^^^^^
+
+warning: Verus does not (yet) support autoderive Clone impl when the clone is not a copy; continuing, but without adding a specification for the derived Clone impl
+  --> src/Chap52/AdjTableGraphMtPer.rs:48:14
+   |
+48 |     #[derive(Clone)]
+   |              ^^^^^
+
+error: cannot call function `lib::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait::length` with mode exec
+   --> src/Chap61/VertexMatchingMtEph.rs:105:22
+    |
+105 |                 n == edges.length(),
+    |                      ^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error; 3 warnings emitted
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2884MB, peak z3 RSS: 0MB, min free: 20895MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 0s
