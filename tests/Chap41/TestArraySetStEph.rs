@@ -138,3 +138,69 @@ fn test_array_set_macro() {
 }
 
 // Tests for Example41_3 functions disabled — module commented out in lib.rs
+
+#[test]
+fn test_delete_nonexistent() {
+    let mut set = ArraySetStEphLit![1, 2, 3];
+    set.delete(&999);
+    assert_eq!(set.size(), 3);
+}
+
+#[test]
+fn test_delete_all_elements() {
+    let mut set = ArraySetStEphLit![1, 2, 3];
+    set.delete(&1);
+    set.delete(&2);
+    set.delete(&3);
+    assert_eq!(set.size(), 0);
+}
+
+#[test]
+fn test_union_with_empty() {
+    let set = ArraySetStEphLit![1, 2, 3];
+    let empty: ArraySetStEph<i32> = ArraySetStEph::empty();
+    let result = set.union(&empty);
+    assert_eq!(result.size(), 3);
+}
+
+#[test]
+fn test_intersection_disjoint() {
+    let a = ArraySetStEphLit![1, 2, 3];
+    let b = ArraySetStEphLit![4, 5, 6];
+    let result = a.intersection(&b);
+    assert_eq!(result.size(), 0);
+}
+
+#[test]
+fn test_difference_with_self() {
+    let set = ArraySetStEphLit![1, 2, 3];
+    let result = set.difference(&set);
+    assert_eq!(result.size(), 0);
+}
+
+#[test]
+fn test_filter_none_match() {
+    let set = ArraySetStEphLit![1, 2, 3, 4, 5];
+    let filtered = set.filter(|&x| x > 100, Ghost::assume_new());
+    assert_eq!(filtered.size(), 0);
+}
+
+#[test]
+fn test_filter_all_match() {
+    let set = ArraySetStEphLit![1, 2, 3, 4, 5];
+    let filtered = set.filter(|&x| x > 0, Ghost::assume_new());
+    assert_eq!(filtered.size(), 5);
+}
+
+#[test]
+fn test_large_set_operations() {
+    let mut set: ArraySetStEph<i32> = ArraySetStEph::empty();
+    for i in 0..100 {
+        set.insert(i);
+    }
+    assert_eq!(set.size(), 100);
+    for i in 0..100 {
+        assert!(set.find(&i));
+    }
+    assert!(!set.find(&100));
+}

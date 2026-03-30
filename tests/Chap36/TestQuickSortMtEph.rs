@@ -100,3 +100,40 @@ fn quick_sort_mt_concurrent_execution() {
         assert_eq!(result, expected);
     }
 }
+
+#[test]
+fn quick_sort_mt_all_same() {
+    let mut data = ArraySeqMtEphChap19SLit![5, 5, 5, 5, 5];
+    ArraySeqMtEphS::quick_sort_first(&mut data);
+    assert_eq!(to_vec(&data), vec![5, 5, 5, 5, 5]);
+}
+
+#[test]
+fn quick_sort_mt_negative_values() {
+    let mut data = ArraySeqMtEphChap19SLit![-5, 3, -1, 0, -3, 2];
+    ArraySeqMtEphS::quick_sort_random(&mut data);
+    assert_eq!(to_vec(&data), vec![-5, -3, -1, 0, 2, 3]);
+}
+
+#[test]
+fn quick_sort_mt_preserves_multiset() {
+    let input = vec![5, 3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
+    let mut data = ArraySeqMtEphS::from_vec(input.clone());
+    ArraySeqMtEphS::quick_sort_median3(&mut data);
+    let result = to_vec(&data);
+    let mut expected = input;
+    expected.sort();
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn quick_sort_mt_three_elements_all_permutations() {
+    let perms = [
+        [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1],
+    ];
+    for perm in &perms {
+        let mut data = ArraySeqMtEphS::from_vec(perm.to_vec());
+        ArraySeqMtEphS::quick_sort_first(&mut data);
+        assert_eq!(to_vec(&data), vec![1, 2, 3], "Failed for perm {:?}", perm);
+    }
+}
