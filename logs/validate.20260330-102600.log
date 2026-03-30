@@ -1,0 +1,238 @@
+error: precondition not satisfied
+    --> src/Chap42/TableMtEph.rs:1242:21
+     |
+ 211 |             spec_keys_no_dups(entries),
+     |             -------------------------- failed precondition
+...
+1242 |                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:211:13
+    |
+211 |             spec_keys_no_dups(entries),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = 0;
+    let tmp%% = idx;
+        let tmp%% = tmp%.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+spec_keys_no_dups(tmp%) ✘
+|   forall |i, j|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = j in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% && tmp%% < tmp%% ==>
+|           !(tmp%.index(i).0 == tmp%.index(j).0) 
++---
+
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1640:28
+     |
+1640 |                       assert(combine.ensures(
+     |  ____________________________^
+1641 | |                         (&old_self_raw[si].1, &other_raw[ci].1), kept@[si].1));
+     | |_____________________________________________________________________________^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap42/TableMtEph.rs:1647:21
+     |
+ 450 |               forall|i: int| n <= i < entries.len() ==> (#[trigger] entries[i]).0 != k,
+     |               ------------------------------------------------------------------------ failed precondition
+...
+1647 | /                     lemma_entries_to_map_ignore_suffix::<K::V, V::V>(
+1648 | |                         self.entries@, phase1_len, k);
+     | |_____________________________________________________^
+
+error: precondition not satisfied
+    --> src/Chap42/TableMtEph.rs:1659:21
+     |
+ 211 |             spec_keys_no_dups(entries),
+     |             -------------------------- failed precondition
+...
+1659 |                     lemma_entries_to_map_get::<K::V, V::V>(prefix, si);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureEns(combine, (old_self_raw.index(si).1, other_raw.index(ci).1), kept.view().index(si).1) 
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1554:45
+     |
+1554 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1555:32
+     |
+1555 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1555:62
+     |
+1555 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1552:61
+     |
+1552 |                         implies (#[trigger] prefix[i]).0 == (#[trigger] old_self_view[i]).0
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1561:45
+     |
+1561 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1562:32
+     |
+1562 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1562:62
+     |
+1562 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1559:48
+     |
+1559 |                         implies prefix[i].1 == old_self_view[i].1
+     |                                                ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1653:45
+     |
+1653 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1654:32
+     |
+1654 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1654:62
+     |
+1654 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1651:61
+     |
+1651 |                         implies (#[trigger] prefix[i]).0 == (#[trigger] old_self_view[i]).0
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1657:28
+     |
+1657 |                     assert(prefix[si] == self.entries@[si]);
+     |                            ^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:679:17
+     |
+ 679 | /                 old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+ 680 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+ 681 | |                     && self@[key@] == r@);
+     | |_________________________________________^ failed this postcondition
+...
+1976 | /             if match_index < n {
+1977 | |                 // Key found: rebuild array in-place, replacing the value at match_index.
+1978 | |                 let old_entry = self.entries.nth(match_index);
+1979 | |                 proof {
+...    |
+2151 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:679:51
+    |
+679 |                   old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+    |  ___________________________________________________^
+680 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+681 | |                     && self@[key@] == r@);
+    | |_________________________________________^
+
+note: 
+
+self.spec_tablemteph_wf() ✔
+self.view().dom().contains(old(key).view()) ✔
+self.view().dom() =~= old(self).view().dom().insert(old(key).view()) ✔
+forall |k|
+    !(k == old(key).view()) && old(self).view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+!(old(self).view().dom().contains(old(key).view())) ==>
+    self.view().index(old(key).view()) == old(value).view() ✔
+old(self).view().dom().contains(old(key).view()) ==>
+    (exists |old_v, r| old_v.view() == old(self).view().index(old(key).view()) && ClosureEns(old(combine), (old_v, old(value)), r) && self.view().index(old(key).view()) == r.view()) ✘
+
+verification results:: 2166 verified, 3 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 24s
+Sampled Memory Usage: peak rust_verify RSS: 1804MB, peak z3 RSS: 395MB, min free: 21477MB
+Sampled CPU Usage: rust_verify: 34s, z3 children: 41s

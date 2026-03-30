@@ -1,0 +1,268 @@
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:571:17
+    |
+571 | /                 forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
+572 | |                     (exists|key_arg: K, result: V|
+573 | |                         key_arg@ == k && f.ensures((&key_arg,), result)
+574 | |                         && tabulated@[k] == result@);
+    | |____________________________________________________^ failed this postcondition
+...
+880 |               TableMtEph { entries: seq }
+    |               --------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:572:21
+    |
+572 | /                     (exists|key_arg: K, result: V|
+573 | |                         key_arg@ == k && f.ensures((&key_arg,), result)
+574 | |                         && tabulated@[k] == result@);
+    | |____________________________________________________^
+
+note: 
+
+%return.view().dom() =~= old(keys).view() ✔
+%return.spec_tablemteph_wf() ✔
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |key_arg, result| key_arg.view() == k && ClosureEns(old(f), (key_arg), result) && %return.view().index(k) == result.view()) ✘
+
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:584:17
+    |
+584 | /                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+585 | |                     (exists|old_val: V, result: V|
+586 | |                         old_val@ == old(self)@[k]
+587 | |                         && f.ensures((&old_val,), result)
+588 | |                         && self@[k] == result@);
+    | |_______________________________________________^ failed this postcondition
+...
+910 |               proof {
+    |  ___________________-
+911 | |                 // Each mapped entry preserves the key from old_entries.
+912 | |                 assert forall|i: int| 0 <= i < self.entries@.len()
+913 | |                     implies (#[trigger] self.entries@[i]).0 == old_entries[i].0
+...   |
+928 | |                 };
+929 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:585:21
+    |
+585 | /                     (exists|old_val: V, result: V|
+586 | |                         old_val@ == old(self)@[k]
+587 | |                         && f.ensures((&old_val,), result)
+588 | |                         && self@[k] == result@);
+    | |_______________________________________________^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom() ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |old_val, result| old_val.view() == old(self).view().index(k) && ClosureEns(old(f), (old_val), result) && self.view().index(k) == result.view()) ✘
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:617:17
+     |
+ 617 | /                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+ 618 | |                     (exists|v1: V, v2: V, r: V|
+ 619 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+ 620 | |                         && combine.ensures((&v1, &v2), r)
+ 621 | |                         && self@[k] == r@);
+     | |__________________________________________^ failed this postcondition
+...
+1153 |               proof {
+     |  ___________________-
+1154 | |                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+1155 | |                 let ghost target_dom = spec_entries_to_map(old_self_view).dom().intersect(other@.dom());
+1156 | |                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
+...    |
+1180 | |                 };
+1181 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:618:21
+    |
+618 | /                     (exists|v1: V, v2: V, r: V|
+619 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+620 | |                         && combine.ensures((&v1, &v2), r)
+621 | |                         && self@[k] == r@);
+    | |__________________________________________^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(combine), (v1, v2), r) && self.view().index(k) == r.view()) ✘
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:637:17
+     |
+ 637 | /                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+ 638 | |                     (exists|v1: V, v2: V, r: V|
+ 639 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+ 640 | |                         && combine.ensures((&v1, &v2), r)
+ 641 | |                         && self@[k] == r@);
+     | |__________________________________________^ failed this postcondition
+...
+1383 |               proof {
+     |  ___________________-
+1384 | |                 // Every old self key is in the output (Phase 1).
+1385 | |                 assert forall|k: K::V|
+1386 | |                     spec_entries_to_map(old_self_view).dom().contains(k)
+...    |
+1538 | |                 };
+1539 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:638:21
+    |
+638 | /                     (exists|v1: V, v2: V, r: V|
+639 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+640 | |                         && combine.ensures((&v1, &v2), r)
+641 | |                         && self@[k] == r@);
+    | |__________________________________________^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        self.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(combine), (v1, v2), r) && self.view().index(k) == r.view()) ✘
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1472:45
+     |
+1472 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1473:32
+     |
+1473 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1473:62
+     |
+1473 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1470:61
+     |
+1470 |                         implies (#[trigger] prefix[i]).0 == (#[trigger] old_self_view[i]).0
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1479:45
+     |
+1479 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1480:32
+     |
+1480 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1480:62
+     |
+1480 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1477:48
+     |
+1477 |                         implies prefix[i].1 == old_self_view[i].1
+     |                                                ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:679:17
+     |
+ 679 | /                 old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+ 680 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+ 681 | |                     && self@[key@] == r@);
+     | |_________________________________________^ failed this postcondition
+...
+1854 | /             if match_index < n {
+1855 | |                 // Key found: rebuild array in-place, replacing the value at match_index.
+1856 | |                 let old_entry = self.entries.nth(match_index);
+1857 | |                 proof {
+...    |
+2024 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:679:51
+    |
+679 |                   old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+    |  ___________________________________________________^
+680 | |                     old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+681 | |                     && self@[key@] == r@);
+    | |_________________________________________^
+
+note: 
+
+self.spec_tablemteph_wf() ✔
+self.view().dom().contains(old(key).view()) ✔
+self.view().dom() =~= old(self).view().dom().insert(old(key).view()) ✔
+forall |k|
+    !(k == old(key).view()) && old(self).view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+!(old(self).view().dom().contains(old(key).view())) ==>
+    self.view().index(old(key).view()) == old(value).view() ✔
+old(self).view().dom().contains(old(key).view()) ==>
+    (exists |old_v, r| old_v.view() == old(self).view().index(old(key).view()) && ClosureEns(old(combine), (old_v, old(value)), r) && self.view().index(old(key).view()) == r.view()) ✘
+
+verification results:: 2164 verified, 5 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 1782MB, peak z3 RSS: 330MB, min free: 21105MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 39s

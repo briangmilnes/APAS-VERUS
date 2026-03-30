@@ -1,0 +1,112 @@
+error: assertion failed
+    --> src/Chap42/TableMtEph.rs:1701:28
+     |
+1701 |                       assert(combine.ensures(
+     |  ____________________________^
+1702 | |                         (&old_self_raw[si].1, &other_raw[ci].1), kept@[si].1));
+     | |_____________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureEns(combine, (old_self_raw.index(si).1, other_raw.index(ci).1), kept.view().index(si).1) 
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1576:45
+     |
+1576 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1577:32
+     |
+1577 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1577:62
+     |
+1577 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1574:61
+     |
+1574 |                         implies (#[trigger] prefix[i]).0 == (#[trigger] old_self_view[i]).0
+     |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1583:45
+     |
+1583 |                         assert(prefix[i] == self.entries@[i]);
+     |                                             ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1584:32
+     |
+1584 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:183:24
+     |
+ 183 |             recommends i < self.spec_len();
+     |                        ------------------- recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1584:62
+     |
+1584 |                         assert(self.entries.spec_index(i) == kept@[i]);
+     |                                                              ^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1581:48
+     |
+1581 |                         implies prefix[i].1 == old_self_view[i].1
+     |                                                ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap42/TableMtEph.rs:1726:28
+     |
+1726 |                     assert(prefix[si] == self.entries@[si]);
+     |                            ^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 2168 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 1807MB, peak z3 RSS: 359MB, min free: 21098MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 33s
