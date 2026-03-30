@@ -1,28 +1,29 @@
-//! Proof tests for AVLTreeSetMtEph iterators.
+//! Proof tests for AVLTreeSeqMtPer iterators.
 //!
 //! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
 //!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
+//!   - loop-borrow-into:   `loop { ... (&a).into_iter() ... }`
 //!   - for-borrow-iter:    `for x in iter: a.iter()`
 //!   - for-borrow-into:    `for x in iter: (&a).into_iter()`
 //!
-//! AVLTreeSetMtEph uses snapshot-based iteration (owned T values).
+//! AVLTreeSeqMtPer has IntoIterator for Self but the consuming iterator
+//! has no View impl or useful ensures, so consume patterns are not applicable.
 
 #[macro_use]
 #[path = "../common/mod.rs"]
 mod common;
 use common::*;
 
-// loop-borrow-iter: Manual iteration with loop + a.iter()
+// loop-borrow-iter
 test_verify_one_file! {
-    #[test] avltreesetmteph_loop_borrow_iter verus_code! {
+    #[test] avltreeseqmtper_loop_borrow_iter verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::*;
-        use apas_verus::AVLTreeSetMtEphLit;
+        use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
 
         fn test_loop_borrow_iter() {
-            let mut a: AVLTreeSetMtEph<u64> = AVLTreeSetMtEphLit![1u64, 2u64, 3u64];
+            let a: AVLTreeSeqMtPerS<u64> = AVLTreeSeqMtPerS::singleton(42u64);
 
-            let mut it: AVLTreeSetMtEphIter<u64> = a.iter();
+            let mut it: AVLTreeSeqMtPerBorrowIter<u64> = a.iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
 
@@ -30,13 +31,13 @@ test_verify_one_file! {
             loop
                 invariant
                     items =~= iter_seq.take(it@.0 as int),
-                    avltreesetmteph_iter_invariant(&it),
+                    iter_invariant(&it),
                     iter_seq == it@.1,
                     it@.0 <= iter_seq.len(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(x); }
+                    proof { items = items.push(*x); }
                 } else {
                     break;
                 }
@@ -48,17 +49,16 @@ test_verify_one_file! {
     } => Ok(())
 }
 
-// loop-borrow-into: Manual iteration via (&a).into_iter()
+// loop-borrow-into
 test_verify_one_file! {
-    #[test] avltreesetmteph_loop_borrow_into verus_code! {
+    #[test] avltreeseqmtper_loop_borrow_into verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::*;
-        use apas_verus::AVLTreeSetMtEphLit;
+        use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
 
         fn test_loop_borrow_into() {
-            let mut a: AVLTreeSetMtEph<u64> = AVLTreeSetMtEphLit![1u64, 2u64, 3u64];
+            let a: AVLTreeSeqMtPerS<u64> = AVLTreeSeqMtPerS::singleton(42u64);
 
-            let mut it: AVLTreeSetMtEphIter<u64> = (&a).into_iter();
+            let mut it: AVLTreeSeqMtPerBorrowIter<u64> = (&a).into_iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
 
@@ -66,13 +66,13 @@ test_verify_one_file! {
             loop
                 invariant
                     items =~= iter_seq.take(it@.0 as int),
-                    avltreesetmteph_iter_invariant(&it),
+                    iter_invariant(&it),
                     iter_seq == it@.1,
                     it@.0 <= iter_seq.len(),
                 decreases iter_seq.len() - it@.0,
             {
                 if let Some(x) = it.next() {
-                    proof { items = items.push(x); }
+                    proof { items = items.push(*x); }
                 } else {
                     break;
                 }
@@ -84,17 +84,16 @@ test_verify_one_file! {
     } => Ok(())
 }
 
-// for-borrow-iter: `for x in iter: a.iter()`
+// for-borrow-iter
 test_verify_one_file! {
-    #[test] avltreesetmteph_for_borrow_iter verus_code! {
+    #[test] avltreeseqmtper_for_borrow_iter verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::*;
-        use apas_verus::AVLTreeSetMtEphLit;
+        use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
 
         fn test_for_borrow_iter() {
-            let mut a: AVLTreeSetMtEph<u64> = AVLTreeSetMtEphLit![1u64, 2u64, 3u64];
+            let a: AVLTreeSeqMtPerS<u64> = AVLTreeSeqMtPerS::singleton(42u64);
 
-            let it: AVLTreeSetMtEphIter<u64> = a.iter();
+            let it: AVLTreeSeqMtPerBorrowIter<u64> = a.iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
 
@@ -104,7 +103,7 @@ test_verify_one_file! {
                     items =~= iter_seq.take(iter.pos),
                     iter.pos <= iter_seq.len(),
             {
-                proof { items = items.push(x); }
+                proof { items = items.push(*x); }
             }
 
             assert(items =~= iter_seq);
@@ -112,17 +111,16 @@ test_verify_one_file! {
     } => Ok(())
 }
 
-// for-borrow-into: `for x in iter: (&a).into_iter()`
+// for-borrow-into
 test_verify_one_file! {
-    #[test] avltreesetmteph_for_borrow_into verus_code! {
+    #[test] avltreeseqmtper_for_borrow_into verus_code! {
         use vstd::prelude::*;
-        use apas_verus::Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::*;
-        use apas_verus::AVLTreeSetMtEphLit;
+        use apas_verus::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
 
         fn test_for_borrow_into() {
-            let mut a: AVLTreeSetMtEph<u64> = AVLTreeSetMtEphLit![1u64, 2u64, 3u64];
+            let a: AVLTreeSeqMtPerS<u64> = AVLTreeSeqMtPerS::singleton(42u64);
 
-            let it: AVLTreeSetMtEphIter<u64> = (&a).into_iter();
+            let it: AVLTreeSeqMtPerBorrowIter<u64> = (&a).into_iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
 
@@ -132,7 +130,7 @@ test_verify_one_file! {
                     items =~= iter_seq.take(iter.pos),
                     iter.pos <= iter_seq.len(),
             {
-                proof { items = items.push(x); }
+                proof { items = items.push(*x); }
             }
 
             assert(items =~= iter_seq);

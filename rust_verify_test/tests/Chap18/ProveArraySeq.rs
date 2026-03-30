@@ -1,8 +1,11 @@
 //! Proof tests for ArraySeq
 //!
-//! Loop patterns tested (see docs/APASLoops.md):
-//!   - loop-loop:  `loop { match it.next() { ... } }`
-//!   - for-iter:   `for x in iter: it`
+//! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
+//!   - for-borrow-iter:    `for x in iter: a.iter()`
+//!
+//! IntoIterator impls have no ensures (no iter_invariant, no it@.0 == 0),
+//! so borrow-into and consume patterns are not provable.
 //!
 //! Higher-order function tests (spec_fn bridge / closure ensures):
 //!   - iterate, reduce, scan, scan_inclusive, filter, iterate_prefixes, map, tabulate

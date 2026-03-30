@@ -1,8 +1,11 @@
 //! Proof tests for ArraySeqStPer iterator
 //!
-//! Loop patterns tested (see docs/APASLoops.md):
-//!   - loop-loop:  `loop { match it.next() { ... } }`
-//!   - for-iter:   `for x in iter: it`
+//! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+//!   - loop-borrow-iter:   `loop { ... a.iter() ... }`
+//!   - for-borrow-iter:    `for x in iter: a.iter()`
+//!
+//! IntoIterator impls are outside verus!, so borrow-into and consume
+//! patterns are not provable.
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -54,11 +57,11 @@ test_verify_one_file! {
 
         fn test_for_iter() {
             let a: ArraySeqStPerS<u64> = ArraySeqStPerS::new(3, 99);
-            
+
             let it: ArraySeqStPerIter<u64> = a.iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
-            
+
             for x in iter: it
                 invariant
                     iter.elements == iter_seq,
@@ -69,7 +72,7 @@ test_verify_one_file! {
                     items = items.push(*x);
                 }
             }
-            
+
             assert(items =~= iter_seq);
         }
     } => Ok(())

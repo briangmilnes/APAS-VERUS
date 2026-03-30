@@ -1,8 +1,11 @@
 //! Proof tests for LinkedListStPer iterator
 //!
-//! Loop patterns tested (see docs/APASLoops.md):
-//!   - loop-loop:  `loop { match it.next() { ... } }`
-//!   - for-iter:   `for x in iter: it`
+//! Loop patterns tested (see docs/APAS-VERUSIterators.rs):
+//!   - loop-borrow-iter:   `loop { ... list.iter() ... }`
+//!   - for-borrow-iter:    `for x in iter: list.iter()`
+//!
+//! IntoIterator impls have no ensures (no iter_invariant, no it@.0 == 0),
+//! so borrow-into and consume patterns are not provable.
 
 #[macro_use]
 #[path = "../common/mod.rs"]
@@ -14,14 +17,14 @@ test_verify_one_file! {
     #[test] linkedliststper_loop_loop verus_code! {
         use vstd::prelude::*;
         use apas_verus::Chap18::LinkedListStPer::LinkedListStPer::*;
-        
+
         fn test_loop_loop() {
             let list: LinkedListStPerS<u64> = LinkedListStPerS::new(3, 42);
-            
+
             let mut it: LinkedListStPerIter<u64> = list.iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
-            
+
             #[verifier::loop_isolation(false)]
             loop
                 invariant
@@ -39,7 +42,7 @@ test_verify_one_file! {
                     break;
                 }
             }
-            
+
             assert(it@.0 == iter_seq.len());
             assert(items =~= iter_seq);
         }
@@ -54,11 +57,11 @@ test_verify_one_file! {
 
         fn test_for_iter() {
             let list: LinkedListStPerS<u64> = LinkedListStPerS::new(3, 99);
-            
+
             let it: LinkedListStPerIter<u64> = list.iter();
             let ghost iter_seq: Seq<u64> = it@.1;
             let ghost mut items: Seq<u64> = Seq::empty();
-            
+
             for x in iter: it
                 invariant
                     iter.elements == iter_seq,
@@ -69,7 +72,7 @@ test_verify_one_file! {
                     items = items.push(*x);
                 }
             }
-            
+
             assert(items =~= iter_seq);
         }
     } => Ok(())
