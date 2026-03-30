@@ -51,3 +51,51 @@ fn insertion_sort_large_input_stress_test() {
         assert!(result[i - 1] <= result[i], "Array not properly sorted at index {i}");
     }
 }
+
+#[test]
+fn insertion_sort_all_same_elements() {
+    sort_and_assert(vec![7, 7, 7, 7, 7], &[7, 7, 7, 7, 7]);
+}
+
+#[test]
+fn insertion_sort_two_elements() {
+    sort_and_assert(vec![2, 1], &[1, 2]);
+}
+
+#[test]
+fn insertion_sort_two_elements_sorted() {
+    sort_and_assert(vec![1, 2], &[1, 2]);
+}
+
+#[test]
+fn insertion_sort_alternating_pattern() {
+    sort_and_assert(vec![1, 100, 2, 99, 3, 98], &[1, 2, 3, 98, 99, 100]);
+}
+
+#[test]
+fn insertion_sort_with_zeros() {
+    sort_and_assert(vec![0, 0, 1, 0, 0], &[0, 0, 0, 0, 1]);
+}
+
+#[test]
+fn insertion_sort_max_values() {
+    sort_and_assert(vec![u64::MAX, 0, u64::MAX, 1], &[0, 1, u64::MAX, u64::MAX]);
+}
+
+#[test]
+fn insertion_sort_preserves_length() {
+    for len in 0..20 {
+        let mut data: Vec<u64> = (0..len).rev().collect();
+        let result = insertion_sort(&mut data);
+        assert_eq!(result.len(), len as usize);
+    }
+}
+
+#[test]
+fn insertion_sort_stability_like_behavior() {
+    // All elements same — sorted output should equal input.
+    let mut data = vec![42u64; 50];
+    let result = insertion_sort(&mut data);
+    assert!(result.iter().all(|&x| x == 42));
+    assert_eq!(result.len(), 50);
+}

@@ -198,3 +198,91 @@ fn para_delete_nonexistent_key() {
     assert_eq!(tree.in_order(), ArraySeqStPerS::from_vec(vec![1, 3, 5]));
     assert_eq!(tree.size(), 3);
 }
+
+#[test]
+fn para_large_union() {
+    let a = make_range_tree(0, 100);
+    let b = make_range_tree(50, 150);
+    let union = a.union(&b);
+    assert_eq!(union.size(), 150);
+    let order = union.in_order();
+    for i in 0..150 {
+        assert_eq!(*order.nth(i), i as i32, "Mismatch at index {i}");
+    }
+}
+
+#[test]
+fn para_delete_all_elements() {
+    let mut tree = make_tree(&[3, 1, 4, 1, 5, 9]);
+    for &v in &[1, 3, 4, 5, 9] {
+        tree.delete(&v);
+    }
+    assert_eq!(tree.size(), 0);
+    assert!(tree.is_empty());
+}
+
+#[test]
+fn para_insert_descending_order() {
+    let tree = make_range_tree(0, 50);
+    assert_eq!(tree.size(), 50);
+    for i in 0..50 {
+        assert_eq!(tree.find(&i), Some(i));
+    }
+}
+
+#[test]
+fn para_split_at_min_and_max() {
+    let tree = make_tree(&[10, 20, 30, 40, 50]);
+
+    let (less, present, greater) = tree.split(&10);
+    assert!(present);
+    assert_eq!(less.size(), 0);
+    assert_eq!(greater.size(), 4);
+
+    let (less, present, greater) = tree.split(&50);
+    assert!(present);
+    assert_eq!(less.size(), 4);
+    assert_eq!(greater.size(), 0);
+}
+
+#[test]
+fn para_intersect_with_self() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let inter = tree.intersect(&tree);
+    assert_eq!(inter.in_order(), tree.in_order());
+}
+
+#[test]
+fn para_difference_with_self() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let diff = tree.difference(&tree);
+    assert_eq!(diff.size(), 0);
+}
+
+#[test]
+fn para_union_with_self() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let union = tree.union(&tree);
+    assert_eq!(union.in_order(), tree.in_order());
+}
+
+#[test]
+fn para_filter_none_match() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let filtered = tree.filter(|v| *v > 100, Ghost::assume_new());
+    assert_eq!(filtered.size(), 0);
+}
+
+#[test]
+fn para_filter_all_match() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let filtered = tree.filter(|v| *v > 0, Ghost::assume_new());
+    assert_eq!(filtered.size(), 5);
+}
+
+#[test]
+fn para_reduce_product() {
+    let tree = make_tree(&[1, 2, 3, 4, 5]);
+    let product = tree.reduce(|a, b| a * b, 1);
+    assert_eq!(product, 120);
+}

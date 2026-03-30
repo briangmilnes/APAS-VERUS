@@ -50,3 +50,83 @@ fn quick_sort_handles_edge_cases() {
     ArraySeqStEphS::quick_sort_median3(&mut pair);
     assert_eq!(pair.to_vec(), vec![1, 2]);
 }
+
+#[test]
+fn quick_sort_all_same_elements() {
+    let mut data = ArraySeqStEphSLit![7, 7, 7, 7, 7];
+    ArraySeqStEphS::quick_sort_first(&mut data);
+    assert_eq!(data.to_vec(), vec![7, 7, 7, 7, 7]);
+}
+
+#[test]
+fn quick_sort_large_descending() {
+    let values: Vec<i32> = (0..500).rev().collect();
+    let mut data = ArraySeqStEphS::from_vec(values);
+    ArraySeqStEphS::quick_sort_random(&mut data);
+    let result = data.to_vec();
+    for i in 1..result.len() {
+        assert!(result[i - 1] <= result[i], "Not sorted at index {i}");
+    }
+}
+
+#[test]
+fn quick_sort_large_ascending() {
+    let values: Vec<i32> = (0..500).collect();
+    let mut data = ArraySeqStEphS::from_vec(values.clone());
+    ArraySeqStEphS::quick_sort_median3(&mut data);
+    assert_eq!(data.to_vec(), values);
+}
+
+#[test]
+fn quick_sort_preserves_multiset() {
+    let input = vec![5, 3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5];
+    let mut data = ArraySeqStEphS::from_vec(input.clone());
+    ArraySeqStEphS::quick_sort_first(&mut data);
+    let result = data.to_vec();
+
+    // Same length.
+    assert_eq!(result.len(), input.len());
+
+    // Same elements (sorted).
+    let mut expected = input;
+    expected.sort();
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn quick_sort_negative_values() {
+    let mut data = ArraySeqStEphSLit![-5, 3, -1, 0, -3, 2];
+    ArraySeqStEphS::quick_sort_random(&mut data);
+    assert_eq!(data.to_vec(), vec![-5, -3, -1, 0, 2, 3]);
+}
+
+#[test]
+fn quick_sort_two_elements_all_variants() {
+    for (a, b) in [(1, 2), (2, 1), (1, 1)] {
+        let expected = if a <= b { vec![a, b] } else { vec![b, a] };
+
+        let mut d1 = ArraySeqStEphSLit![a, b];
+        ArraySeqStEphS::quick_sort_first(&mut d1);
+        assert_eq!(d1.to_vec(), expected);
+
+        let mut d2 = ArraySeqStEphSLit![a, b];
+        ArraySeqStEphS::quick_sort_median3(&mut d2);
+        assert_eq!(d2.to_vec(), expected);
+
+        let mut d3 = ArraySeqStEphSLit![a, b];
+        ArraySeqStEphS::quick_sort_random(&mut d3);
+        assert_eq!(d3.to_vec(), expected);
+    }
+}
+
+#[test]
+fn quick_sort_three_elements_all_permutations() {
+    let perms = [
+        [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1],
+    ];
+    for perm in &perms {
+        let mut data = ArraySeqStEphS::from_vec(perm.to_vec());
+        ArraySeqStEphS::quick_sort_first(&mut data);
+        assert_eq!(data.to_vec(), vec![1, 2, 3], "Failed for perm {:?}", perm);
+    }
+}

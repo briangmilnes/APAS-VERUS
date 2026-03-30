@@ -1,0 +1,25 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1404:11
+     |
+1404 |       proof fn lemma_union_bridge<V: StT + Hash>(
+     |  ___________^
+1405 | |         uf_new: &UnionFindStEph<V>,
+1406 | |         uf_old: &UnionFindStEph<V>,
+1407 | |         root_u_view: <V as View>::V,
+...    |
+1411 | |         winner_view: <V as View>::V,
+1412 | |     )
+     | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1726:9
+     |
+1726 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2418 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 121s
+Sampled Memory Usage: peak rust_verify RSS: 12406MB, peak z3 RSS: 3589MB, min free: 6071MB
+Sampled CPU Usage: rust_verify: 112s, z3 children: 155s
