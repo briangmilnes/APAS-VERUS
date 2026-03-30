@@ -287,12 +287,16 @@ pub mod BSTParaMtEph {
                 old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
-            ensures self.spec_bstparamteph_wf();
+            ensures
+                self.spec_bstparamteph_wf(),
+                self@ =~= old(self)@.insert(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn delete(&mut self, key: &T)
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
-            ensures self.spec_bstparamteph_wf();
+            ensures
+                self.spec_bstparamteph_wf(),
+                self@ =~= old(self)@.remove(key@);
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn find(&self, key: &T) -> (found: Option<T>)
@@ -469,10 +473,12 @@ pub mod BSTParaMtEph {
         fn insert(&mut self, key: T)
         {
                       assert(obeys_feq_full_trigger::<T>());
+            let ghost old_view = self@;
             let _sz = self.size();
-            let (left, _, right) = split_inner(self, &key);
+            let (left, _found, right) = split_inner(self, &key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                assert(old_view.insert(key@) =~= left@.union(right@).insert(key@));
             }
             *self = Self::join_mid(Exposed::Node(left, key, right));
         }
@@ -480,8 +486,9 @@ pub mod BSTParaMtEph {
         fn delete(&mut self, key: &T)
         {
                       assert(obeys_feq_full_trigger::<T>());
+            let ghost old_view = self@;
             let _sz = self.size();
-            let (left, _, right) = split_inner(self, key);
+            let (left, _found, right) = split_inner(self, key);
             proof {
                 lemma_cmp_order_axioms::<T>();
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
@@ -490,6 +497,7 @@ pub mod BSTParaMtEph {
                     lemma_cmp_antisymmetry(o, *key);
                     lemma_cmp_transitivity(s, *key, o);
                 };
+                assert(old_view.remove(key@) =~= left@.union(right@));
             }
             *self = left.join_pair_inner(&right);
         }

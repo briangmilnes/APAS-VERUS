@@ -1,8 +1,8 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-29 19:52:23 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
+Started at: 2026-03-29 20:25:25 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS-agent2
+Full output: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-compare-par-mut.log
 
 Phase 1: File groups
 
@@ -396,21 +396,19 @@ src/Chap37/BSTRBMtEph.rs:0: info: file group BSTRB — comparing MtEph (src/Chap
 src/Chap37/BSTRBStEph.rs:39: info: struct BSTRBStEph { root: BalBinTree < T > }
 src/Chap37/BSTRBStEph.rs:46: info: View = BalBinTree < T >
 src/Chap37/BSTRBStEph.rs:112: info: wf = spec_bstrbsteph_wf
-src/Chap37/BSTRBMtEph.rs:901: info: struct BSTRBMtEph { root: RwLock < Link < T > , BSTRBMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
-src/Chap37/BSTRBMtEph.rs:921: info: View = Link < T >
-src/Chap37/BSTRBMtEph.rs:926: info: wf = spec_bstrbmteph_wf
-src/Chap37/BSTRBMtEph.rs:921: error: View = Link < T > but StEph has View = BalBinTree < T >
-src/Chap37/BSTRBMtEph.rs:901: warning: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTRBMtEph.rs:960: info: struct BSTRBMtEph { root: RwLock < Link < T > , BSTRBMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
+src/Chap37/BSTRBMtEph.rs:980: info: View = BalBinTree < T >
+src/Chap37/BSTRBMtEph.rs:985: info: wf = spec_bstrbmteph_wf
+src/Chap37/BSTRBMtEph.rs:960: warning: ghost field `ghost_root` has no counterpart in other variants
 src/Chap37/BSTRBStEph.rs:110: info: trait BSTRBStEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 9 fns (7 exec, 2 spec)
-src/Chap37/BSTRBMtEph.rs:925: info: trait BSTRBMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = Link < T > > — 15 fns (14 exec, 1 spec)
-src/Chap37/BSTRBMtEph.rs:925: error: supertrait `Sized + View < V = Link < T > >` but StEph has `Sized + View < V = BalBinTree < T > >`
-src/Chap37/BSTRBMtEph.rs:925: warning: generic bounds `<T : StTInMtT + Ord + TotalOrder>` but StEph has `<T : TotalOrder>`
-src/Chap37/BSTRBMtEph.rs:925: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstrbsteph_wf`
-src/Chap37/BSTRBMtEph.rs:925: warning: missing 1 fns present in StEph (BSTRBStEphTrait): `spec_root`
-src/Chap37/BSTRBMtEph.rs:925: info: 8 extra fns not in StEph (BSTRBStEphTrait): `spec_bstrbmteph_wf`, `from_sorted_slice`, `minimum`, `maximum`, `in_order`, `pre_order`, `filter`, `reduce`
-src/Chap37/BSTRBMtEph.rs:935: info: `insert` returns `Result < () , () >` but StEph returns `Self`
-src/Chap37/BSTRBMtEph.rs:959: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTRBMtEph.rs:959: warning: `find`: StEph has requires but MtEph does not
+src/Chap37/BSTRBMtEph.rs:984: info: trait BSTRBMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = BalBinTree < T > > — 15 fns (14 exec, 1 spec)
+src/Chap37/BSTRBMtEph.rs:984: warning: generic bounds `<T : StTInMtT + Ord + TotalOrder>` but StEph has `<T : TotalOrder>`
+src/Chap37/BSTRBMtEph.rs:984: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstrbsteph_wf`
+src/Chap37/BSTRBMtEph.rs:984: warning: missing 1 fns present in StEph (BSTRBStEphTrait): `spec_root`
+src/Chap37/BSTRBMtEph.rs:984: info: 8 extra fns not in StEph (BSTRBStEphTrait): `spec_bstrbmteph_wf`, `from_sorted_slice`, `minimum`, `maximum`, `in_order`, `pre_order`, `filter`, `reduce`
+src/Chap37/BSTRBMtEph.rs:994: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTRBMtEph.rs:1018: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTRBMtEph.rs:1018: warning: `find`: StEph has requires but MtEph does not
 src/Chap37/BSTRBStEph.rs:0: info: BSTRBTrait trait: 7 matched fns across 2 variants
 src/Chap37/BSTSplayMtEph.rs:0: info: file group BSTSplay — comparing MtEph (src/Chap37/BSTSplayMtEph.rs), StEph (src/Chap37/BSTSplayStEph.rs)
 src/Chap37/BSTSplayStEph.rs:46: info: struct BSTSplayStEph { root: Link < T > }
@@ -1192,7 +1190,7 @@ src/Chap66/BoruvkaMtEph.rs:92: warning: missing 4 fns present in StEph (BoruvkaS
 src/Chap66/BoruvkaMtEph.rs:92: info: 5 extra fns not in StEph (BoruvkaStEphTrait): `spec_boruvkamteph_wf`, `vertex_bridges_mt`, `bridge_star_partition_mt`, `boruvka_mst_mt`, `boruvka_mst_mt_with_seed`
 src/Chap66/BoruvkaStEph.rs:0: info: BoruvkaTrait trait: 1 matched fns across 2 variants
 
-Phase 2 summary: 57 groups compared, 14 errors, 216 warnings, 858 info
+Phase 2 summary: 57 groups compared, 12 errors, 216 warnings, 858 info
 
 Phase 4: Requires/ensures clause comparison
 
@@ -1515,32 +1513,32 @@ src/Chap37/BSTPlainMtEph.rs:292: warning: `maximum`: StEph has ensures clause `m
 src/Chap37/BSTPlainMtEph.rs:292: warning: `maximum`: StEph has ensures clause `self . spec_root () . spec_size () == 0 ==> max . is_none ()` with no match in MtEph
 src/Chap37/BSTPlainMtEph.rs:292: warning: `maximum`: StEph has ensures clause `self . spec_root () . spec_size () > 0 ==> max . is_some ()` with no match in MtEph
 src/Chap37/BSTPlainMtEph.rs:292: info: `maximum`: MtEph has extra ensures clause `true` not in StEph
-src/Chap37/BSTRBMtEph.rs:928: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
-src/Chap37/BSTRBMtEph.rs:928: warning: `new`: StEph has ensures clause `forall | x : T | ! tree . spec_root () . tree_contains (x)` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:928: warning: `new`: StEph has ensures clause `tree . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:928: info: `new`: MtEph has extra ensures clause `tree @ is None` not in StEph
-src/Chap37/BSTRBMtEph.rs:947: warning: `size`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:947: warning: `size`: StEph has requires clause `self . spec_root () . spec_size () <= usize :: MAX` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:947: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == link_spec_size (self @)`
-src/Chap37/BSTRBMtEph.rs:951: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is None)`
-src/Chap37/BSTRBMtEph.rs:955: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:955: warning: `height`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:955: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == link_height (self @)`
-src/Chap37/BSTRBMtEph.rs:935: warning: `insert`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:935: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstrb_wf ()` ~ cur: `old (self) . spec_bstrb_wf ()`
-src/Chap37/BSTRBMtEph.rs:935: warning: `insert`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:935: warning: `insert`: ensures clause count 2 vs 4 (StEph has 4)
-src/Chap37/BSTRBMtEph.rs:935: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `match r { Ok (_) => link_spec_size (self @) <= link_spec_siz...`
-src/Chap37/BSTRBMtEph.rs:935: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_bstrb_wf ()` ~ cur: `self . spec_bstrb_wf ()`
-src/Chap37/BSTRBMtEph.rs:935: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_contains (value)` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:935: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:943: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:943: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:943: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == link_contains (self @ , * target)`
-src/Chap37/BSTRBMtEph.rs:959: warning: `find`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:959: warning: `find`: StEph has ensures clause `found . is_some () == self . spec_root () . tree_contains (* target)` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:959: warning: `find`: StEph has ensures clause `found . is_some () ==> * found . unwrap () == * target` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:959: info: `find`: MtEph has extra ensures clause `true` not in StEph
+src/Chap37/BSTRBMtEph.rs:987: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
+src/Chap37/BSTRBMtEph.rs:987: warning: `new`: StEph has ensures clause `forall | x : T | ! tree . spec_root () . tree_contains (x)` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:987: warning: `new`: StEph has ensures clause `tree . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:987: info: `new`: MtEph has extra ensures clause `tree @ == BalBinTree :: < T > :: Leaf` not in StEph
+src/Chap37/BSTRBMtEph.rs:1006: warning: `size`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1006: warning: `size`: StEph has requires clause `self . spec_root () . spec_size () <= usize :: MAX` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1006: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
+src/Chap37/BSTRBMtEph.rs:1010: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ . spec_size () == 0)`
+src/Chap37/BSTRBMtEph.rs:1014: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1014: warning: `height`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1014: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
+src/Chap37/BSTRBMtEph.rs:994: warning: `insert`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:994: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstrb_wf ()` ~ cur: `old (self) . spec_bstrb_wf ()`
+src/Chap37/BSTRBMtEph.rs:994: warning: `insert`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:994: warning: `insert`: ensures clause count 2 vs 4 (StEph has 4)
+src/Chap37/BSTRBMtEph.rs:994: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `match r { Ok (_) => self @ . spec_size () <= old (self) @ . ...`
+src/Chap37/BSTRBMtEph.rs:994: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_bstrb_wf ()` ~ cur: `self . spec_bstrb_wf ()`
+src/Chap37/BSTRBMtEph.rs:994: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_contains (value)` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:994: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1002: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1002: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1002: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
+src/Chap37/BSTRBMtEph.rs:1018: warning: `find`: ensures clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1018: warning: `find`: StEph has ensures clause `found . is_some () == self . spec_root () . tree_contains (* target)` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1018: warning: `find`: StEph has ensures clause `found . is_some () ==> * found . unwrap () == * target` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1018: info: `find`: MtEph has extra ensures clause `true` not in StEph
 src/Chap37/BSTSplayMtEph.rs:1774: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap37/BSTSplayMtEph.rs:1774: warning: `new`: StEph has ensures clause `forall | x : T | ! tree . spec_contains (x)` with no match in MtEph
 src/Chap37/BSTSplayMtEph.rs:1774: warning: `new`: StEph has ensures clause `tree . spec_size () == 0` with no match in MtEph

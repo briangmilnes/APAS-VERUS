@@ -153,7 +153,11 @@ pub mod LabUnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
-            ensures spec_labgraphview_wf(self@);
+            ensures
+                spec_labgraphview_wf(self@),
+                self@.V == old(self)@.V.insert(v1@).insert(v2@),
+                self@.A == old(self)@.A.insert((v1@, v2@, label@)) ||
+                self@.A == old(self)@.A.insert((v2@, v1@, label@));
 
         /// - APAS: Work Θ(|E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search

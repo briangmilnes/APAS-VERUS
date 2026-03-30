@@ -274,7 +274,12 @@ broadcast use {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures
-                self.spec_orderedsetsteph_wf();
+                self@.subset_of(old(self)@),
+                self.spec_orderedsetsteph_wf(),
+                forall|v: T::V| #[trigger] self@.contains(v)
+                    ==> old(self)@.contains(v) && spec_pred(v),
+                forall|v: T::V| old(self)@.contains(v) && spec_pred(v)
+                    ==> #[trigger] self@.contains(v);
         /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
         fn intersection(&mut self, other: &Self)
             requires old(self).spec_orderedsetsteph_wf(), other.spec_orderedsetsteph_wf(),
