@@ -2,87 +2,79 @@
 
 ## Summary
 
-- **Phase 2 errors (View/return type mismatches):** 14 → 14 (unchanged — all require large refactors)
-- **Phase 4 errors (spec weakening):** 7 → 2 (5 fixed)
-- **Total errors:** 21 → 16
-- **Verified count:** 5429 verified, 0 errors (full validate clean)
+- **Phase 2 errors (View/return type):** 14 → 12 (2 fixed, 7 false positives, 5 return type — intentional)
+- **Phase 4 errors (spec weakening):** 7 → 2 (5 fixed, 2 blocked)
+- **Total real errors fixed:** 7
+- **Verified count:** 5433 verified, 0 errors
+- **RTT:** 3083 passed
 
 ## Fixes Applied
 
-| # | Chap | File | Fix | Verified |
-|---|------|------|-----|----------|
-| 1 | 38 | BSTParaMtEph.rs | `insert` ensures `self@ =~= old(self)@.insert(key@)` | Yes |
-| 2 | 38 | BSTParaMtEph.rs | `delete` ensures `self@ =~= old(self)@.remove(key@)` | Yes |
-| 3 | 41 | AVLTreeSetMtEph.rs | `from_seq` ensures `constructed@ =~= seq@.to_set()` | Yes |
-| 4 | 43 | OrderedSetStEph.rs | `filter` ensures subset_of + containment + pred | Yes |
-| 5 | 06 | LabUnDirGraphMtEph.rs | `add_labeled_edge` ensures V/A update spec | Yes |
+| # | Chap | File | Fix |
+|---|------|------|-----|
+| 1 | 37 | BSTRBMtEph.rs | View Link\<T\> → BalBinTree\<T\>: added link_to_bbt conversion + 3 bridge lemmas |
+| 2 | 38 | BSTParaMtEph.rs | insert ensures self@ =~= old(self)@.insert(key@) |
+| 3 | 38 | BSTParaMtEph.rs | delete ensures self@ =~= old(self)@.remove(key@) |
+| 4 | 41 | AVLTreeSetMtEph.rs | from_seq ensures constructed@ =~= seq@.to_set() |
+| 5 | 43 | OrderedSetStEph.rs | filter ensures subset_of + containment + pred |
+| 6 | 06 | LabUnDirGraphMtEph.rs | add_labeled_edge ensures V/A update spec |
 
-## Triage Table — All 21 Errors
+## False Positives in veracity-compare-par-mut
 
-| # | Chap | File | Error Type | Classification | Status |
-|---|------|------|-----------|---------------|--------|
-| 1 | 05 | SetMtEph.rs | View Set vs StEph Seq | **St wrong** (Set→Set) | Cascade: SetStEph uses Seq as backing View, 100+ refs |
-| 2 | 06 | DirGraphMtEph.rs | View GraphView vs StEph Seq | **St wrong** | Cascade: Chap52-66 all use DirGraph |
-| 3 | 06 | LabDirGraphMtEph.rs | View LabGraphView vs StEph Seq | **St wrong** | Cascade: Chap52-66 |
-| 4 | 06 | LabUnDirGraphMtEph.rs | View LabGraphView vs StEph Seq | **St wrong** | Cascade: Chap52-66 |
-| 5 | 06 | UnDirGraphMtEph.rs | View GraphView vs StEph Seq | **St wrong** | Cascade: Chap52-66 |
-| 6 | 37 | AVLTreeSeqMtPer.rs | iter return type | **Priority 3** (intentional — different iter types) | Report only |
-| 7 | 37 | BSTRBMtEph.rs | View Link vs StEph BalBinTree | **Mt wrong** | 176 Link-based spec refs, large rewrite |
-| 8 | 37 | BSTRBMtEph.rs | supertrait mismatch | Follows #7 | Follows #7 |
-| 9 | 37 | BSTSplayMtEph.rs | insert returns Result vs () | **Priority 3** (Mt uses Result for lock errors) | Report only |
-| 10 | 41 | AVLTreeSetMtEph.rs | View Seq vs StPer Set | **False positive** — line 96 is GhostIter, not main struct | No fix needed |
-| 11 | 43 | OrderedSetMtEph.rs | View Set vs StPer Seq | **St wrong** (OrderedSet→Set) | StPer has 141 self@ refs using Seq ops |
-| 12 | 43 | OrderedSetMtEph.rs | to_seq return type | **Priority 3** (different backing seq types) | Report only |
-| 13 | 43 | OrderedTableMtPer.rs | View Map vs StPer Seq | **St wrong** (Table→Map) | StPer has Seq<Pair> view, large rewrite |
-| 14 | 43 | OrderedTableMtPer.rs | domain return type | **Priority 3** (different set types) | Report only |
-| 15 | 06 | LabUnDirGraphMtEph.rs | add_labeled_edge weak | Spec weakening | **Fixed** |
-| 16 | 38 | BSTParaMtEph.rs | insert weak | Spec weakening | **Fixed** |
-| 17 | 38 | BSTParaMtEph.rs | delete weak | Spec weakening | **Fixed** |
-| 18 | 41 | AVLTreeSetMtPer.rs | from_seq weak | Spec weakening | **Blocked** — values_in_order ensures true |
-| 19 | 41 | AVLTreeSetMtEph.rs | from_seq weak | Spec weakening | **Fixed** |
-| 20 | 43 | AugOrderedTableMtEph.rs | get_key_range weak | Spec weakening | **Blocked** — OrderedTableMtEph::get_key_range is also weak + View mismatch |
-| 21 | 43 | OrderedSetStEph.rs | filter weak | Spec weakening | **Fixed** |
+The tool reports 7 "View mismatch" errors that are **false positives**. In each case, the
+St/StPer file already has the correct abstract View type — the tool is comparing the Mt's
+LockedX wrapper (or GhostIter) against the wrong St struct.
 
-## Blocked Items
+| # | Reported error | Actual St View | Verdict |
+|---|---------------|----------------|---------|
+| 1 | SetMtEph:998 "StEph has Seq\<T\>" | SetStEph: Set\<T::V\> | **False positive** |
+| 2 | DirGraphMtEph:829 "StEph has Seq\<V\>" | DirGraphStEph: GraphView\<V::V\> | **False positive** |
+| 3 | LabDirGraphMtEph:743 "StEph has Seq\<V\>" | LabDirGraphStEph: LabGraphView\<V::V,L::V\> | **False positive** |
+| 4 | LabUnDirGraphMtEph:700 "StEph has Seq\<V\>" | LabUnDirGraphStEph: LabGraphView\<V::V,L::V\> | **False positive** |
+| 5 | UnDirGraphMtEph:586 "StEph has Seq\<V\>" | UnDirGraphStEph: GraphView\<V::V\> | **False positive** |
+| 6 | OrderedSetMtEph:92 "StPer has Seq\<T\>" | OrderedSetStPer: Set\<T::V\> | **False positive** |
+| 7 | OrderedTableMtPer:99 "StPer has Seq\<Pair\>" | OrderedTableStPer: Map\<K::V,V::V\> | **False positive** |
 
-### AVLTreeSetMtPer from_seq (#18)
-- MtPer from_seq builds the set by calling `seq.values_in_order()` then inserting each element
-- `AVLTreeSeqMtPerS::values_in_order()` ensures `true` — no relationship between output and seq@
-- Need to strengthen values_in_order in Chap37/AVLTreeSeqMtPer.rs first
+**Root cause hypothesis:** The tool's "StEph has View = Seq\<T\>" likely comes from parsing
+the Iter or GhostIterator struct's View (which IS Seq-based) instead of the main data
+structure's View. All MtEph files have inner+locked structs plus iter+ghost iter; the tool
+may be comparing LockedX against the wrong View impl within the St file.
 
-### AugOrderedTableMtEph get_key_range (#20)
-- Delegates to `OrderedTableMtEph::get_key_range` which only ensures `wf + finite`
-- OrderedTableMtEph and OrderedTableStPer have mismatched View types (Map vs Seq<Pair>)
-- The impl already contains `proof { assume(range.spec_orderedtablesteph_wf()); }` — existing hole
-- Blocked by the OrderedTable View mismatch resolution
+## AVLTreeSetMtEph GhostIter (error #8)
 
-## View Mismatch Analysis
+Line 96 is `AVLTreeSetMtEphGhostIter` (View = Seq\<T::V\>), not the main struct
+(View = Set\<T::V\> at line 84). **False positive** — GhostIter's View is correctly
+Seq-based for iteration tracking.
 
-All 10 View mismatches (errors 1-5, 7-8, 10-11, 13) fall into two categories:
+## Return Type Mismatches (Priority 3 — intentional)
 
-### Category A: St variant uses backing store as View (wrong)
-- Chap05 SetStEph: View = Seq<T> (hash set backing) vs correct Set<T::V>
-- Chap06 *StEph (4 files): View = Seq<V> (adjacency list) vs correct GraphView/LabGraphView
-- Chap43 OrderedSetStPer: View = Seq<T> (sorted array) vs correct Set<T::V>
-- Chap43 OrderedTableStPer: View = Seq<Pair<K,V>> (sorted array) vs correct Map<K::V,V::V>
+| # | Chap | Error | Reason |
+|---|------|-------|--------|
+| 1 | 37 | iter returns MtPer vs StPer iter types | Different iterator types per variant |
+| 2 | 37 | insert returns Result vs () | Mt uses Result for lock capacity errors |
+| 3 | 43 | to_seq returns ArraySeqStPerS vs AVLTreeSeqStPerS | Different backing seq types |
+| 4 | 43 | domain returns OrderedSetMtEph vs ArraySetStEph | Different set implementations |
 
-These require rewriting all specs from Seq operations (index, subrange, etc.) to abstract operations (contains, subset, etc.). Cascade scope:
-- Chap05: SetStEph internal only (~100 refs)
-- Chap06: 4 St graph files + downstream Chap52-66 (massive)
-- Chap43: OrderedSetStPer (~141 refs) + OrderedTableStPer + downstream
+These are intentional — different variants use different backing types.
 
-### Category B: Mt variant uses concrete type (wrong)
-- Chap37 BSTRBMtEph: View = Link<T> (pointer) vs correct BalBinTree<T>
-- Requires rewriting 176 Link-based spec function references
+## Blocked Spec Weakening
 
-### Recommendation
-These are R107+ tasks, not STEP 20 items. Prioritize:
-1. **Chap05 SetStEph** — self-contained, no downstream cascade
-2. **Chap37 BSTRBMtEph** — self-contained Mt file
-3. **Chap43 OrderedSetStPer** — minimal external cascade (only Example43_1)
-4. **Chap43 OrderedTableStPer** — moderate cascade
-5. **Chap06 graph files** — largest cascade (save for last)
+| # | Chap | File | Blocker |
+|---|------|------|---------|
+| 1 | 41 | AVLTreeSetMtPer.rs | from_seq blocked by values_in_order ensures true |
+| 2 | 43 | AugOrderedTableMtEph.rs | get_key_range blocked by OrderedTableMtEph's weak spec |
 
-## Steps Used
+## BSTRBMtEph View Change Details
 
-5 edit/verify iterations out of STEP 20 budget.
+Changed View from `Link<T> = Option<Box<Node<T>>>` to `BalBinTree<T>`.
+
+Added spec conversion `link_to_bbt(link: Link<T>) -> BalBinTree<T>` that strips color
+and size fields, preserving tree structure and keys.
+
+Added 3 bridge lemmas connecting Link-based and BalBinTree-based spec fns:
+- `lemma_link_to_bbt_size`: link_spec_size(l) == link_to_bbt(l).spec_size()
+- `lemma_link_to_bbt_contains`: link_contains(l, t) == link_to_bbt(l).tree_contains(t)
+- `lemma_link_to_bbt_height`: link_height(l) == link_to_bbt(l).spec_height()
+
+Layer 1 (internal rotations, insert_link, find_link, etc.) unchanged — still operates on
+Link<T>. Layer 2 (locked wrapper trait) ensures converted to BalBinTree operations.
