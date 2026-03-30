@@ -24,6 +24,8 @@ pub mod BSTRBMtEph {
     use vstd::rwlock::*;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::slice::slice_subrange;
@@ -109,7 +111,64 @@ pub mod BSTRBMtEph {
         }
     }
 
+    /// Convert Link<T> (concrete RB tree pointer) to BalBinTree<T> (abstract binary tree).
+    /// Strips color and size, retaining structure and keys.
+    pub open spec fn link_to_bbt<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> BalBinTree<T>
+        decreases link,
+    {
+        match link {
+            None => BalBinTree::Leaf,
+            Some(node) => BalBinTree::Node(Box::new(BalBinNode {
+                left: link_to_bbt(node.left),
+                value: node.key,
+                right: link_to_bbt(node.right),
+            })),
+        }
+    }
+
     // 7. proof fns
+
+    /// Bridge: link_spec_size == BalBinTree::spec_size after conversion.
+    proof fn lemma_link_to_bbt_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
+        ensures link_spec_size(link) == link_to_bbt(link).spec_size(),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_link_to_bbt_size::<T>(node.left);
+                lemma_link_to_bbt_size::<T>(node.right);
+            }
+        }
+    }
+
+    /// Bridge: link_contains == BalBinTree::tree_contains after conversion.
+    proof fn lemma_link_to_bbt_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T)
+        ensures link_contains(link, target) == link_to_bbt(link).tree_contains(target),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_link_to_bbt_contains::<T>(node.left, target);
+                lemma_link_to_bbt_contains::<T>(node.right, target);
+            }
+        }
+    }
+
+    /// Bridge: link_height == BalBinTree::spec_height after conversion.
+    proof fn lemma_link_to_bbt_height<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
+        ensures link_height(link) == link_to_bbt(link).spec_height(),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_link_to_bbt_height::<T>(node.left);
+                lemma_link_to_bbt_height::<T>(node.right);
+            }
+        }
+    }
 
     /// Height is bounded by structural node count.
     proof fn lemma_height_le_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
@@ -918,16 +977,16 @@ pub mod BSTRBMtEph {
     }
 
     impl<T: StTInMtT + Ord + TotalOrder> View for BSTRBMtEph<T> {
-        type V = Link<T>;
-        open spec fn view(&self) -> Link<T> { self.spec_ghost_root() }
+        type V = BalBinTree<T>;
+        open spec fn view(&self) -> BalBinTree<T> { link_to_bbt(self.spec_ghost_root()) }
     }
 
-    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = Link<T>> {
+    pub trait BSTRBMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_bstrbmteph_wf(&self) -> bool;
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstrbmteph_wf(),
-                    tree@ is None;
+                    tree@ == BalBinTree::<T>::Leaf;
 
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
             ensures tree.spec_bstrbmteph_wf();
@@ -936,25 +995,25 @@ pub mod BSTRBMtEph {
             requires old(self).spec_bstrbmteph_wf(),
             ensures self.spec_bstrbmteph_wf(),
                     match r {
-                        Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1,
+                        Ok(_) => self@.spec_size() <= old(self)@.spec_size() + 1,
                         Err(_) => self@ == old(self)@,
                     };
 
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstrbmteph_wf(),
-            ensures found == link_contains(self@, *target);
+            ensures found == self@.tree_contains(*target);
 
         fn size(&self) -> (n: usize)
             requires self.spec_bstrbmteph_wf(),
-            ensures n as nat == link_spec_size(self@);
+            ensures n as nat == self@.spec_size();
 
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstrbmteph_wf(),
-            ensures b == (self@ is None);
+            ensures b == (self@.spec_size() == 0);
 
         fn height(&self) -> (h: usize)
             requires self.spec_bstrbmteph_wf(),
-            ensures h as nat == link_height(self@);
+            ensures h as nat == self@.spec_height();
 
         fn find(&self, target: &T) -> (found: Option<T>)
             ensures true;
@@ -984,8 +1043,8 @@ pub mod BSTRBMtEph {
 
     impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
         open spec fn spec_bstrbmteph_wf(&self) -> bool {
-            link_spec_size(self@) <= usize::MAX
-            && spec_is_bst_link(self@)
+            link_spec_size(self.spec_ghost_root()) <= usize::MAX
+            && spec_is_bst_link(self.spec_ghost_root())
         }
 
         fn new() -> Self {
@@ -1025,10 +1084,15 @@ pub mod BSTRBMtEph {
                     node.color = Color::Black;
                     current = Some(node);
                 }
-                let ghost old_size = link_spec_size(self.ghost_root@);
+                let ghost old_ghost = self.ghost_root@;
+                let ghost old_size = link_spec_size(old_ghost);
                 let ghost new_root = current;
-                proof { assume(link_spec_size(new_root) <= old_size + 1); }
-                proof { assume(link_spec_size(new_root) <= usize::MAX as nat); }
+                proof {
+                    assume(link_spec_size(new_root) <= old_size + 1);
+                    assume(link_spec_size(new_root) <= usize::MAX as nat);
+                    lemma_link_to_bbt_size::<T>(new_root);
+                    lemma_link_to_bbt_size::<T>(old_ghost);
+                }
                 self.ghost_root = Ghost(new_root);
                 write_handle.release_write(current);
                 Ok(())
@@ -1044,7 +1108,7 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // spec_is_bst_link(*data) from lock predicate via acquire_read.
             let found = find_link(data, target).is_some();
-            proof { assume(found == link_contains(self@, *target)); }
+            proof { assume(found == self@.tree_contains(*target)); }
             handle.release_read();
             found
         }
@@ -1055,7 +1119,7 @@ pub mod BSTRBMtEph {
             let data = handle.borrow();
             // link_spec_size(*data) <= usize::MAX from lock predicate via acquire_read.
             let n = size_link(data);
-            proof { assume(n as nat == link_spec_size(self@)); }
+            proof { assume(n as nat == self@.spec_size()); }
             handle.release_read();
             n
         }
@@ -1064,7 +1128,7 @@ pub mod BSTRBMtEph {
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
-            proof { assume(b == (self@ is None)); }
+            proof { assume(b == (self@.spec_size() == 0)); }
             handle.release_read();
             b
         }
@@ -1079,7 +1143,7 @@ pub mod BSTRBMtEph {
                 lemma_height_le_size::<T>(*data);
             }
             let h = height_rec(data);
-            proof { assume(h as nat == link_height(self@)); }
+            proof { assume(h as nat == self@.spec_height()); }
             handle.release_read();
             h
         }
