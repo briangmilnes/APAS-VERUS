@@ -113,7 +113,9 @@ broadcast use {
         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static
             requires old(self).spec_obstmteph_wf();
 
-        fn keys(&self) -> (keys: Vec<KeyProb<T>>);
+        fn keys(&self) -> (keys: Vec<KeyProb<T>>)
+            requires self.spec_obstmteph_wf(),
+            ensures keys@.len() == self@.keys.len();
 
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
             requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
@@ -284,7 +286,9 @@ broadcast use {
         fn keys(&self) -> (keys: Vec<KeyProb<T>>) {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
-            let keys = handle.borrow().clone();
+            let borrowed = handle.borrow();
+            assert(borrowed@.len() == rwlock.pred().expected_len);
+            let keys = borrowed.clone();
             handle.release_read();
             keys
         }

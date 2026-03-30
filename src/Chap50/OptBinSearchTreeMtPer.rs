@@ -103,7 +103,8 @@ broadcast use {
 
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;
 
-        fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>);
+        fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>)
+            ensures keys@ =~= self@.keys;
 
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();

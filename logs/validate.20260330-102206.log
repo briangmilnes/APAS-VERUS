@@ -1,0 +1,11 @@
+error: cannot call function `vstd::rwlock::impl&%6::borrow` with mode exec
+   --> src/Chap50/MatrixChainMtEph.rs:427:20
+    |
+427 |             assert(handle.borrow()@ =~= self.ghost_dimensions@);
+    |                    ^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22608MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

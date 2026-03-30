@@ -160,7 +160,8 @@ broadcast use {
                 cost as nat == if self@.dimensions.len() <= 1 { 0 }
                     else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };
 
-        fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>);
+        fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>)
+            ensures dims@ =~= self@.dimensions;
 
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len();
