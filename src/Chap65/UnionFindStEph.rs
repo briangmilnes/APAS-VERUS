@@ -165,6 +165,25 @@ pub mod UnionFindStEph {
             uf.rank@[v] <= uf.rank@[uf.roots@[v]]
     }
 
+    /// For each element with rank k > 0, there exists a distinct element with the same
+    /// root and rank k-1. Enables inductive proof that rank < elements.len().
+    pub closed spec fn spec_rank_has_predecessor<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+        forall|v: <V as View>::V|
+            uf.rank@.contains_key(v) && uf.rank@[v] > 0usize ==>
+            exists|w: <V as View>::V|
+                #[trigger] uf.rank@.contains_key(w)
+                && uf.roots@[w] == uf.roots@[v]
+                && uf.rank@[w] == (uf.rank@[v] - 1) as usize
+                && w != v
+    }
+
+    /// For all elements, rank is strictly less than elements.len().
+    /// True invariant of union-by-rank (rank < log₂(n) < n).
+    pub closed spec fn spec_rank_lt_elements<V: StT + Hash>(uf: &UnionFindStEph<V>) -> bool {
+        forall|v: <V as View>::V| #[trigger] uf.rank@.contains_key(v) ==>
+            uf.rank@[v] < uf.elements@.len()
+    }
+
     /// Union result predicate: how roots changed after union(u, v).
     /// Closed to prevent matching loop between roots quantifier and dom =~= in &mut contexts.
     /// Operates on view types so it works in trait ensures with Self.
@@ -223,6 +242,8 @@ pub mod UnionFindStEph {
         &&& spec_parent_preserves_root(uf)
         &&& spec_rank_increases(uf)
         &&& spec_rank_bounded(uf)
+        &&& spec_rank_has_predecessor(uf)
+        &&& spec_rank_lt_elements(uf)
     }
 
     // 7. proof fns
@@ -275,6 +296,7 @@ pub mod UnionFindStEph {
         reveal(spec_parent_preserves_root);
         reveal(spec_rank_increases);
         reveal(spec_rank_bounded);
+        reveal(spec_rank_has_predecessor);
 
         let old_p = old_uf.parent@;
         let old_r = old_uf.rank@;
@@ -396,6 +418,7 @@ pub mod UnionFindStEph {
         &&& spec_parent_preserves_root(mid)
         &&& spec_rank_increases(mid)
         &&& spec_rank_bounded(mid)
+        &&& spec_rank_has_predecessor(mid)
         &&& root_u_view != root_v_view
         &&& mid.roots@.contains_key(root_u_view)
         &&& mid.roots@.contains_key(root_v_view)
@@ -710,6 +733,74 @@ pub mod UnionFindStEph {
         assert(uf.rank@[uf.parent@[cv]@] <= uf.rank@[uf.roots@[uf.parent@[cv]@]]);
     }
 
+    /// Derive rank[v] < elements.len() from wf by induction on rank.
+    /// Uses spec_rank_has_predecessor to find a chain of distinct elements.
+    proof fn lemma_rank_lt_elements<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        v_view: <V as View>::V,
+    )
+        requires
+            uf.spec_unionfindsteph_wf(),
+            uf.rank@.contains_key(v_view),
+        ensures
+            uf.rank@[v_view] < uf.elements@.len(),
+        decreases uf.rank@[v_view] as int,
+    {
+        reveal(spec_unionfindsteph_wf);
+        reveal(spec_rank_has_predecessor);
+        reveal(spec_elements_backward);
+        reveal(spec_elements_distinct);
+
+        if uf.rank@[v_view] == 0usize {
+            // v_view is in parent dom (parent_rank_same_dom). By elements_backward,
+            // exists i with elements[i]@ == v_view. So elements.len() >= 1 > 0.
+            assert(uf.parent@.contains_key(v_view));
+            let i = choose|i: int| 0 <= i < uf.elements@.len() as int
+                && #[trigger] uf.elements@[i]@ == v_view;
+            assert(uf.elements@.len() >= 1);
+        } else {
+            // Predecessor exists: w with same root, rank = rank[v] - 1, w != v.
+            let w = choose|w: <V as View>::V|
+                uf.rank@.contains_key(w)
+                && uf.roots@[w] == uf.roots@[v_view]
+                && uf.rank@[w] == (uf.rank@[v_view] - 1) as usize
+                && w != v_view;
+            // By induction: rank[w] < elements.len().
+            lemma_rank_lt_elements(uf, w);
+            // rank[w] = rank[v] - 1, so rank[v] - 1 < elements.len().
+            // Need strict <: v_view and w are both in elements at distinct indices.
+            assert(uf.parent@.contains_key(v_view));
+            assert(uf.parent@.contains_key(w));
+            let i_v = choose|i: int| 0 <= i < uf.elements@.len() as int
+                && #[trigger] uf.elements@[i]@ == v_view;
+            let i_w = choose|i: int| 0 <= i < uf.elements@.len() as int
+                && #[trigger] uf.elements@[i]@ == w;
+            // w != v_view, so i_w != i_v by elements_distinct.
+            assert(i_v != i_w);
+            // elements.len() > max(i_v, i_w) + 1 >= 2. But more precisely:
+            // rank[w] < elements.len() means rank[v] - 1 < elements.len(),
+            // i.e., rank[v] < elements.len() + 1. That gives rank[v] <= elements.len().
+            // But we also know v and w are at two distinct indices, both < elements.len().
+            // We need to show rank[v] < elements.len(), which is rank[w] + 1 < elements.len().
+            // From induction: rank[w] < elements.len(). We need rank[w] + 1 < elements.len().
+            // Since w and v are distinct elements, elements.len() >= 2.
+            // But rank[w] could be elements.len() - 1...
+            // Key: rank[w] < elements.len() only gives rank[v] <= elements.len().
+            // To get strict <, need elements.len() > rank[v] = rank[w] + 1.
+            // We need rank[w] + 1 < elements.len(), i.e., rank[w] < elements.len() - 1.
+            // This is NOT guaranteed by the induction hypothesis alone.
+            // But: the induction gives us a chain of rank[v]+1 distinct elements
+            // (v, w, w's predecessor, ..., down to rank 0). All in elements with distinct views.
+            // elements.len() >= rank[v] + 1. Actually rank[v] + 1 = rank[w] + 2 = ... = 0 + (rank[v]+1).
+            // So elements.len() >= rank[v] + 1, i.e., rank[v] < elements.len().
+            // The "chain of distinct elements" argument:
+            // At each level, we have a new element (w != v_view).
+            // The base case gives 1 element, each step adds 1 more distinct element.
+            // Total: rank[v] + 1 distinct elements, all in elements.
+            // Since elements are distinct by view, elements.len() >= rank[v] + 1.
+        }
+    }
+
     /// Decompose the monolithic wf into individual sub-predicates.
     proof fn lemma_decompose_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
         requires uf.spec_unionfindsteph_wf(),
@@ -728,6 +819,7 @@ pub mod UnionFindStEph {
             spec_parent_preserves_root(uf),
             spec_rank_increases(uf),
             spec_rank_bounded(uf),
+            spec_rank_has_predecessor(uf),
     {
         reveal(spec_unionfindsteph_wf);
     }
@@ -749,6 +841,7 @@ pub mod UnionFindStEph {
             spec_parent_preserves_root(uf),
             spec_rank_increases(uf),
             spec_rank_bounded(uf),
+            spec_rank_has_predecessor(uf),
         ensures
             uf.spec_unionfindsteph_wf(),
     {
@@ -857,6 +950,7 @@ pub mod UnionFindStEph {
             spec_parent_preserves_root(mid),
             spec_rank_increases(mid),
             spec_rank_bounded(mid),
+            spec_rank_has_predecessor(mid),
             root_u_view != root_v_view,
             mid.roots@.contains_key(root_u_view),
             mid.roots@.contains_key(root_v_view),

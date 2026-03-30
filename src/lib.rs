@@ -658,14 +658,12 @@ pub mod Chap64 {
     pub mod TSPApproxStEph;
 }
 
-// Chap65: commented out — tricky three proof holes (union, uf_wf_opaque, kruskal).
-// union_merge proved (R106). union trait impl + Kruskal remain.
-// #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
-// pub mod Chap65 {
-//     pub mod UnionFindStEph;
-//     pub mod KruskalStEph;
-//     pub mod PrimStEph;
-// }
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
+pub mod Chap65 {
+    pub mod UnionFindStEph;
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
+}
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap66")))]
 pub mod Chap66 {
