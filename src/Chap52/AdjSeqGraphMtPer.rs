@@ -89,6 +89,22 @@ broadcast use {
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
+        fn from_seq(adj: ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (constructed: Self)
+            requires
+                forall|u: int, j: int|
+                    0 <= u < adj.spec_len()
+                    && 0 <= j < adj.spec_index(u).spec_len()
+                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),
+            ensures
+                constructed.spec_adjseqgraphmtper_wf(),
+                constructed.spec_num_vertices() == adj.spec_len(),
+                forall|i: int| 0 <= i < adj.spec_len() ==>
+                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
+                forall|i: int, j: int| 0 <= i < adj.spec_len()
+                    && 0 <= j < adj.spec_index(i).spec_len()
+                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
+
+        /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphmtper_wf()
             ensures n as nat == self.spec_num_vertices();
@@ -126,6 +142,41 @@ broadcast use {
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
+
+        /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
+        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self)
+            requires
+                self.spec_adjseqgraphmtper_wf(),
+                u < self.spec_num_vertices(),
+                v < self.spec_num_vertices(),
+            ensures
+                updated.spec_adjseqgraphmtper_wf(),
+                updated.spec_num_vertices() == self.spec_num_vertices(),
+                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
+                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
+                forall|i: int, j: int|
+                    0 <= i < self.spec_num_vertices() && i != u as int
+                    && 0 <= j < self.spec_degree(i)
+                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                exists|j: int|
+                    0 <= j < updated.spec_degree(u as int)
+                    && #[trigger] updated.spec_neighbor(u as int, j) == v;
+
+        /// Work Theta(n + deg(u)), Span Theta(n + deg(u))
+        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self)
+            requires self.spec_adjseqgraphmtper_wf(), u < self.spec_num_vertices()
+            ensures
+                updated.spec_adjseqgraphmtper_wf(),
+                updated.spec_num_vertices() == self.spec_num_vertices(),
+                forall|i: int| 0 <= i < self.spec_num_vertices() && i != u as int
+                    ==> #[trigger] updated.spec_degree(i) == self.spec_degree(i),
+                forall|i: int, j: int|
+                    0 <= i < self.spec_num_vertices() && i != u as int
+                    && 0 <= j < self.spec_degree(i)
+                    ==> #[trigger] updated.spec_neighbor(i, j) == self.spec_neighbor(i, j),
+                forall|j: int|
+                    0 <= j < updated.spec_degree(u as int)
+                    ==> #[trigger] updated.spec_neighbor(u as int, j) != v;
     }
 
     // 9. impls
@@ -160,6 +211,10 @@ broadcast use {
                 },
                 n,
             );
+            AdjSeqGraphMtPer { adj }
+        }
+
+        fn from_seq(adj: ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (constructed: Self) {
             AdjSeqGraphMtPer { adj }
         }
 
@@ -223,6 +278,208 @@ broadcast use {
 
         fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
+        }
+
+        fn insert_edge(&self, u: usize, v: usize) -> (updated: Self) {
+            let n_v = self.adj.length();
+            let src_u = self.adj.nth(u);
+            let deg_u = src_u.length();
+
+            // Check if v already in neighbor list.
+            let mut found = false;
+            let mut fi: usize = 0;
+            while fi < deg_u
+                invariant
+                    fi <= deg_u,
+                    u < self.spec_num_vertices(),
+                    deg_u as nat == self.spec_degree(u as int),
+                    deg_u as nat == src_u.spec_len(),
+                    forall|j: int| 0 <= j < deg_u as int
+                        ==> #[trigger] src_u.spec_index(j) == self.spec_neighbor(u as int, j),
+                    !found ==> forall|j: int| 0 <= j < fi
+                        ==> #[trigger] self.spec_neighbor(u as int, j) != v,
+                    found ==> exists|j: int| 0 <= j < self.spec_degree(u as int)
+                        && #[trigger] self.spec_neighbor(u as int, j) == v,
+                decreases deg_u - fi
+            {
+                if *src_u.nth(fi) == v {
+                    assert(self.spec_neighbor(u as int, fi as int) == v);
+                    found = true;
+                    break;
+                }
+                fi = fi + 1;
+            }
+
+            // Build new neighbor list for vertex u.
+            let new_neighbors: ArraySeqMtPerS<usize>;
+            let ghost mut witness: int = 0;
+            if found {
+                new_neighbors = ArraySeqMtPerS::tabulate(
+                    &|i: usize| -> (r: usize)
+                        requires i < deg_u
+                        ensures r == src_u.spec_index(i as int)
+                    { *src_u.nth(i) },
+                    deg_u,
+                );
+                proof {
+                    witness = choose|j: int| 0 <= j < self.spec_degree(u as int)
+                        && self.spec_neighbor(u as int, j) == v;
+                    assert(new_neighbors.spec_index(witness) == src_u.spec_index(witness));
+                    assert(src_u.spec_index(witness) == self.spec_neighbor(u as int, witness));
+                }
+            } else {
+                let mut nvec = Vec::<usize>::new();
+                let mut j: usize = 0;
+                while j < deg_u
+                    invariant
+                        j <= deg_u,
+                        u < self.spec_num_vertices(),
+                        deg_u as nat == self.spec_degree(u as int),
+                        deg_u as nat == src_u.spec_len(),
+                        forall|k: int| 0 <= k < deg_u as int
+                            ==> #[trigger] src_u.spec_index(k) == self.spec_neighbor(u as int, k),
+                        nvec@.len() == j as int,
+                        forall|k: int| 0 <= k < j
+                            ==> #[trigger] nvec@[k] == self.spec_neighbor(u as int, k),
+                    decreases deg_u - j
+                {
+                    nvec.push(*src_u.nth(j));
+                    j = j + 1;
+                }
+                nvec.push(v);
+                new_neighbors = ArraySeqMtPerS::from_vec(nvec);
+                proof { witness = deg_u as int; }
+            }
+            assert(0 <= witness < new_neighbors.spec_len() as int);
+            assert(new_neighbors.spec_index(witness) == v);
+
+            // Build new adj: tabulate copies each row; row u gets new_neighbors.
+            let result_adj = ArraySeqMtPerS::tabulate(
+                &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+                    requires k < n_v
+                    ensures
+                        k as int != u as int ==> (
+                            r.spec_len() == self.adj.spec_index(k as int).spec_len()
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
+                        ),
+                        k as int == u as int ==> (
+                            r.spec_len() == new_neighbors.spec_len()
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == new_neighbors.spec_index(l)
+                        )
+                {
+                    if k == u {
+                        let nn_len = new_neighbors.length();
+                        ArraySeqMtPerS::tabulate(
+                            &|i: usize| -> (r: usize)
+                                requires i < nn_len
+                                ensures r == new_neighbors.spec_index(i as int)
+                            { *new_neighbors.nth(i) },
+                            nn_len,
+                        )
+                    } else {
+                        let src = self.adj.nth(k);
+                        let len = src.length();
+                        ArraySeqMtPerS::tabulate(
+                            &|i: usize| -> (r: usize)
+                                requires i < len
+                                ensures r == src.spec_index(i as int)
+                            { *src.nth(i) },
+                            len,
+                        )
+                    }
+                },
+                n_v,
+            );
+
+            let updated = AdjSeqGraphMtPer { adj: result_adj };
+            assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+            assert(updated.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
+            assert(updated.spec_neighbor(u as int, witness) == v);
+            updated
+        }
+
+        fn delete_edge(&self, u: usize, v: usize) -> (updated: Self) {
+            let n_v = self.adj.length();
+            let src_u = self.adj.nth(u);
+            let deg_u = src_u.length();
+
+            // Build filtered neighbors for vertex u (exclude v).
+            let mut nvec = Vec::<usize>::new();
+            let mut j: usize = 0;
+            while j < deg_u
+                invariant
+                    j <= deg_u,
+                    u < self.spec_num_vertices(),
+                    deg_u as nat == self.spec_degree(u as int),
+                    deg_u as nat == src_u.spec_len(),
+                    forall|k: int| 0 <= k < nvec@.len() as int
+                        ==> #[trigger] nvec@[k] != v,
+                    self.spec_adjseqgraphmtper_wf(),
+                    forall|k: int| 0 <= k < nvec@.len() as int
+                        ==> nvec@[k] < self.adj.spec_len(),
+                decreases deg_u - j
+            {
+                let neighbor = *self.adj.nth(u).nth(j);
+                if neighbor != v {
+                    nvec.push(neighbor);
+                }
+                j = j + 1;
+            }
+            let new_neighbors = ArraySeqMtPerS::from_vec(nvec);
+
+            // Build new adj: tabulate copies each row; row u gets new_neighbors.
+            let result_adj = ArraySeqMtPerS::tabulate(
+                &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+                    requires k < n_v
+                    ensures
+                        k as int != u as int ==> (
+                            r.spec_len() == self.adj.spec_index(k as int).spec_len()
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == self.adj.spec_index(k as int).spec_index(l)
+                        ),
+                        k as int == u as int ==> (
+                            r.spec_len() == new_neighbors.spec_len()
+                            && forall|l: int| 0 <= l < r.spec_len()
+                                ==> #[trigger] r.spec_index(l) == new_neighbors.spec_index(l)
+                        )
+                {
+                    if k == u {
+                        let nn_len = new_neighbors.length();
+                        ArraySeqMtPerS::tabulate(
+                            &|i: usize| -> (r: usize)
+                                requires i < nn_len
+                                ensures r == new_neighbors.spec_index(i as int)
+                            { *new_neighbors.nth(i) },
+                            nn_len,
+                        )
+                    } else {
+                        let src = self.adj.nth(k);
+                        let len = src.length();
+                        ArraySeqMtPerS::tabulate(
+                            &|i: usize| -> (r: usize)
+                                requires i < len
+                                ensures r == src.spec_index(i as int)
+                            { *src.nth(i) },
+                            len,
+                        )
+                    }
+                },
+                n_v,
+            );
+
+            assert forall|u2: int, j2: int|
+                0 <= u2 < result_adj.spec_len()
+                && 0 <= j2 < result_adj.spec_index(u2).spec_len()
+            implies #[trigger] result_adj.spec_index(u2).spec_index(j2) < result_adj.spec_len()
+            by {
+                if u2 != u as int {
+                    assert(result_adj.spec_index(u2).spec_index(j2) == self.adj.spec_index(u2).spec_index(j2));
+                }
+            }
+
+            AdjSeqGraphMtPer { adj: result_adj }
         }
     }
 

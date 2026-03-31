@@ -92,6 +92,22 @@ broadcast use {
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
+        fn from_seq(adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (constructed: Self)
+            requires
+                forall|u: int, j: int|
+                    0 <= u < adj.spec_len()
+                    && 0 <= j < adj.spec_index(u).spec_len()
+                    ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),
+            ensures
+                constructed.spec_adjseqgraphmteph_wf(),
+                constructed.spec_num_vertices() == adj.spec_len(),
+                forall|i: int| 0 <= i < adj.spec_len() ==>
+                    #[trigger] constructed.spec_degree(i) == adj.spec_index(i).spec_len(),
+                forall|i: int, j: int| 0 <= i < adj.spec_len()
+                    && 0 <= j < adj.spec_index(i).spec_len()
+                    ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
+
+        /// Work Theta(1), Span Theta(1)
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphmteph_wf()
             ensures n as nat == self.spec_num_vertices();
@@ -129,6 +145,26 @@ broadcast use {
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
+
+        /// Work Theta(1), Span Theta(1)
+        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqMtEphS<usize>)
+            requires
+                old(self).spec_adjseqgraphmteph_wf(),
+                v < old(self).spec_num_vertices(),
+                forall|j: int| 0 <= j < neighbors.spec_len()
+                    ==> #[trigger] neighbors.spec_index(j) < old(self).spec_num_vertices(),
+            ensures
+                self.spec_adjseqgraphmteph_wf(),
+                self.spec_num_vertices() == old(self).spec_num_vertices(),
+                self.spec_degree(v as int) == neighbors.spec_len(),
+                forall|j: int| 0 <= j < neighbors.spec_len()
+                    ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),
+                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != v as int
+                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),
+                forall|i: int, j: int|
+                    0 <= i < old(self).spec_num_vertices() && i != v as int
+                    && 0 <= j < old(self).spec_degree(i)
+                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
@@ -185,6 +221,10 @@ broadcast use {
                 },
                 n,
             );
+            AdjSeqGraphMtEph { adj }
+        }
+
+        fn from_seq(adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (constructed: Self) {
             AdjSeqGraphMtEph { adj }
         }
 
@@ -258,6 +298,19 @@ broadcast use {
 
         fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
+        }
+
+        fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqMtEphS<usize>) {
+            let _ = self.adj.set(v, neighbors);
+            assert forall|u: int, j: int|
+                0 <= u < self.adj.spec_len()
+                && 0 <= j < self.adj.spec_index(u).spec_len()
+            implies #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+            by {
+                if u != v as int {
+                    assert(self.adj.spec_index(u) == old(self).adj.spec_index(u));
+                }
+            }
         }
 
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {

@@ -234,18 +234,23 @@ broadcast use {
             ensures m as nat == self.spec_num_edges();
         /// - APAS: Work Theta(|V|), Span Theta(|V|) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
-        fn vertices(&self) -> AVLTreeSetStEph<V>
+        fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             requires
                 self.spec_adjtablegraphsteph_wf(),
-                self.spec_adj().dom().len() < usize::MAX as nat;
+                self.spec_adj().dom().len() < usize::MAX as nat,
+            ensures verts@ == self.spec_adj().dom();
         /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set find.
-        fn has_edge(&self, u: &V, v: &V) -> bool
-            requires self.spec_adjtablegraphsteph_wf();
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
+            requires self.spec_adjtablegraphsteph_wf()
+            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table find.
-        fn out_neighbors(&self, u: &V) -> AVLTreeSetStEph<V>
-            requires self.spec_adjtablegraphsteph_wf();
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
+            requires self.spec_adjtablegraphsteph_wf()
+            ensures
+                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> usize
@@ -384,7 +389,9 @@ broadcast use {
             count
         }
 
-        fn vertices(&self) -> (verts: AVLTreeSetStEph<V>) {
+        fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
+            ensures verts@ == self.spec_adj().dom()
+        {
             proof {
                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
             }
@@ -399,6 +406,10 @@ broadcast use {
                     len < usize::MAX,
                     verts.spec_avltreesetsteph_wf(),
                     verts@.len() <= i as nat,
+                    forall|j: int| 0 <= j < i ==>
+                        #[trigger] verts@.contains(self.adj.entries@[j].0),
+                    forall|k: <V as View>::V| #[trigger] verts@.contains(k) ==>
+                        exists|j: int| 0 <= j < i && (#[trigger] self.adj.entries@[j]).0 == k,
                 decreases len - i,
             {
                 let pair: &Pair<V, AVLTreeSetStEph<V>> = self.adj.entries.nth(i);
@@ -406,13 +417,47 @@ broadcast use {
                 proof {
                     lemma_cloned_view_eq::<V>(pair.0, key);
                 }
+                let ghost old_verts = verts@;
                 verts.insert(key);
+                proof {
+                    assert forall|k: <V as View>::V| #[trigger] verts@.contains(k)
+                        implies exists|j: int| 0 <= j < i + 1 && (#[trigger] self.adj.entries@[j]).0 == k
+                    by {
+                        if old_verts.contains(k) {
+                            let j = choose|j: int| 0 <= j < i && (#[trigger] self.adj.entries@[j]).0 == k;
+                            assert(self.adj.entries@[j].0 == k);
+                        } else {
+                            assert(k == key@);
+                            assert(self.adj.entries@[i as int].0 == key@);
+                        }
+                    };
+                }
                 i = i + 1;
+            }
+            proof {
+                // dom → verts: every key in the map domain is in verts.
+                assert forall|k: <V as View>::V| #[trigger] self.spec_adj().dom().contains(k)
+                    implies verts@.contains(k)
+                by {
+                    lemma_entries_to_map_key_in_seq::<V::V, Set<V::V>>(self.adj.entries@, k);
+                    let j = choose|j: int| 0 <= j < self.adj.entries@.len() && (#[trigger] self.adj.entries@[j]).0 == k;
+                    assert(verts@.contains(self.adj.entries@[j].0));
+                };
+                // verts → dom: every key in verts came from an entry, which is in the map.
+                assert forall|k: <V as View>::V| #[trigger] verts@.contains(k)
+                    implies self.spec_adj().dom().contains(k)
+                by {
+                    let j = choose|j: int| 0 <= j < len && (#[trigger] self.adj.entries@[j]).0 == k;
+                    lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(self.adj.entries@, j);
+                };
+                assert(verts@ =~= self.spec_adj().dom());
             }
             verts
         }
 
-        fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
+        fn has_edge(&self, u: &V, v: &V) -> (found: bool)
+            ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
+        {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
                 Some(neighbors) => {
@@ -422,7 +467,11 @@ broadcast use {
             }
         }
 
-        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>) {
+        fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
+            ensures
+                self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
+                !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty()
+        {
             proof { reveal(obeys_view_eq); }
             match self.adj.find(u) {
                 Some(ns) => ns,

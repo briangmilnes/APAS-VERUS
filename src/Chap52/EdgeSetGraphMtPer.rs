@@ -71,6 +71,7 @@ pub mod EdgeSetGraphMtPer {
         spec fn spec_edgesetgraphmtper_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
+        spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
 
         /// Work Theta(1), Span Theta(1)
         fn empty() -> (out: Self)
@@ -119,7 +120,9 @@ pub mod EdgeSetGraphMtPer {
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
         fn insert_vertex(&self, v: V) -> (updated: Self)
-            requires self.spec_edgesetgraphmtper_wf()
+            requires
+                self.spec_edgesetgraphmtper_wf(),
+                self.spec_vertices().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphmtper_wf();
         /// Work Theta(|E| log |V| + |E| log |E|), Span Theta(log |E| * log |V|)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
@@ -127,7 +130,10 @@ pub mod EdgeSetGraphMtPer {
             ensures updated.spec_edgesetgraphmtper_wf(), !updated.spec_vertices().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
-            requires self.spec_edgesetgraphmtper_wf()
+            requires
+                self.spec_edgesetgraphmtper_wf(),
+                self.spec_vertices().len() + 2 < usize::MAX as nat,
+                self.spec_edges().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
@@ -156,6 +162,10 @@ pub mod EdgeSetGraphMtPer {
 
         open spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)> {
             self.edges@
+        }
+
+        open spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V> {
+            Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
         }
 
         fn empty() -> (out: Self) {
