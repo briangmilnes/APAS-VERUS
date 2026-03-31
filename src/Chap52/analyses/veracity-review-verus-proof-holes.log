@@ -146,11 +146,11 @@ Proof Functions:
    30 total
 
 Function Specs:
-   289 exec fns with complete spec (requires+ensures) (63%)
+   307 exec fns with complete spec (requires+ensures) (64%)
    0 exec fns missing spec (0%)
-   166 proof/spec fns clean (36%)
+   168 proof/spec fns clean (35%)
    0 proof/spec fns with holes (0%)
-   455 total fns
+   475 total fns
 
 
 Holes Found: 1 (actionable)
@@ -164,9 +164,9 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 19:14:24 -07:00
-Ended:     2026-03-30 19:14:24 -07:00
-Duration:  61ms
+Started:   2026-03-30 19:49:13 -07:00
+Ended:     2026-03-30 19:49:13 -07:00
+Duration:  93ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

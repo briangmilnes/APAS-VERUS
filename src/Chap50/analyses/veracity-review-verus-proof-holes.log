@@ -51,35 +51,35 @@ Table of Contents:
        427 |             r
        428 |         }
 ⚠ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:369: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       362 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:384: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       377 |         fn clone(&self) -> (mc: Self)
             ...
-       367 |                 memo: self.memo.clone(),
-       368 |             };
-       370 |             mc
-       371 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:385: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       381 |         fn eq(&self, other: &Self) -> (r: bool)
+       382 |                 memo: self.memo.clone(),
+       383 |             };
+       385 |             mc
+       386 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:400: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       396 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       383 |         {
-       384 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       386 |             r
-       387 |         }
+       398 |         {
+       399 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       401 |             r
+       402 |         }
 ⚠ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:338: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       331 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:350: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       343 |         fn clone(&self) -> (mc: Self)
             ...
-       336 |                       memo: self.memo.clone(),
-       337 |                       };
-       339 |             mc
-       340 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:354: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       350 |         fn eq(&self, other: &Self) -> (r: bool)
+       348 |                       memo: self.memo.clone(),
+       349 |                       };
+       351 |             mc
+       352 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       362 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       352 |         {
-       353 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       355 |             r
-       356 |         }
+       364 |         {
+       365 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       367 |             r
+       368 |         }
 ⚠ OptBinSearchTreeMtEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         53 |         fn clone(&self) -> (cloned: Self)
@@ -88,20 +88,20 @@ Table of Contents:
         56 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
         58 |             cloned
         59 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:368: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       360 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:371: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       363 |         fn clone(&self) -> (cloned: Self)
             ...
-       366 |                 ghost_keys: Ghost(self.ghost_keys@),
-       367 |             };
-       369 |             cloned
-       370 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:390: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       380 |         fn eq(&self, other: &Self) -> (r: bool)
+       369 |                 ghost_keys: Ghost(self.ghost_keys@),
+       370 |             };
+       372 |             cloned
+       373 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:393: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       383 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       388 |             other_handle.release_read();
-       389 |             self_handle.release_read();
-       391 |             r
-       392 |         }
+       391 |             other_handle.release_read();
+       392 |             self_handle.release_read();
+       394 |             r
+       395 |         }
 ⚠ OptBinSearchTreeMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         56 |         fn clone(&self) -> (cloned: Self)
@@ -200,11 +200,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   178 exec fns with complete spec (requires+ensures) (76%)
+   178 exec fns with complete spec (requires+ensures) (74%)
    0 exec fns missing spec (0%)
-   56 proof/spec fns clean (23%)
+   60 proof/spec fns clean (25%)
    0 proof/spec fns with holes (0%)
-   234 total fns
+   238 total fns
 
 
 Holes Found: 0 (actionable)
@@ -219,12 +219,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 19:14:24 -07:00
-Ended:     2026-03-30 19:14:24 -07:00
-Duration:  32ms
+Started:   2026-03-30 19:49:13 -07:00
+Ended:     2026-03-30 19:49:13 -07:00
+Duration:  46ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-0
-Duration:  32ms
-
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log

@@ -1,8 +1,8 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-30 19:14:26 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
-Full output: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-compare-par-mut.log
+Started at: 2026-03-30 19:51:14 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
 
 Phase 1: File groups
 
@@ -711,11 +711,13 @@ src/Chap49/SubsetSumStPer.rs:0: info: SubsetSumTrait trait: 6 matched fns across
 src/Chap50/MatrixChainMtEph.rs:0: info: file group MatrixChain — comparing MtEph (src/Chap50/MatrixChainMtEph.rs), StEph (src/Chap50/MatrixChainStEph.rs), MtPer (src/Chap50/MatrixChainMtPer.rs), StPer (src/Chap50/MatrixChainStPer.rs)
 src/Chap50/MatrixChainStPer.rs:65: info: struct MatrixChainStPerS { dimensions: Vec < MatrixDim >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
 src/Chap50/MatrixChainStPer.rs:71: info: View = MatrixChainStPerV
+src/Chap50/MatrixChainStPer.rs:135: info: wf = spec_matrixchainstper_wf
 src/Chap50/MatrixChainMtPer.rs:80: info: struct MatrixChainMtPerS { dimensions: Arc < Vec < MatrixDim > >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MatrixChainMtPerMemoInv > > }
 src/Chap50/MatrixChainMtPer.rs:86: info: View = MatrixChainMtPerV
 src/Chap50/MatrixChainMtPer.rs:142: info: wf = spec_matrixchainmtper_wf
 src/Chap50/MatrixChainStEph.rs:65: info: struct MatrixChainStEphS { dimensions: Vec < MatrixDim >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
 src/Chap50/MatrixChainStEph.rs:71: info: View = MatrixChainStEphV
+src/Chap50/MatrixChainStEph.rs:135: info: wf = spec_matrixchainsteph_wf
 src/Chap50/MatrixChainMtEph.rs:83: info: struct MatrixChainMtEphS { dimensions: Arc < RwLock < Vec < MatrixDim > , MatrixChainMtEphDimInv > >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MatrixChainMtEphMemoInv > >, ghost ghost_dimensions: Ghost < Seq < MatrixDim > > }
 src/Chap50/MatrixChainMtEph.rs:94: info: View = MatrixChainMtEphV
 src/Chap50/MatrixChainMtEph.rs:150: info: wf = spec_matrixchainmteph_wf
@@ -723,19 +725,21 @@ src/Chap50/MatrixChainMtPer.rs:86: info: View = MatrixChainMtPerV (variant-subst
 src/Chap50/MatrixChainStEph.rs:71: info: View = MatrixChainStEphV (variant-substitution of StPer View = MatrixChainStPerV)
 src/Chap50/MatrixChainMtEph.rs:94: info: View = MatrixChainMtEphV (variant-substitution of StPer View = MatrixChainStPerV)
 src/Chap50/MatrixChainMtEph.rs:83: info: ghost field `ghost_dimensions` has no counterpart in other variants
-src/Chap50/MatrixChainStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
-src/Chap50/MatrixChainStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
-src/Chap50/MatrixChainStPer.rs:134: info: trait MatrixChainStPerTrait <> : Sized + View < V = MatrixChainStPerV > — 9 fns (9 exec, 0 spec)
+src/Chap50/MatrixChainStPer.rs:134: info: trait MatrixChainStPerTrait <> : Sized + View < V = MatrixChainStPerV > — 10 fns (9 exec, 1 spec)
 src/Chap50/MatrixChainMtPer.rs:141: info: trait MatrixChainMtPerTrait <> : Sized + View < V = MatrixChainMtPerV > — 11 fns (10 exec, 1 spec)
-src/Chap50/MatrixChainStEph.rs:134: info: trait MatrixChainStEphTrait <> : Sized + View < V = MatrixChainStEphV > — 12 fns (12 exec, 0 spec)
+src/Chap50/MatrixChainStEph.rs:134: info: trait MatrixChainStEphTrait <> : Sized + View < V = MatrixChainStEphV > — 13 fns (12 exec, 1 spec)
 src/Chap50/MatrixChainMtEph.rs:149: info: trait MatrixChainMtEphTrait <> : Sized + View < V = MatrixChainMtEphV > — 14 fns (13 exec, 1 spec)
 src/Chap50/MatrixChainStEph.rs:134: info: supertrait `Sized + View < V = MatrixChainStEphV >` (variant-substitution of `Sized + View < V = MatrixChainStPerV >`)
+src/Chap50/MatrixChainStEph.rs:134: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_matrixchainstper_wf`
 src/Chap50/MatrixChainStEph.rs:134: info: 3 mutation fns (&mut self) added by Eph variant: `set_dimension`, `update_dimension`, `clear_memo`
+src/Chap50/MatrixChainStEph.rs:134: info: 1 extra fns not in StPer (MatrixChainStPerTrait): `spec_matrixchainsteph_wf`
 src/Chap50/MatrixChainMtPer.rs:141: info: supertrait `Sized + View < V = MatrixChainMtPerV >` (variant-substitution of `Sized + View < V = MatrixChainStPerV >`)
+src/Chap50/MatrixChainMtPer.rs:141: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_matrixchainstper_wf`
 src/Chap50/MatrixChainMtPer.rs:141: info: 2 extra fns not in StPer (MatrixChainStPerTrait): `spec_matrixchainmtper_wf`, `parallel_min_reduction`
 src/Chap50/MatrixChainMtPer.rs:163: info: `dimensions` returns `& Arc < Vec < MatrixDim > >` but StPer returns `& Vec < MatrixDim >` (owned/borrowed pattern)
 src/Chap50/MatrixChainMtPer.rs:169: warning: `memo_size`: StPer has ensures but MtPer does not
 src/Chap50/MatrixChainMtEph.rs:149: info: supertrait `Sized + View < V = MatrixChainMtEphV >` (variant-substitution of `Sized + View < V = MatrixChainStEphV >`)
+src/Chap50/MatrixChainMtEph.rs:149: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_matrixchainsteph_wf`
 src/Chap50/MatrixChainMtEph.rs:149: info: 2 extra fns not in StEph (MatrixChainStEphTrait): `spec_matrixchainmteph_wf`, `parallel_min_reduction`
 src/Chap50/MatrixChainMtEph.rs:173: info: `dimensions` returns `Vec < MatrixDim >` but StEph returns `& Vec < MatrixDim >` (owned/borrowed pattern)
 src/Chap50/MatrixChainMtEph.rs:173: info: `dimensions`: MtEph has requires but StEph does not
@@ -751,34 +755,33 @@ src/Chap50/MatrixChainMtEph.rs:173: info: `dimensions`: MtEph has requires but M
 src/Chap50/MatrixChainMtEph.rs:190: info: `num_matrices`: MtEph has requires but MtPer does not
 src/Chap50/MatrixChainStPer.rs:0: info: MatrixChainTrait trait: 9 matched fns across 4 variants
 src/Chap50/OptBinSearchTreeMtEph.rs:0: info: file group OptBinSearchTree — comparing MtEph (src/Chap50/OptBinSearchTreeMtEph.rs), StEph (src/Chap50/OptBinSearchTreeStEph.rs), MtPer (src/Chap50/OptBinSearchTreeMtPer.rs), StPer (src/Chap50/OptBinSearchTreeStPer.rs)
-src/Chap50/OptBinSearchTreeMtEph.rs:101: info: wf = spec_obstmteph_wf
-src/Chap50/OptBinSearchTreeMtEph.rs:101: warning: wf name `spec_obstmteph_wf` does not follow expected pattern `spec_optbinsearchtree*_wf`
+src/Chap50/OptBinSearchTreeMtEph.rs:102: info: wf = spec_optbinsearchtreemteph_wf
 src/Chap50/OptBinSearchTreeStPer.rs:97: info: trait OBSTStPerTrait <T : StT> : Sized + View < V = OBSTStPerV < T > > — 7 fns (7 exec, 0 spec)
 src/Chap50/OptBinSearchTreeMtPer.rs:93: info: trait OBSTMtPerTrait <T : MtVal> : Sized + View < V = OBSTMtPerV < T > > — 7 fns (7 exec, 0 spec)
 src/Chap50/OptBinSearchTreeStEph.rs:97: info: trait OBSTStEphTrait <T : StT> : Sized + View < V = OBSTStEphV < T > > — 10 fns (10 exec, 0 spec)
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: trait OBSTMtEphTrait <T : MtVal> : Sized + View < V = OBSTMtEphV < T > > — 11 fns (10 exec, 1 spec)
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: trait OBSTMtEphTrait <T : MtVal> : Sized + View < V = OBSTMtEphV < T > > — 11 fns (10 exec, 1 spec)
 src/Chap50/OptBinSearchTreeStEph.rs:97: info: supertrait `Sized + View < V = OBSTStEphV < T > >` (variant-substitution of `Sized + View < V = OBSTStPerV < T > >`)
 src/Chap50/OptBinSearchTreeStEph.rs:97: info: 3 mutation fns (&mut self) added by Eph variant: `set_key_prob`, `update_prob`, `clear_memo`
 src/Chap50/OptBinSearchTreeMtPer.rs:93: info: supertrait `Sized + View < V = OBSTMtPerV < T > >` (variant-substitution of `Sized + View < V = OBSTStPerV < T > >`)
 src/Chap50/OptBinSearchTreeMtPer.rs:93: info: generic bounds `<T : MtVal>` — supertrait-compatible with StPer `<T : StT>`
 src/Chap50/OptBinSearchTreeMtPer.rs:106: info: `keys` returns `& Arc < Vec < KeyProb < T > > >` but StPer returns `& Vec < KeyProb < T > >` (owned/borrowed pattern)
 src/Chap50/OptBinSearchTreeMtPer.rs:112: warning: `memo_size`: StPer has ensures but MtPer does not
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: supertrait `Sized + View < V = OBSTMtEphV < T > >` (variant-substitution of `Sized + View < V = OBSTStEphV < T > >`)
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: generic bounds `<T : MtVal>` — supertrait-compatible with StEph `<T : StT>`
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: 1 extra fns not in StEph (OBSTStEphTrait): `spec_obstmteph_wf`
-src/Chap50/OptBinSearchTreeMtEph.rs:113: info: `optimal_cost`: MtEph has requires but StEph does not
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys` returns `Vec < KeyProb < T > >` but StEph returns `& Vec < KeyProb < T > >` (owned/borrowed pattern)
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys`: MtEph has requires but StEph does not
-src/Chap50/OptBinSearchTreeMtEph.rs:132: info: `num_keys`: MtEph has requires but StEph does not
-src/Chap50/OptBinSearchTreeMtEph.rs:136: info: `clear_memo`: MtEph has requires but StEph does not
-src/Chap50/OptBinSearchTreeMtEph.rs:140: warning: `memo_size`: StEph has ensures but MtEph does not
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: supertrait `Sized + View < V = OBSTMtEphV < T > >` (variant-substitution of `Sized + View < V = OBSTMtPerV < T > >`)
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: 3 mutation fns (&mut self) added by Eph variant: `set_key_prob`, `update_prob`, `clear_memo`
-src/Chap50/OptBinSearchTreeMtEph.rs:100: info: 1 extra fns not in MtPer (OBSTMtPerTrait): `spec_obstmteph_wf`
-src/Chap50/OptBinSearchTreeMtEph.rs:113: info: `optimal_cost`: MtEph has requires but MtPer does not
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys` returns `Vec < KeyProb < T > >` but MtPer returns `& Arc < Vec < KeyProb < T > > >` (owned/borrowed pattern)
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys`: MtEph has requires but MtPer does not
-src/Chap50/OptBinSearchTreeMtEph.rs:132: info: `num_keys`: MtEph has requires but MtPer does not
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: supertrait `Sized + View < V = OBSTMtEphV < T > >` (variant-substitution of `Sized + View < V = OBSTStEphV < T > >`)
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: generic bounds `<T : MtVal>` — supertrait-compatible with StEph `<T : StT>`
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: 1 extra fns not in StEph (OBSTStEphTrait): `spec_optbinsearchtreemteph_wf`
+src/Chap50/OptBinSearchTreeMtEph.rs:114: info: `optimal_cost`: MtEph has requires but StEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:117: info: `keys` returns `Vec < KeyProb < T > >` but StEph returns `& Vec < KeyProb < T > >` (owned/borrowed pattern)
+src/Chap50/OptBinSearchTreeMtEph.rs:117: info: `keys`: MtEph has requires but StEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:133: info: `num_keys`: MtEph has requires but StEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:137: info: `clear_memo`: MtEph has requires but StEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:141: warning: `memo_size`: StEph has ensures but MtEph does not
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: supertrait `Sized + View < V = OBSTMtEphV < T > >` (variant-substitution of `Sized + View < V = OBSTMtPerV < T > >`)
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: 3 mutation fns (&mut self) added by Eph variant: `set_key_prob`, `update_prob`, `clear_memo`
+src/Chap50/OptBinSearchTreeMtEph.rs:101: info: 1 extra fns not in MtPer (OBSTMtPerTrait): `spec_optbinsearchtreemteph_wf`
+src/Chap50/OptBinSearchTreeMtEph.rs:114: info: `optimal_cost`: MtEph has requires but MtPer does not
+src/Chap50/OptBinSearchTreeMtEph.rs:117: info: `keys` returns `Vec < KeyProb < T > >` but MtPer returns `& Arc < Vec < KeyProb < T > > >` (owned/borrowed pattern)
+src/Chap50/OptBinSearchTreeMtEph.rs:117: info: `keys`: MtEph has requires but MtPer does not
+src/Chap50/OptBinSearchTreeMtEph.rs:133: info: `num_keys`: MtEph has requires but MtPer does not
 src/Chap50/OptBinSearchTreeStPer.rs:0: info: OBSTTrait trait: 7 matched fns across 4 variants
 src/Chap51/BottomUpDPMtEph.rs:0: info: file group BottomUpDP — comparing MtEph (src/Chap51/BottomUpDPMtEph.rs), StEph (src/Chap51/BottomUpDPStEph.rs), MtPer (src/Chap51/BottomUpDPMtPer.rs), StPer (src/Chap51/BottomUpDPStPer.rs)
 src/Chap51/BottomUpDPStPer.rs:33: info: struct BottomUpDPStPerS { seq_s: ArraySeqStPerS < char >, seq_t: ArraySeqStPerS < char > }
@@ -843,21 +846,20 @@ src/Chap52/AdjMatrixGraphMtEph.rs:38: info: View = Seq < Seq < bool > >
 src/Chap52/AdjMatrixGraphMtEph.rs:105: info: wf = spec_adjmatrixgraphmteph_wf
 src/Chap52/AdjMatrixGraphStEph.rs:30: info: struct field `matrix`: type `ArraySeqStEphS < ArraySeqStEphS < bool > >` (variant-substitution of `ArraySeqStPerS < ArraySeqStPerS < bool > >`)
 src/Chap52/AdjMatrixGraphStPer.rs:109: info: trait AdjMatrixGraphStPerTrait <> : Sized — 12 fns (9 exec, 3 spec)
-src/Chap52/AdjMatrixGraphMtPer.rs:105: info: trait AdjMatrixGraphMtPerTrait <> : Sized — 10 fns (7 exec, 3 spec)
+src/Chap52/AdjMatrixGraphMtPer.rs:105: info: trait AdjMatrixGraphMtPerTrait <> : Sized — 12 fns (9 exec, 3 spec)
 src/Chap52/AdjMatrixGraphStEph.rs:104: info: trait AdjMatrixGraphStEphTrait <> : Sized — 12 fns (9 exec, 3 spec)
 src/Chap52/AdjMatrixGraphMtEph.rs:104: info: trait AdjMatrixGraphMtEphTrait <> : Sized — 12 fns (9 exec, 3 spec)
 src/Chap52/AdjMatrixGraphStEph.rs:104: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphstper_wf`
 src/Chap52/AdjMatrixGraphStEph.rs:104: info: 1 extra fns not in StPer (AdjMatrixGraphStPerTrait): `spec_adjmatrixgraphsteph_wf`
 src/Chap52/AdjMatrixGraphStEph.rs:182: info: `set_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
 src/Chap52/AdjMatrixGraphMtPer.rs:105: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphstper_wf`
-src/Chap52/AdjMatrixGraphMtPer.rs:105: warning: missing 2 fns present in StPer (AdjMatrixGraphStPerTrait): `from_matrix`, `set_edge`
 src/Chap52/AdjMatrixGraphMtPer.rs:105: info: 1 extra fns not in StPer (AdjMatrixGraphStPerTrait): `spec_adjmatrixgraphmtper_wf`
 src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphsteph_wf`
 src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 extra fns not in StEph (AdjMatrixGraphStEphTrait): `spec_adjmatrixgraphmteph_wf`
 src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjmatrixgraphmtper_wf`
-src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 mutation fns (&mut self) added by Eph variant: `set_edge`
-src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 2 extra fns not in MtPer (AdjMatrixGraphMtPerTrait): `spec_adjmatrixgraphmteph_wf`, `from_matrix`
-src/Chap52/AdjMatrixGraphStPer.rs:0: info: AdjMatrixGraphTrait trait: 9 matched fns across 4 variants
+src/Chap52/AdjMatrixGraphMtEph.rs:104: info: 1 extra fns not in MtPer (AdjMatrixGraphMtPerTrait): `spec_adjmatrixgraphmteph_wf`
+src/Chap52/AdjMatrixGraphMtEph.rs:178: info: `set_edge` returns `()` but MtPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjMatrixGraphStPer.rs:0: info: AdjMatrixGraphTrait trait: 11 matched fns across 4 variants
 src/Chap52/AdjSeqGraphMtEph.rs:0: info: file group AdjSeqGraph — comparing MtEph (src/Chap52/AdjSeqGraphMtEph.rs), StEph (src/Chap52/AdjSeqGraphStEph.rs), MtPer (src/Chap52/AdjSeqGraphMtPer.rs), StPer (src/Chap52/AdjSeqGraphStPer.rs)
 src/Chap52/AdjSeqGraphStPer.rs:35: info: struct AdjSeqGraphStPer { adj: ArraySeqStPerS < ArraySeqStPerS < usize > > }
 src/Chap52/AdjSeqGraphStPer.rs:42: info: View = Seq < Seq < int > >
@@ -873,25 +875,26 @@ src/Chap52/AdjSeqGraphMtEph.rs:39: info: View = Seq < Seq < int > >
 src/Chap52/AdjSeqGraphMtEph.rs:80: info: wf = spec_adjseqgraphmteph_wf
 src/Chap52/AdjSeqGraphStEph.rs:30: info: struct field `adj`: type `ArraySeqStEphS < ArraySeqStEphS < usize > >` (variant-substitution of `ArraySeqStPerS < ArraySeqStPerS < usize > >`)
 src/Chap52/AdjSeqGraphStPer.rs:82: info: trait AdjSeqGraphStPerTrait <> : Sized — 13 fns (9 exec, 4 spec)
-src/Chap52/AdjSeqGraphMtPer.rs:76: info: trait AdjSeqGraphMtPerTrait <> : Sized — 10 fns (6 exec, 4 spec)
-src/Chap52/AdjSeqGraphStEph.rs:79: info: trait AdjSeqGraphStEphTrait <> : Sized — 13 fns (9 exec, 4 spec)
-src/Chap52/AdjSeqGraphMtEph.rs:79: info: trait AdjSeqGraphMtEphTrait <> : Sized — 11 fns (7 exec, 4 spec)
+src/Chap52/AdjSeqGraphMtPer.rs:76: info: trait AdjSeqGraphMtPerTrait <> : Sized — 13 fns (9 exec, 4 spec)
+src/Chap52/AdjSeqGraphStEph.rs:79: info: trait AdjSeqGraphStEphTrait <> : Sized — 15 fns (11 exec, 4 spec)
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: trait AdjSeqGraphMtEphTrait <> : Sized — 13 fns (9 exec, 4 spec)
 src/Chap52/AdjSeqGraphStEph.rs:79: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphstper_wf`
-src/Chap52/AdjSeqGraphStEph.rs:79: warning: missing 2 fns present in StPer (AdjSeqGraphStPerTrait): `insert_edge`, `delete_edge`
 src/Chap52/AdjSeqGraphStEph.rs:79: info: 2 mutation fns (&mut self) added by Eph variant: `set_neighbors`, `set_edge`
 src/Chap52/AdjSeqGraphStEph.rs:79: info: 1 extra fns not in StPer (AdjSeqGraphStPerTrait): `spec_adjseqgraphsteph_wf`
 src/Chap52/AdjSeqGraphStEph.rs:143: info: `out_neighbors` returns `ArraySeqStEphS < usize >` but StPer returns `& ArraySeqStPerS < usize >` (owned/borrowed pattern)
+src/Chap52/AdjSeqGraphStEph.rs:179: info: `insert_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjSeqGraphStEph.rs:199: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
 src/Chap52/AdjSeqGraphMtPer.rs:76: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphstper_wf`
-src/Chap52/AdjSeqGraphMtPer.rs:76: warning: missing 3 fns present in StPer (AdjSeqGraphStPerTrait): `from_seq`, `insert_edge`, `delete_edge`
 src/Chap52/AdjSeqGraphMtPer.rs:76: info: 1 extra fns not in StPer (AdjSeqGraphStPerTrait): `spec_adjseqgraphmtper_wf`
 src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphsteph_wf`
-src/Chap52/AdjSeqGraphMtEph.rs:79: warning: missing 2 fns present in StEph (AdjSeqGraphStEphTrait): `from_seq`, `set_neighbors`
+src/Chap52/AdjSeqGraphMtEph.rs:79: warning: missing 2 fns present in StEph (AdjSeqGraphStEphTrait): `insert_edge`, `delete_edge`
 src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 extra fns not in StEph (AdjSeqGraphStEphTrait): `spec_adjseqgraphmteph_wf`
 src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjseqgraphmtper_wf`
-src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 mutation fns (&mut self) added by Eph variant: `set_edge`
+src/Chap52/AdjSeqGraphMtEph.rs:79: warning: missing 2 fns present in MtPer (AdjSeqGraphMtPerTrait): `insert_edge`, `delete_edge`
+src/Chap52/AdjSeqGraphMtEph.rs:79: info: 2 mutation fns (&mut self) added by Eph variant: `set_neighbors`, `set_edge`
 src/Chap52/AdjSeqGraphMtEph.rs:79: info: 1 extra fns not in MtPer (AdjSeqGraphMtPerTrait): `spec_adjseqgraphmteph_wf`
-src/Chap52/AdjSeqGraphMtEph.rs:121: info: `out_neighbors` returns `ArraySeqMtEphS < usize >` but MtPer returns `& ArraySeqMtPerS < usize >` (owned/borrowed pattern)
-src/Chap52/AdjSeqGraphStPer.rs:0: info: AdjSeqGraphTrait trait: 9 matched fns across 4 variants
+src/Chap52/AdjSeqGraphMtEph.rs:137: info: `out_neighbors` returns `ArraySeqMtEphS < usize >` but MtPer returns `& ArraySeqMtPerS < usize >` (owned/borrowed pattern)
+src/Chap52/AdjSeqGraphStPer.rs:0: info: AdjSeqGraphTrait trait: 10 matched fns across 4 variants
 src/Chap52/AdjTableGraphStEph.rs:0: info: file group AdjTableGraph — comparing StEph (src/Chap52/AdjTableGraphStEph.rs), MtPer (src/Chap52/AdjTableGraphMtPer.rs), StPer (src/Chap52/AdjTableGraphStPer.rs)
 src/Chap52/AdjTableGraphStPer.rs:57: info: struct AdjTableGraphStPer { adj: TableStPer < V , AVLTreeSetStPer < V > > }
 src/Chap52/AdjTableGraphStPer.rs:64: info: View = Self
@@ -908,13 +911,10 @@ src/Chap52/AdjTableGraphMtPer.rs:101: info: trait AdjTableGraphMtPerTrait <V : S
 src/Chap52/AdjTableGraphStEph.rs:200: info: trait AdjTableGraphStEphTrait <V : StT + Ord> : Sized — 15 fns (12 exec, 3 spec)
 src/Chap52/AdjTableGraphStEph.rs:200: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjtablegraphstper_wf`
 src/Chap52/AdjTableGraphStEph.rs:200: info: 1 extra fns not in StPer (AdjTableGraphStPerTrait): `spec_adjtablegraphsteph_wf`
-src/Chap52/AdjTableGraphStEph.rs:237: warning: `vertices`: StPer has ensures but StEph does not
-src/Chap52/AdjTableGraphStEph.rs:243: warning: `has_edge`: StPer has ensures but StEph does not
-src/Chap52/AdjTableGraphStEph.rs:247: warning: `out_neighbors`: StPer has ensures but StEph does not
-src/Chap52/AdjTableGraphStEph.rs:255: info: `insert_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap52/AdjTableGraphStEph.rs:260: info: `delete_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap52/AdjTableGraphStEph.rs:265: info: `insert_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
-src/Chap52/AdjTableGraphStEph.rs:276: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:260: info: `insert_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:265: info: `delete_vertex` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:270: info: `insert_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap52/AdjTableGraphStEph.rs:281: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
 src/Chap52/AdjTableGraphMtPer.rs:101: info: generic bounds `<V : StTInMtT + Ord + TotalOrder + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT, V: TotalOrder)
 src/Chap52/AdjTableGraphMtPer.rs:101: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_adjtablegraphstper_wf`
 src/Chap52/AdjTableGraphMtPer.rs:101: warning: missing 2 fns present in StPer (AdjTableGraphStPerTrait): `from_table`, `vertices`
@@ -933,7 +933,7 @@ src/Chap52/EdgeSetGraphStEph.rs:68: info: wf = spec_edgesetgraphsteph_wf
 src/Chap52/EdgeSetGraphStEph.rs:53: info: struct field `vertices`: type `AVLTreeSetStEph < V >` (variant-substitution of `AVLTreeSetStPer < V >`)
 src/Chap52/EdgeSetGraphStEph.rs:53: info: struct field `edges`: type `AVLTreeSetStEph < Pair < V , V > >` (variant-substitution of `AVLTreeSetStPer < Pair < V , V > >`)
 src/Chap52/EdgeSetGraphStPer.rs:73: info: trait EdgeSetGraphStPerTrait <V : StT + Ord + ClonePreservesView> : Sized — 17 fns (13 exec, 4 spec)
-src/Chap52/EdgeSetGraphMtPer.rs:70: info: trait EdgeSetGraphMtPerTrait <V : StTInMtT + Ord + ClonePreservesView + 'static> : Sized — 16 fns (13 exec, 3 spec)
+src/Chap52/EdgeSetGraphMtPer.rs:70: info: trait EdgeSetGraphMtPerTrait <V : StTInMtT + Ord + ClonePreservesView + 'static> : Sized — 17 fns (13 exec, 4 spec)
 src/Chap52/EdgeSetGraphStEph.rs:67: info: trait EdgeSetGraphStEphTrait <V : StT + Ord + ClonePreservesView> : Sized — 17 fns (13 exec, 4 spec)
 src/Chap52/EdgeSetGraphStEph.rs:67: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_edgesetgraphstper_wf`
 src/Chap52/EdgeSetGraphStEph.rs:67: info: 1 extra fns not in StPer (EdgeSetGraphStPerTrait): `spec_edgesetgraphsteph_wf`
@@ -943,9 +943,8 @@ src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge` returns `()` but StPer 
 src/Chap52/EdgeSetGraphStEph.rs:147: info: `delete_edge` returns `()` but StPer returns `Self` (Eph→Per return shift)
 src/Chap52/EdgeSetGraphMtPer.rs:70: info: generic bounds `<V : StTInMtT + Ord + ClonePreservesView + 'static>` — supertrait-compatible with StPer `<V : StT + Ord + ClonePreservesView>` (extra: V: StTInMtT)
 src/Chap52/EdgeSetGraphMtPer.rs:70: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_edgesetgraphstper_wf`
-src/Chap52/EdgeSetGraphMtPer.rs:70: warning: missing 1 fns present in StPer (EdgeSetGraphStPerTrait): `spec_out_neighbors`
 src/Chap52/EdgeSetGraphMtPer.rs:70: info: 1 extra fns not in StPer (EdgeSetGraphStPerTrait): `spec_edgesetgraphmtper_wf`
-src/Chap52/EdgeSetGraphStPer.rs:0: info: EdgeSetGraphTrait trait: 15 matched fns across 3 variants
+src/Chap52/EdgeSetGraphStPer.rs:0: info: EdgeSetGraphTrait trait: 16 matched fns across 3 variants
 src/Chap53/GraphSearchStEph.rs:0: info: file group GraphSearch — comparing StEph (src/Chap53/GraphSearchStEph.rs), MtPer (src/Chap53/GraphSearchMtPer.rs), StPer (src/Chap53/GraphSearchStPer.rs)
 src/Chap53/GraphSearchStPer.rs:46: info: trait GraphSearchStPerTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
 src/Chap53/GraphSearchMtPer.rs:41: info: trait GraphSearchMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 3 fns (3 exec, 0 spec)
@@ -1110,7 +1109,7 @@ src/Chap66/BoruvkaMtEph.rs:92: warning: missing 4 fns present in StEph (BoruvkaS
 src/Chap66/BoruvkaMtEph.rs:92: info: 5 extra fns not in StEph (BoruvkaStEphTrait): `spec_boruvkamteph_wf`, `vertex_bridges_mt`, `bridge_star_partition_mt`, `boruvka_mst_mt`, `boruvka_mst_mt_with_seed`
 src/Chap66/BoruvkaStEph.rs:0: info: BoruvkaTrait trait: 1 matched fns across 2 variants
 
-Phase 2 summary: 57 groups compared, 0 errors, 93 warnings, 913 info
+Phase 2 summary: 57 groups compared, 0 errors, 84 warnings, 921 info
 
 Phase 4: Requires/ensures clause comparison
 
@@ -2281,16 +2280,16 @@ src/Chap49/SubsetSumMtEph.rs:103: info: `from_multiset`: MtEph has extra ensures
 src/Chap49/SubsetSumMtEph.rs:123: info: `set`: requires clause count 2 vs 1 (StEph has 1)
 src/Chap49/SubsetSumMtEph.rs:123: info: `set`: MtEph has extra requires clause `old (self) . spec_subsetsum_wf ()` not in StEph
 src/Chap49/SubsetSumMtEph.rs:110: info: `subset_sum`: requires clause fuzzy match — ref: `self . spec_subsetsum_wf ()` ~ cur: `old (self) . spec_subsetsum_wf ()`
-src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: requires clause fuzzy match — ref: `self @ . dimensions . len () > 1 ==> spec_costs_fit (self @ ...` ~ cur: `old (self) @ . dimensions . len () > 1 ==> spec_costs_fit (o...`
-src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: requires clause fuzzy match — ref: `spec_dims_bounded (self @ . dimensions)` ~ cur: `spec_dims_bounded (old (self) @ . dimensions)`
-src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: ensures clause count 2 vs 1 (StPer has 1)
-src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: StEph has extra ensures clause `self @ . dimensions =~= old (self) @ . dimensions` not in StPer
+src/Chap50/MatrixChainStEph.rs:155: info: `optimal_cost`: requires clause fuzzy match — ref: `self @ . dimensions . len () > 1 ==> spec_costs_fit (self @ ...` ~ cur: `old (self) @ . dimensions . len () > 1 ==> spec_costs_fit (o...`
+src/Chap50/MatrixChainStEph.rs:155: info: `optimal_cost`: requires clause fuzzy match — ref: `spec_dims_bounded (self @ . dimensions)` ~ cur: `spec_dims_bounded (old (self) @ . dimensions)`
+src/Chap50/MatrixChainStEph.rs:155: info: `optimal_cost`: ensures clause count 2 vs 1 (StPer has 1)
+src/Chap50/MatrixChainStEph.rs:155: info: `optimal_cost`: StEph has extra ensures clause `self @ . dimensions =~= old (self) @ . dimensions` not in StPer
+src/Chap50/MatrixChainMtPer.rs:144: warning: `new`: ensures clause count 2 vs 3 (StPer has 3)
 src/Chap50/MatrixChainMtPer.rs:144: warning: `new`: StPer has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtPer
-src/Chap50/MatrixChainMtPer.rs:144: info: `new`: MtPer has extra ensures clause `mc . spec_matrixchain_wf ()` not in StPer
+src/Chap50/MatrixChainMtPer.rs:147: warning: `from_dimensions`: ensures clause count 2 vs 3 (StPer has 3)
 src/Chap50/MatrixChainMtPer.rs:147: warning: `from_dimensions`: StPer has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtPer
-src/Chap50/MatrixChainMtPer.rs:147: info: `from_dimensions`: MtPer has extra ensures clause `mc . spec_matrixchain_wf ()` not in StPer
+src/Chap50/MatrixChainMtPer.rs:150: warning: `from_dim_pairs`: ensures clause count 2 vs 3 (StPer has 3)
 src/Chap50/MatrixChainMtPer.rs:150: warning: `from_dim_pairs`: StPer has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtPer
-src/Chap50/MatrixChainMtPer.rs:150: info: `from_dim_pairs`: MtPer has extra ensures clause `mc . spec_matrixchain_wf ()` not in StPer
 src/Chap50/MatrixChainMtPer.rs:153: info: `optimal_cost`: requires clause count 3 vs 2 (StPer has 2)
 src/Chap50/MatrixChainMtPer.rs:153: info: `optimal_cost`: MtPer has extra requires clause `self . spec_matrixchain_wf ()` not in StPer
 src/Chap50/MatrixChainMtPer.rs:181: info: `matrix_chain_rec`: requires clause fuzzy match — ref: `j < old (self) @ . dimensions . len ()` ~ cur: `j < self @ . dimensions . len ()`
@@ -2303,28 +2302,26 @@ src/Chap50/MatrixChainMtPer.rs:181: warning: `matrix_chain_rec`: StPer has ensur
 src/Chap50/MatrixChainMtPer.rs:181: warning: `matrix_chain_rec`: StPer has ensures clause `self @ . memo . contains_key ((i , j))` with no match in MtPer
 src/Chap50/MatrixChainMtPer.rs:181: warning: `matrix_chain_rec`: StPer has ensures clause `self @ . memo [(i , j)] == cost` with no match in MtPer
 src/Chap50/MatrixChainMtPer.rs:181: warning: `matrix_chain_rec`: StPer has ensures clause `spec_memo_correct (self @ . dimensions , self @ . memo)` with no match in MtPer
+src/Chap50/MatrixChainMtEph.rs:152: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:152: warning: `new`: StEph has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:152: info: `new`: MtEph has extra ensures clause `mc . spec_matrixchain_wf ()` not in StEph
-src/Chap50/MatrixChainMtEph.rs:155: warning: `from_dimensions`: StEph has ensures clause `mc @ . dimensions =~= dimensions @` with no match in MtEph
+src/Chap50/MatrixChainMtEph.rs:155: warning: `from_dimensions`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:155: warning: `from_dimensions`: StEph has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:155: info: `from_dimensions`: MtEph has extra ensures clause `mc . spec_matrixchain_wf ()` not in StEph
-src/Chap50/MatrixChainMtEph.rs:155: info: `from_dimensions`: MtEph has extra ensures clause `mc @ . dimensions . len () == dimensions @ . len ()` not in StEph
+src/Chap50/MatrixChainMtEph.rs:158: warning: `from_dim_pairs`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:158: warning: `from_dim_pairs`: StEph has ensures clause `mc @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:158: info: `from_dim_pairs`: MtEph has extra ensures clause `mc . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: requires clause count 3 vs 2 (StEph has 2)
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: MtEph has extra requires clause `old (self) . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: ensures clause count 3 vs 2 (StEph has 2)
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: MtEph has extra ensures clause `self . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:177: info: `set_dimension`: requires clause count 2 vs 1 (StEph has 1)
 src/Chap50/MatrixChainMtEph.rs:177: info: `set_dimension`: MtEph has extra requires clause `old (self) . spec_matrixchain_wf ()` not in StEph
+src/Chap50/MatrixChainMtEph.rs:177: warning: `set_dimension`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:177: warning: `set_dimension`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:177: info: `set_dimension`: MtEph has extra ensures clause `self . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:183: info: `update_dimension`: requires clause count 2 vs 1 (StEph has 1)
 src/Chap50/MatrixChainMtEph.rs:183: info: `update_dimension`: MtEph has extra requires clause `old (self) . spec_matrixchain_wf ()` not in StEph
+src/Chap50/MatrixChainMtEph.rs:183: warning: `update_dimension`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:183: warning: `update_dimension`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:183: info: `update_dimension`: MtEph has extra ensures clause `self . spec_matrixchain_wf ()` not in StEph
+src/Chap50/MatrixChainMtEph.rs:194: warning: `clear_memo`: ensures clause count 2 vs 3 (StEph has 3)
 src/Chap50/MatrixChainMtEph.rs:194: warning: `clear_memo`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , usize > :: empty ()` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:194: info: `clear_memo`: MtEph has extra ensures clause `self . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:200: info: `multiply_cost`: requires clause count 6 vs 5 (StEph has 5)
 src/Chap50/MatrixChainMtEph.rs:200: info: `multiply_cost`: MtEph has extra requires clause `self . spec_matrixchain_wf ()` not in StEph
 src/Chap50/MatrixChainMtEph.rs:211: info: `matrix_chain_rec`: requires clause fuzzy match — ref: `j < old (self) @ . dimensions . len ()` ~ cur: `j < self @ . dimensions . len ()`
@@ -2337,8 +2334,6 @@ src/Chap50/MatrixChainMtEph.rs:211: warning: `matrix_chain_rec`: StEph has ensur
 src/Chap50/MatrixChainMtEph.rs:211: warning: `matrix_chain_rec`: StEph has ensures clause `self @ . memo . contains_key ((i , j))` with no match in MtEph
 src/Chap50/MatrixChainMtEph.rs:211: warning: `matrix_chain_rec`: StEph has ensures clause `self @ . memo [(i , j)] == cost` with no match in MtEph
 src/Chap50/MatrixChainMtEph.rs:211: warning: `matrix_chain_rec`: StEph has ensures clause `spec_memo_correct (self @ . dimensions , self @ . memo)` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:155: warning: `from_dimensions`: MtPer has ensures clause `mc @ . dimensions =~= dimensions @` with no match in MtEph
-src/Chap50/MatrixChainMtEph.rs:155: info: `from_dimensions`: MtEph has extra ensures clause `mc @ . dimensions . len () == dimensions @ . len ()` not in MtPer
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: requires clause fuzzy match — ref: `self . spec_matrixchain_wf ()` ~ cur: `old (self) . spec_matrixchain_wf ()`
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: requires clause fuzzy match — ref: `self @ . dimensions . len () > 1 ==> spec_costs_fit (self @ ...` ~ cur: `old (self) @ . dimensions . len () > 1 ==> spec_costs_fit (o...`
 src/Chap50/MatrixChainMtEph.rs:161: info: `optimal_cost`: requires clause fuzzy match — ref: `spec_dims_bounded (self @ . dimensions)` ~ cur: `spec_dims_bounded (old (self) @ . dimensions)`
@@ -2353,32 +2348,28 @@ src/Chap50/OptBinSearchTreeMtPer.rs:97: warning: `from_keys_probs`: ensures clau
 src/Chap50/OptBinSearchTreeMtPer.rs:97: warning: `from_keys_probs`: StPer has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtPer
 src/Chap50/OptBinSearchTreeMtPer.rs:101: warning: `from_key_probs`: ensures clause count 1 vs 2 (StPer has 2)
 src/Chap50/OptBinSearchTreeMtPer.rs:101: warning: `from_key_probs`: StPer has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtPer
-src/Chap50/OptBinSearchTreeMtEph.rs:103: warning: `new`: StEph has ensures clause `empty @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:103: info: `new`: MtEph has extra ensures clause `empty . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:106: warning: `from_keys_probs`: StEph has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:106: info: `from_keys_probs`: MtEph has extra ensures clause `constructed . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:110: warning: `from_key_probs`: StEph has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:110: info: `from_key_probs`: MtEph has extra ensures clause `constructed . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:116: warning: `keys`: StEph has ensures clause `keys @ =~= self @ . keys` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys`: MtEph has extra ensures clause `keys @ . len () == self @ . keys . len ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:120: info: `set_key_prob`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap50/OptBinSearchTreeMtEph.rs:120: info: `set_key_prob`: MtEph has extra requires clause `old (self) . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:120: warning: `set_key_prob`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:120: info: `set_key_prob`: MtEph has extra ensures clause `self . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:126: info: `update_prob`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap50/OptBinSearchTreeMtEph.rs:126: info: `update_prob`: MtEph has extra requires clause `old (self) . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:126: warning: `update_prob`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:126: info: `update_prob`: MtEph has extra ensures clause `self . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:136: warning: `clear_memo`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:136: info: `clear_memo`: MtEph has extra ensures clause `self . spec_obst_wf ()` not in StEph
-src/Chap50/OptBinSearchTreeMtEph.rs:103: info: `new`: ensures clause count 2 vs 1 (MtPer has 1)
-src/Chap50/OptBinSearchTreeMtEph.rs:103: info: `new`: MtEph has extra ensures clause `empty . spec_obst_wf ()` not in MtPer
-src/Chap50/OptBinSearchTreeMtEph.rs:106: info: `from_keys_probs`: ensures clause count 2 vs 1 (MtPer has 1)
-src/Chap50/OptBinSearchTreeMtEph.rs:106: info: `from_keys_probs`: MtEph has extra ensures clause `constructed . spec_obst_wf ()` not in MtPer
-src/Chap50/OptBinSearchTreeMtEph.rs:110: info: `from_key_probs`: ensures clause count 2 vs 1 (MtPer has 1)
-src/Chap50/OptBinSearchTreeMtEph.rs:110: info: `from_key_probs`: MtEph has extra ensures clause `constructed . spec_obst_wf ()` not in MtPer
-src/Chap50/OptBinSearchTreeMtEph.rs:116: warning: `keys`: MtPer has ensures clause `keys @ =~= self @ . keys` with no match in MtEph
-src/Chap50/OptBinSearchTreeMtEph.rs:116: info: `keys`: MtEph has extra ensures clause `keys @ . len () == self @ . keys . len ()` not in MtPer
+src/Chap50/OptBinSearchTreeMtEph.rs:104: warning: `new`: StEph has ensures clause `empty @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:104: info: `new`: MtEph has extra ensures clause `empty . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:107: warning: `from_keys_probs`: StEph has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:107: info: `from_keys_probs`: MtEph has extra ensures clause `constructed . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:111: warning: `from_key_probs`: StEph has ensures clause `constructed @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:111: info: `from_key_probs`: MtEph has extra ensures clause `constructed . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:121: info: `set_key_prob`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap50/OptBinSearchTreeMtEph.rs:121: info: `set_key_prob`: MtEph has extra requires clause `old (self) . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:121: warning: `set_key_prob`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:121: info: `set_key_prob`: MtEph has extra ensures clause `self . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:127: info: `update_prob`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap50/OptBinSearchTreeMtEph.rs:127: info: `update_prob`: MtEph has extra requires clause `old (self) . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:127: warning: `update_prob`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:127: info: `update_prob`: MtEph has extra ensures clause `self . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:137: warning: `clear_memo`: StEph has ensures clause `self @ . memo =~= Map :: < (usize , usize) , Probability > :: empty ()` with no match in MtEph
+src/Chap50/OptBinSearchTreeMtEph.rs:137: info: `clear_memo`: MtEph has extra ensures clause `self . spec_optbinsearchtree_wf ()` not in StEph
+src/Chap50/OptBinSearchTreeMtEph.rs:104: info: `new`: ensures clause count 2 vs 1 (MtPer has 1)
+src/Chap50/OptBinSearchTreeMtEph.rs:104: info: `new`: MtEph has extra ensures clause `empty . spec_optbinsearchtree_wf ()` not in MtPer
+src/Chap50/OptBinSearchTreeMtEph.rs:107: info: `from_keys_probs`: ensures clause count 2 vs 1 (MtPer has 1)
+src/Chap50/OptBinSearchTreeMtEph.rs:107: info: `from_keys_probs`: MtEph has extra ensures clause `constructed . spec_optbinsearchtree_wf ()` not in MtPer
+src/Chap50/OptBinSearchTreeMtEph.rs:111: info: `from_key_probs`: ensures clause count 2 vs 1 (MtPer has 1)
+src/Chap50/OptBinSearchTreeMtEph.rs:111: info: `from_key_probs`: MtEph has extra ensures clause `constructed . spec_optbinsearchtree_wf ()` not in MtPer
 src/Chap51/BottomUpDPStEph.rs:93: info: `med_bottom_up`: requires clause fuzzy match — ref: `self . spec_s_len () + self . spec_t_len () < usize :: MAX` ~ cur: `old (self) . spec_s_len () + old (self) . spec_t_len () < us...`
 src/Chap51/BottomUpDPStEph.rs:93: info: `med_bottom_up`: ensures clause count 3 vs 1 (StPer has 1)
 src/Chap51/BottomUpDPStEph.rs:93: info: `med_bottom_up`: StEph has extra ensures clause `self . spec_s () == old (self) . spec_s ()` not in StPer
@@ -2414,41 +2405,51 @@ src/Chap51/TopDownDPMtEph.rs:173: info: `med_memoized_parallel`: MtEph has extra
 src/Chap52/AdjMatrixGraphStEph.rs:182: info: `set_edge`: requires clause fuzzy match — ref: `self . spec_adjmatrixgraph_wf ()` ~ cur: `old (self) . spec_adjmatrixgraph_wf ()`
 src/Chap52/AdjMatrixGraphStEph.rs:182: info: `set_edge`: requires clause fuzzy match — ref: `u < self . spec_n ()` ~ cur: `u < old (self) . spec_n ()`
 src/Chap52/AdjMatrixGraphStEph.rs:182: info: `set_edge`: requires clause fuzzy match — ref: `v < self . spec_n ()` ~ cur: `v < old (self) . spec_n ()`
-src/Chap52/AdjMatrixGraphMtPer.rs:139: warning: `has_edge`: requires clause count 1 vs 3 (StPer has 3)
-src/Chap52/AdjMatrixGraphMtPer.rs:139: warning: `has_edge`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
-src/Chap52/AdjMatrixGraphMtPer.rs:139: warning: `has_edge`: StPer has requires clause `v < self . spec_n ()` with no match in MtPer
-src/Chap52/AdjMatrixGraphMtPer.rs:139: info: `has_edge`: ensures clause fuzzy match — ref: `found == self . spec_edge (u as int , v as int)` ~ cur: `u < self . spec_n () && v < self . spec_n () ==> found == se...`
-src/Chap52/AdjMatrixGraphMtPer.rs:139: info: `has_edge`: ensures clause count 2 vs 1 (StPer has 1)
-src/Chap52/AdjMatrixGraphMtPer.rs:139: info: `has_edge`: MtPer has extra ensures clause `(u >= self . spec_n () || v >= self . spec_n ()) ==> ! found` not in StPer
-src/Chap52/AdjMatrixGraphMtPer.rs:146: warning: `out_neighbors`: requires clause count 1 vs 2 (StPer has 2)
-src/Chap52/AdjMatrixGraphMtPer.rs:146: warning: `out_neighbors`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
-src/Chap52/AdjMatrixGraphMtPer.rs:146: info: `out_neighbors`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < self . spec_n () && # [trigger] ...` ~ cur: `u < self . spec_n () ==> ((forall | k : int | 0 <= k < neigh...`
-src/Chap52/AdjMatrixGraphMtPer.rs:146: info: `out_neighbors`: ensures clause fuzzy match — ref: `forall | k : int | 0 <= k < neighbors . spec_len () ==> # [t...` ~ cur: `u >= self . spec_n () ==> neighbors . spec_len () == 0`
-src/Chap52/AdjMatrixGraphMtPer.rs:160: warning: `out_degree`: requires clause count 1 vs 2 (StPer has 2)
-src/Chap52/AdjMatrixGraphMtPer.rs:160: warning: `out_degree`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
-src/Chap52/AdjMatrixGraphMtPer.rs:160: info: `out_degree`: ensures clause fuzzy match — ref: `d as nat == spec_count_true (| v : int | self . spec_edge (u...` ~ cur: `u < self . spec_n () ==> d as nat == spec_count_true (| v : ...`
-src/Chap52/AdjMatrixGraphMtPer.rs:160: info: `out_degree`: ensures clause count 2 vs 1 (StPer has 1)
-src/Chap52/AdjMatrixGraphMtPer.rs:160: info: `out_degree`: MtPer has extra ensures clause `u >= self . spec_n () ==> d == 0` not in StPer
-src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: requires clause count 3 vs 1 (MtPer has 1)
-src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: MtEph has extra requires clause `u < self . spec_n ()` not in MtPer
-src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: MtEph has extra requires clause `v < self . spec_n ()` not in MtPer
-src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: ensures clause fuzzy match — ref: `u < self . spec_n () && v < self . spec_n () ==> found == se...` ~ cur: `found == self . spec_edge (u as int , v as int)`
-src/Chap52/AdjMatrixGraphMtEph.rs:150: warning: `has_edge`: ensures clause count 1 vs 2 (MtPer has 2)
-src/Chap52/AdjMatrixGraphMtEph.rs:150: warning: `has_edge`: MtPer has ensures clause `(u >= self . spec_n () || v >= self . spec_n ()) ==> ! found` with no match in MtEph
-src/Chap52/AdjMatrixGraphMtEph.rs:155: info: `out_neighbors`: requires clause count 2 vs 1 (MtPer has 1)
-src/Chap52/AdjMatrixGraphMtEph.rs:155: info: `out_neighbors`: MtEph has extra requires clause `u < self . spec_n ()` not in MtPer
-src/Chap52/AdjMatrixGraphMtEph.rs:155: info: `out_neighbors`: ensures clause fuzzy match — ref: `u < self . spec_n () ==> ((forall | k : int | 0 <= k < neigh...` ~ cur: `forall | k : int | 0 <= k < neighbors . spec_len () ==> # [t...`
-src/Chap52/AdjMatrixGraphMtEph.rs:155: info: `out_neighbors`: ensures clause fuzzy match — ref: `u >= self . spec_n () ==> neighbors . spec_len () == 0` ~ cur: `forall | v : int | 0 <= v < self . spec_n () && # [trigger] ...`
-src/Chap52/AdjMatrixGraphMtEph.rs:166: info: `out_degree`: requires clause count 2 vs 1 (MtPer has 1)
-src/Chap52/AdjMatrixGraphMtEph.rs:166: info: `out_degree`: MtEph has extra requires clause `u < self . spec_n ()` not in MtPer
-src/Chap52/AdjMatrixGraphMtEph.rs:166: info: `out_degree`: ensures clause fuzzy match — ref: `u < self . spec_n () ==> d as nat == spec_count_true (| v : ...` ~ cur: `d as nat == spec_count_true (| v : int | self . spec_edge (u...`
-src/Chap52/AdjMatrixGraphMtEph.rs:166: warning: `out_degree`: ensures clause count 1 vs 2 (MtPer has 2)
-src/Chap52/AdjMatrixGraphMtEph.rs:166: warning: `out_degree`: MtPer has ensures clause `u >= self . spec_n () ==> d == 0` with no match in MtEph
-src/Chap52/AdjTableGraphStEph.rs:255: info: `insert_vertex`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
-src/Chap52/AdjTableGraphStEph.rs:260: info: `delete_vertex`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
-src/Chap52/AdjTableGraphStEph.rs:265: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_adj () . dom () . len () + 1 < usize :: MAX as n...` ~ cur: `old (self) . spec_adj () . dom () . len () + 1 < usize :: MA...`
-src/Chap52/AdjTableGraphStEph.rs:265: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
-src/Chap52/AdjTableGraphStEph.rs:276: info: `delete_edge`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
+src/Chap52/AdjMatrixGraphMtPer.rs:151: warning: `has_edge`: requires clause count 1 vs 3 (StPer has 3)
+src/Chap52/AdjMatrixGraphMtPer.rs:151: warning: `has_edge`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
+src/Chap52/AdjMatrixGraphMtPer.rs:151: warning: `has_edge`: StPer has requires clause `v < self . spec_n ()` with no match in MtPer
+src/Chap52/AdjMatrixGraphMtPer.rs:151: info: `has_edge`: ensures clause fuzzy match — ref: `found == self . spec_edge (u as int , v as int)` ~ cur: `u < self . spec_n () && v < self . spec_n () ==> found == se...`
+src/Chap52/AdjMatrixGraphMtPer.rs:151: info: `has_edge`: ensures clause count 2 vs 1 (StPer has 1)
+src/Chap52/AdjMatrixGraphMtPer.rs:151: info: `has_edge`: MtPer has extra ensures clause `(u >= self . spec_n () || v >= self . spec_n ()) ==> ! found` not in StPer
+src/Chap52/AdjMatrixGraphMtPer.rs:158: warning: `out_neighbors`: requires clause count 1 vs 2 (StPer has 2)
+src/Chap52/AdjMatrixGraphMtPer.rs:158: warning: `out_neighbors`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
+src/Chap52/AdjMatrixGraphMtPer.rs:158: info: `out_neighbors`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < self . spec_n () && # [trigger] ...` ~ cur: `u < self . spec_n () ==> ((forall | k : int | 0 <= k < neigh...`
+src/Chap52/AdjMatrixGraphMtPer.rs:158: info: `out_neighbors`: ensures clause fuzzy match — ref: `forall | k : int | 0 <= k < neighbors . spec_len () ==> # [t...` ~ cur: `u >= self . spec_n () ==> neighbors . spec_len () == 0`
+src/Chap52/AdjMatrixGraphMtPer.rs:172: warning: `out_degree`: requires clause count 1 vs 2 (StPer has 2)
+src/Chap52/AdjMatrixGraphMtPer.rs:172: warning: `out_degree`: StPer has requires clause `u < self . spec_n ()` with no match in MtPer
+src/Chap52/AdjMatrixGraphMtPer.rs:172: info: `out_degree`: ensures clause fuzzy match — ref: `d as nat == spec_count_true (| v : int | self . spec_edge (u...` ~ cur: `u < self . spec_n () ==> d as nat == spec_count_true (| v : ...`
+src/Chap52/AdjMatrixGraphMtPer.rs:172: info: `out_degree`: ensures clause count 2 vs 1 (StPer has 1)
+src/Chap52/AdjMatrixGraphMtPer.rs:172: info: `out_degree`: MtPer has extra ensures clause `u >= self . spec_n () ==> d == 0` not in StPer
+src/Chap52/AdjMatrixGraphMtEph.rs:150: warning: `has_edge`: requires clause count 1 vs 3 (StEph has 3)
+src/Chap52/AdjMatrixGraphMtEph.rs:150: warning: `has_edge`: StEph has requires clause `u < self . spec_n ()` with no match in MtEph
+src/Chap52/AdjMatrixGraphMtEph.rs:150: warning: `has_edge`: StEph has requires clause `v < self . spec_n ()` with no match in MtEph
+src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: ensures clause fuzzy match — ref: `found == self . spec_edge (u as int , v as int)` ~ cur: `u < self . spec_n () && v < self . spec_n () ==> found == se...`
+src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap52/AdjMatrixGraphMtEph.rs:150: info: `has_edge`: MtEph has extra ensures clause `(u >= self . spec_n () || v >= self . spec_n ()) ==> ! found` not in StEph
+src/Chap52/AdjMatrixGraphMtEph.rs:168: warning: `out_degree`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap52/AdjMatrixGraphMtEph.rs:168: warning: `out_degree`: StEph has requires clause `u < self . spec_n ()` with no match in MtEph
+src/Chap52/AdjMatrixGraphMtEph.rs:168: info: `out_degree`: ensures clause fuzzy match — ref: `d as nat == spec_count_true (| v : int | self . spec_edge (u...` ~ cur: `u < self . spec_n () ==> d as nat == spec_count_true (| v : ...`
+src/Chap52/AdjMatrixGraphMtEph.rs:168: info: `out_degree`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap52/AdjMatrixGraphMtEph.rs:168: info: `out_degree`: MtEph has extra ensures clause `u >= self . spec_n () ==> d == 0` not in StEph
+src/Chap52/AdjMatrixGraphMtEph.rs:157: info: `out_neighbors`: requires clause count 2 vs 1 (MtPer has 1)
+src/Chap52/AdjMatrixGraphMtEph.rs:157: info: `out_neighbors`: MtEph has extra requires clause `u < self . spec_n ()` not in MtPer
+src/Chap52/AdjMatrixGraphMtEph.rs:157: info: `out_neighbors`: ensures clause fuzzy match — ref: `u < self . spec_n () ==> ((forall | k : int | 0 <= k < neigh...` ~ cur: `forall | k : int | 0 <= k < neighbors . spec_len () ==> # [t...`
+src/Chap52/AdjMatrixGraphMtEph.rs:157: info: `out_neighbors`: ensures clause fuzzy match — ref: `u >= self . spec_n () ==> neighbors . spec_len () == 0` ~ cur: `forall | v : int | 0 <= v < self . spec_n () && # [trigger] ...`
+src/Chap52/AdjMatrixGraphMtEph.rs:178: info: `set_edge`: requires clause fuzzy match — ref: `self . spec_adjmatrixgraph_wf ()` ~ cur: `old (self) . spec_adjmatrixgraph_wf ()`
+src/Chap52/AdjMatrixGraphMtEph.rs:178: info: `set_edge`: requires clause fuzzy match — ref: `u < self . spec_n ()` ~ cur: `u < old (self) . spec_n ()`
+src/Chap52/AdjMatrixGraphMtEph.rs:178: info: `set_edge`: requires clause fuzzy match — ref: `v < self . spec_n ()` ~ cur: `v < old (self) . spec_n ()`
+src/Chap52/AdjSeqGraphStEph.rs:179: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_adjseqgraph_wf ()` ~ cur: `old (self) . spec_adjseqgraph_wf ()`
+src/Chap52/AdjSeqGraphStEph.rs:179: info: `insert_edge`: requires clause fuzzy match — ref: `u < self . spec_num_vertices ()` ~ cur: `u < old (self) . spec_num_vertices ()`
+src/Chap52/AdjSeqGraphStEph.rs:179: info: `insert_edge`: requires clause fuzzy match — ref: `v < self . spec_num_vertices ()` ~ cur: `v < old (self) . spec_num_vertices ()`
+src/Chap52/AdjSeqGraphStEph.rs:199: info: `delete_edge`: requires clause fuzzy match — ref: `self . spec_adjseqgraph_wf ()` ~ cur: `old (self) . spec_adjseqgraph_wf ()`
+src/Chap52/AdjSeqGraphStEph.rs:199: info: `delete_edge`: requires clause fuzzy match — ref: `u < self . spec_num_vertices ()` ~ cur: `u < old (self) . spec_num_vertices ()`
+src/Chap52/AdjSeqGraphStEph.rs:199: info: `delete_edge`: requires clause count 3 vs 2 (StPer has 2)
+src/Chap52/AdjSeqGraphStEph.rs:199: info: `delete_edge`: StEph has extra requires clause `v < old (self) . spec_num_vertices ()` not in StPer
+src/Chap52/AdjTableGraphStEph.rs:260: info: `insert_vertex`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
+src/Chap52/AdjTableGraphStEph.rs:265: info: `delete_vertex`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
+src/Chap52/AdjTableGraphStEph.rs:270: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_adj () . dom () . len () + 1 < usize :: MAX as n...` ~ cur: `old (self) . spec_adj () . dom () . len () + 1 < usize :: MA...`
+src/Chap52/AdjTableGraphStEph.rs:270: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
+src/Chap52/AdjTableGraphStEph.rs:281: info: `delete_edge`: requires clause fuzzy match — ref: `self . spec_adjtablegraph_wf ()` ~ cur: `old (self) . spec_adjtablegraph_wf ()`
 src/Chap52/AdjTableGraphMtPer.rs:107: info: `empty`: requires clause count 5 vs 2 (StPer has 2)
 src/Chap52/AdjTableGraphMtPer.rs:107: info: `empty`: MtPer has extra requires clause `spec_pair_key_determines_order :: < V , AVLTreeSet < V > > ()` not in StPer
 src/Chap52/AdjTableGraphMtPer.rs:107: info: `empty`: MtPer has extra requires clause `view_ord_consistent :: < Pair < V , AVLTreeSet < V > > > ()` not in StPer
@@ -2467,12 +2468,7 @@ src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge`: requires clause fuzzy 
 src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_edgesetgraph_wf ()` ~ cur: `old (self) . spec_edgesetgraph_wf ()`
 src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_vertices () . len () + 2 < usize :: MAX as nat` ~ cur: `old (self) . spec_vertices () . len () + 2 < usize :: MAX as...`
 src/Chap52/EdgeSetGraphStEph.rs:147: info: `delete_edge`: requires clause fuzzy match — ref: `self . spec_edgesetgraph_wf ()` ~ cur: `old (self) . spec_edgesetgraph_wf ()`
-src/Chap52/EdgeSetGraphMtPer.rs:112: info: `out_neighbors`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_out_neighbors (u @)` ~ cur: `neighbors @ == Set :: new (| v : V :: V | self . spec_edges ...`
-src/Chap52/EdgeSetGraphMtPer.rs:121: warning: `insert_vertex`: requires clause count 1 vs 2 (StPer has 2)
-src/Chap52/EdgeSetGraphMtPer.rs:121: warning: `insert_vertex`: StPer has requires clause `self . spec_vertices () . len () + 1 < usize :: MAX as nat` with no match in MtPer
-src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: requires clause count 1 vs 3 (StPer has 3)
-src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: StPer has requires clause `self . spec_edges () . len () + 1 < usize :: MAX as nat` with no match in MtPer
-src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: StPer has requires clause `self . spec_vertices () . len () + 2 < usize :: MAX as nat` with no match in MtPer
+src/Chap52/EdgeSetGraphMtPer.rs:113: info: `out_neighbors`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_out_neighbors (u @)` ~ cur: `neighbors @ == Set :: new (| v : V :: V | self . spec_edges ...`
 src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: requires clause count 3 vs 8 (StPer has 8)
 src/Chap53/GraphSearchMtPer.rs:44: info: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
 src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
@@ -2501,4 +2497,4 @@ src/Chap55/CycleDetectStEph.rs:267: info: `has_cycle`: ensures clause fuzzy matc
 src/Chap55/DFSStEph.rs:200: info: `dfs`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...` ~ cur: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...`
 src/Chap55/TopoSortStEph.rs:396: info: `topo_sort`: ensures clause fuzzy match — ref: `spec_is_dag_per (graph) ==> spec_is_topo_order_per (graph , ...` ~ cur: `spec_is_dag (graph) ==> spec_is_topo_order (graph , order @)`
 
-Phase 4 summary: 0 errors, 387 warnings, 999 info
+Phase 4 summary: 0 errors, 388 warnings, 995 info

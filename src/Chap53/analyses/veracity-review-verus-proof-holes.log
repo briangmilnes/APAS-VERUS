@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap53/GraphSearchMtPer.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap53/
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap53/GraphSearchMtPer.rs:179: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:179: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
        127 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        177 |                 proof {
@@ -30,6 +30,10 @@ Table of Contents:
        181 |                 new_neighbors = new_neighbors.union(&neighbors);
    Holes: 1 total
       1 × assume()
+✓ GraphSearchStEph.rs
+✓ GraphSearchStPer.rs
+✓ PQMinStEph.rs
+✓ PQMinStPer.rs
 
 =================================================================
 2. Depends Upon
@@ -40,21 +44,29 @@ Table of Contents:
 =================================================================
 
 GraphSearchMtPer  depends upon only clean modules
+GraphSearchStEph  depends upon only clean modules
+GraphSearchStPer  depends upon only clean modules
+PQMinStEph  depends upon only clean modules
+PQMinStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
 GraphSearchMtPer.rs  depends upon only clean modules
+GraphSearchStEph.rs  depends upon only clean modules
+GraphSearchStPer.rs  depends upon only clean modules
+PQMinStEph.rs  depends upon only clean modules
+PQMinStPer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
-   1 total
+   4 clean (no holes, no errors; 80%)
+   1 holed (holes or errors, 20%)
+   5 total
 
 Proof Functions:
    0 clean (0%)
@@ -62,11 +74,11 @@ Proof Functions:
    0 total
 
 Function Specs:
-   14 exec fns with complete spec (requires+ensures) (100%)
+   60 exec fns with complete spec (requires+ensures) (90%)
    0 exec fns missing spec (0%)
-   0 proof/spec fns clean (0%)
+   6 proof/spec fns clean (9%)
    0 proof/spec fns with holes (0%)
-   14 total fns
+   66 total fns
 
 
 Holes Found: 1 (actionable)
@@ -77,8 +89,9 @@ Real Proof Targets: 0 (1 total - 1 rwlock)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 19:43:27 -07:00
-Ended:     2026-03-30 19:43:27 -07:00
-Duration:  6ms
+Started:   2026-03-30 19:49:13 -07:00
+Ended:     2026-03-30 19:49:13 -07:00
+Duration:  32ms
 
+Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
