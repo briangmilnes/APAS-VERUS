@@ -114,24 +114,24 @@ broadcast use {
             ensures out.spec_adjtablegraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; table size
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(|V| + |E|), Span Theta(log |V| * log |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop summing neighbor set sizes, not cached
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(lg n * lg m) — DIFFERS: APAS assumes cached; impl sums degrees
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find + set find
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphmtper_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + d_g(v)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + d_g(v)), Span O(lg n + d_g(v)) — DIFFERS: span = work, sequential table find + clone
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find returns neighbor set
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
             requires self.spec_adjtablegraphmtper_wf()
             ensures
@@ -140,7 +140,7 @@ broadcast use {
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find + set len
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)

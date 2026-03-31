@@ -140,7 +140,7 @@ pub mod BFSStPer {
     pub trait BFSStPerTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential queue-based BFS, not parallel Alg 54.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — DIFFERS: impl uses sequential queue-based BFS (Alg 54.3), not parallel set-based (Alg 54.4)
         fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (traversal: ArraySeqStPerS<usize>)
             requires
                 source < graph.spec_len(),
@@ -158,7 +158,7 @@ pub mod BFSStPer {
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential queue-based BFS tree, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — matches APAS work; sequential BFS tree with array seqs
         fn bfs_tree(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),

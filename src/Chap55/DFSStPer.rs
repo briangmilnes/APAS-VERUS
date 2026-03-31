@@ -194,7 +194,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O((m+n) lg n), Span O((m+n) lg n)
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(m + n), Span O(m + n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((m+n) lg n), Span O((m+n) lg n) — matches APAS tree-based; uses AVL set for visited, adj seq for graph
         fn dfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (reachable: AVLTreeSetStPer<usize>)
             requires
                 source < graph@.len(),

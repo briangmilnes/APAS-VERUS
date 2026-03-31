@@ -34,7 +34,7 @@ pub mod JohnsonMtEphI64 {
             /// Parallel Johnson's all-pairs shortest path algorithm
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
             /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n) — matches APAS; parallel: n Dijkstra calls via join
             fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
                 requires
                     graph@.V.len() > 0,
@@ -77,7 +77,7 @@ pub mod JohnsonMtEphI64 {
     /// 3. Parallel Dijkstra from each vertex using ParaPair! divide-and-conquer
     ///
     /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(mn lg n), Span O(m lg n) — matches APAS; parallel: BF O(nm) then n x Dijkstra in parallel
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
         requires
             graph@.V.len() > 0,

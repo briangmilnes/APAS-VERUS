@@ -280,7 +280,7 @@ pub mod BFSMtEph {
     pub trait BFSMtEphTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential layer-by-layer BFS, not parallel Alg 54.4
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(d lg^2 n) — matches APAS; parallel BFS with set union per round
         fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: ArraySeqMtEphS<usize>)
             requires
                 source < graph.spec_len(),
@@ -298,7 +298,7 @@ pub mod BFSMtEph {
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
         /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential layer-by-layer BFS tree, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(d lg n) — matches APAS; parallel BFS tree with inject per round
         fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),

@@ -130,14 +130,14 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; cached vertex count
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures n as nat == self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: nested sequential loops counting true entries
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: APAS assumes cached; impl counts trues in n*n matrix
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjmatrixgraphmtper_wf(),
@@ -153,7 +153,7 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; direct matrix index
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
@@ -162,7 +162,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span = work, sequential row scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS work; sequential row scan
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtPerS<usize>)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
@@ -178,7 +178,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span = work, sequential count over row
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS work; sequential count
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
@@ -190,7 +190,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential tabulate rebuilds entire row, not O(1) in-place
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: APAS says O(1); persistent seq requires row copy
         fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self)
             requires
                 self.spec_adjmatrixgraphmtper_wf(),
@@ -207,7 +207,7 @@ broadcast use {
 
         /// Work Theta(n^2), Span Theta(n^2)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n^2), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: span = work, sequential nested tabulate
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — matches APAS work; negate all entries
         fn complement(&self) -> (complemented: Self)
             requires self.spec_adjmatrixgraphmtper_wf()
             ensures
