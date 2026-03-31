@@ -169,7 +169,7 @@ pub mod ArraySeqStPer {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -196,7 +196,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -224,7 +224,7 @@ pub mod ArraySeqStPer {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqstper_wf(),
@@ -325,8 +325,8 @@ pub mod ArraySeqStPer {
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
-        /// - APAS: Algorithm 19.8 — iterate (iterative form).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.8): iterate (iterative form)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -347,8 +347,8 @@ pub mod ArraySeqStPer {
                 accumulated == spec_iterate(a.seq@, spec_f, seed);
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
-        /// - APAS: Algorithm 19.9 — reduce (iterative form).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.9): reduce (iterative form)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -419,8 +419,8 @@ pub mod ArraySeqStPer {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();
 
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
-        /// - APAS: Algorithm 19.5 — deflate (part of filter). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.5): deflate (part of filter)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires

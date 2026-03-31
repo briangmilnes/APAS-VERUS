@@ -192,7 +192,7 @@ pub mod ArraySeqMtEph {
 
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
     /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-    /// - Claude-Opus-4.6: Work Θ(|updates|), Span Θ(|updates|).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|).
     fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
         lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
         updates: Vec<(usize, T)>,
@@ -266,7 +266,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -279,7 +279,7 @@ pub mod ArraySeqMtEph {
 
         /// - Set the element at `index` to `item` in place.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -303,7 +303,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -331,7 +331,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
@@ -1102,7 +1102,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1154,7 +1154,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1236,7 +1236,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1324,7 +1324,7 @@ pub mod ArraySeqMtEph {
         /// Whichever thread acquires last overwrites the other's conflicting writes.
         /// That scheduling race is the source of nondeterminism.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|a| + |updates|), Span Θ(|updates|) — lock serializes the writers.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |updates|), Span O(|updates|) — lock serializes the writers.
         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires

@@ -16,8 +16,8 @@ pub mod FibonacciMtPerAllThreads {
 
         /// Parallel Fibonacci using ParaPair! for symmetric binary parallelism.
         /// Implements Ex 11.10. Exponential work; demonstrates parallel recursion patterns.
-        /// - APAS: Work Θ(φⁿ), Span Θ(n) — full recursive parallelism.
-        /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(n) — agrees. ParaPair! at every level.
+        /// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — full recursive parallelism
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(n) — matches APAS; ParaPair! at every level
         pub fn fib(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,

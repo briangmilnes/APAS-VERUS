@@ -51,7 +51,7 @@ pub mod Exercise21_8 {
 
     // Lemma: if divisor count is 0 in [from, to), then no element in that range divides n.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_zero_count_means_no_divisors(n: int, from: int, to: int)
         requires
             from <= to,
@@ -77,7 +77,7 @@ pub mod Exercise21_8 {
 
     // Lemma: if no element in [from, to) divides n, then divisor count is 0.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_no_divisors_means_zero_count(n: int, from: int, to: int)
         requires
             from <= to,
@@ -95,7 +95,7 @@ pub mod Exercise21_8 {
 
     // Lemma: spec_divisor_count is non-negative.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_divisor_count_nonneg(n: int, from: int, to: int)
         ensures spec_divisor_count(n, from, to) >= 0,
         decreases (if to > from { to - from } else { 0 }),
@@ -159,8 +159,8 @@ pub mod Exercise21_8 {
 
     //		9. impls
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     pub fn is_divisible(n: usize, i: usize) -> (divides: bool)
         requires i > 0
         ensures divides == (n as int % i as int == 0)
@@ -171,8 +171,8 @@ pub mod Exercise21_8 {
     /// Exercise 21.8 / Algorithm 21.4 (Brute Force Primality Test)
     /// - isPrime n = |{ x in 1..=floor(sqrt(n)) : n mod x == 0 }| == 1
     /// - Uses tabulate + filter per the textbook.
-    /// - APAS: Work Θ(√n), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(√n), Span Θ(√n) — sequential StEph tabulate + filter.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(√n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(√n), Span O(√n) — sequential StEph tabulate + filter.
     // veracity: no_requires
     pub fn is_prime(n: usize) -> (prime: bool)
         ensures prime == spec_is_prime(n as int)

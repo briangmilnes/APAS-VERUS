@@ -84,8 +84,8 @@ pub mod FibonacciStEph {
         //		9. impls
 
         /// Iterative Fibonacci implementation.
-        /// - APAS: Work Θ(n), Span Θ(n) — sequential, no parallelism stated.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — agrees. Iterative loop, O(1) space.
+        /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(n), Span O(n) — sequential, no parallelism
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; iterative loop, O(1) space
         pub fn fib(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,
@@ -122,8 +122,8 @@ pub mod FibonacciStEph {
         }
 
         /// Recursive Fibonacci (matches APAS structure). Sequential elision of the parallel version.
-        /// - APAS: Work Θ(φⁿ), Span Θ(φⁿ) — sequential, span == work.
-        /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(φⁿ) — agrees. Exponential, demonstration only.
+        /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(φⁿ) — sequential, span == work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(φⁿ) — matches APAS; exponential, demonstration only
         pub fn fib_recursive(n: u64) -> (fibonacci: u64)
             requires
                 n <= 46,

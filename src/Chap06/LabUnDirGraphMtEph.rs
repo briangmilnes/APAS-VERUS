@@ -114,8 +114,8 @@ pub mod LabUnDirGraphMtEph {
             Set::new(|w: V::V| exists |l: L::V| subedges.contains((v, w, l)) || subedges.contains((w, v, l)))
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -124,8 +124,8 @@ pub mod LabUnDirGraphMtEph {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(1)
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
@@ -139,31 +139,31 @@ pub mod LabUnDirGraphMtEph {
                 g@.V =~= vertices@,
                 g@.A =~= labeled_edges@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
             ensures e@ =~= self@.A;
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential map
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential map
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V)
             requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires spec_labgraphview_wf(old(self)@), valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -172,8 +172,8 @@ pub mod LabUnDirGraphMtEph {
                 self@.A == old(self)@.A.insert((v1@, v2@, label@)) ||
                 self@.A == old(self)@.A.insert((v2@, v1@, label@));
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -182,8 +182,8 @@ pub mod LabUnDirGraphMtEph {
                 label.is_some() ==> (self@.A.contains((v1@, v2@, label.unwrap()@)) ||
                                       self@.A.contains((v2@, v1@, label.unwrap()@)));
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
             ensures b == (exists |l: L::V| 
@@ -197,8 +197,8 @@ pub mod LabUnDirGraphMtEph {
             Set::new(|w: V::V| exists |l: L::V| self@.A.contains((v, w, l)) || self@.A.contains((w, v, l)))
         }
 
-        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(log |E|) — parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires
                 spec_labgraphview_wf(self@),

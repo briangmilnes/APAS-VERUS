@@ -35,8 +35,8 @@ pub mod Problem21_4 {
     //		9. impls
 
     /// Problem 21.4 (Cartesian Product) - Imperative approach using explicit loops.
-    /// - APAS: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
-    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|)
+    /// - Alg Analysis: APAS (Ch21 Alg 21.3): Work O(|a|·|b|), Span O(|a|·|b|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|·|b|), Span O(|a|·|b|)
     pub fn cartesian_loops(
         a: &ArraySeqStPerS<usize>,
         b: &ArraySeqStPerS<usize>,
@@ -87,8 +87,8 @@ pub mod Problem21_4 {
 
     /// Problem 21.4 (Cartesian Product) - Functional approach using tabulate + flatten.
     /// flatten(tabulate(λi. tabulate(λj. (a[i], b[j])) |b|) |a|)
-    /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
-    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer tabulate + flatten.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.3): Work O(|a|·|b|), Span O(lg |a|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|·|b|), Span O(|a|·|b|) — sequential StPer tabulate + flatten.
     pub fn cartesian_tab_flat(
         a: &ArraySeqStPerS<usize>,
         b: &ArraySeqStPerS<usize>,

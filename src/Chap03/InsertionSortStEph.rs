@@ -32,8 +32,8 @@ pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
     forall|i: int, j: int| 0 <= i < j < v.len() ==> T::le(#[trigger] v[i], #[trigger] v[j])
 }
 
-/// - APAS: Work Θ(n²), Span Θ(n²) — sequential insertion sort.
-/// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — agrees with APAS. Iterative in-place variant, same cost as the recursive prose version.
+/// - Alg Analysis: APAS (Ch03 Ex 3.1): Work O(n²), Span O(n²) — sequential insertion sort
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — matches APAS; iterative in-place variant, same cost as prose
 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
 // veracity: no_requires
 pub fn insertion_sort<T: TotalOrder + Copy>(a: &mut [T]) -> (sorted: &[T])

@@ -41,8 +41,8 @@ pub mod Algorithm21_2 {
     /// Algorithm 21.2 (3D Points) using ArraySeqPer: flatten of nested tabulates.
     /// - Comprehension form: 〈(x,y,z): 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1〉
     /// - Implemented as: flatten (tabulate_x (flatten (tabulate_y (tabulate_z))))
-    /// - APAS: Work Θ(n³), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential StPer nested tabulate + flatten.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.2): Work O(n³), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n³), Span O(n³) — sequential StPer nested tabulate + flatten.
     pub fn points3d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>)
         requires
             n + 2 <= usize::MAX,

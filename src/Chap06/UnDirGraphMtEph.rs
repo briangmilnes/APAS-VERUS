@@ -117,8 +117,8 @@ pub mod UnDirGraphMtEph {
         {
             Set::new(|w: V::V| exists |u: V::V| #![trigger subverts.contains(u)] subverts.contains(u) && self.spec_ng(u).contains(w))
         }
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
             ensures
@@ -127,8 +127,8 @@ pub mod UnDirGraphMtEph {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|V| + |E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(1)
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 valid_key_type_for_graph::<V>(),
@@ -142,30 +142,30 @@ pub mod UnDirGraphMtEph {
                 g@.V =~= V@,
                 g@.A =~= E@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
             ensures e@ =~= self@.A;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeV(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.V.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeE(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_for_graph::<V>()
             ensures n == self@.A.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires 
                 spec_graphview_wf(self@),
@@ -180,8 +180,8 @@ pub mod UnDirGraphMtEph {
             Set::new(|w: V::V| self@.A.contains((v, w)) || self@.A.contains((w, v)))
         }
 
-        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — ParaPair! split edges
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(log |E|) — parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — ParaPair! split edges
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires 
                 spec_graphview_wf(self@),
@@ -198,8 +198,8 @@ pub mod UnDirGraphMtEph {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// - APAS: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) — parallel
-        /// - Claude-Opus-4.6: Work Θ(|u_set| × |E|), Span Θ(log |u_set| + log |E|) — ParaPair! split vertices
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|u_set| × |E|), Span O(log |u_set| + log |E|) — parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|u_set| × |E|), Span O(log |u_set| + log |E|) — ParaPair! split vertices
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires 
                 spec_graphview_wf(self@),
@@ -210,14 +210,14 @@ pub mod UnDirGraphMtEph {
                 neighbors@ == self.spec_ng_of_vertices(u_set@),
                 neighbors@ <= self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_for_graph::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// - APAS: Work Θ(|E|), Span Θ(log |E|) — parallel
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(log |E|) — calls ng
+        /// - Alg Analysis: APAS (Ch06 Def 6.2): Work O(|E|), Span O(log |E|) — parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) — calls ng
         fn degree(&self, v: &V) -> (n: usize)
             requires
                 spec_graphview_wf(self@),

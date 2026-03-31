@@ -67,8 +67,8 @@ verus! {
         lemma_fib_fits_u64(n);
     }
 
-    /// - APAS: Work Θ(φⁿ), Span Θ(φⁿ)
-    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(φⁿ) — sequential, work = span. Correct.
+    /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(φⁿ)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(φⁿ) — matches APAS; sequential, work = span
     pub fn fib_seq(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),
@@ -82,8 +82,8 @@ verus! {
         }
     }
 
-    /// - APAS: Work Θ(φⁿ), Span Θ(n) — both branches recurse in parallel.
-    /// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(n) — recursive fib_par through join(); S(n) = S(n-1) + O(1) = Θ(n).
+    /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(n) — both branches recurse in parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(n) — matches APAS; recursive fib_par through join()
     pub fn fib_par(n: u64) -> (fibonacci: u64)
         requires n <= 46,
         ensures fibonacci == spec_fib(n as nat),

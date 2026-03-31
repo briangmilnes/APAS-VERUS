@@ -67,8 +67,8 @@ verus! {
             Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -77,8 +77,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(|V| + |A|), Parallelism Θ(1) - sequential
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|), Parallelism O(1) - sequential
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
@@ -90,60 +90,60 @@ verus! {
                 g@.V =~= vertices@,
                 g@.A =~= labeled_arcs@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ =~= self@.A;
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential map
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
                 label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential search
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
         /// out-neighbors
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential filter
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);
 
         /// in-neighbors
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|), Parallelism Θ(1) - sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential filter
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);

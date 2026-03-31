@@ -128,15 +128,15 @@ pub mod PrimTreeSeqStPer {
         spec fn spec_primtreeseqstper_wf(&self) -> bool;
 
         /// Creates an empty sequence.
-        /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_primtreeseqstper_wf(),
                     empty_seq.spec_len() == 0;
 
         /// Builds a sequence containing a single element.
-        /// - APAS: Algorithm 23.3. Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn singleton(value: T) -> (single: Self)
             ensures
                 single.spec_primtreeseqstper_wf(),
@@ -145,7 +145,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Constructs a sequence from the provided vector.
         /// - Alg Analysis: APAS: N/A — not in prose, Vec-specific constructor.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps existing Vec.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps existing Vec.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_primtreeseqstper_wf(),
@@ -192,8 +192,8 @@ pub mod PrimTreeSeqStPer {
                 };
 
         /// Reassembles a primitive tree sequence from an exposed tree.
-        /// - APAS: Cost Spec 23.2. Work Θ(1 + |r(L) − r(R)|), Span Θ(1 + |r(L) − r(R)|) for Two; Θ(1) for Zero/One.
-        /// - Claude-Opus-4.6: Work Θ(|L| + |R|), Span Θ(|L| + |R|) for Two; Θ(1) for Zero/One — Vec append.
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1 + |r(L) − r(R)|), Span O(1 + |r(L) − r(R)|) for Two; O(1) for Zero/One.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|L| + |R|), Span O(|L| + |R|) for Two; O(1) for Zero/One — Vec append.
         fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
             ensures
                 joined.spec_primtreeseqstper_wf(),
@@ -249,8 +249,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.spec_len() && i != index as int ==> updated.spec_index(i) == a.spec_index(i);
 
         /// Algorithm 23.3 (map). Transform each element via `f`.
-        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log n) — parallel tree-based.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
         fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)
             requires
                 forall|i: int| 0 <= i < a.spec_len() ==> #[trigger] f.requires((&a.spec_index(i),)),
@@ -259,8 +259,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger mapped.spec_index(i)] 0 <= i < a.spec_len() ==> f.ensures((&a.spec_index(i),), mapped.spec_index(i));
 
         /// Algorithm 23.3 (tabulate). Build a sequence by applying `f` to each index.
-        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log n) — parallel tree-based.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log n) — parallel tree-based.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: Self)
             requires
                 length <= usize::MAX,
@@ -271,8 +271,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger tab_seq.spec_index(i)] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.spec_index(i));
 
         /// Algorithm 23.3 (filter). Keep elements satisfying the predicate.
-        /// - APAS: Algorithm 23.3. Work Θ(n), Span Θ(log² n) — parallel tree-based with rebalancing.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(n), Span O(log² n) — parallel tree-based with rebalancing.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop.
         fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
@@ -288,8 +288,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// Algorithm 23.3 (drop). Drop the first `n` elements.
-        /// - APAS: Algorithm 23.3. Tree-based Work Θ(log² n), Span Θ(log² n).
-        /// - Claude-Opus-4.6: Work Θ(|a| − n), Span Θ(|a| − n) — delegates to subseq.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): Tree-based Work O(log² n), Span O(log² n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| − n), Span O(|a| − n) — delegates to subseq.
         fn drop(&self, n: usize) -> (dropped: Self)
             where T: Clone + Eq
             requires
@@ -303,8 +303,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger dropped.spec_index(i)] 0 <= i < dropped.spec_len() ==> dropped.spec_index(i) == self.spec_index(n as int + i);
 
         /// Algorithm 23.3 (flatten). Concatenate a sequence of sequences.
-        /// - APAS: Algorithm 23.3. flatten = reduce append empty. Tree-based cost depends on reduce+append.
-        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(Σ|a_i|) — nested sequential loops.
+        /// - Alg Analysis: APAS (Ch23 Alg 23.3): flatten = reduce append empty. Tree-based cost depends on reduce+append.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — nested sequential loops.
         fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)
             where T: Clone + Eq
             requires
@@ -314,14 +314,14 @@ pub mod PrimTreeSeqStPer {
 
         /// Borrows the inner slice.
         /// - Alg Analysis: APAS: N/A — utility method, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn as_slice(&self) -> (slice: &[T])
             requires self.spec_primtreeseqstper_wf(),
             ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
         /// - Alg Analysis: APAS: N/A — utility method, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_vec(self) -> (vec: Vec<T>)
             requires self.spec_primtreeseqstper_wf(),
             ensures vec@ =~= self@;
@@ -333,7 +333,7 @@ pub mod PrimTreeSeqStPer {
     impl<T> PrimTreeSeqStS<T> {
         /// Returns a borrow iterator over the sequence elements.
         /// - Alg Analysis: APAS: N/A — Verus-specific iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — wraps slice::Iter.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps slice::Iter.
         pub fn iter(&self) -> (it: PrimTreeSeqStIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -782,7 +782,7 @@ pub mod PrimTreeSeqStPer {
         type Item = &'a T;
 
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -851,7 +851,7 @@ pub mod PrimTreeSeqStPer {
         type Item = &'a T;
         type IntoIter = PrimTreeSeqStIter<'a, T>;
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps slice::Iter.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps slice::Iter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
@@ -866,7 +866,7 @@ pub mod PrimTreeSeqStPer {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — consumes Vec into IntoIter.
         fn into_iter(self) -> (it: Self::IntoIter)
             ensures
                 it@.0 == 0,
@@ -880,7 +880,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Clone> Clone for PrimTreeSeqStS<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones inner Vec.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones inner Vec.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -892,7 +892,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStS<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — delegates to Vec::eq.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to Vec::eq.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -906,7 +906,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: Clone> Clone for PrimTreeSeqStTree<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones variant contents.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones variant contents.
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -922,7 +922,7 @@ pub mod PrimTreeSeqStPer {
 
     impl<T: PartialEq + View> PartialEq for PrimTreeSeqStTree<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — compares variant contents.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — compares variant contents.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

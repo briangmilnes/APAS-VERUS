@@ -132,14 +132,14 @@ verus! {
             self@.finite()
         }
 
-        /// - APAS: Work Θ(|v|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|v|), Span Θ(|v|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|v|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — sequential loop, not parallel. Span == Work.
         fn from_vec(v: Vec<T>) -> (s: Self)
             requires Self::spec_valid_key_type()
             ensures s.spec_setmteph_wf(), s@ == v@.map(|i: int, x: T| x@).to_set();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>)
             requires self.spec_setmteph_wf()
             ensures
@@ -150,39 +150,39 @@ verus! {
                 iter_invariant(&it);
 
         /// - Alg Analysis: APAS: N/A — conversion utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
             requires self.spec_setmteph_wf()
             ensures
                 seq@.no_duplicates(),
                 forall |x: T::V| self@.contains(x) <==> seq@.map(|_i: int, t: T| t@).contains(x);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Allocates empty hash set.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Allocates empty hash set.
         fn empty()                           -> (empty: Self)
             requires Self::spec_valid_key_type()
             ensures empty.spec_setmteph_wf(), empty@ == Set::<<T as View>::V>::empty();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. One allocation + one insert.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. One allocation + one insert.
         fn singleton(x: T)                   -> (s: Self)
             requires Self::spec_valid_key_type()
             ensures s.spec_setmteph_wf(), s@ == Set::empty().insert(x@);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set len().
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set len().
         fn size(&self)                       -> (size: usize)
             requires self.spec_setmteph_wf()
             ensures size == self@.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains().
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains().
         fn mem(&self, x: &T)                 -> (contains: bool)
             requires self.spec_setmteph_wf()
             ensures contains == self@.contains(x@);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set insert(), amortized.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set insert(), amortized.
         fn insert(&mut self, x: T)           -> (inserted: bool)
             requires old(self).spec_setmteph_wf()
             ensures
@@ -190,8 +190,8 @@ verus! {
                 self@ == old(self)@.insert(x@),
                 inserted == !old(self)@.contains(x@);
 
-        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setmteph_wf(),
@@ -199,8 +199,8 @@ verus! {
             ensures union.spec_setmteph_wf(), union@ == self@.union(s2@);
 
         /// - Disjoint union: union of two sets known to be disjoint.
-        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn disjoint_union(&self, s2: &Self) -> (union: Self)
             requires
                self.spec_setmteph_wf(),
@@ -211,8 +211,8 @@ verus! {
                union@ == self@.union(s2@),
                union@.len() == self@.len() + s2@.len();
 
-        /// - APAS: Work Θ(|a| + |b|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — sequential loop, not parallel. Span == Work.
         fn intersection(&self, s2: &Self) -> (intersection: Self)
             requires
                 self.spec_setmteph_wf(),
@@ -220,7 +220,7 @@ verus! {
             ensures intersection.spec_setmteph_wf(), intersection@ == self@.intersect(s2@);
 
         /// - Alg Analysis: APAS: N/A — internal helper for cartesian_product.
-        /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — sequential loop, creates one pair per element.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s2|), Span O(|s2|) — sequential loop, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             requires
               Self::spec_valid_key_type(),
@@ -230,8 +230,8 @@ verus! {
                spec_setmteph_wf_generic(&product),
                forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (av == a@ && s2@.contains(bv));
 
-        /// - APAS: Work Θ(|a| × |b|), Span Θ(|b|)
-        /// - Claude-Opus-4.6: Work Θ(|a| × |b|), Span Θ(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each Θ(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |b|), Span O(|b|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |b|), Span O(|a| × |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but join phase is sequential disjoint_union over |a| results of size |b|. Sequential join dominates span.
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
             requires
@@ -243,7 +243,7 @@ verus! {
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
         /// - Alg Analysis: APAS: N/A — internal helper for partition.
-        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetMtEph<SetMtEph<T>>) -> (all_nonempty: bool)
             requires
                 Self::spec_valid_key_type(),
@@ -252,7 +252,7 @@ verus! {
                 all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
         /// - Alg Analysis: APAS: N/A — internal helper for partition.
-        /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|parts|), Span O(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetMtEph<SetMtEph<T>>) -> (partition_on_elt: bool)
             requires
                 Self::spec_valid_key_type(),
@@ -266,8 +266,8 @@ verus! {
                         parts@.contains(s2) && s2.contains(x@) ==> s1 == s2)
                 );
 
-        /// - APAS: Work Θ(|a| × |parts|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|a| × |parts|), Span Θ(|a| × |parts|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|a| × |parts|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| × |parts|), Span O(|a| × |parts|) — sequential loop, not parallel. Span == Work.
         fn partition(&self, parts: &SetMtEph<SetMtEph<T>>) -> (partition: bool)
             requires
                 self.spec_setmteph_wf(),
@@ -285,8 +285,8 @@ verus! {
                 );
 
         /// Split a set into two parts: the first with n elements, the second with the rest.
-        /// - APAS: Work Θ(|self|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — sequential loop, not parallel. Span == Work.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(|self|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(|self|) — sequential loop, not parallel. Span == Work.
         fn split(&self, n: usize) -> (n_set_rest_set: (Self, Self))
             requires
                 self.spec_setmteph_wf(),
@@ -302,8 +302,8 @@ verus! {
                });
 
         /// Choose an arbitrary element from a non-empty set.
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator, takes first.
+        /// - Alg Analysis: APAS (Ch05 Def 5.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator, takes first.
         fn choose(&self) -> (element: T)
             requires
                 self.spec_setmteph_wf(),

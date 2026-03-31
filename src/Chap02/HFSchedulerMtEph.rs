@@ -30,7 +30,7 @@ pub mod HFSchedulerMtEph {
     static PARALLELISM: RwLock<Option<usize>> = RwLock::new(None);
 
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — reads config, creates mutex/condvar.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reads config, creates mutex/condvar.
     fn init_pool() -> PoolState {
         let n = PARALLELISM.read().unwrap();
         let threads = n.unwrap_or_else(|| {
@@ -48,7 +48,7 @@ pub mod HFSchedulerMtEph {
     static POOL: LazyLock<PoolState> = LazyLock::new(init_pool);
 
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, check, unlock.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, check, unlock.
     fn try_acquire() -> bool {
         let mut available = POOL.available_tasks.lock().unwrap();
         if *available > 0 {
@@ -60,7 +60,7 @@ pub mod HFSchedulerMtEph {
     }
 
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1) amortized, Span Θ(1) amortized — waits on condvar.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — waits on condvar.
     fn acquire() {
         let mut available = POOL.available_tasks.lock().unwrap();
         while *available == 0 {
@@ -70,7 +70,7 @@ pub mod HFSchedulerMtEph {
     }
 
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — lock, increment, notify, unlock.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — lock, increment, notify, unlock.
     fn release() {
         let mut available = POOL.available_tasks.lock().unwrap();
         *available += 1;
@@ -90,7 +90,7 @@ pub mod HFSchedulerMtEph {
 
     /// Set parallelism level. Must be called before any parallel operations.
     /// - Alg Analysis: APAS: N/A (scheduler config)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     #[verifier::external_body] // accept hole
     pub fn set_parallelism(n: usize) {
         *PARALLELISM.write().unwrap() = Some(n);
@@ -100,7 +100,7 @@ pub mod HFSchedulerMtEph {
     /// - If no capacity, runs both closures sequentially (help-first strategy).
     /// - Prevents deadlock from nested joins.
     /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
-    /// - Claude-Opus-4.6: Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb)) when parallel; else Θ(W_fa + W_fb)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb)) when parallel; else O(W_fa + W_fb)
     #[verifier::external_body] // accept hole
     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -127,7 +127,7 @@ pub mod HFSchedulerMtEph {
     /// - Unconditional fork-join: always spawns fb in a new thread.
     /// - Runs fa in the current thread, waits for fb to complete, returns both results.
     /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
-    /// - Claude-Opus-4.6: Work Θ(W_fa + W_fb), Span Θ(max(S_fa, S_fb))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_fa + W_fb), Span O(max(S_fa, S_fb))
     #[verifier::external_body] // accept hole
     pub fn spawn_join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
     where
@@ -158,7 +158,7 @@ pub mod HFSchedulerMtEph {
     /// - If no capacity, runs locally (help-first) and returns completed state.
     /// - Never blocks, never deadlocks.
     /// - Alg Analysis: APAS: N/A (scheduler primitive; cost = closure cost)
-    /// - Claude-Opus-4.6: Work Θ(W_f), Span Θ(S_f)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(W_f), Span O(S_f)
     #[verifier::external_body] // accept hole
     pub fn spawn<T, F>(f: F) -> (task: TaskState<T>)
     where
@@ -180,7 +180,7 @@ pub mod HFSchedulerMtEph {
 
     /// Wait for a spawned task to complete. Releases capacity.
     /// - Alg Analysis: APAS: N/A (scheduler primitive)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(S_task) — blocks until task completes
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(S_task) — blocks until task completes
     #[verifier::external_body] // accept hole
     pub fn wait<T: Send + 'static>(task: TaskState<T>) -> (task_result: T)
         ensures

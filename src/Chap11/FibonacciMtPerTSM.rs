@@ -4,7 +4,7 @@
 //! Full recursive parallelism with TSM tracking fork-join at each level.
 //! No intermediate values stored - pure recomputation.
 //!
-//! APAS: Work Θ(φⁿ), Span Θ(n) where φ ≈ 1.618
+//! APAS: Work O(φⁿ), Span O(n) where φ ≈ 1.618
 
 #![cfg(verus_keep_ghost)]
 
@@ -81,8 +81,8 @@ tokenized_state_machine!{
 
 /// Parallel Fibonacci with TSM at each recursive fork-join.
 /// Each call spawns two threads and uses a fresh TSM instance to track completion.
-/// - APAS: Work Θ(φⁿ), Span Θ(n) — full recursive parallelism.
-/// - Claude-Opus-4.6: Work Θ(φⁿ), Span Θ(n) — agrees. TSM + vstd::thread at every level.
+/// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — full recursive parallelism
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(n) — matches APAS; TSM + vstd::thread at every level
 pub fn fib(n: u64) -> (fibonacci: u64)
     requires n <= 46
     ensures fibonacci == spec_fib(n as nat)
