@@ -1,0 +1,65 @@
+error[E0308]: mismatched types
+   --> src/experiments/pcell_rwlock_zero_assume.rs:204:46
+    |
+204 |             let token_arc = clone_arc_rwlock(&self.token_lock);
+    |                             ---------------- ^^^^^^^^^^^^^^^^ expected `&Arc<RwLock<_, _>>`, found `&RwLock<Tracked<PointsTo<u64>>, ...>`
+    |                             |
+    |                             arguments to this function are incorrect
+    |
+    = note: expected reference `&std::sync::Arc<vstd::rwlock::RwLock<_, _>>`
+               found reference `&vstd::rwlock::RwLock<vstd::prelude::Tracked<vstd::cell::PointsTo<u64>>, experiments::pcell_rwlock_zero_assume::pcell_rwlock_zero_assume::TokenInv>`
+note: function defined here
+   --> src/vstdplus/arc_rwlock.rs:34:12
+    |
+ 34 |     pub fn clone_arc_rwlock<V, Pred: RwLockPredicate<V>>(
+    |            ^^^^^^^^^^^^^^^^
+ 35 |         arc: &Arc<RwLock<V, Pred>>,
+    |         --------------------------
+
+error[E0599]: no method named `view` found for struct `experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count` in the current scope
+  --> src/experiments/state_machine_set_mt.rs:95:59
+   |
+19 | /     tokenized_state_machine!(
+20 | |         SetSM {
+21 | |             fields {
+22 | |                 #[sharding(variable)]
+23 | |                 pub count: nat,
+   | |_________________________- method `view` not found for this struct
+...
+95 |               interior.steph@.len() == interior.ghost_count@@.value
+   |                                        -------------------- ^ method not found in `experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count`
+   |                                        |
+   |                                        method `view` is available on `vstd::prelude::Tracked<experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count>`
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `view`, perhaps you need to implement one of them:
+           candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+           candidate #2: `vstd::string::View`
+
+error[E0599]: no method named `view` found for struct `experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count` in the current scope
+  --> src/experiments/state_machine_set_mt.rs:96:37
+   |
+19 | /     tokenized_state_machine!(
+20 | |         SetSM {
+21 | |             fields {
+22 | |                 #[sharding(variable)]
+23 | |                 pub count: nat,
+   | |_________________________- method `view` not found for this struct
+...
+96 |               && interior.ghost_count@@.instance == self.instance
+   |                  -------------------- ^ method not found in `experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count`
+   |                  |
+   |                  method `view` is available on `vstd::prelude::Tracked<experiments::state_machine_set_mt::state_machine_set_mt::SetSM::count>`
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following traits define an item `view`, perhaps you need to implement one of them:
+           candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+           candidate #2: `vstd::string::View`
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23299MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

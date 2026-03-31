@@ -1,0 +1,41 @@
+error: precondition not satisfied
+   --> src/experiments/state_machine_set_mt.rs:130:17
+    |
+ 19 | /     tokenized_state_machine!(
+ 20 | |         SetSM {
+ 21 | |             fields {
+ 22 | |                 #[sharding(variable)]
+...   |
+ 47 | |     );
+    | |_____- failed precondition
+...
+130 | /                 self.inst.borrow().tr_insert(
+131 | |                     &mut *interior.ghost_count.borrow_mut(),
+132 | |                 );
+    | |_________________^
+
+error: precondition not satisfied
+   --> src/experiments/state_machine_set_mt.rs:139:13
+    |
+139 |             write_handle.release_write(interior);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/rwlock.rs:405:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+write_handle.rwlock().inv(interior)
+|   write_handle.rwlock().pred().inv(interior) 
+|       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+verification results:: 676 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 477MB, peak z3 RSS: 215MB, min free: 22897MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

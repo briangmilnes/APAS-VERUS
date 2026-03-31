@@ -1,0 +1,24 @@
+error[E0308]: mismatched types
+   --> src/experiments/pcell_rwlock_zero_assume.rs:204:46
+    |
+204 |             let token_arc = clone_arc_rwlock(&self.token_lock);
+    |                             ---------------- ^^^^^^^^^^^^^^^^ expected `&Arc<RwLock<_, _>>`, found `&RwLock<Tracked<PointsTo<u64>>, ...>`
+    |                             |
+    |                             arguments to this function are incorrect
+    |
+    = note: expected reference `&std::sync::Arc<vstd::rwlock::RwLock<_, _>>`
+               found reference `&vstd::rwlock::RwLock<vstd::prelude::Tracked<vstd::cell::PointsTo<u64>>, experiments::pcell_rwlock_zero_assume::pcell_rwlock_zero_assume::TokenInv>`
+note: function defined here
+   --> src/vstdplus/arc_rwlock.rs:34:12
+    |
+ 34 |     pub fn clone_arc_rwlock<V, Pred: RwLockPredicate<V>>(
+    |            ^^^^^^^^^^^^^^^^
+ 35 |         arc: &Arc<RwLock<V, Pred>>,
+    |         --------------------------
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23602MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
