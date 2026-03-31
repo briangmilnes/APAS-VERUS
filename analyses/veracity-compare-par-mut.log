@@ -1,8 +1,8 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-30 18:30:27 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS-agent3
-Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-compare-par-mut.log
+Started at: 2026-03-30 19:01:59 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
 
 Phase 1: File groups
 
@@ -110,76 +110,75 @@ src/Chap05/SetStEph.rs:118: info: wf = spec_setsteph_wf
 src/Chap05/SetMtEph.rs:83: info: struct SetMtEph { elements: HashSetWithViewPlus < T > }
 src/Chap05/SetMtEph.rs:88: info: View = Set < T :: V >
 src/Chap05/SetMtEph.rs:127: info: wf = spec_setmteph_wf
-src/Chap05/SetMtEph.rs:1005: info: trait LockedSetMtEphTrait — 5 fns (5 exec, 0 spec), only in MtEph variant
+src/Chap05/SetMtEph.rs:1078: info: trait LockedSetMtEphTrait — 5 fns (5 exec, 0 spec), only in MtEph variant
 src/Chap05/SetStEph.rs:116: info: trait SetStEphTrait <T : StT + Hash> : View < V = Set < T :: V > > + Sized — 20 fns (18 exec, 2 spec)
-src/Chap05/SetMtEph.rs:125: info: trait SetMtEphTrait <T : StT + Hash> : View < V = Set < T :: V > > + Sized — 20 fns (17 exec, 3 spec)
+src/Chap05/SetMtEph.rs:125: info: trait SetMtEphTrait <T : StT + Hash> : View < V = Set < T :: V > > + Sized — 21 fns (18 exec, 3 spec)
 src/Chap05/SetMtEph.rs:125: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_setsteph_wf`
-src/Chap05/SetMtEph.rs:125: warning: missing 1 fns present in StEph (SetStEphTrait): `split`
 src/Chap05/SetMtEph.rs:125: info: 2 extra fns not in StEph (SetStEphTrait): `spec_setmteph_wf`, `spec_finite`
-src/Chap05/SetStEph.rs:0: info: SetTrait trait: 18 matched fns across 2 variants
+src/Chap05/SetStEph.rs:0: info: SetTrait trait: 19 matched fns across 2 variants
 src/Chap06/DirGraphMtEph.rs:0: info: file group DirGraph — comparing MtEph (src/Chap06/DirGraphMtEph.rs), StEph (src/Chap06/DirGraphStEph.rs)
 src/Chap06/DirGraphStEph.rs:60: info: struct DirGraphStEph { V: SetStEph < V >, A: SetStEph < Edge < V > > }
 src/Chap06/DirGraphStEph.rs:67: info: View = GraphView < V :: V >
 src/Chap06/DirGraphStEph.rs:78: info: wf = spec_dirgraphsteph_wf
 src/Chap06/DirGraphMtEph.rs:70: info: struct DirGraphMtEph { V: SetStEph < V >, A: SetStEph < Edge < V > > }
 src/Chap06/DirGraphMtEph.rs:79: info: View = GraphView < V :: V >
-src/Chap06/DirGraphMtEph.rs:835: info: wf = spec_dirgraphmteph_wf
+src/Chap06/DirGraphMtEph.rs:844: info: wf = spec_dirgraphmteph_wf
 src/Chap06/DirGraphStEph.rs:75: info: trait DirGraphStEphTrait <V : StT + Hash> : View < V = GraphView < V :: V > > + Sized — 25 fns (17 exec, 8 spec)
-src/Chap06/DirGraphMtEph.rs:95: info: trait DirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < V :: V > > + Sized — 36 fns (22 exec, 14 spec)
+src/Chap06/DirGraphMtEph.rs:95: info: trait DirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < V :: V > > + Sized — 37 fns (22 exec, 15 spec)
 src/Chap06/DirGraphMtEph.rs:95: info: generic bounds `<V : StTInMtT + Hash + 'static>` — supertrait-compatible with StEph `<V : StT + Hash>` (extra: V: StTInMtT)
-src/Chap06/DirGraphMtEph.rs:95: warning: missing 1 fns present in StEph (DirGraphStEphTrait): `spec_dirgraphsteph_wf`
-src/Chap06/DirGraphMtEph.rs:95: info: 12 extra fns not in StEph (DirGraphStEphTrait): `spec_vertices`, `spec_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `spec_n_plus_of_vertices_from_set`, `spec_n_minus_of_vertices_from_set`, `spec_ng_of_vertices_from_set`, `n_plus_par`, `n_minus_par`, `n_plus_of_vertices_par`, `n_minus_of_vertices_par`, `ng_of_vertices_par`
+src/Chap06/DirGraphMtEph.rs:95: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_dirgraphsteph_wf`
+src/Chap06/DirGraphMtEph.rs:95: info: 13 extra fns not in StEph (DirGraphStEphTrait): `spec_dirgraphmteph_wf`, `spec_vertices`, `spec_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `spec_n_plus_of_vertices_from_set`, `spec_n_minus_of_vertices_from_set`, `spec_ng_of_vertices_from_set`, `n_plus_par`, `n_minus_par`, `n_plus_of_vertices_par`, `n_minus_of_vertices_par`, `ng_of_vertices_par`
 src/Chap06/DirGraphStEph.rs:0: info: DirGraphTrait trait: 24 matched fns across 2 variants
-src/Chap06/DirGraphMtEph.rs:834: info: trait LockedDirGraphMtEphTrait — 19 fns (12 exec, 7 spec), only in MtEph variant
+src/Chap06/DirGraphMtEph.rs:843: info: trait LockedDirGraphMtEphTrait — 19 fns (12 exec, 7 spec), only in MtEph variant
 src/Chap06/LabDirGraphMtEph.rs:0: info: file group LabDirGraph — comparing MtEph (src/Chap06/LabDirGraphMtEph.rs), StEph (src/Chap06/LabDirGraphStEph.rs)
 src/Chap06/LabDirGraphStEph.rs:32: info: struct LabDirGraphStEph { vertices: SetStEph < V >, labeled_arcs: SetStEph < LabEdge < V , L > > }
 src/Chap06/LabDirGraphStEph.rs:38: info: View = LabGraphView < V :: V , L :: V >
 src/Chap06/LabDirGraphStEph.rs:48: info: wf = spec_labdirgraphsteph_wf
 src/Chap06/LabDirGraphMtEph.rs:68: info: struct LabDirGraphMtEph { vertices: SetStEph < V >, labeled_arcs: SetStEph < LabEdge < V , L > > }
 src/Chap06/LabDirGraphMtEph.rs:77: info: View = LabGraphView < V :: V , L :: V >
-src/Chap06/LabDirGraphMtEph.rs:751: info: wf = spec_labdirgraphmteph_wf
+src/Chap06/LabDirGraphMtEph.rs:768: info: wf = spec_labdirgraphmteph_wf
 src/Chap06/LabDirGraphStEph.rs:45: info: trait LabDirGraphStEphTrait <V : StT + Hash, L : StT + Hash> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 16 fns (11 exec, 5 spec)
-src/Chap06/LabDirGraphMtEph.rs:93: info: trait LabDirGraphMtEphTrait <V : StTInMtT + Hash + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 19 fns (13 exec, 6 spec)
+src/Chap06/LabDirGraphMtEph.rs:93: info: trait LabDirGraphMtEphTrait <V : StTInMtT + Hash + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 22 fns (13 exec, 9 spec)
 src/Chap06/LabDirGraphMtEph.rs:93: info: generic bounds `<V : StTInMtT + Hash + 'static, L : StTInMtT + Hash + 'static>` — supertrait-compatible with StEph `<V : StT + Hash, L : StT + Hash>` (extra: V: StTInMtT, L: StTInMtT)
-src/Chap06/LabDirGraphMtEph.rs:93: warning: missing 3 fns present in StEph (LabDirGraphStEphTrait): `spec_labdirgraphsteph_wf`, `spec_finite`, `spec_arcs`
-src/Chap06/LabDirGraphMtEph.rs:93: info: 6 extra fns not in StEph (LabDirGraphStEphTrait): `spec_vertices`, `spec_labeled_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `n_plus_par`, `n_minus_par`
-src/Chap06/LabDirGraphStEph.rs:0: info: LabDirGraphTrait trait: 13 matched fns across 2 variants
-src/Chap06/LabDirGraphMtEph.rs:748: info: trait LockedLabDirGraphMtEphTrait — 8 fns (5 exec, 3 spec), only in MtEph variant
+src/Chap06/LabDirGraphMtEph.rs:93: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_labdirgraphsteph_wf`
+src/Chap06/LabDirGraphMtEph.rs:93: info: 7 extra fns not in StEph (LabDirGraphStEphTrait): `spec_labdirgraphmteph_wf`, `spec_vertices`, `spec_labeled_arcs`, `spec_n_plus_from_set`, `spec_n_minus_from_set`, `n_plus_par`, `n_minus_par`
+src/Chap06/LabDirGraphStEph.rs:0: info: LabDirGraphTrait trait: 15 matched fns across 2 variants
+src/Chap06/LabDirGraphMtEph.rs:765: info: trait LockedLabDirGraphMtEphTrait — 8 fns (5 exec, 3 spec), only in MtEph variant
 src/Chap06/LabUnDirGraphMtEph.rs:0: info: file group LabUnDirGraph — comparing MtEph (src/Chap06/LabUnDirGraphMtEph.rs), StEph (src/Chap06/LabUnDirGraphStEph.rs)
 src/Chap06/LabUnDirGraphStEph.rs:33: info: struct LabUnDirGraphStEph { vertices: SetStEph < V >, labeled_edges: SetStEph < LabEdge < V , L > > }
 src/Chap06/LabUnDirGraphStEph.rs:39: info: View = LabGraphView < V :: V , L :: V >
 src/Chap06/LabUnDirGraphStEph.rs:49: info: wf = spec_labundirgraphsteph_wf
 src/Chap06/LabUnDirGraphMtEph.rs:68: info: struct LabUnDirGraphMtEph { vertices: SetStEph < V >, labeled_edges: SetStEph < LabEdge < V , L > > }
 src/Chap06/LabUnDirGraphMtEph.rs:77: info: View = LabGraphView < V :: V , L :: V >
-src/Chap06/LabUnDirGraphMtEph.rs:714: info: wf = spec_labundirgraphmteph_wf
+src/Chap06/LabUnDirGraphMtEph.rs:731: info: wf = spec_labundirgraphmteph_wf
 src/Chap06/LabUnDirGraphStEph.rs:46: info: trait LabUnDirGraphStEphTrait <V : HashOrd, L : StT + Hash> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 14 fns (10 exec, 4 spec)
-src/Chap06/LabUnDirGraphMtEph.rs:93: info: trait LabUnDirGraphMtEphTrait <V : StTInMtT + Hash + Ord + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 15 fns (11 exec, 4 spec)
+src/Chap06/LabUnDirGraphMtEph.rs:93: info: trait LabUnDirGraphMtEphTrait <V : StTInMtT + Hash + Ord + 'static, L : StTInMtT + Hash + 'static> : View < V = LabGraphView < V :: V , L :: V > > + Sized — 18 fns (11 exec, 7 spec)
 src/Chap06/LabUnDirGraphMtEph.rs:93: info: generic bounds `<V : StTInMtT + Hash + Ord + 'static, L : StTInMtT + Hash + 'static>` — supertrait-compatible with StEph `<V : HashOrd, L : StT + Hash>` (extra: V: StTInMtT, L: StTInMtT)
-src/Chap06/LabUnDirGraphMtEph.rs:93: warning: missing 3 fns present in StEph (LabUnDirGraphStEphTrait): `spec_labundirgraphsteph_wf`, `spec_finite`, `spec_edges`
-src/Chap06/LabUnDirGraphMtEph.rs:93: info: 4 extra fns not in StEph (LabUnDirGraphStEphTrait): `spec_vertices`, `spec_labeled_edges`, `spec_ng_from_set`, `ng_par`
-src/Chap06/LabUnDirGraphStEph.rs:0: info: LabUnDirGraphTrait trait: 11 matched fns across 2 variants
-src/Chap06/LabUnDirGraphMtEph.rs:711: info: trait LockedLabUnDirGraphMtEphTrait — 10 fns (8 exec, 2 spec), only in MtEph variant
+src/Chap06/LabUnDirGraphMtEph.rs:93: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_labundirgraphsteph_wf`
+src/Chap06/LabUnDirGraphMtEph.rs:93: info: 5 extra fns not in StEph (LabUnDirGraphStEphTrait): `spec_labundirgraphmteph_wf`, `spec_vertices`, `spec_labeled_edges`, `spec_ng_from_set`, `ng_par`
+src/Chap06/LabUnDirGraphStEph.rs:0: info: LabUnDirGraphTrait trait: 13 matched fns across 2 variants
+src/Chap06/LabUnDirGraphMtEph.rs:728: info: trait LockedLabUnDirGraphMtEphTrait — 10 fns (8 exec, 2 spec), only in MtEph variant
 src/Chap06/UnDirGraphMtEph.rs:0: info: file group UnDirGraph — comparing MtEph (src/Chap06/UnDirGraphMtEph.rs), StEph (src/Chap06/UnDirGraphStEph.rs)
 src/Chap06/UnDirGraphStEph.rs:55: info: struct UnDirGraphStEph { V: SetStEph < V >, E: SetStEph < Edge < V > > }
 src/Chap06/UnDirGraphStEph.rs:64: info: View = GraphView < V :: V >
 src/Chap06/UnDirGraphStEph.rs:77: info: wf = spec_undirgraphsteph_wf
 src/Chap06/UnDirGraphMtEph.rs:69: info: struct UnDirGraphMtEph { V: SetStEph < V >, E: SetStEph < Edge < V > > }
 src/Chap06/UnDirGraphMtEph.rs:78: info: View = GraphView < V :: V >
-src/Chap06/UnDirGraphMtEph.rs:592: info: wf = spec_undirgraphmteph_wf
-src/Chap06/UnDirGraphMtEph.rs:591: info: trait LockedUnDirGraphMtEphTrait — 11 fns (8 exec, 3 spec), only in MtEph variant
+src/Chap06/UnDirGraphMtEph.rs:607: info: wf = spec_undirgraphmteph_wf
+src/Chap06/UnDirGraphMtEph.rs:606: info: trait LockedUnDirGraphMtEphTrait — 11 fns (8 exec, 3 spec), only in MtEph variant
 src/Chap06/UnDirGraphStEph.rs:74: info: trait UnDirGraphStEphTrait <V : StT + Hash> : View < V = GraphView < V :: V > > + Sized — 15 fns (11 exec, 4 spec)
-src/Chap06/UnDirGraphMtEph.rs:94: info: trait UnDirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < V :: V > > + Sized — 19 fns (13 exec, 6 spec)
+src/Chap06/UnDirGraphMtEph.rs:94: info: trait UnDirGraphMtEphTrait <V : StTInMtT + Hash + 'static> : View < V = GraphView < V :: V > > + Sized — 21 fns (13 exec, 8 spec)
 src/Chap06/UnDirGraphMtEph.rs:94: info: generic bounds `<V : StTInMtT + Hash + 'static>` — supertrait-compatible with StEph `<V : StT + Hash>` (extra: V: StTInMtT)
-src/Chap06/UnDirGraphMtEph.rs:94: warning: missing 2 fns present in StEph (UnDirGraphStEphTrait): `spec_undirgraphsteph_wf`, `spec_degree`
-src/Chap06/UnDirGraphMtEph.rs:94: info: 6 extra fns not in StEph (UnDirGraphStEphTrait): `spec_vertices`, `spec_edges`, `spec_ng_from_set`, `spec_ng_of_vertices_from_set`, `ng_par`, `ng_of_vertices_par`
-src/Chap06/UnDirGraphStEph.rs:0: info: UnDirGraphTrait trait: 13 matched fns across 2 variants
+src/Chap06/UnDirGraphMtEph.rs:94: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_undirgraphsteph_wf`
+src/Chap06/UnDirGraphMtEph.rs:94: info: 7 extra fns not in StEph (UnDirGraphStEphTrait): `spec_undirgraphmteph_wf`, `spec_vertices`, `spec_edges`, `spec_ng_from_set`, `spec_ng_of_vertices_from_set`, `ng_par`, `ng_of_vertices_par`
+src/Chap06/UnDirGraphStEph.rs:0: info: UnDirGraphTrait trait: 14 matched fns across 2 variants
 src/Chap18/ArraySeqMtEph.rs:0: info: file group ArraySeq — comparing MtEph (src/Chap18/ArraySeqMtEph.rs), StEph (src/Chap18/ArraySeqStEph.rs), MtPer (src/Chap18/ArraySeqMtPer.rs), StPer (src/Chap18/ArraySeqStPer.rs)
 src/Chap18/ArraySeqStPer.rs:62: info: struct ArraySeqStPerS { seq: Vec < T > }
 src/Chap18/ArraySeqStPer.rs:70: info: View = Seq < T :: V >
 src/Chap18/ArraySeqStPer.rs:105: info: wf = spec_arrayseqstper_wf
 src/Chap18/ArraySeqMtPer.rs:67: info: struct ArraySeqMtPerS { seq: Vec < T > }
 src/Chap18/ArraySeqMtPer.rs:75: info: View = Seq < T :: V >
-src/Chap18/ArraySeqMtPer.rs:95: info: wf = spec_arrayseqmtper_wf
+src/Chap18/ArraySeqMtPer.rs:110: info: wf = spec_arrayseqmtper_wf
 src/Chap18/ArraySeqStEph.rs:61: info: struct ArraySeqStEphS { seq: Vec < T > }
 src/Chap18/ArraySeqStEph.rs:69: info: View = Seq < T :: V >
 src/Chap18/ArraySeqStEph.rs:104: info: wf = spec_arrayseqsteph_wf
@@ -187,14 +186,14 @@ src/Chap18/ArraySeqMtEph.rs:69: info: struct ArraySeqMtEphS { seq: Vec < T > }
 src/Chap18/ArraySeqMtEph.rs:77: info: View = Seq < T :: V >
 src/Chap18/ArraySeqMtEph.rs:260: info: wf = spec_arrayseqmteph_wf
 src/Chap18/ArraySeqStPer.rs:104: info: trait ArraySeqStPerBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
-src/Chap18/ArraySeqMtPer.rs:94: info: trait ArraySeqMtPerBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
+src/Chap18/ArraySeqMtPer.rs:109: info: trait ArraySeqMtPerBaseTrait <T> : Sized — 9 fns (6 exec, 3 spec)
 src/Chap18/ArraySeqStEph.rs:103: info: trait ArraySeqStEphBaseTrait <T> : Sized — 10 fns (7 exec, 3 spec)
 src/Chap18/ArraySeqMtEph.rs:259: info: trait ArraySeqMtEphBaseTrait <T> : Sized — 10 fns (7 exec, 3 spec)
 src/Chap18/ArraySeqStEph.rs:103: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
 src/Chap18/ArraySeqStEph.rs:103: info: 1 mutation fns (&mut self) added by Eph variant: `set`
 src/Chap18/ArraySeqStEph.rs:103: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqsteph_wf`
-src/Chap18/ArraySeqMtPer.rs:94: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
-src/Chap18/ArraySeqMtPer.rs:94: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqmtper_wf`
+src/Chap18/ArraySeqMtPer.rs:109: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqstper_wf`
+src/Chap18/ArraySeqMtPer.rs:109: info: 1 extra fns not in StPer (ArraySeqStPerBaseTrait): `spec_arrayseqmtper_wf`
 src/Chap18/ArraySeqMtEph.rs:259: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqsteph_wf`
 src/Chap18/ArraySeqMtEph.rs:259: info: 1 extra fns not in StEph (ArraySeqStEphBaseTrait): `spec_arrayseqmteph_wf`
 src/Chap18/ArraySeqMtEph.rs:259: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_arrayseqmtper_wf`
@@ -202,17 +201,16 @@ src/Chap18/ArraySeqMtEph.rs:259: info: 1 mutation fns (&mut self) added by Eph v
 src/Chap18/ArraySeqMtEph.rs:259: info: 1 extra fns not in MtPer (ArraySeqMtPerBaseTrait): `spec_arrayseqmteph_wf`
 src/Chap18/ArraySeqStPer.rs:0: info: ArraySeqBaseTrait trait: 8 matched fns across 4 variants
 src/Chap18/ArraySeqStPer.rs:176: info: trait ArraySeqStPerRedefinableTrait <T> : ArraySeqStPerBaseTrait < T > — 14 fns (14 exec, 0 spec)
-src/Chap18/ArraySeqMtPer.rs:167: info: trait ArraySeqMtPerRedefinableTrait <T> : ArraySeqMtPerBaseTrait < T > — 13 fns (13 exec, 0 spec)
+src/Chap18/ArraySeqMtPer.rs:182: info: trait ArraySeqMtPerRedefinableTrait <T> : ArraySeqMtPerBaseTrait < T > — 14 fns (14 exec, 0 spec)
 src/Chap18/ArraySeqStEph.rs:186: info: trait ArraySeqStEphRedefinableTrait <T> : ArraySeqStEphBaseTrait < T > — 14 fns (14 exec, 0 spec)
 src/Chap18/ArraySeqMtEph.rs:342: info: trait ArraySeqMtEphRedefinableTrait <T> : ArraySeqMtEphBaseTrait < T > — 15 fns (15 exec, 0 spec)
 src/Chap18/ArraySeqStEph.rs:186: info: supertrait `ArraySeqStEphBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
-src/Chap18/ArraySeqMtPer.rs:167: info: supertrait `ArraySeqMtPerBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
-src/Chap18/ArraySeqMtPer.rs:167: warning: missing 1 fns present in StPer (ArraySeqStPerRedefinableTrait): `inject`
+src/Chap18/ArraySeqMtPer.rs:182: info: supertrait `ArraySeqMtPerBaseTrait < T >` (variant-substitution of `ArraySeqStPerBaseTrait < T >`)
 src/Chap18/ArraySeqMtEph.rs:342: info: supertrait `ArraySeqMtEphBaseTrait < T >` (variant-substitution of `ArraySeqStEphBaseTrait < T >`)
 src/Chap18/ArraySeqMtEph.rs:342: info: 1 extra fns not in StEph (ArraySeqStEphRedefinableTrait): `ninject`
 src/Chap18/ArraySeqMtEph.rs:342: info: supertrait `ArraySeqMtEphBaseTrait < T >` (variant-substitution of `ArraySeqMtPerBaseTrait < T >`)
-src/Chap18/ArraySeqMtEph.rs:342: info: 2 extra fns not in MtPer (ArraySeqMtPerRedefinableTrait): `inject`, `ninject`
-src/Chap18/ArraySeqStPer.rs:0: info: ArraySeqRedefinableTrait trait: 13 matched fns across 4 variants
+src/Chap18/ArraySeqMtEph.rs:342: info: 1 extra fns not in MtPer (ArraySeqMtPerRedefinableTrait): `ninject`
+src/Chap18/ArraySeqStPer.rs:0: info: ArraySeqRedefinableTrait trait: 14 matched fns across 4 variants
 src/Chap18/LinkedListStEph.rs:0: info: file group LinkedList — comparing StEph (src/Chap18/LinkedListStEph.rs), StPer (src/Chap18/LinkedListStPer.rs)
 src/Chap18/LinkedListStPer.rs:65: info: struct LinkedListStPerS { seq: Vec < T > }
 src/Chap18/LinkedListStPer.rs:73: info: View = Seq < T :: V >
@@ -427,23 +425,27 @@ src/Chap39/BSTTreapStEph.rs:91: info: View = Set < T :: V >
 src/Chap39/BSTTreapStEph.rs:2740: info: wf = spec_parambsttreapsteph_wf
 src/Chap39/BSTTreapMtEph.rs:56: info: struct BSTTreapMtEph { locked_root: RwLock < Link < T > , BSTTreapMtEphInv >, ghost ghost_locked_root: Ghost < Set < T :: V > > }
 src/Chap39/BSTTreapMtEph.rs:79: info: View = Set < T :: V >
-src/Chap39/BSTTreapMtEph.rs:255: info: wf = spec_bsttreapmteph_wf
+src/Chap39/BSTTreapMtEph.rs:259: info: wf = spec_bsttreapmteph_wf
 src/Chap39/BSTTreapMtEph.rs:56: info: ghost field `ghost_locked_root` has no counterpart in other variants
 src/Chap39/BSTTreapStEph.rs:2740: warning: wf name `spec_parambsttreapsteph_wf` does not follow expected pattern `spec_bsttreap*_wf`
 src/Chap39/BSTTreapStEph.rs:413: info: trait BSTTreapStEphTrait <T : StT + Ord + IsLtTransitive> : (none) — 51 fns (26 exec, 17 spec)
-src/Chap39/BSTTreapMtEph.rs:254: info: trait BSTTreapMtEphTrait <T : StTInMtT + Ord + IsLtTransitive> : Sized + View < V = Set < T :: V > > — 13 fns (12 exec, 1 spec)
-src/Chap39/BSTTreapMtEph.rs:254: info: supertrait bounds `Sized + View < V = Set < T :: V > >` added by MtEph (ref StEph has none)
-src/Chap39/BSTTreapMtEph.rs:254: info: generic bounds `<T : StTInMtT + Ord + IsLtTransitive>` — supertrait-compatible with StEph `<T : StT + Ord + IsLtTransitive>` (extra: T: StTInMtT)
-src/Chap39/BSTTreapMtEph.rs:254: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bsttreapsteph_wf`
-src/Chap39/BSTTreapMtEph.rs:254: warning: missing 38 fns present in StEph (BSTTreapStEphTrait): `spec_size_link`, `spec_bst_link`, `spec_link_size_wf`, `spec_in_order_link`, `spec_pre_order_link`, `spec_min_link`, `spec_max_link`, `spec_height_link`, `spec_size`, `spec_bst`, `spec_height`, `spec_contains`, `spec_min`, `spec_max`, `spec_in_order`, `spec_pre_order`, `lemma_height_le_size`, `lemma_size_wf_child_bounded`, `lemma_wf_decompose`, `lemma_wf_assemble_node`, `lemma_contains_left`, `lemma_contains_right`, `lemma_bst_decompose`, `lemma_contains_root`, `new_node`, `size_link`, `update_size`, `rotate_left`, `rotate_right`, `clone_link`, `height_link`, `insert_link`, `delete_link`, `find_link`, `min_link`, `max_link`, `in_order_vec`, `pre_order_vec`
-src/Chap39/BSTTreapMtEph.rs:254: info: 1 extra fns not in StEph (BSTTreapStEphTrait): `spec_bsttreapmteph_wf`
-src/Chap39/BSTTreapMtEph.rs:283: warning: `height`: StEph has requires but MtEph does not
-src/Chap39/BSTTreapMtEph.rs:283: warning: `height`: StEph has ensures but MtEph does not
-src/Chap39/BSTTreapMtEph.rs:269: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapMtEph.rs:285: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapMtEph.rs:288: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapStEph.rs:0: info: BSTTreapTrait trait: 12 matched fns across 2 variants
-src/Chap39/BSTTreapMtEph.rs:241: info: trait LinkTrait — 4 fns (0 exec, 4 spec), only in MtEph variant
+src/Chap39/BSTTreapMtEph.rs:258: info: trait BSTTreapMtEphTrait <T : StTInMtT + Ord + IsLtTransitive> : Sized + View < V = Set < T :: V > > — 28 fns (17 exec, 3 spec)
+src/Chap39/BSTTreapMtEph.rs:258: info: supertrait bounds `Sized + View < V = Set < T :: V > >` added by MtEph (ref StEph has none)
+src/Chap39/BSTTreapMtEph.rs:258: info: generic bounds `<T : StTInMtT + Ord + IsLtTransitive>` — supertrait-compatible with StEph `<T : StT + Ord + IsLtTransitive>` (extra: T: StTInMtT)
+src/Chap39/BSTTreapMtEph.rs:258: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bsttreapsteph_wf`
+src/Chap39/BSTTreapMtEph.rs:258: warning: missing 23 fns present in StEph (BSTTreapStEphTrait): `spec_size_link`, `spec_bst_link`, `spec_link_size_wf`, `spec_in_order_link`, `spec_pre_order_link`, `spec_min_link`, `spec_max_link`, `spec_height_link`, `spec_bst`, `spec_height`, `spec_min`, `spec_max`, `spec_in_order`, `spec_pre_order`, `new_node`, `update_size`, `rotate_left`, `rotate_right`, `clone_link`, `insert_link`, `delete_link`, `in_order_vec`, `pre_order_vec`
+src/Chap39/BSTTreapMtEph.rs:258: info: 1 extra fns not in StEph (BSTTreapStEphTrait): `spec_bsttreapmteph_wf`
+src/Chap39/BSTTreapMtEph.rs:318: warning: `lemma_wf_assemble_node` param 1 type `& Node < T >` but StEph has `& Box < Node < T > >`
+src/Chap39/BSTTreapMtEph.rs:394: warning: `height`: StEph has requires but MtEph does not
+src/Chap39/BSTTreapMtEph.rs:394: warning: `height`: StEph has ensures but MtEph does not
+src/Chap39/BSTTreapMtEph.rs:380: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap39/BSTTreapMtEph.rs:396: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap39/BSTTreapMtEph.rs:399: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap39/BSTTreapMtEph.rs:326: info: `size_link`: MtEph has requires but StEph does not
+src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: MtEph has requires but StEph does not
+src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: MtEph has requires but StEph does not
+src/Chap39/BSTTreapStEph.rs:0: info: BSTTreapTrait trait: 27 matched fns across 2 variants
+src/Chap39/BSTTreapMtEph.rs:241: info: trait LinkTrait — 8 fns (0 exec, 8 spec), only in MtEph variant
 src/Chap39/BSTTreapStEph.rs:2737: info: trait ParamBSTTreapStEphTrait — 18 fns (17 exec, 1 spec), only in StEph variant
 src/Chap41/AVLTreeSetMtEph.rs:0: info: file group AVLTreeSet — comparing MtEph (src/Chap41/AVLTreeSetMtEph.rs), StEph (src/Chap41/AVLTreeSetStEph.rs), MtPer (src/Chap41/AVLTreeSetMtPer.rs), StPer (src/Chap41/AVLTreeSetStPer.rs)
 src/Chap41/AVLTreeSetStPer.rs:56: info: struct AVLTreeSetStPer { tree: ParamBST < T > }
@@ -478,24 +480,14 @@ src/Chap41/AVLTreeSetMtPer.rs:97: info: generic bounds `<T : StTInMtT + Ord + 's
 src/Chap41/AVLTreeSetMtPer.rs:97: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetstper_wf`
 src/Chap41/AVLTreeSetMtPer.rs:97: warning: missing 7 fns present in StPer (AVLTreeSetStPerTrait): `find_iter`, `insert_iter`, `delete_iter`, `filter_iter`, `intersection_iter`, `union_iter`, `difference_iter`
 src/Chap41/AVLTreeSetMtPer.rs:97: info: 1 extra fns not in StPer (AVLTreeSetStPerTrait): `spec_avltreesetmtper_wf`
-src/Chap41/AVLTreeSetMtPer.rs:151: warning: `intersection`: StPer has requires but MtPer does not
-src/Chap41/AVLTreeSetMtPer.rs:155: warning: `difference`: StPer has requires but MtPer does not
-src/Chap41/AVLTreeSetMtPer.rs:159: warning: `union`: StPer has requires but MtPer does not
-src/Chap41/AVLTreeSetMtPer.rs:171: warning: `delete`: StPer has requires but MtPer does not
-src/Chap41/AVLTreeSetMtPer.rs:175: warning: `insert`: StPer has requires but MtPer does not
 src/Chap41/AVLTreeSetMtEph.rs:108: info: generic bounds `<T : StTInMtT + Ord + 'static>` — supertrait-compatible with StEph `<T : StT + Ord>` (extra: T: StTInMtT)
 src/Chap41/AVLTreeSetMtEph.rs:108: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetsteph_wf`
 src/Chap41/AVLTreeSetMtEph.rs:108: warning: missing 7 fns present in StEph (AVLTreeSetStEphTrait): `find_iter`, `insert_iter`, `delete_iter`, `filter_iter`, `intersection_iter`, `union_iter`, `difference_iter`
 src/Chap41/AVLTreeSetMtEph.rs:108: info: 2 extra fns not in StEph (AVLTreeSetStEphTrait): `spec_avltreesetmteph_wf`, `iter`
 src/Chap41/AVLTreeSetMtEph.rs:108: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_avltreesetmtper_wf`
 src/Chap41/AVLTreeSetMtEph.rs:108: info: 2 extra fns not in MtPer (AVLTreeSetMtPerTrait): `spec_avltreesetmteph_wf`, `iter`
-src/Chap41/AVLTreeSetMtEph.rs:167: info: `intersection`: MtEph has requires but MtPer does not
-src/Chap41/AVLTreeSetMtEph.rs:174: info: `difference`: MtEph has requires but MtPer does not
-src/Chap41/AVLTreeSetMtEph.rs:181: info: `union`: MtEph has requires but MtPer does not
-src/Chap41/AVLTreeSetMtEph.rs:199: info: `delete` returns `()` but MtPer returns `Self` (Eph→Per return shift)
-src/Chap41/AVLTreeSetMtEph.rs:199: info: `delete`: MtEph has requires but MtPer does not
-src/Chap41/AVLTreeSetMtEph.rs:206: info: `insert` returns `()` but MtPer returns `Self` (Eph→Per return shift)
-src/Chap41/AVLTreeSetMtEph.rs:206: info: `insert`: MtEph has requires but MtPer does not
+src/Chap41/AVLTreeSetMtEph.rs:212: info: `delete` returns `()` but MtPer returns `Self` (Eph→Per return shift)
+src/Chap41/AVLTreeSetMtEph.rs:222: info: `insert` returns `()` but MtPer returns `Self` (Eph→Per return shift)
 src/Chap41/AVLTreeSetStPer.rs:0: info: AVLTreeSetTrait trait: 12 matched fns across 4 variants
 src/Chap42/TableMtEph.rs:0: info: file group Table — comparing MtEph (src/Chap42/TableMtEph.rs), StEph (src/Chap42/TableStEph.rs), StPer (src/Chap42/TableStPer.rs)
 src/Chap42/TableStPer.rs:72: info: struct TableStPer { entries: ArraySeqStPerS < Pair < K , V > > }
@@ -664,45 +656,57 @@ src/Chap43/OrderedTableStPer.rs:0: info: OrderedTableTrait trait: 19 matched fns
 src/Chap49/MinEditDistMtEph.rs:0: info: file group MinEditDist — comparing MtEph (src/Chap49/MinEditDistMtEph.rs), StEph (src/Chap49/MinEditDistStEph.rs), MtPer (src/Chap49/MinEditDistMtPer.rs), StPer (src/Chap49/MinEditDistStPer.rs)
 src/Chap49/MinEditDistStPer.rs:46: info: struct MinEditDistStPerS { source: ArraySeqStPerS < T >, target: ArraySeqStPerS < T >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
 src/Chap49/MinEditDistMtPer.rs:55: info: struct MinEditDistMtPerS { source: ArraySeqMtPerS < T >, target: ArraySeqMtPerS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MinEditDistMtPerMemoInv > > }
+src/Chap49/MinEditDistMtPer.rs:90: info: wf = spec_mineditdistmtper_wf
 src/Chap49/MinEditDistStEph.rs:46: info: struct MinEditDistStEphS { source: ArraySeqStEphS < T >, target: ArraySeqStEphS < T >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
 src/Chap49/MinEditDistMtEph.rs:56: info: struct MinEditDistMtEphS { source: ArraySeqMtEphS < T >, target: ArraySeqMtEphS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , usize > , usize > , MinEditDistMtEphMemoInv > > }
+src/Chap49/MinEditDistMtEph.rs:91: info: wf = spec_mineditdistmteph_wf
 src/Chap49/MinEditDistStEph.rs:46: info: struct field `source`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
 src/Chap49/MinEditDistStEph.rs:46: info: struct field `target`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
 src/Chap49/MinEditDistStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
-src/Chap49/MinEditDistMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
 src/Chap49/MinEditDistStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
-src/Chap49/MinEditDistMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
 src/Chap49/MinEditDistStPer.rs:79: info: trait MinEditDistStPerTrait <T : StT> : Sized — 8 fns (6 exec, 2 spec)
-src/Chap49/MinEditDistMtPer.rs:82: info: trait MinEditDistMtPerTrait <T : MtVal> : Sized — 8 fns (6 exec, 2 spec)
+src/Chap49/MinEditDistMtPer.rs:82: info: trait MinEditDistMtPerTrait <T : MtVal> : Sized — 9 fns (6 exec, 3 spec)
 src/Chap49/MinEditDistStEph.rs:79: info: trait MinEditDistStEphTrait <T : StT> : Sized — 11 fns (9 exec, 2 spec)
-src/Chap49/MinEditDistMtEph.rs:83: info: trait MinEditDistMtEphTrait <T : MtVal> : Sized — 11 fns (9 exec, 2 spec)
+src/Chap49/MinEditDistMtEph.rs:83: info: trait MinEditDistMtEphTrait <T : MtVal> : Sized — 12 fns (9 exec, 3 spec)
 src/Chap49/MinEditDistStEph.rs:79: info: 3 mutation fns (&mut self) added by Eph variant: `set_source`, `set_target`, `clear_memo`
 src/Chap49/MinEditDistStEph.rs:106: info: `min_edit_distance`: StEph has ensures but StPer does not
 src/Chap49/MinEditDistMtPer.rs:82: info: generic bounds `<T : MtVal>` — supertrait-compatible with StPer `<T : StT>`
+src/Chap49/MinEditDistMtPer.rs:82: info: 1 extra fns not in StPer (MinEditDistStPerTrait): `spec_mineditdistmtper_wf`
 src/Chap49/MinEditDistMtEph.rs:83: info: generic bounds `<T : MtVal>` — supertrait-compatible with StEph `<T : StT>`
+src/Chap49/MinEditDistMtEph.rs:83: info: 1 extra fns not in StEph (MinEditDistStEphTrait): `spec_mineditdistmteph_wf`
+src/Chap49/MinEditDistMtEph.rs:156: info: `clear_memo`: MtEph has requires but StEph does not
+src/Chap49/MinEditDistMtEph.rs:83: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_mineditdistmtper_wf`
 src/Chap49/MinEditDistMtEph.rs:83: info: 3 mutation fns (&mut self) added by Eph variant: `set_source`, `set_target`, `clear_memo`
-src/Chap49/MinEditDistMtEph.rs:107: info: `min_edit_distance`: MtEph has ensures but MtPer does not
+src/Chap49/MinEditDistMtEph.rs:83: info: 1 extra fns not in MtPer (MinEditDistMtPerTrait): `spec_mineditdistmteph_wf`
+src/Chap49/MinEditDistMtEph.rs:114: info: `min_edit_distance`: MtEph has ensures but MtPer does not
 src/Chap49/MinEditDistStPer.rs:0: info: MinEditDistTrait trait: 8 matched fns across 4 variants
 src/Chap49/SubsetSumMtEph.rs:0: info: file group SubsetSum — comparing MtEph (src/Chap49/SubsetSumMtEph.rs), StEph (src/Chap49/SubsetSumStEph.rs), MtPer (src/Chap49/SubsetSumMtPer.rs), StPer (src/Chap49/SubsetSumStPer.rs)
 src/Chap49/SubsetSumStPer.rs:44: info: struct SubsetSumStPerS { multiset: ArraySeqStPerS < T >, memo: HashMapWithViewPlus < Pair < usize , i32 > , bool > }
 src/Chap49/SubsetSumMtPer.rs:55: info: struct SubsetSumMtPerS { multiset: ArraySeqMtPerS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , i32 > , bool > , SubsetSumMtPerMemoInv > > }
+src/Chap49/SubsetSumMtPer.rs:88: info: wf = spec_subsetsummtper_wf
 src/Chap49/SubsetSumStEph.rs:44: info: struct SubsetSumStEphS { multiset: ArraySeqStEphS < T >, memo: HashMapWithViewPlus < Pair < usize , i32 > , bool > }
 src/Chap49/SubsetSumMtEph.rs:56: info: struct SubsetSumMtEphS { multiset: ArraySeqMtEphS < T >, memo: Arc < RwLock < HashMapWithViewPlus < Pair < usize , i32 > , bool > , SubsetSumMtEphMemoInv > > }
+src/Chap49/SubsetSumMtEph.rs:89: info: wf = spec_subsetsummteph_wf
 src/Chap49/SubsetSumStEph.rs:44: info: struct field `multiset`: type `ArraySeqStEphS < T >` (variant-substitution of `ArraySeqStPerS < T >`)
 src/Chap49/SubsetSumStPer.rs:0: warning: no spec_*_wf predicate found in StPer variant
-src/Chap49/SubsetSumMtPer.rs:0: warning: no spec_*_wf predicate found in MtPer variant
 src/Chap49/SubsetSumStEph.rs:0: warning: no spec_*_wf predicate found in StEph variant
-src/Chap49/SubsetSumMtEph.rs:0: warning: no spec_*_wf predicate found in MtEph variant
 src/Chap49/SubsetSumStPer.rs:72: info: trait SubsetSumStPerTrait <T : StT> : Sized — 6 fns (5 exec, 1 spec)
-src/Chap49/SubsetSumMtPer.rs:83: info: trait SubsetSumMtPerTrait <T : MtVal> : Sized — 6 fns (5 exec, 1 spec)
+src/Chap49/SubsetSumMtPer.rs:83: info: trait SubsetSumMtPerTrait <T : MtVal> : Sized — 7 fns (5 exec, 2 spec)
 src/Chap49/SubsetSumStEph.rs:72: info: trait SubsetSumStEphTrait <T : StT> : Sized — 8 fns (7 exec, 1 spec)
-src/Chap49/SubsetSumMtEph.rs:84: info: trait SubsetSumMtEphTrait <T : MtVal> : Sized — 8 fns (7 exec, 1 spec)
+src/Chap49/SubsetSumMtEph.rs:84: info: trait SubsetSumMtEphTrait <T : MtVal> : Sized — 9 fns (7 exec, 2 spec)
 src/Chap49/SubsetSumStEph.rs:72: info: 2 mutation fns (&mut self) added by Eph variant: `set`, `clear_memo`
 src/Chap49/SubsetSumStEph.rs:94: info: `subset_sum`: StEph has ensures but StPer does not
 src/Chap49/SubsetSumMtPer.rs:83: info: generic bounds `<T : MtVal>` — supertrait-compatible with StPer `<T : StT>`
+src/Chap49/SubsetSumMtPer.rs:83: info: 1 extra fns not in StPer (SubsetSumStPerTrait): `spec_subsetsummtper_wf`
+src/Chap49/SubsetSumMtPer.rs:109: info: `subset_sum`: MtPer has requires but StPer does not
 src/Chap49/SubsetSumMtEph.rs:84: info: generic bounds `<T : MtVal>` — supertrait-compatible with StEph `<T : StT>`
+src/Chap49/SubsetSumMtEph.rs:84: info: 1 extra fns not in StEph (SubsetSumStEphTrait): `spec_subsetsummteph_wf`
+src/Chap49/SubsetSumMtEph.rs:110: info: `subset_sum`: MtEph has requires but StEph does not
+src/Chap49/SubsetSumMtEph.rs:131: info: `clear_memo`: MtEph has requires but StEph does not
+src/Chap49/SubsetSumMtEph.rs:84: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_subsetsummtper_wf`
 src/Chap49/SubsetSumMtEph.rs:84: info: 2 mutation fns (&mut self) added by Eph variant: `set`, `clear_memo`
-src/Chap49/SubsetSumMtEph.rs:103: info: `subset_sum`: MtEph has ensures but MtPer does not
+src/Chap49/SubsetSumMtEph.rs:84: info: 1 extra fns not in MtPer (SubsetSumMtPerTrait): `spec_subsetsummteph_wf`
+src/Chap49/SubsetSumMtEph.rs:110: info: `subset_sum`: MtEph has ensures but MtPer does not
 src/Chap49/SubsetSumStPer.rs:0: info: SubsetSumTrait trait: 6 matched fns across 4 variants
 src/Chap50/MatrixChainMtEph.rs:0: info: file group MatrixChain — comparing MtEph (src/Chap50/MatrixChainMtEph.rs), StEph (src/Chap50/MatrixChainStEph.rs), MtPer (src/Chap50/MatrixChainMtPer.rs), StPer (src/Chap50/MatrixChainStPer.rs)
 src/Chap50/MatrixChainStPer.rs:65: info: struct MatrixChainStPerS { dimensions: Vec < MatrixDim >, memo: HashMapWithViewPlus < Pair < usize , usize > , usize > }
@@ -944,17 +948,17 @@ src/Chap52/EdgeSetGraphMtPer.rs:70: info: 1 extra fns not in StPer (EdgeSetGraph
 src/Chap52/EdgeSetGraphStPer.rs:0: info: EdgeSetGraphTrait trait: 15 matched fns across 3 variants
 src/Chap53/GraphSearchStEph.rs:0: info: file group GraphSearch — comparing StEph (src/Chap53/GraphSearchStEph.rs), MtPer (src/Chap53/GraphSearchMtPer.rs), StPer (src/Chap53/GraphSearchStPer.rs)
 src/Chap53/GraphSearchStPer.rs:46: info: trait GraphSearchStPerTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
-src/Chap53/GraphSearchMtPer.rs:39: info: trait GraphSearchMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 3 fns (3 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:41: info: trait GraphSearchMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 3 fns (3 exec, 0 spec)
 src/Chap53/GraphSearchStEph.rs:38: info: trait GraphSearchStEphTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
-src/Chap53/GraphSearchMtPer.rs:39: info: generic bounds `<V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT)
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search` has 3 params but StPer has 4
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi` has 3 params but StPer has 4
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable` has 2 params but StPer has 3
+src/Chap53/GraphSearchMtPer.rs:41: info: generic bounds `<V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT)
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search` has 3 params but StPer has 4
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi` has 3 params but StPer has 4
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable` has 2 params but StPer has 3
 src/Chap53/GraphSearchStPer.rs:0: info: GraphSearchTrait trait: 3 matched fns across 3 variants
 src/Chap53/GraphSearchStPer.rs:36: info: trait SelectionStrategy <V : StT + Ord> : (none) — 1 fns (1 exec, 0 spec)
-src/Chap53/GraphSearchMtPer.rs:33: info: trait SelectionStrategy <V : StTInMtT + Ord + 'static> : (none) — 1 fns (1 exec, 0 spec)
+src/Chap53/GraphSearchMtPer.rs:35: info: trait SelectionStrategy <V : StTInMtT + Ord + 'static> : (none) — 1 fns (1 exec, 0 spec)
 src/Chap53/GraphSearchStEph.rs:30: info: trait SelectionStrategy <V : StT + Ord> : (none) — 1 fns (1 exec, 0 spec)
-src/Chap53/GraphSearchMtPer.rs:33: info: generic bounds `<V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT)
+src/Chap53/GraphSearchMtPer.rs:35: info: generic bounds `<V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT)
 src/Chap53/GraphSearchStPer.rs:0: info: SelectionStrategy trait: 1 matched fns across 3 variants
 src/Chap53/PQMinStEph.rs:0: info: file group PQMin — comparing StEph (src/Chap53/PQMinStEph.rs), StPer (src/Chap53/PQMinStPer.rs)
 src/Chap53/PQMinStPer.rs:30: info: struct PQMinResult { visited: AVLTreeSetStPer < V >, priorities: AVLTreeSetStPer < Pair < V , P > >, parent: Option < AVLTreeSetStPer < Pair < V , V > > > }
@@ -1106,219 +1110,150 @@ src/Chap66/BoruvkaMtEph.rs:92: warning: missing 4 fns present in StEph (BoruvkaS
 src/Chap66/BoruvkaMtEph.rs:92: info: 5 extra fns not in StEph (BoruvkaStEphTrait): `spec_boruvkamteph_wf`, `vertex_bridges_mt`, `bridge_star_partition_mt`, `boruvka_mst_mt`, `boruvka_mst_mt_with_seed`
 src/Chap66/BoruvkaStEph.rs:0: info: BoruvkaTrait trait: 1 matched fns across 2 variants
 
-Phase 2 summary: 57 groups compared, 0 errors, 107 warnings, 895 info
+Phase 2 summary: 57 groups compared, 0 errors, 93 warnings, 913 info
 
 Phase 4: Requires/ensures clause comparison
 
-src/Chap05/SetMtEph.rs:143: warning: `iter`: ensures clause count 4 vs 5 (StEph has 5)
-src/Chap05/SetMtEph.rs:143: warning: `iter`: StEph has ensures clause `forall | j : int | 0 <= j < it @ . 1 . len () ==> self @ . contains (# [trigger]...` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:102: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:102: info: `empty`: ensures clause fuzzy match — ref: `g @ . A =~= Set :: < (V :: V , V :: V) > :: empty ()` ~ cur: `g @ . A == Set :: < (V :: V , V :: V) > :: empty ()`
-src/Chap06/DirGraphMtEph.rs:102: info: `empty`: ensures clause fuzzy match — ref: `g @ . V =~= Set :: < V :: V > :: empty ()` ~ cur: `g @ . V == Set :: < V :: V > :: empty ()`
-src/Chap06/DirGraphMtEph.rs:102: warning: `empty`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/DirGraphMtEph.rs:102: info: `empty`: StEph has ensures clause `g . spec_dirgraph_wf ()` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: requires clause fuzzy match — ref: `forall | u : V :: V , w : V :: V | # [trigger] arcs @ . cont...` ~ cur: `forall | u : V :: V , w : V :: V | # [trigger] A @ . contain...`
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: requires clause count 4 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: MtEph has extra requires clause `A @ . finite ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: MtEph has extra requires clause `V @ . finite ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: MtEph has extra requires clause `valid_key_type_for_graph :: < V > ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:111: warning: `from_sets`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: StEph has ensures clause `g . spec_dirgraph_wf ()` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:111: warning: `from_sets`: StEph has ensures clause `g @ . A =~= arcs @` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:111: warning: `from_sets`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: MtEph has extra ensures clause `g @ . A == A @` not in StEph
-src/Chap06/DirGraphMtEph.rs:111: info: `from_sets`: MtEph has extra ensures clause `g @ . V == V @` not in StEph
-src/Chap06/DirGraphMtEph.rs:130: warning: `arcs`: StEph has ensures clause `a @ =~= self @ . A` with no match in MtEph
-src/Chap06/DirGraphMtEph.rs:130: info: `arcs`: MtEph has extra ensures clause `a @ == self @ . A` not in StEph
-src/Chap06/DirGraphMtEph.rs:135: info: `sizeV`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:141: info: `sizeA`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:147: info: `neighbor`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:147: info: `neighbor`: requires clause count 4 vs 2 (StEph has 2)
-src/Chap06/DirGraphMtEph.rs:147: info: `neighbor`: MtEph has extra requires clause `self @ . V . contains (u @)` not in StEph
-src/Chap06/DirGraphMtEph.rs:147: info: `neighbor`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
-src/Chap06/DirGraphMtEph.rs:239: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:239: info: `ng`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:239: info: `ng`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:239: info: `ng`: MtEph has extra ensures clause `neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_ng_of_vertices (vertices @)` ~ cur: `neighbors @ == self . spec_ng_of_vertices (u_set @)`
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:326: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:177: info: `n_plus`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:177: info: `n_plus`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:177: info: `n_plus`: MtEph has extra ensures clause `out_neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:177: info: `n_plus`: MtEph has extra ensures clause `out_neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:212: info: `n_minus`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:212: info: `n_minus`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:212: info: `n_minus`: MtEph has extra ensures clause `in_neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:212: info: `n_minus`: MtEph has extra ensures clause `in_neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: ensures clause fuzzy match — ref: `out_neighbors @ == self . spec_n_plus_of_vertices (vertices ...` ~ cur: `out_neighbors @ == self . spec_n_plus_of_vertices (u_set @)`
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: MtEph has extra ensures clause `out_neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:278: info: `n_plus_of_vertices`: MtEph has extra ensures clause `out_neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: ensures clause fuzzy match — ref: `in_neighbors @ == self . spec_n_minus_of_vertices (vertices ...` ~ cur: `in_neighbors @ == self . spec_n_minus_of_vertices (u_set @)`
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: MtEph has extra ensures clause `in_neighbors . spec_set_wf ()` not in StEph
-src/Chap06/DirGraphMtEph.rs:302: info: `n_minus_of_vertices`: MtEph has extra ensures clause `in_neighbors @ <= self @ . V` not in StEph
-src/Chap06/DirGraphMtEph.rs:157: info: `incident`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:257: info: `degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:224: info: `in_degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/DirGraphMtEph.rs:189: info: `out_degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/LabDirGraphMtEph.rs:101: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:101: info: `empty`: ensures clause fuzzy match — ref: `g @ . A =~= Set :: < (V :: V , V :: V , L :: V) > :: empty (...` ~ cur: `g @ . A == Set :: < (V :: V , V :: V , L :: V) > :: empty ()`
-src/Chap06/LabDirGraphMtEph.rs:101: info: `empty`: ensures clause fuzzy match — ref: `g @ . V =~= Set :: < V :: V > :: empty ()` ~ cur: `g @ . V == Set :: < V :: V > :: empty ()`
-src/Chap06/LabDirGraphMtEph.rs:101: warning: `empty`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/LabDirGraphMtEph.rs:101: info: `empty`: StEph has ensures clause `g . spec_labdirgraph_wf ()` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: requires clause count 4 vs 1 (StEph has 1)
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `labeled_arcs @ . finite ()` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `valid_key_type_for_lab_graph :: < V , L > ()` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `vertices @ . finite ()` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:110: warning: `from_vertices_and_labeled_arcs`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: StEph has ensures clause `g . spec_labdirgraph_wf ()` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:110: warning: `from_vertices_and_labeled_arcs`: StEph has ensures clause `g @ . A =~= labeled_arcs @` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:110: warning: `from_vertices_and_labeled_arcs`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: MtEph has extra ensures clause `g @ . A == labeled_arcs @` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:110: info: `from_vertices_and_labeled_arcs`: MtEph has extra ensures clause `g @ . V == vertices @` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:129: warning: `labeled_arcs`: StEph has ensures clause `a @ =~= self @ . A` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:129: info: `labeled_arcs`: MtEph has extra ensures clause `a @ == self @ . A` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:134: info: `arcs`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:134: info: `arcs`: requires clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:134: info: `arcs`: MtEph has extra requires clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:134: info: `arcs`: ensures clause fuzzy match — ref: `arcs @ == self . spec_arcs ()` ~ cur: `forall | u : V :: V , w : V :: V | arcs @ . contains ((u , w...`
-src/Chap06/LabDirGraphMtEph.rs:134: warning: `arcs`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:134: warning: `arcs`: StEph has ensures clause `arcs @ . finite ()` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:141: info: `add_vertex`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:141: info: `add_vertex`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/LabDirGraphMtEph.rs:141: info: `add_vertex`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:141: info: `add_vertex`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:141: info: `add_vertex`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:147: info: `add_labeled_arc`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:147: info: `add_labeled_arc`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/LabDirGraphMtEph.rs:147: info: `add_labeled_arc`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:147: info: `add_labeled_arc`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:147: info: `add_labeled_arc`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:156: info: `get_arc_label`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:156: info: `get_arc_label`: ensures clause fuzzy match — ref: `label . is_some () == (exists | l : L :: V | # ! [trigger se...` ~ cur: `match label { Some (l) => self @ . A . contains ((from @ , t...`
-src/Chap06/LabDirGraphMtEph.rs:156: warning: `get_arc_label`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:156: warning: `get_arc_label`: StEph has ensures clause `label . is_some () ==> self @ . A . contains ((from @ , to @ , label . unwrap ()...` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:165: info: `has_arc`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: requires clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:200: warning: `n_plus`: StEph has ensures clause `n_plus @ . finite ()` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: MtEph has extra ensures clause `n_plus . spec_set_wf ()` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:200: info: `n_plus`: MtEph has extra ensures clause `n_plus @ <= self @ . V` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: requires clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabDirGraphMtEph.rs:213: warning: `n_minus`: StEph has ensures clause `n_minus @ . finite ()` with no match in MtEph
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: MtEph has extra ensures clause `n_minus . spec_set_wf ()` not in StEph
-src/Chap06/LabDirGraphMtEph.rs:213: info: `n_minus`: MtEph has extra ensures clause `n_minus @ <= self @ . V` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:109: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:109: info: `empty`: ensures clause fuzzy match — ref: `g @ . A =~= Set :: < (V :: V , V :: V , L :: V) > :: empty (...` ~ cur: `g @ . A == Set :: < (V :: V , V :: V , L :: V) > :: empty ()`
-src/Chap06/LabUnDirGraphMtEph.rs:109: info: `empty`: ensures clause fuzzy match — ref: `g @ . V =~= Set :: < V :: V > :: empty ()` ~ cur: `g @ . V == Set :: < V :: V > :: empty ()`
-src/Chap06/LabUnDirGraphMtEph.rs:109: warning: `empty`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/LabUnDirGraphMtEph.rs:109: info: `empty`: StEph has ensures clause `g . spec_labundirgraph_wf ()` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: requires clause count 4 vs 1 (StEph has 1)
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `labeled_edges @ . finite ()` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `valid_key_type_for_lab_graph :: < V , L > ()` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `vertices @ . finite ()` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: warning: `from_vertices_and_labeled_edges`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: StEph has ensures clause `g . spec_labundirgraph_wf ()` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: warning: `from_vertices_and_labeled_edges`: StEph has ensures clause `g @ . A =~= labeled_edges @` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: warning: `from_vertices_and_labeled_edges`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: MtEph has extra ensures clause `g @ . A == labeled_edges @` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:118: info: `from_vertices_and_labeled_edges`: MtEph has extra ensures clause `g @ . V == vertices @` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:137: warning: `labeled_edges`: StEph has ensures clause `e @ =~= self @ . A` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:137: info: `labeled_edges`: MtEph has extra ensures clause `e @ == self @ . A` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:142: info: `edges`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:142: info: `edges`: requires clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:142: info: `edges`: MtEph has extra requires clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:142: info: `edges`: ensures clause fuzzy match — ref: `forall | e : (V :: V , V :: V) | edges @ . contains (e) == (...` ~ cur: `forall | u : V :: V , w : V :: V | edges @ . contains ((u , ...`
-src/Chap06/LabUnDirGraphMtEph.rs:149: info: `add_vertex`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:149: info: `add_vertex`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/LabUnDirGraphMtEph.rs:149: info: `add_vertex`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:149: info: `add_vertex`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:149: info: `add_vertex`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:155: info: `add_labeled_edge`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:155: info: `add_labeled_edge`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/LabUnDirGraphMtEph.rs:155: info: `add_labeled_edge`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:155: info: `add_labeled_edge`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:155: info: `add_labeled_edge`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:165: info: `get_edge_label`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:165: info: `get_edge_label`: ensures clause fuzzy match — ref: `label . is_some () == (exists | l : L :: V | self @ . A . co...` ~ cur: `match label { Some (l) => self @ . A . contains ((v1 @ , v2 ...`
-src/Chap06/LabUnDirGraphMtEph.rs:165: warning: `get_edge_label`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:165: warning: `get_edge_label`: StEph has ensures clause `label . is_some () ==> (self @ . A . contains ((v1 @ , v2 @ , label . unwrap () ...` with no match in MtEph
-src/Chap06/LabUnDirGraphMtEph.rs:174: info: `has_edge`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:174: info: `has_edge`: ensures clause fuzzy match — ref: `b == (exists | l : L :: V | self @ . A . contains ((v1 @ , v...` ~ cur: `b == (exists | l : L :: V | # ! [trigger self @. A . contain...`
-src/Chap06/LabUnDirGraphMtEph.rs:189: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
-src/Chap06/LabUnDirGraphMtEph.rs:189: info: `ng`: requires clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:189: info: `ng`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
-src/Chap06/LabUnDirGraphMtEph.rs:189: info: `ng`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/LabUnDirGraphMtEph.rs:189: info: `ng`: MtEph has extra ensures clause `ng @ <= self @ . V` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:114: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:114: info: `empty`: ensures clause fuzzy match — ref: `g @ . A =~= Set :: < (V :: V , V :: V) > :: empty ()` ~ cur: `g @ . A == Set :: < (V :: V , V :: V) > :: empty ()`
-src/Chap06/UnDirGraphMtEph.rs:114: info: `empty`: ensures clause fuzzy match — ref: `g @ . V =~= Set :: < V :: V > :: empty ()` ~ cur: `g @ . V == Set :: < V :: V > :: empty ()`
-src/Chap06/UnDirGraphMtEph.rs:114: warning: `empty`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/UnDirGraphMtEph.rs:114: info: `empty`: StEph has ensures clause `g . spec_undirgraph_wf ()` with no match in MtEph
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: requires clause fuzzy match — ref: `forall | u : V :: V , w : V :: V | # [trigger] edges @ . con...` ~ cur: `forall | u : V :: V , w : V :: V | # [trigger] E @ . contain...`
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: requires clause count 4 vs 1 (StEph has 1)
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: MtEph has extra requires clause `E @ . finite ()` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: MtEph has extra requires clause `V @ . finite ()` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: MtEph has extra requires clause `valid_key_type_for_graph :: < V > ()` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:123: warning: `from_sets`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: StEph has ensures clause `g . spec_undirgraph_wf ()` with no match in MtEph
-src/Chap06/UnDirGraphMtEph.rs:123: warning: `from_sets`: StEph has ensures clause `g @ . A =~= edges @` with no match in MtEph
-src/Chap06/UnDirGraphMtEph.rs:123: warning: `from_sets`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: MtEph has extra ensures clause `g @ . A == E @` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:123: info: `from_sets`: MtEph has extra ensures clause `g @ . V == V @` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:142: warning: `edges`: StEph has ensures clause `e @ =~= self @ . A` with no match in MtEph
-src/Chap06/UnDirGraphMtEph.rs:142: info: `edges`: MtEph has extra ensures clause `e @ == self @ . A` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:147: info: `sizeV`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:147: info: `sizeV`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/UnDirGraphMtEph.rs:147: info: `sizeV`: MtEph has extra requires clause `spec_graphview_wf (self @)` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:153: info: `sizeE`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:153: info: `sizeE`: requires clause count 2 vs 1 (StEph has 1)
-src/Chap06/UnDirGraphMtEph.rs:153: info: `sizeE`: MtEph has extra requires clause `spec_graphview_wf (self @)` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:159: info: `neighbor`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:175: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:175: info: `ng`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/UnDirGraphMtEph.rs:175: info: `ng`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:193: info: `ng_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
-src/Chap06/UnDirGraphMtEph.rs:193: info: `ng_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:193: info: `ng_of_vertices`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_ng_of_vertices (vertices @)` ~ cur: `neighbors @ == self . spec_ng_of_vertices (u_set @)`
-src/Chap06/UnDirGraphMtEph.rs:193: info: `ng_of_vertices`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap06/UnDirGraphMtEph.rs:193: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
-src/Chap06/UnDirGraphMtEph.rs:205: info: `incident`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:211: info: `degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
-src/Chap06/UnDirGraphMtEph.rs:211: info: `degree`: ensures clause fuzzy match — ref: `n == self . spec_degree (v @)` ~ cur: `n == self . spec_ng (v @) . len ()`
-src/Chap18/ArraySeqStEph.rs:206: warning: `append`: ensures clause count 3 vs 4 (StPer has 4)
-src/Chap18/ArraySeqStEph.rs:206: info: `append`: StPer has ensures clause `appended . spec_arrayseq_wf ()` with no match in StEph
-src/Chap18/ArraySeqStEph.rs:221: warning: `filter`: ensures clause count 4 vs 5 (StPer has 5)
-src/Chap18/ArraySeqStEph.rs:221: info: `filter`: StPer has ensures clause `filtered . spec_arrayseq_wf ()` with no match in StEph
-src/Chap18/ArraySeqStEph.rs:240: warning: `update`: ensures clause count 3 vs 4 (StPer has 4)
-src/Chap18/ArraySeqStEph.rs:240: info: `update`: StPer has ensures clause `updated . spec_arrayseq_wf ()` with no match in StEph
-src/Chap18/ArraySeqStEph.rs:254: warning: `inject`: ensures clause count 2 vs 3 (StPer has 3)
-src/Chap18/ArraySeqStEph.rs:254: info: `inject`: StPer has ensures clause `injected . spec_arrayseq_wf ()` with no match in StEph
-src/Chap18/ArraySeqStEph.rs:280: info: `iterate`: requires clause fuzzy match — ref: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...` ~ cur: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...`
-src/Chap18/ArraySeqStEph.rs:290: info: `reduce`: requires clause fuzzy match — ref: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...` ~ cur: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...`
-src/Chap18/ArraySeqStEph.rs:303: info: `scan`: requires clause fuzzy match — ref: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...` ~ cur: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...`
-src/Chap18/ArraySeqMtEph.rs:362: info: `append`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap18/ArraySeqMtEph.rs:362: info: `append`: MtEph has extra ensures clause `appended . spec_arrayseq_wf ()` not in StEph
-src/Chap18/ArraySeqMtEph.rs:378: info: `filter`: ensures clause count 5 vs 4 (StEph has 4)
-src/Chap18/ArraySeqMtEph.rs:378: info: `filter`: MtEph has extra ensures clause `filtered . spec_arrayseq_wf ()` not in StEph
-src/Chap18/ArraySeqMtEph.rs:398: info: `update`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap18/ArraySeqMtEph.rs:398: info: `update`: MtEph has extra ensures clause `updated . spec_arrayseq_wf ()` not in StEph
-src/Chap18/ArraySeqMtEph.rs:413: info: `inject`: ensures clause count 3 vs 2 (StEph has 2)
-src/Chap18/ArraySeqMtEph.rs:413: info: `inject`: MtEph has extra ensures clause `injected . spec_arrayseq_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:104: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: requires clause fuzzy match — ref: `forall | u : V :: V , w : V :: V | # [trigger] arcs @ . cont...` ~ cur: `forall | u : V :: V , w : V :: V | # [trigger] A @ . contain...`
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: requires clause count 4 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: MtEph has extra requires clause `A @ . finite ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: MtEph has extra requires clause `V @ . finite ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: MtEph has extra requires clause `valid_key_type_for_graph :: < V > ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:114: warning: `from_sets`: StEph has ensures clause `g @ . A =~= arcs @` with no match in MtEph
+src/Chap06/DirGraphMtEph.rs:114: warning: `from_sets`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: MtEph has extra ensures clause `g @ . A =~= A @` not in StEph
+src/Chap06/DirGraphMtEph.rs:114: info: `from_sets`: MtEph has extra ensures clause `g @ . V =~= V @` not in StEph
+src/Chap06/DirGraphMtEph.rs:139: info: `sizeV`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:145: info: `sizeA`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:151: info: `neighbor`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:151: info: `neighbor`: requires clause count 4 vs 2 (StEph has 2)
+src/Chap06/DirGraphMtEph.rs:151: info: `neighbor`: MtEph has extra requires clause `self @ . V . contains (u @)` not in StEph
+src/Chap06/DirGraphMtEph.rs:151: info: `neighbor`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
+src/Chap06/DirGraphMtEph.rs:243: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:243: info: `ng`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:243: info: `ng`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:243: info: `ng`: MtEph has extra ensures clause `neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_ng_of_vertices (vertices @)` ~ cur: `neighbors @ == self . spec_ng_of_vertices (u_set @)`
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:330: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:181: info: `n_plus`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:181: info: `n_plus`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:181: info: `n_plus`: MtEph has extra ensures clause `out_neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:181: info: `n_plus`: MtEph has extra ensures clause `out_neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:216: info: `n_minus`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:216: info: `n_minus`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:216: info: `n_minus`: MtEph has extra ensures clause `in_neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:216: info: `n_minus`: MtEph has extra ensures clause `in_neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: ensures clause fuzzy match — ref: `out_neighbors @ == self . spec_n_plus_of_vertices (vertices ...` ~ cur: `out_neighbors @ == self . spec_n_plus_of_vertices (u_set @)`
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: MtEph has extra ensures clause `out_neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:282: info: `n_plus_of_vertices`: MtEph has extra ensures clause `out_neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: ensures clause fuzzy match — ref: `in_neighbors @ == self . spec_n_minus_of_vertices (vertices ...` ~ cur: `in_neighbors @ == self . spec_n_minus_of_vertices (u_set @)`
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: ensures clause count 3 vs 1 (StEph has 1)
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: MtEph has extra ensures clause `in_neighbors . spec_set_wf ()` not in StEph
+src/Chap06/DirGraphMtEph.rs:306: info: `n_minus_of_vertices`: MtEph has extra ensures clause `in_neighbors @ <= self @ . V` not in StEph
+src/Chap06/DirGraphMtEph.rs:161: info: `incident`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:261: info: `degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:228: info: `in_degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/DirGraphMtEph.rs:193: info: `out_degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/LabDirGraphMtEph.rs:111: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:121: info: `from_vertices_and_labeled_arcs`: requires clause count 4 vs 1 (StEph has 1)
+src/Chap06/LabDirGraphMtEph.rs:121: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `labeled_arcs @ . finite ()` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:121: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `valid_key_type_for_lab_graph :: < V , L > ()` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:121: info: `from_vertices_and_labeled_arcs`: MtEph has extra requires clause `vertices @ . finite ()` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:146: info: `arcs`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:146: info: `arcs`: requires clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:146: info: `arcs`: MtEph has extra requires clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:152: info: `add_vertex`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:152: info: `add_vertex`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/LabDirGraphMtEph.rs:152: info: `add_vertex`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:152: info: `add_vertex`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:152: info: `add_vertex`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:158: info: `add_labeled_arc`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:158: info: `add_labeled_arc`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/LabDirGraphMtEph.rs:158: info: `add_labeled_arc`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:158: info: `add_labeled_arc`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:158: info: `add_labeled_arc`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:167: info: `get_arc_label`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:175: info: `has_arc`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: requires clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: ensures clause count 4 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: MtEph has extra ensures clause `n_plus . spec_set_wf ()` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:210: info: `n_plus`: MtEph has extra ensures clause `n_plus @ <= self @ . V` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: requires clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: ensures clause count 4 vs 2 (StEph has 2)
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: MtEph has extra ensures clause `n_minus . spec_set_wf ()` not in StEph
+src/Chap06/LabDirGraphMtEph.rs:224: info: `n_minus`: MtEph has extra ensures clause `n_minus @ <= self @ . V` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:119: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:129: info: `from_vertices_and_labeled_edges`: requires clause count 4 vs 1 (StEph has 1)
+src/Chap06/LabUnDirGraphMtEph.rs:129: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `labeled_edges @ . finite ()` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:129: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `valid_key_type_for_lab_graph :: < V , L > ()` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:129: info: `from_vertices_and_labeled_edges`: MtEph has extra requires clause `vertices @ . finite ()` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:154: info: `edges`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:154: info: `edges`: requires clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabUnDirGraphMtEph.rs:154: info: `edges`: MtEph has extra requires clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:154: info: `edges`: ensures clause fuzzy match — ref: `forall | e : (V :: V , V :: V) | edges @ . contains (e) == (...` ~ cur: `forall | u : V :: V , w : V :: V | edges @ . contains ((u , ...`
+src/Chap06/LabUnDirGraphMtEph.rs:161: info: `add_vertex`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:161: info: `add_vertex`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/LabUnDirGraphMtEph.rs:161: info: `add_vertex`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:161: info: `add_vertex`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabUnDirGraphMtEph.rs:161: info: `add_vertex`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:167: info: `add_labeled_edge`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:167: info: `add_labeled_edge`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/LabUnDirGraphMtEph.rs:167: info: `add_labeled_edge`: MtEph has extra requires clause `spec_labgraphview_wf (old (self) @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:167: info: `add_labeled_edge`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabUnDirGraphMtEph.rs:167: info: `add_labeled_edge`: MtEph has extra ensures clause `spec_labgraphview_wf (self @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:177: info: `get_edge_label`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:187: info: `has_edge`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:187: info: `has_edge`: ensures clause fuzzy match — ref: `b == (exists | l : L :: V | self @ . A . contains ((v1 @ , v...` ~ cur: `b == (exists | l : L :: V | # ! [trigger self @. A . contain...`
+src/Chap06/LabUnDirGraphMtEph.rs:202: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_LabEdge :: < V , L > ()` ~ cur: `valid_key_type_for_lab_graph :: < V , L > ()`
+src/Chap06/LabUnDirGraphMtEph.rs:202: info: `ng`: requires clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabUnDirGraphMtEph.rs:202: info: `ng`: MtEph has extra requires clause `self @ . V . contains (v @)` not in StEph
+src/Chap06/LabUnDirGraphMtEph.rs:202: info: `ng`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/LabUnDirGraphMtEph.rs:202: info: `ng`: MtEph has extra ensures clause `ng @ <= self @ . V` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:122: info: `empty`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: requires clause fuzzy match — ref: `forall | u : V :: V , w : V :: V | # [trigger] edges @ . con...` ~ cur: `forall | u : V :: V , w : V :: V | # [trigger] E @ . contain...`
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: requires clause count 4 vs 1 (StEph has 1)
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: MtEph has extra requires clause `E @ . finite ()` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: MtEph has extra requires clause `V @ . finite ()` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: MtEph has extra requires clause `valid_key_type_for_graph :: < V > ()` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:132: warning: `from_sets`: StEph has ensures clause `g @ . A =~= edges @` with no match in MtEph
+src/Chap06/UnDirGraphMtEph.rs:132: warning: `from_sets`: StEph has ensures clause `g @ . V =~= vertices @` with no match in MtEph
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: MtEph has extra ensures clause `g @ . A =~= E @` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:132: info: `from_sets`: MtEph has extra ensures clause `g @ . V =~= V @` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:157: info: `sizeV`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:157: info: `sizeV`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/UnDirGraphMtEph.rs:157: info: `sizeV`: MtEph has extra requires clause `spec_graphview_wf (self @)` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:163: info: `sizeE`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:163: info: `sizeE`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap06/UnDirGraphMtEph.rs:163: info: `sizeE`: MtEph has extra requires clause `spec_graphview_wf (self @)` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:169: info: `neighbor`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:185: info: `ng`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:185: info: `ng`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/UnDirGraphMtEph.rs:185: info: `ng`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:203: info: `ng_of_vertices`: requires clause fuzzy match — ref: `vertices @ <= self @ . V` ~ cur: `u_set @ <= self @ . V`
+src/Chap06/UnDirGraphMtEph.rs:203: info: `ng_of_vertices`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:203: info: `ng_of_vertices`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_ng_of_vertices (vertices @)` ~ cur: `neighbors @ == self . spec_ng_of_vertices (u_set @)`
+src/Chap06/UnDirGraphMtEph.rs:203: info: `ng_of_vertices`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap06/UnDirGraphMtEph.rs:203: info: `ng_of_vertices`: MtEph has extra ensures clause `neighbors . spec_set_wf ()` not in StEph
+src/Chap06/UnDirGraphMtEph.rs:215: info: `incident`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:221: info: `degree`: requires clause fuzzy match — ref: `valid_key_type_Edge :: < V > ()` ~ cur: `valid_key_type_for_graph :: < V > ()`
+src/Chap06/UnDirGraphMtEph.rs:221: info: `degree`: ensures clause fuzzy match — ref: `n == self . spec_degree (v @)` ~ cur: `n == self . spec_ng (v @) . len ()`
+src/Chap18/ArraySeqStEph.rs:284: info: `iterate`: requires clause fuzzy match — ref: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...` ~ cur: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...`
+src/Chap18/ArraySeqStEph.rs:294: info: `reduce`: requires clause fuzzy match — ref: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...` ~ cur: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...`
+src/Chap18/ArraySeqStEph.rs:307: info: `scan`: requires clause fuzzy match — ref: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...` ~ cur: `forall | x : T , y : T , ret : T | f . ensures ((& x , & y) ...`
 src/Chap18/ArraySeqMtEph.rs:455: info: `iterate`: ensures clause fuzzy match — ref: `accumulated == spec_iterate (Seq :: new (a . spec_len () , |...` ~ cur: `acc == spec_iterate (Seq :: new (a . spec_len () , | i : int...`
 src/Chap18/ArraySeqMtEph.rs:455: info: `iterate`: requires clause fuzzy match — ref: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...` ~ cur: `forall | a : A , t : T , ret : A | f . ensures ((& a , & t) ...`
 src/Chap18/ArraySeqMtEph.rs:455: info: `iterate`: ensures clause fuzzy match — ref: `accumulated == spec_iterate (Seq :: new (a . spec_len () , |...` ~ cur: `acc == spec_iterate (Seq :: new (a . spec_len () , | i : int...`
@@ -1499,49 +1434,75 @@ src/Chap38/BSTParaMtEph.rs:377: info: `filter`: requires clause fuzzy match — 
 src/Chap38/BSTParaMtEph.rs:377: info: `filter`: requires clause `self @ . finite ()` subsumed by MtEph wf predicate
 src/Chap38/BSTParaMtEph.rs:398: info: `reduce`: requires clause fuzzy match — ref: `forall | a : T , b : T | op . requires ((a , b))` ~ cur: `forall | a : T , b : T | # [trigger] op . requires ((a , b))`
 src/Chap38/BSTParaMtEph.rs:398: info: `reduce`: requires clause `self @ . finite ()` subsumed by MtEph wf predicate
-src/Chap39/BSTTreapMtEph.rs:258: info: `new`: ensures clause fuzzy match — ref: `empty_tree . spec_size () == 0` ~ cur: `empty_tree @ == Set :: < T :: V > :: empty ()`
-src/Chap39/BSTTreapMtEph.rs:258: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:258: warning: `new`: StEph has ensures clause `empty_tree . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:277: info: `size`: ensures clause fuzzy match — ref: `sz as nat == self . spec_size ()` ~ cur: `count == self @ . len ()`
-src/Chap39/BSTTreapMtEph.rs:277: info: `size`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:277: info: `size`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap39/BSTTreapMtEph.rs:280: info: `is_empty`: ensures clause fuzzy match — ref: `empty == (self . spec_size () == 0)` ~ cur: `empty == (self @ . len () == 0)`
-src/Chap39/BSTTreapMtEph.rs:280: info: `is_empty`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:280: info: `is_empty`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:261: info: `insert`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has requires clause `old (self) . spec_size () + 1 <= usize :: MAX as nat` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: ensures clause count 2 vs 6 (StEph has 6)
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has ensures clause `forall | k : T | old (self) . spec_contains (k) ==> self . spec_contains (k)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has ensures clause `self . spec_contains (value)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size () + 1` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: warning: `insert`: StEph has ensures clause `self . spec_size () >= old (self) . spec_size ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:261: info: `insert`: MtEph has extra ensures clause `self @ =~= old (self) @ . insert (value @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:265: warning: `delete`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap39/BSTTreapMtEph.rs:265: info: `delete`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:265: warning: `delete`: ensures clause count 2 vs 4 (StEph has 4)
-src/Chap39/BSTTreapMtEph.rs:265: warning: `delete`: StEph has ensures clause `forall | k : T | self . spec_contains (k) ==> old (self) . spec_contains (k)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:265: warning: `delete`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:265: warning: `delete`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:265: info: `delete`: MtEph has extra ensures clause `self @ =~= old (self) @ . remove (target @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:269: warning: `find`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:269: warning: `find`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:269: info: `find`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:269: info: `find`: ensures clause fuzzy match — ref: `found . is_some () <==> self . spec_contains (* target)` ~ cur: `found . is_some () <==> self @ . contains (target @)`
-src/Chap39/BSTTreapMtEph.rs:269: warning: `find`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap39/BSTTreapMtEph.rs:269: warning: `find`: StEph has ensures clause `found . is_some () ==> * found . unwrap () == * target` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:273: warning: `contains`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:273: warning: `contains`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:273: info: `contains`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:273: warning: `contains`: StEph has ensures clause `found == self . spec_contains (* target)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:273: info: `contains`: MtEph has extra ensures clause `found <==> self @ . contains (target @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:285: warning: `minimum`: StEph has ensures clause `match (min_val , self . spec_min ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:285: info: `minimum`: MtEph has extra ensures clause `min_val . is_some () ==> self @ . contains (min_val . unwrap () @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:288: warning: `maximum`: StEph has ensures clause `match (max_val , self . spec_max ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:288: info: `maximum`: MtEph has extra ensures clause `max_val . is_some () ==> self @ . contains (max_val . unwrap () @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:291: info: `in_order`: ensures clause fuzzy match — ref: `ordered . spec_len () == self . spec_in_order () . len ()` ~ cur: `ordered @ . len () == self @ . len ()`
-src/Chap39/BSTTreapMtEph.rs:294: info: `pre_order`: ensures clause fuzzy match — ref: `preordered . spec_len () == self . spec_pre_order () . len (...` ~ cur: `preordered @ . len () == self @ . len ()`
+src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
+src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
+src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: ensures clause fuzzy match — ref: `Self :: spec_height_link (link) <= Self :: spec_size_link (l...` ~ cur: `Lnk :: spec_height_link (link) <= Lnk :: spec_size_link (lin...`
+src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
+src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
+src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) > 0` ~ cur: `Lnk :: spec_size_link (link) > 0`
+src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { Self :: spec_si...` ~ cur: `match link { None => true , Some (node) => { Lnk :: spec_siz...`
+src/Chap39/BSTTreapMtEph.rs:306: info: `lemma_wf_decompose`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
+src/Chap39/BSTTreapMtEph.rs:306: info: `lemma_wf_decompose`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { node . size as ...` ~ cur: `match link { None => true , Some (node) => { node . size as ...`
+src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (& node . left)` ~ cur: `Lnk :: spec_link_size_wf (& node . left)`
+src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (& node . right)` ~ cur: `Lnk :: spec_link_size_wf (& node . right)`
+src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `node . size as nat == 1 + Self :: spec_size_link (& node . l...` ~ cur: `node . size as nat == 1 + Lnk :: spec_size_link (& node . le...`
+src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: ensures clause fuzzy match — ref: `Self :: spec_link_size_wf (& Some (* node))` ~ cur: `Lnk :: spec_link_size_wf (& Some (Box :: new (* node)))`
+src/Chap39/BSTTreapMtEph.rs:263: info: `lemma_bst_decompose`: requires clause fuzzy match — ref: `Self :: spec_bst_link (link)` ~ cur: `Lnk :: spec_bst_link (link)`
+src/Chap39/BSTTreapMtEph.rs:263: info: `lemma_bst_decompose`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { Self :: spec_bs...` ~ cur: `match link { None => true , Some (node) => { Lnk :: spec_bst...`
+src/Chap39/BSTTreapMtEph.rs:369: info: `new`: ensures clause fuzzy match — ref: `empty_tree . spec_size () == 0` ~ cur: `empty_tree @ == Set :: < T :: V > :: empty ()`
+src/Chap39/BSTTreapMtEph.rs:369: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
+src/Chap39/BSTTreapMtEph.rs:369: warning: `new`: StEph has ensures clause `empty_tree . spec_bst ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:388: info: `size`: ensures clause fuzzy match — ref: `sz as nat == self . spec_size ()` ~ cur: `count == self @ . len ()`
+src/Chap39/BSTTreapMtEph.rs:388: info: `size`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap39/BSTTreapMtEph.rs:388: info: `size`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
+src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: ensures clause fuzzy match — ref: `empty == (self . spec_size () == 0)` ~ cur: `empty == (self @ . len () == 0)`
+src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: requires clause count 1 vs 3 (StEph has 3)
+src/Chap39/BSTTreapMtEph.rs:372: info: `insert`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has requires clause `old (self) . spec_size () + 1 <= usize :: MAX as nat` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: ensures clause count 2 vs 6 (StEph has 6)
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `forall | k : T | old (self) . spec_contains (k) ==> self . spec_contains (k)` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_contains (value)` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size () + 1` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_size () >= old (self) . spec_size ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:372: info: `insert`: MtEph has extra ensures clause `self @ =~= old (self) @ . insert (value @)` not in StEph
+src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap39/BSTTreapMtEph.rs:376: info: `delete`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: ensures clause count 2 vs 4 (StEph has 4)
+src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `forall | k : T | self . spec_contains (k) ==> old (self) . spec_contains (k)` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:376: info: `delete`: MtEph has extra ensures clause `self @ =~= old (self) @ . remove (target @)` not in StEph
+src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: requires clause count 1 vs 3 (StEph has 3)
+src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:380: info: `find`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:380: info: `find`: ensures clause fuzzy match — ref: `found . is_some () <==> self . spec_contains (* target)` ~ cur: `found . is_some () <==> self @ . contains (target @)`
+src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: ensures clause count 1 vs 2 (StEph has 2)
+src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: StEph has ensures clause `found . is_some () ==> * found . unwrap () == * target` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: requires clause count 1 vs 3 (StEph has 3)
+src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:384: info: `contains`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: StEph has ensures clause `found == self . spec_contains (* target)` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:384: info: `contains`: MtEph has extra ensures clause `found <==> self @ . contains (target @)` not in StEph
+src/Chap39/BSTTreapMtEph.rs:396: warning: `minimum`: StEph has ensures clause `match (min_val , self . spec_min ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:396: info: `minimum`: MtEph has extra ensures clause `min_val . is_some () ==> self @ . contains (min_val . unwrap () @)` not in StEph
+src/Chap39/BSTTreapMtEph.rs:399: warning: `maximum`: StEph has ensures clause `match (max_val , self . spec_max ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
+src/Chap39/BSTTreapMtEph.rs:399: info: `maximum`: MtEph has extra ensures clause `max_val . is_some () ==> self @ . contains (max_val . unwrap () @)` not in StEph
+src/Chap39/BSTTreapMtEph.rs:402: info: `in_order`: ensures clause fuzzy match — ref: `ordered . spec_len () == self . spec_in_order () . len ()` ~ cur: `ordered @ . len () == self @ . len ()`
+src/Chap39/BSTTreapMtEph.rs:405: info: `pre_order`: ensures clause fuzzy match — ref: `preordered . spec_len () == self . spec_pre_order () . len (...` ~ cur: `preordered @ . len () == self @ . len ()`
+src/Chap39/BSTTreapMtEph.rs:326: info: `size_link`: ensures clause fuzzy match — ref: `sz as nat == Self :: spec_size_link (link)` ~ cur: `sz as nat == Lnk :: spec_size_link (link)`
+src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
+src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
+src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: ensures clause fuzzy match — ref: `h as nat == Self :: spec_height_link (link)` ~ cur: `h as nat == Lnk :: spec_height_link (link)`
+src/Chap39/BSTTreapMtEph.rs:331: info: `find_link`: requires clause fuzzy match — ref: `Self :: spec_bst_link (link)` ~ cur: `Lnk :: spec_bst_link (link)`
+src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: ensures clause fuzzy match — ref: `match (min_val , Self :: spec_min_link (link)) { (Some (rv) ...` ~ cur: `match (min_val , Lnk :: spec_min_link (link)) { (Some (rv) ,...`
+src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: MtEph has extra ensures clause `min_val . is_some () ==> spec_contains_link (link , * min_val . unwrap ())` not in StEph
+src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: ensures clause fuzzy match — ref: `match (max_val , Self :: spec_max_link (link)) { (Some (rv) ...` ~ cur: `match (max_val , Lnk :: spec_max_link (link)) { (Some (rv) ,...`
+src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: MtEph has extra ensures clause `max_val . is_some () ==> spec_contains_link (link , * max_val . unwrap ())` not in StEph
 src/Chap41/AVLTreeSetStEph.rs:284: info: `delete`: requires clause fuzzy match — ref: `self . spec_avltreeset_wf ()` ~ cur: `old (self) . spec_avltreeset_wf ()`
 src/Chap41/AVLTreeSetStEph.rs:293: info: `insert`: requires clause fuzzy match — ref: `self . spec_avltreeset_wf ()` ~ cur: `old (self) . spec_avltreeset_wf ()`
 src/Chap41/AVLTreeSetStEph.rs:293: info: `insert`: requires clause fuzzy match — ref: `self @ . len () + 1 < usize :: MAX as nat` ~ cur: `old (self) @ . len () + 1 < usize :: MAX as nat`
@@ -1554,38 +1515,22 @@ src/Chap41/AVLTreeSetMtPer.rs:107: info: `to_seq`: ensures clause count 4 vs 3 (
 src/Chap41/AVLTreeSetMtPer.rs:107: info: `to_seq`: MtPer has extra ensures clause `self @ . finite ()` not in StPer
 src/Chap41/AVLTreeSetMtPer.rs:123: info: `from_seq`: StPer has requires clause `seq . spec_avltreeseq_wf ()` with no match in MtPer
 src/Chap41/AVLTreeSetMtPer.rs:123: info: `from_seq`: MtPer has extra requires clause `seq @ . len () <= usize :: MAX - 2` not in StPer
-src/Chap41/AVLTreeSetMtPer.rs:133: warning: `filter`: requires clause count 2 vs 5 (StPer has 5)
-src/Chap41/AVLTreeSetMtPer.rs:133: info: `filter`: StPer has requires clause `self . spec_avltreeset_wf ()` with no match in MtPer
-src/Chap41/AVLTreeSetMtPer.rs:133: warning: `filter`: StPer has requires clause `view_ord_consistent :: < T > ()` with no match in MtPer
-src/Chap41/AVLTreeSetMtPer.rs:133: warning: `filter`: StPer has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtPer
+src/Chap41/AVLTreeSetMtPer.rs:172: warning: `union`: requires clause count 4 vs 5 (StPer has 5)
+src/Chap41/AVLTreeSetMtPer.rs:172: warning: `union`: StPer has requires clause `self @ . len () + other @ . len () < usize :: MAX as nat` with no match in MtPer
+src/Chap41/AVLTreeSetMtPer.rs:197: warning: `insert`: requires clause count 3 vs 4 (StPer has 4)
+src/Chap41/AVLTreeSetMtPer.rs:197: warning: `insert`: StPer has requires clause `self @ . len () + 1 < usize :: MAX as nat` with no match in MtPer
 src/Chap41/AVLTreeSetMtEph.rs:114: info: `size`: ensures clause count 2 vs 1 (StEph has 1)
 src/Chap41/AVLTreeSetMtEph.rs:114: info: `size`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap41/AVLTreeSetMtEph.rs:119: info: `to_seq`: StEph has ensures clause `seq . spec_avltreeseq_wf ()` with no match in MtEph
+src/Chap41/AVLTreeSetMtEph.rs:119: info: `to_seq`: ensures clause count 4 vs 3 (StEph has 3)
 src/Chap41/AVLTreeSetMtEph.rs:119: info: `to_seq`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap41/AVLTreeSetMtEph.rs:148: warning: `filter`: requires clause count 3 vs 5 (StEph has 5)
-src/Chap41/AVLTreeSetMtEph.rs:148: warning: `filter`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:148: warning: `filter`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:167: warning: `intersection`: requires clause count 2 vs 4 (StEph has 4)
-src/Chap41/AVLTreeSetMtEph.rs:167: warning: `intersection`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:167: warning: `intersection`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:174: warning: `difference`: requires clause count 2 vs 4 (StEph has 4)
-src/Chap41/AVLTreeSetMtEph.rs:174: warning: `difference`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:174: warning: `difference`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:181: warning: `union`: requires clause count 3 vs 5 (StEph has 5)
-src/Chap41/AVLTreeSetMtEph.rs:181: warning: `union`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:181: warning: `union`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:199: warning: `delete`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap41/AVLTreeSetMtEph.rs:199: warning: `delete`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:199: warning: `delete`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:206: warning: `insert`: requires clause count 2 vs 4 (StEph has 4)
-src/Chap41/AVLTreeSetMtEph.rs:206: warning: `insert`: StEph has requires clause `view_ord_consistent :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:206: warning: `insert`: StEph has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < T > ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:119: warning: `to_seq`: ensures clause count 3 vs 4 (MtPer has 4)
-src/Chap41/AVLTreeSetMtEph.rs:119: info: `to_seq`: MtPer has ensures clause `seq . spec_avltreeseq_wf ()` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:138: warning: `from_seq`: MtPer has requires clause `seq @ . len () <= usize :: MAX - 2` with no match in MtEph
-src/Chap41/AVLTreeSetMtEph.rs:138: info: `from_seq`: MtEph has extra requires clause `seq . spec_avltreeseq_wf ()` not in MtPer
-src/Chap41/AVLTreeSetMtEph.rs:148: info: `filter`: requires clause count 3 vs 2 (MtPer has 2)
-src/Chap41/AVLTreeSetMtEph.rs:148: info: `filter`: MtEph has extra requires clause `self . spec_avltreeset_wf ()` not in MtPer
+src/Chap41/AVLTreeSetMtEph.rs:139: warning: `from_seq`: MtPer has requires clause `seq @ . len () <= usize :: MAX - 2` with no match in MtEph
+src/Chap41/AVLTreeSetMtEph.rs:139: info: `from_seq`: MtEph has extra requires clause `seq . spec_avltreeseq_wf ()` not in MtPer
+src/Chap41/AVLTreeSetMtEph.rs:192: info: `union`: requires clause count 5 vs 4 (MtPer has 4)
+src/Chap41/AVLTreeSetMtEph.rs:192: info: `union`: MtEph has extra requires clause `self @ . len () + other @ . len () < usize :: MAX as nat` not in MtPer
+src/Chap41/AVLTreeSetMtEph.rs:212: info: `delete`: requires clause fuzzy match — ref: `self . spec_avltreeset_wf ()` ~ cur: `old (self) . spec_avltreeset_wf ()`
+src/Chap41/AVLTreeSetMtEph.rs:222: info: `insert`: requires clause fuzzy match — ref: `self . spec_avltreeset_wf ()` ~ cur: `old (self) . spec_avltreeset_wf ()`
+src/Chap41/AVLTreeSetMtEph.rs:222: info: `insert`: requires clause count 4 vs 3 (MtPer has 3)
+src/Chap41/AVLTreeSetMtEph.rs:222: info: `insert`: MtEph has extra requires clause `old (self) @ . len () + 1 < usize :: MAX as nat` not in MtPer
 src/Chap42/TableStEph.rs:328: info: `map`: requires clause fuzzy match — ref: `obeys_feq_full :: < K > ()` ~ cur: `obeys_feq_clone :: < K > ()`
 src/Chap42/TableStEph.rs:328: info: `map`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
 src/Chap42/TableStEph.rs:343: info: `filter`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
@@ -2307,7 +2252,35 @@ src/Chap43/OrderedTableMtEph.rs:336: info: `split_rank_key`: requires clause fuz
 src/Chap43/OrderedTableMtEph.rs:336: info: `split_rank_key`: ensures clause `self @ . dom () . finite ()` subsumed by MtEph wf predicate
 src/Chap43/OrderedTableMtEph.rs:336: info: `split_rank_key`: MtEph has extra ensures clause `self @ . dom () . finite ()` not in MtPer
 src/Chap49/MinEditDistStEph.rs:106: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_source_len () + self . spec_target_len () < usiz...` ~ cur: `old (self) . spec_source_len () + old (self) . spec_target_l...`
-src/Chap49/MinEditDistMtEph.rs:107: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_source_len () + self . spec_target_len () < usiz...` ~ cur: `old (self) . spec_source_len () + old (self) . spec_target_l...`
+src/Chap49/MinEditDistMtPer.rs:94: info: `new`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap49/MinEditDistMtPer.rs:94: info: `new`: MtPer has extra ensures clause `empty . spec_mineditdist_wf ()` not in StPer
+src/Chap49/MinEditDistMtPer.rs:105: info: `from_sequences`: ensures clause count 3 vs 2 (StPer has 2)
+src/Chap49/MinEditDistMtPer.rs:105: info: `from_sequences`: MtPer has extra ensures clause `edit_dist . spec_mineditdist_wf ()` not in StPer
+src/Chap49/MinEditDistMtPer.rs:113: info: `min_edit_distance`: requires clause count 2 vs 1 (StPer has 1)
+src/Chap49/MinEditDistMtPer.rs:113: info: `min_edit_distance`: MtPer has extra requires clause `self . spec_mineditdist_wf ()` not in StPer
+src/Chap49/MinEditDistMtEph.rs:95: info: `new`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap49/MinEditDistMtEph.rs:95: info: `new`: MtEph has extra ensures clause `empty . spec_mineditdist_wf ()` not in StEph
+src/Chap49/MinEditDistMtEph.rs:106: info: `from_sequences`: ensures clause count 3 vs 2 (StEph has 2)
+src/Chap49/MinEditDistMtEph.rs:106: info: `from_sequences`: MtEph has extra ensures clause `edit_dist . spec_mineditdist_wf ()` not in StEph
+src/Chap49/MinEditDistMtEph.rs:114: info: `min_edit_distance`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap49/MinEditDistMtEph.rs:114: info: `min_edit_distance`: MtEph has extra requires clause `old (self) . spec_mineditdist_wf ()` not in StEph
+src/Chap49/MinEditDistMtEph.rs:136: info: `set_source`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap49/MinEditDistMtEph.rs:136: info: `set_source`: MtEph has extra requires clause `old (self) . spec_mineditdist_wf ()` not in StEph
+src/Chap49/MinEditDistMtEph.rs:146: info: `set_target`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap49/MinEditDistMtEph.rs:146: info: `set_target`: MtEph has extra requires clause `old (self) . spec_mineditdist_wf ()` not in StEph
+src/Chap49/MinEditDistMtEph.rs:114: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_mineditdist_wf ()` ~ cur: `old (self) . spec_mineditdist_wf ()`
+src/Chap49/MinEditDistMtEph.rs:114: info: `min_edit_distance`: requires clause fuzzy match — ref: `self . spec_source_len () + self . spec_target_len () < usiz...` ~ cur: `old (self) . spec_source_len () + old (self) . spec_target_l...`
+src/Chap49/SubsetSumMtPer.rs:92: info: `new`: ensures clause count 2 vs 1 (StPer has 1)
+src/Chap49/SubsetSumMtPer.rs:92: info: `new`: MtPer has extra ensures clause `empty . spec_subsetsum_wf ()` not in StPer
+src/Chap49/SubsetSumMtPer.rs:102: info: `from_multiset`: ensures clause count 2 vs 1 (StPer has 1)
+src/Chap49/SubsetSumMtPer.rs:102: info: `from_multiset`: MtPer has extra ensures clause `subset_sum . spec_subsetsum_wf ()` not in StPer
+src/Chap49/SubsetSumMtEph.rs:93: info: `new`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap49/SubsetSumMtEph.rs:93: info: `new`: MtEph has extra ensures clause `empty . spec_subsetsum_wf ()` not in StEph
+src/Chap49/SubsetSumMtEph.rs:103: info: `from_multiset`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap49/SubsetSumMtEph.rs:103: info: `from_multiset`: MtEph has extra ensures clause `subset_sum . spec_subsetsum_wf ()` not in StEph
+src/Chap49/SubsetSumMtEph.rs:123: info: `set`: requires clause count 2 vs 1 (StEph has 1)
+src/Chap49/SubsetSumMtEph.rs:123: info: `set`: MtEph has extra requires clause `old (self) . spec_subsetsum_wf ()` not in StEph
+src/Chap49/SubsetSumMtEph.rs:110: info: `subset_sum`: requires clause fuzzy match — ref: `self . spec_subsetsum_wf ()` ~ cur: `old (self) . spec_subsetsum_wf ()`
 src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: requires clause fuzzy match — ref: `self @ . dimensions . len () > 1 ==> spec_costs_fit (self @ ...` ~ cur: `old (self) @ . dimensions . len () > 1 ==> spec_costs_fit (o...`
 src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: requires clause fuzzy match — ref: `spec_dims_bounded (self @ . dimensions)` ~ cur: `spec_dims_bounded (old (self) @ . dimensions)`
 src/Chap50/MatrixChainStEph.rs:150: info: `optimal_cost`: ensures clause count 2 vs 1 (StPer has 1)
@@ -2500,30 +2473,24 @@ src/Chap52/EdgeSetGraphMtPer.rs:121: warning: `insert_vertex`: StPer has require
 src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: requires clause count 1 vs 3 (StPer has 3)
 src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: StPer has requires clause `self . spec_edges () . len () + 1 < usize :: MAX as nat` with no match in MtPer
 src/Chap52/EdgeSetGraphMtPer.rs:129: warning: `insert_edge`: StPer has requires clause `self . spec_vertices () . len () + 2 < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: requires clause count 1 vs 8 (StPer has 8)
-src/Chap53/GraphSearchMtPer.rs:42: info: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `view_ord_consistent :: < V > ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:42: warning: `graph_search`: StPer has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < V > ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: requires clause count 2 vs 9 (StPer has 9)
-src/Chap53/GraphSearchMtPer.rs:51: info: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `sources @ . subset_of (vertex_universe)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `view_ord_consistent :: < V > ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:51: warning: `graph_search_multi`: StPer has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < V > ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: requires clause count 1 vs 8 (StPer has 8)
-src/Chap53/GraphSearchMtPer.rs:62: info: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `view_ord_consistent :: < V > ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:62: warning: `reachable`: StPer has requires clause `vstd :: laws_cmp :: obeys_cmp_spec :: < V > ()` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: requires clause count 3 vs 8 (StPer has 8)
+src/Chap53/GraphSearchMtPer.rs:44: info: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: requires clause count 4 vs 9 (StPer has 9)
+src/Chap53/GraphSearchMtPer.rs:56: info: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `sources @ . subset_of (vertex_universe)` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: requires clause count 3 vs 8 (StPer has 8)
+src/Chap53/GraphSearchMtPer.rs:69: info: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
+src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
 src/Chap53/PQMinStEph.rs:45: info: `pq_min`: requires clause fuzzy match — ref: `forall | v : & V , p : P | # [trigger] priority_fn . ensures...` ~ cur: `forall | v1 : & V , v2 : & V , r1 : P , r2 : P | # ! [trigge...`
 src/Chap53/PQMinStEph.rs:75: info: `pq_min_multi`: requires clause fuzzy match — ref: `forall | v : & V , p : P | # [trigger] priority_fn . ensures...` ~ cur: `forall | v1 : & V , v2 : & V , r1 : P , r2 : P | # ! [trigge...`
 src/Chap54/BFSMtEph.rs:283: info: `bfs`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < traversal . spec_len () && # [tr...` ~ cur: `forall | v : int | # ! [trigger traversal . spec_index (v)] ...`
@@ -2534,7 +2501,4 @@ src/Chap55/CycleDetectStEph.rs:267: info: `has_cycle`: ensures clause fuzzy matc
 src/Chap55/DFSStEph.rs:200: info: `dfs`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...` ~ cur: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...`
 src/Chap55/TopoSortStEph.rs:396: info: `topo_sort`: ensures clause fuzzy match — ref: `spec_is_dag_per (graph) ==> spec_is_topo_order_per (graph , ...` ~ cur: `spec_is_dag (graph) ==> spec_is_topo_order (graph , order @)`
 
-Phase 4 summary: 0 errors, 441 warnings, 982 info
-5/TopoSortStEph.rs:396: info: `topo_sort`: ensures clause fuzzy match — ref: `spec_is_dag_per (graph) ==> spec_is_topo_order_per (graph , ...` ~ cur: `spec_is_dag (graph) ==> spec_is_topo_order (graph , order @)`
-
-Phase 4 summary: 0 errors, 441 warnings, 982 info
+Phase 4 summary: 0 errors, 387 warnings, 999 info
