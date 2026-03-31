@@ -550,7 +550,8 @@ broadcast use {
             requires self.spec_tablemteph_wf()
             ensures count == self@.dom().len();
         /// - APAS Cost Spec 42.5: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS. — matches APAS
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)

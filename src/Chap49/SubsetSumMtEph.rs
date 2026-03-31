@@ -89,7 +89,8 @@ pub mod SubsetSumMtEph {
         spec fn spec_subsetsummteph_wf(&self) -> bool;
 
         /// Create new subset sum solver.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
             T: Default
@@ -99,7 +100,8 @@ pub mod SubsetSumMtEph {
                 empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_multiset(multiset: ArraySeqMtEphS<T>) -> (subset_sum: Self)
             ensures
                 subset_sum.spec_subsetsummteph_wf(),
@@ -115,12 +117,14 @@ pub mod SubsetSumMtEph {
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get the multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset(&self) -> (ms: &ArraySeqMtEphS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Set element at index (ephemeral mutation).
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set(&mut self, index: usize, value: T)
             requires
                 old(self).spec_subsetsummteph_wf(),
@@ -128,13 +132,15 @@ pub mod SubsetSumMtEph {
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Clear memoization table.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn clear_memo(&mut self)
             requires old(self).spec_subsetsummteph_wf(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -161,7 +167,8 @@ pub mod SubsetSumMtEph {
     }
 
     /// Recursive memoized parallel subset sum solver.
-    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         multiset: &ArraySeqMtEphS<T>,
         memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>,
@@ -319,7 +326,8 @@ pub mod SubsetSumMtEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait SubsetSumMtEphMutTrait<T: MtVal> {
         /// Get mutable multiset (ephemeral allows mutation).
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
     }
 

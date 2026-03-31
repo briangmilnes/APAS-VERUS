@@ -192,8 +192,8 @@ pub mod LinProbFlatHashTableStEph {
             new_size as int > table.current_size as int
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe find_slot then set.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe find_slot then set.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -471,8 +471,8 @@ pub mod LinProbFlatHashTableStEph {
             diverge::<()>();
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe sequence until found or empty.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe sequence until found or empty.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -577,8 +577,8 @@ pub mod LinProbFlatHashTableStEph {
             None
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until found or empty, then tombstone.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until found or empty, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -729,8 +729,8 @@ pub mod LinProbFlatHashTableStEph {
             false
         }
 
-        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
-        /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — collects n pairs from m slots, creates m' new slots, reinserts n pairs.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
@@ -884,15 +884,15 @@ pub mod LinProbFlatHashTableStEph {
         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
         for LinProbFlatHashTableStEph
     {
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash + addition + modulo.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash + addition + modulo.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             (hash_val.wrapping_add(attempt)) % table.current_size
         }
 
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — linear probe until empty/deleted/matching slot.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
             let mut attempt: usize = 0;
             while attempt < table.current_size

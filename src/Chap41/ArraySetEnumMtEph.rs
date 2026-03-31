@@ -174,7 +174,8 @@ broadcast use {
         spec fn spec_arraysetenummteph_wf(&self) -> bool;
         spec fn spec_universe_size(&self) -> usize;
 
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- allocates u/64 words.
+        /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- allocates u/64 words.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- allocates u/64 words. — matches APAS
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -198,7 +199,8 @@ broadcast use {
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
 
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- same as new.
+        /// - Alg Analysis: APAS (Ch41 ref): Work O(u/w), Span O(u/w) -- same as new.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u/w), Span O(u/w) -- same as new. — matches APAS
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),

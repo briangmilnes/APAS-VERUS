@@ -75,7 +75,7 @@ pub mod SubsetSumStEph {
 
         /// Create new subset sum solver.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- allocate empty structures.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures. — matches APAS
         fn new() -> (empty: Self)
         where
             T: Default
@@ -84,7 +84,7 @@ pub mod SubsetSumStEph {
 
         /// Create from multiset.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move multiset into struct.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move multiset into struct. — matches APAS
         fn from_multiset(multiset: ArraySeqStEphS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
@@ -98,34 +98,34 @@ pub mod SubsetSumStEph {
 
         /// Get the multiset.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference. — matches APAS
         fn multiset(&self) -> (ms: &ArraySeqStEphS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Set element at index (ephemeral mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
         fn set(&mut self, index: usize, value: T)
             requires index < old(self).spec_multiset_len(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Clear memoization table.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map. — matches APAS
         fn clear_memo(&mut self)
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     /// Recursive memoized subset sum solver.
-    /// - APAS: Work O(k*|S|), Span O(|S|)
-    /// - Claude-Opus-4.6: Work O(k*|S|), Span O(|S|) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) -- agrees with APAS. — matches APAS
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStEphS<T>,
         i: usize,
@@ -227,7 +227,7 @@ pub mod SubsetSumStEph {
     pub trait SubsetSumStEphMutTrait<T: StT> {
         /// Get mutable multiset (ephemeral allows mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference. — matches APAS
         fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }
 

@@ -374,8 +374,8 @@ broadcast use {
 
     // 13. derive impls outside verus!
     impl Display for MatrixChainStPerS {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(
                 f,
@@ -390,8 +390,8 @@ broadcast use {
         type Item = MatrixDim;
         type IntoIter = IntoIter<MatrixDim>;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — move Vec into iterator
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — move Vec into iterator
         fn into_iter(self) -> Self::IntoIter { self.dimensions.into_iter() }
     }
 
@@ -399,14 +399,14 @@ broadcast use {
         type Item = MatrixDim;
         type IntoIter = Cloned<Iter<'a, MatrixDim>>;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — create cloned iterator adapter
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
         fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
     }
 
     impl Display for MatrixDim {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 }

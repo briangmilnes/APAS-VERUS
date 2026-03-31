@@ -85,7 +85,7 @@ pub mod MinEditDistStEph {
 
         /// Create new minimum edit distance solver.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- allocate empty structures.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- allocate empty structures. — matches APAS
         fn new() -> (empty: Self)
         where
             T: Default
@@ -94,7 +94,7 @@ pub mod MinEditDistStEph {
 
         /// Create from source and target sequences.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct. — matches APAS
         fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_source_len() == source.spec_len(),
@@ -111,19 +111,19 @@ pub mod MinEditDistStEph {
 
         /// Get the source sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference. — matches APAS
         fn source(&self) -> (s: &ArraySeqStEphS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return reference. — matches APAS
         fn target(&self) -> (t: &ArraySeqStEphS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Set element in source sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
         fn set_source(&mut self, index: usize, value: T)
             requires index < old(self).spec_source_len(),
             ensures
@@ -132,7 +132,7 @@ pub mod MinEditDistStEph {
 
         /// Set element in target sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
         fn set_target(&mut self, index: usize, value: T)
             requires index < old(self).spec_target_len(),
             ensures
@@ -141,7 +141,7 @@ pub mod MinEditDistStEph {
 
         /// Clear memoization table.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map. — matches APAS
         fn clear_memo(&mut self)
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
@@ -149,15 +149,15 @@ pub mod MinEditDistStEph {
 
         /// Get memoization table size.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     /// Recursive memoized minimum edit distance solver.
-    /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|)
-    /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|*|T|), Span O(|S|+|T|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS. — matches APAS
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStEphS<T>,
         i: usize,
@@ -279,12 +279,12 @@ pub mod MinEditDistStEph {
     pub trait MinEditDistStEphMutTrait<T: StT> {
         /// Get mutable source sequence (ephemeral allows mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference. — matches APAS
         fn source_mut(&mut self) -> &mut ArraySeqStEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return mutable reference. — matches APAS
         fn target_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }
 
