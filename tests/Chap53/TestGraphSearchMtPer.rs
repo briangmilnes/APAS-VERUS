@@ -5,11 +5,12 @@
 use apas_verus::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
 use apas_verus::Chap53::GraphSearchMtPer::GraphSearchMtPer::*;
 use apas_verus::Types::Types::*;
+use vstd::prelude::*;
 
 #[test]
 fn test_reachable_single_node() {
     let graph = |_v: &i32| AVLTreeSetMtPer::empty();
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 1);
 }
 
@@ -22,7 +23,7 @@ fn test_reachable_simple_path() {
             AVLTreeSetMtPer::empty()
         }
     };
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 2);
 }
 
@@ -35,7 +36,7 @@ fn test_graph_search_single_source() {
             AVLTreeSetMtPer::empty()
         }
     };
-    let result = graph_search(&graph, 1, &SelectAll);
+    let result = graph_search(&graph, 1, &SelectAll, Ghost::assume_new());
     assert_eq!(result.visited.size(), 2);
 }
 
@@ -49,7 +50,7 @@ fn test_graph_search_multi_source() {
         }
     };
     let sources = AVLTreeSetMtPer::singleton(1).insert(3);
-    let result = graph_search_multi(&graph, sources, &SelectAll);
+    let result = graph_search_multi(&graph, sources, &SelectAll, Ghost::assume_new());
     assert_eq!(result.visited.size(), 3);
 }
 
@@ -62,13 +63,13 @@ fn test_select_one_strategy() {
             AVLTreeSetMtPer::empty()
         }
     };
-    let _result = graph_search(&graph, 1, &SelectOne);
+    let _result = graph_search(&graph, 1, &SelectOne, Ghost::assume_new());
 }
 
 #[test]
 fn test_empty_graph() {
     let graph = |_v: &i32| AVLTreeSetMtPer::empty();
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 1);
 }
 
@@ -80,6 +81,6 @@ fn test_cycle_detection() {
         | 3 => AVLTreeSetMtPer::singleton(1),
         | _ => AVLTreeSetMtPer::empty(),
     };
-    let reachable_set = reachable(&graph, 1);
+    let reachable_set = reachable(&graph, 1, Ghost::assume_new());
     assert_eq!(reachable_set.size(), 3);
 }

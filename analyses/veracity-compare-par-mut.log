@@ -1,8 +1,8 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-30 19:51:14 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
+Started at: 2026-03-30 20:06:22 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS-agent4
+Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-compare-par-mut.log
 
 Phase 1: File groups
 
@@ -330,47 +330,47 @@ src/Chap37/BSTAVLMtEph.rs:849: info: trait BSTAVLMtEphTrait <T : TotalOrder> : S
 src/Chap37/BSTAVLMtEph.rs:849: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstavlsteph_wf`
 src/Chap37/BSTAVLMtEph.rs:849: info: `spec_root` absent — MtEph uses View impl instead
 src/Chap37/BSTAVLMtEph.rs:849: info: 5 extra fns not in StEph (BSTAVLStEphTrait): `spec_bstavlmteph_wf`, `minimum`, `maximum`, `in_order`, `pre_order`
-src/Chap37/BSTAVLMtEph.rs:858: info: `insert` returns `Result < () , () >` but StEph returns `Self`
-src/Chap37/BSTAVLMtEph.rs:884: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTAVLMtEph.rs:886: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
 src/Chap37/BSTAVLStEph.rs:0: info: BSTAVLTrait trait: 7 matched fns across 2 variants
 src/Chap37/BSTBBAlphaMtEph.rs:0: info: file group BSTBBAlpha — comparing MtEph (src/Chap37/BSTBBAlphaMtEph.rs), StEph (src/Chap37/BSTBBAlphaStEph.rs)
 src/Chap37/BSTBBAlphaStEph.rs:39: info: struct BSTBBAlphaStEph { root: BalBinTree < T > }
 src/Chap37/BSTBBAlphaStEph.rs:46: info: View = BalBinTree < T >
 src/Chap37/BSTBBAlphaStEph.rs:78: info: wf = spec_bstbbalphasteph_wf
-src/Chap37/BSTBBAlphaMtEph.rs:234: info: struct BSTBBAlphaMtEph { root: RwLock < BalBinTree < T > , BSTBBAlphaMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
-src/Chap37/BSTBBAlphaMtEph.rs:253: info: View = BalBinTree < T >
-src/Chap37/BSTBBAlphaMtEph.rs:258: info: wf = spec_bstbbalphamteph_wf
-src/Chap37/BSTBBAlphaMtEph.rs:234: info: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTBBAlphaMtEph.rs:530: info: struct BSTBBAlphaMtEph { root: RwLock < BalBinTree < T > , BSTBBAlphaMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
+src/Chap37/BSTBBAlphaMtEph.rs:549: info: View = BalBinTree < T >
+src/Chap37/BSTBBAlphaMtEph.rs:554: info: wf = spec_bstbbalphamteph_wf
+src/Chap37/BSTBBAlphaMtEph.rs:530: info: ghost field `ghost_root` has no counterpart in other variants
 src/Chap37/BSTBBAlphaStEph.rs:76: info: trait BSTBBAlphaStEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (10 exec, 2 spec)
-src/Chap37/BSTBBAlphaMtEph.rs:257: info: trait BSTBBAlphaMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (11 exec, 1 spec)
-src/Chap37/BSTBBAlphaMtEph.rs:257: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstbbalphasteph_wf`
-src/Chap37/BSTBBAlphaMtEph.rs:257: info: `spec_root` absent — MtEph uses View impl instead
-src/Chap37/BSTBBAlphaMtEph.rs:257: warning: missing 1 fns present in StEph (BSTBBAlphaStEphTrait): `delete`
-src/Chap37/BSTBBAlphaMtEph.rs:257: info: 3 extra fns not in StEph (BSTBBAlphaStEphTrait): `spec_bstbbalphamteph_wf`, `in_order`, `pre_order`
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert` returns `Result < () , () >` but StEph returns `Self`
-src/Chap37/BSTBBAlphaMtEph.rs:292: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTBBAlphaMtEph.rs:297: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTBBAlphaMtEph.rs:303: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTBBAlphaStEph.rs:0: info: BSTBBAlphaTrait trait: 9 matched fns across 2 variants
+src/Chap37/BSTBBAlphaMtEph.rs:553: info: trait BSTBBAlphaMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 13 fns (12 exec, 1 spec)
+src/Chap37/BSTBBAlphaMtEph.rs:553: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstbbalphasteph_wf`
+src/Chap37/BSTBBAlphaMtEph.rs:553: info: `spec_root` absent — MtEph uses View impl instead
+src/Chap37/BSTBBAlphaMtEph.rs:553: info: 3 extra fns not in StEph (BSTBBAlphaStEphTrait): `spec_bstbbalphamteph_wf`, `in_order`, `pre_order`
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTBBAlphaMtEph.rs:598: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTBBAlphaMtEph.rs:603: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTBBAlphaMtEph.rs:609: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTBBAlphaStEph.rs:0: info: BSTBBAlphaTrait trait: 10 matched fns across 2 variants
 src/Chap37/BSTPlainMtEph.rs:0: info: file group BSTPlain — comparing MtEph (src/Chap37/BSTPlainMtEph.rs), StEph (src/Chap37/BSTPlainStEph.rs)
 src/Chap37/BSTPlainStEph.rs:34: info: struct BSTPlainStEph { root: BalBinTree < T > }
 src/Chap37/BSTPlainStEph.rs:41: info: View = BalBinTree < T >
 src/Chap37/BSTPlainStEph.rs:93: info: wf = spec_bstplainsteph_wf
-src/Chap37/BSTPlainMtEph.rs:234: info: struct BSTPlainMtEph { root: RwLock < BalBinTree < T > , BSTPlainMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
-src/Chap37/BSTPlainMtEph.rs:253: info: View = BalBinTree < T >
-src/Chap37/BSTPlainMtEph.rs:258: info: wf = spec_bstplainmteph_wf
-src/Chap37/BSTPlainMtEph.rs:234: info: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTPlainMtEph.rs:530: info: struct BSTPlainMtEph { root: RwLock < BalBinTree < T > , BSTPlainMtEphInv < T > >, ghost ghost_root: Ghost < BalBinTree < T > > }
+src/Chap37/BSTPlainMtEph.rs:549: info: View = BalBinTree < T >
+src/Chap37/BSTPlainMtEph.rs:554: info: wf = spec_bstplainmteph_wf
+src/Chap37/BSTPlainMtEph.rs:530: info: ghost field `ghost_root` has no counterpart in other variants
 src/Chap37/BSTPlainStEph.rs:91: info: trait BSTPlainStEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (10 exec, 2 spec)
-src/Chap37/BSTPlainMtEph.rs:257: info: trait BSTPlainMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 12 fns (11 exec, 1 spec)
-src/Chap37/BSTPlainMtEph.rs:257: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstplainsteph_wf`
-src/Chap37/BSTPlainMtEph.rs:257: info: `spec_root` absent — MtEph uses View impl instead
-src/Chap37/BSTPlainMtEph.rs:257: warning: missing 1 fns present in StEph (BSTPlainStEphTrait): `delete`
-src/Chap37/BSTPlainMtEph.rs:257: info: 3 extra fns not in StEph (BSTPlainStEphTrait): `spec_bstplainmteph_wf`, `in_order`, `pre_order`
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert` returns `Result < () , () >` but StEph returns `Self`
-src/Chap37/BSTPlainMtEph.rs:292: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTPlainMtEph.rs:297: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTPlainMtEph.rs:303: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTPlainStEph.rs:0: info: BSTPlainTrait trait: 9 matched fns across 2 variants
+src/Chap37/BSTPlainMtEph.rs:553: info: trait BSTPlainMtEphTrait <T : TotalOrder> : Sized + View < V = BalBinTree < T > > — 13 fns (12 exec, 1 spec)
+src/Chap37/BSTPlainMtEph.rs:553: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstplainsteph_wf`
+src/Chap37/BSTPlainMtEph.rs:553: info: `spec_root` absent — MtEph uses View impl instead
+src/Chap37/BSTPlainMtEph.rs:553: info: 3 extra fns not in StEph (BSTPlainStEphTrait): `spec_bstplainmteph_wf`, `in_order`, `pre_order`
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTPlainMtEph.rs:598: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete` returns `Result < () , () >` but StEph returns `Self`
+src/Chap37/BSTPlainMtEph.rs:603: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTPlainMtEph.rs:609: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTPlainStEph.rs:0: info: BSTPlainTrait trait: 10 matched fns across 2 variants
 src/Chap37/BSTPlainStEph.rs:86: info: trait BSTSpecFns — 2 fns (0 exec, 2 spec), only in StEph variant
 src/Chap37/BSTRBMtEph.rs:0: info: file group BSTRB — comparing MtEph (src/Chap37/BSTRBMtEph.rs), StEph (src/Chap37/BSTRBStEph.rs)
 src/Chap37/BSTRBStEph.rs:39: info: struct BSTRBStEph { root: BalBinTree < T > }
@@ -387,27 +387,26 @@ src/Chap37/BSTRBMtEph.rs:984: info: 1 variant-named spec_*_wf absent — has own
 src/Chap37/BSTRBMtEph.rs:984: info: `spec_root` absent — MtEph uses View impl instead
 src/Chap37/BSTRBMtEph.rs:984: info: 8 extra fns not in StEph (BSTRBStEphTrait): `spec_bstrbmteph_wf`, `from_sorted_slice`, `minimum`, `maximum`, `in_order`, `pre_order`, `filter`, `reduce`
 src/Chap37/BSTRBMtEph.rs:996: info: `insert` returns `Result < () , () >` but StEph returns `Self`
-src/Chap37/BSTRBMtEph.rs:1020: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTRBMtEph.rs:1023: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
 src/Chap37/BSTRBStEph.rs:0: info: BSTRBTrait trait: 7 matched fns across 2 variants
 src/Chap37/BSTSplayMtEph.rs:0: info: file group BSTSplay — comparing MtEph (src/Chap37/BSTSplayMtEph.rs), StEph (src/Chap37/BSTSplayStEph.rs)
 src/Chap37/BSTSplayStEph.rs:46: info: struct BSTSplayStEph { root: Link < T > }
 src/Chap37/BSTSplayStEph.rs:189: info: wf = spec_bstsplaysteph_wf
-src/Chap37/BSTSplayMtEph.rs:1749: info: struct BSTSplayMtEph { root: RwLock < Link < T > , BSTSplayMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
-src/Chap37/BSTSplayMtEph.rs:1768: info: View = Link < T >
-src/Chap37/BSTSplayMtEph.rs:1773: info: wf = spec_bstsplaymteph_wf
-src/Chap37/BSTSplayMtEph.rs:1749: info: ghost field `ghost_root` has no counterpart in other variants
+src/Chap37/BSTSplayMtEph.rs:1777: info: struct BSTSplayMtEph { root: RwLock < Link < T > , BSTSplayMtEphInv >, ghost ghost_root: Ghost < Link < T > > }
+src/Chap37/BSTSplayMtEph.rs:1796: info: View = Link < T >
+src/Chap37/BSTSplayMtEph.rs:1801: info: wf = spec_bstsplaymteph_wf
+src/Chap37/BSTSplayMtEph.rs:1777: info: ghost field `ghost_root` has no counterpart in other variants
 src/Chap37/BSTSplayStEph.rs:185: info: trait BSTSplayStEphTrait <T : TotalOrder + Clone> : (none) — 17 fns (11 exec, 6 spec)
-src/Chap37/BSTSplayMtEph.rs:1772: info: trait BSTSplayMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = Link < T > > — 15 fns (14 exec, 1 spec)
-src/Chap37/BSTSplayMtEph.rs:1772: info: supertrait bounds `Sized + View < V = Link < T > >` added by MtEph (ref StEph has none)
-src/Chap37/BSTSplayMtEph.rs:1772: info: generic bounds `<T : StTInMtT + Ord + TotalOrder>` — supertrait-compatible with StEph `<T : TotalOrder + Clone>` (extra: T: StTInMtT, T: Ord)
-src/Chap37/BSTSplayMtEph.rs:1772: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstsplaysteph_wf`
-src/Chap37/BSTSplayMtEph.rs:1772: warning: missing 5 fns present in StEph (BSTSplayStEphTrait): `spec_size`, `spec_height`, `spec_contains`, `spec_in_order`, `spec_pre_order`
-src/Chap37/BSTSplayMtEph.rs:1772: info: 4 extra fns not in StEph (BSTSplayStEphTrait): `spec_bstsplaymteph_wf`, `from_sorted_slice`, `filter`, `reduce`
-src/Chap37/BSTSplayMtEph.rs:1789: info: `insert` returns `Result < () , () >` but StEph returns `()` (Result wrapping)
-src/Chap37/BSTSplayMtEph.rs:1816: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTSplayMtEph.rs:1821: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTSplayMtEph.rs:1828: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap37/BSTSplayStEph.rs:0: info: BSTSplayTrait trait: 11 matched fns across 2 variants
+src/Chap37/BSTSplayMtEph.rs:1800: info: trait BSTSplayMtEphTrait <T : StTInMtT + Ord + TotalOrder> : Sized + View < V = Link < T > > — 20 fns (14 exec, 6 spec)
+src/Chap37/BSTSplayMtEph.rs:1800: info: supertrait bounds `Sized + View < V = Link < T > >` added by MtEph (ref StEph has none)
+src/Chap37/BSTSplayMtEph.rs:1800: info: generic bounds `<T : StTInMtT + Ord + TotalOrder>` — supertrait-compatible with StEph `<T : TotalOrder + Clone>` (extra: T: StTInMtT, T: Ord)
+src/Chap37/BSTSplayMtEph.rs:1800: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bstsplaysteph_wf`
+src/Chap37/BSTSplayMtEph.rs:1800: info: 4 extra fns not in StEph (BSTSplayStEphTrait): `spec_bstsplaymteph_wf`, `from_sorted_slice`, `filter`, `reduce`
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert` returns `Result < () , () >` but StEph returns `()` (Result wrapping)
+src/Chap37/BSTSplayMtEph.rs:1851: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTSplayMtEph.rs:1856: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTSplayMtEph.rs:1863: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
+src/Chap37/BSTSplayStEph.rs:0: info: BSTSplayTrait trait: 16 matched fns across 2 variants
 src/Chap38/BSTParaMtEph.rs:0: info: file group BSTPara — comparing MtEph (src/Chap38/BSTParaMtEph.rs), StEph (src/Chap38/BSTParaStEph.rs)
 src/Chap38/BSTParaStEph.rs:50: info: struct BSTParaStEphInv { contents: Set < T :: V > }
 src/Chap38/BSTParaStEph.rs:245: info: wf = spec_bstparasteph_wf
@@ -950,9 +949,6 @@ src/Chap53/GraphSearchStPer.rs:46: info: trait GraphSearchStPerTrait <V : StT + 
 src/Chap53/GraphSearchMtPer.rs:41: info: trait GraphSearchMtPerTrait <V : StTInMtT + Ord + 'static> : (none) — 3 fns (3 exec, 0 spec)
 src/Chap53/GraphSearchStEph.rs:38: info: trait GraphSearchStEphTrait <V : StT + Ord> : (none) — 3 fns (3 exec, 0 spec)
 src/Chap53/GraphSearchMtPer.rs:41: info: generic bounds `<V : StTInMtT + Ord + 'static>` — supertrait-compatible with StPer `<V : StT + Ord>` (extra: V: StTInMtT)
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search` has 3 params but StPer has 4
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi` has 3 params but StPer has 4
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable` has 2 params but StPer has 3
 src/Chap53/GraphSearchStPer.rs:0: info: GraphSearchTrait trait: 3 matched fns across 3 variants
 src/Chap53/GraphSearchStPer.rs:36: info: trait SelectionStrategy <V : StT + Ord> : (none) — 1 fns (1 exec, 0 spec)
 src/Chap53/GraphSearchMtPer.rs:35: info: trait SelectionStrategy <V : StTInMtT + Ord + 'static> : (none) — 1 fns (1 exec, 0 spec)
@@ -1109,7 +1105,7 @@ src/Chap66/BoruvkaMtEph.rs:92: warning: missing 4 fns present in StEph (BoruvkaS
 src/Chap66/BoruvkaMtEph.rs:92: info: 5 extra fns not in StEph (BoruvkaStEphTrait): `spec_boruvkamteph_wf`, `vertex_bridges_mt`, `bridge_star_partition_mt`, `boruvka_mst_mt`, `boruvka_mst_mt_with_seed`
 src/Chap66/BoruvkaStEph.rs:0: info: BoruvkaTrait trait: 1 matched fns across 2 variants
 
-Phase 2 summary: 57 groups compared, 0 errors, 84 warnings, 921 info
+Phase 2 summary: 57 groups compared, 0 errors, 78 warnings, 923 info
 
 Phase 4: Requires/ensures clause comparison
 
@@ -1287,140 +1283,149 @@ src/Chap37/AVLTreeSeqMtPer.rs:252: info: `iter`: ensures clause fuzzy match — 
 src/Chap37/AVLTreeSeqMtPer.rs:252: warning: `iter`: StPer has ensures clause `avltreeseq_iter_invariant (& it)` with no match in MtPer
 src/Chap37/AVLTreeSeqMtPer.rs:252: info: `iter`: MtPer has extra ensures clause `iter_invariant (& it)` not in StPer
 src/Chap37/BSTAVLMtEph.rs:852: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
-src/Chap37/BSTAVLMtEph.rs:852: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap37/BSTAVLMtEph.rs:852: warning: `new`: StEph has ensures clause `tree_is_avl :: < T > (tree . spec_root ())` with no match in MtEph
+src/Chap37/BSTAVLMtEph.rs:852: info: `new`: ensures clause fuzzy match — ref: `tree_is_avl :: < T > (tree . spec_root ())` ~ cur: `tree_is_avl :: < T > (tree @)`
+src/Chap37/BSTAVLMtEph.rs:852: info: `new`: ensures clause count 5 vs 3 (StEph has 3)
 src/Chap37/BSTAVLMtEph.rs:852: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
 src/Chap37/BSTAVLMtEph.rs:852: info: `new`: MtEph has extra ensures clause `tree @ is Leaf` not in StEph
-src/Chap37/BSTAVLMtEph.rs:872: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTAVLMtEph.rs:872: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
-src/Chap37/BSTAVLMtEph.rs:876: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
-src/Chap37/BSTAVLMtEph.rs:880: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTAVLMtEph.rs:880: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
-src/Chap37/BSTAVLMtEph.rs:858: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstavl_wf ()` ~ cur: `old (self) . spec_bstavl_wf ()`
-src/Chap37/BSTAVLMtEph.rs:858: info: `insert`: requires clause `tree_is_avl :: < T > (self . spec_root ())` subsumed by MtEph wf predicate
-src/Chap37/BSTAVLMtEph.rs:858: warning: `insert`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap37/BSTAVLMtEph.rs:858: warning: `insert`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX - 1` with no match in MtEph
-src/Chap37/BSTAVLMtEph.rs:858: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
-src/Chap37/BSTAVLMtEph.rs:858: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
-src/Chap37/BSTAVLMtEph.rs:858: warning: `insert`: ensures clause count 3 vs 4 (StEph has 4)
-src/Chap37/BSTAVLMtEph.rs:858: warning: `insert`: StEph has ensures clause `tree_is_avl :: < T > (inserted . spec_root ())` with no match in MtEph
-src/Chap37/BSTAVLMtEph.rs:868: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTAVLMtEph.rs:868: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTAVLMtEph.rs:868: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
-src/Chap37/BSTAVLMtEph.rs:884: warning: `find`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTAVLMtEph.rs:884: warning: `find`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTAVLMtEph.rs:884: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
-src/Chap37/BSTAVLMtEph.rs:884: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
-src/Chap37/BSTBBAlphaMtEph.rs:260: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
-src/Chap37/BSTBBAlphaMtEph.rs:260: info: `new`: ensures clause `tree . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:260: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap37/BSTBBAlphaMtEph.rs:260: info: `new`: MtEph has extra ensures clause `tree @ . spec_is_leaf ()` not in StEph
-src/Chap37/BSTBBAlphaMtEph.rs:260: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
-src/Chap37/BSTBBAlphaMtEph.rs:280: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:280: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
-src/Chap37/BSTBBAlphaMtEph.rs:284: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
-src/Chap37/BSTBBAlphaMtEph.rs:288: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:288: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstbbalpha_wf ()` ~ cur: `old (self) . spec_bstbbalpha_wf ()`
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
-src/Chap37/BSTBBAlphaMtEph.rs:266: info: `insert`: ensures clause `inserted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:276: info: `contains`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:276: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
-src/Chap37/BSTBBAlphaMtEph.rs:292: info: `find`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:292: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
-src/Chap37/BSTBBAlphaMtEph.rs:292: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
-src/Chap37/BSTBBAlphaMtEph.rs:297: info: `minimum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `min . is_some () ==> self @ . tree_contains (min . unwrap ()...`
-src/Chap37/BSTBBAlphaMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> min . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> min . is_none ()`
-src/Chap37/BSTBBAlphaMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> min . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> min . is_some ()`
-src/Chap37/BSTBBAlphaMtEph.rs:303: info: `maximum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTBBAlphaMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `max . is_some () ==> self @ . tree_contains (max . unwrap ()...`
-src/Chap37/BSTBBAlphaMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> max . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> max . is_none ()`
-src/Chap37/BSTBBAlphaMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> max . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> max . is_some ()`
-src/Chap37/BSTPlainMtEph.rs:260: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
-src/Chap37/BSTPlainMtEph.rs:260: info: `new`: ensures clause `tree . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:260: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap37/BSTPlainMtEph.rs:260: info: `new`: MtEph has extra ensures clause `tree @ . spec_is_leaf ()` not in StEph
-src/Chap37/BSTPlainMtEph.rs:260: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
-src/Chap37/BSTPlainMtEph.rs:280: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:280: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
-src/Chap37/BSTPlainMtEph.rs:284: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
-src/Chap37/BSTPlainMtEph.rs:288: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:288: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstplain_wf ()` ~ cur: `old (self) . spec_bstplain_wf ()`
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
-src/Chap37/BSTPlainMtEph.rs:266: info: `insert`: ensures clause `inserted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:276: info: `contains`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:276: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
-src/Chap37/BSTPlainMtEph.rs:292: info: `find`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:292: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
-src/Chap37/BSTPlainMtEph.rs:292: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
-src/Chap37/BSTPlainMtEph.rs:297: info: `minimum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `min . is_some () ==> self @ . tree_contains (min . unwrap ()...`
-src/Chap37/BSTPlainMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> min . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> min . is_none ()`
-src/Chap37/BSTPlainMtEph.rs:297: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> min . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> min . is_some ()`
-src/Chap37/BSTPlainMtEph.rs:303: info: `maximum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
-src/Chap37/BSTPlainMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `max . is_some () ==> self @ . tree_contains (max . unwrap ()...`
-src/Chap37/BSTPlainMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> max . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> max . is_none ()`
-src/Chap37/BSTPlainMtEph.rs:303: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> max . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> max . is_some ()`
+src/Chap37/BSTAVLMtEph.rs:874: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTAVLMtEph.rs:874: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
+src/Chap37/BSTAVLMtEph.rs:878: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
+src/Chap37/BSTAVLMtEph.rs:882: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTAVLMtEph.rs:882: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstavl_wf ()` ~ cur: `old (self) . spec_bstavl_wf ()`
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert`: requires clause `tree_is_avl :: < T > (self . spec_root ())` subsumed by MtEph wf predicate
+src/Chap37/BSTAVLMtEph.rs:859: warning: `insert`: requires clause count 1 vs 3 (StEph has 3)
+src/Chap37/BSTAVLMtEph.rs:859: warning: `insert`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX - 1` with no match in MtEph
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
+src/Chap37/BSTAVLMtEph.rs:859: info: `insert`: ensures clause fuzzy match — ref: `tree_is_avl :: < T > (inserted . spec_root ())` ~ cur: `tree_is_avl :: < T > (self @)`
+src/Chap37/BSTAVLMtEph.rs:870: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTAVLMtEph.rs:870: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTAVLMtEph.rs:870: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
+src/Chap37/BSTAVLMtEph.rs:886: warning: `find`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTAVLMtEph.rs:886: warning: `find`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTAVLMtEph.rs:886: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
+src/Chap37/BSTAVLMtEph.rs:886: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
+src/Chap37/BSTBBAlphaMtEph.rs:556: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
+src/Chap37/BSTBBAlphaMtEph.rs:556: info: `new`: ensures clause `tree . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:556: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
+src/Chap37/BSTBBAlphaMtEph.rs:556: info: `new`: MtEph has extra ensures clause `tree @ . spec_is_leaf ()` not in StEph
+src/Chap37/BSTBBAlphaMtEph.rs:556: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
+src/Chap37/BSTBBAlphaMtEph.rs:586: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:586: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
+src/Chap37/BSTBBAlphaMtEph.rs:590: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
+src/Chap37/BSTBBAlphaMtEph.rs:594: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:594: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstbbalpha_wf ()` ~ cur: `old (self) . spec_bstbbalpha_wf ()`
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
+src/Chap37/BSTBBAlphaMtEph.rs:562: info: `insert`: ensures clause `inserted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:582: info: `contains`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:582: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
+src/Chap37/BSTBBAlphaMtEph.rs:598: info: `find`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:598: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
+src/Chap37/BSTBBAlphaMtEph.rs:598: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete`: requires clause fuzzy match — ref: `self . spec_bstbbalpha_wf ()` ~ cur: `old (self) . spec_bstbbalpha_wf ()`
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete`: ensures clause fuzzy match — ref: `! deleted . spec_root () . tree_contains (* target)` ~ cur: `! self @ . tree_contains (* target)`
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] deleted . spec_root () . tree_...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
+src/Chap37/BSTBBAlphaMtEph.rs:572: info: `delete`: ensures clause `deleted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:603: info: `minimum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `min . is_some () ==> self @ . tree_contains (min . unwrap ()...`
+src/Chap37/BSTBBAlphaMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> min . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> min . is_none ()`
+src/Chap37/BSTBBAlphaMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> min . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> min . is_some ()`
+src/Chap37/BSTBBAlphaMtEph.rs:609: info: `maximum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTBBAlphaMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `max . is_some () ==> self @ . tree_contains (max . unwrap ()...`
+src/Chap37/BSTBBAlphaMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> max . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> max . is_none ()`
+src/Chap37/BSTBBAlphaMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> max . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> max . is_some ()`
+src/Chap37/BSTPlainMtEph.rs:556: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
+src/Chap37/BSTPlainMtEph.rs:556: info: `new`: ensures clause `tree . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:556: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
+src/Chap37/BSTPlainMtEph.rs:556: info: `new`: MtEph has extra ensures clause `tree @ . spec_is_leaf ()` not in StEph
+src/Chap37/BSTPlainMtEph.rs:556: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
+src/Chap37/BSTPlainMtEph.rs:586: info: `size`: requires clause `self . spec_root () . spec_size () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:586: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
+src/Chap37/BSTPlainMtEph.rs:590: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ is Leaf)`
+src/Chap37/BSTPlainMtEph.rs:594: info: `height`: requires clause `self . spec_root () . spec_height () <= usize :: MAX` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:594: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstplain_wf ()` ~ cur: `old (self) . spec_bstplain_wf ()`
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
+src/Chap37/BSTPlainMtEph.rs:562: info: `insert`: ensures clause `inserted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:582: info: `contains`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:582: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
+src/Chap37/BSTPlainMtEph.rs:598: info: `find`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:598: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
+src/Chap37/BSTPlainMtEph.rs:598: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete`: requires clause fuzzy match — ref: `self . spec_bstplain_wf ()` ~ cur: `old (self) . spec_bstplain_wf ()`
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete`: ensures clause fuzzy match — ref: `! deleted . spec_root () . tree_contains (* target)` ~ cur: `! self @ . tree_contains (* target)`
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] deleted . spec_root () . tree_...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
+src/Chap37/BSTPlainMtEph.rs:572: info: `delete`: ensures clause `deleted . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:603: info: `minimum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `min . is_some () ==> self @ . tree_contains (min . unwrap ()...`
+src/Chap37/BSTPlainMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> min . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> min . is_none ()`
+src/Chap37/BSTPlainMtEph.rs:603: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> min . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> min . is_some ()`
+src/Chap37/BSTPlainMtEph.rs:609: info: `maximum`: requires clause `self . spec_root () . tree_is_bst ()` subsumed by MtEph wf predicate
+src/Chap37/BSTPlainMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_root () . tree_contains (* ...` ~ cur: `max . is_some () ==> self @ . tree_contains (max . unwrap ()...`
+src/Chap37/BSTPlainMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () == 0 ==> max . is_none ()` ~ cur: `self @ . spec_size () == 0 ==> max . is_none ()`
+src/Chap37/BSTPlainMtEph.rs:609: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_root () . spec_size () > 0 ==> max . is_some ()` ~ cur: `self @ . spec_size () > 0 ==> max . is_some ()`
 src/Chap37/BSTRBMtEph.rs:987: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_root () . tree_contains (x)` ~ cur: `forall | x : T | ! tree @ . tree_contains (x)`
 src/Chap37/BSTRBMtEph.rs:987: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
 src/Chap37/BSTRBMtEph.rs:987: warning: `new`: StEph has ensures clause `tree . spec_root () . tree_is_bst ()` with no match in MtEph
 src/Chap37/BSTRBMtEph.rs:987: info: `new`: MtEph has extra ensures clause `tree @ . tree_is_bst ()` not in StEph
 src/Chap37/BSTRBMtEph.rs:987: info: `new`: MtEph has extra ensures clause `tree @ == BalBinTree :: < T > :: Leaf` not in StEph
-src/Chap37/BSTRBMtEph.rs:1008: warning: `size`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:1008: warning: `size`: StEph has requires clause `self . spec_root () . spec_size () <= usize :: MAX` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:1008: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
-src/Chap37/BSTRBMtEph.rs:1012: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ . spec_size () == 0)`
-src/Chap37/BSTRBMtEph.rs:1016: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:1016: warning: `height`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:1016: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
+src/Chap37/BSTRBMtEph.rs:1011: warning: `size`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1011: warning: `size`: StEph has requires clause `self . spec_root () . spec_size () <= usize :: MAX` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1011: info: `size`: ensures clause fuzzy match — ref: `n == self . spec_root () . spec_size ()` ~ cur: `n as nat == self @ . spec_size ()`
+src/Chap37/BSTRBMtEph.rs:1015: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_root () . spec_size () == 0)` ~ cur: `b == (self @ . spec_size () == 0)`
+src/Chap37/BSTRBMtEph.rs:1019: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1019: warning: `height`: StEph has requires clause `self . spec_root () . spec_height () <= usize :: MAX` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1019: info: `height`: ensures clause fuzzy match — ref: `h == self . spec_root () . spec_height ()` ~ cur: `h as nat == self @ . spec_height ()`
 src/Chap37/BSTRBMtEph.rs:996: info: `insert`: requires clause fuzzy match — ref: `self . spec_bstrb_wf ()` ~ cur: `old (self) . spec_bstrb_wf ()`
 src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: requires clause count 1 vs 2 (StEph has 2)
 src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: ensures clause count 2 vs 4 (StEph has 4)
-src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_contains (value)` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:996: info: `insert`: ensures clause fuzzy match — ref: `inserted . spec_root () . tree_contains (value)` ~ cur: `self @ . tree_contains (value)`
+src/Chap37/BSTRBMtEph.rs:996: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | (# [trigger] inserted . spec_root () . tree...` ~ cur: `forall | x : T | (# [trigger] self @ . tree_contains (x)) <=...`
 src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: StEph has ensures clause `inserted . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:996: warning: `insert`: StEph has ensures clause `forall | x : T | (# [trigger] inserted . spec_root () . tree_contains (x)) <==> ...` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:996: info: `insert`: MtEph has extra ensures clause `self @ . spec_size () <= old (self) @ . spec_size () + 1` not in StEph
-src/Chap37/BSTRBMtEph.rs:1004: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:1004: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:1004: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
-src/Chap37/BSTRBMtEph.rs:1020: warning: `find`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTRBMtEph.rs:1020: warning: `find`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
-src/Chap37/BSTRBMtEph.rs:1020: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
-src/Chap37/BSTRBMtEph.rs:1020: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
-src/Chap37/BSTSplayMtEph.rs:1775: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_contains (x)` ~ cur: `forall | x : T | ! link_contains (tree @ , x)`
-src/Chap37/BSTSplayMtEph.rs:1775: info: `new`: ensures clause fuzzy match — ref: `tree . spec_size () == 0` ~ cur: `link_spec_size (tree @) == 0`
-src/Chap37/BSTSplayMtEph.rs:1775: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap37/BSTSplayMtEph.rs:1775: info: `new`: MtEph has extra ensures clause `tree @ is None` not in StEph
-src/Chap37/BSTSplayMtEph.rs:1804: info: `size`: ensures clause fuzzy match — ref: `n as nat == self . spec_size ()` ~ cur: `n as nat == link_spec_size (self @)`
-src/Chap37/BSTSplayMtEph.rs:1808: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_size () == 0)` ~ cur: `b == (self @ is None)`
-src/Chap37/BSTSplayMtEph.rs:1812: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap37/BSTSplayMtEph.rs:1812: warning: `height`: StEph has requires clause `self . spec_height () < usize :: MAX as nat` with no match in MtEph
-src/Chap37/BSTSplayMtEph.rs:1812: info: `height`: ensures clause fuzzy match — ref: `h as nat == self . spec_height ()` ~ cur: `h as nat == link_height (self @)`
-src/Chap37/BSTSplayMtEph.rs:1789: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | old (self) . spec_contains (x) ==> self . s...` ~ cur: `forall | x : T | link_contains (old (self) @ , x) ==> # [tri...`
-src/Chap37/BSTSplayMtEph.rs:1789: info: `insert`: ensures clause count 4 vs 3 (StEph has 3)
-src/Chap37/BSTSplayMtEph.rs:1789: warning: `insert`: StEph has ensures clause `self . spec_contains (value)` with no match in MtEph
-src/Chap37/BSTSplayMtEph.rs:1789: info: `insert`: MtEph has extra ensures clause `link_contains (self @ , value)` not in StEph
-src/Chap37/BSTSplayMtEph.rs:1789: info: `insert`: MtEph has extra ensures clause `link_spec_size (self @) <= link_spec_size (old (self) @) + 1` not in StEph
-src/Chap37/BSTSplayMtEph.rs:1816: info: `find`: ensures clause fuzzy match — ref: `found . is_some () <==> self . spec_contains (* target)` ~ cur: `found . is_some () <==> link_contains (self @ , * target)`
-src/Chap37/BSTSplayMtEph.rs:1816: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
-src/Chap37/BSTSplayMtEph.rs:1800: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_contains (* target)` ~ cur: `found == link_contains (self @ , * target)`
-src/Chap37/BSTSplayMtEph.rs:1821: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> forall | x : T | self . spec_contains (...` ~ cur: `link_spec_size (self @) > 0 ==> min . is_some ()`
-src/Chap37/BSTSplayMtEph.rs:1821: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_contains (* min . unwrap ()...` ~ cur: `min . is_some () ==> forall | x : T | link_contains (self @ ...`
-src/Chap37/BSTSplayMtEph.rs:1821: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_size () > 0 ==> min . is_some ()` ~ cur: `min . is_some () ==> link_contains (self @ , min . unwrap ()...`
-src/Chap37/BSTSplayMtEph.rs:1828: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> forall | x : T | self . spec_contains (...` ~ cur: `link_spec_size (self @) > 0 ==> max . is_some ()`
-src/Chap37/BSTSplayMtEph.rs:1828: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_contains (* max . unwrap ()...` ~ cur: `max . is_some () ==> forall | x : T | link_contains (self @ ...`
-src/Chap37/BSTSplayMtEph.rs:1828: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_size () > 0 ==> max . is_some ()` ~ cur: `max . is_some () ==> link_contains (self @ , max . unwrap ()...`
-src/Chap37/BSTSplayMtEph.rs:1835: warning: `in_order`: StEph has ensures clause `seq . spec_len () == self . spec_in_order () . len ()` with no match in MtEph
-src/Chap37/BSTSplayMtEph.rs:1835: info: `in_order`: MtEph has extra ensures clause `true` not in StEph
-src/Chap37/BSTSplayMtEph.rs:1838: warning: `pre_order`: StEph has ensures clause `seq . spec_len () == self . spec_pre_order () . len ()` with no match in MtEph
-src/Chap37/BSTSplayMtEph.rs:1838: info: `pre_order`: MtEph has extra ensures clause `true` not in StEph
+src/Chap37/BSTRBMtEph.rs:996: info: `insert`: MtEph has extra ensures clause `self @ . tree_is_bst ()` not in StEph
+src/Chap37/BSTRBMtEph.rs:1007: warning: `contains`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1007: warning: `contains`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1007: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_root () . tree_contains (* target)` ~ cur: `found == self @ . tree_contains (* target)`
+src/Chap37/BSTRBMtEph.rs:1023: warning: `find`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTRBMtEph.rs:1023: warning: `find`: StEph has requires clause `self . spec_root () . tree_is_bst ()` with no match in MtEph
+src/Chap37/BSTRBMtEph.rs:1023: info: `find`: ensures clause fuzzy match — ref: `found . is_some () == self . spec_root () . tree_contains (*...` ~ cur: `found . is_some () == self @ . tree_contains (* target)`
+src/Chap37/BSTRBMtEph.rs:1023: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
+src/Chap37/BSTSplayMtEph.rs:1808: info: `new`: ensures clause fuzzy match — ref: `forall | x : T | ! tree . spec_contains (x)` ~ cur: `forall | x : T | ! link_contains (tree @ , x)`
+src/Chap37/BSTSplayMtEph.rs:1808: info: `new`: ensures clause fuzzy match — ref: `tree . spec_size () == 0` ~ cur: `link_spec_size (tree @) == 0`
+src/Chap37/BSTSplayMtEph.rs:1808: info: `new`: ensures clause count 4 vs 3 (StEph has 3)
+src/Chap37/BSTSplayMtEph.rs:1808: info: `new`: MtEph has extra ensures clause `tree @ is None` not in StEph
+src/Chap37/BSTSplayMtEph.rs:1839: info: `size`: ensures clause fuzzy match — ref: `n as nat == self . spec_size ()` ~ cur: `n as nat == link_spec_size (self @)`
+src/Chap37/BSTSplayMtEph.rs:1843: info: `is_empty`: ensures clause fuzzy match — ref: `b == (self . spec_size () == 0)` ~ cur: `b == (self @ is None)`
+src/Chap37/BSTSplayMtEph.rs:1847: warning: `height`: requires clause count 1 vs 2 (StEph has 2)
+src/Chap37/BSTSplayMtEph.rs:1847: warning: `height`: StEph has requires clause `self . spec_height () < usize :: MAX as nat` with no match in MtEph
+src/Chap37/BSTSplayMtEph.rs:1847: info: `height`: ensures clause fuzzy match — ref: `h as nat == self . spec_height ()` ~ cur: `h as nat == link_height (self @)`
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert`: ensures clause fuzzy match — ref: `forall | x : T | old (self) . spec_contains (x) ==> self . s...` ~ cur: `forall | x : T | (# [trigger] link_contains (self @ , x)) ==...`
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert`: ensures clause count 5 vs 3 (StEph has 3)
+src/Chap37/BSTSplayMtEph.rs:1822: warning: `insert`: StEph has ensures clause `self . spec_contains (value)` with no match in MtEph
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert`: MtEph has extra ensures clause `forall | x : T | link_contains (old (self) @ , x) ==> # [trigger] link_contains ...` not in StEph
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert`: MtEph has extra ensures clause `link_contains (self @ , value)` not in StEph
+src/Chap37/BSTSplayMtEph.rs:1822: info: `insert`: MtEph has extra ensures clause `link_spec_size (self @) <= link_spec_size (old (self) @) + 1` not in StEph
+src/Chap37/BSTSplayMtEph.rs:1851: info: `find`: ensures clause fuzzy match — ref: `found . is_some () <==> self . spec_contains (* target)` ~ cur: `found . is_some () <==> link_contains (self @ , * target)`
+src/Chap37/BSTSplayMtEph.rs:1851: info: `find`: ensures clause fuzzy match — ref: `found . is_some () ==> * found . unwrap () == * target` ~ cur: `found . is_some () ==> found . unwrap () == * target`
+src/Chap37/BSTSplayMtEph.rs:1835: info: `contains`: ensures clause fuzzy match — ref: `found == self . spec_contains (* target)` ~ cur: `found == link_contains (self @ , * target)`
+src/Chap37/BSTSplayMtEph.rs:1856: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> forall | x : T | self . spec_contains (...` ~ cur: `link_spec_size (self @) > 0 ==> min . is_some ()`
+src/Chap37/BSTSplayMtEph.rs:1856: info: `minimum`: ensures clause fuzzy match — ref: `min . is_some () ==> self . spec_contains (* min . unwrap ()...` ~ cur: `min . is_some () ==> forall | x : T | link_contains (self @ ...`
+src/Chap37/BSTSplayMtEph.rs:1856: info: `minimum`: ensures clause fuzzy match — ref: `self . spec_size () > 0 ==> min . is_some ()` ~ cur: `min . is_some () ==> link_contains (self @ , min . unwrap ()...`
+src/Chap37/BSTSplayMtEph.rs:1863: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> forall | x : T | self . spec_contains (...` ~ cur: `link_spec_size (self @) > 0 ==> max . is_some ()`
+src/Chap37/BSTSplayMtEph.rs:1863: info: `maximum`: ensures clause fuzzy match — ref: `max . is_some () ==> self . spec_contains (* max . unwrap ()...` ~ cur: `max . is_some () ==> forall | x : T | link_contains (self @ ...`
+src/Chap37/BSTSplayMtEph.rs:1863: info: `maximum`: ensures clause fuzzy match — ref: `self . spec_size () > 0 ==> max . is_some ()` ~ cur: `max . is_some () ==> link_contains (self @ , max . unwrap ()...`
+src/Chap37/BSTSplayMtEph.rs:1870: warning: `in_order`: StEph has ensures clause `seq . spec_len () == self . spec_in_order () . len ()` with no match in MtEph
+src/Chap37/BSTSplayMtEph.rs:1870: info: `in_order`: MtEph has extra ensures clause `true` not in StEph
+src/Chap37/BSTSplayMtEph.rs:1873: warning: `pre_order`: StEph has ensures clause `seq . spec_len () == self . spec_pre_order () . len ()` with no match in MtEph
+src/Chap37/BSTSplayMtEph.rs:1873: info: `pre_order`: MtEph has extra ensures clause `true` not in StEph
 src/Chap38/BSTParaMtEph.rs:340: info: `join_pair`: requires clause fuzzy match — ref: `self @ . len () + other @ . len () < usize :: MAX as nat` ~ cur: `self @ . len () + other @ . len () <= usize :: MAX as nat`
 src/Chap38/BSTParaMtEph.rs:340: info: `join_pair`: requires clause `other @ . finite ()` subsumed by MtEph wf predicate
 src/Chap38/BSTParaMtEph.rs:340: info: `join_pair`: requires clause `self @ . finite ()` subsumed by MtEph wf predicate
@@ -2469,24 +2474,6 @@ src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge`: requires clause fuzzy 
 src/Chap52/EdgeSetGraphStEph.rs:139: info: `insert_edge`: requires clause fuzzy match — ref: `self . spec_vertices () . len () + 2 < usize :: MAX as nat` ~ cur: `old (self) . spec_vertices () . len () + 2 < usize :: MAX as...`
 src/Chap52/EdgeSetGraphStEph.rs:147: info: `delete_edge`: requires clause fuzzy match — ref: `self . spec_edgesetgraph_wf ()` ~ cur: `old (self) . spec_edgesetgraph_wf ()`
 src/Chap52/EdgeSetGraphMtPer.rs:113: info: `out_neighbors`: ensures clause fuzzy match — ref: `neighbors @ == self . spec_out_neighbors (u @)` ~ cur: `neighbors @ == Set :: new (| v : V :: V | self . spec_edges ...`
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: requires clause count 3 vs 8 (StPer has 8)
-src/Chap53/GraphSearchMtPer.rs:44: info: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:44: warning: `graph_search`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: requires clause count 4 vs 9 (StPer has 9)
-src/Chap53/GraphSearchMtPer.rs:56: info: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `sources @ . subset_of (vertex_universe)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:56: warning: `graph_search_multi`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: requires clause count 3 vs 8 (StPer has 8)
-src/Chap53/GraphSearchMtPer.rs:69: info: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `forall | v : & V , r : AVLTreeSet < V > | # [trigger] graph . ensures ((v ,) , r...` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . contains (source @)` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . finite ()` with no match in MtPer
-src/Chap53/GraphSearchMtPer.rs:69: warning: `reachable`: StPer has requires clause `vertex_universe . len () + vertex_universe . len () < usize :: MAX as nat` with no match in MtPer
 src/Chap53/PQMinStEph.rs:45: info: `pq_min`: requires clause fuzzy match — ref: `forall | v : & V , p : P | # [trigger] priority_fn . ensures...` ~ cur: `forall | v1 : & V , v2 : & V , r1 : P , r2 : P | # ! [trigge...`
 src/Chap53/PQMinStEph.rs:75: info: `pq_min_multi`: requires clause fuzzy match — ref: `forall | v : & V , p : P | # [trigger] priority_fn . ensures...` ~ cur: `forall | v1 : & V , v2 : & V , r1 : P , r2 : P | # ! [trigge...`
 src/Chap54/BFSMtEph.rs:283: info: `bfs`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < traversal . spec_len () && # [tr...` ~ cur: `forall | v : int | # ! [trigger traversal . spec_index (v)] ...`
@@ -2497,4 +2484,4 @@ src/Chap55/CycleDetectStEph.rs:267: info: `has_cycle`: ensures clause fuzzy matc
 src/Chap55/DFSStEph.rs:200: info: `dfs`: ensures clause fuzzy match — ref: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...` ~ cur: `forall | v : int | 0 <= v < graph @ . len () ==> (reachable ...`
 src/Chap55/TopoSortStEph.rs:396: info: `topo_sort`: ensures clause fuzzy match — ref: `spec_is_dag_per (graph) ==> spec_is_topo_order_per (graph , ...` ~ cur: `spec_is_dag (graph) ==> spec_is_topo_order (graph , order @)`
 
-Phase 4 summary: 0 errors, 388 warnings, 995 info
+Phase 4 summary: 0 errors, 367 warnings, 1007 info
