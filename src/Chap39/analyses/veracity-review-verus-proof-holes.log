@@ -61,68 +61,68 @@ Table of Contents:
        381 |             cloned
        382 |         }
 ⚠ BSTTreapMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:362: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:523: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       513 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
-       360 |             None => {
-       361 |                 let c = None;
-       363 |                 c
-       364 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       352 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
+       521 |             None => {
+       522 |                 let c = None;
+       524 |                 c
+       525 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:536: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       513 |     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
             ...
-       373 |                     right,
-       374 |                 }));
-       376 |                 c
-       377 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+       534 |                     right,
+       535 |                 }));
+       537 |                 c
+       538 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1412: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1408 |         fn clone(&self) -> (cloned: Self)
             ...
-      1159 |         {
-      1160 |             proof {
-      1162 |                 assume(Lnk::spec_link_size_wf(&self.right));
-      1163 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1162: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+      1410 |         {
+      1411 |             proof {
+      1413 |                 assume(Lnk::spec_link_size_wf(&self.right));
+      1414 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1413: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1408 |         fn clone(&self) -> (cloned: Self)
             ...
-      1160 |             proof {
-      1161 |                 assume(Lnk::spec_link_size_wf(&self.left));
-      1163 |             }
-      1164 |             let cloned = Node {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1171: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1157 |         fn clone(&self) -> (cloned: Self)
+      1411 |             proof {
+      1412 |                 assume(Lnk::spec_link_size_wf(&self.left));
+      1414 |             }
+      1415 |             let cloned = Node {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1422: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1408 |         fn clone(&self) -> (cloned: Self)
             ...
-      1169 |                 right: clone_link(&self.right),
-      1170 |             };
-      1172 |             cloned
-      1173 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1184: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      1420 |                 right: clone_link(&self.right),
+      1421 |             };
+      1423 |             cloned
+      1424 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1435: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1428 |         fn clone(&self) -> (cloned: Self)
             ...
-      1182 |             handle.release_read();
-      1183 |             proof {
-      1185 |                 assume(self.ghost_locked_root@.finite());
-      1186 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      1433 |             handle.release_read();
+      1434 |             proof {
+      1436 |                 assume(self.ghost_locked_root@.finite());
+      1437 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1436: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1428 |         fn clone(&self) -> (cloned: Self)
             ...
-      1183 |             proof {
-      1184 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
-      1186 |             }
-      1187 |             let cloned = BSTTreapMtEph {
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1191: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1177 |         fn clone(&self) -> (cloned: Self)
+      1434 |             proof {
+      1435 |                 assume(spec_bsttreapmteph_link_wf(&inner_clone));
+      1437 |             }
+      1438 |             let cloned = BSTTreapMtEph {
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1442: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1428 |         fn clone(&self) -> (cloned: Self)
             ...
-      1189 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
-      1190 |             };
-      1192 |             cloned
-      1193 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1069: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1086: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1110: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1120: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1132: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1144: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
+      1440 |                 ghost_locked_root: Ghost(self.ghost_locked_root@),
+      1441 |             };
+      1443 |             cloned
+      1444 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1320: info: structural_false_positive RWLOCK_GHOST find — proof { assume(result.is_some() <==> self@.contains(target@) [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1337: info: structural_false_positive RWLOCK_GHOST size — proof { assume(result as nat == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1361: info: structural_false_positive RWLOCK_GHOST minimum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1371: info: structural_false_positive RWLOCK_GHOST maximum — proof { assume(result.is_some() ==> self@.contains(result.un [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1383: info: structural_false_positive RWLOCK_GHOST in_order — proof { assume(ordered@.len() == self@.len()); } [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapMtEph.rs:1395: info: structural_false_positive RWLOCK_GHOST pre_order — proof { assume(preordered@.len() == self@.len()); } [medium]
 ℹ BSTTreapStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:149: info: accept()
 /home/milnes/projects/APAS-VERUS/src/Chap39/BSTTreapStEph.rs:160: info: accept()
@@ -163,16 +163,16 @@ Modules:
    4 total
 
 Proof Functions:
-   46 clean (100%)
+   62 clean (100%)
    0 holed (0%)
-   46 total
+   62 total
 
 Function Specs:
-   238 exec fns with complete spec (requires+ensures) (66%)
+   248 exec fns with complete spec (requires+ensures) (62%)
    4 exec fns missing spec (1%)
-   114 proof/spec fns clean (32%)
+   142 proof/spec fns clean (36%)
    0 proof/spec fns with holes (0%)
-   356 total fns
+   394 total fns
 
 
 Holes Found: 0 (actionable)
@@ -195,8 +195,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 17:04:26 -07:00
-Ended:     2026-03-30 17:04:26 -07:00
+Started:   2026-03-30 19:14:23 -07:00
+Ended:     2026-03-30 19:14:23 -07:00
+Duration:  96ms
+
+Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log
+============================
+
+Started:   2026-03-30 19:14:23 -07:00
+Ended:     2026-03-30 19:14:23 -07:00
 Duration:  96ms
 
 Full output: src/Chap39/analyses/veracity-review-verus-proof-holes.log

@@ -32,17 +32,18 @@ Table of Contents:
        622 |         }
 ✓ RelationStEph.rs
 ⚠ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1096: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1092 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1170: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1166 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1094 |         {
-      1095 |             let equal = self.elements == other.elements;
-      1097 |             equal
-      1098 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1042: info: structural_false_positive RWLOCK_GHOST size — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1051: info: structural_false_positive RWLOCK_GHOST mem — proof { assume(inner@ == self@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1059: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1070: info: structural_false_positive RWLOCK_GHOST choose — proof { assume(inner@ == self@); } [medium]
+      1168 |         {
+      1169 |             let equal = self.elements == other.elements;
+      1171 |             equal
+      1172 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1116: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1125: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1144: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1133: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+   Info: 3 total
 ⚠ SetStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:916: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        911 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -91,11 +92,11 @@ Proof Functions:
    11 total
 
 Function Specs:
-   152 exec fns with complete spec (requires+ensures) (59%)
+   154 exec fns with complete spec (requires+ensures) (59%)
    0 exec fns missing spec (0%)
    105 proof/spec fns clean (40%)
    0 proof/spec fns with holes (0%)
-   257 total fns
+   259 total fns
 
 
 Holes Found: 0 (actionable)
@@ -104,8 +105,11 @@ Real Proof Targets: 0 (all actionable)
 Warnings: 3 total
    3 × assume_eq_clone_workaround
 
-Structural (info only): 4
-   4 × RWLOCK_GHOST
+Accepted (reviewed): 3 total
+   3 × accept()
+
+Structural (info only): 1
+   1 × RWLOCK_GHOST
 
 No proof holes found! All proofs are complete.
 
@@ -113,9 +117,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 07:13:37 -07:00
-Ended:     2026-03-30 07:13:37 -07:00
+Started:   2026-03-30 19:14:23 -07:00
+Ended:     2026-03-30 19:14:23 -07:00
 Duration:  31ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

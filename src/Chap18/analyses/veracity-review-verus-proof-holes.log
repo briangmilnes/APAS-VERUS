@@ -42,24 +42,24 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:528: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1190: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1186 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1293: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1289 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1188 |         {
-      1189 |             let equal = self.seq == other.seq;
-      1191 |             equal
-      1192 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:322: info: trivial_spec_wf
+      1291 |         {
+      1292 |             let equal = self.seq == other.seq;
+      1294 |             equal
+      1295 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:353: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1054: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1050 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:1058: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1054 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1052 |         {
-      1053 |             let equal = self.seq == other.seq;
-      1055 |             equal
-      1056 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:353: info: trivial_spec_wf
+      1056 |         {
+      1057 |             let equal = self.seq == other.seq;
+      1059 |             equal
+      1060 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStEph.rs:357: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqStPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqStPer.rs:1020: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -149,11 +149,11 @@ Proof Functions:
    20 total
 
 Function Specs:
-   338 exec fns with complete spec (requires+ensures) (66%)
+   340 exec fns with complete spec (requires+ensures) (66%)
    0 exec fns missing spec (0%)
-   170 proof/spec fns clean (33%)
+   171 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   508 total fns
+   511 total fns
 
 
 Holes Found: 0 (actionable)
@@ -172,9 +172,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 07:13:37 -07:00
-Ended:     2026-03-30 07:13:37 -07:00
-Duration:  90ms
+Started:   2026-03-30 19:14:23 -07:00
+Ended:     2026-03-30 19:14:23 -07:00
+Duration:  93ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
