@@ -146,6 +146,7 @@ verus! {
                 it@.0 == 0int,
                 it@.1.map(|i: int, k: T| k@).to_set() == self@,
                 it@.1.no_duplicates(),
+                forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@),
                 iter_invariant(&it);
 
         /// - APAS: N/A — conversion utility, not in prose.
@@ -283,6 +284,23 @@ verus! {
                     (forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0)
                 );
 
+        /// Split a set into two parts: the first with n elements, the second with the rest.
+        /// - APAS: Work Θ(|self|), Span Θ(1)
+        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — sequential loop, not parallel. Span == Work.
+        fn split(&self, n: usize) -> (n_set_rest_set: (Self, Self))
+            requires
+                self.spec_setmteph_wf(),
+                self@.len() >= n,
+            ensures
+               ({let (n_set, rest_set) = n_set_rest_set;
+                  &&& n_set.spec_setmteph_wf()
+                  &&& rest_set.spec_setmteph_wf()
+                  &&& n_set@.disjoint(rest_set@)
+                  &&& n_set@.union(rest_set@) == self@
+                  &&& n_set@.len() == n
+                  &&& rest_set@.len() == self@.len() - n
+               });
+
         /// Choose an arbitrary element from a non-empty set.
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator, takes first.
@@ -327,7 +345,15 @@ verus! {
 
         fn iter<'a>(&'a self) -> (it: SetMtEphIter<'a, T>) {
             let inner = self.elements.iter();
-            proof { lemma_seq_map_to_set_equality(inner@.1, self@); }
+            proof {
+                lemma_seq_map_to_set_equality(inner@.1, self@);
+                // Derive element-wise membership from HashSetWithViewPlus iter postcondition.
+                assert forall |j: int| 0 <= j < inner@.1.len()
+                    implies self@.contains(#[trigger] inner@.1[j]@)
+                by {
+                    assert(inner@.1.contains(inner@.1[j]));
+                };
+            }
             SetMtEphIter { inner }
         }
 
@@ -801,6 +827,53 @@ verus! {
                     }
                 }
             }
+        }
+
+        fn split(&self, n: usize) -> (n_set_rest_set: (Self, Self)) {
+            let mut first : SetMtEph<T> = SetMtEph::empty();
+            let mut second: SetMtEph<T> = SetMtEph::empty();
+            let it = self.iter();
+            let ghost iter_seq = it@.1;
+            let ghost self_view = self@;
+
+            for x in iter: it
+                invariant
+                    valid_key_type::<T>(),
+                    iter.elements == iter_seq,
+                    iter_seq.map(|_i: int, k: T| k@).to_set() == self_view,
+                    iter_seq.no_duplicates(),
+                    first@.finite(),
+                    second@.finite(),
+                    first@.disjoint(second@),
+                    first@.union(second@) == iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set(),
+                    first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+                    second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+            {
+                proof {
+                    lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+                    assert(!iter_seq.take(iter.pos).contains(*x)) by {
+                        if iter_seq.take(iter.pos).contains(*x) {
+                            let j = choose |j: int| 0 <= j < iter.pos && iter_seq.take(iter.pos)[j] == *x;
+                        }
+                    };
+                    assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
+                        lemma_reveal_view_injective::<T>();
+                        if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
+                            let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+                            let j = mapped.lemma_contains_to_index(x@);
+                        }
+                    };
+                }
+
+                let x_clone = x.clone_plus();
+                if first.size() < n {
+                    first.insert(x_clone);
+                } else {
+                    second.insert(x_clone);
+                }
+            }
+
+            (first, second)
         }
 
         fn choose(&self) -> (element: T) {
