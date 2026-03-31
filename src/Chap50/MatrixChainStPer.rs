@@ -132,20 +132,25 @@ broadcast use {
 
     // 8. traits
     pub trait MatrixChainStPerTrait: Sized + View<V = MatrixChainStPerV> {
+        spec fn spec_matrixchainstper_wf(&self) -> bool;
+
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf();
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf();
 
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf();
 
         fn optimal_cost(&self) -> (cost: usize)
             requires
@@ -194,10 +199,15 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainStPerTrait for MatrixChainStPerS {
+        open spec fn spec_matrixchainstper_wf(&self) -> bool {
+            spec_memo_correct(self@.dimensions, self@.memo)
+        }
+
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -210,6 +220,7 @@ broadcast use {
             ensures
                 mc@.dimensions =~= dimensions@,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -222,6 +233,7 @@ broadcast use {
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainstper_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let mut dimensions: Vec<MatrixDim> = Vec::new();

@@ -153,7 +153,7 @@ broadcast use {
             ensures mc@.dimensions.len() == 0, mc.spec_matrixchainmteph_wf();
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
-            ensures mc@.dimensions.len() == dimensions@.len(), mc.spec_matrixchainmteph_wf();
+            ensures mc@.dimensions =~= dimensions@, mc.spec_matrixchainmteph_wf();
 
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmteph_wf();
