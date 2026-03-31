@@ -29,26 +29,26 @@ verus! {
 
         /// Create a new unlocked spin lock.
         /// - Alg Analysis: APAS: no cost spec.
-        /// - Claude-Opus-4.6: O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
         fn new() -> (lock: Self)
             ensures !lock.spec_locked();
 
         /// Acquire the lock (spins until acquired).
         /// - Alg Analysis: APAS: no cost spec.
-        /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (spin). Ticket lock guarantees FIFO fairness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (spin). Ticket lock guarantees FIFO fairness.
         fn lock(&self)
             ensures self.spec_locked();
 
         /// Release the lock.
         /// - Alg Analysis: APAS: no cost spec.
-        /// - Claude-Opus-4.6: O(1) — single fetch_add.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — single fetch_add.
         fn unlock(&self)
             requires self.spec_locked()
             ensures !self.spec_locked();
 
         /// Execute action while holding the lock.
         /// - Alg Analysis: APAS: no cost spec.
-        /// - Claude-Opus-4.6: O(1) + cost of action.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) + cost of action.
         /// Note: requires/ensures omitted because Verus cannot express "result
         /// equals action()" for a generic FnOnce — the closure's spec is opaque.
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;
@@ -89,7 +89,7 @@ verus! {
 
     /// Run 4 threads, each incrementing a shared counter `iterations` times.
     /// - Alg Analysis: APAS: no cost spec.
-    /// - Claude-Opus-4.6: Work Θ(iterations), Span Θ(iterations) — 4-way parallel, bounded by lock contention.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(iterations), Span O(iterations) — 4-way parallel, bounded by lock contention.
     #[verifier::external_body] // accept hole
     pub fn parallel_increment(iterations: usize) -> (incremented: usize)
         ensures incremented == 4 * iterations

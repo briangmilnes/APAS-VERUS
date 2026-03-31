@@ -97,56 +97,56 @@ verus! {
             self@.finite()
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             requires Self::spec_valid_key_type()
             ensures empty.spec_relationsteph_wf(), empty@ == Set::<(<X as View>::V, <Y as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|pairs|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|pairs|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(1)
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == pairs@;
 
-        /// - APAS: Work Θ(|pairs|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|pairs|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|pairs|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|pairs|), Span O(1)
         fn from_vec(v: Vec<Pair<X, Y>>) -> (relation: Self)
             requires Self::spec_valid_key_type()
             ensures relation.spec_relationsteph_wf(), relation@ == v@.map(|i: int, p: Pair<X, Y>| p@).to_set();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (size: usize)
             requires self.spec_relationsteph_wf()
             ensures size == self@.len();
 
-        /// - APAS: Work Θ(|R|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|R|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(1)
         fn domain(&self) -> (domain: SetStEph<X>)
             requires self.spec_relationsteph_wf()
             ensures domain@.finite(), domain@ == Set::<X::V>::new(|x: X::V| exists |y: Y::V| self@.contains((x, y)));
 
-        /// - APAS: Work Θ(|R|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|R|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(|R|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(1)
         fn range(&self) -> (range: SetStEph<Y>)
             requires self.spec_relationsteph_wf()
             ensures range@.finite(), range@ == Set::<Y::V>::new(|y: Y::V| exists |x: X::V| self@.contains((x, y)));
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Hash set contains() on the pair.
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Hash set contains() on the pair.
         fn mem(&self, a: &X, b: &Y) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains((a@, b@));
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Delegates to set mem.
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Delegates to set mem.
         fn relates(&self, p: &Pair<X, Y>) -> (contains: bool)
             requires self.spec_relationsteph_wf()
             ensures contains == self@.contains(p@);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — agrees. Creates iterator handle.
+        /// - Alg Analysis: APAS (Ch05 Def 5.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees. Creates iterator handle.
         fn iter<'a>(&'a self) -> (it: RelationStEphIter<'a, X, Y>)
             requires self.spec_relationsteph_wf()
             ensures

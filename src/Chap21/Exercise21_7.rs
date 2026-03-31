@@ -42,8 +42,8 @@ pub mod Exercise21_7 {
     //		9. impls
 
     /// Check if a number is even.
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     pub fn is_even(x: &usize) -> (r: bool)
         ensures r == spec_is_even(*x as int)
@@ -56,8 +56,8 @@ pub mod Exercise21_7 {
     }
 
     /// Check if a character is a vowel (case-insensitive).
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     pub fn is_vowel(c: &char) -> (r: bool)
         ensures r == spec_is_vowel(*c)
@@ -72,8 +72,8 @@ pub mod Exercise21_7 {
     /// flatten 〈 〈 (x, y) : y ∈ b | isVowel y 〉 : x ∈ a | isEven x 〉
     ///
     /// Pairs even elements of a with vowels of b.
-    /// - APAS: Work Θ(|a|·|b|), Span Θ(lg |a|)
-    /// - Claude-Opus-4.6: Work Θ(|a|·|b|), Span Θ(|a|·|b|) — sequential StPer filter + tabulate + flatten.
+    /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(|a|·|b|), Span O(lg |a|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|·|b|), Span O(|a|·|b|) — sequential StPer filter + tabulate + flatten.
     pub fn pair_even_with_vowels(
         a: &ArraySeqStPerS<usize>,
         b: &ArraySeqStPerS<char>,

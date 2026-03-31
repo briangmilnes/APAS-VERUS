@@ -38,8 +38,8 @@ verus! {
         open spec fn spec_total_weight(&self) -> int 
          { self@.A.fold(0int, |acc: int, t: (V::V, V::V, isize)| acc + t.2 as int) }
 
-        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) -- sequential
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) -- sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, isize>>) -> (g: WeightedDirGraphStEphIsize<V>)
             requires
                 valid_key_type_WeightedEdge::<V, isize>(),
@@ -49,61 +49,61 @@ verus! {
                         vertices@.contains(u) && vertices@.contains(w),
             ensures spec_labgraphview_wf(g@), g@.V =~= vertices@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_weighed_edge(&mut self, from: V, to: V, weight: isize)
             requires valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 self@.V == old(self)@.V.insert(from@).insert(to@),
                 self@.A == old(self)@.A.insert((from@, to@, weight));
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential search
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<isize>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 weight.is_some() == (exists |w: isize| #![trigger self@.A.contains((from@, to@, w))] self@.A.contains((from@, to@, w))),
                 weight.is_some() ==> self@.A.contains((from@, to@, weight.unwrap()));
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential iteration
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential iteration
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, isize>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 forall |t: (V::V, V::V, isize)| #[trigger] weighed_edges@.contains(t) == self@.A.contains(t);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, isize>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 forall |p: (V::V, isize)| out_neighbors@.contains(p) ==
                     (exists |w: isize| #![trigger self@.A.contains((v@, p.0, w))] self@.A.contains((v@, p.0, w)) && p.1 == w);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, isize>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 forall |p: (V::V, isize)| in_neighbors@.contains(p) ==
                     (exists |w: isize| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential fold
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential fold
         fn total_weight(&self) -> (total_weight: CheckedIsize)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures total_weight@ == self.spec_total_weight();
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: isize) -> (edges_above: SetStEph<WeightedEdge<V, isize>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
                 forall |t: (V::V, V::V, isize)| #[trigger] edges_above@.contains(t) ==
                     (self@.A.contains(t) && t.2 > threshold);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) -- sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: isize) -> (edges_below: SetStEph<WeightedEdge<V, isize>>)
             requires spec_labgraphview_wf(self@), valid_key_type_WeightedEdge::<V, isize>()
             ensures
@@ -113,7 +113,8 @@ verus! {
 
     impl<V: StT + Hash> WeightedDirGraphStEphIsizeTrait<V> for WeightedDirGraphStEphIsize<V> {
 
-        /// APAS: Work Θ(|V| + |E|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
         fn from_weighed_edges(vertices: SetStEph<V>, edges: SetStEph<WeightedEdge<V, isize>>) -> (g: WeightedDirGraphStEphIsize<V>) {
             let mut edge_set: SetStEph<LabEdge<V, isize>> = SetStEph::empty();
             let mut it = edges.iter();
@@ -146,12 +147,14 @@ verus! {
             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
         }
 
-        /// APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn add_weighed_edge(&mut self, from: V, to: V, weight: isize) { 
             self.add_labeled_arc(from, to, weight); 
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn get_edge_weight(&self, from: &V, to: &V) -> (weight: Option<isize>) { 
             match self.get_arc_label(from, to) {
                 Some(w) => Some(*w),
@@ -159,7 +162,8 @@ verus! {
             }
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn weighed_edges(&self) -> (weighed_edges: SetStEph<WeightedEdge<V, isize>>) {
             let mut edges: SetStEph<WeightedEdge<V, isize>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -202,7 +206,8 @@ assert forall |t: (V::V, V::V, isize)| #[trigger] wa_view.contains(t) implies ed
             }
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn out_neighbors_weighed(&self, v: &V) -> (out_neighbors: SetStEph<Pair<V, isize>>) {
             let mut neighbors: SetStEph<Pair<V, isize>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -251,7 +256,8 @@ assert forall |p: (V::V, isize)| (exists |w: isize| #![trigger wa_view.contains(
             }
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn in_neighbors_weighed(&self, v: &V) -> (in_neighbors: SetStEph<Pair<V, isize>>) {
             let mut neighbors: SetStEph<Pair<V, isize>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -300,7 +306,8 @@ assert forall |p: (V::V, isize)| (exists |w: isize| #![trigger wa_view.contains(
             }
         }
 
-        /// APAS: Work Θ(|A|), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential
         fn total_weight(&self) -> (total_weight: CheckedIsize) { 
             let mut sum = CheckedIsize::new(0);
             let mut it = self.labeled_arcs().iter();

@@ -111,8 +111,8 @@ verus! {
             Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w))
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_Edge::<V>()
             ensures
@@ -121,8 +121,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(|V| + |A|) — sequential
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|V| + |A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — sequential
         fn from_sets(vertices: SetStEph<V>, arcs: SetStEph<Edge<V>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V|
@@ -134,90 +134,90 @@ verus! {
                 g@.V =~= vertices@,
                 g@.A =~= arcs@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
             ensures a@ =~= self@.A;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeV(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures n == self@.V.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeA(&self) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures n == self@.A.len();
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>()
             ensures b == self@.A.contains((u@, v@));
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures neighbors@ == self.spec_ng(v@);
 
-        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures neighbors@ == self.spec_ng_of_vertices(vertices@);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures out_neighbors@ == self.spec_n_plus(v@);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures in_neighbors@ == self.spec_n_minus(v@);
 
-        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
         fn n_plus_of_vertices(&self, vertices: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures out_neighbors@ == self.spec_n_plus_of_vertices(vertices@);
 
-        /// - APAS: Work Θ(|vertices| × |A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|vertices| × |A|), Span Θ(|vertices| × |A|) — nested iteration
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|vertices| × |A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|vertices| × |A|), Span O(|vertices| × |A|) — nested iteration
         fn n_minus_of_vertices(&self, vertices: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), vertices@ <= self@.V
             ensures in_neighbors@ == self.spec_n_minus_of_vertices(vertices@);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool)
             requires valid_key_type_Edge::<V>()
             ensures b == (e@.0 == v@ || e@.1 == v@);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_degree(v@);
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn in_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_minus(v@).len();
 
-        /// - APAS: Work Θ(|A|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.1): Work O(|A|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — sequential filter
         fn out_degree(&self, v: &V) -> (n: usize)
             requires spec_graphview_wf(self@), valid_key_type_Edge::<V>(), self@.V.contains(v@)
             ensures n == self.spec_n_plus(v@).len();

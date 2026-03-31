@@ -91,12 +91,12 @@ tokenized_state_machine!{
 }
 
 /// Two-threaded Fibonacci using TSM tokens to prove correctness.
-/// Top-level fork only — each thread runs iterative `fib` (Θ(n)), not
-/// recursive `fib_recursive` (Θ(φⁿ)). This is a different algorithm from
-/// Ex 11.10's parallel recursion: it achieves the same Θ(n) span with
-/// only Θ(n) total work instead of exponential.
-/// - APAS: Work Θ(φⁿ), Span Θ(n) — the recursive parallel version (Ex 11.10).
-/// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — not Ex 11.10. Iterative sub-calls yield linear work and span.
+/// Top-level fork only — each thread runs iterative `fib` (O(n)), not
+/// recursive `fib_recursive` (O(φⁿ)). This is a different algorithm from
+/// Ex 11.10's parallel recursion: it achieves the same O(n) span with
+/// only O(n) total work instead of exponential.
+/// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — the recursive parallel version
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: not Ex 11.10; iterative sub-calls yield linear work and span
 pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     requires n >= 2 && n <= 46
     ensures fibonacci == spec_fib(n as nat)

@@ -63,8 +63,8 @@ verus! {
             Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
         }
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -73,8 +73,8 @@ verus! {
                 g@.V =~= Set::<<V as View>::V>::empty(),
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
-        /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — sequential
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — sequential
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
@@ -86,31 +86,31 @@ verus! {
                 g@.V =~= vertices@,
                 g@.A =~= labeled_edges@;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>)
             ensures e@ =~= self@.A;
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential map
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential map
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures 
                 forall |e: (V::V, V::V)| edges@.contains(e) == (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)));
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
@@ -118,8 +118,8 @@ verus! {
                 self@.A == old(self)@.A.insert((v1@, v2@, label@)) || 
                 self@.A == old(self)@.A.insert((v2@, v1@, label@));
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
@@ -128,15 +128,15 @@ verus! {
                 label.is_some() ==> (self@.A.contains((v1@, v2@, label.unwrap()@)) || 
                                       self@.A.contains((v2@, v1@, label.unwrap()@)));
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential search
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential search
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| 
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
-        /// - APAS: Work Θ(|E|), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — sequential filter
+        /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|E|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — sequential filter
         fn ng(&self, v: &V) -> (ng: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures ng@ == self.spec_ng(v@), ng.spec_setsteph_wf();

@@ -81,7 +81,7 @@ pub mod LinkedListStEph {
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-    /// - Claude-Opus-4.6: N/A (spec only; no runtime cost).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
         s.fold_left(start_x, f)
     }
@@ -97,7 +97,7 @@ pub mod LinkedListStEph {
             recommends i < self.spec_len();
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(1).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -109,7 +109,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(index), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(index), Span O(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -118,7 +118,7 @@ pub mod LinkedListStEph {
                 success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn length(&self) -> (len: usize)
             ensures len as int == self.spec_len();
 
@@ -143,7 +143,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_linkedliststeph_wf(),
@@ -155,12 +155,12 @@ pub mod LinkedListStEph {
     pub trait LinkedListStEphRedefinableTrait<T>: LinkedListStEphBaseTrait<T> {
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_linkedliststeph_wf(), empty_seq.spec_len() == 0;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn singleton(item: T) -> (singleton: Self)
             ensures
                 singleton.spec_linkedliststeph_wf(),
@@ -221,7 +221,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(Σ|a_i|), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(1).
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)
             where T: Clone + Eq
             requires
@@ -243,17 +243,17 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn is_empty(&self) -> (empty: bool)
             ensures empty <==> self.spec_len() == 0;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn is_singleton(&self) -> (single: bool)
             ensures single <==> self.spec_len() == 1;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(1).
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -736,7 +736,7 @@ pub mod LinkedListStEph {
 
         /// Returns an iterator over the list elements.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         pub fn iter(&self) -> (it: LinkedListStEphIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -775,7 +775,7 @@ pub mod LinkedListStEph {
         type Item = &'a T;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
@@ -853,7 +853,7 @@ pub mod LinkedListStEph {
         type Item = &'a T;
         type IntoIter = LinkedListStEphIter<'a, T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> Self::IntoIter { LinkedListStEphIter { inner: self.seq.iter() } }
     }
 
@@ -861,7 +861,7 @@ pub mod LinkedListStEph {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
@@ -870,7 +870,7 @@ pub mod LinkedListStEph {
 
     impl<T: Clone + View> Clone for LinkedListStEphS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -884,7 +884,7 @@ pub mod LinkedListStEph {
 
     impl<T: PartialEq + View> PartialEq for LinkedListStEphS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

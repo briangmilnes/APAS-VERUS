@@ -91,7 +91,7 @@ pub mod BalBinTreeStEph {
 
     /// The in-order and pre-order traversals of a tree are permutations of each other.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
         decreases tree,
@@ -136,7 +136,7 @@ pub mod BalBinTreeStEph {
 
     /// The pre-order and post-order traversals of a tree are permutations of each other.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
         decreases tree,
@@ -188,8 +188,8 @@ pub mod BalBinTreeStEph {
         spec fn spec_post_order(self) -> Seq<T>;
         spec fn spec_is_leaf(self) -> bool;
 
-        /// - APAS: Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn leaf() -> (l: Self)
             ensures l.spec_balbintreesteph_wf(),
                     l.spec_size() == 0,
@@ -198,8 +198,8 @@ pub mod BalBinTreeStEph {
                     l.spec_pre_order() == Seq::<T>::empty(),
                     l.spec_post_order() == Seq::<T>::empty();
 
-        /// - APAS: Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn node(left: Self, value: T, right: Self) -> (n: Self)
             ensures n.spec_balbintreesteph_wf(),
                     n.spec_size() == 1 + left.spec_size() + right.spec_size(),
@@ -209,29 +209,29 @@ pub mod BalBinTreeStEph {
                     n.spec_pre_order() == seq![value] + left.spec_pre_order() + right.spec_pre_order(),
                     n.spec_post_order() == left.spec_post_order() + right.spec_post_order() + seq![value];
 
-        /// - APAS: Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn is_leaf(&self) -> (b: bool)
             requires self.spec_balbintreesteph_wf(),
             ensures b == (self.spec_size() == 0);
 
-        /// - APAS: Work Θ(n), Span Θ(n).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal, no stored size.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal, no stored size.
         fn size(&self) -> (count: usize)
             requires self.spec_balbintreesteph_wf(),
                      self.spec_size() <= usize::MAX,
             ensures count == self.spec_size();
 
-        /// - APAS: Work Θ(n), Span Θ(n).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal.
         fn height(&self) -> (h: usize)
             requires self.spec_balbintreesteph_wf(),
                      self.spec_height() <= usize::MAX,
             ensures h == self.spec_height();
 
         /// In-order traversal: left, root, right.
-        /// - APAS: Work Θ(n), Span Θ(n).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -240,8 +240,8 @@ pub mod BalBinTreeStEph {
             ensures traversal@ =~= self.spec_in_order();
 
         /// Pre-order traversal: root, left, right.
-        /// - APAS: Work Θ(n), Span Θ(n).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -250,8 +250,8 @@ pub mod BalBinTreeStEph {
             ensures traversal@ =~= self.spec_pre_order();
 
         /// Post-order traversal: left, right, root.
-        /// - APAS: Work Θ(n), Span Θ(n).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential recursive traversal with Vec building.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential recursive traversal with Vec building.
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             requires self.spec_balbintreesteph_wf(),
@@ -439,8 +439,8 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone + Eq> BalBinTree<T> {
         /// Returns an in-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by in_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls in_order() then wraps in iterator.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by in_order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls in_order() then wraps in iterator.
         pub fn iter_in_order(&self) -> (it: InOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -453,8 +453,8 @@ pub mod BalBinTreeStEph {
         }
 
         /// Returns a pre-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by pre_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls pre_order() then wraps in iterator.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by pre_order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls pre_order() then wraps in iterator.
         pub fn iter_pre_order(&self) -> (it: PreOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -467,8 +467,8 @@ pub mod BalBinTreeStEph {
         }
 
         /// Returns a post-order iterator.
-        /// - APAS: Work Θ(n), Span Θ(n) — dominated by post_order traversal.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — calls post_order() then wraps in iterator.
+        /// - Alg Analysis: APAS (Ch23 DT 23.1): Work O(n), Span O(n) — dominated by post_order traversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — calls post_order() then wraps in iterator.
         pub fn iter_post_order(&self) -> (it: PostOrderIter<T>)
             requires self.spec_size() <= usize::MAX,
                      obeys_feq_clone::<T>(),
@@ -560,7 +560,7 @@ pub mod BalBinTreeStEph {
         type Item = T;
 
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -587,7 +587,7 @@ pub mod BalBinTreeStEph {
         type Item = T;
 
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -614,7 +614,7 @@ pub mod BalBinTreeStEph {
         type Item = T;
 
         /// - Alg Analysis: APAS: N/A — iterator scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
                 let (old_index, old_seq) = old(self)@;
@@ -781,7 +781,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: PartialEq> PartialEq for BalBinTree<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive structural comparison.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive structural comparison.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
             decreases self,
@@ -802,7 +802,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — compares subtrees recursively.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — compares subtrees recursively.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
         {
@@ -814,7 +814,7 @@ pub mod BalBinTreeStEph {
 
 
     /// - Alg Analysis: APAS: N/A — derive scaffolding.
-    /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive deep clone.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive deep clone.
     // veracity: no_requires
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
         ensures c == *t
@@ -834,7 +834,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone> Clone for BalBinTree<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — delegates to clone_tree.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to clone_tree.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {
@@ -844,7 +844,7 @@ pub mod BalBinTreeStEph {
 
     impl<T: Clone> Clone for BalBinNode<T> {
         /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones left/right subtrees recursively.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — clones left/right subtrees recursively.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
         {

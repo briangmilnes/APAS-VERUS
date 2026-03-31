@@ -48,7 +48,7 @@ pub mod Algorithm21_1 {
 
     /// Lemma: sum_inner_lens is monotonically increasing.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_mono<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
         requires 0 <= a <= b <= ss.len()
         ensures sum_inner_lens(ss, a) <= sum_inner_lens(ss, b)
@@ -61,7 +61,7 @@ pub mod Algorithm21_1 {
 
     /// Lemma: if all inner sequences have the same length m, then sum = k * m.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
         requires
             0 <= k <= ss.len(),
@@ -87,8 +87,8 @@ pub mod Algorithm21_1 {
     //		9. impls
 
     /// Flatten a sequence of sequences into a single sequence.
-    /// - APAS: Work Θ(m), Span Θ(lg k) where m = total elements, k = number of inner sequences.
-    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — sequential two-pass implementation.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(m), Span O(lg k) where m = total elements, k = number of inner sequences.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential two-pass implementation.
     fn flatten_inner<T: View + Clone>(ss: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
         requires
             sum_inner_lens(ss.seq@, ss.seq@.len() as int) <= usize::MAX as int,
@@ -147,8 +147,8 @@ pub mod Algorithm21_1 {
     /// Algorithm 21.1 (2D Points) using ArraySeqPer: points2D via tabulate + flatten.
     /// - Functional form: points2D n = flatten (tabulate (\x. tabulate (\y. (x, y+1)) (n-1)) n)
     /// - Generates all 2D points (x, y) where 0 ≤ x < n and 1 ≤ y < n.
-    /// - APAS: Work Θ(n²), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential StPer tabulate + flatten.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(n²), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — sequential StPer tabulate + flatten.
     pub fn points2d_tab_flat(n: usize) -> (points: ArraySeqStPerS<Pair<usize, usize>>)
         requires
             n <= usize::MAX,

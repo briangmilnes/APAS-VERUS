@@ -134,14 +134,14 @@ pub mod MathSeq {
             spec fn spec_seq(&self) -> Seq<T>;
 
             /// - Alg Analysis: APAS: no cost spec (definitions chapter).
-            /// - Claude-Opus-4.6: O(n) — Vec allocation + clone fill.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — Vec allocation + clone fill.
             fn new(length: usize, init_value: T) -> (new_seq: Self)
                 ensures
                     new_seq.spec_len() == length,
                     forall|i: int| #![trigger new_seq.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, new_seq.spec_seq()[i]);
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — direct index write.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index write.
             fn set(&mut self, index: usize, value: T) -> (success: bool)
                 ensures
                     success ==> index < old(self).spec_len()
@@ -151,30 +151,30 @@ pub mod MathSeq {
                     !success ==> index >= old(self).spec_len() && self@ == old(self)@;
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
             fn length(&self) -> (len: usize)
                 ensures len == self.spec_len();
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — direct index read.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — direct index read.
             fn nth(&self, index: usize) -> (elem: &T)
                 requires index < self.spec_len()
                 ensures elem@ == self@[index as int];
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
             fn empty() -> (empty_seq: Self)
                 ensures empty_seq.spec_len() == 0;
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
             fn singleton(item: T) -> (singleton: Self)
                 ensures
                     singleton.spec_len() == 1,
                     singleton@[0] == item@;
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: amortized O(1) — Vec::push.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1) — Vec::push.
             fn add_last(&mut self, value: T)
                 ensures
                     self.spec_len() == old(self).spec_len() + 1,
@@ -182,7 +182,7 @@ pub mod MathSeq {
                     forall|i: int| 0 <= i < old(self).spec_len() ==> self@[i] == old(self)@[i];
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — Vec::pop.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — Vec::pop.
             fn delete_last(&mut self) -> (shortened: Option<T>)
                 ensures
                     old(self).spec_len() == 0 ==> shortened is None && self@ == old(self)@,
@@ -192,29 +192,29 @@ pub mod MathSeq {
                         && forall|i: int| 0 <= i < self.spec_len() ==> self@[i] == old(self)@[i];
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
             fn is_empty(&self) -> (emptiness: bool)
                 ensures emptiness == self.spec_is_empty();
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
             fn is_singleton(&self) -> (singularity: bool)
                 ensures singularity == self.spec_is_singleton();
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — move, no copy.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — move, no copy.
             fn from_vec(data: Vec<T>) -> (seq: Self)
                 ensures seq.spec_seq() == data@;
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) — delegates to new.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — delegates to new.
             fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
                 ensures
                     seq_of_len_value.spec_len() == length,
                     forall|i: int| #![trigger seq_of_len_value.spec_seq()[i]] 0 <= i < length ==> cloned(init_value, seq_of_len_value.spec_seq()[i]);
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — returns slice reference.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns slice reference.
             fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
                 ensures
                     subseq@.len() <= length,
@@ -225,7 +225,7 @@ pub mod MathSeq {
                 });
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(length) — copies subrange.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(length) — copies subrange.
             fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
                 requires
                     start as int + length as int <= self.spec_seq().len(),
@@ -234,14 +234,14 @@ pub mod MathSeq {
                     subseq.spec_seq() == self.spec_seq().subrange(start as int, (start + length) as int);
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) — builds index vector.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) — builds index vector.
             fn domain(&self) -> (domain: Vec<usize>)
                 ensures
                     domain@.len() == self.spec_len(),
                     forall|i: int| 0 <= i < domain@.len() ==> domain@[i] == i as usize;
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) expected — hash set dedup.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash set dedup.
             fn range(&self) -> (range: Vec<T>)
                 requires valid_key_type::<T>()
                 ensures
@@ -249,7 +249,7 @@ pub mod MathSeq {
                     range@.no_duplicates();
 
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(n) expected — hash map counting, two passes.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(n) expected — hash map counting, two passes.
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
                 requires
                     valid_key_type::<T>(),
@@ -259,7 +259,7 @@ pub mod MathSeq {
 
             /// Borrow iterator over the sequence elements.
             /// - Alg Analysis: APAS: no cost spec.
-            /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
             fn iter(&self) -> (it: MathSeqIter<'_, T>)
                 ensures
                     it@.0 == 0,
@@ -739,7 +739,7 @@ pub mod MathSeq {
     impl<T: StT + Hash> MathSeqS<T> {
         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
         /// - Alg Analysis: APAS: no cost spec.
-        /// - Claude-Opus-4.6: O(1) — returns iterator wrapper.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — returns iterator wrapper.
         pub fn iter_mut(&mut self) -> IterMut<'_, T> {
             self.data.iter_mut()
         }

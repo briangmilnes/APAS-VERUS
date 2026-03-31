@@ -184,7 +184,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -197,7 +197,7 @@ pub mod ArraySeqMtEph {
 
         /// - Set the element at `index` to `item` in place (ephemeral mutation).
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -222,7 +222,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -250,7 +250,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
@@ -366,8 +366,8 @@ pub mod ArraySeqMtEph {
             ensures single <==> self.spec_len() == 1;
 
         /// - Algorithm 19.8 (iterate). Left fold over the sequence (iterative).
-        /// - APAS: Algorithm 19.8 — iterate (iterative).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.8): iterate (iterative)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             requires
                 forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
@@ -388,8 +388,8 @@ pub mod ArraySeqMtEph {
                 accumulated == spec_iterate(a.seq@, spec_f, seed);
 
         /// - Algorithm 19.9 (reduce). Combine elements (iterative).
-        /// - APAS: Algorithm 19.9 — reduce (iterative).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.9): reduce (iterative)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|).
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -460,8 +460,8 @@ pub mod ArraySeqMtEph {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten();
 
         /// - Algorithm 19.5 (deflate). deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
-        /// - APAS: Algorithm 19.5 — deflate (part of filter).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.5): deflate (part of filter)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: Self)
             where T: Clone + Eq
             requires
@@ -1109,8 +1109,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel map via D&C fork-join.
-        /// - APAS: parallel variant of Algorithm 19.3 — map.
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.3): parallel variant — map
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg |a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1162,8 +1162,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel filter via D&C fork-join.
-        /// - APAS: parallel variant of Algorithm 19.5 — filter.
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg² |a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.5): parallel variant — filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg² |a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1245,8 +1245,8 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel reduce via D&C fork-join (requires monoid).
-        /// - APAS: parallel variant of Algorithm 19.9 — reduce.
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(lg |a|).
+        /// - Alg Analysis: APAS (Ch19 Alg 19.9): parallel variant — reduce
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg |a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
