@@ -49,7 +49,7 @@ pub mod StarPartitionMtEph {
         /// Parallel star partition using randomized coin flips.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential loops despite Mt naming, no join/spawn
         fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -78,7 +78,7 @@ pub mod StarPartitionMtEph {
     /// Algorithm 62.3: Parallel Star Partition.
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential loops despite Mt naming, no join/spawn
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
