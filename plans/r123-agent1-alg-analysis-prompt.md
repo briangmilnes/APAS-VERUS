@@ -1,4 +1,4 @@
-# R122 Agent 4 — Algorithmic analysis: verify APAS + independent code review (Chap52-59). AFK. DOT.
+# R123 Agent 1 — Algorithmic analysis: verify APAS + independent code review (Chap61-66). AFK. DOT.
 
 ## Task
 
@@ -17,10 +17,7 @@ For each function in your chapters, do THREE things:
 
 ## Your chapters
 
-Chap52, Chap53, Chap54, Chap55, Chap56, Chap57, Chap58, Chap59
-
-Note: Chap54 has two prose files (Chap54part2.txt). Read both.
-Chap61-66 are handled by another agent. Do NOT touch them.
+Chap61, Chap62, Chap63, Chap64, Chap65, Chap66
 
 ## Existing placeholders
 
@@ -94,5 +91,5 @@ For spec functions, proof functions, and type definitions: no annotations needed
 
 ## Report
 
-Write `plans/agent4-r122-alg-analysis-report.md`. Per chapter: functions
+Write `plans/agent1-r123-alg-analysis-report.md`. Per chapter: functions
 annotated, matches, differs (with brief reason for each differ).
