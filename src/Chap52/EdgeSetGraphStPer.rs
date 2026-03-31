@@ -283,7 +283,8 @@ broadcast use {
             neighbors
         }
 
-        /// - APAS: Work Θ(m), Span Θ(lg n) [Cost Spec 52.1, degree of vertex]
+        /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 

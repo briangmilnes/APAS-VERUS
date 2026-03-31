@@ -64,7 +64,8 @@ pub mod StarPartitionStEph {
 
     /// Sequential Star Partition using greedy selection.
     ///
-    /// - APAS: Work Θ(n + m), Span Θ(n + m)
+    /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(n + m)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — matches APAS
     /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) — agrees with APAS.
     pub fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (partition: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires

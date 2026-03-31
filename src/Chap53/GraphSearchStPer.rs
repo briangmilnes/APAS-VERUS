@@ -44,7 +44,8 @@ pub mod GraphSearchStPer {
     }
 
     pub trait GraphSearchStPerTrait<V: StT + Ord> {
-        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
@@ -61,7 +62,8 @@ pub mod GraphSearchStPer {
                 view_ord_consistent::<V>(),
             ensures search.visited@.contains(source@);
 
-        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
@@ -79,7 +81,8 @@ pub mod GraphSearchStPer {
                 view_ord_consistent::<V>(),
             ensures sources@.subset_of(search.visited@);
 
-        /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStPer<V>)
         where
@@ -305,7 +308,8 @@ pub mod GraphSearchStPer {
     }
 
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
-    /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
+    /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
     pub fn reachable<V: StT + Ord, G>(
         graph: &G, source: V,

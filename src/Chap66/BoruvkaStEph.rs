@@ -170,6 +170,7 @@ pub mod BoruvkaStEph {
         /// Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(m log n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n) — matches APAS
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential, span = work
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
@@ -213,7 +214,8 @@ pub mod BoruvkaStEph {
         /// For each vertex, find the minimum weight edge incident on it.
         /// Returns a table mapping each vertex to (neighbor, weight, label).
         ///
-        /// - APAS: Work O(m), Span O(log m)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — matches APAS
         /// - Sequential: Work O(m), Span O(m) — sequential iteration over edges.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
@@ -278,7 +280,8 @@ pub mod BoruvkaStEph {
         /// Performs star contraction along vertex bridges using deterministic coin flips.
         /// Each vertex flips a coin (Heads/Tails). Edges from Tail to Head are contracted.
         ///
-        /// - APAS: Work O(n), Span O(log n)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — matches APAS
         /// - Sequential: Work O(n), Span O(n) — sequential iteration over vertices.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
@@ -379,7 +382,8 @@ pub mod BoruvkaStEph {
         /// Computes the Minimum Spanning Tree using recursive bridge-based contraction.
         /// Returns the set of edge labels in the MST.
         ///
-        /// - APAS: Work O(m log n), Span O(log^2 n)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(log^2 n) — matches APAS
         /// - Sequential: Work O(m log n), Span O(m log n) — sequential; O(log n) rounds each O(m).
         #[verifier::exec_allows_no_decreases_clause]
         fn boruvka_mst<V: HashOrd + Copy>(
@@ -495,7 +499,8 @@ pub mod BoruvkaStEph {
         /// Borůvka MST with a specific seed.
         /// Deterministic coin flips replace StdRng for Verus verification.
         ///
-        /// - APAS: Work O(m log n), Span O(log^2 n)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m log n), Span O(log^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(log^2 n) — matches APAS
         /// - Sequential: Work O(m log n), Span O(m log n) — delegates to sequential boruvka_mst.
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,

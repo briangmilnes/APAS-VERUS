@@ -1717,7 +1717,8 @@ pub mod UnionFindStEph {
             spec_unionfindsteph_wf(self)
         }
 
-        /// - APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn new() -> (uf: Self) {
             let uf = UnionFindStEph {
                 parent: HashMapWithViewPlus::new(),
@@ -1742,7 +1743,8 @@ pub mod UnionFindStEph {
             uf
         }
 
-        /// - APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn insert(&mut self, v: V) {
             if !self.parent.contains_key(&v) {
                 // Capture v@ before v is consumed by push.
@@ -1765,13 +1767,15 @@ pub mod UnionFindStEph {
             }
         }
 
-        /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
         /// Without path compression for now (correct but O(log n) per call).
         fn find(&mut self, v: &V) -> (root: V) {
             find_root_loop(self, v)
         }
 
-        /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
         // R115 EXPERIMENT: keep external_body, test via union_experiment below.
         #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
@@ -1786,7 +1790,8 @@ pub mod UnionFindStEph {
             }
         }
 
-        /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
         #[verifier::rlimit(20)]
         fn equals(&mut self, u: &V, v: &V) -> (same: bool) {
             let root_u = find_root_loop(self, u);
@@ -1794,7 +1799,8 @@ pub mod UnionFindStEph {
             feq(&root_u, &root_v)
         }
 
-        /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(n alpha(n)), Span O(n alpha(n))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n) — matches APAS
         #[verifier::rlimit(30)]
         fn num_sets(&mut self) -> (count: usize) {
             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;

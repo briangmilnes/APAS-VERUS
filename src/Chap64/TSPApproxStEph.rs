@@ -103,7 +103,8 @@ pub mod TSPApproxStEph {
     /// Performs DFS traversal that visits each edge twice (once in each direction).
     /// Returns a sequence of vertices visited.
     ///
-    /// - APAS: Work O(n), Span O(n)
+    /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — DFS is inherently sequential.
     ///
     /// Arguments:
@@ -239,7 +240,8 @@ pub mod TSPApproxStEph {
     /// Removes duplicate vertex visits from Euler tour using triangle inequality.
     /// Result is a Hamiltonian cycle (visits each vertex exactly once).
     ///
-    /// - APAS: Work O(n), Span O(n)
+    /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     ///
     /// Arguments:
@@ -287,7 +289,8 @@ pub mod TSPApproxStEph {
     ///
     /// Sums the weights of edges in the tour.
     ///
-    /// - APAS: Work O(n), Span O(n)
+    /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
     /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -369,7 +372,8 @@ pub mod TSPApproxStEph {
     /// 3. Apply shortcuts using triangle inequality
     /// 4. Result has weight <= 2 * w(T)
     ///
-    /// - APAS: Work O(n+m), Span O(n+m)
+    /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n+m), Span O(n+m)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — matches APAS
     /// - Claude-Opus-4.6: Work O(n+m), Span O(n+m) — agrees with APAS.
     ///
     /// Arguments:

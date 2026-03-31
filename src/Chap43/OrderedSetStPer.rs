@@ -219,37 +219,44 @@ broadcast use {
         spec fn spec_orderedsetstper_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - delegated
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn size(&self) -> (count: usize)
             requires self.spec_orderedsetstper_wf(),
             ensures count == self@.len(), self@.finite();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn empty() -> (empty: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn singleton(x: T) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn find(&self, x: &T) -> (found: bool)
             requires self.spec_orderedsetstper_wf(),
             ensures found == self@.contains(x@);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_orderedsetstper_wf(),
                 self@.len() + 1 < usize::MAX as nat,
             ensures updated@ == self@.insert(x@), updated.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn delete(&self, x: &T) -> (updated: Self)
             requires self.spec_orderedsetstper_wf(),
             ensures updated@ == self@.remove(x@), updated.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -261,22 +268,26 @@ broadcast use {
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
             ensures filtered@.subset_of(self@), filtered.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
             ensures common@ == self@.intersect(other@), common.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_orderedsetstper_wf(),
                 other.spec_orderedsetstper_wf(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(m log(n/m + 1))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires self.spec_orderedsetstper_wf(), other.spec_orderedsetstper_wf(),
             ensures remaining@ == self@.difference(other@), remaining.spec_orderedsetstper_wf();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -284,7 +295,8 @@ broadcast use {
                 seq.spec_avltreeseqstper_wf(),
                 seq@.to_set() =~= self@,
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
-        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — matches APAS
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqstper_wf(),

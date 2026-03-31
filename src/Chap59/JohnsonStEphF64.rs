@@ -233,7 +233,8 @@ pub mod JohnsonStEphF64 {
 
     /// Reweight graph edges: w'(u,v) = w(u,v) + h(u) - h(v).
     /// Returns a new graph with the same vertices and reweighted edges.
-    /// - APAS: Work O(m), Span O(m).
+    /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(m), Span O(m).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — matches APAS
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m).
     fn reweight_graph(
         graph: &WeightedDirGraphStEphF64<usize>,

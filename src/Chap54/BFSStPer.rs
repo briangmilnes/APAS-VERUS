@@ -202,7 +202,8 @@ pub mod BFSStPer {
 
     impl BFSStPerTrait for BFSStPer {
 
-    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — matches APAS
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, source: usize) -> (traversal: ArraySeqStPerS<usize>)
     {

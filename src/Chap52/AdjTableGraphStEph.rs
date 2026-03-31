@@ -202,14 +202,16 @@ broadcast use {
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
 
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty table.
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
                 view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphsteph_wf();
-        /// - APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
@@ -232,7 +234,8 @@ broadcast use {
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
-        /// - APAS: Work Theta(|V|), Span Theta(|V|) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(|V|), Span O(|V|) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             requires
@@ -255,17 +258,20 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find + set len
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphsteph_wf();
-        /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table insert.
         fn insert_vertex(&mut self, v: V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
-        /// - APAS: Work Theta((n + m) lg n), Span Theta((n + m) lg n) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O((n + m) lg n), Span O((n + m) lg n) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
         /// - Claude-Opus-4.6: Work Theta((n + m) lg n), Span Theta((n + m) lg n) — agrees; removes from all neighbor sets.
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
-        /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set insert.
         fn insert_edge(&mut self, u: V, v: V)
             requires
@@ -276,7 +282,8 @@ broadcast use {
                 self.spec_adj().dom().contains(u@),
                 self.spec_adj().dom().contains(v@),
                 self.spec_adj()[u@].contains(v@);
-        /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set delete.
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()

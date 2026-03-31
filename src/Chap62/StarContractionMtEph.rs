@@ -166,7 +166,8 @@ pub mod StarContractionMtEph {
     /// - Base case: No edges, call base function on vertices
     /// - Recursive case: Parallel partition, parallel quotient construction, recur, then expand
     ///
-    /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
+    /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — star_partition is sequential (all loops); quotient build uses ParaPair but partition dominates span.
     ///
     /// Arguments:
@@ -219,6 +220,7 @@ pub mod StarContractionMtEph {
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -287,6 +289,7 @@ pub mod StarContractionMtEph {
     /// to prove the edge-closure postcondition: all output edges have centers as endpoints.
     ///
     /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
@@ -413,7 +416,8 @@ pub mod StarContractionMtEph {
     ///
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
-    /// - APAS: Work O((n + m) lg n), Span O(lg^2 n)
+    /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,

@@ -73,7 +73,8 @@ pub mod SCCStEph {
 
     pub trait SCCStEphTrait {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18).
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [inherits from DFS cost]
+        /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(|V| + |E|), Span O(|V| + |E|) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — matches APAS
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
         fn scc(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (components: AVLTreeSeqStEphS<AVLTreeSetStEph<usize>>)
             requires

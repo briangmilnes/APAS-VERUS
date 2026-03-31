@@ -199,7 +199,8 @@ pub mod EdgeSetGraphMtPer {
 
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
-        /// - APAS: Work Theta(m), Span Theta(lg n) [Cost Spec 52.1]
+        /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — sequential iterate+insert.
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
         {
@@ -259,7 +260,8 @@ pub mod EdgeSetGraphMtPer {
             neighbors
         }
 
-        /// - APAS: Work Theta(m), Span Theta(lg n) [Cost Spec 52.1, degree of vertex]
+        /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
@@ -277,7 +279,8 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
-        /// - APAS: Work Theta(|E| log |E|), Span Theta(log |E| * log |V|)
+        /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(|E| log |E|), Span O(log |E| * log |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E| log |E|), Span O(log |E| * log |V|) — matches APAS
         /// - Claude-Opus-4.6: Work Theta(|E| log |E|), Span Theta(|E| log |E|) — sequential iterate+insert.
         fn delete_vertex(&self, v: &V) -> (updated: Self)
         {

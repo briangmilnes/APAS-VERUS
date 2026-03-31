@@ -146,7 +146,8 @@ pub mod EdgeContractionStEph {
     ///
     /// Computes a greedy matching and contracts it.
     ///
-    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — matches APAS
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
     pub fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (contracted: UnDirGraphStEph<V>)
         requires

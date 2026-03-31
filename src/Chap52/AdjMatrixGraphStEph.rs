@@ -107,7 +107,8 @@ broadcast use {
         spec fn spec_edge(&self, u: int, v: int) -> bool
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
-        /// - APAS: (no explicit new cost; matrix init is n^2)
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): (no explicit new cost; matrix init is n^2)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — tabulate n rows of n booleans.
         fn new(n: usize) -> (empty: Self)
             ensures
