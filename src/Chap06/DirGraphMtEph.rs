@@ -94,6 +94,8 @@ pub mod DirGraphMtEph {
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
+        spec fn spec_dirgraphmteph_wf(&self) -> bool;
+
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> { self@.A }
 
@@ -101,24 +103,26 @@ pub mod DirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
-            ensures 
+            ensures
+                g.spec_dirgraphmteph_wf(),
                 spec_graphview_wf(g@),
-                g@.V == Set::<<V as View>::V>::empty(), 
-                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
+                g@.V =~= Set::<<V as View>::V>::empty(),
+                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: Self)
-            requires 
+            requires
                 valid_key_type_for_graph::<V>(),
                 V@.finite(),
                 A@.finite(),
-                forall |u: V::V, w: V::V| 
+                forall |u: V::V, w: V::V|
                     #[trigger] A@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
-            ensures 
+            ensures
+                g.spec_dirgraphmteph_wf(),
                 spec_graphview_wf(g@),
-                g@.V == V@, 
-                g@.A == A@;
+                g@.V =~= V@,
+                g@.A =~= A@;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -128,7 +132,7 @@ pub mod DirGraphMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>)
-            ensures a@ == self@.A;
+            ensures a@ =~= self@.A;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -403,6 +407,11 @@ pub mod DirGraphMtEph {
     //		9. impls
 
     impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
+
+        open spec fn spec_dirgraphmteph_wf(&self) -> bool {
+            spec_graphview_wf(self@)
+        }
+
         fn empty() -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
         }

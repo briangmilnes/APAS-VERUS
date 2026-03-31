@@ -93,8 +93,16 @@ pub mod UnDirGraphMtEph {
 
     pub trait UnDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
+        spec fn spec_undirgraphmteph_wf(&self) -> bool;
+
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_edges(&self) -> Set<(V::V, V::V)> { self@.A }
+
+        open spec fn spec_degree(&self, v: V::V) -> nat
+            recommends spec_graphview_wf(self@), self@.V.contains(v)
+        {
+            self.spec_ng(v).len()
+        }
 
         open spec fn spec_ng_from_set(&self, v: V::V, subedges: Set<(V::V, V::V)>) -> Set<V::V> 
             recommends 
@@ -113,24 +121,26 @@ pub mod UnDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_graph::<V>()
-            ensures 
+            ensures
+                g.spec_undirgraphmteph_wf(),
                 spec_graphview_wf(g@),
-                g@.V == Set::<<V as View>::V>::empty(), 
-                g@.A == Set::<(<V as View>::V, <V as View>::V)>::empty();
+                g@.V =~= Set::<<V as View>::V>::empty(),
+                g@.A =~= Set::<(<V as View>::V, <V as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |E|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(1)
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: Self)
-            requires 
+            requires
                 valid_key_type_for_graph::<V>(),
                 V@.finite(),
                 E@.finite(),
-                forall |u: V::V, w: V::V| 
+                forall |u: V::V, w: V::V|
                     #[trigger] E@.contains((u, w)) ==> V@.contains(u) && V@.contains(w),
-            ensures 
+            ensures
+                g.spec_undirgraphmteph_wf(),
                 spec_graphview_wf(g@),
-                g@.V == V@, 
-                g@.A == E@;
+                g@.V =~= V@,
+                g@.A =~= E@;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -140,7 +150,7 @@ pub mod UnDirGraphMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>)
-            ensures e@ == self@.A;
+            ensures e@ =~= self@.A;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -246,6 +256,11 @@ pub mod UnDirGraphMtEph {
     //		9. impls
 
     impl<V: StTInMtT + Hash + 'static> UnDirGraphMtEphTrait<V> for UnDirGraphMtEph<V> {
+
+        open spec fn spec_undirgraphmteph_wf(&self) -> bool {
+            spec_graphview_wf(self@)
+        }
+
         fn empty() -> (g: UnDirGraphMtEph<V>) {
             UnDirGraphMtEph {
                 V: SetLit![],
