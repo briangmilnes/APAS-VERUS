@@ -306,7 +306,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@);
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablesteph_wf();
         /// - APAS Cost Spec 42.5: Work |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential scan; disagrees with APAS span (no parallelism).
         fn domain(&self) -> (domain: ArraySetStEph<K>)
@@ -331,6 +331,7 @@ broadcast use {
                 forall|v: &V| f.requires((v,)),
                 obeys_feq_clone::<K>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() == old(self)@.dom(),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     (exists|old_val: V, result: V|
@@ -349,7 +350,9 @@ broadcast use {
                 forall|k: &K, v: &V| f.requires((k, v)),
                 forall|k: K, v: V, keep: bool|
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom().subset_of(old(self)@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
@@ -364,6 +367,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
@@ -380,6 +384,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
                     ==> self@[k] == old(self)@[k],
@@ -396,13 +401,15 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
         fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
+            requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
                 match found {
                     Some(v) => self@.contains_key(key@) && self@[key@] == v@,
@@ -422,7 +429,11 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
         fn delete(&mut self, key: &K)
-            requires old(self).spec_tablesteph_wf(), obeys_view_eq::<K>()
+            requires
+                old(self).spec_tablesteph_wf(),
+                obeys_feq_clone::<Pair<K, V>>(),
+                obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures self@ =~= old(self)@.remove(key@), self.spec_tablesteph_wf();
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
@@ -431,6 +442,7 @@ broadcast use {
                 old(self).spec_tablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
             ensures
                 self.spec_tablesteph_wf(),
                 self@.contains_key(key@),
@@ -452,6 +464,7 @@ broadcast use {
                 old(self).spec_tablesteph_wf(),
                 forall|v1: &V, v2: &V| combine.requires((v1, v2)),
                 obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
                 value.spec_wf(),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) ==>
                     old(self).spec_stored_value(k).spec_wf(),
@@ -480,6 +493,7 @@ broadcast use {
             requires
                 old(self).spec_tablesteph_wf(),
                 obeys_view_eq::<K>(),
+                obeys_feq_full::<Pair<K, V>>(),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) ==>
                     old(self).spec_stored_value(k).spec_wf(),
             ensures
@@ -492,8 +506,10 @@ broadcast use {
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),
+                obeys_feq_full::<Pair<K, V>>(),
                 keys@.finite(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
@@ -501,8 +517,10 @@ broadcast use {
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),
+                obeys_feq_full::<Pair<K, V>>(),
                 keys@.finite(),
             ensures
+                self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
@@ -591,6 +609,9 @@ broadcast use {
             let entries = ArraySeqStEphS::singleton(Pair(key, value));
             assert(entries@ =~= seq![(key@, value@)]);
             proof {
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 let s = entries@;
                 assert(s.len() == 1);
                 assert(s.drop_last() =~= Seq::<(K::V, V::V)>::empty());

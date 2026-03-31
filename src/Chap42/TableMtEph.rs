@@ -541,6 +541,9 @@ broadcast use {
     pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_tablemteph_wf(&self) -> bool;
 
+        /// Returns the concrete stored value for a given key.
+        spec fn spec_stored_value(&self, key: K::V) -> V;
+
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn size(&self) -> (count: usize)
@@ -553,10 +556,12 @@ broadcast use {
         /// - APAS Cost Spec 42.5: Work 1, Span 1
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn singleton(key: K, value: V) -> (tree: Self)
+            requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();
         /// - APAS Cost Spec 42.5: Work |a|, Span lg |a|
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential scan; disagrees with APAS span.
         fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
         /// - APAS Cost Spec 42.5: Work |s| * W(f), Span lg |s| + S(f)
         /// - Claude-Opus-4.6: Work Θ(|s| * W(f)), Span Θ(lg |s| + S(f)) -- parallel via join(); agrees with APAS.
@@ -580,6 +585,7 @@ broadcast use {
                 forall|v: &V| f.requires((v,)),
                 obeys_feq_clone::<K>(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() == old(self)@.dom(),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     (exists|old_val: V, result: V|
@@ -599,6 +605,7 @@ broadcast use {
                 forall|k: K, v: V, keep: bool|
                     f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom().subset_of(old(self)@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
@@ -613,6 +620,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     (exists|v1: V, v2: V, r: V|
@@ -629,6 +637,7 @@ broadcast use {
                 obeys_feq_clone::<K>(),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
                     ==> self@[k] == old(self)@[k],
@@ -646,6 +655,7 @@ broadcast use {
                 old(self).spec_tablemteph_wf(),
                 obeys_view_eq::<K>(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
@@ -686,6 +696,7 @@ broadcast use {
                 old(self).spec_tablemteph_wf(),
                 keys@.finite(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
@@ -695,6 +706,7 @@ broadcast use {
                 old(self).spec_tablemteph_wf(),
                 keys@.finite(),
             ensures
+                self.spec_tablemteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
@@ -709,6 +721,12 @@ broadcast use {
             spec_keys_no_dups(self.entries@)
             && obeys_feq_fulls::<K, V>()
             && obeys_feq_full::<Pair<K, V>>()
+        }
+
+        open spec fn spec_stored_value(&self, key: K::V) -> V {
+            let i = choose|i: int| 0 <= i < self.entries.seq@.len()
+                && (#[trigger] self.entries.seq@[i]).0@ == key;
+            self.entries.seq@[i].1
         }
 
         fn size(&self) -> (count: usize)
@@ -1876,6 +1894,17 @@ broadcast use {
                     lemma_entries_to_map_subseq_value::<K::V, V::V>(
                         old_self_view, self.entries@, sources, k);
                 };
+                // Prove wf: no_dups from subsequence of old no-dup entries.
+                assert(spec_keys_no_dups(self.entries@)) by {
+                    assert forall|a: int, b: int|
+                        0 <= a < b < self.entries@.len()
+                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+                    by {
+                        assert(sources[a] < sources[b]);
+                        assert(self.entries@[a] == old_self_view[sources[a]]);
+                        assert(self.entries@[b] == old_self_view[sources[b]]);
+                    };
+                };
             }
         }
 
@@ -2326,6 +2355,17 @@ broadcast use {
                     lemma_entries_to_map_subseq_value::<K::V, V::V>(
                         old_view, self.entries@, sources, k);
                 };
+                // Prove wf: no_dups from subsequence of old no-dup entries.
+                assert(spec_keys_no_dups(self.entries@)) by {
+                    assert forall|a: int, b: int|
+                        0 <= a < b < self.entries@.len()
+                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+                    by {
+                        assert(sources[a] < sources[b]);
+                        assert(self.entries@[a] == old_view[sources[a]]);
+                        assert(self.entries@[b] == old_view[sources[b]]);
+                    };
+                };
             }
         }
 
@@ -2420,6 +2460,17 @@ broadcast use {
                 by {
                     lemma_entries_to_map_subseq_value::<K::V, V::V>(
                         old_view, self.entries@, sources, k);
+                };
+                // Prove wf: no_dups from subsequence of old no-dup entries.
+                assert(spec_keys_no_dups(self.entries@)) by {
+                    assert forall|a: int, b: int|
+                        0 <= a < b < self.entries@.len()
+                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+                    by {
+                        assert(sources[a] < sources[b]);
+                        assert(self.entries@[a] == old_view[sources[a]]);
+                        assert(self.entries@[b] == old_view[sources[b]]);
+                    };
                 };
             }
         }
