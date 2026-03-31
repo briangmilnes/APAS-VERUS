@@ -114,32 +114,41 @@ pub mod TopDownDPMtPer {
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
+        spec fn spec_topdowndpmtper_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)
             ensures
+                dp.spec_topdowndpmtper_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
         fn s_length(&self) -> (len: usize)
+            requires self.spec_topdowndpmtper_wf(),
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            requires self.spec_topdowndpmtper_wf(),
             ensures len as nat == self.spec_t_len();
 
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_topdowndpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         fn med_memoized_concurrent(&self) -> (distance: usize)
-            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,
+            requires
+                self.spec_topdowndpmtper_wf(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
 
         fn med_memoized_parallel(&self) -> (distance: usize)
-            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,
+            requires
+                self.spec_topdowndpmtper_wf(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
     }
 
@@ -358,6 +367,8 @@ pub mod TopDownDPMtPer {
             spec_med_fn(self.seq_s@, self.seq_t@, i, j)
         }
 
+        open spec fn spec_topdowndpmtper_wf(&self) -> bool { true }
+
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat) {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
@@ -408,6 +419,7 @@ pub mod TopDownDPMtPer {
     impl Default for TopDownDPMtPerS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_topdowndpmtper_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {

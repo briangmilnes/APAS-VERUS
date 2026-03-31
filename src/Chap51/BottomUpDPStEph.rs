@@ -46,6 +46,7 @@ pub mod BottomUpDPStEph {
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
+        spec fn spec_bottomupdpsteph_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
@@ -54,6 +55,7 @@ pub mod BottomUpDPStEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
+                dp.spec_bottomupdpsteph_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
@@ -62,37 +64,47 @@ pub mod BottomUpDPStEph {
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpsteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpsteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_bottomupdpsteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
+            requires old(self).spec_bottomupdpsteph_wf(),
             ensures
+                self.spec_bottomupdpsteph_wf(),
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
+            requires old(self).spec_bottomupdpsteph_wf(),
             ensures
+                self.spec_bottomupdpsteph_wf(),
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
         /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1)
         /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, no parallelism.
         fn med_bottom_up(&mut self) -> (distance: usize)
-            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
+            requires
+                old(self).spec_bottomupdpsteph_wf(),
+                old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures
+                self.spec_bottomupdpsteph_wf(),
                 distance as nat == old(self).spec_med(
                     old(self).spec_s_len(),
                     old(self).spec_t_len()
@@ -104,6 +116,7 @@ pub mod BottomUpDPStEph {
         /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- allocate (|S|+1)*(|T|+1) cells.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
+                self.spec_bottomupdpsteph_wf(),
                 self.spec_s_len() < usize::MAX,
                 self.spec_t_len() < usize::MAX,
             ensures
@@ -127,6 +140,7 @@ pub mod BottomUpDPStEph {
             j: usize,
         ) -> (val: usize)
             requires
+                self.spec_bottomupdpsteph_wf(),
                 1 <= i <= self.spec_s_len(),
                 1 <= j <= self.spec_t_len(),
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
@@ -164,6 +178,8 @@ pub mod BottomUpDPStEph {
                 1 + spec_min(del, ins)
             }
         }
+
+        open spec fn spec_bottomupdpsteph_wf(&self) -> bool { true }
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j,
@@ -449,6 +465,7 @@ pub mod BottomUpDPStEph {
     impl Default for BottomUpDPStEphS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_bottomupdpsteph_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {

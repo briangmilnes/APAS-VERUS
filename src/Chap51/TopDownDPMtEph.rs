@@ -114,6 +114,7 @@ pub mod TopDownDPMtEph {
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
+        spec fn spec_topdowndpmteph_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
@@ -122,6 +123,7 @@ pub mod TopDownDPMtEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)
             ensures
+                dp.spec_topdowndpmteph_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
@@ -130,37 +132,47 @@ pub mod TopDownDPMtEph {
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
+            requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
+            requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_topdowndpmteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqMtEphS<char>)
+            requires old(self).spec_topdowndpmteph_wf(),
             ensures
+                self.spec_topdowndpmteph_wf(),
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqMtEphS<char>)
+            requires old(self).spec_topdowndpmteph_wf(),
             ensures
+                self.spec_topdowndpmteph_wf(),
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
         /// - APAS: Work O(|S|*|T|), Span O(|S|*|T|) (sequential memo threading)
         /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential memoized recursion.
         fn med_memoized_concurrent(&mut self) -> (distance: usize)
-            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
+            requires
+                old(self).spec_topdowndpmteph_wf(),
+                old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures
+                self.spec_topdowndpmteph_wf(),
                 distance as nat == old(self).spec_med(
                     old(self).spec_s_len(),
                     old(self).spec_t_len()
@@ -171,8 +183,11 @@ pub mod TopDownDPMtEph {
         /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (parallel subproblem exploration)
         /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|+|T|) -- fork-join on branches.
         fn med_memoized_parallel(&mut self) -> (distance: usize)
-            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
+            requires
+                old(self).spec_topdowndpmteph_wf(),
+                old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures
+                self.spec_topdowndpmteph_wf(),
                 distance as nat == old(self).spec_med(
                     old(self).spec_s_len(),
                     old(self).spec_t_len()
@@ -400,6 +415,8 @@ pub mod TopDownDPMtEph {
             spec_med_fn(self.seq_s@, self.seq_t@, i, j)
         }
 
+        open spec fn spec_topdowndpmteph_wf(&self) -> bool { true }
+
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat) {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
@@ -453,6 +470,7 @@ pub mod TopDownDPMtEph {
     impl Default for TopDownDPMtEphS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_topdowndpmteph_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {

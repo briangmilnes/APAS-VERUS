@@ -89,33 +89,41 @@ pub mod TopDownDPStPer {
         spec fn spec_memo(&self) -> Map<(usize, usize), usize>;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
         spec fn spec_memo_correct(&self, memo: Map<(usize, usize), usize>) -> bool;
+        spec fn spec_topdowndpstper_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)
             ensures
+                dp.spec_topdowndpstper_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
         fn s_length(&self) -> (len: usize)
+            requires self.spec_topdowndpstper_wf(),
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            requires self.spec_topdowndpstper_wf(),
             ensures len as nat == self.spec_t_len();
 
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_topdowndpstper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         fn memo_size(&self) -> (size: usize)
+            requires self.spec_topdowndpstper_wf(),
             ensures size == self.spec_memo().len();
 
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
+            requires self.spec_topdowndpstper_wf(),
             ensures memoized == self.spec_memo().contains_key((i, j));
 
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
+            requires self.spec_topdowndpstper_wf(),
             ensures
                 match val {
                     Some(v) => self.spec_memo().contains_key((i, j))
@@ -130,11 +138,14 @@ pub mod TopDownDPStPer {
 
         fn clear_memo(self) -> (dp: Self)
             ensures
+                dp.spec_topdowndpstper_wf(),
                 dp.spec_s() == self.spec_s(),
                 dp.spec_t() == self.spec_t();
 
         fn med_memoized(&self) -> (distance: usize)
-            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,
+            requires
+                self.spec_topdowndpstper_wf(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
 
         fn med_recursive(
@@ -170,6 +181,10 @@ pub mod TopDownDPStPer {
         open spec fn spec_memo_correct(&self, memo: Map<(usize, usize), usize>) -> bool {
             forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
                 memo[(a, b)] as nat == self.spec_med(a as nat, b as nat)
+        }
+
+        open spec fn spec_topdowndpstper_wf(&self) -> bool {
+            self.spec_memo_correct(self.spec_memo())
         }
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
@@ -299,6 +314,7 @@ pub mod TopDownDPStPer {
     impl Default for TopDownDPStPerS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_topdowndpstper_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {

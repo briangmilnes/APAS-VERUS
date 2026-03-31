@@ -47,33 +47,81 @@ pub mod BottomUpDPMtPer {
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
+        spec fn spec_bottomupdpmtper_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)
             ensures
+                dp.spec_bottomupdpmtper_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
         fn s_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpmtper_wf(),
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpmtper_wf(),
             ensures len as nat == self.spec_t_len();
 
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_bottomupdpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         fn med_bottom_up_parallel(&self) -> (distance: usize)
-            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,
+            requires
+                self.spec_bottomupdpmtper_wf(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures
                 distance as nat == self.spec_med(
                     self.spec_s_len(),
                     self.spec_t_len()
                 );
+
+        fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
+            requires
+                self.spec_bottomupdpmtper_wf(),
+                self.spec_s_len() < usize::MAX,
+                self.spec_t_len() < usize::MAX,
+            ensures
+                table@.len() == self.spec_s_len() + 1,
+                forall|i: int| #![trigger table@[i]]
+                    0 <= i < table@.len() ==>
+                    table@[i]@.len() == self.spec_t_len() + 1,
+                forall|i: int| #![trigger table@[i]]
+                    0 <= i <= self.spec_s_len() as int ==>
+                    table@[i]@[0] == i as nat,
+                forall|j: int|
+                    0 <= j <= self.spec_t_len() as int ==>
+                    table@[0]@[j] == j as nat;
+
+        fn compute_cell_value(
+            &self,
+            table: &Vec<Vec<usize>>,
+            i: usize,
+            j: usize,
+        ) -> (val: usize)
+            requires
+                self.spec_bottomupdpmtper_wf(),
+                1 <= i <= self.spec_s_len(),
+                1 <= j <= self.spec_t_len(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
+                table@.len() > i,
+                forall|r: int| #![trigger table@[r]]
+                    0 <= r < table@.len() ==>
+                    table@[r]@.len() > j,
+                table@[(i - 1) as int]@[(j - 1) as int] as nat
+                    == self.spec_med((i - 1) as nat, (j - 1) as nat),
+                table@[(i - 1) as int]@[j as int] as nat
+                    == self.spec_med((i - 1) as nat, j as nat),
+                table@[i as int]@[(j - 1) as int] as nat
+                    == self.spec_med(i as nat, (j - 1) as nat),
+            ensures
+                val as nat == self.spec_med(i as nat, j as nat);
     }
 
     // 9. impls
@@ -96,6 +144,8 @@ pub mod BottomUpDPMtPer {
                 1 + spec_min(del, ins)
             }
         }
+
+        open spec fn spec_bottomupdpmtper_wf(&self) -> bool { true }
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j,
@@ -251,6 +301,98 @@ pub mod BottomUpDPMtPer {
 
             table[s_len][t_len]
         }
+
+        fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
+            let s_len = self.seq_s.length();
+            let t_len = self.seq_t.length();
+
+            let mut table: Vec<Vec<usize>> = Vec::new();
+
+            // Row 0: [0, 1, 2, ..., t_len].
+            let mut first_row: Vec<usize> = Vec::new();
+            let mut j: usize = 0;
+            while j <= t_len
+                invariant
+                    j <= t_len + 1,
+                    t_len < usize::MAX,
+                    t_len as nat == self.spec_t_len(),
+                    first_row@.len() == j as nat,
+                    forall|k: int| 0 <= k < j as int ==> first_row@[k] == k as nat,
+                decreases (t_len + 1 - j),
+            {
+                first_row.push(j);
+                j = j + 1;
+            }
+            table.push(first_row);
+
+            // Rows 1..=s_len: [i, 0, 0, ..., 0].
+            let mut i: usize = 1;
+            while i <= s_len
+                invariant
+                    1 <= i <= s_len + 1,
+                    s_len < usize::MAX,
+                    t_len < usize::MAX,
+                    s_len as nat == self.spec_s_len(),
+                    t_len as nat == self.spec_t_len(),
+                    table@.len() == i as nat,
+                    forall|r: int| #![trigger table@[r]]
+                        0 <= r < i as int ==>
+                        table@[r]@.len() == t_len as nat + 1,
+                    forall|r: int| #![trigger table@[r]]
+                        0 <= r < i as int ==>
+                        table@[r]@[0] == r as nat,
+                    forall|c: int|
+                        0 <= c <= t_len as int ==>
+                        table@[0]@[c] == c as nat,
+                decreases (s_len + 1 - i),
+            {
+                let mut row: Vec<usize> = Vec::new();
+                row.push(i);
+                let mut jj: usize = 1;
+                while jj <= t_len
+                    invariant
+                        1 <= jj <= t_len + 1,
+                        t_len < usize::MAX,
+                        t_len as nat == self.spec_t_len(),
+                        row@.len() == jj as nat,
+                        row@[0] == i as nat,
+                    decreases (t_len + 1 - jj),
+                {
+                    row.push(0);
+                    jj = jj + 1;
+                }
+                table.push(row);
+                i = i + 1;
+            }
+
+            table
+        }
+
+        fn compute_cell_value(
+            &self,
+            table: &Vec<Vec<usize>>,
+            i: usize,
+            j: usize,
+        ) -> (val: usize) {
+            let s_char = *self.seq_s.nth(i - 1);
+            let t_char = *self.seq_t.nth(j - 1);
+
+            if s_char == t_char {
+                table[i - 1][j - 1]
+            } else {
+                let delete_cost = table[i - 1][j];
+                let insert_cost = table[i][j - 1];
+                proof {
+                    self.lemma_spec_med_bounded((i - 1) as nat, j as nat);
+                    self.lemma_spec_med_bounded(i as nat, (j - 1) as nat);
+                }
+                if delete_cost <= insert_cost {
+                    1 + delete_cost
+                } else {
+                    1 + insert_cost
+                }
+            }
+        }
     }
 
     #[cfg(verus_keep_ghost)]
@@ -264,6 +406,7 @@ pub mod BottomUpDPMtPer {
     impl Default for BottomUpDPMtPerS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_bottomupdpmtper_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {
