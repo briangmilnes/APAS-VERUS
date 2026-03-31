@@ -126,7 +126,7 @@ pub mod MergeSortStPer {
 
         /// Sort a sequence using merge sort. Algorithm 26.4.
         /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential recursion and sequential merge
         fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures

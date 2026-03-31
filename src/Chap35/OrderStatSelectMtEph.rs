@@ -108,8 +108,7 @@ pub mod OrderStatSelectMtEph {
     pub trait OrderStatSelectMtEphTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
-        ///   are sequential loops inside join(), so each round is O(n) span not O(lg n).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — DIFFERS: partition uses sequential loops inside join()
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures

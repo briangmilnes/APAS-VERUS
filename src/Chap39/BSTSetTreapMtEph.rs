@@ -128,7 +128,7 @@ pub mod BSTSetTreapMtEph {
                 self@.len() < usize::MAX as nat,
             ensures diff@.finite(), diff@ == self@.difference(other@);
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures
@@ -144,7 +144,7 @@ pub mod BSTSetTreapMtEph {
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(pivot) == Less,
                 forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(pivot) == Greater;
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
         fn join_pair(left: Self, right: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -156,7 +156,7 @@ pub mod BSTSetTreapMtEph {
                     left@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= left@.union(right@);
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
