@@ -91,9 +91,8 @@ broadcast use {
                     self@.len() > 0 ==> min_elem.is_some(),
                     self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
-            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+            /// - Alg Analysis: APAS (Ch45 cost table): Work O(n), Span O(n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS: scan for sorted position + copy
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -104,9 +103,8 @@ broadcast use {
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@),
                     Self::spec_sorted(pq.spec_seq());
 
-            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+            /// - Alg Analysis: APAS (Ch45 cost table): Work O(1), Span O(1)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: persistent array drops first element by copying
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
@@ -120,9 +118,8 @@ broadcast use {
                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
                     Self::spec_sorted(min_and_rest.0.spec_seq());
 
-            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(m * lg(1 + n/m)), Span O(m * lg(1 + n/m))
-            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg |A| + lg |B|), Span O(lg |A| + lg |B|)
-            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+            /// - Alg Analysis: APAS (Ch45 cost table): Work O(m + n), Span O(m + n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n) — matches APAS: sorted merge
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -134,9 +131,8 @@ broadcast use {
                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset()),
                     Self::spec_sorted(pq.spec_seq());
 
-            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(n lg n), Span O(n lg n)
-            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(n), Span O(lg^2 n)
-            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+            /// - Alg Analysis: APAS (Ch45 cost table): Work O(n lg n), Span O(n lg n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — matches APAS: sequential inserts
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures

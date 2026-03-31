@@ -317,7 +317,7 @@ pub mod BSTSizeStEph {
             requires self.spec_bstsizesteph_wf(),
             ensures ordered.spec_len() == self.spec_size();
         /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn rank(&self, key: &T) -> (rank: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
@@ -325,7 +325,7 @@ pub mod BSTSizeStEph {
             ensures
                 rank as nat <= self.spec_size();
         /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn select(&self, rank: usize) -> (selected: Option<&T>)
             ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1

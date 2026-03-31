@@ -106,7 +106,7 @@ pub mod SubsetSumMtPer {
 
         /// Solve subset sum for the given target.
         /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — DIFFERS: sequential DP table fill, APAS Span O(|S|) assumes parallel
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static

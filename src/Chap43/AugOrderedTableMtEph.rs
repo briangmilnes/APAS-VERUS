@@ -377,7 +377,7 @@ broadcast use {
             requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn reduce_val(&self) -> (reduced: V)
             requires self@.dom().finite()
             ensures self@.dom().finite();

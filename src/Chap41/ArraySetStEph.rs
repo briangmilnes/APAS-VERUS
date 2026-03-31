@@ -304,14 +304,14 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: stored count, not array scan
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetsteph_wf()
             ensures count == self@.len(), self@.finite();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential clone of element array
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_arraysetsteph_wf(),
             ensures
@@ -326,13 +326,13 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: single-element array, not boolean array
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — DIFFERS: sequential insert loop, each O(n)
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
             ensures
                 constructed@ =~= seq@.to_set(),
@@ -340,7 +340,7 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(x))), Span O(n + Σ W(f(x))) — DIFFERS: sequential filter
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -362,7 +362,7 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -375,7 +375,7 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -388,7 +388,7 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -401,14 +401,14 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: linear scan, not indexed
         fn find(&self, x: &T) -> (found: bool)
             requires self@.finite(),
             ensures found == self@.contains(x@);
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: copy with filter
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_arraysetsteph_wf(),
@@ -419,7 +419,7 @@ pub mod ArraySetStEph {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: find + copy
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_arraysetsteph_wf(),

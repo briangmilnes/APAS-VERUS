@@ -1,10 +1,10 @@
 veracity-annotate-alg-analysis-from-toml
 =========================================
-Started at: 2026-03-30 23:03:39 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-annotate-alg-analysis-from-toml.log
+Started at: 2026-03-31 09:12:12 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS-agent3
+Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-annotate-alg-analysis-from-toml.log
 
-Loaded 90 cost_spec entries (249 operations) from /home/milnes/projects/APAS-VERUS/analyses/apas-cost-reference-all.toml
+Loaded 90 cost_spec entries (249 operations) from /home/milnes/projects/APAS-VERUS-agent3/analyses/apas-cost-reference-all.toml
 
 Phase 1: Indexing 235 source files
 Indexed 962 unique (chapter, fn_name) keys, 2769 total fn locations

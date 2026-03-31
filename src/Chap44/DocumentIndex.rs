@@ -77,7 +77,7 @@ pub mod DocumentIndex {
         spec fn spec_documentindex_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.2): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential loops, APAS Span O(lg^2 n)
         fn make_index(docs: &DocumentCollection) -> (di: Self)
             requires
                 docs.spec_len() <= usize::MAX as nat / 2,
@@ -88,7 +88,7 @@ pub mod DocumentIndex {
             ensures di.spec_documentindex_wf();
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_documentindex_wf(),
@@ -100,7 +100,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -113,7 +113,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -127,7 +127,7 @@ pub mod DocumentIndex {
         ;
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -440,7 +440,7 @@ pub mod DocumentIndex {
             ensures qb.spec_index_wf();
 
         /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),

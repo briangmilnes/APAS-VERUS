@@ -184,14 +184,14 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetstper_wf(),
             ensures count == self@.len();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential in-order traversal
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_avltreesetstper_wf(),
@@ -207,7 +207,7 @@ broadcast use {
                 empty.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.4
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
             ensures
@@ -216,7 +216,7 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential loop of inserts
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqstper_wf(),
@@ -227,7 +227,7 @@ broadcast use {
                 constructed.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(x))), Span O(n + Σ W(f(x))) — DIFFERS: sequential filter
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -249,7 +249,7 @@ broadcast use {
                     ==> #[trigger] filtered@.contains(v);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -261,7 +261,7 @@ broadcast use {
                 common.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -273,7 +273,7 @@ broadcast use {
                 remaining.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -286,7 +286,7 @@ broadcast use {
                 combined.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
         fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -295,7 +295,7 @@ broadcast use {
             ensures found == self@.contains(x@);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
         fn delete(&self, x: &T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -306,7 +306,7 @@ broadcast use {
                 updated.spec_avltreesetstper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS CS 41.4
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),
