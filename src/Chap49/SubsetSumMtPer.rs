@@ -84,24 +84,32 @@ pub mod SubsetSumMtPer {
         /// Spec: multiset length.
         spec fn spec_multiset_len(&self) -> nat;
 
+        /// Well-formedness: the memo lock carries the correct predicate.
+        spec fn spec_subsetsummtper_wf(&self) -> bool;
+
         /// Create new subset sum solver.
         /// - APAS: not specified
         fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures empty.spec_multiset_len() == 0;
+            ensures
+                empty.spec_subsetsummtper_wf(),
+                empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
         /// - APAS: not specified
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (subset_sum: Self)
-            ensures subset_sum.spec_multiset_len() == multiset.spec_len();
+            ensures
+                subset_sum.spec_subsetsummtper_wf(),
+                subset_sum.spec_multiset_len() == multiset.spec_len();
 
         /// Solve subset sum for the given target.
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
-            T: Into<i32> + Copy + Send + Sync + 'static;
+            T: Into<i32> + Copy + Send + Sync + 'static
+            requires self.spec_subsetsummtper_wf();
 
         /// Get the multiset.
         /// - APAS: not specified
@@ -210,6 +218,10 @@ pub mod SubsetSumMtPer {
 
     impl<T: MtVal> SubsetSumMtPerTrait<T> for SubsetSumMtPerS<T> {
         open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
+
+        open spec fn spec_subsetsummtper_wf(&self) -> bool {
+            self.memo.pred() == SubsetSumMtPerMemoInv
+        }
 
         fn new() -> Self
         where

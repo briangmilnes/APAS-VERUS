@@ -86,18 +86,25 @@ pub mod MinEditDistMtPer {
         /// Spec: target length.
         spec fn spec_target_len(&self) -> nat;
 
+        /// Well-formedness: the memo lock carries the correct predicate.
+        spec fn spec_mineditdistmtper_wf(&self) -> bool;
+
         /// Create new minimum edit distance solver.
         /// - APAS: not specified
         fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
+            ensures
+                empty.spec_mineditdistmtper_wf(),
+                empty.spec_source_len() == 0,
+                empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
         /// - APAS: not specified
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> (edit_dist: Self)
             ensures
+                edit_dist.spec_mineditdistmtper_wf(),
                 edit_dist.spec_source_len() == source.spec_len(),
                 edit_dist.spec_target_len() == target.spec_len();
 
@@ -106,7 +113,9 @@ pub mod MinEditDistMtPer {
         fn min_edit_distance(&self) -> (dist: usize)
         where
             T: Send + Sync + 'static
-            requires self.spec_source_len() + self.spec_target_len() < usize::MAX;
+            requires
+                self.spec_mineditdistmtper_wf(),
+                self.spec_source_len() + self.spec_target_len() < usize::MAX;
 
         /// Get the source sequence.
         /// - APAS: not specified
@@ -242,6 +251,10 @@ pub mod MinEditDistMtPer {
         open spec fn spec_source_len(&self) -> nat { self.source.spec_len() }
 
         open spec fn spec_target_len(&self) -> nat { self.target.spec_len() }
+
+        open spec fn spec_mineditdistmtper_wf(&self) -> bool {
+            self.memo.pred() == MinEditDistMtPerMemoInv
+        }
 
         fn new() -> Self
         where

@@ -87,18 +87,25 @@ pub mod MinEditDistMtEph {
         /// Spec: target length.
         spec fn spec_target_len(&self) -> nat;
 
+        /// Well-formedness: the memo lock carries the correct predicate.
+        spec fn spec_mineditdistmteph_wf(&self) -> bool;
+
         /// Create new minimum edit distance solver.
         /// - APAS: not specified
         fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
+            ensures
+                empty.spec_mineditdistmteph_wf(),
+                empty.spec_source_len() == 0,
+                empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
         /// - APAS: not specified
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> (edit_dist: Self)
             ensures
+                edit_dist.spec_mineditdistmteph_wf(),
                 edit_dist.spec_source_len() == source.spec_len(),
                 edit_dist.spec_target_len() == target.spec_len();
 
@@ -107,7 +114,9 @@ pub mod MinEditDistMtEph {
         fn min_edit_distance(&mut self) -> (dist: usize)
         where
             T: Send + Sync + 'static
-            requires old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,
+            requires
+                old(self).spec_mineditdistmteph_wf(),
+                old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
                 self.spec_target_len() == old(self).spec_target_len();
@@ -125,7 +134,9 @@ pub mod MinEditDistMtEph {
         /// Set element in source sequence.
         /// - APAS: not specified
         fn set_source(&mut self, index: usize, value: T)
-            requires index < old(self).spec_source_len(),
+            requires
+                old(self).spec_mineditdistmteph_wf(),
+                index < old(self).spec_source_len(),
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
                 self.spec_target_len() == old(self).spec_target_len();
@@ -133,7 +144,9 @@ pub mod MinEditDistMtEph {
         /// Set element in target sequence.
         /// - APAS: not specified
         fn set_target(&mut self, index: usize, value: T)
-            requires index < old(self).spec_target_len(),
+            requires
+                old(self).spec_mineditdistmteph_wf(),
+                index < old(self).spec_target_len(),
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
                 self.spec_target_len() == old(self).spec_target_len();
@@ -141,6 +154,7 @@ pub mod MinEditDistMtEph {
         /// Clear memoization table.
         /// - APAS: not specified
         fn clear_memo(&mut self)
+            requires old(self).spec_mineditdistmteph_wf(),
             ensures
                 self.spec_source_len() == old(self).spec_source_len(),
                 self.spec_target_len() == old(self).spec_target_len();
@@ -272,6 +286,10 @@ pub mod MinEditDistMtEph {
         open spec fn spec_source_len(&self) -> nat { self.source.spec_len() }
 
         open spec fn spec_target_len(&self) -> nat { self.target.spec_len() }
+
+        open spec fn spec_mineditdistmteph_wf(&self) -> bool {
+            self.memo.pred() == MinEditDistMtEphMemoInv
+        }
 
         fn new() -> Self
         where

@@ -85,24 +85,32 @@ pub mod SubsetSumMtEph {
         /// Spec: multiset length.
         spec fn spec_multiset_len(&self) -> nat;
 
+        /// Well-formedness: the memo lock carries the correct predicate.
+        spec fn spec_subsetsummteph_wf(&self) -> bool;
+
         /// Create new subset sum solver.
         /// - APAS: not specified
         fn new() -> (empty: Self)
         where
             T: Default
             requires obeys_feq_clone::<T>(),
-            ensures empty.spec_multiset_len() == 0;
+            ensures
+                empty.spec_subsetsummteph_wf(),
+                empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
         /// - APAS: not specified
         fn from_multiset(multiset: ArraySeqMtEphS<T>) -> (subset_sum: Self)
-            ensures subset_sum.spec_multiset_len() == multiset.spec_len();
+            ensures
+                subset_sum.spec_subsetsummteph_wf(),
+                subset_sum.spec_multiset_len() == multiset.spec_len();
 
         /// Solve subset sum for the given target.
         /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
         fn subset_sum(&mut self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static
+            requires old(self).spec_subsetsummteph_wf(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get the multiset.
@@ -113,12 +121,15 @@ pub mod SubsetSumMtEph {
         /// Set element at index (ephemeral mutation).
         /// - APAS: not specified
         fn set(&mut self, index: usize, value: T)
-            requires index < old(self).spec_multiset_len(),
+            requires
+                old(self).spec_subsetsummteph_wf(),
+                index < old(self).spec_multiset_len(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Clear memoization table.
         /// - APAS: not specified
         fn clear_memo(&mut self)
+            requires old(self).spec_subsetsummteph_wf(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
@@ -223,6 +234,10 @@ pub mod SubsetSumMtEph {
 
     impl<T: MtVal> SubsetSumMtEphTrait<T> for SubsetSumMtEphS<T> {
         open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
+
+        open spec fn spec_subsetsummteph_wf(&self) -> bool {
+            self.memo.pred() == SubsetSumMtEphMemoInv
+        }
 
         fn new() -> Self
         where

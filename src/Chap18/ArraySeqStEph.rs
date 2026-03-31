@@ -209,6 +209,7 @@ pub mod ArraySeqStEph {
                 obeys_feq_clone::<T>(),
                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
             ensures
+                appended.spec_arrayseqsteph_wf(),
                 appended.spec_len() == a.seq@.len() + b.seq@.len(),
                 forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
                 forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
@@ -226,6 +227,7 @@ pub mod ArraySeqStEph {
                 // The biconditional bridge ties the exec closure to the spec predicate.
                 forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
+                filtered.spec_arrayseqsteph_wf(),
                 filtered.spec_len() <= a.seq@.len(),
                 filtered.spec_len() == spec_filter_len(
                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
@@ -243,6 +245,7 @@ pub mod ArraySeqStEph {
                 obeys_feq_clone::<T>(),
                 index < a.seq@.len(),
             ensures
+                updated.spec_arrayseqsteph_wf(),
                 updated.spec_len() == a.seq@.len(),
                 updated.spec_index(index as int) == item,
                 forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
@@ -256,6 +259,7 @@ pub mod ArraySeqStEph {
             requires
                 obeys_feq_clone::<T>(),
             ensures
+                injected.spec_arrayseqsteph_wf(),
                 injected.spec_len() == a.spec_len(),
                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
                     =~= spec_inject(
