@@ -201,7 +201,7 @@ pub mod StarContractionStEph {
     /// Routes edges through partition map, removing self-loops.
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
-    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,

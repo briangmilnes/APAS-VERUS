@@ -103,7 +103,7 @@ pub mod DijkstraStEphF64 {
 
     // 9. impls
 
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
     fn pq_entry_new(dist: WrappedF64, vertex: usize) -> (r: PQEntry)

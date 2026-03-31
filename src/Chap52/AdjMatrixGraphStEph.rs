@@ -116,7 +116,7 @@ broadcast use {
                 forall|u: int, v: int|
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing matrix.
         fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)
             requires

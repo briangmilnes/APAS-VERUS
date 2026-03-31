@@ -247,7 +247,7 @@ pub mod BSTSplayStEph {
 
     //		9. impls
 
-    /// - APAS: N/A -- Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-time allocation.
     // veracity: no_requires
     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
@@ -266,7 +266,7 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: N/A -- Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
     // veracity: no_requires
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: usize)
@@ -279,7 +279,7 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: usize)
         requires spec_height_link(link) < usize::MAX as nat,
@@ -1498,7 +1498,7 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
         requires spec_is_bst_link(link),
@@ -1550,7 +1550,7 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
         requires spec_is_bst_link(link),
@@ -1648,11 +1648,11 @@ pub mod BSTSplayStEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
         fn size(&self) -> (n: usize) { size_link(&self.root) }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- compares cached size.
         fn is_empty(&self) -> (b: bool) { self.size() == 0 }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn height(&self) -> (h: usize) {
             height_link(&self.root)
@@ -1670,14 +1670,14 @@ pub mod BSTSplayStEph {
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- delegates to find.
         fn contains(&self, target: &T) -> (found: bool) { self.find(target).is_some() }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             proof { reveal(spec_size_link); }
             min_link(&self.root)
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             proof { reveal(spec_size_link); }

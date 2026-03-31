@@ -151,7 +151,7 @@ pub mod VertexMatchingMtEph {
         edges
     }
 
-    /// - APAS: N/A — Verus-specific scaffolding (parallel recursion helper)
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding (parallel recursion helper)
     /// - Claude-Opus-4.6: Work Θ(k * |E|), Span Θ(lg k + |E|) — each base case calls should_select_edge which is Θ(|E|)
     #[verifier::external_body]
     fn select_edges_recursive<V: StT + MtT + Hash + 'static>(

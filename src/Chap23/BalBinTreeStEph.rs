@@ -90,7 +90,7 @@ pub mod BalBinTreeStEph {
     //		7. proof fns/broadcast groups
 
     /// The in-order and pre-order traversals of a tree are permutations of each other.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
@@ -135,7 +135,7 @@ pub mod BalBinTreeStEph {
     }
 
     /// The pre-order and post-order traversals of a tree are permutations of each other.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
         ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
@@ -559,7 +559,7 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for InOrderIter<T> {
         type Item = T;
 
-        /// - APAS: N/A — iterator scaffolding.
+        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
@@ -586,7 +586,7 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for PreOrderIter<T> {
         type Item = T;
 
-        /// - APAS: N/A — iterator scaffolding.
+        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
@@ -613,7 +613,7 @@ pub mod BalBinTreeStEph {
     impl<T> std::iter::Iterator for PostOrderIter<T> {
         type Item = T;
 
-        /// - APAS: N/A — iterator scaffolding.
+        /// - Alg Analysis: APAS: N/A — iterator scaffolding.
         /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — delegates to Vec::IntoIter::next.
         fn next(&mut self) -> (next: Option<T>)
             ensures ({
@@ -780,7 +780,7 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinTree<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinTree<T> {
-        /// - APAS: N/A — derive scaffolding.
+        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive structural comparison.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
@@ -801,7 +801,7 @@ pub mod BalBinTreeStEph {
     impl<T: Eq> Eq for BalBinNode<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
-        /// - APAS: N/A — derive scaffolding.
+        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — compares subtrees recursively.
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (*self == *other)
@@ -813,7 +813,7 @@ pub mod BalBinTreeStEph {
     }
 
 
-    /// - APAS: N/A — derive scaffolding.
+    /// - Alg Analysis: APAS: N/A — derive scaffolding.
     /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — recursive deep clone.
     // veracity: no_requires
     fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
@@ -833,7 +833,7 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T: Clone> Clone for BalBinTree<T> {
-        /// - APAS: N/A — derive scaffolding.
+        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — delegates to clone_tree.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self
@@ -843,7 +843,7 @@ pub mod BalBinTreeStEph {
     }
 
     impl<T: Clone> Clone for BalBinNode<T> {
-        /// - APAS: N/A — derive scaffolding.
+        /// - Alg Analysis: APAS: N/A — derive scaffolding.
         /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — clones left/right subtrees recursively.
         fn clone(&self) -> (cloned: Self)
             ensures cloned == *self

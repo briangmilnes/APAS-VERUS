@@ -135,7 +135,7 @@ verus! {
                 forall |j: int| 0 <= j < it@.1.len() ==> self@.contains(#[trigger] it@.1[j]@),
                 iter_invariant(&it);
 
-        /// - APAS: N/A — conversion utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — conversion utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(|self|), Span Θ(|self|) — iterates set, clones each element.
         fn to_seq(&self) -> (seq: Vec<T>)
             requires self.spec_setsteph_wf()
@@ -205,7 +205,7 @@ verus! {
                 s2.spec_setsteph_wf(),
             ensures intersection.spec_setsteph_wf(), intersection@ == self@.intersect(s2@);
 
-        /// - APAS: N/A — internal helper for cartesian_product.
+        /// - Alg Analysis: APAS: N/A — internal helper for cartesian_product.
         /// - Claude-Opus-4.6: Work Θ(|s2|), Span Θ(|s2|) — iterates s2, creates one pair per element.
         fn elt_cross_set<U: StT + Hash + Clone>(a: &T, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
             requires
@@ -227,7 +227,7 @@ verus! {
                 spec_setsteph_wf_generic(&product),
                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
 
-        /// - APAS: N/A — internal helper for partition.
+        /// - Alg Analysis: APAS: N/A — internal helper for partition.
         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) size check each.
         fn all_nonempty(parts: &SetStEph<SetStEph<T>>) -> (all_nonempty: bool)
             requires
@@ -236,7 +236,7 @@ verus! {
             ensures 
                 all_nonempty <==> forall |s: Set<T::V>| #![trigger parts@.contains(s)] parts@.contains(s) ==> s.len() != 0;
 
-        /// - APAS: N/A — internal helper for partition.
+        /// - Alg Analysis: APAS: N/A — internal helper for partition.
         /// - Claude-Opus-4.6: Work Θ(|parts|), Span Θ(|parts|) — iterates parts, O(1) membership check each.
         fn partition_on_elt(x: &T, parts: &SetStEph<SetStEph<T>>) -> (partition_on_elt: bool)
             requires

@@ -148,7 +148,7 @@ pub mod SpanTreeStEph {
 
     /// Verify that result is a valid spanning tree.
     ///
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|V| + |E_tree|).
     pub fn verify_spanning_tree<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,

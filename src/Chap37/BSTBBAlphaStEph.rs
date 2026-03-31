@@ -159,19 +159,19 @@ pub mod BSTBBAlphaStEph {
             BSTBBAlphaStEph { root: BalBinTree::Leaf }
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
         fn height(&self) -> (h: usize) {
             self.root.height()
@@ -201,13 +201,13 @@ pub mod BSTBBAlphaStEph {
             BSTBBAlphaStEph { root: delete_node(self.root, target) }
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             min_node(&self.root)
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             max_node(&self.root)
@@ -423,7 +423,7 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
@@ -445,7 +445,7 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
@@ -468,7 +468,7 @@ pub mod BSTBBAlphaStEph {
     }
 
     /// Remove and return the minimum element from a non-empty BST subtree.
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
     fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
         requires

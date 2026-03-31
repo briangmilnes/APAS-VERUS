@@ -62,7 +62,7 @@ pub mod BellmanFordStEphF64 {
     // 9. impls
 
     /// Reconstruct predecessor array from converged distances.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(nm), Span O(nm).
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphF64<usize>,

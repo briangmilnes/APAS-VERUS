@@ -1018,7 +1018,7 @@ pub mod BSTAVLStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- descends leftmost path; AVL balanced.
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
@@ -1040,7 +1040,7 @@ pub mod BSTAVLStEph {
         }
     }
 
-    /// - APAS: (no cost stated)
+    /// - Alg Analysis: APAS: (no cost stated)
     /// - Claude-Opus-4.6: Work O(lg n), Span O(lg n) -- descends rightmost path; AVL balanced.
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
@@ -1072,19 +1072,19 @@ pub mod BSTAVLStEph {
             BSTAVLStEph { root: BalBinTree::Leaf }
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::size.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::height.
         fn height(&self) -> (h: usize) {
             self.root.height()

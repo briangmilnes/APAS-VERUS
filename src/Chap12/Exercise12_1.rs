@@ -28,26 +28,26 @@ verus! {
         spec fn spec_locked(&self) -> bool;
 
         /// Create a new unlocked spin lock.
-        /// - APAS: no cost spec.
+        /// - Alg Analysis: APAS: no cost spec.
         /// - Claude-Opus-4.6: O(1).
         fn new() -> (lock: Self)
             ensures !lock.spec_locked();
 
         /// Acquire the lock (spins until acquired).
-        /// - APAS: no cost spec.
+        /// - Alg Analysis: APAS: no cost spec.
         /// - Claude-Opus-4.6: amortized O(1), worst-case unbounded (spin). Ticket lock guarantees FIFO fairness.
         fn lock(&self)
             ensures self.spec_locked();
 
         /// Release the lock.
-        /// - APAS: no cost spec.
+        /// - Alg Analysis: APAS: no cost spec.
         /// - Claude-Opus-4.6: O(1) — single fetch_add.
         fn unlock(&self)
             requires self.spec_locked()
             ensures !self.spec_locked();
 
         /// Execute action while holding the lock.
-        /// - APAS: no cost spec.
+        /// - Alg Analysis: APAS: no cost spec.
         /// - Claude-Opus-4.6: O(1) + cost of action.
         /// Note: requires/ensures omitted because Verus cannot express "result
         /// equals action()" for a generic FnOnce — the closure's spec is opaque.
@@ -88,7 +88,7 @@ verus! {
     }
 
     /// Run 4 threads, each incrementing a shared counter `iterations` times.
-    /// - APAS: no cost spec.
+    /// - Alg Analysis: APAS: no cost spec.
     /// - Claude-Opus-4.6: Work Θ(iterations), Span Θ(iterations) — 4-way parallel, bounded by lock contention.
     #[verifier::external_body] // accept hole
     pub fn parallel_increment(iterations: usize) -> (incremented: usize)

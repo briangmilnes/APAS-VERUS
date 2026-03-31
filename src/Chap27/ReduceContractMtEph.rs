@@ -170,7 +170,7 @@ pub mod ReduceContractMtEph {
 
     /// Parallel contraction: build b[j] = f(a[2j], a[2j+1]) using fork-join.
     /// Parallelism via the help-first scheduler's join.
-    /// - APAS: N/A — Verus-specific helper (contraction step factored out for sharing).
+    /// - Alg Analysis: APAS: N/A — Verus-specific helper (contraction step factored out for sharing).
     /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n/2) — two parallel halves via join, each Θ(n/4).
     pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
         a: &ArraySeqMtEphS<T>,

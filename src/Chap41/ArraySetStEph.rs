@@ -319,7 +319,7 @@ pub mod ArraySetStEph {
                 seq@.no_duplicates(),
                 seq@.to_set() =~= self@;
 
-        /// - APAS: no cost spec (unordered array set)
+        /// - Alg Analysis: APAS: no cost spec (unordered array set)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();

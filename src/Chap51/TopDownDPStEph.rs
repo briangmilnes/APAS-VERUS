@@ -94,7 +94,7 @@ pub mod TopDownDPStEph {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
@@ -104,37 +104,37 @@ pub mod TopDownDPStEph {
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_s_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_t_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return hash map size.
         fn memo_size(&self) -> (size: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures size == self.spec_memo().len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map contains_key.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures memoized == self.spec_memo().contains_key((i, j));
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpsteph_wf(),
@@ -145,7 +145,7 @@ pub mod TopDownDPStEph {
                     None => !self.spec_memo().contains_key((i, j)),
                 };
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map insert.
         fn insert_memo(&mut self, i: usize, j: usize, value: usize)
             requires old(self).spec_topdowndpsteph_wf(),
@@ -154,7 +154,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == old(self).spec_t(),
                 self.spec_memo() == old(self).spec_memo().insert((i, j), value);
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures
@@ -163,7 +163,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == old(self).spec_t(),
                 self.spec_memo() == Map::<(usize, usize), usize>::empty();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
@@ -172,7 +172,7 @@ pub mod TopDownDPStEph {
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
