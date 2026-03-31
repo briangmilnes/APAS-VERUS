@@ -433,7 +433,7 @@ broadcast use {
                 split.0.spec_augorderedtablestper_wf(),
                 split.1.spec_augorderedtablestper_wf();
         /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn reduce_val(&self) -> (reduced: V)
             requires self.spec_augorderedtablestper_wf(),
             ensures self@.dom().finite();

@@ -110,7 +110,7 @@ pub mod MinEditDistMtPer {
 
         /// Compute minimum edit distance.
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
         fn min_edit_distance(&self) -> (dist: usize)
         where
             T: Send + Sync + 'static

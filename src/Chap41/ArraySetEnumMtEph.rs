@@ -183,14 +183,14 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential bit scan, APAS assumes parallel
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len(), self@.finite();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential scan, APAS assumes parallel
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
@@ -207,7 +207,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — matches APAS CS 41.3 Work; Span DIFFERS: sequential
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -217,7 +217,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + n), Span O(u + n) — DIFFERS: sequential init + insert loop
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
@@ -225,7 +225,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — DIFFERS: sequential loop, not parallel
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -237,7 +237,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-AND, APAS assumes parallel
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -250,7 +250,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-AND-NOT, APAS assumes parallel
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -263,7 +263,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-OR, APAS assumes parallel
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -276,14 +276,14 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS CS 41.3
         fn find(&self, x: usize) -> (found: bool)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: ephemeral bit clear, APAS O(u) assumes copy
         fn delete(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -293,7 +293,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: ephemeral bit set, APAS O(u) assumes copy
         fn insert(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures

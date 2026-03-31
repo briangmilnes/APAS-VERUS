@@ -373,15 +373,15 @@ pub mod ParaHashTableStEph {
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
         fn insert(&mut self, key: Key, value: Value)
             ensures self.spec_entry_to_map().dom().contains(key);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected — matches APAS
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
@@ -473,7 +473,7 @@ pub mod ParaHashTableStEph {
 
         /// Inserts a key-value pair into the hash table.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -493,7 +493,7 @@ pub mod ParaHashTableStEph {
         /// Looks up a key in the hash table, returning its value if found.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
         /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) expected, Span O(1) expected — matches APAS
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 Self::spec_parahashtablesteph_wf(table),
@@ -505,7 +505,7 @@ pub mod ParaHashTableStEph {
 
         /// Deletes a key from the hash table if it exists.
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1 + α) expected, Span O(1 + α) expected — matches APAS
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),

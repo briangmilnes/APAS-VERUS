@@ -379,7 +379,7 @@ pub mod TableStPer {
         spec fn spec_stored_value(&self, key: K::V) -> V;
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn size(&self) -> (count: usize)
             requires self.spec_tablestper_wf(),
             ensures count == self@.len();
@@ -390,19 +390,19 @@ pub mod TableStPer {
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablestper_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablestper_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential key extraction
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|·W(f)), Span O(|s|·W(f)) — DIFFERS: sequential loop
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>(),
             ensures
@@ -414,7 +414,7 @@ pub mod TableStPer {
                         && tabulated@[k] == result@);
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·W(f)), Span O(n·W(f)) — DIFFERS: sequential loop
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -430,7 +430,7 @@ pub mod TableStPer {
                         && mapped@[k] == result@);
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(k,v))), Span O(n + Σ W(f(k,v))) — DIFFERS: sequential loop
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -450,7 +450,7 @@ pub mod TableStPer {
                     ==> #[trigger] filtered@.dom().contains(k);
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans on array
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -468,7 +468,7 @@ pub mod TableStPer {
                         && common@[k] == r@);
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans on array
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -490,7 +490,7 @@ pub mod TableStPer {
                         && combined@[k] == r@);
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans on array
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<Pair<K, V>>(),
             ensures
@@ -499,7 +499,7 @@ pub mod TableStPer {
                 forall|k: K::V| #[trigger] remaining@.contains_key(k) ==> remaining@[k] == self@[k];
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: linear scan on unsorted array
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -521,7 +521,7 @@ pub mod TableStPer {
                 };
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: linear scan + copy
         fn delete(&self, key: &K) -> (updated: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -531,7 +531,7 @@ pub mod TableStPer {
             ensures updated@ =~= self@.remove(key@), updated.spec_tablestper_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: linear scan + copy
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             requires
                 self.spec_tablestper_wf(),
@@ -597,7 +597,7 @@ pub mod TableStPer {
                     updated.spec_stored_value(k).spec_wf();
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans on array
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
             requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(), keys@.finite(),
             ensures
@@ -606,7 +606,7 @@ pub mod TableStPer {
                 forall|k: K::V| #[trigger] restricted@.contains_key(k) ==> restricted@[k] == self@[k];
 
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — DIFFERS: nested linear scans on array
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
             requires self.spec_tablestper_wf(), obeys_feq_full::<Pair<K, V>>(), keys@.finite(),
             ensures

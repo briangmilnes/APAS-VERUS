@@ -73,7 +73,7 @@ pub mod BottomUpDPStPer {
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: APAS (Ch51 Alg 51.1): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
         fn med_bottom_up(&self) -> (distance: usize)
             requires
                 self.spec_bottomupdpstper_wf(),

@@ -98,7 +98,7 @@ pub mod BottomUpDPStEph {
                 self.spec_t() == t@;
 
         /// - Alg Analysis: APAS (Ch51 Alg 51.1): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
         fn med_bottom_up(&mut self) -> (distance: usize)
             requires
                 old(self).spec_bottomupdpsteph_wf(),
