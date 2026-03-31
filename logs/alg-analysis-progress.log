@@ -1,13 +1,13 @@
-Alg Analysis Progress — 09:35:58
+Alg Analysis Progress — 09:47:49
 ================================================
 
-Main: 475 NONEs, 92 filled
+Main: 105 NONEs, 462 filled
 
 Agent      NONEs  Filled  Done%  Dirty  Status
 --------  ------  ------  -----  -----  ----------
-agent1       555      12     2%      0  working
-agent2       475      92    16%      0  working
-agent3       378     189    33%      0  working
-agent4       469      98    17%     24  working
+agent1       239     328    57%      2  working
+agent2       211     356    62%      0  working
+agent3       168     399    70%      0  working
+agent4       461     106    18%      0  working
 
 Total slots: 567
