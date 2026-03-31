@@ -202,7 +202,8 @@ pub mod BFSStEph {
 
     impl BFSStEphTrait for BFSStEph {
 
-    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(|V| + |E|), Span O(|V| + |E|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — matches APAS
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: ArraySeqStEphS<usize>)
     {

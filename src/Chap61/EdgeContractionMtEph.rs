@@ -58,7 +58,8 @@ pub mod EdgeContractionMtEph {
     /// Each edge in the matching forms a block of two vertices.
     /// Unmatched vertices form singleton blocks.
     ///
-    /// - APAS: Work O(|V| + |E|), Span O(lg |V|)
+    /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — matches APAS
     /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
     ///   only Phase 3 (build_edges_parallel) is parallel
     ///
@@ -206,7 +207,8 @@ pub mod EdgeContractionMtEph {
     ///
     /// Computes a parallel matching and contracts it.
     ///
-    /// - APAS: Work O(|V| + |E|), Span O(lg |V|)
+    /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — matches APAS
     /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
     ///   should_select_edge scanning all edges
     ///

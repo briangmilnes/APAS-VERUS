@@ -48,19 +48,22 @@ pub mod PathWeightUtilsStPer {
             i: int,
         ) -> bool;
 
-        /// - APAS: Def 56.1 — computes path weight (sum of edge weights along a path).
+        /// - Alg Analysis: APAS (Ch56 Def 56.1): computes path weight (sum of edge weights along a path).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): definition, not algorithm — N/A
         /// - Claude-Opus-4.6: Work O(k), Span O(k) where k = path length.
         fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (weight: Option<i64>)
             ensures weight == Self::spec_path_weight_int(path, weights, 0, 0);
 
-        /// - APAS: Def 56.1 — computes path weight (sum of edge weights along a path).
+        /// - Alg Analysis: APAS (Ch56 Def 56.1): computes path weight (sum of edge weights along a path).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): definition, not algorithm — N/A
         /// - Claude-Opus-4.6: Work O(k), Span O(k) where k = path length.
         fn path_weight_float(
             path: &ArraySeqStPerS<usize>,
             weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
         ) -> (weight: Option<WrappedF64>);
 
-        /// - APAS: Def 56.4 — validates sub-paths property along a path.
+        /// - Alg Analysis: APAS (Ch56 Def 56.4): validates sub-paths property along a path.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): definition, not algorithm — N/A
         /// - Claude-Opus-4.6: Work O(k), Span O(k) where k = path length.
         fn validate_subpath_property_int(
             path: &ArraySeqStPerS<usize>,
@@ -69,7 +72,8 @@ pub mod PathWeightUtilsStPer {
         ) -> (valid: bool)
             ensures valid == Self::spec_validate_subpath_int(path, distances, weights, 0);
 
-        /// - APAS: Def 56.4 — validates sub-paths property along a path.
+        /// - Alg Analysis: APAS (Ch56 Def 56.4): validates sub-paths property along a path.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): definition, not algorithm — N/A
         /// - Claude-Opus-4.6: Work O(k), Span O(k) where k = path length.
         fn validate_subpath_property_float(
             path: &ArraySeqStPerS<usize>,

@@ -40,7 +40,8 @@ pub mod PQMinStEph {
     pub trait PQMinStEphTrait<V: StT + Ord, P: StT + Ord> {
         spec fn spec_pqminsteph_wf(&self) -> bool;
 
-        /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
@@ -70,7 +71,8 @@ pub mod PQMinStEph {
                 spec_pqminsteph_wf_generic(&search),
                 search.visited@.contains(source@);
 
-        /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where
@@ -125,7 +127,8 @@ pub mod PQMinStEph {
     }
 
     /// Priority-first search from single source (Section 53.4).
-    /// - APAS: (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+    /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
     pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
     where

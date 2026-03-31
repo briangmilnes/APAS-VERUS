@@ -549,16 +549,19 @@ broadcast use {
     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablesteph_wf(&self) -> bool;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn size(&self) -> (count: usize)
             requires self.spec_orderedtablesteph_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn singleton(k: K, v: V) -> (tree: Self)
             requires
@@ -569,7 +572,8 @@ broadcast use {
                 vstd::laws_cmp::obeys_cmp_spec::<K>(),
                 view_ord_consistent::<K>(),
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST descent
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
@@ -578,7 +582,8 @@ broadcast use {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
@@ -587,12 +592,14 @@ broadcast use {
                     Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_orderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST insert
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
@@ -609,7 +616,8 @@ broadcast use {
                     old_v@ == old(self)@[k@] && combine.ensures((&old_v, &v), r) && self@[k@] == r@),
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST delete
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
@@ -617,12 +625,14 @@ broadcast use {
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- collects keys from in_order
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires self.spec_orderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
-        /// - APAS: Work Θ(n log n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- inserts keys one by one
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires
@@ -645,7 +655,8 @@ broadcast use {
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && tabulated@[k] == result@),
                 tabulated@.dom().finite();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, maps, rebuilds
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
             requires
@@ -653,7 +664,8 @@ broadcast use {
                 forall|k: &K, v: &V| f.requires((k, v)),
                 obeys_feq_clone::<Pair<K, V>>(),
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite(), mapped.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects, filters, rebuilds
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
@@ -672,12 +684,14 @@ broadcast use {
                     ==> #[trigger] filtered@.dom().contains(k),
                 filtered@.dom().finite(),
                 filtered.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- iterates all entries
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             requires self.spec_orderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- iterative merge
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
@@ -695,7 +709,8 @@ broadcast use {
                         && self@[k] == r@),
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- iterative merge
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
             requires
@@ -718,7 +733,8 @@ broadcast use {
                         && self@[k] == r@),
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- iterative difference
         fn difference(&mut self, other: &Self)
             requires old(self).spec_orderedtablesteph_wf(), other.spec_orderedtablesteph_wf(),obeys_view_eq::<K>()
@@ -727,7 +743,8 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- iterative restrict
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf()
@@ -736,7 +753,8 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- iterative subtract
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_orderedtablesteph_wf()
@@ -745,12 +763,14 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(n log n), Span Θ(n log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- collects from in_order
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_orderedtablesteph_wf()
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST min
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
@@ -760,7 +780,8 @@ broadcast use {
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST max
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
@@ -770,7 +791,8 @@ broadcast use {
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
@@ -780,7 +802,8 @@ broadcast use {
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
@@ -790,7 +813,8 @@ broadcast use {
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST split
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
@@ -812,7 +836,8 @@ broadcast use {
                 forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.2@.dom().contains(key) || key == k@,
                 split.0.spec_orderedtablesteph_wf(),
                 split.2.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union
         fn join_key(&mut self, other: Self)
             requires
@@ -825,7 +850,8 @@ broadcast use {
                 self@.dom() =~= old(self)@.dom().union(other@.dom()),
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(log n + m) where m = output size, Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m) where m = output size, Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires
@@ -835,7 +861,8 @@ broadcast use {
                 range@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablesteph_wf();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST rank
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
@@ -846,7 +873,8 @@ broadcast use {
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST select
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
@@ -858,7 +886,8 @@ broadcast use {
                 i >= self@.dom().len() ==> selected matches None,
                 selected matches Some(k) ==> self@.dom().contains(k@),
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST split by rank
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized

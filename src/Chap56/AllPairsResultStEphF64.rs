@@ -38,6 +38,7 @@ pub mod AllPairsResultStEphF64 {
         spec fn spec_n(&self) -> usize;
 
         /// - Alg Analysis: APAS: (no cost stated) — data structure scaffolding.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
         fn new(n: usize) -> (empty: Self)
             ensures
@@ -45,11 +46,13 @@ pub mod AllPairsResultStEphF64 {
                 empty.spec_n() == n;
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_distance(&self, u: usize, v: usize) -> (dist: WrappedF64)
             requires self.spec_allpairsresultstephf64_wf();
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_distance(&mut self, u: usize, v: usize, dist: WrappedF64)
             requires old(self).spec_allpairsresultstephf64_wf(),
@@ -58,11 +61,13 @@ pub mod AllPairsResultStEphF64 {
                 self.spec_n() == old(self).spec_n();
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_predecessor(&self, u: usize, v: usize) -> (predecessor: Option<usize>)
             requires self.spec_allpairsresultstephf64_wf();
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
             requires old(self).spec_allpairsresultstephf64_wf(),
@@ -71,11 +76,13 @@ pub mod AllPairsResultStEphF64 {
                 self.spec_n() == old(self).spec_n();
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, u: usize, v: usize) -> (reachable: bool)
             requires self.spec_allpairsresultstephf64_wf();
 
         /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             requires self.spec_allpairsresultstephf64_wf();

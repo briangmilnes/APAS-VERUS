@@ -477,7 +477,8 @@ pub mod BoruvkaMtEph {
     /// For each vertex, find the minimum weight edge incident on it.
     /// Uses parallel reduce over edges via ParaPair!.
     ///
-    /// - APAS: Work O(m), Span O(log m)
+    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — matches APAS
     /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
@@ -585,7 +586,8 @@ pub mod BoruvkaMtEph {
     /// Performs star contraction along vertex bridges using hash-based coin flips.
     /// All operations parallelized via ParaPair! divide-and-conquer.
     ///
-    /// - APAS: Work O(n), Span O(log n)
+    /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — matches APAS
     /// - Claude-Opus-4.6: Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,

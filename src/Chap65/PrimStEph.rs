@@ -207,7 +207,8 @@ pub mod PrimStEph {
     ///
     /// Priority: p(v) = min_{x in X} w(x,v)
     ///
-    /// - APAS: Work O(m lg n), Span O(m lg n)
+    /// - Alg Analysis: APAS (Ch65 Alg 65.1): Work O(m lg n), Span O(m lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — matches APAS
     /// - Claude-Opus-4.6: Work O(m^2 lg n), Span O(m^2 lg n) — the APAS bound assumes
     ///   O(degree) adjacency-list lookups, but LabUnDirGraphStEph stores edges in a flat
     ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
@@ -417,6 +418,7 @@ pub mod PrimStEph {
 
     /// Compute total MST weight.
     /// - Alg Analysis: APAS: (no cost stated) — utility function
+    /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)

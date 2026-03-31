@@ -202,6 +202,7 @@ pub mod StarContractionStEph {
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential loop over all edges.
     fn build_quotient_graph<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
@@ -316,7 +317,8 @@ pub mod StarContractionStEph {
     ///
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
-    /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O((n + m) lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (vertices: SetStEph<V>)
         requires

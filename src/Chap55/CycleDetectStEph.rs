@@ -262,7 +262,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     pub trait CycleDetectStEphTrait {
         /// Detects if a directed graph contains a cycle (Algorithm 55.10).
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
+        /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(|V| + |E|), Span O(|V| + |E|) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — matches APAS
         /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
             requires
