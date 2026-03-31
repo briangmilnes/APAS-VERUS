@@ -94,11 +94,11 @@ broadcast use {
                     ==> v@.contains(u) && v@.contains(w),
             ensures out.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn num_vertices(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.1]
@@ -110,16 +110,16 @@ broadcast use {
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn has_edge(&self, u: &V, v: &V) -> bool
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — DIFFERS: sequential filter loop, span = work
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_edgesetgraphsteph_wf()
             ensures neighbors@ == self.spec_out_neighbors(u@), neighbors.spec_avltreesetsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — DIFFERS: delegates to sequential out_neighbors
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.1]

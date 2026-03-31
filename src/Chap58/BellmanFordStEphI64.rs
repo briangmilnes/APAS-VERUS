@@ -44,7 +44,7 @@ pub mod BellmanFordStEphI64 {
         /// Bellman-Ford single-source shortest path algorithm.
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) — DIFFERS: span = work, sequential edge relaxation per round
         fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
             requires
@@ -177,7 +177,7 @@ pub mod BellmanFordStEphI64 {
     ///
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
     /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm) — DIFFERS: span = work, sequential edge relaxation per round
     pub fn bellman_ford(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
         -> (sssp: Result<SSSPResultStEphI64, BellmanFordError>)
         requires

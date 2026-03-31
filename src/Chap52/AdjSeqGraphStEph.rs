@@ -110,13 +110,13 @@ broadcast use {
                     ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphsteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop summing degrees, not cached
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphsteph_wf(),
@@ -131,7 +131,7 @@ broadcast use {
                 );
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(u)), Span O(lg d_g(u))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — DIFFERS: span = work, sequential linear scan
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
@@ -139,7 +139,7 @@ broadcast use {
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(v)), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(v)), Span O(d_g(v)) — DIFFERS: span = work, sequential tabulate copy
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures
@@ -148,7 +148,7 @@ broadcast use {
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
@@ -215,7 +215,7 @@ broadcast use {
                     ==> #[trigger] self.spec_neighbor(u as int, j) != v;
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — DIFFERS: sequential scan + rebuild of neighbor list, not O(n)
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
