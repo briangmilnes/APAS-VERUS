@@ -1,0 +1,58 @@
+error[E0425]: cannot find type `RwLockWriteGuard` in this scope
+  --> src/experiments/locked_wrapper_generic.rs:63:74
+   |
+63 |         pub fn acquire_write_with_ghost(&mut self) -> (pair: (T, Tracked<RwLockWriteGuard<T, LockedInv>>))
+   |                                                                          ^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+19 +     use std::sync::RwLockWriteGuard;
+   |
+19 +     use std::sync::nonpoison::RwLockWriteGuard;
+   |
+
+error[E0425]: cannot find type `RwLockWriteGuard` in this scope
+  --> src/experiments/locked_wrapper_generic.rs:77:78
+   |
+77 |         pub fn release_write_with_ghost(&mut self, inner: T, handle: Tracked<RwLockWriteGuard<T, LockedInv>>)
+   |                                                                              ^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+19 +     use std::sync::RwLockWriteGuard;
+   |
+19 +     use std::sync::nonpoison::RwLockWriteGuard;
+   |
+
+error[E0425]: cannot find type `RwLockReadGuard` in this scope
+  --> src/experiments/locked_wrapper_generic.rs:86:67
+   |
+86 |         pub fn acquire_read_with_ghost(&self) -> (handle: Tracked<RwLockReadGuard<T, LockedInv>>)
+   |                                                                   ^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+19 +     use std::sync::RwLockReadGuard;
+   |
+19 +     use std::sync::nonpoison::RwLockReadGuard;
+   |
+
+error[E0425]: cannot find type `RwLockReadGuard` in this scope
+  --> src/experiments/locked_wrapper_generic.rs:93:68
+   |
+93 |         pub fn borrow_with_ghost<'a>(&'a self, handle: &'a Tracked<RwLockReadGuard<'a, T, LockedInv>>) -> (inner: &'a T)
+   |                                                                    ^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing one of these structs
+   |
+19 +     use std::sync::RwLockReadGuard;
+   |
+19 +     use std::sync::nonpoison::RwLockReadGuard;
+   |
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22224MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

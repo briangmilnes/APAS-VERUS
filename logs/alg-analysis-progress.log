@@ -1,11 +1,11 @@
-Alg Analysis Progress — 09:47:49
+Alg Analysis Progress — 10:35:02
 ================================================
 
-Main: 105 NONEs, 462 filled
+Main: 0 NONEs, 567 filled
 
 Agent      NONEs  Filled  Done%  Dirty  Status
 --------  ------  ------  -----  -----  ----------
-agent1       239     328    57%      2  working
+agent1       169     398    70%      0  working
 agent2       211     356    62%      0  working
 agent3       168     399    70%      0  working
 agent4       461     106    18%      0  working

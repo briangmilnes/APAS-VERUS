@@ -1,0 +1,38 @@
+error: postcondition not satisfied
+   --> src/experiments/rwlock_no_ghost_field.rs:228:21
+    |
+228 |             ensures found == self@.contains(val);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+255 |             found
+    |             ----- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/experiments/rwlock_no_ghost_field.rs:247:21
+    |
+247 |                     found == self.elements@.take(i as int).contains(val),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/experiments/rwlock_no_ghost_field.rs:228:21
+    |
+228 |             ensures found == self@.contains(val);
+    |                     ^^^^^    ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == old(self).view().contains(old(val))
+|   %return ==>
+|       old(self).view().contains(old(val)) ✘
+|       |   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && old(self).view().index(i) == old(val)) 
+|       +---
+|   old(self).view().contains(old(val)) ==>
+|       %return ✘
++---
+
+verification results:: 673 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 488MB, peak z3 RSS: 47MB, min free: 22278MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 1s

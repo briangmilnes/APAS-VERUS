@@ -1,0 +1,21 @@
+error[E0599]: no method named `unwrap` found for type `u64` in the current scope
+   --> src/experiments/rwlock_no_ghost_field.rs:118:32
+    |
+118 |             self.perm@.value().unwrap()
+    |                                ^^^^^^ method not found in `u64`
+
+error[E0599]: no method named `is_some` found for type `u64` in the current scope
+   --> src/experiments/rwlock_no_ghost_field.rs:125:35
+    |
+125 |             && self.perm@.value().is_some()
+    |                                   ^^^^^^^
+    |
+help: there is a method `is_ge` with a similar name, but with different arguments
+   --> vstd/std_specs/cmp.rs:201:9
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22800MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

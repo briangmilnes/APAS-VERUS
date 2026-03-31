@@ -1,0 +1,18 @@
+error[E0407]: method `contains` is not a member of trait `SetStEphTrait`
+   --> src/experiments/rwlock_no_ghost_field.rs:238:9
+    |
+238 | /         fn contains(&self, val: u64) -> (found: bool) {
+239 | |             let mut i: usize = 0;
+240 | |             let mut found = false;
+241 | |             while i < self.elements.len()
+...   |
+252 | |             found
+253 | |         }
+    | |_________^ not a member of trait `SetStEphTrait`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0407`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23012MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -86,6 +86,8 @@ pub mod experiments {
 //    pub mod pub_crate_test;                               // SUCCEEDS: pub(crate) test patterns
 //    pub mod pub_crate_type_invariant_with_accessors;      // SUCCEEDS: closed spec fn accessors for pub(crate) fields
 //    pub mod rwlock_inc_token_inside_lock;                 // SUCCEEDS: increment token inside lock
+    pub mod locked_wrapper_generic;                        // TESTING: generic LockedWrapper<T>, 1 assume for all Mt
+    pub mod rwlock_no_ghost_field;                         // TESTING: PCell+PointsTo eliminates assumes
 //    pub mod rwlock_tsm;                                   // SUCCEEDS: RwLock TSM pattern
 //    pub mod rwlock_tsm_increment;                         // SUCCEEDS: coarse-grained lock caller sees specs via ghost TSM token
 //    pub mod seq_array_equality;                           // SUCCEEDS: seq/array equality patterns

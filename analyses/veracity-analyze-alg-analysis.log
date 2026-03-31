@@ -1,0 +1,27 @@
+veracity-analyze-alg-analysis
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+
+
+=============================================================
+Summary
+=============================================================
+
+  Total exec fns scanned:    5060
+  Boilerplate excluded:       429
+  Files scanned:              246
+
+  Code review annotations:   1320
+  Missing Code review:       3740  <- errors
+
+  Mt DIFFERS (blockers):       75  <- errors
+  St DIFFERS (expected):      133  <- info
+  Cost mismatch (no DIFFERS):   0  <- errors
+  St parallel span:           112  <- errors
+  Per mutability O(1):          0  <- warnings
+  APAS without Code review:   333  <- warnings
+
+  Errors: 3927
+  Warnings: 333
+  Info: 133
+
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
