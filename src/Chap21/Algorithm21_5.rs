@@ -42,7 +42,7 @@ pub mod Algorithm21_5 {
     /// Finds all prime numbers less than n using brute force primality testing.
     ///
     /// - Alg Analysis: APAS (Ch21 Alg 21.5): Work O(n^(3/2)), Span O(lg n)
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^(3/2)), Span O(n^(3/2)) — DIFFERS: sequential tabulate+filter via ArraySeqStPer, span = work
     pub fn primes_bf(n: usize) -> (primes: ArraySeqStPerS<usize>)
         ensures
             n <= 2 ==> primes.spec_len() == 0,

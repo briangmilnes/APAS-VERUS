@@ -154,7 +154,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Returns the number of elements in the sequence.
         /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn length(&self) -> (len: usize)
             requires self.spec_primtreeseqstper_wf(),
             ensures len == self.spec_len();
@@ -162,7 +162,7 @@ pub mod PrimTreeSeqStPer {
         /// Algorithm 23.3 (nth). Return a reference to the element at `index`.
         /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS from CS 20.6 O(lg n) but matches CS 22.2 O(1); Vec-backed, direct array index
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires self.spec_primtreeseqstper_wf(),
                      index < self.spec_len(),
@@ -170,7 +170,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Exposes the internal structure as Zero, One, or Two parts.
         /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: Vec-backed, copies elements into left/right halves
         fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
             requires
@@ -203,7 +203,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Definition 18.13 (append). Concatenate two sequences.
         /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(|lg(|a|/|b|)|), Span O(|lg(|a|/|b|)|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: Vec-backed, copies both arrays sequentially
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -219,7 +219,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: Vec-backed, copies elements sequentially
         fn subseq(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -235,7 +235,7 @@ pub mod PrimTreeSeqStPer {
         /// Definition 18.16 (update). Return a copy with the element at `index` replaced.
         /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: Vec-backed, copies entire array with replacement
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
