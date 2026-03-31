@@ -1,122 +1,116 @@
 veracity-compare-par-mut
 ========================
-Started at: 2026-03-30 17:41:39 -07:00
-Codebase: /home/milnes/projects/APAS-VERUS-agent2
-Full output: /home/milnes/projects/APAS-VERUS-agent2/analyses/veracity-compare-par-mut.log
+Started at: 2026-03-30 17:17:15 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-compare-par-mut.log
 
-Filtered to Chap39: 3 groups
+Filtered to Chap42: 1 groups
 
 Phase 1: File groups
 
-src/Chap39/BSTParaTreapMtEph.rs:1: info: BSTParaTreap (Chap39) — only MtEph variant, nothing to compare
-src/Chap39/BSTSetTreapMtEph.rs:1: info: BSTSetTreap (Chap39) — only MtEph variant, nothing to compare
-src/Chap39/BSTTreapMtEph.rs:1: info: BSTTreap (Chap39) — comparing MtEph (src/Chap39/BSTTreapMtEph.rs), StEph (src/Chap39/BSTTreapStEph.rs)
+src/Chap42/TableMtEph.rs:1: info: Table (Chap42) — comparing MtEph (src/Chap42/TableMtEph.rs), StEph (src/Chap42/TableStEph.rs), StPer (src/Chap42/TableStPer.rs)
 
-Phase 1 summary: 3 file groups, 4 total variant files
+Phase 1 summary: 1 file groups, 3 total variant files
 
 Phase 2: Variant comparison
 
-src/Chap39/BSTTreapMtEph.rs:0: info: file group BSTTreap — comparing MtEph (src/Chap39/BSTTreapMtEph.rs), StEph (src/Chap39/BSTTreapStEph.rs)
-src/Chap39/BSTTreapStEph.rs:56: info: struct BSTTreapStEph { root: Link < T > }
-src/Chap39/BSTTreapStEph.rs:91: info: View = Set < T :: V >
-src/Chap39/BSTTreapStEph.rs:2740: info: wf = spec_parambsttreapsteph_wf
-src/Chap39/BSTTreapMtEph.rs:56: info: struct BSTTreapMtEph { locked_root: RwLock < Link < T > , BSTTreapMtEphInv >, ghost ghost_locked_root: Ghost < Set < T :: V > > }
-src/Chap39/BSTTreapMtEph.rs:79: info: View = Set < T :: V >
-src/Chap39/BSTTreapMtEph.rs:259: info: wf = spec_bsttreapmteph_wf
-src/Chap39/BSTTreapMtEph.rs:56: info: ghost field `ghost_locked_root` has no counterpart in other variants
-src/Chap39/BSTTreapStEph.rs:2740: warning: wf name `spec_parambsttreapsteph_wf` does not follow expected pattern `spec_bsttreap*_wf`
-src/Chap39/BSTTreapStEph.rs:413: info: trait BSTTreapStEphTrait <T : StT + Ord + IsLtTransitive> : (none) — 51 fns (26 exec, 17 spec)
-src/Chap39/BSTTreapMtEph.rs:258: info: trait BSTTreapMtEphTrait <T : StTInMtT + Ord + IsLtTransitive> : Sized + View < V = Set < T :: V > > — 28 fns (17 exec, 3 spec)
-src/Chap39/BSTTreapMtEph.rs:258: info: supertrait bounds `Sized + View < V = Set < T :: V > >` added by MtEph (ref StEph has none)
-src/Chap39/BSTTreapMtEph.rs:258: info: generic bounds `<T : StTInMtT + Ord + IsLtTransitive>` — supertrait-compatible with StEph `<T : StT + Ord + IsLtTransitive>` (extra: T: StTInMtT)
-src/Chap39/BSTTreapMtEph.rs:258: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_bsttreapsteph_wf`
-src/Chap39/BSTTreapMtEph.rs:258: warning: missing 23 fns present in StEph (BSTTreapStEphTrait): `spec_size_link`, `spec_bst_link`, `spec_link_size_wf`, `spec_in_order_link`, `spec_pre_order_link`, `spec_min_link`, `spec_max_link`, `spec_height_link`, `spec_bst`, `spec_height`, `spec_min`, `spec_max`, `spec_in_order`, `spec_pre_order`, `new_node`, `update_size`, `rotate_left`, `rotate_right`, `clone_link`, `insert_link`, `delete_link`, `in_order_vec`, `pre_order_vec`
-src/Chap39/BSTTreapMtEph.rs:258: info: 1 extra fns not in StEph (BSTTreapStEphTrait): `spec_bsttreapmteph_wf`
-src/Chap39/BSTTreapMtEph.rs:318: warning: `lemma_wf_assemble_node` param 1 type `& Node < T >` but StEph has `& Box < Node < T > >`
-src/Chap39/BSTTreapMtEph.rs:394: warning: `height`: StEph has requires but MtEph does not
-src/Chap39/BSTTreapMtEph.rs:394: warning: `height`: StEph has ensures but MtEph does not
-src/Chap39/BSTTreapMtEph.rs:380: info: `find` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapMtEph.rs:396: info: `minimum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapMtEph.rs:399: info: `maximum` returns `Option < T >` but StEph returns `Option < & T >` (owned/borrowed pattern)
-src/Chap39/BSTTreapMtEph.rs:326: info: `size_link`: MtEph has requires but StEph does not
-src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: MtEph has requires but StEph does not
-src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: MtEph has requires but StEph does not
-src/Chap39/BSTTreapStEph.rs:0: info: BSTTreapTrait trait: 27 matched fns across 2 variants
-src/Chap39/BSTTreapMtEph.rs:241: info: trait LinkTrait — 8 fns (0 exec, 8 spec), only in MtEph variant
-src/Chap39/BSTTreapStEph.rs:2737: info: trait ParamBSTTreapStEphTrait — 18 fns (17 exec, 1 spec), only in StEph variant
+src/Chap42/TableMtEph.rs:0: info: file group Table — comparing MtEph (src/Chap42/TableMtEph.rs), StEph (src/Chap42/TableStEph.rs), StPer (src/Chap42/TableStPer.rs)
+src/Chap42/TableStPer.rs:72: info: struct TableStPer { entries: ArraySeqStPerS < Pair < K , V > > }
+src/Chap42/TableStPer.rs:83: info: View = Map < K :: V , V :: V >
+src/Chap42/TableStPer.rs:375: info: wf = spec_tablestper_wf
+src/Chap42/TableStEph.rs:73: info: struct TableStEph { entries: ArraySeqStEphS < Pair < K , V > > }
+src/Chap42/TableStEph.rs:82: info: View = Map < K :: V , V :: V >
+src/Chap42/TableStEph.rs:290: info: wf = spec_tablesteph_wf
+src/Chap42/TableMtEph.rs:76: info: struct TableMtEph { entries: ArraySeqMtEphS < Pair < K , V > > }
+src/Chap42/TableMtEph.rs:85: info: View = Map < K :: V , V :: V >
+src/Chap42/TableMtEph.rs:542: info: wf = spec_tablemteph_wf
+src/Chap42/TableStEph.rs:73: info: struct field `entries`: type `ArraySeqStEphS < Pair < K , V > >` (variant-substitution of `ArraySeqStPerS < Pair < K , V > >`)
+src/Chap42/TableStPer.rs:374: info: trait TableStPerTrait <K : StT + Ord, V : StT> : Sized + View < V = Map < K :: V , V :: V > > — 21 fns (19 exec, 2 spec)
+src/Chap42/TableStEph.rs:289: info: trait TableStEphTrait <K : StT + Ord, V : StT> : Sized + View < V = Map < K :: V , V :: V > > — 21 fns (19 exec, 2 spec)
+src/Chap42/TableMtEph.rs:541: info: trait TableMtEphTrait <K : MtKey, V : MtVal> : Sized + View < V = Map < K :: V , V :: V > > — 17 fns (16 exec, 1 spec)
+src/Chap42/TableStEph.rs:289: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_tablestper_wf`
+src/Chap42/TableStEph.rs:289: warning: missing 1 fns present in StPer (TableStPerTrait): `collect`
+src/Chap42/TableStEph.rs:289: info: 2 extra fns not in StPer (TableStPerTrait): `spec_tablesteph_wf`, `entries`
+src/Chap42/TableStEph.rs:328: info: `map` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:342: info: `filter` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:359: info: `intersection` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:375: info: `union` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:395: info: `difference` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:424: info: `delete` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:429: info: `insert` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:449: info: `insert_wf` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:478: info: `delete_wf` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:492: info: `restrict` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableStEph.rs:501: info: `subtract` returns `()` but StPer returns `Self` (Eph→Per return shift)
+src/Chap42/TableMtEph.rs:541: info: generic bounds `<K : MtKey, V : MtVal>` — supertrait-compatible with StEph `<K : StT + Ord, V : StT>`
+src/Chap42/TableMtEph.rs:541: info: 1 variant-named spec_*_wf absent — has own variant wf: `spec_tablesteph_wf`
+src/Chap42/TableMtEph.rs:541: warning: missing 4 fns present in StEph (TableStEphTrait): `spec_stored_value`, `find_ref`, `insert_wf`, `delete_wf`
+src/Chap42/TableMtEph.rs:541: info: 1 extra fns not in StEph (TableStEphTrait): `spec_tablemteph_wf`
+src/Chap42/TableMtEph.rs:555: warning: `singleton`: StEph has requires but MtEph does not
+src/Chap42/TableMtEph.rs:559: warning: `domain`: StEph has requires but MtEph does not
+src/Chap42/TableStPer.rs:0: info: TableTrait trait: 15 matched fns across 3 variants
 
-Phase 2 summary: 1 groups compared, 0 errors, 5 warnings, 23 info
+Phase 2 summary: 1 groups compared, 0 errors, 4 warnings, 31 info
 
 Phase 4: Requires/ensures clause comparison
 
-src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
-src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
-src/Chap39/BSTTreapMtEph.rs:286: info: `lemma_height_le_size`: ensures clause fuzzy match — ref: `Self :: spec_height_link (link) <= Self :: spec_size_link (l...` ~ cur: `Lnk :: spec_height_link (link) <= Lnk :: spec_size_link (lin...`
-src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
-src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
-src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) > 0` ~ cur: `Lnk :: spec_size_link (link) > 0`
-src/Chap39/BSTTreapMtEph.rs:292: info: `lemma_size_wf_child_bounded`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { Self :: spec_si...` ~ cur: `match link { None => true , Some (node) => { Lnk :: spec_siz...`
-src/Chap39/BSTTreapMtEph.rs:306: info: `lemma_wf_decompose`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
-src/Chap39/BSTTreapMtEph.rs:306: info: `lemma_wf_decompose`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { node . size as ...` ~ cur: `match link { None => true , Some (node) => { node . size as ...`
-src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (& node . left)` ~ cur: `Lnk :: spec_link_size_wf (& node . left)`
-src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (& node . right)` ~ cur: `Lnk :: spec_link_size_wf (& node . right)`
-src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: requires clause fuzzy match — ref: `node . size as nat == 1 + Self :: spec_size_link (& node . l...` ~ cur: `node . size as nat == 1 + Lnk :: spec_size_link (& node . le...`
-src/Chap39/BSTTreapMtEph.rs:318: info: `lemma_wf_assemble_node`: ensures clause fuzzy match — ref: `Self :: spec_link_size_wf (& Some (* node))` ~ cur: `Lnk :: spec_link_size_wf (& Some (Box :: new (* node)))`
-src/Chap39/BSTTreapMtEph.rs:263: info: `lemma_bst_decompose`: requires clause fuzzy match — ref: `Self :: spec_bst_link (link)` ~ cur: `Lnk :: spec_bst_link (link)`
-src/Chap39/BSTTreapMtEph.rs:263: info: `lemma_bst_decompose`: ensures clause fuzzy match — ref: `match link { None => true , Some (node) => { Self :: spec_bs...` ~ cur: `match link { None => true , Some (node) => { Lnk :: spec_bst...`
-src/Chap39/BSTTreapMtEph.rs:369: info: `new`: ensures clause fuzzy match — ref: `empty_tree . spec_size () == 0` ~ cur: `empty_tree @ == Set :: < T :: V > :: empty ()`
-src/Chap39/BSTTreapMtEph.rs:369: warning: `new`: ensures clause count 2 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:369: warning: `new`: StEph has ensures clause `empty_tree . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:388: info: `size`: ensures clause fuzzy match — ref: `sz as nat == self . spec_size ()` ~ cur: `count == self @ . len ()`
-src/Chap39/BSTTreapMtEph.rs:388: info: `size`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:388: info: `size`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: ensures clause fuzzy match — ref: `empty == (self . spec_size () == 0)` ~ cur: `empty == (self @ . len () == 0)`
-src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:391: info: `is_empty`: MtEph has extra ensures clause `self @ . finite ()` not in StEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:372: info: `insert`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has requires clause `old (self) . spec_size () + 1 <= usize :: MAX as nat` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: ensures clause count 2 vs 6 (StEph has 6)
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `forall | k : T | old (self) . spec_contains (k) ==> self . spec_contains (k)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_contains (value)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size () + 1` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: warning: `insert`: StEph has ensures clause `self . spec_size () >= old (self) . spec_size ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:372: info: `insert`: MtEph has extra ensures clause `self @ =~= old (self) @ . insert (value @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: requires clause count 1 vs 2 (StEph has 2)
-src/Chap39/BSTTreapMtEph.rs:376: info: `delete`: StEph has requires clause `old (self) . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: ensures clause count 2 vs 4 (StEph has 4)
-src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `forall | k : T | self . spec_contains (k) ==> old (self) . spec_contains (k)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `old (self) . spec_bst () ==> self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:376: warning: `delete`: StEph has ensures clause `self . spec_size () <= old (self) . spec_size ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:376: info: `delete`: MtEph has extra ensures clause `self @ =~= old (self) @ . remove (target @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:380: info: `find`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:380: info: `find`: ensures clause fuzzy match — ref: `found . is_some () <==> self . spec_contains (* target)` ~ cur: `found . is_some () <==> self @ . contains (target @)`
-src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: ensures clause count 1 vs 2 (StEph has 2)
-src/Chap39/BSTTreapMtEph.rs:380: warning: `find`: StEph has ensures clause `found . is_some () ==> * found . unwrap () == * target` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: requires clause count 1 vs 3 (StEph has 3)
-src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: StEph has requires clause `self . spec_bst ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:384: info: `contains`: StEph has requires clause `self . spec_bsttreap_wf ()` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:384: warning: `contains`: StEph has ensures clause `found == self . spec_contains (* target)` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:384: info: `contains`: MtEph has extra ensures clause `found <==> self @ . contains (target @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:396: warning: `minimum`: StEph has ensures clause `match (min_val , self . spec_min ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:396: info: `minimum`: MtEph has extra ensures clause `min_val . is_some () ==> self @ . contains (min_val . unwrap () @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:399: warning: `maximum`: StEph has ensures clause `match (max_val , self . spec_max ()) { (Some (rv) , Some (sv)) => * rv == sv , (...` with no match in MtEph
-src/Chap39/BSTTreapMtEph.rs:399: info: `maximum`: MtEph has extra ensures clause `max_val . is_some () ==> self @ . contains (max_val . unwrap () @)` not in StEph
-src/Chap39/BSTTreapMtEph.rs:402: info: `in_order`: ensures clause fuzzy match — ref: `ordered . spec_len () == self . spec_in_order () . len ()` ~ cur: `ordered @ . len () == self @ . len ()`
-src/Chap39/BSTTreapMtEph.rs:405: info: `pre_order`: ensures clause fuzzy match — ref: `preordered . spec_len () == self . spec_pre_order () . len (...` ~ cur: `preordered @ . len () == self @ . len ()`
-src/Chap39/BSTTreapMtEph.rs:326: info: `size_link`: ensures clause fuzzy match — ref: `sz as nat == Self :: spec_size_link (link)` ~ cur: `sz as nat == Lnk :: spec_size_link (link)`
-src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: requires clause fuzzy match — ref: `Self :: spec_link_size_wf (link)` ~ cur: `Lnk :: spec_link_size_wf (link)`
-src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: requires clause fuzzy match — ref: `Self :: spec_size_link (link) < usize :: MAX as nat` ~ cur: `Lnk :: spec_size_link (link) < usize :: MAX as nat`
-src/Chap39/BSTTreapMtEph.rs:362: info: `height_link`: ensures clause fuzzy match — ref: `h as nat == Self :: spec_height_link (link)` ~ cur: `h as nat == Lnk :: spec_height_link (link)`
-src/Chap39/BSTTreapMtEph.rs:331: info: `find_link`: requires clause fuzzy match — ref: `Self :: spec_bst_link (link)` ~ cur: `Lnk :: spec_bst_link (link)`
-src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: ensures clause fuzzy match — ref: `match (min_val , Self :: spec_min_link (link)) { (Some (rv) ...` ~ cur: `match (min_val , Lnk :: spec_min_link (link)) { (Some (rv) ,...`
-src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:340: info: `min_link`: MtEph has extra ensures clause `min_val . is_some () ==> spec_contains_link (link , * min_val . unwrap ())` not in StEph
-src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: ensures clause fuzzy match — ref: `match (max_val , Self :: spec_max_link (link)) { (Some (rv) ...` ~ cur: `match (max_val , Lnk :: spec_max_link (link)) { (Some (rv) ,...`
-src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: ensures clause count 2 vs 1 (StEph has 1)
-src/Chap39/BSTTreapMtEph.rs:351: info: `max_link`: MtEph has extra ensures clause `max_val . is_some () ==> spec_contains_link (link , * max_val . unwrap ())` not in StEph
+src/Chap42/TableStEph.rs:307: warning: `singleton`: ensures clause count 1 vs 2 (StPer has 2)
+src/Chap42/TableStEph.rs:307: info: `singleton`: StPer has ensures clause `tree . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:328: info: `map`: requires clause fuzzy match — ref: `obeys_feq_full :: < K > ()` ~ cur: `obeys_feq_clone :: < K > ()`
+src/Chap42/TableStEph.rs:328: info: `map`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:328: warning: `map`: ensures clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:328: info: `map`: StPer has ensures clause `mapped . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:342: info: `filter`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:342: warning: `filter`: requires clause count 3 vs 4 (StPer has 4)
+src/Chap42/TableStEph.rs:342: warning: `filter`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:342: warning: `filter`: ensures clause count 3 vs 4 (StPer has 4)
+src/Chap42/TableStEph.rs:342: info: `filter`: StPer has ensures clause `filtered . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:359: info: `intersection`: requires clause fuzzy match — ref: `obeys_feq_full :: < K > ()` ~ cur: `obeys_feq_clone :: < K > ()`
+src/Chap42/TableStEph.rs:359: info: `intersection`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:359: warning: `intersection`: ensures clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:359: info: `intersection`: StPer has ensures clause `common . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:375: info: `union`: requires clause fuzzy match — ref: `obeys_feq_full :: < Pair < K , V > > ()` ~ cur: `obeys_feq_clone :: < K > ()`
+src/Chap42/TableStEph.rs:375: info: `union`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:375: warning: `union`: ensures clause count 4 vs 5 (StPer has 5)
+src/Chap42/TableStEph.rs:375: info: `union`: StPer has ensures clause `combined . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:395: info: `difference`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:395: warning: `difference`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:395: warning: `difference`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:395: warning: `difference`: ensures clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:395: info: `difference`: StPer has ensures clause `remaining . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:404: warning: `find`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:404: warning: `find`: StPer has requires clause `obeys_feq_full :: < V > ()` with no match in StEph
+src/Chap42/TableStEph.rs:424: info: `delete`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:424: warning: `delete`: requires clause count 2 vs 4 (StPer has 4)
+src/Chap42/TableStEph.rs:424: warning: `delete`: StPer has requires clause `obeys_feq_clone :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:424: warning: `delete`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:429: info: `insert`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:429: warning: `insert`: requires clause count 3 vs 4 (StPer has 4)
+src/Chap42/TableStEph.rs:429: warning: `insert`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:449: info: `insert_wf`: requires clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
+src/Chap42/TableStEph.rs:449: info: `insert_wf`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:449: warning: `insert_wf`: requires clause count 6 vs 7 (StPer has 7)
+src/Chap42/TableStEph.rs:449: warning: `insert_wf`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:478: info: `delete_wf`: requires clause fuzzy match — ref: `forall | k : K :: V | # [trigger] self @ . contains_key (k) ...` ~ cur: `forall | k : K :: V | # [trigger] old (self) @ . contains_ke...`
+src/Chap42/TableStEph.rs:478: info: `delete_wf`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:478: warning: `delete_wf`: requires clause count 3 vs 4 (StPer has 4)
+src/Chap42/TableStEph.rs:478: warning: `delete_wf`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:492: info: `restrict`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:492: warning: `restrict`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:492: warning: `restrict`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:492: warning: `restrict`: ensures clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:492: info: `restrict`: StPer has ensures clause `restricted . spec_table_wf ()` with no match in StEph
+src/Chap42/TableStEph.rs:501: info: `subtract`: requires clause fuzzy match — ref: `self . spec_table_wf ()` ~ cur: `old (self) . spec_table_wf ()`
+src/Chap42/TableStEph.rs:501: warning: `subtract`: requires clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:501: warning: `subtract`: StPer has requires clause `obeys_feq_full :: < Pair < K , V > > ()` with no match in StEph
+src/Chap42/TableStEph.rs:501: warning: `subtract`: ensures clause count 2 vs 3 (StPer has 3)
+src/Chap42/TableStEph.rs:501: info: `subtract`: StPer has ensures clause `subtracted . spec_table_wf ()` with no match in StEph
+src/Chap42/TableMtEph.rs:546: info: `size`: ensures clause fuzzy match — ref: `count == self @ . len ()` ~ cur: `count == self @ . dom () . len ()`
+src/Chap42/TableMtEph.rs:555: info: `singleton`: ensures clause count 2 vs 1 (StEph has 1)
+src/Chap42/TableMtEph.rs:555: info: `singleton`: MtEph has extra ensures clause `tree . spec_table_wf ()` not in StEph
+src/Chap42/TableMtEph.rs:667: info: `insert`: requires clause count 4 vs 3 (StEph has 3)
+src/Chap42/TableMtEph.rs:667: info: `insert`: MtEph has extra requires clause `obeys_feq_clone :: < K > ()` not in StEph
+src/Chap42/TableMtEph.rs:667: info: `insert`: ensures clause fuzzy match — ref: `! old (self) @ . contains_key (key @) ==> self @ [key @] == ...` ~ cur: `! old (self) @ . contains_key (key @) ==> self @ [key @] == ...`
+src/Chap42/TableMtEph.rs:667: info: `insert`: ensures clause fuzzy match — ref: `old (self) @ . contains_key (key @) ==> (exists | old_v : V ...` ~ cur: `old (self) @ . contains_key (key @) ==> (exists | old_v : V ...`
 
-Phase 4 summary: 0 errors, 24 warnings, 45 info
+Phase 4 summary: 0 errors, 27 warnings, 31 info

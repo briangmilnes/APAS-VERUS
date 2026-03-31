@@ -5,27 +5,8 @@
 
 set -uo pipefail
 
-# Wait for 5GB free RAM before running. Poll every 5s, give up after 120s.
-wait_for_ram() {
-    local need_kb=$((9 * 1024 * 1024))
-    local waited=0
-    while true; do
-        local avail_kb
-        avail_kb=$(awk '/MemAvailable/ {print $2}' /proc/meminfo)
-        if [ "$avail_kb" -ge "$need_kb" ]; then
-            return 0
-        fi
-        if [ "$waited" -ge 120 ]; then
-            echo "ERROR: only $((avail_kb / 1024))MB free after 120s (need 9GB). Aborting."
-            exit 1
-        fi
-        echo "Waiting for RAM: $((avail_kb / 1024))MB free, need 9216MB (${waited}s elapsed)..."
-        sleep 5
-        waited=$((waited + 5))
-    done
-}
-
-wait_for_ram
+# Acquire one of N exclusive slots (default 2) so concurrent agents don't OOM.
+source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus

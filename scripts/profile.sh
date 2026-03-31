@@ -10,6 +10,9 @@
 
 set -uo pipefail
 
+# Acquire one of N exclusive slots (default 2) so concurrent agents don't OOM.
+source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
+
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus
 

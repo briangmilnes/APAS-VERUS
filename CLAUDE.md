@@ -416,6 +416,26 @@ When to use:
 Agents working on ChapNN should use `scripts/validate.sh isolate ChapNN` for all
 iterative development, then `scripts/validate.sh` once at the end before pushing.
 
+### Profiling rlimit failures
+
+When a function exceeds its rlimit, **profile before guessing**. Add `--profile` to
+the validate command:
+
+```bash
+scripts/validate.sh isolate Chap65 --profile    # profile a chapter
+scripts/profile.sh isolate Chap65               # dedicated profile script
+```
+
+After it runs, read the summary:
+
+```bash
+ls -t logs/profile/SUMMARY-*.txt | head -1 | xargs cat
+```
+
+Functions with >100K instantiations are matching loop candidates. The profile tells
+you which quantifiers Z3 is stuck on — without it you are guessing. Always profile
+an rlimit failure before changing proof strategy.
+
 ### Proof Holes
 
 Use the wrapper scripts for hole queries (never grep manually, never call the binary directly):
