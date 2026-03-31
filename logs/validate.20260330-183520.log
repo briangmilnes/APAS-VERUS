@@ -1,0 +1,77 @@
+error: postcondition not satisfied
+   --> src/Chap65/UnionFindStEph.rs:284:13
+    |
+271 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________-
+272 | |         uf: UnionFindStEph<V>,
+273 | |         old_uf: UnionFindStEph<V>,
+274 | |         v: V,
+275 | |     )
+    | |_____- at the end of the function body
+...
+284 |               uf.spec_unionfindsteph_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:271:11
+    |
+271 |       proof fn lemma_insert_preserves_wf<V: StT + Hash>(
+    |  ___________^
+272 | |         uf: UnionFindStEph<V>,
+273 | |         old_uf: UnionFindStEph<V>,
+274 | |         v: V,
+275 | |     )
+    | |_____^
+
+note: diagnostics via expansion
+   --> src/Chap65/UnionFindStEph.rs:245:13
+    |
+245 |         &&& spec_rank_has_predecessor(uf)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(uf).spec_unionfindsteph_wf()
+|   spec_unionfindsteph_wf(old(uf))
+|   |   spec_key_model() ✔
+|   |   spec_feq_full() ✔
+|   |   spec_parent_rank_same_dom(old(uf)) ✔
+|   |   spec_roots_parent_same_dom(old(uf)) ✔
+|   |   spec_roots_idempotent(old(uf)) ✔
+|   |   spec_parent_closed(old(uf)) ✔
+|   |   spec_roots_in_dom(old(uf)) ✔
+|   |   spec_elements_forward(old(uf)) ✔
+|   |   spec_elements_backward(old(uf)) ✔
+|   |   spec_elements_distinct(old(uf)) ✔
+|   |   spec_self_parent_is_root(old(uf)) ✔
+|   |   spec_parent_preserves_root(old(uf)) ✔
+|   |   spec_rank_increases(old(uf)) ✔
+|   |   spec_rank_bounded(old(uf)) ✔
+|   |   spec_rank_has_predecessor(old(uf)) ✘ [rlimit exceeded]
+|   |   |   forall |v|
+|   |   |       old(uf).rank.view().dom().contains(v) && old(uf).rank.view().index(v) > 0 ==>
+|   |   |           (exists |w| old(uf).rank.view().dom().contains(w) && old(uf).roots.index(w) == old(uf).roots.index(v) && old(uf).rank.view().index(w) == clip(usize, old(uf).rank.view().index(v) - 1) && !(w == v)) 
+|   |   +---
+|   |   spec_rank_lt_elements(old(uf)) ✔
+|   +---
++---
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:738:11
+    |
+738 |       proof fn lemma_rank_lt_elements<V: StT + Hash>(
+    |  ___________^
+739 | |         uf: &UnionFindStEph<V>,
+740 | |         v_view: <V as View>::V,
+741 | |     )
+    | |_____^
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap65/UnionFindStEph.rs:828:11
+    |
+828 |     proof fn lemma_assemble_wf<V: StT + Hash>(uf: &UnionFindStEph<V>)
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Elapsed: 300s
+Sampled Memory Usage: peak rust_verify RSS: 18614MB, peak z3 RSS: 4158MB, min free: 1048MB
+Sampled CPU Usage: rust_verify: 526s, z3 children: 326s

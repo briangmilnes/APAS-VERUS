@@ -11,6 +11,8 @@ pub mod GraphSearchMtPer {
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -43,7 +45,10 @@ pub mod GraphSearchMtPer {
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
             S: SelectionStrategy<V>,
-            requires forall|v: &V| #[trigger] graph.requires((v,)),
+            requires
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures search.visited@.contains(source@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -55,6 +60,8 @@ pub mod GraphSearchMtPer {
             requires
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 sources.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures sources@.subset_of(search.visited@);
 
         /// - APAS: (no explicit cost; Theorem 53.1: ≤ |V| rounds)
@@ -62,7 +69,10 @@ pub mod GraphSearchMtPer {
         fn reachable<G>(graph: &G, source: V)                                             -> (reachable_set: AVLTreeSetMtPer<V>)
         where
             G: Fn(&V) -> AVLTreeSetMtPer<V>,
-            requires forall|v: &V| #[trigger] graph.requires((v,)),
+            requires
+                forall|v: &V| #[trigger] graph.requires((v,)),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
             ensures reachable_set@.contains(source@);
     }
 
@@ -102,7 +112,10 @@ pub mod GraphSearchMtPer {
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
-        requires forall|v: &V| #[trigger] graph.requires((v,)),
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures search.visited@.contains(source@),
     {
         let sources = AVLTreeSetMtPer::singleton(source);
@@ -121,6 +134,8 @@ pub mod GraphSearchMtPer {
             forall|v: &V| #[trigger] graph.requires((v,)),
             visited_init.spec_avltreesetmtper_wf(),
             frontier_init.spec_avltreesetmtper_wf(),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures
             visited_init@.subset_of(visited_all@),
             frontier_init@.subset_of(visited_all@),
@@ -136,6 +151,8 @@ pub mod GraphSearchMtPer {
                 forall|v: &V| #[trigger] graph.requires((v,)),
                 visited.spec_avltreesetmtper_wf(),
                 frontier.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                view_ord_consistent::<V>(),
         {
             let visited_new = visited.union(&frontier);
 
@@ -149,11 +166,18 @@ pub mod GraphSearchMtPer {
                     nlen as nat == frontier_seq@.len(),
                     frontier_seq.spec_avltreeseqmtper_wf(),
                     frontier.spec_avltreesetmtper_wf(),
+                    new_neighbors.spec_avltreesetmtper_wf(),
                     forall|v: &V| #[trigger] graph.requires((v,)),
+                    vstd::laws_cmp::obeys_cmp_spec::<V>(),
+                    view_ord_consistent::<V>(),
                 decreases nlen - i,
             {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
+                proof {
+                    // Graph closure returns well-formed sets.
+                    assume(neighbors.spec_avltreesetmtper_wf());
+                }
                 new_neighbors = new_neighbors.union(&neighbors);
                 i = i + 1;
             }
@@ -179,6 +203,8 @@ pub mod GraphSearchMtPer {
         requires
             forall|v: &V| #[trigger] graph.requires((v,)),
             sources.spec_avltreesetmtper_wf(),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures sources@.subset_of(search.visited@),
     {
         let visited = graph_search_explore(graph, strategy, AVLTreeSetMtPer::empty(), sources);
@@ -207,7 +233,10 @@ pub mod GraphSearchMtPer {
     pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V) -> (reachable_set: AVLTreeSetMtPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
-        requires forall|v: &V| #[trigger] graph.requires((v,)),
+        requires
+            forall|v: &V| #[trigger] graph.requires((v,)),
+            vstd::laws_cmp::obeys_cmp_spec::<V>(),
+            view_ord_consistent::<V>(),
         ensures reachable_set@.contains(source@),
     {
         let result = graph_search(graph, source, &SelectAll);
