@@ -415,8 +415,8 @@ broadcast use {
     }
 
     impl<T: MtVal> Display for OBSTMtEphS<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format two integers under read locks
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers under read locks
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             let memo_handle = self.memo.acquire_read();
             let memo_size = memo_handle.borrow().len();
@@ -432,8 +432,8 @@ broadcast use {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec from Arc<RwLock>
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec from Arc<RwLock>
         fn into_iter(self) -> Self::IntoIter {
             let handle = self.keys.acquire_read();
             let keys = handle.borrow().clone();
@@ -446,8 +446,8 @@ broadcast use {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under read lock
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
         fn into_iter(self) -> Self::IntoIter {
             let handle = self.keys.acquire_read();
             let keys = handle.borrow().clone();
@@ -460,8 +460,8 @@ broadcast use {
         type Item = KeyProb<T>;
         type IntoIter = IntoIter<KeyProb<T>>;
 
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — clone Vec under read lock
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
         fn into_iter(self) -> Self::IntoIter {
             let handle = self.keys.acquire_read();
             let keys = handle.borrow().clone();
@@ -471,8 +471,8 @@ broadcast use {
     }
 
     impl<T: MtVal + Display> Display for KeyProb<T> {
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — format key and probability
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
     }
 

@@ -53,7 +53,7 @@ pub mod BottomUpDPMtEph {
             ensures self.spec_med(i, j) <= i + j;
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct. — matches APAS
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_bottomupdpmteph_wf(),
@@ -63,25 +63,25 @@ pub mod BottomUpDPMtEph {
                 dp.spec_t_len() == t.spec_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn s_length(&self) -> (len: usize)
             requires self.spec_bottomupdpmteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn t_length(&self) -> (len: usize)
             requires self.spec_bottomupdpmteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks. — matches APAS
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_bottomupdpmteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence. — matches APAS
         fn set_s(&mut self, s: ArraySeqMtEphS<char>)
             requires old(self).spec_bottomupdpmteph_wf(),
             ensures
@@ -90,7 +90,7 @@ pub mod BottomUpDPMtEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence. — matches APAS
         fn set_t(&mut self, t: ArraySeqMtEphS<char>)
             requires old(self).spec_bottomupdpmteph_wf(),
             ensures
@@ -98,8 +98,8 @@ pub mod BottomUpDPMtEph {
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
-        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1, diagonal parallel)
-        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, not parallel.
+        /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1, diagonal parallel)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, not parallel. — matches APAS
         fn med_bottom_up_parallel(&mut self) -> (distance: usize)
             requires
                 old(self).spec_bottomupdpmteph_wf(),
@@ -114,7 +114,7 @@ pub mod BottomUpDPMtEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific helper (table initialization).
-        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- allocate (|S|+1)*(|T|+1) cells.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- allocate (|S|+1)*(|T|+1) cells. — matches APAS
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
                 self.spec_bottomupdpmteph_wf(),
@@ -133,7 +133,7 @@ pub mod BottomUpDPMtEph {
                     table@[0]@[j] == j as nat;
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific helper (single cell computation).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two array lookups plus comparison.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two array lookups plus comparison. — matches APAS
         fn compute_cell_value(
             &self,
             table: &Vec<Vec<usize>>,

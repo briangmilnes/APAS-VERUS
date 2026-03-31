@@ -91,7 +91,8 @@ pub mod MinEditDistMtEph {
         spec fn spec_mineditdistmteph_wf(&self) -> bool;
 
         /// Create new minimum edit distance solver.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
             T: Default
@@ -102,7 +103,8 @@ pub mod MinEditDistMtEph {
                 empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_mineditdistmteph_wf(),
@@ -123,17 +125,20 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get the source sequence.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn source(&self) -> (s: &ArraySeqMtEphS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn target(&self) -> (t: &ArraySeqMtEphS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Set element in source sequence.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_source(&mut self, index: usize, value: T)
             requires
                 old(self).spec_mineditdistmteph_wf(),
@@ -143,7 +148,8 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Set element in target sequence.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_target(&mut self, index: usize, value: T)
             requires
                 old(self).spec_mineditdistmteph_wf(),
@@ -153,7 +159,8 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Clear memoization table.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn clear_memo(&mut self)
             requires old(self).spec_mineditdistmteph_wf(),
             ensures
@@ -161,7 +168,8 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get memoization table size.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -188,7 +196,8 @@ pub mod MinEditDistMtEph {
     }
 
     /// Recursive memoized parallel minimum edit distance solver.
-    /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|) — matches APAS
     fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
         source: &ArraySeqMtEphS<T>,
         target: &ArraySeqMtEphS<T>,
@@ -380,11 +389,13 @@ pub mod MinEditDistMtEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait MinEditDistMtEphMutTrait<T: MtVal> {
         /// Get mutable source sequence (ephemeral allows mutation).
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn source_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation).
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn target_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
     }
 

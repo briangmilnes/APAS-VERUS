@@ -385,7 +385,8 @@ pub mod TableStPer {
             ensures count == self@.len();
 
         /// - APAS Cost Spec 42.5: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS. — matches APAS
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablestper_wf();
 
@@ -614,8 +615,8 @@ pub mod TableStPer {
                 subtracted.spec_tablestper_wf(),
                 forall|k: K::V| #[trigger] subtracted@.contains_key(k) ==> subtracted@[k] == self@[k];
 
-        /// - APAS: Work Θ(|a|), Span Θ(lg |a|) -- from Algorithm 42.3
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- returns backing entries directly.
+        /// - Alg Analysis: APAS (Ch42 ref): Work O(|a|), Span O(lg |a|) -- from Algorithm 42.3
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- returns backing entries directly. — matches APAS
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
             ensures spec_entries_to_map(collected@) == self@;
     }

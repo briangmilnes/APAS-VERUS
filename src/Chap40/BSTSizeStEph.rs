@@ -243,26 +243,31 @@ pub mod BSTSizeStEph {
         spec fn spec_bstsizesteph_wf(&self) -> bool;
         spec fn spec_height(&self) -> nat;
 
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn new() -> (empty: Self)
             ensures
                 empty.spec_size() == 0,
                 empty.spec_bstsizesteph_wf(),
                 empty@ == Set::<T>::empty();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1) — reads augmented size field
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn size(&self) -> (count: usize)
             ensures count as nat == self.spec_size();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self.spec_size() == 0);
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn height(&self) -> (height: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_bstsizesteph_wf(),
             ensures
                 height as nat == self.spec_height();
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
@@ -274,7 +279,8 @@ pub mod BSTSizeStEph {
                 self.spec_bstsizesteph_wf(),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstsizesteph_wf(),
@@ -284,7 +290,8 @@ pub mod BSTSizeStEph {
                 self@ == old(self)@.remove(*key),
                 self.spec_bstsizesteph_wf(),
                 self.spec_size() <= old(self).spec_size();
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstsizesteph_wf(),
@@ -293,26 +300,30 @@ pub mod BSTSizeStEph {
             ensures
                 found is Some <==> self@.contains(*target),
                 found is Some ==> *found.unwrap() == *target;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
         fn contains(&self, target: &T) -> (contains: bool)
             requires
                 self.spec_bstsizesteph_wf(),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 forall |a: T, b: T| a.cmp_spec(&b) == std::cmp::Ordering::Equal ==> (a == b),
             ensures contains == self@.contains(*target);
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
         fn minimum(&self) -> (minimum: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> minimum is None,
                 self.spec_size() > 0 ==> minimum is Some;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS
         fn maximum(&self) -> (maximum: Option<&T>)
             requires self.spec_bstsizesteph_wf(),
             ensures
                 self.spec_size() == 0 ==> maximum is None,
                 self.spec_size() > 0 ==> maximum is Some;
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires self.spec_bstsizesteph_wf(),
             ensures ordered.spec_len() == self.spec_size();
@@ -328,7 +339,8 @@ pub mod BSTSizeStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn select(&self, rank: usize) -> (selected: Option<&T>)
             ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
-        /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1
+        /// - Alg Analysis: APAS (Ch40 Ex 40.1): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn split_rank(&self, rank: usize) -> (split: (BSTSizeStEph<T>, BSTSizeStEph<T>))
             requires self.spec_bstsizesteph_wf(),
             ensures

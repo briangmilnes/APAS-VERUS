@@ -88,7 +88,8 @@ pub mod SubsetSumMtPer {
         spec fn spec_subsetsummtper_wf(&self) -> bool;
 
         /// Create new subset sum solver.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
             T: Default
@@ -98,7 +99,8 @@ pub mod SubsetSumMtPer {
                 empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (subset_sum: Self)
             ensures
                 subset_sum.spec_subsetsummtper_wf(),
@@ -113,12 +115,14 @@ pub mod SubsetSumMtPer {
             requires self.spec_subsetsummtper_wf();
 
         /// Get the multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Get memoization table size.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -145,7 +149,8 @@ pub mod SubsetSumMtPer {
     }
 
     /// Recursive memoized parallel subset sum solver.
-    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
     fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
         multiset: &ArraySeqMtPerS<T>,
         memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>,

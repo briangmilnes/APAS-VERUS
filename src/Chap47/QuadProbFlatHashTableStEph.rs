@@ -556,8 +556,8 @@ pub mod QuadProbFlatHashTableStEph {
             && new_size as int > table.current_size as int
         }
 
-        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
-        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe then set.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe then set.
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -849,8 +849,8 @@ pub mod QuadProbFlatHashTableStEph {
             }
         }
 
-        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
-        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -964,8 +964,8 @@ pub mod QuadProbFlatHashTableStEph {
             None
         }
 
-        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
-        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe until found, then tombstone.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe until found, then tombstone.
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -1134,8 +1134,8 @@ pub mod QuadProbFlatHashTableStEph {
             false
         }
 
-        /// - APAS: Work O(n + m + m'), Span O(n + m + m').
-        /// - Claude-Opus-4.6: Work O(n + m + m') — collect n pairs, create m' empty slots, reinsert.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m') — collect n pairs, create m' empty slots, reinsert.
         fn resize(
             table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>,
             new_size: usize,
@@ -1282,16 +1282,16 @@ pub mod QuadProbFlatHashTableStEph {
         FlatHashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>
         for QuadProbFlatHashTableStEph
     {
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — triangular probe position.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — triangular probe position.
         fn probe(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize) {
             let hash_val = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let tri = attempt.wrapping_mul(attempt.wrapping_add(1)) / 2;
             (hash_val.wrapping_add(tri)) % table.current_size
         }
 
-        /// - APAS: Work O(1/(1-α)) expected, Span O(1/(1-α)).
-        /// - Claude-Opus-4.6: Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1-α)) expected, Span O(1/(1-α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1-α)), Span O(1/(1-α)) — triangular probe sequence.
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
             let mut attempt: usize = 0;
             while attempt < table.current_size

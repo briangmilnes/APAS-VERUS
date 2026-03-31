@@ -58,8 +58,8 @@ pub mod FlatHashTable {
         ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
     {
         /// Probes for the next slot in the sequence.
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on probing strategy.
         fn probe(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key, attempt: usize) -> (slot: usize)
             requires
                 table.current_size > 0,
@@ -68,8 +68,8 @@ pub mod FlatHashTable {
                 slot < table.current_size;
 
         /// Finds the first available slot (Empty or Deleted) for insertion.
-        /// - APAS: Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on probing strategy.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on probing strategy.
         fn find_slot(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (slot: usize)
             requires
                 table.current_size > 0,
@@ -91,22 +91,22 @@ pub mod FlatHashTable {
             }
         }
 
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum construction.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time enum construction.
         fn new() -> (entry: Self)
             ensures entry is Empty,
         { FlatEntry::Empty }
 
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — constant-time enum assignment.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time enum assignment.
         fn insert(&mut self, key: Key, value: Value)
             ensures
                 *self == FlatEntry::<Key, Value>::Occupied(key, value),
                 self.spec_entry_to_map()[key] == value,
         { *self = FlatEntry::Occupied(key, value); }
 
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + key comparison.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single match + key comparison.
         fn lookup(&self, key: &Key) -> (found: Option<Value>)
             ensures
                 self is Empty ==> found is None,
@@ -120,8 +120,8 @@ pub mod FlatHashTable {
             }
         }
 
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — single match + enum assignment.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single match + enum assignment.
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures
                 deleted ==> *self is Deleted,

@@ -159,8 +159,8 @@ pub mod ChainedHashTable {
             ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
         {
             /// Computes the hash index for a key.
-            /// - APAS: Work O(1), Span O(1).
-            /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on hash function.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on hash function.
             fn hash_index(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (index: usize)
                 requires
                     spec_hashtable_wf(table),

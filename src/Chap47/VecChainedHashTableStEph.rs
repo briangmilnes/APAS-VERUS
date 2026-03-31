@@ -73,14 +73,14 @@ pub mod VecChainedHashTableStEph {
                 spec_seq_pairs_to_map(self@)
             }
 
-            /// - APAS: Work O(1), Span O(1).
-            /// - Claude-Opus-4.6: Work O(1), Span O(1) — empty Vec construction.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec construction.
             fn new() -> (entry: Self)
                 ensures entry@.len() == 0,
             { Vec::new() }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
             fn insert(&mut self, key: Key, value: Value)
                 ensures
                     self@.len() >= 1,
@@ -106,8 +106,8 @@ pub mod VecChainedHashTableStEph {
                 self.push((key, value));
             }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan of chain, n = chain length.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan of chain, n = chain length.
             fn lookup(&self, key: &Key) -> (found: Option<Value>) {
                 let mut i: usize = 0;
                 while i < self.len()
@@ -121,8 +121,8 @@ pub mod VecChainedHashTableStEph {
                 None
             }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + Vec::remove (shifts elements), n = chain length.
             fn delete(&mut self, key: &Key) -> (deleted: bool)
                 ensures
                     !deleted ==> self@ == old(self)@,
@@ -166,8 +166,8 @@ pub mod VecChainedHashTableStEph {
             ParaHashTableStEphTrait<Key, Value, Vec<(Key, Value)>, Metrics, H>
             for VecChainedHashTableStEph
         {
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone bucket, dedup insert, set back.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone bucket, dedup insert, set back.
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -262,8 +262,8 @@ pub mod VecChainedHashTableStEph {
                 }
             }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — hash, backward scan bucket for last-wins match.
             fn lookup(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let bucket_len = table.table[index].len();
@@ -321,8 +321,8 @@ pub mod VecChainedHashTableStEph {
                 None
             }
 
-            /// - APAS: Work O(1+α) expected, Span O(1+α).
-            /// - Claude-Opus-4.6: Work O(n) worst, Span O(n) — hash, clone bucket, filter out key, set back.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone bucket, filter out key, set back.
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -442,8 +442,8 @@ pub mod VecChainedHashTableStEph {
                 deleted
             }
 
-            /// - APAS: Work O(n + m + m'), Span O(n + m + m').
-            /// - Claude-Opus-4.6: Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m').
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') — collects n pairs, creates m' chains, reinserts.
             fn resize(
                 table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>,
                 new_size: usize,
@@ -598,8 +598,8 @@ pub mod VecChainedHashTableStEph {
             ChainedHashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>
             for VecChainedHashTableStEph
         {
-            /// - APAS: Work O(1), Span O(1).
-            /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to stored hash function.
+            /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to stored hash function.
             fn hash_index(table: &HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (index: usize) {
                 call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash)
             }

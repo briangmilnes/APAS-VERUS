@@ -369,7 +369,7 @@ pub mod ParaHashTableStEph {
         /// Abstract map view of this entry's key-value content.
         spec fn spec_entry_to_map(&self) -> Map<Key, Value>;
         /// - Alg Analysis: APAS: N/A — inner table interface, cost depends on implementation.
-        /// - Claude-Opus-4.6: N/A — abstract trait method.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method.
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
         /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
@@ -420,8 +420,8 @@ pub mod ParaHashTableStEph {
 
         /// Creates an empty hash table with the given initial size.
         /// Takes a hash function that maps (&Key, table_size) to a bucket index.
-        /// - APAS: Work O(m), Span O(m) where m is initial size.
-        /// - Claude-Opus-4.6: Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(m), Span O(m) where m is initial size.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — agrees with APAS; iterates m times to create entries.
         fn createTable(hash_fn: H, initial_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (table: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 initial_size > 0,
@@ -520,7 +520,7 @@ pub mod ParaHashTableStEph {
 
         /// Accessor for metrics field.
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             requires Self::spec_parahashtablesteph_wf(table),
             ensures m == &table.metrics,
@@ -528,8 +528,8 @@ pub mod ParaHashTableStEph {
 
         /// Returns the load (number of elements) and size (table capacity).
         /// Load factor α = load/size.
-        /// - APAS: Work O(1), Span O(1).
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — agrees with APAS; field reads only.
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS; field reads only.
         fn loadAndSize(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (load_and_size: LoadAndSize)
             requires Self::spec_parahashtablesteph_wf(table),
             ensures
@@ -544,9 +544,11 @@ pub mod ParaHashTableStEph {
 
         /// Resizes the hash table to a new size and rehashes all entries.
         /// Clones the stored hash function for the new table.
-        /// - APAS: Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
+        /// - Alg Analysis: APAS (Ch47 ref): Work O(n + m + m'), Span O(n + m + m') where n is number of elements,
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m + m'), Span O(n + m + m') where n is number of elements, — matches APAS
         ///   m is old size, m' is new size.
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+        /// - Alg Analysis: APAS (Ch47 ref): N/A
+        /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — abstract trait method; cost depends on implementation.
         fn resize(table: &HashTable<Key, Value, Entry, Metrics, H>, new_size: usize) -> (resized: HashTable<Key, Value, Entry, Metrics, H>)
             requires
                 new_size > 0,

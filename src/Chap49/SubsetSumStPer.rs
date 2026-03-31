@@ -74,7 +74,8 @@ pub mod SubsetSumStPer {
         spec fn spec_multiset_len(&self) -> nat;
 
         /// Create new subset sum solver.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
             T: Default
@@ -82,7 +83,8 @@ pub mod SubsetSumStPer {
             ensures empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
@@ -94,19 +96,22 @@ pub mod SubsetSumStPer {
             T: Into<i32> + Copy;
 
         /// Get the multiset.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset(&self) -> (ms: &ArraySeqStPerS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Get memoization table size.
-        /// - APAS: not specified
+        /// - Alg Analysis: APAS (Ch49 ref): not specified
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
 
     // 9. impls
 
     /// Recursive memoized subset sum solver.
-    /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+    /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStPerS<T>,
         i: usize,

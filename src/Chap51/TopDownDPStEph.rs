@@ -95,7 +95,7 @@ pub mod TopDownDPStEph {
             ensures self.spec_med(i, j) <= i + j;
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequences into struct. — matches APAS
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
                 dp.spec_topdowndpsteph_wf(),
@@ -105,37 +105,37 @@ pub mod TopDownDPStEph {
                 dp.spec_t_len() == t.spec_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return cached length. — matches APAS
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- two length checks. — matches APAS
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return hash map size.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- return hash map size. — matches APAS
         fn memo_size(&self) -> (size: usize)
             requires self.spec_topdowndpsteph_wf(),
             ensures size == self.spec_memo().len();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map contains_key.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map contains_key. — matches APAS
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
             requires self.spec_topdowndpsteph_wf(),
             ensures memoized == self.spec_memo().contains_key((i, j));
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map lookup.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map lookup. — matches APAS
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpsteph_wf(),
             ensures
@@ -146,7 +146,7 @@ pub mod TopDownDPStEph {
                 };
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- hash map insert. — matches APAS
         fn insert_memo(&mut self, i: usize, j: usize, value: usize)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -155,7 +155,7 @@ pub mod TopDownDPStEph {
                 self.spec_memo() == old(self).spec_memo().insert((i, j), value);
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- clear hash map. — matches APAS
         fn clear_memo(&mut self)
             ensures
                 self.spec_topdowndpsteph_wf(),
@@ -164,7 +164,7 @@ pub mod TopDownDPStEph {
                 self.spec_memo() == Map::<(usize, usize), usize>::empty();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence. — matches APAS
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -173,7 +173,7 @@ pub mod TopDownDPStEph {
                 self.spec_t() == old(self).spec_t();
 
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- move sequence. — matches APAS
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
             requires old(self).spec_topdowndpsteph_wf(),
             ensures
@@ -181,8 +181,8 @@ pub mod TopDownDPStEph {
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
-        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
-        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo. — matches APAS
         fn med_memoized(&mut self) -> (distance: usize)
             requires
                 old(self).spec_topdowndpsteph_wf(),
@@ -196,8 +196,8 @@ pub mod TopDownDPStEph {
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t();
 
-        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (medOne from Algorithm 51.4)
-        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
+        /// - Alg Analysis: APAS (Ch51 ref): Work O(|S|*|T|), Span O(|S|+|T|) (medOne from Algorithm 51.4)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo. — matches APAS
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             requires
                 i <= old(self).spec_s_len(),
