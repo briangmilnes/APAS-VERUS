@@ -19,6 +19,10 @@ In short:
 
 ## No step limit — finish all chapters.
 
+## When done
+
+Commit all changes with `git add -A && git commit` and push.
+
 ## Report
 
 Write `plans/agent4-r125-alg-format-report.md`.
