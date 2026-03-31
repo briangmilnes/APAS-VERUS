@@ -1,0 +1,25 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:566:5
+    |
+566 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/GraphSearchMtPer.rs:185:28
+    |
+185 |                     assert(neighbors@.finite());
+    |                            ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+neighbors.view().finite() 
+    function is uninterpreted
+
+verification results:: 2103 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 11328MB, peak z3 RSS: 740MB, min free: 11447MB
+Sampled CPU Usage: rust_verify: 165s, z3 children: 148s

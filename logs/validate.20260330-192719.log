@@ -1,0 +1,27 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:566:5
+    |
+566 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap53/GraphSearchMtPer.rs:185:28
+    |
+185 |                     assert(neighbors.spec_avltreesetmtper_wf());
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+neighbors.spec_avltreesetmtper_wf()
+|   neighbors.ghost_set_view.finite() 
+|       function is uninterpreted
++---
+
+verification results:: 2103 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 3221MB, peak z3 RSS: 374MB, min free: 19854MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 56s
