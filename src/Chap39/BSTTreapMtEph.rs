@@ -370,19 +370,38 @@ pub mod BSTTreapMtEph {
             ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn insert(&mut self, value: T, priority: u64)
-            requires T::obeys_partial_cmp_spec(),
-            ensures self@ =~= old(self)@.insert(value@), self.spec_bsttreapmteph_wf();
+            requires
+                old(self).spec_bsttreapmteph_wf(),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                self@ =~= old(self)@.insert(value@),
+                self.spec_bsttreapmteph_wf(),
+                self.spec_contains(value),
+                self.spec_size() <= old(self).spec_size() + 1,
+                self.spec_size() >= old(self).spec_size();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn delete(&mut self, target: &T)
-            requires T::obeys_partial_cmp_spec(),
-            ensures self@ =~= old(self)@.remove(target@), self.spec_bsttreapmteph_wf();
+            requires
+                old(self).spec_bsttreapmteph_wf(),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                self@ =~= old(self)@.remove(target@),
+                self.spec_bsttreapmteph_wf(),
+                self.spec_size() <= old(self).spec_size(),
+                forall|k: T| self@.contains(k@) ==> #[trigger] old(self)@.contains(k@);
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn find(&self, target: &T) -> (found: Option<T>)
-            requires T::obeys_partial_cmp_spec(),
-            ensures found.is_some() <==> self@.contains(target@);
+            requires
+                self.spec_bsttreapmteph_wf(),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                found.is_some() <==> self@.contains(target@),
+                found.is_some() ==> found.unwrap()@ == target@;
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn contains(&self, target: &T) -> (found: bool)
-            requires T::obeys_partial_cmp_spec(),
+            requires
+                self.spec_bsttreapmteph_wf(),
+                T::obeys_partial_cmp_spec(),
             ensures found <==> self@.contains(target@);
         /// - APAS: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
@@ -391,7 +410,8 @@ pub mod BSTTreapMtEph {
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - APAS: Work Θ(n), Span Θ(n)
-        fn height(&self) -> (h: usize);
+        fn height(&self) -> (h: usize)
+            requires self.spec_bsttreapmteph_wf();
         /// - APAS: Work O(log n) expected, Span O(log n) expected
         fn minimum(&self) -> (min_val: Option<T>)
             ensures min_val.is_some() ==> self@.contains(min_val.unwrap()@);
@@ -1285,7 +1305,6 @@ pub mod BSTTreapMtEph {
         }
 
         fn insert(&mut self, value: T, priority: u64)
-            ensures self@ =~= old(self)@.insert(value@), self.spec_bsttreapmteph_wf()
         {
             proof { use_type_invariant(&*self); }
             let ghost value_view = value@;
@@ -1300,7 +1319,6 @@ pub mod BSTTreapMtEph {
         }
 
         fn delete(&mut self, target: &T)
-            ensures self@ =~= old(self)@.remove(target@), self.spec_bsttreapmteph_wf()
         {
             proof { use_type_invariant(&*self); }
             let ghost target_view = target@;
@@ -1312,17 +1330,18 @@ pub mod BSTTreapMtEph {
         }
 
         fn find(&self, target: &T) -> (found: Option<T>)
-            ensures found.is_some() <==> self@.contains(target@)
         {
             let handle = self.locked_root.acquire_read();
             let result = find_link(handle.borrow(), target).cloned();
             handle.release_read();
-            proof { assume(result.is_some() <==> self@.contains(target@)); }
+            proof {
+                assume(result.is_some() <==> self@.contains(target@));
+                assume(result.is_some() ==> result.unwrap()@ == target@);
+            }
             result
         }
 
         fn contains(&self, target: &T) -> (found: bool)
-            ensures found <==> self@.contains(target@)
         {
             self.find(target).is_some()
         }
@@ -1344,7 +1363,8 @@ pub mod BSTTreapMtEph {
             self.size() == 0
         }
 
-        fn height(&self) -> (h: usize) {
+        fn height(&self) -> (h: usize)
+        {
             let handle = self.locked_root.acquire_read();
             let link: &Link<T> = handle.borrow();
             let result = height_link(link);
