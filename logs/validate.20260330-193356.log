@@ -1,0 +1,37 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:566:5
+    |
+566 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchMtPer.rs:183:33
+    |
+183 |                 new_neighbors = new_neighbors.union(&neighbors);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:175:17
+    |
+175 |                 other.spec_avltreesetmtper_wf(),
+    |                 ------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetMtPer.rs:175:17
+    |
+175 |                 other.spec_avltreesetmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_neighbors.spec_avltreesetmtper_wf() ✔
+neighbors.spec_avltreesetmtper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+verification results:: 2103 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 5671MB, peak z3 RSS: 426MB, min free: 17732MB
+Sampled CPU Usage: rust_verify: 91s, z3 children: 41s

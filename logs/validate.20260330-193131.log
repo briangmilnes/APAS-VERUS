@@ -1,0 +1,17 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:566:5
+    |
+566 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: trigger does not cover variable v
+  --> src/Chap53/GraphSearchMtPer.rs:50:17
+   |
+50 |                 forall|v: &V, r: AVLTreeSetMtPer<V>| graph.ensures((v,), r) ==> #[trigger] r@.finite(),
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 3603MB, peak z3 RSS: 448MB, min free: 19235MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 35s
