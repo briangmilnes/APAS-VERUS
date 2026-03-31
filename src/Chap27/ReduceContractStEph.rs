@@ -164,7 +164,7 @@ pub mod ReduceContractStEph {
         /// Reduce a sequence using contraction: contract→solve→expand.
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
         /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential contraction, no parallel tabulate
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

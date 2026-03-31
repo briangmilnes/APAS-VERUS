@@ -86,7 +86,7 @@ pub mod OrderStatSelectStEph {
     pub trait OrderStatSelectStEphTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — DIFFERS: sequential partition loop, span = work
         fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures

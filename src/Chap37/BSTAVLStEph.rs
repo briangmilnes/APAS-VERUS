@@ -169,7 +169,7 @@ pub mod BSTAVLStEph {
                 self.spec_root().tree_is_bst(),
             ensures found == self.spec_root().tree_contains(*target);
         /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires
                 self.spec_bstavlsteph_wf(),

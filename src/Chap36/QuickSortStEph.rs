@@ -179,7 +179,7 @@ pub mod QuickSortStEph {
     pub trait QuickSortStEphTrait<T: TotalOrder> {
         /// Quicksort with first-element pivot.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — DIFFERS: sequential recursion + sequential partition
         fn quick_sort_first(a: &mut ArraySeqStEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -189,7 +189,7 @@ pub mod QuickSortStEph {
 
         /// Quicksort with median-of-three pivot.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential recursion, span = work
         fn quick_sort_median3(a: &mut ArraySeqStEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -199,7 +199,7 @@ pub mod QuickSortStEph {
 
         /// Quicksort with random pivot.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n lg n) expected — DIFFERS: sequential recursion, span = work
         fn quick_sort_random(a: &mut ArraySeqStEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures

@@ -1605,7 +1605,7 @@ pub mod BSTTreapStEph {
 
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)
@@ -1882,7 +1882,7 @@ pub mod BSTTreapStEph {
     }
 
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)
@@ -2756,7 +2756,7 @@ pub mod BSTTreapStEph {
                 tree.spec_parambsttreapsteph_wf();
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -2780,7 +2780,7 @@ pub mod BSTTreapStEph {
                 );
 
         /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),

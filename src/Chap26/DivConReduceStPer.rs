@@ -59,7 +59,7 @@ pub mod DivConReduceStPer {
         /// Find maximum element via reduce.
         /// Pattern: reduce max identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential while loop, not D&C
         fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -75,7 +75,7 @@ pub mod DivConReduceStPer {
         /// Sum all elements via reduce.
         /// Pattern: reduce (+) 0 identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: delegates to sequential reduce
         fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -87,7 +87,7 @@ pub mod DivConReduceStPer {
         /// Product of all elements via reduce.
         /// Pattern: reduce (*) 1 identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: delegates to sequential reduce
         fn product(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -99,7 +99,7 @@ pub mod DivConReduceStPer {
         /// Logical OR of all elements via reduce.
         /// Pattern: reduce (||) false identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: delegates to sequential reduce
         fn any(a: &ArraySeqStPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -111,7 +111,7 @@ pub mod DivConReduceStPer {
         /// Logical AND of all elements via reduce.
         /// Pattern: reduce (&&) true identity
         /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: delegates to sequential reduce
         fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,

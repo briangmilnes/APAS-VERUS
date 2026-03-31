@@ -206,7 +206,7 @@ pub mod QuickSortMtEphSlice {
     pub trait QuickSortMtEphSliceTrait<T: TotalOrder + Eq + Clone> {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — DIFFERS: sequential partition loop, parallel recursion via ParaPair but partition dominates span
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -220,7 +220,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — DIFFERS: sequential partition O(n) per level; parallel recursion via ParaPair gives geometric span
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -234,7 +234,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n) expected — DIFFERS: sequential partition O(n) per level; parallel recursion via ParaPair
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
