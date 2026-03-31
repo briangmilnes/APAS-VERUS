@@ -1,0 +1,170 @@
+Algorithmic Analysis Blockers — 2026-03-31 09:52:02
+=============================================================
+
+1. Summary
+-------------------------------------------------------------
+
+  APAS annotations:    673
+  Code reviews:        462
+  NONEs remaining:     105
+  Matches APAS:        251
+  DIFFERS total:       212
+    St (expected):     123
+    Mt (blockers):     75
+    Other:             14
+
+  Chapter    APAS   Done   NONE  Match  StDif  MtDif
+  --------  -----  -----  -----  -----  -----  -----
+  Chap18      122      0    105      0      0      0
+  Chap19       67     55      0     24     20     11
+  Chap21        2      2      0      0      0      0
+  Chap23        8      6      0      1      5      0
+  Chap26        8      8      0      0      8      0
+  Chap27        2      2      0      0      2      0
+  Chap28        5      5      0      1      4      0
+  Chap35        4      4      0      0      2      2
+  Chap36        9      9      0      0      3      3
+  Chap37       24     24      0     18      3      1
+  Chap38       27     27      0     17      5      5
+  Chap39       13     13      0     13      0      0
+  Chap40        2      2      0      2      0      0
+  Chap41      132     66      0     22     23     22
+  Chap42       42     42      0      6     24     12
+  Chap43       33     33      0     33      0      0
+  Chap44        6      6      0      2      0      0
+  Chap45       20     20      0     17      0      0
+  Chap47        8      6      0      6      0      0
+  Chap49        8      8      0      0      4      4
+  Chap50        4      4      0      0      2      2
+  Chap51        2      2      0      0      2      0
+  Chap52       80     80      0     65      8      7
+  Chap54        8      8      0      6      2      0
+  Chap55        4      2      0      2      0      0
+  Chap57        4      4      0      4      0      0
+  Chap58        8      4      0      4      0      0
+  Chap59        8      8      0      8      0      0
+  Chap61        2      2      0      0      2      0
+  Chap62        4      4      0      0      2      2
+  Chap66        7      6      0      0      2      4
+
+=============================================================
+2. Mt Blockers by Category
+=============================================================
+
+    52  Sequential impl where APAS assumes parallel (span issue)
+     6  Mt file but no actual parallelism (no join/spawn)
+     7  APAS assumes cached/stored value, impl recomputes
+
+  Top reasons:
+      6  sequential split-join
+      6  sequential loops despite Mt naming
+      6  sequential loop
+      6  sequential DP table fill
+      5  nested linear scans on array
+      5  APAS assumes cached
+      3  sequential recursion
+      2  sequential tree traversal
+      2  sequential tabulate
+      2  sequential partition O(n) per level
+      2  sequential loop of inserts
+      2  sequential in-order traversal
+      2  sequential filter
+      2  partition uses sequential loops inside join()
+      2  linear scan + copy
+      1  Vec-backed
+      1  tree traversal to indexed node
+      1  sequential word-OR
+      1  sequential word-AND-NOT
+      1  sequential word-AND
+
+=============================================================
+3. Mt DIFFERS Detail (by chapter)
+=============================================================
+
+  # | Chap   | File                           | Line | Reason
+  # | ------ | ------------------------------ | ---- | ----------
+    1 | 19     | ArraySeqMtEph.rs               |  239 | Vec-backed, copies elements sequentially
+    2 | 19     | ArraySeqMtEph.rs               |  279 | sequential tabulate, span = work
+    3 | 19     | ArraySeqMtEph.rs               |  293 | sequential map+flatten, span = work
+    4 | 19     | ArraySeqMtEph.rs               |  312 | clone entire Vec + set, sequential
+    5 | 19     | ArraySeqMtEph.rs               |  328 | sequential clone + loop
+    6 | 19     | ArraySeqMtEph.rs               |  344 | delegates to inject, sequential clone + loop
+    7 | 19     | ArraySeqMtEph.rs               |  404 | delegates to reduce_iter (sequential), span = work
+    8 | 19     | ArraySeqMtEph.rs               |  417 | sequential loop, span = work
+    9 | 19     | ArraySeqMtEph.rs               |  432 | sequential tabulate, span = work
+   10 | 19     | ArraySeqMtEph.rs               |  442 | sequential loop, span = work
+   11 | 19     | ArraySeqMtEph.rs               |  454 | nested sequential loops, span = work
+   12 | 35     | OrderStatSelectMtEph.rs        |  111 | partition uses sequential loops inside join()
+   13 | 35     | OrderStatSelectMtPer.rs        |  111 | partition uses sequential loops inside join()
+   14 | 36     | QuickSortMtEph.rs              |  184 | sequential partition loop, parallel recursion via ParaPair but partition dominates span
+   15 | 36     | QuickSortMtEph.rs              |  194 | sequential partition O(n) per level; parallel recursion via ParaPair gives geometric span
+   16 | 36     | QuickSortMtEph.rs              |  204 | sequential partition O(n) per level; parallel recursion via ParaPair
+   17 | 37     | AVLTreeSeqMtPer.rs             |  218 | tree traversal to indexed node
+   18 | 38     | BSTParaMtEph.rs                |  360 | sequential recursion, no parallel split
+   19 | 38     | BSTParaMtEph.rs                |  368 | sequential recursion, no parallel split
+   20 | 38     | BSTParaMtEph.rs                |  373 | sequential recursion, no parallel split
+   21 | 38     | BSTParaMtEph.rs                |  378 | sequential tree traversal
+   22 | 38     | BSTParaMtEph.rs                |  398 | sequential tree traversal
+   23 | 41     | ArraySetEnumMtEph.rs           |  186 | sequential bit scan, APAS assumes parallel
+   24 | 41     | ArraySetEnumMtEph.rs           |  193 | sequential scan, APAS assumes parallel
+   25 | 41     | ArraySetEnumMtEph.rs           |  210 | sequential
+   26 | 41     | ArraySetEnumMtEph.rs           |  220 | sequential init + insert loop
+   27 | 41     | ArraySetEnumMtEph.rs           |  228 | sequential loop, not parallel
+   28 | 41     | ArraySetEnumMtEph.rs           |  240 | sequential word-AND, APAS assumes parallel
+   29 | 41     | ArraySetEnumMtEph.rs           |  253 | sequential word-AND-NOT, APAS assumes parallel
+   30 | 41     | ArraySetEnumMtEph.rs           |  266 | sequential word-OR, APAS assumes parallel
+   31 | 41     | ArraySetEnumMtEph.rs           |  286 | ephemeral bit clear, APAS O(u) assumes copy
+   32 | 41     | ArraySetEnumMtEph.rs           |  296 | ephemeral bit set, APAS O(u) assumes copy
+   33 | 41     | AVLTreeSetMtEph.rs             |  121 | sequential in-order traversal
+   34 | 41     | AVLTreeSetMtEph.rs             |  147 | sequential loop of inserts
+   35 | 41     | AVLTreeSetMtEph.rs             |  158 | sequential filter
+   36 | 41     | AVLTreeSetMtEph.rs             |  181 | sequential split-join
+   37 | 41     | AVLTreeSetMtEph.rs             |  194 | sequential split-join
+   38 | 41     | AVLTreeSetMtEph.rs             |  207 | sequential split-join
+   39 | 41     | AVLTreeSetMtPer.rs             |  109 | sequential in-order traversal
+   40 | 41     | AVLTreeSetMtPer.rs             |  131 | sequential loop of inserts
+   41 | 41     | AVLTreeSetMtPer.rs             |  142 | sequential filter
+   42 | 41     | AVLTreeSetMtPer.rs             |  165 | sequential split-join
+   43 | 41     | AVLTreeSetMtPer.rs             |  176 | sequential split-join
+   44 | 41     | AVLTreeSetMtPer.rs             |  187 | sequential split-join
+   45 | 42     | TableMtEph.rs                  |  562 | sequential key extraction
+   46 | 42     | TableMtEph.rs                  |  567 | sequential loop
+   47 | 42     | TableMtEph.rs                  |  581 | sequential loop
+   48 | 42     | TableMtEph.rs                  |  596 | sequential loop
+   49 | 42     | TableMtEph.rs                  |  614 | nested linear scans on array
+   50 | 42     | TableMtEph.rs                  |  631 | nested linear scans on array
+   51 | 42     | TableMtEph.rs                  |  652 | nested linear scans on array
+   52 | 42     | TableMtEph.rs                  |  662 | linear scan on unsorted array
+   53 | 42     | TableMtEph.rs                  |  671 | linear scan + copy
+   54 | 42     | TableMtEph.rs                  |  676 | linear scan + copy
+   55 | 42     | TableMtEph.rs                  |  693 | nested linear scans on array
+   56 | 42     | TableMtEph.rs                  |  703 | nested linear scans on array
+   57 | 49     | MinEditDistMtEph.rs            |  114 | sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+   58 | 49     | MinEditDistMtPer.rs            |  113 | sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+   59 | 49     | SubsetSumMtEph.rs              |  110 | sequential DP table fill, APAS Span O(|S|) assumes parallel
+   60 | 49     | SubsetSumMtPer.rs              |  109 | sequential DP table fill, APAS Span O(|S|) assumes parallel
+   61 | 50     | OptBinSearchTreeMtEph.rs       |  147 | sequential DP table fill, APAS Span O(n lg n) assumes parallel
+   62 | 50     | OptBinSearchTreeMtPer.rs       |  118 | sequential DP table fill, APAS Span O(n lg n) assumes parallel
+   63 | 52     | AdjMatrixGraphMtEph.rs         |  139 | APAS assumes cached; impl counts trues in n*n matrix
+   64 | 52     | AdjMatrixGraphMtPer.rs         |  140 | APAS assumes cached; impl counts trues in n*n matrix
+   65 | 52     | AdjMatrixGraphMtPer.rs         |  193 | APAS says O(1); persistent seq requires row copy
+   66 | 52     | AdjSeqGraphMtEph.rs            |  119 | APAS assumes cached; impl sums degrees
+   67 | 52     | AdjSeqGraphMtEph.rs            |  181 | APAS says O(n), O(1); impl rebuilds neighbor list
+   68 | 52     | AdjSeqGraphMtPer.rs            |  116 | APAS assumes cached; impl sums degrees
+   69 | 52     | AdjTableGraphMtPer.rs          |  122 | APAS assumes cached; impl sums degrees
+   70 | 62     | StarPartitionMtEph.rs          |   52 | sequential loops despite Mt naming, no join/spawn
+   71 | 62     | StarPartitionMtEph.rs          |   81 | sequential loops despite Mt naming, no join/spawn
+   72 | 66     | BoruvkaMtEph.rs                |  132 | sequential loops despite Mt naming, no join/spawn
+   73 | 66     | BoruvkaMtEph.rs                |  151 | sequential loops despite Mt naming, no join/spawn
+   74 | 66     | BoruvkaMtEph.rs                |  752 | sequential loops despite Mt naming, no join/spawn
+   75 | 66     | BoruvkaMtEph.rs                |  984 | sequential loops despite Mt naming, no join/spawn
+
+=============================================================
+4. St DIFFERS Summary (expected, for reference)
+=============================================================
+
+  123 St functions have sequential span where APAS specifies parallel.
+  This is by design — St variants are sequential implementations.
+  Mt variants should achieve the APAS parallel span.
+
+End of report.
