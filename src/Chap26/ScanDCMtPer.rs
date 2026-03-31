@@ -90,8 +90,8 @@ pub mod ScanDCMtPer {
     pub trait ScanDCMtTrait {
         /// Exclusive prefix sums via parallel divide-and-conquer scan.
         /// Returns (prefixes, total) where prefixes[i] = sum(a[0], ..., a[i-1]).
-        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5 with parallel recursive calls.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
+        /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), sequential O(n) combine: S(n) = S(n/2) + O(n) = O(n).
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -105,8 +105,8 @@ pub mod ScanDCMtPer {
     //		9. impls
 
     /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
-    /// - APAS: Work Θ(n lg n), Span Θ(lg n) — Algorithm 26.5, parallel recursive calls + O(n)/O(1) combine.
-    /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), sequential Θ(n) combine: S(n) = S(n/2) + Θ(n) = Θ(n).
+    /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls + O(n)/O(1) combine.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), sequential O(n) combine: S(n) = S(n/2) + O(n) = O(n).
     fn prefix_sums_dc_inner(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize))
         requires a.spec_len() <= usize::MAX,
         ensures

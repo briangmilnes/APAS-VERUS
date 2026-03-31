@@ -248,7 +248,7 @@ pub mod BSTSplayStEph {
     //		9. impls
 
     /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- constant-time allocation.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
     // veracity: no_requires
     fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
 
@@ -267,7 +267,7 @@ pub mod BSTSplayStEph {
     }
 
     /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
     // veracity: no_requires
     fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: usize)
         ensures size as nat == spec_size_link(link),
@@ -280,7 +280,7 @@ pub mod BSTSplayStEph {
     }
 
     /// - Alg Analysis: APAS: (no cost stated)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
     fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: usize)
         requires spec_height_link(link) < usize::MAX as nat,
         ensures height as nat == spec_height_link(link),
@@ -317,8 +317,8 @@ pub mod BSTSplayStEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
-    /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
-    /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — agrees with APAS.
     fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         requires spec_is_bst_link(&Some(root)),
         ensures
@@ -1296,8 +1296,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T))
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- standard BST insert path.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST insert path.
     fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
         requires spec_is_bst_link(old(link)),
         ensures
@@ -1439,8 +1439,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
-    /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- bst_insert + splay.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — bst_insert + splay.
     fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
         requires spec_is_bst_link(old(link)),
         ensures
@@ -1459,8 +1459,8 @@ pub mod BSTSplayStEph {
         inserted
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T))
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- standard BST search.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST search.
     fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         requires spec_is_bst_link(link),
         ensures
@@ -1499,7 +1499,7 @@ pub mod BSTSplayStEph {
     }
 
     /// - Alg Analysis: APAS: (no cost stated)
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
     fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
         requires spec_is_bst_link(link),
         ensures
@@ -1551,7 +1551,7 @@ pub mod BSTSplayStEph {
     }
 
     /// - Alg Analysis: APAS: (no cost stated)
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
     fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
         requires spec_is_bst_link(link),
         ensures
@@ -1602,8 +1602,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: Work O(n), Span O(n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
     // veracity: no_requires
     fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
         requires spec_is_bst_link(link),
@@ -1617,8 +1617,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: Work O(n), Span O(n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) -- visits every node.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
     // veracity: no_requires
     fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
         requires spec_is_bst_link(link),
@@ -1640,60 +1640,60 @@ pub mod BSTSplayStEph {
         open spec fn spec_in_order(self) -> Seq<T> { spec_in_order_link(&self.root) }
         open spec fn spec_pre_order(self) -> Seq<T> { spec_pre_order_link(&self.root) }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn new() -> (tree: Self) { BSTSplayStEph { root: None } }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- cached size field.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
         fn size(&self) -> (n: usize) { size_link(&self.root) }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- compares cached size.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — compares cached size.
         fn is_empty(&self) -> (b: bool) { self.size() == 0 }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- recursive tree traversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
         fn height(&self) -> (h: usize) {
             height_link(&self.root)
         }
 
-        /// - APAS: Work O(lg n) amortized, Span O(lg n) amortized
-        /// - Claude-Opus-4.6: Work O(lg n) amortized, Span O(lg n) amortized -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — agrees with APAS.
         fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
 
-        /// - APAS: Work O(h(T)), Span O(h(T))
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn find(&self, target: &T) -> (found: Option<&T>) { find_link(&self.root, target) }
 
-        /// - APAS: Work O(h(T)), Span O(h(T))
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- delegates to find.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — delegates to find.
         fn contains(&self, target: &T) -> (found: bool) { self.find(target).is_some() }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             proof { reveal(spec_size_link); }
             min_link(&self.root)
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             proof { reveal(spec_size_link); }
             max_link(&self.root)
         }
 
-        /// - APAS: Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- in-order traversal.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal.
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
-        /// - APAS: Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- pre-order traversal.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — pre-order traversal.
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
             pre_order_collect(&self.root, &mut out);

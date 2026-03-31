@@ -154,8 +154,8 @@ pub mod DivConReduceMtPer {
     pub trait DivConReduceMtTrait {
         /// Find maximum element via parallel reduce.
         /// Pattern: reduce max identity (parallel)
-        /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
         fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -170,8 +170,8 @@ pub mod DivConReduceMtPer {
 
         /// Sum all elements via parallel reduce.
         /// Pattern: reduce (+) 0 identity (parallel)
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
         fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -182,8 +182,8 @@ pub mod DivConReduceMtPer {
 
         /// Product of all elements via parallel reduce.
         /// Pattern: reduce (*) 1 identity (parallel)
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
         fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -194,8 +194,8 @@ pub mod DivConReduceMtPer {
 
         /// Logical OR of all elements via parallel reduce.
         /// Pattern: reduce (||) false identity (parallel)
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
         fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -206,8 +206,8 @@ pub mod DivConReduceMtPer {
 
         /// Logical AND of all elements via parallel reduce.
         /// Pattern: reduce (&&) true identity (parallel)
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n) — D&C reduce with constant-time op.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to ArraySeqMtPerS::reduce (parallel). Agrees with APAS.
         fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,

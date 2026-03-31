@@ -243,8 +243,8 @@ pub mod ScanContractStEph {
                         scanned.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i).fold_left(id, spec_f);
 
         /// Expand phase: interleave contracted scan results into full scan output.
-        /// - APAS: Work Θ(n), Span Θ(1) — parallel tabulate (Algorithm 27.3 expansion step).
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop, no parallelism.
+        /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(1) — parallel tabulate (expansion step).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop, no parallelism.
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,

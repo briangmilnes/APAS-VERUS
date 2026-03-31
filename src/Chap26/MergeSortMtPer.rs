@@ -174,8 +174,8 @@ pub mod MergeSortMtPer {
 
     pub trait MergeSortMtTrait {
         /// Merge two sorted sequences using parallel binary-search divide and conquer.
-        /// - APAS: Work Θ(n), Span Θ(lg n) — assumed for merge sort Span analysis.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — parallel D&C merge via join(); Vec concat at each level is Θ(n), dominating span. Θ(lg² n) requires O(1) concat (balanced tree).
+        /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge assumed for merge sort span analysis.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — parallel D&C merge via join(); Vec concat at each level is O(n), dominating span. O(lg² n) requires O(1) concat (balanced tree).
         fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
@@ -188,8 +188,8 @@ pub mod MergeSortMtPer {
                     Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));
 
         /// Sort a sequence using parallel merge sort. Algorithm 26.4.
-        /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with O(lg n)-span merge.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n) — parallel recursion via join(), Θ(n) merge: S(n) = S(n/2) + Θ(n) = Θ(n).
+        /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n lg n), Span O(lg^2 n) — with O(lg n)-span merge.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — parallel recursion via join(), O(n) merge: S(n) = S(n/2) + O(n) = O(n).
         fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -204,8 +204,8 @@ pub mod MergeSortMtPer {
     //		9. impls
 
     /// Binary search in a sorted array: find the count of elements <= pivot.
-    /// - APAS: Work Θ(lg n), Span Θ(lg n) — standard binary search.
-    /// - Claude-Opus-4.6: Work Θ(lg n), Span Θ(lg n) — agrees with APAS.
+    /// - Alg Analysis: APAS (Ch26 ref): Work O(lg n), Span O(lg n) — binary search for merge.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
     fn binary_search_upper_bound(arr: &ArraySeqMtPerS<usize>, pivot: usize) -> (pos: usize)
         requires spec_sorted(Seq::new(arr.spec_len(), |i: int| arr.spec_index(i))),
         ensures
@@ -263,8 +263,8 @@ pub mod MergeSortMtPer {
 
     /// Parallel binary-search merge. Picks the median of left, binary searches in right,
     /// then recursively merges both halves in parallel via join().
-    /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge via binary search and recursive halving.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — Vec concat at each level is Θ(n), dominating span.
+    /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge via binary search and recursive halving.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — Vec concat at each level is O(n), dominating span.
     fn merge_dc(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>)
         requires
             spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),

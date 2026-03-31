@@ -122,8 +122,8 @@ pub mod OrderStatSelectMtPer {
     /// Parallel three-way partition: splits array into (elements < pivot, eq_count, elements > pivot).
     /// Uses join() for genuine parallelism: left and right filters run concurrently.
     /// Both filter closures and the post-join multiset assembly are fully verified.
-    /// - APAS: Work O(n), Span O(lg n) — uses parallel filter.
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) — filter closures use sequential loops,
+    /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg n) — uses parallel filter.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — filter closures use sequential loops,
     ///   so each half is O(n); join halves the constant but span class is still O(n).
     fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtPerS<T>, pivot: T, pivot_idx: usize, n: usize,
@@ -401,8 +401,8 @@ pub mod OrderStatSelectMtPer {
     }
 
     /// Recursive core of contraction-based select.
-    /// - APAS: Work O(n) expected, Span O(lg^2 n) w.h.p. — Algorithm 35.2.
-    /// - Claude-Opus-4.6: Work O(n) expected, Span O(n) expected — partition is O(n) span
+    /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n) expected, Span O(lg^2 n) w.h.p.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — partition is O(n) span
     ///   per round; geometric shrinkage over O(lg n) expected rounds sums to O(n).
     fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtPerS<T>, k: usize,

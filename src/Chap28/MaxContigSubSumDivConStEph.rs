@@ -164,8 +164,8 @@ broadcast use {
 
     // ─── 3. exec functions ───
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch28 Alg 28.17): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -181,8 +181,8 @@ broadcast use {
     /// Find max suffix sum (MCSSE problem, Algorithm 28.12).
     /// max over lo in 0..n of range_sum(a, lo, n).
     /// Uses prefix-sum approach: result = total - min(prefix(0), ..., prefix(n-1)).
-    /// - APAS: Work Θ(n), Span Θ(log n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
+    /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
     fn max_suffix_sum(a: &ArraySeqStEphS<i32>) -> (mss: i32)
         requires
             a.seq@.len() > 0,
@@ -257,8 +257,8 @@ broadcast use {
 
     /// Find max prefix sum (MCSSS problem, Algorithm 28.11).
     /// max over hi in 1..=n of range_sum(a, 0, hi).
-    /// - APAS: Work Θ(n), Span Θ(log n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential loop
+    /// - Alg Analysis: APAS (Ch28 Alg 28.18): Work O(n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop
     fn max_prefix_sum(a: &ArraySeqStEphS<i32>) -> (mps: i32)
         requires
             a.seq@.len() > 0,

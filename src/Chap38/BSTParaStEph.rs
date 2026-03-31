@@ -244,8 +244,8 @@ pub mod BSTParaStEph {
     pub trait ParamBSTTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_bstparasteph_wf(&self) -> bool;
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
@@ -255,8 +255,8 @@ pub mod BSTParaStEph {
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
                 tree@.finite(),
                 tree.spec_bstparasteph_wf();
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures
                 self@.len() == 0 ==> exposed is Leaf,
@@ -300,12 +300,12 @@ pub mod BSTParaStEph {
                 forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
             ensures tree@ =~= left@.union(right@).insert(key@);
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
@@ -353,8 +353,8 @@ pub mod BSTParaStEph {
                 !parts.2@.contains(key@),
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
-        /// - APAS: Work O(lg |t|), Span O(lg |t|)
-        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — agrees with APAS.
         fn min_key(&self) -> (minimum: Option<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -427,7 +427,7 @@ pub mod BSTParaStEph {
                 forall|a: T, b: T| op.requires((a, b)),
             ensures self@.len() == 0 ==> reduced@ == base@;
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- helper for in_order.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — helper for in_order.
         fn collect_in_order(&self, out: &mut Vec<T>)
             requires
                 self@.finite(),
@@ -437,8 +437,8 @@ pub mod BSTParaStEph {
                 forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
                 forall|v: T::V| self@.contains(v) ==>
                     exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v;
-        /// - APAS: Work O(|t|), Span O(|t|)
-        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(|t|), Span O(|t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — agrees with APAS.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),

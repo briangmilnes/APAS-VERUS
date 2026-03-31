@@ -147,8 +147,8 @@ pub mod ReduceContractMtEph {
     pub trait ReduceContractMtEphTrait<T: StTInMtT> {
         /// Reduce a sequence using parallel contraction: contract→solve→expand.
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
-        /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — contraction via one-level join, each half sequential.
+        /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — contraction via one-level join, each half sequential.
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -171,7 +171,7 @@ pub mod ReduceContractMtEph {
     /// Parallel contraction: build b[j] = f(a[2j], a[2j+1]) using fork-join.
     /// Parallelism via the help-first scheduler's join.
     /// - Alg Analysis: APAS: N/A — Verus-specific helper (contraction step factored out for sharing).
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n/2) — two parallel halves via join, each Θ(n/4).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n/2) — two parallel halves via join, each O(n/4).
     pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
         a: &ArraySeqMtEphS<T>,
         f: &Arc<F>,
