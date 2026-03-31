@@ -298,6 +298,7 @@ pub mod BSTParaMtEph {
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn insert(&mut self, key: T)
             requires
+                old(self).spec_bstparamteph_wf(),
                 old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
@@ -307,7 +308,11 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(lg |t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
         fn delete(&mut self, key: &T)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
+            requires
+                old(self).spec_bstparamteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 self.spec_bstparamteph_wf(),
                 self@ =~= old(self)@.remove(key@);
@@ -390,12 +395,49 @@ pub mod BSTParaMtEph {
         /// - APAS: Work O(|t|), Span O(lg |t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(lg |t|) -- agrees with APAS; parallel.
         /// Requires `op` to be associative with identity `base`.
-        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T
-            requires forall|a: T, b: T| #[trigger] op.requires((a, b));
+        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> (reduced: T)
+            requires forall|a: T, b: T| #[trigger] op.requires((a, b)),
+            ensures self@.len() == 0 ==> reduced@ == base@;
+        /// - APAS: Work O(lg |t|), Span O(lg |t|)
+        /// - Claude-Opus-4.6: Work O(lg |t|), Span O(lg |t|) -- agrees with APAS.
+        fn min_key(&self) -> (minimum: Option<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
+            ensures
+                self@.len() == 0 <==> minimum.is_none(),
+                minimum.is_some() ==> self@.contains(minimum.unwrap()@),
+                minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
+                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;
+        /// - APAS: (no cost stated for joinM, but O(1) wrapping joinMid)
+        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- trivial wrapper around joinMid.
+        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
+            requires
+                left@.finite(), right@.finite(),
+                left@.disjoint(right@),
+                !left@.contains(key@),
+                !right@.contains(key@),
+                left@.len() + right@.len() < usize::MAX as nat,
+                forall|t: T| (#[trigger] left@.contains(t@)) ==> t.cmp_spec(&key) == Less,
+                forall|t: T| (#[trigger] right@.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+            ensures tree@ =~= left@.union(right@).insert(key@);
+        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- helper for in_order.
+        fn collect_in_order(&self, out: &mut Vec<T>)
+            requires
+                self@.finite(),
+            ensures
+                out@.len() == old(out)@.len() + self@.len(),
+                forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
+                forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
+                forall|v: T::V| self@.contains(v) ==>
+                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v;
         /// - APAS: Work O(|t|), Span O(|t|)
         /// - Claude-Opus-4.6: Work O(|t|), Span O(|t|) -- agrees with APAS; sequential DFS traversal.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures seq@.len() == self@.len();
+            ensures
+                seq@.len() == self@.len(),
+                forall|v: T::V| self@.contains(v) <==> seq@.contains(v);
     }
 
     // 9. impls
@@ -506,6 +548,9 @@ pub mod BSTParaMtEph {
         { self.size() == 0 }
 
         fn insert(&mut self, key: T)
+            ensures
+                self.spec_bstparamteph_wf(),
+                self@ =~= old(self)@.insert(key@),
         {
                       assert(obeys_feq_full_trigger::<T>());
             let ghost old_view = self@;
@@ -519,6 +564,9 @@ pub mod BSTParaMtEph {
         }
 
         fn delete(&mut self, key: &T)
+            ensures
+                self.spec_bstparamteph_wf(),
+                self@ =~= old(self)@.remove(key@),
         {
                       assert(obeys_feq_full_trigger::<T>());
             let ghost old_view = self@;
@@ -687,16 +735,63 @@ pub mod BSTParaMtEph {
             filter_parallel(self, predicate, Ghost(spec_pred))
         }
 
-        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> T {
+        fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> (reduced: T)
+            ensures self@.len() == 0 ==> reduced@ == base@,
+        {
             reduce_parallel(self, op, base)
         }
 
-        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            ensures seq@.len() == self@.len()
+        fn min_key(&self) -> (minimum: Option<T>)
+            ensures
+                self@.len() == 0 <==> minimum.is_none(),
+                minimum.is_some() ==> self@.contains(minimum.unwrap()@),
+                minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
+                    minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@,
         {
-            let mut out = Vec::with_capacity(self.size());
-            collect_in_order(self, &mut out);
-            ArraySeqStPerS::from_vec(out)
+            proof { use_type_invariant(self); }
+            min_key_inner(self)
+        }
+
+        fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
+        {
+            Self::join_mid(Exposed::Node(left, key, right))
+        }
+
+        fn collect_in_order(&self, out: &mut Vec<T>)
+            ensures
+                out@.len() == old(out)@.len() + self@.len(),
+                forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
+                forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
+                forall|v: T::V| self@.contains(v) ==>
+                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
+        {
+            proof { use_type_invariant(self); }
+            collect_in_order_inner(self, out)
+        }
+
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            ensures
+                seq@.len() == self@.len(),
+                forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+        {
+            let count = self.size();
+            let mut out = Vec::with_capacity(count);
+            self.collect_in_order(&mut out);
+            let result = ArraySeqStPerS::from_vec(out);
+            proof {
+                assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
+                    let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
+                    assert(result@[i] == result.spec_index(i)@);
+                    assert(result.spec_index(i) == out@[i]);
+                };
+                assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
+                    let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
+                    assert(result@[i] == result.spec_index(i)@);
+                    assert(result.spec_index(i) == out@[i]);
+                    assert(self@.contains(out@[i]@));
+                };
+            }
+            result
         }
     }
 
@@ -1012,21 +1107,53 @@ pub mod BSTParaMtEph {
         }
     }
 
-    fn min_key<T: MtKey>(tree: &ParamBST<T>) -> (min: Option<T>)
+    fn min_key_inner<T: MtKey>(tree: &ParamBST<T>) -> (min: Option<T>)
         requires
             tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
         ensures
             min.is_none() <==> tree@.len() == 0,
             min.is_some() ==> tree@.contains(min.unwrap()@),
+            min.is_some() ==> forall|t: T| (#[trigger] tree@.contains(t@)) ==>
+                min.unwrap().cmp_spec(&t) == Less || min.unwrap()@ == t@,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
             | Exposed::Leaf => None,
-            | Exposed::Node(left, key, _) => {
-                proof { left@.lemma_subset_not_in_lt(tree@, key@); }
-                match min_key(&left) {
-                    | Some(rec) => Some(rec),
-                    | None => Some(key),
+            | Exposed::Node(left, key, right) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
+                match min_key_inner(&left) {
+                    | Some(rec) => {
+                        proof {
+                            assert forall|t: T| #![trigger tree@.contains(t@)] tree@.contains(t@) implies
+                                rec.cmp_spec(&t) == Less || rec@ == t@ by {
+                                if left@.contains(t@) {
+                                } else if right@.contains(t@) {
+                                    lemma_cmp_antisymmetry(t, key);
+                                    lemma_cmp_transitivity(rec, key, t);
+                                } else {
+                                    lemma_cmp_eq_subst(rec, key, t);
+                                }
+                            };
+                        }
+                        Some(rec)
+                    }
+                    | None => {
+                        proof {
+                            assert forall|t: T| #![trigger tree@.contains(t@)] tree@.contains(t@) implies
+                                key.cmp_spec(&t) == Less || key@ == t@ by {
+                                if right@.contains(t@) {
+                                    lemma_cmp_antisymmetry(t, key);
+                                }
+                            };
+                        }
+                        Some(key)
+                    }
                 }
             },
         }
@@ -1684,24 +1811,69 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
-    fn collect_in_order<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)
+    fn collect_in_order_inner<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)
         requires
             tree@.finite(),
-        ensures out@.len() == old(out)@.len() + tree@.len(),
+        ensures
+            out@.len() == old(out)@.len() + tree@.len(),
+            forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
+            forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> tree@.contains(out@[i]@),
+            forall|v: T::V| tree@.contains(v) ==>
+                exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
         decreases tree@.len(),
     {
         match expose_internal(tree) {
             | Exposed::Leaf => {}
             | Exposed::Node(left, key, right) => {
+                let ghost g0 = out@.len();
+                let ghost out_0 = out@;
                 proof {
                     left@.lemma_subset_not_in_lt(tree@, key@);
                     right@.lemma_subset_not_in_lt(tree@, key@);
                     assert(!left@.union(right@).contains(key@));
                     assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
-                collect_in_order(&left, out);
+                collect_in_order_inner(&left, out);
+                let ghost g1 = out@.len();
+                let ghost out_1 = out@;
                 out.push(key);
-                collect_in_order(&right, out);
+                let ghost g2 = out@.len();
+                let ghost out_2 = out@;
+                collect_in_order_inner(&right, out);
+                proof {
+                    assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
+                        tree@.contains(out@[i]@) by {
+                        if i < g1 as int {
+                            assert(out@[i] == out_2[i]);
+                            assert(out_2[i] == out_1[i]);
+                            assert(left@.contains(out_1[i]@));
+                        } else if i == g1 as int {
+                            assert(out@[i] == out_2[i]);
+                            assert(out_2[g1 as int] == key);
+                        } else if i < g2 as int {
+                        } else {
+                            assert(right@.contains(out@[i]@));
+                        }
+                    };
+                    assert forall|v: T::V| tree@.contains(v) implies
+                        exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
+                        if left@.contains(v) {
+                            let i_left = choose|i: int| #![trigger out_1[i]] g0 <= i < g1 as int && out_1[i]@ == v;
+                            assert(out_2[i_left] == out_1[i_left]);
+                            assert(out@[i_left] == out_2[i_left]);
+                        } else if v == key@ {
+                            assert(out_2[g1 as int] == key);
+                            assert(out@[g1 as int] == out_2[g1 as int]);
+                        } else {
+                            assert(right@.contains(v));
+                        }
+                    };
+                    assert forall|i: int| #![trigger out@[i]] 0 <= i < g0 implies out@[i] == out_0[i] by {
+                        assert(out@[i] == out_2[i]);
+                        assert(out_2[i] == out_1[i]);
+                        assert(out_1[i] == out_0[i]);
+                    };
+                }
             }
         }
     }
