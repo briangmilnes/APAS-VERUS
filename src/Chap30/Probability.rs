@@ -27,19 +27,19 @@ pub mod Probability {
     // 8. traits
     /// Trait for probability operations
     pub trait ProbabilityTrait: Sized {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 wrapper construction.
         fn new(p: f64) -> Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 field access.
         fn value(&self) -> f64;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 constant construction.
         fn infinity() -> Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 constant construction.
         fn zero() -> Self;
     }
@@ -55,13 +55,13 @@ pub mod Probability {
 
     // 11. derive impls
     impl Default for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to zero().
         fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
     }
 
     impl PartialEq for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — bit-level f64 comparison.
 
         #[verifier::external_body] // accept hole
@@ -73,14 +73,14 @@ pub mod Probability {
     impl Eq for Probability {}
 
     impl PartialOrd for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to cmp().
         #[verifier::external_body] // accept hole
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(self.cmp(other)) }
     }
 
     impl Ord for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — NaN-aware f64 comparison.
 
         #[verifier::external_body] // accept hole
@@ -103,7 +103,7 @@ pub mod Probability {
     }
 
     impl Hash for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — hash f64 bits.
 
         #[verifier::external_body]  // accept hole
@@ -111,14 +111,14 @@ pub mod Probability {
     }
 
     impl From<f64> for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 wrapping.
         #[verifier::external_body] // accept hole
         fn from(value: f64) -> Self { Probability(value) }
     }
 
     impl From<Probability> for f64 {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 unwrapping.
         #[verifier::external_body] // accept hole
         fn from(prob: Probability) -> Self { prob.0 }
@@ -127,7 +127,7 @@ pub mod Probability {
     impl Add for Probability {
         type Output = Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 addition.
         #[verifier::external_body] // accept hole
         fn add(self, other: Self) -> Self { Probability(self.0 + other.0) }
@@ -136,7 +136,7 @@ pub mod Probability {
     impl Sub for Probability {
         type Output = Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 subtraction.
         #[verifier::external_body] // accept hole
         fn sub(self, other: Self) -> Self { Probability(self.0 - other.0) }
@@ -145,7 +145,7 @@ pub mod Probability {
     impl Mul for Probability {
         type Output = Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 multiplication.
         #[verifier::external_body] // accept hole
         fn mul(self, other: Self) -> Self { Probability(self.0 * other.0) }
@@ -154,7 +154,7 @@ pub mod Probability {
     impl Div for Probability {
         type Output = Self;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — f64 division.
         #[verifier::external_body] // accept hole
         fn div(self, other: Self) -> Self { Probability(self.0 / other.0) }
@@ -171,13 +171,13 @@ pub mod Probability {
 
     // 13. derive impls outside verus!
     impl Debug for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — format f64 to debug string.
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "Probability({})", self.0) }
     }
 
     impl Display for Probability {
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — format f64 to display string.
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
     }

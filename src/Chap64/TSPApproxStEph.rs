@@ -134,7 +134,7 @@ pub mod TSPApproxStEph {
     }
 
     /// DFS helper for Euler tour with fuel-based termination.
-    /// - APAS: N/A — internal helper for euler_tour.
+    /// - Alg Analysis: APAS: N/A — internal helper for euler_tour.
     /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
     fn euler_tour_dfs<V: HashOrd>(
@@ -328,7 +328,7 @@ pub mod TSPApproxStEph {
         total
     }
 
-    /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
+    /// - Alg Analysis: APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to ng().
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
         requires
@@ -339,7 +339,7 @@ pub mod TSPApproxStEph {
         graph.ng(v)
     }
 
-    /// - APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
+    /// - Alg Analysis: APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,

@@ -68,7 +68,7 @@ pub mod JohnsonStEphI64 {
 
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (adjusted: i64)
@@ -85,7 +85,7 @@ pub mod JohnsonStEphI64 {
     }
 
     /// Reweight edge: new_weight = weight + h(u) - h(v), clamped to i128 range.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
     // veracity: no_requires
     fn reweight_edge(weight: i128, h_u: i64, h_v: i64) -> (reweighted: i128)
@@ -100,7 +100,7 @@ pub mod JohnsonStEphI64 {
     }
 
     /// Build a vertex set {0, ..., max_val} and track its cardinality.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(max_val), Span O(max_val).
     fn build_vertex_set(max_val: usize) -> (vertices: SetStEph<usize>)
         requires
@@ -142,7 +142,7 @@ pub mod JohnsonStEphI64 {
 
     /// Add dummy source vertex n with zero-weight edges to all vertices.
     /// Returns augmented graph with n+1 vertices.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m).
     fn add_dummy_source(
         graph: &WeightedDirGraphStEphI128<usize>,
@@ -337,7 +337,7 @@ pub mod JohnsonStEphI64 {
     }
 
     /// Create all-UNREACHABLE result for negative cycle detection.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2).
     fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphI64)
         requires n < usize::MAX,

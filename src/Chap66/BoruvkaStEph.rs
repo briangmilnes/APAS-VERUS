@@ -508,7 +508,7 @@ pub mod BoruvkaStEph {
 
         /// Compute MST weight from edge labels.
         ///
-        /// - APAS: N/A — utility function, not in prose.
+        /// - Alg Analysis: APAS: N/A — utility function, not in prose.
         /// - Sequential: Work O(m), Span O(m) — sequential scan of edges.
         fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,

@@ -1,0 +1,107 @@
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:109:28
+    |
+109 |             let old_val = *self.cell.borrow(Tracked(&perm));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:247:12
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:124:13
+    |
+124 |             self.cell.write(Tracked(&mut perm), old_val + 1);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:298:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+ --> vstd/cell.rs:298:12
+
+note: 
+
+tmp%.id() == perm.view().pcell ✘
+    datatype is opaque here
+perm.mem_contents() is Init ✔
+
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:137:22
+    |
+137 |             let v = *self.cell.borrow(Tracked(tracked_ref.borrow()));
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:247:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+ --> vstd/cell.rs:247:12
+
+note: 
+
+tmp%.id() == tracked_ref.view().pcell ✘
+    datatype is opaque here
+tracked_ref.mem_contents() is Init ✔
+
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:195:28
+    |
+195 |             let old_val = *self.cell.borrow(Tracked(&perm));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:247:12
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:198:13
+    |
+198 |             self.cell.write(Tracked(&mut perm), old_val + 1);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:298:12
+    |
+    = note: failed precondition
+
+error: possible arithmetic underflow/overflow
+   --> src/experiments/pcell_rwlock_zero_assume.rs:198:49
+    |
+198 |             self.cell.write(Tracked(&mut perm), old_val + 1);
+    |                                                 ^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/experiments/pcell_rwlock_zero_assume.rs:198:49
+    |
+198 |             self.cell.write(Tracked(&mut perm), old_val + 1);
+    |                                                 ^^^^^^^^^^^
+
+note: 
+
+0 <= old_val + 1 ✔
+old_val + 1 < 18446744073709551616 ✘
+
+error: precondition not satisfied
+   --> src/experiments/pcell_rwlock_zero_assume.rs:209:22
+    |
+209 |             let v = *self.cell.borrow(Tracked(tracked_ref.borrow()));
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/cell.rs:247:12
+    |
+    = note: failed precondition
+
+note: 
+
+tmp%.id() == tracked_ref.view().pcell ✘
+    datatype is opaque here
+tracked_ref.mem_contents() is Init ✔
+
+verification results:: 671 verified, 4 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 490MB, peak z3 RSS: 162MB, min free: 21626MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 1s

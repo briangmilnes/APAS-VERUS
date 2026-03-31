@@ -120,7 +120,7 @@ pub mod EdgeContractionMtEph {
 
     /// Build new edge set in parallel using divide-and-conquer
     ///
-    /// - APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,

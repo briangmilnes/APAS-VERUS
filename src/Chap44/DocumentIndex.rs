@@ -145,24 +145,24 @@ pub mod DocumentIndex {
             requires docs.spec_avltreesetstper_wf()
             ensures count == docs@.len();
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — sequential iteration over AVL tree sequence
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>)
             requires docs.spec_avltreesetstper_wf()
             ensures seq.spec_arrayseqstper_wf();
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1)
         fn empty() -> (di: Self)
             ensures di.spec_documentindex_wf();
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — collects table keys into sequence
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>)
             requires self.spec_documentindex_wf()
             ensures words.spec_arrayseqstper_wf();
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — delegates to Table.size
         fn word_count(&self) -> (count: usize)
             requires self.spec_documentindex_wf();
@@ -433,7 +433,7 @@ pub mod DocumentIndex {
         /// Spec: whether the underlying index is well-formed.
         spec fn spec_index_wf(&self) -> bool;
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1)
         fn new(index: &'a DocumentIndex) -> (qb: Self)
             requires spec_documentindex_wf(index)
@@ -451,7 +451,7 @@ pub mod DocumentIndex {
                 found@.len() <= usize::MAX as nat / 2,
         ;
 
-        /// - APAS: N/A — delegates to DocumentIndex::query_and.
+        /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_and.
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
@@ -464,7 +464,7 @@ pub mod DocumentIndex {
                 combined.spec_avltreesetstper_wf(),
         ;
 
-        /// - APAS: N/A — delegates to DocumentIndex::query_or.
+        /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_or.
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet)
             requires
@@ -478,7 +478,7 @@ pub mod DocumentIndex {
                 combined.spec_avltreesetstper_wf(),
         ;
 
-        /// - APAS: N/A — delegates to DocumentIndex::query_and_not.
+        /// - Alg Analysis: APAS: N/A — delegates to DocumentIndex::query_and_not.
         /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m))
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet)
             requires
@@ -491,7 +491,7 @@ pub mod DocumentIndex {
                 remaining.spec_avltreesetstper_wf(),
         ;
 
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet)
             requires
@@ -552,7 +552,7 @@ pub mod DocumentIndex {
     // 10. free functions
 
     /// Tokenization: splits content into lowercase ASCII words.
-    /// - APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
+    /// - Alg Analysis: APAS: (no cost stated — tokens is a helper assumed O(m) where m = string length)
     /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential character iteration
     // veracity: no_requires
     pub fn tokens(content: &Contents) -> (words: ArraySeqStPerS<Word>)
@@ -613,7 +613,7 @@ pub mod DocumentIndex {
     } // verus!
 
     /// Convenience function for staged computation pattern (Example 44.2).
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1) — closure capture only
     pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
         move |word: &Word| index.find(word)

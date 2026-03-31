@@ -218,7 +218,7 @@ pub mod StarContractionMtEph {
     /// Routes edges through partition map using divide-and-conquer parallelism.
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
-    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -286,7 +286,7 @@ pub mod StarContractionMtEph {
     /// Takes ghost graph_v_view (the set of graph vertices) and centers_view (the center set)
     /// to prove the edge-closure postcondition: all output edges have centers as endpoints.
     ///
-    /// - APAS: (no cost stated) — helper not in prose.
+    /// - Alg Analysis: APAS: (no cost stated) — helper not in prose.
     /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,

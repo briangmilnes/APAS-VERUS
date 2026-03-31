@@ -83,7 +83,7 @@ pub mod VertexMatchingStEph {
 
     /// Baseline Sequential Version of Parallel Matching
     ///
-    /// - APAS: (no cost stated — sequential baseline of Algorithm 61.4)
+    /// - Alg Analysis: APAS: (no cost stated — sequential baseline of Algorithm 61.4)
     /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> (matching: SetStEph<Edge<V>>)
         requires

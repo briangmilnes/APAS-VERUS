@@ -62,12 +62,12 @@ broadcast use {
     pub trait StackStEphTrait<T: StT>: View<V = Seq<T>> + Sized {
         spec fn spec_stacksteph_wf(&self) -> bool;
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1), Span O(1).
         fn new() -> (empty: Self)
             ensures empty.spec_stacksteph_wf();
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1) amortized, Span O(1) amortized.
         fn push(&mut self, item: T)
             requires
@@ -75,23 +75,23 @@ broadcast use {
                 old(self)@.len() < usize::MAX as int,
             ensures self.spec_stacksteph_wf();
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1) amortized, Span O(1) amortized.
         fn pop(&mut self) -> (popped: Option<T>)
             requires old(self).spec_stacksteph_wf()
             ensures self.spec_stacksteph_wf();
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1), Span O(1).
         fn peek(&self) -> (top: Option<&T>)
             requires self.spec_stacksteph_wf();
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1), Span O(1).
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_stacksteph_wf();
 
-        /// - APAS: (no cost stated) — standard stack.
+        /// - Alg Analysis: APAS: (no cost stated) — standard stack.
         /// - Claude-Opus-4.6: Work O(1), Span O(1).
         fn size(&self) -> (count: usize)
             requires self.spec_stacksteph_wf();

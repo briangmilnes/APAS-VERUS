@@ -368,7 +368,7 @@ pub mod ParaHashTableStEph {
     pub trait EntryTrait<Key, Value> : Sized {
         /// Abstract map view of this entry's key-value content.
         spec fn spec_entry_to_map(&self) -> Map<Key, Value>;
-        /// - APAS: N/A — inner table interface, cost depends on implementation.
+        /// - Alg Analysis: APAS: N/A — inner table interface, cost depends on implementation.
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
@@ -519,7 +519,7 @@ pub mod ParaHashTableStEph {
                 table.current_size == old(table).current_size;
 
         /// Accessor for metrics field.
-        /// - APAS: N/A — Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — field access.
         fn metrics(table: &HashTable<Key, Value, Entry, Metrics, H>) -> (m: &Metrics)
             requires Self::spec_parahashtablesteph_wf(table),

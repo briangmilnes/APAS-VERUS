@@ -403,7 +403,7 @@ pub mod KruskalStEph {
     }
 
     /// Compute total MST weight.
-    /// - APAS: (no cost stated) — utility function
+    /// - Alg Analysis: APAS: (no cost stated) — utility function
     /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
@@ -436,7 +436,7 @@ pub mod KruskalStEph {
 
     /// Verify MST has correct number of edges.
     /// A valid MST of n vertices should have n-1 edges.
-    /// - APAS: (no cost stated) — validation utility
+    /// - Alg Analysis: APAS: (no cost stated) — validation utility
     /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
     pub fn verify_mst_size<V: HashOrd>(
         n_vertices: usize,
