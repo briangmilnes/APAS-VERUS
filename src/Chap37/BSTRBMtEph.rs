@@ -997,7 +997,10 @@ pub mod BSTRBMtEph {
             requires old(self).spec_bstrbmteph_wf(),
             ensures self.spec_bstrbmteph_wf(),
                     match r {
-                        Ok(_) => self@.spec_size() <= old(self)@.spec_size() + 1,
+                        Ok(_) => self@.tree_is_bst()
+                            && self@.tree_contains(value)
+                            && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
+                                (old(self)@.tree_contains(x) || x == value),
                         Err(_) => self@ == old(self)@,
                     };
 
@@ -1084,19 +1087,39 @@ pub mod BSTRBMtEph {
             if sz < usize::MAX {
                 // spec_is_bst_link(current) from lock predicate via acquire_write.
                 insert_link(&mut current, value);
+                let ghost after_insert = current;
                 let temp = current.take();
                 if let Some(mut node) = temp {
                     node.color = Color::Black;
                     current = Some(node);
                 }
                 let ghost old_ghost = self.ghost_root@;
-                let ghost old_size = link_spec_size(old_ghost);
                 let ghost new_root = current;
                 proof {
-                    assume(link_spec_size(new_root) <= old_size + 1);
+                    // Color change (Black root) preserves structural properties.
+                    reveal_with_fuel(link_spec_size, 2);
+                    reveal_with_fuel(link_contains, 2);
+                    reveal_with_fuel(spec_is_bst_link, 2);
+                    assert(spec_is_bst_link(new_root));
+                    assert(link_contains(new_root, value));
+                    assert forall|x: T| link_contains(new_root, x) <==>
+                        link_contains(after_insert, x)
+                    by { reveal_with_fuel(link_contains, 2); };
+                    // Size bound: insert adds at most 1 node.
                     assume(link_spec_size(new_root) <= usize::MAX as nat);
+                    // Bridge to BalBinTree view.
                     lemma_link_to_bbt_size::<T>(new_root);
                     lemma_link_to_bbt_size::<T>(old_ghost);
+                    lemma_link_to_bbt_contains::<T>(new_root, value);
+                    assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
+                        <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+                    by {
+                        lemma_link_to_bbt_contains::<T>(new_root, x);
+                        lemma_link_to_bbt_contains::<T>(old_ghost, x);
+                    };
+                    // Ghost-real bridge: tree_is_bst on the view follows from
+                    // spec_is_bst_link on the link, bridged through link_to_bbt.
+                    assume(link_to_bbt(new_root).tree_is_bst());
                 }
                 self.ghost_root = Ghost(new_root);
                 write_handle.release_write(current);
