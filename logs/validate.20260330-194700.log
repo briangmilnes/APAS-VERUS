@@ -1,0 +1,21 @@
+error: loop must have a decreases clause
+   --> src/Chap37/BSTBBAlphaMtEph.rs:237:17
+    |
+237 |                 loop { }
+    |                 ^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: loop must have a decreases clause
+   --> src/Chap37/BSTPlainMtEph.rs:237:17
+    |
+237 |                 loop { }
+    |                 ^^^^
+    |
+    = help: to disable this check, use #[verifier::exec_allows_no_decreases_clause] on the function
+
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1271MB, peak z3 RSS: 318MB, min free: 21947MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 15s

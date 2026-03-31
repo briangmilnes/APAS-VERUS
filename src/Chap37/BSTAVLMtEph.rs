@@ -852,6 +852,7 @@ pub mod BSTAVLMtEph {
         fn new() -> (tree: Self)
             ensures tree.spec_bstavlmteph_wf(),
                     tree@ is Leaf,
+                    tree_is_avl::<T>(tree@),
                     tree@.tree_is_bst(),
                     forall|x: T| !tree@.tree_contains(x);
 
@@ -859,7 +860,8 @@ pub mod BSTAVLMtEph {
             requires old(self).spec_bstavlmteph_wf(),
             ensures self.spec_bstavlmteph_wf(),
                     match r {
-                        Ok(_) => self@.tree_contains(value)
+                        Ok(_) => tree_is_avl::<T>(self@)
+                            && self@.tree_contains(value)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
                                 (old(self)@.tree_contains(x) || x == value),
                         Err(_) => self@ == old(self)@,

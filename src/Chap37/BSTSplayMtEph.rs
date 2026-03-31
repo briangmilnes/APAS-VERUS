@@ -98,6 +98,34 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// Spec-level in-order traversal for splay tree links.
+    pub open spec fn spec_in_order_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> Seq<T>
+        decreases link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                let left = spec_in_order_link(node.left);
+                let right = spec_in_order_link(node.right);
+                left.push(node.key).add(right)
+            }
+        }
+    }
+
+    /// Spec-level pre-order traversal for splay tree links.
+    pub open spec fn spec_pre_order_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> Seq<T>
+        decreases link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                let left = spec_pre_order_link(node.left);
+                let right = spec_pre_order_link(node.right);
+                Seq::empty().push(node.key).add(left).add(right)
+            }
+        }
+    }
+
     /// BST ordering invariant for splay tree links.
     pub open spec fn spec_is_bst_link<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> bool
         decreases link,
@@ -1771,6 +1799,11 @@ pub mod BSTSplayMtEph {
 
     pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = Link<T>> {
         spec fn spec_bstsplaymteph_wf(&self) -> bool;
+        spec fn spec_size(&self) -> nat;
+        spec fn spec_height(&self) -> nat;
+        spec fn spec_contains(&self, value: T) -> bool;
+        spec fn spec_in_order(&self) -> Seq<T>;
+        spec fn spec_pre_order(&self) -> Seq<T>;
 
         fn new() -> (tree: Self)
             ensures tree.spec_bstsplaymteph_wf(),
@@ -1793,7 +1826,9 @@ pub mod BSTSplayMtEph {
                         Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1
                             && link_contains(self@, value)
                             && forall|x: T| link_contains(old(self)@, x) ==>
-                                #[trigger] link_contains(self@, x),
+                                #[trigger] link_contains(self@, x)
+                            && forall|x: T| (#[trigger] link_contains(self@, x)) ==>
+                                (link_contains(old(self)@, x) || x == value),
                         Err(_) => self@ == old(self)@,
                     };
 
@@ -1859,6 +1894,11 @@ pub mod BSTSplayMtEph {
             link_node_count(self@) <= usize::MAX
             && spec_is_bst_link(self@)
         }
+        open spec fn spec_size(&self) -> nat { link_spec_size(self@) }
+        open spec fn spec_height(&self) -> nat { link_height(self@) }
+        open spec fn spec_contains(&self, value: T) -> bool { link_contains(self@, value) }
+        open spec fn spec_in_order(&self) -> Seq<T> { spec_in_order_link(self@) }
+        open spec fn spec_pre_order(&self) -> Seq<T> { spec_pre_order_link(self@) }
 
         fn new() -> Self {
             BSTSplayMtEph {
@@ -1891,6 +1931,8 @@ pub mod BSTSplayMtEph {
                     assume(link_contains(current, value));
                     assume(forall|x: T| link_contains(old(self)@, x) ==>
                         #[trigger] link_contains(current, x));
+                    assume(forall|x: T| (#[trigger] link_contains(current, x)) ==>
+                        (link_contains(old(self)@, x) || x == value));
                 }
                 let ghost new_root = current;
                 self.ghost_root = Ghost(new_root);

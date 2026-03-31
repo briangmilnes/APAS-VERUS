@@ -1,0 +1,29 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent1)
+error[E0425]: cannot find function `unreached` in this scope
+   --> src/Chap37/BSTPlainMtEph.rs:237:17
+    |
+237 |                 unreached()
+    |                 ^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 20 +     use vstd::pervasive::unreached;
+    |
+
+error[E0425]: cannot find function `unreached` in this scope
+   --> src/Chap37/BSTBBAlphaMtEph.rs:237:17
+    |
+237 |                 unreached()
+    |                 ^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 20 +     use vstd::pervasive::unreached;
+    |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `apas-verus` (lib test) due to 2 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

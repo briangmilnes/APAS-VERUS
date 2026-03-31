@@ -215,6 +215,302 @@ pub mod BSTPlainMtEph {
         }
     }
 
+    // Verified BST delete (Layer 1).
+
+    /// Remove and return the minimum element from a non-empty BST subtree.
+    fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
+        requires
+            node.spec_size() > 0,
+            node.tree_is_bst(),
+        ensures
+            pair.0.tree_is_bst(),
+            node.tree_contains(pair.1),
+            !pair.0.tree_contains(pair.1),
+            forall|x: T| (#[trigger] pair.0.tree_contains(x)) <==>
+                (node.tree_contains(x) && x != pair.1),
+            forall|x: T| (#[trigger] node.tree_contains(x)) ==> T::le(pair.1, x),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => {
+                proof { assert(false); }
+                vstd::pervasive::unreached()
+            }
+            BalBinTree::Node(inner) => {
+                let BalBinNode { left, value: node_val, right } = *inner;
+                let ghost old_left = left;
+                let ghost old_right = right;
+                if left.is_leaf() {
+                    proof {
+                        assert forall|x: T| right.tree_contains(x) implies
+                            x != node_val
+                        by {};
+
+                        assert forall|x: T| node.tree_contains(x) implies
+                            #[trigger] T::le(node_val, x)
+                        by {
+                            assert(node.tree_contains(x) ==
+                                (node_val == x
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
+                            if x == node_val {
+                                T::reflexive(node_val);
+                            }
+                        };
+
+                        assert forall|x: T| old_right.tree_contains(x) ==
+                            (node.tree_contains(x) && x != node_val)
+                        by {
+                            assert(node.tree_contains(x) ==
+                                (node_val == x
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
+                        };
+                    }
+                    (right, node_val)
+                } else {
+                    let (new_left, min_val) = delete_min_node(left);
+                    let r = BalBinTree::Node(Box::new(BalBinNode {
+                        left: new_left,
+                        value: node_val,
+                        right: right,
+                    }));
+                    proof {
+                        assert(new_left.tree_is_bst());
+                        assert(old_right.tree_is_bst());
+
+                        assert forall|x: T| new_left.tree_contains(x) implies
+                            #[trigger] T::le(x, node_val) && x != node_val
+                        by {
+                            assert(old_left.tree_contains(x));
+                        };
+
+                        assert forall|x: T| old_right.tree_contains(x) implies
+                            #[trigger] T::le(node_val, x) && x != node_val
+                        by {};
+
+                        assert(old_left.tree_contains(min_val));
+
+                        assert forall|x: T| node.tree_contains(x) implies
+                            #[trigger] T::le(min_val, x)
+                        by {
+                            if old_left.tree_contains(x) {
+                            } else if x == node_val {
+                                assert(T::le(min_val, node_val));
+                            } else {
+                                assert(old_right.tree_contains(x));
+                                assert(T::le(min_val, node_val));
+                                assert(T::le(node_val, x));
+                                T::transitive(min_val, node_val, x);
+                            }
+                        };
+
+                        assert forall|x: T| r.tree_contains(x) ==
+                            (node.tree_contains(x) && x != min_val)
+                        by {
+                            assert(r.tree_contains(x) ==
+                                (node_val == x
+                                || new_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
+                            assert(node.tree_contains(x) ==
+                                (node_val == x
+                                || old_left.tree_contains(x)
+                                || old_right.tree_contains(x)));
+                            if x == min_val {
+                                if old_right.tree_contains(min_val) {
+                                    assert(T::le(min_val, node_val));
+                                    assert(T::le(node_val, min_val));
+                                    T::antisymmetric(min_val, node_val);
+                                }
+                            }
+                        };
+                    }
+                    (r, min_val)
+                }
+            }
+        }
+    }
+
+    /// Delete a key from the BST, returning the modified tree.
+    fn delete_node<T: TotalOrder>(node: BalBinTree<T>, target: &T) -> (deleted: BalBinTree<T>)
+        requires node.tree_is_bst(),
+        ensures
+            deleted.tree_is_bst(),
+            !deleted.tree_contains(*target),
+            forall|x: T| (#[trigger] deleted.tree_contains(x)) <==>
+                (node.tree_contains(x) && x != *target),
+        decreases node.spec_size(),
+    {
+        match node {
+            BalBinTree::Leaf => {
+                BalBinTree::Leaf
+            }
+            BalBinTree::Node(inner) => {
+                let BalBinNode { left, value: node_val, right } = *inner;
+                let ghost old_left = left;
+                let ghost old_right = right;
+
+                match TotalOrder::cmp(target, &node_val) {
+                    core::cmp::Ordering::Less => {
+                        let new_left = delete_node(left, target);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: new_left,
+                            value: node_val,
+                            right: right,
+                        }));
+                        proof {
+                            assert(new_left.tree_is_bst());
+                            assert(old_right.tree_is_bst());
+
+                            assert forall|x: T| new_left.tree_contains(x) implies
+                                #[trigger] T::le(x, node_val) && x != node_val
+                            by {
+                                assert(old_left.tree_contains(x));
+                            };
+
+                            assert forall|x: T| old_right.tree_contains(x) implies
+                                #[trigger] T::le(node_val, x) && x != node_val
+                            by {};
+
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) && x != *target)
+                            by {
+                                assert(r.tree_contains(x) ==
+                                    (node_val == x
+                                    || new_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
+                                    (node_val == x
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                if x == *target && old_right.tree_contains(x) {
+                                    T::antisymmetric(*target, node_val);
+                                }
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Greater => {
+                        let new_right = delete_node(right, target);
+                        let r = BalBinTree::Node(Box::new(BalBinNode {
+                            left: left,
+                            value: node_val,
+                            right: new_right,
+                        }));
+                        proof {
+                            assert(old_left.tree_is_bst());
+                            assert(new_right.tree_is_bst());
+
+                            assert forall|x: T| old_left.tree_contains(x) implies
+                                #[trigger] T::le(x, node_val) && x != node_val
+                            by {};
+
+                            assert forall|x: T| new_right.tree_contains(x) implies
+                                #[trigger] T::le(node_val, x) && x != node_val
+                            by {
+                                assert(old_right.tree_contains(x));
+                            };
+
+                            assert forall|x: T| r.tree_contains(x) ==
+                                (node.tree_contains(x) && x != *target)
+                            by {
+                                assert(r.tree_contains(x) ==
+                                    (node_val == x
+                                    || old_left.tree_contains(x)
+                                    || new_right.tree_contains(x)));
+                                assert(node.tree_contains(x) ==
+                                    (node_val == x
+                                    || old_left.tree_contains(x)
+                                    || old_right.tree_contains(x)));
+                                if x == *target && old_left.tree_contains(x) {
+                                    T::antisymmetric(*target, node_val);
+                                }
+                            };
+                        }
+                        r
+                    }
+                    core::cmp::Ordering::Equal => {
+                        if left.is_leaf() {
+                            proof {
+                                assert forall|x: T| old_right.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
+                                by {
+                                    assert(node.tree_contains(x) ==
+                                        (node_val == x
+                                        || old_left.tree_contains(x)
+                                        || old_right.tree_contains(x)));
+                                };
+                            }
+                            right
+                        } else if right.is_leaf() {
+                            proof {
+                                assert forall|x: T| old_left.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
+                                by {
+                                    assert(node.tree_contains(x) ==
+                                        (node_val == x
+                                        || old_left.tree_contains(x)
+                                        || old_right.tree_contains(x)));
+                                };
+                            }
+                            left
+                        } else {
+                            let (new_right, successor) = delete_min_node(right);
+                            let r = BalBinTree::Node(Box::new(BalBinNode {
+                                left: left,
+                                value: successor,
+                                right: new_right,
+                            }));
+                            proof {
+                                assert(old_left.tree_is_bst());
+                                assert(new_right.tree_is_bst());
+                                assert(old_right.tree_contains(successor));
+                                assert(T::le(node_val, successor));
+                                assert(successor != node_val);
+
+                                assert forall|x: T| old_left.tree_contains(x) implies
+                                    #[trigger] T::le(x, successor) && x != successor
+                                by {
+                                    assert(T::le(x, node_val));
+                                    T::transitive(x, node_val, successor);
+                                    if x == successor {
+                                        T::antisymmetric(x, node_val);
+                                    }
+                                };
+
+                                assert forall|x: T| new_right.tree_contains(x) implies
+                                    #[trigger] T::le(successor, x) && x != successor
+                                by {
+                                    assert(old_right.tree_contains(x));
+                                };
+
+                                assert forall|x: T| r.tree_contains(x) ==
+                                    (node.tree_contains(x) && x != *target)
+                                by {
+                                    assert(r.tree_contains(x) ==
+                                        (successor == x
+                                        || old_left.tree_contains(x)
+                                        || new_right.tree_contains(x)));
+                                    assert(node.tree_contains(x) ==
+                                        (node_val == x
+                                        || old_left.tree_contains(x)
+                                        || old_right.tree_contains(x)));
+                                    if successor == x {
+                                        assert(old_right.tree_contains(successor));
+                                    }
+                                    if old_right.tree_contains(x) && x != *target && x != successor {
+                                        assert(new_right.tree_contains(x));
+                                    }
+                                };
+                            }
+                            r
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // 11. top level coarse locking
 
     /// Lock predicate: the inner tree satisfies BST ordering and fits in usize.
@@ -270,6 +566,16 @@ pub mod BSTPlainMtEph {
                         Ok(_) => self@.tree_contains(value)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
                                 (old(self)@.tree_contains(x) || x == value),
+                        Err(_) => self@ == old(self)@,
+                    };
+
+        fn delete(&mut self, target: &T) -> (r: Result<(), ()>)
+            requires old(self).spec_bstplainmteph_wf(),
+            ensures self.spec_bstplainmteph_wf(),
+                    match r {
+                        Ok(_) => !self@.tree_contains(*target)
+                            && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
+                                (old(self)@.tree_contains(x) && x != *target),
                         Err(_) => self@ == old(self)@,
                     };
 
@@ -351,6 +657,22 @@ pub mod BSTPlainMtEph {
                 write_handle.release_write(tree);
                 Err(())
             }
+        }
+
+        // Writer: assume ghost == inner, delete always succeeds (no capacity check needed).
+        fn delete(&mut self, target: &T) -> (r: Result<(), ()>) {
+            let (tree, write_handle) = self.root.acquire_write();
+            proof { assume(self.ghost_root@ == tree); }
+            let new_tree = delete_node(tree, target);
+            proof {
+                // Delete can only reduce size/height.
+                assume(new_tree.spec_size() <= usize::MAX);
+                assume(new_tree.spec_height() <= usize::MAX);
+            }
+            let ghost new_root = new_tree;
+            self.ghost_root = Ghost(new_root);
+            write_handle.release_write(new_tree);
+            Ok(())
         }
 
         // Reader: assume return value matches ghost.
