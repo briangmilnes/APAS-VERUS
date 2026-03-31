@@ -58,7 +58,7 @@ pub mod Algorithm21_6 {
     /// 3. Collect indices where sieve is true.
     ///
     /// - Alg Analysis: APAS (Ch21 Alg 21.6): Work O(n lg n), Span O(lg n)
-    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential tabulate+flatten+loop via ArraySeqStPer, span = work
     pub fn prime_sieve(n: usize) -> (primes: ArraySeqStPerS<usize>)
         requires n < usize::MAX,
         ensures
