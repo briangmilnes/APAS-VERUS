@@ -47,28 +47,35 @@ pub mod BottomUpDPStPer {
         spec fn spec_s_len(&self) -> nat;
         spec fn spec_t_len(&self) -> nat;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
+        spec fn spec_bottomupdpstper_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)
             ensures
+                dp.spec_bottomupdpstper_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
         fn s_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpstper_wf(),
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            requires self.spec_bottomupdpstper_wf(),
             ensures len as nat == self.spec_t_len();
 
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_bottomupdpstper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         fn med_bottom_up(&self) -> (distance: usize)
-            requires self.spec_s_len() + self.spec_t_len() < usize::MAX,
+            requires
+                self.spec_bottomupdpstper_wf(),
+                self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures
                 distance as nat == self.spec_med(
                     self.spec_s_len(),
@@ -77,6 +84,7 @@ pub mod BottomUpDPStPer {
 
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>)
             requires
+                self.spec_bottomupdpstper_wf(),
                 self.spec_s_len() < usize::MAX,
                 self.spec_t_len() < usize::MAX,
             ensures
@@ -98,6 +106,7 @@ pub mod BottomUpDPStPer {
             j: usize,
         ) -> (val: usize)
             requires
+                self.spec_bottomupdpstper_wf(),
                 1 <= i <= self.spec_s_len(),
                 1 <= j <= self.spec_t_len(),
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
@@ -135,6 +144,8 @@ pub mod BottomUpDPStPer {
                 1 + spec_min(del, ins)
             }
         }
+
+        open spec fn spec_bottomupdpstper_wf(&self) -> bool { true }
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j,
@@ -406,6 +417,7 @@ pub mod BottomUpDPStPer {
     impl Default for BottomUpDPStPerS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_bottomupdpstper_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {

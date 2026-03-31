@@ -89,6 +89,7 @@ pub mod TopDownDPStEph {
         spec fn spec_memo(&self) -> Map<(usize, usize), usize>;
         spec fn spec_med(&self, i: nat, j: nat) -> nat;
         spec fn spec_memo_correct(&self) -> bool;
+        spec fn spec_topdowndpsteph_wf(&self) -> bool;
 
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
@@ -97,6 +98,7 @@ pub mod TopDownDPStEph {
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self)
             ensures
+                dp.spec_topdowndpsteph_wf(),
                 dp.spec_s() == s@,
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
@@ -105,31 +107,37 @@ pub mod TopDownDPStEph {
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
+            requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_s_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
+            requires self.spec_topdowndpsteph_wf(),
             ensures len as nat == self.spec_t_len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
+            requires self.spec_topdowndpsteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return hash map size.
         fn memo_size(&self) -> (size: usize)
+            requires self.spec_topdowndpsteph_wf(),
             ensures size == self.spec_memo().len();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map contains_key.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
+            requires self.spec_topdowndpsteph_wf(),
             ensures memoized == self.spec_memo().contains_key((i, j));
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
+            requires self.spec_topdowndpsteph_wf(),
             ensures
                 match val {
                     Some(v) => self.spec_memo().contains_key((i, j))
@@ -140,6 +148,7 @@ pub mod TopDownDPStEph {
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- hash map insert.
         fn insert_memo(&mut self, i: usize, j: usize, value: usize)
+            requires old(self).spec_topdowndpsteph_wf(),
             ensures
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t(),
@@ -149,6 +158,7 @@ pub mod TopDownDPStEph {
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures
+                self.spec_topdowndpsteph_wf(),
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == old(self).spec_t(),
                 self.spec_memo() == Map::<(usize, usize), usize>::empty();
@@ -156,22 +166,29 @@ pub mod TopDownDPStEph {
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqStEphS<char>)
+            requires old(self).spec_topdowndpsteph_wf(),
             ensures
+                self.spec_topdowndpsteph_wf(),
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
         /// - APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqStEphS<char>)
+            requires old(self).spec_topdowndpsteph_wf(),
             ensures
+                self.spec_topdowndpsteph_wf(),
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
         /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.4)
         /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential recursion with memo.
         fn med_memoized(&mut self) -> (distance: usize)
-            requires old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
+            requires
+                old(self).spec_topdowndpsteph_wf(),
+                old(self).spec_s_len() + old(self).spec_t_len() < usize::MAX,
             ensures
+                self.spec_topdowndpsteph_wf(),
                 distance as nat == old(self).spec_med(
                     old(self).spec_s_len(),
                     old(self).spec_t_len()
@@ -209,6 +226,10 @@ pub mod TopDownDPStEph {
         open spec fn spec_memo_correct(&self) -> bool {
             forall|a: usize, b: usize| self.spec_memo().contains_key((a, b)) ==>
                 self.spec_memo()[(a, b)] as nat == #[trigger] self.spec_med(a as nat, b as nat)
+        }
+
+        open spec fn spec_topdowndpsteph_wf(&self) -> bool {
+            self.spec_memo_correct()
         }
 
         open spec fn spec_med(&self, i: nat, j: nat) -> nat {
@@ -350,6 +371,7 @@ pub mod TopDownDPStEph {
     impl Default for TopDownDPStEphS {
         fn default() -> (dp: Self)
             ensures
+                dp.spec_topdowndpsteph_wf(),
                 dp.spec_s_len() == 0,
                 dp.spec_t_len() == 0,
         {
