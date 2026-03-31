@@ -94,8 +94,8 @@ The textbook's remark on quicksort (Section 2) is noted as future work in a sepa
 All trait-declared functions and significant internal functions now carry cost annotations
 in the format:
 ```
-/// - APAS: Work ..., Span ... -- reference.
-/// - Claude-Opus-4.6: Work ..., Span ... -- implementation assessment.
+/// - Alg Analysis: APAS (ChNN ref): Work O(...), Span O(...) — reference.
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(...), Span O(...) — implementation assessment.
 ```
 
 | # | Chap | File | Function | APAS W | APAS S | Impl W | Impl S | Agreement |

@@ -225,7 +225,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
     proof fn lemma_wf_assemble_node<T: StTInMtT + Ord>(node: &Node<T>)
         requires
             node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right),
@@ -314,7 +315,8 @@ pub mod BSTTreapMtEph {
                 },
             };
 
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         proof fn lemma_wf_assemble_node(node: &Node<T>)
             requires
                 node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right),
@@ -322,12 +324,14 @@ pub mod BSTTreapMtEph {
                 Lnk::spec_link_size_wf(&node.right),
             ensures Lnk::spec_link_size_wf(&Some(Box::new(*node)));
 
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn size_link(link: &Link<T>) -> (sz: usize)
             requires Lnk::spec_link_size_wf(link),
             ensures sz as nat == Lnk::spec_size_link(link);
 
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
                 Lnk::spec_bst_link(link),
@@ -336,7 +340,8 @@ pub mod BSTTreapMtEph {
                 found.is_some() <==> spec_contains_link(link, *target),
                 found.is_some() ==> *found.unwrap() == *target;
 
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             requires Lnk::spec_bst_link(link),
             ensures
@@ -347,7 +352,8 @@ pub mod BSTTreapMtEph {
                     _ => false,
                 };
 
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             requires Lnk::spec_bst_link(link),
             ensures
@@ -358,17 +364,20 @@ pub mod BSTTreapMtEph {
                     _ => false,
                 };
 
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Lnk::spec_size_link(link) < usize::MAX as nat,
                 Lnk::spec_link_size_wf(link),
             ensures h as nat == Lnk::spec_height_link(link);
 
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn new() -> (empty_tree: Self)
             ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf();
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_bsttreapmteph_wf(),
@@ -379,7 +388,8 @@ pub mod BSTTreapMtEph {
                 self.spec_contains(value),
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn delete(&mut self, target: &T)
             requires
                 old(self).spec_bsttreapmteph_wf(),
@@ -389,7 +399,8 @@ pub mod BSTTreapMtEph {
                 self.spec_bsttreapmteph_wf(),
                 self.spec_size() <= old(self).spec_size(),
                 forall|k: T| self@.contains(k@) ==> #[trigger] old(self)@.contains(k@);
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn find(&self, target: &T) -> (found: Option<T>)
             requires
                 self.spec_bsttreapmteph_wf(),
@@ -397,31 +408,39 @@ pub mod BSTTreapMtEph {
             ensures
                 found.is_some() <==> self@.contains(target@),
                 found.is_some() ==> found.unwrap()@ == target@;
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bsttreapmteph_wf(),
                 T::obeys_partial_cmp_spec(),
             ensures found <==> self@.contains(target@);
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite();
-        /// - APAS: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn height(&self) -> (h: usize)
             requires self.spec_bsttreapmteph_wf();
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn minimum(&self) -> (min_val: Option<T>)
             ensures min_val.is_some() ==> self@.contains(min_val.unwrap()@);
-        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) expected, Span O(lg n) expected — matches APAS
         fn maximum(&self) -> (max_val: Option<T>)
             ensures max_val.is_some() ==> self@.contains(max_val.unwrap()@);
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             ensures ordered@.len() == self@.len();
-        /// - APAS: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS
         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
             ensures preordered@.len() == self@.len();
     }
@@ -565,7 +584,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
     fn size_link<T: StTInMtT + Ord>(link: &Link<T>) -> (sz: usize)
         requires Lnk::spec_link_size_wf(link),
         ensures sz as nat == Lnk::spec_size_link(link),
@@ -592,8 +612,8 @@ pub mod BSTTreapMtEph {
         node.size = 1 + l + r;
     }
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn rotate_left<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
             Lnk::spec_link_size_wf(old(link)),
@@ -742,8 +762,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
     fn insert_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, value: T, priority: u64)
         requires
             Lnk::spec_size_link(old(link)) + 1 <= usize::MAX as nat,
@@ -847,8 +867,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
     fn delete_link<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>, target: &T)
         requires
             Lnk::spec_link_size_wf(old(link)),
@@ -1031,8 +1051,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
     fn find_link<'a, T: StTInMtT + Ord + IsLtTransitive>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         requires
             Lnk::spec_bst_link(link),
@@ -1095,8 +1115,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min_val: Option<&T>)
         requires Lnk::spec_bst_link(link),
         ensures
@@ -1126,8 +1146,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work O(log n) expected, Span O(log n) expected
-    /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max_val: Option<&T>)
         requires Lnk::spec_bst_link(link),
         ensures
@@ -1184,8 +1204,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn in_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
         requires Lnk::spec_link_size_wf(link),
         ensures out@.len() == old(out)@.len() + Lnk::spec_size_link(link) as int,
@@ -1198,8 +1218,8 @@ pub mod BSTTreapMtEph {
         }
     }
 
-    /// - APAS: Work Θ(n), Span Θ(n)
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+    /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(n), Span O(n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn pre_order_collect<T: StTInMtT + Ord>(link: &Link<T>, out: &mut Vec<T>)
         requires Lnk::spec_link_size_wf(link),
         ensures out@.len() == old(out)@.len() + Lnk::spec_size_link(link) as int,

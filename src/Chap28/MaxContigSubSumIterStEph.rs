@@ -140,8 +140,8 @@ broadcast use {
 
     //		9. impls
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch28 Alg 28.15): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),

@@ -273,8 +273,8 @@ broadcast use {
 
     // ─── 3. exec functions ───
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -288,8 +288,8 @@ broadcast use {
     }
 
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
-    /// - APAS: Work Θ(n), Span Θ(log² n)
-    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) — subseq_copy O(n) per level; sequential
+    /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg^2 n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — subseq_copy O(n) per level; sequential
     fn max_contig_sub_sum_aux(a: &ArraySeqStEphS<i32>) -> (mcss: StrengthResult)
         requires
             a.seq@.len() > 0,

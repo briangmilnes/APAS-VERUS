@@ -115,8 +115,8 @@ pub mod ScanDCStPer {
 
         /// Exclusive prefix sums via divide-and-conquer scan.
         /// Convenience: scan_dc with (+, 0).
-        /// - APAS: Work Θ(n lg n), Span Θ(lg n) — same as scan_dc.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — delegates to sequential scan_dc.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — same as scan_dc.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — delegates to sequential scan_dc.
         fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize))
             requires a.spec_len() <= usize::MAX,
             ensures

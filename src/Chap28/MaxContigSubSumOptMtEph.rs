@@ -16,7 +16,8 @@ pub mod MaxContigSubSumOptMtEph {
     pub trait MaxContigSubSumOptMtTrait {
         /// Compute MCSS using parallel optimal scan-based algorithm (Algorithm 28.16).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6 (verified): Work Θ(n), Span Θ(n)
         fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires

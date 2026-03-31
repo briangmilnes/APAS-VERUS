@@ -48,7 +48,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
     pub trait MaxContigSubSumDivConOptMtTrait {
         /// Compute MCSS using parallel strengthened D&C (Algorithm 28.19).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS
         /// - Claude-Opus-4.6 (verified): Work Θ(n log n), Span Θ(n)
         fn max_contig_sub_sum_divcon_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             requires
@@ -63,8 +64,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
 
     //		9. impls
 
-    /// - APAS: Work Θ(1), Span Θ(1)
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     // veracity: no_requires
     fn max_with_neginf(a: Option<i32>, b: Option<i32>) -> (max: Option<i32>)
         ensures max == spec_max_opt_i32(a, b),
@@ -78,8 +79,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
     }
 
     /// Auxiliary function: returns (mcss, max_prefix, max_suffix, total).
-    /// - APAS: Work Θ(n), Span Θ(log n)
-    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n) -- subseq_copy O(n) per level; sequential
+    /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(n), Span O(lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — subseq_copy O(n) per level; sequential
     fn max_contig_sub_sum_aux(a: &ArraySeqMtEphS<i32>) -> (mcss: StrengthResult)
         requires a.seq@.len() > 0, sums_fit_i32(a.seq@), obeys_feq_clone::<i32>(),
         ensures

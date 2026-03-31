@@ -158,8 +158,8 @@ pub mod BSTRBStEph {
     // 9. impls
 
     /// Right rotation preserving BST ordering and containment.
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
     fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree.tree_is_bst(),
@@ -258,8 +258,8 @@ pub mod BSTRBStEph {
     }
 
     /// Left rotation preserving BST ordering and containment.
-    /// - APAS: Work O(1), Span O(1)
-    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
     fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
         requires
             tree.tree_is_bst(),
@@ -364,8 +364,8 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T))
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires node.tree_is_bst(),
         ensures
@@ -495,8 +495,8 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T))
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires (*node).tree_is_bst(),
         ensures found == (*node).tree_contains(*target),
@@ -530,8 +530,8 @@ pub mod BSTRBStEph {
         }
     }
 
-    /// - APAS: Work O(h(T)), Span O(h(T))
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -568,7 +568,7 @@ pub mod BSTRBStEph {
     }
 
     /// - Alg Analysis: APAS: (no cost stated)
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends leftmost path.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -590,7 +590,7 @@ pub mod BSTRBStEph {
     }
 
     /// - Alg Analysis: APAS: (no cost stated)
-    /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- descends rightmost path.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -615,44 +615,44 @@ pub mod BSTRBStEph {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
         open spec fn spec_bstrbsteph_wf(&self) -> bool { self.spec_root().tree_is_bst() }
 
-        /// - APAS: Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — agrees with APAS.
         fn new() -> (tree: Self) {
             BSTRBStEph { root: BalBinTree::Leaf }
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::size.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::size.
         fn size(&self) -> (n: usize) {
             self.root.size()
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- leaf check.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — leaf check.
         fn is_empty(&self) -> (b: bool) {
             self.root.is_leaf()
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- delegates to BalBinTree::height.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to BalBinTree::height.
         fn height(&self) -> (h: usize) {
             self.root.height()
         }
 
-        /// - APAS: Work O(h(T)), Span O(h(T))
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn insert(self, value: T) -> (inserted: Self) {
             BSTRBStEph { root: insert_node(self.root, value) }
         }
 
-        /// - APAS: Work O(h(T)), Span O(h(T))
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn contains(&self, target: &T) -> (found: bool) {
             contains_node(&self.root, target)
         }
 
-        /// - APAS: Work O(h(T)), Span O(h(T))
-        /// - Claude-Opus-4.6: Work O(h(T)), Span O(h(T)) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn find(&self, target: &T) -> (found: Option<&T>) {
             find_node(&self.root, target)
         }

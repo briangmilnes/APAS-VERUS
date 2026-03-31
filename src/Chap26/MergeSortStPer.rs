@@ -111,8 +111,8 @@ pub mod MergeSortStPer {
 
     pub trait MergeSortStTrait {
         /// Merge two sorted sequences into one sorted sequence.
-        /// - APAS: Work Θ(n), Span Θ(lg n) — parallel merge assumed for merge sort analysis.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential two-pointer merge, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n), Span O(lg n) — parallel merge assumed for merge sort analysis.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential two-pointer merge, Span = Work.
         fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>)
             requires
                 spec_sorted(Seq::new(left.spec_len(), |i: int| left.spec_index(i))),
