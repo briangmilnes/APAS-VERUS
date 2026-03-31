@@ -1,0 +1,13 @@
+error: Type parameter T of lib::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::OptBSTMtEphKeysInv must be declared #[verifier::reject_recursive_types] to be used in a non-positive position
+  --> src/Chap50/OptBinSearchTreeMtEph.rs:62:9
+   |
+62 | /         pub struct OptBSTMtEphKeysInv<T: MtVal> {
+63 | |             pub ghost expected_keys: Seq<KeyProb<T>>,
+64 | |         }
+   | |_________^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23715MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

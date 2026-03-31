@@ -59,12 +59,13 @@ broadcast use {
         }
     }
 
-        pub struct OptBSTMtEphKeysInv {
-            pub ghost expected_len: nat,
+        #[verifier::reject_recursive_types(T)]
+        pub struct OptBSTMtEphKeysInv<T: MtVal> {
+            pub ghost expected_keys: Seq<KeyProb<T>>,
         }
-        impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for OptBSTMtEphKeysInv {
+        impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for OptBSTMtEphKeysInv<T> {
             open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
-                v@.len() == self.expected_len
+                v@ =~= self.expected_keys
             }
         }
 
@@ -78,7 +79,7 @@ broadcast use {
     /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
     #[verifier::reject_recursive_types(T)]
     pub struct OBSTMtEphS<T: MtVal> {
-        pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv>>,
+        pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv<T>>>,
         pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
         pub ghost_keys: Ghost<Seq<KeyProb<T>>>,
     }
@@ -98,44 +99,44 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTMtEphTrait<T: MtVal>: Sized + View<V = OBSTMtEphV<T>> {
-        spec fn spec_obstmteph_wf(&self) -> bool;
+        spec fn spec_optbinsearchtreemteph_wf(&self) -> bool;
 
         fn new() -> (empty: Self)
-            ensures empty@.keys.len() == 0, empty.spec_obstmteph_wf();
+            ensures empty@.keys.len() == 0, empty.spec_optbinsearchtreemteph_wf();
 
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
-            ensures constructed@.keys.len() == keys@.len(), constructed.spec_obstmteph_wf();
+            ensures constructed@.keys.len() == keys@.len(), constructed.spec_optbinsearchtreemteph_wf();
 
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
-            ensures constructed@.keys =~= key_probs@, constructed.spec_obstmteph_wf();
+            ensures constructed@.keys =~= key_probs@, constructed.spec_optbinsearchtreemteph_wf();
 
         fn optimal_cost(&mut self) -> (cost: Probability) where T: Send + Sync + 'static
-            requires old(self).spec_obstmteph_wf();
+            requires old(self).spec_optbinsearchtreemteph_wf();
 
         fn keys(&self) -> (keys: Vec<KeyProb<T>>)
-            requires self.spec_obstmteph_wf(),
-            ensures keys@.len() == self@.keys.len();
+            requires self.spec_optbinsearchtreemteph_wf(),
+            ensures keys@ =~= self@.keys;
 
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
-            requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
+            requires index < old(self)@.keys.len(), old(self).spec_optbinsearchtreemteph_wf(),
             ensures
                 self@.keys =~= old(self)@.keys.update(index as int, key_prob),
-                self.spec_obstmteph_wf();
+                self.spec_optbinsearchtreemteph_wf();
 
         fn update_prob(&mut self, index: usize, prob: Probability)
-            requires index < old(self)@.keys.len(), old(self).spec_obstmteph_wf(),
+            requires index < old(self)@.keys.len(), old(self).spec_optbinsearchtreemteph_wf(),
             ensures
                 self@.keys.len() == old(self)@.keys.len(),
-                self.spec_obstmteph_wf();
+                self.spec_optbinsearchtreemteph_wf();
 
         fn num_keys(&self) -> (count: usize)
-            requires self.spec_obstmteph_wf(),
+            requires self.spec_optbinsearchtreemteph_wf(),
             ensures count == self@.keys.len();
 
         fn clear_memo(&mut self)
-            requires old(self).spec_obstmteph_wf(),
-            ensures self@.keys =~= old(self)@.keys, self.spec_obstmteph_wf();
+            requires old(self).spec_optbinsearchtreemteph_wf(),
+            ensures self@.keys =~= old(self)@.keys, self.spec_optbinsearchtreemteph_wf();
 
         fn memo_size(&self) -> (count: usize);
     }
@@ -145,7 +146,7 @@ broadcast use {
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtEphS<T>, i: usize, l: usize) -> (cost: Probability)
         requires
             i + l <= table@.keys.len(),
-            table.spec_obstmteph_wf(),
+            table.spec_optbinsearchtreemteph_wf(),
         ensures true,
         decreases l,
     {
@@ -193,7 +194,7 @@ broadcast use {
                     k <= l,
                     i + l <= n,
                     i + l <= table@.keys.len(),
-                    table.spec_obstmteph_wf(),
+                    table.spec_optbinsearchtreemteph_wf(),
                 decreases l - k,
             {
                 let left_cost = obst_rec(table, i, k);
@@ -220,14 +221,14 @@ broadcast use {
     }
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
-        open spec fn spec_obstmteph_wf(&self) -> bool {
-            self.keys.pred().expected_len == self.ghost_keys@.len()
+        open spec fn spec_optbinsearchtreemteph_wf(&self) -> bool {
+            self.keys.pred().expected_keys =~= self.ghost_keys@
         }
 
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_len: 0 })),
+                keys: new_arc_rwlock(Vec::new(), Ghost(OptBSTMtEphKeysInv { expected_keys: Seq::empty() })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(Seq::empty()),
             }
@@ -249,7 +250,7 @@ broadcast use {
             let ghost gk = key_probs@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_len: gk.len() })),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(gk),
             }
@@ -260,7 +261,7 @@ broadcast use {
             let _len = key_probs.len();
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
-                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_len: gk.len() })),
+                keys: new_arc_rwlock(key_probs, Ghost(OptBSTMtEphKeysInv { expected_keys: gk })),
                 memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
                 ghost_keys: Ghost(gk),
             }
@@ -270,7 +271,7 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let keys_len = handle.borrow().len();
-            assert(keys_len == rwlock.pred().expected_len);
+            assert(keys_len == rwlock.pred().expected_keys.len());
             handle.release_read();
             if keys_len == 0 { return Probability::zero(); }
             {
@@ -287,7 +288,7 @@ broadcast use {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let borrowed = handle.borrow();
-            assert(borrowed@.len() == rwlock.pred().expected_len);
+            assert(borrowed@ =~= rwlock.pred().expected_keys);
             let keys = borrowed.clone();
             handle.release_read();
             keys
@@ -296,44 +297,46 @@ broadcast use {
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             let ghost kp = key_prob;
             let ghost old_keys = self.ghost_keys@;
-            {
-                let keys_arc = self.keys.clone();
-                let rwlock = arc_deref(&keys_arc);
-                let (mut keys, write_handle) = rwlock.acquire_write();
-                assert(keys@.len() == rwlock.pred().expected_len);
-                keys.set(index, key_prob);
-                write_handle.release_write(keys);
-            }
-            let memo_arc = self.memo.clone();
-            let rwlock = arc_deref(&memo_arc);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.clear();
-            write_handle.release_write(memo);
-            self.ghost_keys = Ghost(old_keys.update(index as int, kp));
+            let ghost new_keys_ghost = old_keys.update(index as int, kp);
+            let rwlock = arc_deref(&self.keys);
+            let handle = rwlock.acquire_read();
+            let borrowed = handle.borrow();
+            assert(borrowed@ =~= rwlock.pred().expected_keys);
+            let mut keys = borrowed.clone();
+            handle.release_read();
+            keys.set(index, key_prob);
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            *self = OBSTMtEphS {
+                keys: new_arc_rwlock(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                ghost_keys: Ghost(new_keys_ghost),
+            };
         }
 
         fn update_prob(&mut self, index: usize, prob: Probability) {
-            {
-                let keys_arc = self.keys.clone();
-                let rwlock = arc_deref(&keys_arc);
-                let (mut keys, write_handle) = rwlock.acquire_write();
-                assert(keys@.len() == rwlock.pred().expected_len);
-                let new_kp = KeyProb { key: keys[index].key.clone(), prob };
-                keys.set(index, new_kp);
-                write_handle.release_write(keys);
-            }
-            let memo_arc = self.memo.clone();
-            let rwlock = arc_deref(&memo_arc);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.clear();
-            write_handle.release_write(memo);
+            let ghost old_keys = self.ghost_keys@;
+            let rwlock = arc_deref(&self.keys);
+            let handle = rwlock.acquire_read();
+            let borrowed = handle.borrow();
+            assert(borrowed@ =~= rwlock.pred().expected_keys);
+            let mut keys = borrowed.clone();
+            handle.release_read();
+            let new_kp = KeyProb { key: keys[index].key.clone(), prob };
+            let ghost new_keys_ghost = old_keys.update(index as int, new_kp);
+            keys.set(index, new_kp);
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            *self = OBSTMtEphS {
+                keys: new_arc_rwlock(keys, Ghost(OptBSTMtEphKeysInv { expected_keys: new_keys_ghost })),
+                memo: new_arc_rwlock(HashMapWithViewPlus::new(), Ghost(OptBSTMtEphMemoInv)),
+                ghost_keys: Ghost(new_keys_ghost),
+            };
         }
 
         fn num_keys(&self) -> (count: usize) {
             let rwlock = arc_deref(&self.keys);
             let handle = rwlock.acquire_read();
             let count = handle.borrow().len();
-            assert(count == rwlock.pred().expected_len);
+            assert(count == rwlock.pred().expected_keys.len());
             handle.release_read();
             count
         }

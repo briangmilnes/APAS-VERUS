@@ -132,20 +132,25 @@ broadcast use {
 
     // 8. traits
     pub trait MatrixChainStEphTrait: Sized + View<V = MatrixChainStEphV> {
+        spec fn spec_matrixchainsteph_wf(&self) -> bool;
+
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf();
 
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf();
 
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
-                mc@.memo =~= Map::<(usize, usize), usize>::empty();
+                mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf();
 
         fn optimal_cost(&mut self) -> (cost: usize)
             requires
@@ -167,19 +172,22 @@ broadcast use {
             requires index < old(self)@.dimensions.len(),
             ensures
                 self@.dimensions =~= old(self)@.dimensions.update(index as int, dim),
-                self@.memo =~= Map::<(usize, usize), usize>::empty();
+                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self.spec_matrixchainsteph_wf();
 
         fn update_dimension(&mut self, index: usize, rows: usize, cols: usize)
             requires index < old(self)@.dimensions.len(),
             ensures
                 self@.dimensions =~= old(self)@.dimensions.update(
                     index as int, MatrixDim { rows, cols }),
-                self@.memo =~= Map::<(usize, usize), usize>::empty();
+                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self.spec_matrixchainsteph_wf();
 
         fn clear_memo(&mut self)
             ensures
                 self@.dimensions =~= old(self)@.dimensions,
-                self@.memo =~= Map::<(usize, usize), usize>::empty();
+                self@.memo =~= Map::<(usize, usize), usize>::empty(),
+                self.spec_matrixchainsteph_wf();
 
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len();
@@ -213,10 +221,15 @@ broadcast use {
     // 9. impls
 
     impl MatrixChainStEphTrait for MatrixChainStEphS {
+        open spec fn spec_matrixchainsteph_wf(&self) -> bool {
+            spec_memo_correct(self@.dimensions, self@.memo)
+        }
+
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -229,6 +242,7 @@ broadcast use {
             ensures
                 mc@.dimensions =~= dimensions@,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -241,6 +255,7 @@ broadcast use {
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
+                mc.spec_matrixchainsteph_wf(),
         {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let mut dimensions: Vec<MatrixDim> = Vec::new();
