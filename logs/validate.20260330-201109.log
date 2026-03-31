@@ -1,0 +1,87 @@
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:250:13
+    |
+250 |               link_spec_size(*link) == link_spec_size(*old(link)),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+253 | /         if let Some(mut h) = link.take() {
+254 | |             let ghost h_key = h.key;
+255 | |             let ghost old_h_left = h.left;
+256 | |             let ghost old_h_right = h.right;
+...   |
+323 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:250:13
+    |
+250 |             link_spec_size(*link) == link_spec_size(*old(link)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(link) ✔
+forall |z|
+    link_contains(link, z) == link_contains(old(link), z) ✔
+link_spec_size(link) == link_spec_size(old(link)) ✘
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:331:13
+    |
+331 |               link_spec_size(*link) == link_spec_size(*old(link)),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+334 | /         if let Some(mut h) = link.take() {
+335 | |             let ghost h_key = h.key;
+336 | |             let ghost old_h_left = h.left;
+337 | |             let ghost old_h_right = h.right;
+...   |
+404 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:331:13
+    |
+331 |             link_spec_size(*link) == link_spec_size(*old(link)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(link) ✔
+forall |z|
+    link_contains(link, z) == link_contains(old(link), z) ✔
+link_spec_size(link) == link_spec_size(old(link)) ✘
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTRBMtEph.rs:412:13
+    |
+412 |               link_spec_size(*link) == link_spec_size(*old(link)),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+415 | /         if let Some(mut node) = link.take() {
+416 | |             let ghost node_key = node.key;
+417 | |             let ghost orig_left = node.left;
+418 | |             let ghost orig_right = node.right;
+...   |
+466 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:412:13
+    |
+412 |             link_spec_size(*link) == link_spec_size(*old(link)),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_is_bst_link(link) ✔
+forall |z|
+    link_contains(link, z) == link_contains(old(link), z) ✔
+link_spec_size(link) == link_spec_size(old(link)) ✘
+
+verification results:: 1809 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1267MB, peak z3 RSS: 357MB, min free: 21734MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 19s

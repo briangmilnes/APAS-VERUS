@@ -170,6 +170,32 @@ pub mod BSTRBMtEph {
         }
     }
 
+    /// Bridge: spec_is_bst_link on Link implies tree_is_bst on BalBinTree conversion.
+    proof fn lemma_link_to_bbt_is_bst<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
+        requires spec_is_bst_link(link),
+        ensures link_to_bbt(link).tree_is_bst(),
+        decreases link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                reveal_with_fuel(spec_is_bst_link, 2);
+                lemma_link_to_bbt_is_bst::<T>(node.left);
+                lemma_link_to_bbt_is_bst::<T>(node.right);
+                assert forall|x: T| (#[trigger] link_to_bbt(node.left).tree_contains(x))
+                    implies (TotalOrder::le(x, node.key) && x != node.key)
+                by {
+                    lemma_link_to_bbt_contains::<T>(node.left, x);
+                };
+                assert forall|x: T| (#[trigger] link_to_bbt(node.right).tree_contains(x))
+                    implies (TotalOrder::le(node.key, x) && x != node.key)
+                by {
+                    lemma_link_to_bbt_contains::<T>(node.right, x);
+                };
+            }
+        }
+    }
+
     /// Height is bounded by structural node count.
     proof fn lemma_height_le_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
         ensures link_height(link) <= link_spec_size(link),
@@ -247,6 +273,7 @@ pub mod BSTRBMtEph {
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
+            link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
         if let Some(mut h) = link.take() {
@@ -315,9 +342,14 @@ pub mod BSTRBMtEph {
                     assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
                         reveal_with_fuel(link_contains, 4);
                     };
+                    // Size preservation: rotation rearranges subtrees, no nodes added/removed.
+                    assert(link_spec_size(*link) == link_spec_size(old_link)) by {
+                        reveal_with_fuel(link_spec_size, 3);
+                    };
                 }
             } else {
                 *link = Some(h);
+                proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
     }
@@ -327,6 +359,7 @@ pub mod BSTRBMtEph {
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
+            link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
         if let Some(mut h) = link.take() {
@@ -395,9 +428,13 @@ pub mod BSTRBMtEph {
                     assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
                         reveal_with_fuel(link_contains, 4);
                     };
+                    assert(link_spec_size(*link) == link_spec_size(old_link)) by {
+                        reveal_with_fuel(link_spec_size, 3);
+                    };
                 }
             } else {
                 *link = Some(h);
+                proof { reveal_with_fuel(link_spec_size, 2); }
             }
         }
     }
@@ -407,6 +444,7 @@ pub mod BSTRBMtEph {
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
+            link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
         if let Some(mut node) = link.take() {
@@ -459,6 +497,10 @@ pub mod BSTRBMtEph {
                 assert forall|z: T| link_contains(*link, z) <==> link_contains(old_link, z) by {
                     reveal_with_fuel(link_contains, 3);
                 };
+                // Size preservation: flip_colors only changes colors, not structure.
+                assert(link_spec_size(*link) == link_spec_size(old_link)) by {
+                    reveal_with_fuel(link_spec_size, 3);
+                };
             }
         }
     }
@@ -468,6 +510,7 @@ pub mod BSTRBMtEph {
         ensures
             spec_is_bst_link(*link),
             forall|z: T| link_contains(*link, z) <==> link_contains(*old(link), z),
+            link_spec_size(*link) == link_spec_size(*old(link)),
     {
         let ghost old_link = *link;
 
@@ -539,6 +582,7 @@ pub mod BSTRBMtEph {
             link_contains(*link, value),
             forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
             forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value),
+            link_spec_size(*link) <= link_spec_size(*old(link)) + 1,
         decreases old(link),
     {
         let cur = link.take();
@@ -1105,8 +1149,10 @@ pub mod BSTRBMtEph {
                     assert forall|x: T| link_contains(new_root, x) <==>
                         link_contains(after_insert, x)
                     by { reveal_with_fuel(link_contains, 2); };
-                    // Size bound: insert adds at most 1 node.
-                    assume(link_spec_size(new_root) <= usize::MAX as nat);
+                    // Size bound: insert adds at most 1, color change preserves size.
+                    assert(link_spec_size(after_insert) <= sz as nat + 1);
+                    assert(link_spec_size(new_root) == link_spec_size(after_insert));
+                    assert(link_spec_size(new_root) <= usize::MAX as nat);
                     // Bridge to BalBinTree view.
                     lemma_link_to_bbt_size::<T>(new_root);
                     lemma_link_to_bbt_size::<T>(old_ghost);
@@ -1117,9 +1163,8 @@ pub mod BSTRBMtEph {
                         lemma_link_to_bbt_contains::<T>(new_root, x);
                         lemma_link_to_bbt_contains::<T>(old_ghost, x);
                     };
-                    // Ghost-real bridge: tree_is_bst on the view follows from
-                    // spec_is_bst_link on the link, bridged through link_to_bbt.
-                    assume(link_to_bbt(new_root).tree_is_bst());
+                    // Ghost-real bridge: spec_is_bst_link → tree_is_bst via link_to_bbt.
+                    lemma_link_to_bbt_is_bst::<T>(new_root);
                 }
                 self.ghost_root = Ghost(new_root);
                 write_handle.release_write(current);

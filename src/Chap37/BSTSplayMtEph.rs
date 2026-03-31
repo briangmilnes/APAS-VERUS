@@ -1521,7 +1521,6 @@ pub mod BSTSplayMtEph {
         match link {
             None => {
                 let c: Link<T> = None;
-                proof { assume(c == *link); }
                 c
             }
             Some(node) => {
@@ -1928,11 +1927,6 @@ pub mod BSTSplayMtEph {
                 proof {
                     assume(link_node_count(current) <= usize::MAX as nat);
                     assume(link_spec_size(current) <= link_spec_size(old(self)@) + 1);
-                    assume(link_contains(current, value));
-                    assume(forall|x: T| link_contains(old(self)@, x) ==>
-                        #[trigger] link_contains(current, x));
-                    assume(forall|x: T| (#[trigger] link_contains(current, x)) ==>
-                        (link_contains(old(self)@, x) || x == value));
                 }
                 let ghost new_root = current;
                 self.ghost_root = Ghost(new_root);

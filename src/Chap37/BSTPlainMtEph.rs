@@ -229,6 +229,8 @@ pub mod BSTPlainMtEph {
             forall|x: T| (#[trigger] pair.0.tree_contains(x)) <==>
                 (node.tree_contains(x) && x != pair.1),
             forall|x: T| (#[trigger] node.tree_contains(x)) ==> T::le(pair.1, x),
+            pair.0.spec_size() < node.spec_size(),
+            pair.0.spec_height() <= node.spec_height(),
         decreases node.spec_size(),
     {
         match node {
@@ -339,6 +341,8 @@ pub mod BSTPlainMtEph {
             !deleted.tree_contains(*target),
             forall|x: T| (#[trigger] deleted.tree_contains(x)) <==>
                 (node.tree_contains(x) && x != *target),
+            deleted.spec_size() <= node.spec_size(),
+            deleted.spec_height() <= node.spec_height(),
         decreases node.spec_size(),
     {
         match node {
@@ -664,11 +668,6 @@ pub mod BSTPlainMtEph {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
             let new_tree = delete_node(tree, target);
-            proof {
-                // Delete can only reduce size/height.
-                assume(new_tree.spec_size() <= usize::MAX);
-                assume(new_tree.spec_height() <= usize::MAX);
-            }
             let ghost new_root = new_tree;
             self.ghost_root = Ghost(new_root);
             write_handle.release_write(new_tree);

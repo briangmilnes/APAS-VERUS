@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjMatrixGraphStPer.rs:477: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        473 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        475 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjSeqGraphStPer.rs:513: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        509 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        511 |         {
@@ -49,7 +49,7 @@ Table of Contents:
        514 |             equal
        515 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:440: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/AdjTableGraphMtPer.rs:440: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
        425 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        438 |                     proof {
@@ -66,7 +66,7 @@ Table of Contents:
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStEph.rs:406: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        399 |         fn clone(&self) -> (result: Self)
             ...
        404 |                 edges: self.edges.clone(),
@@ -74,14 +74,14 @@ Table of Contents:
        407 |             result
        408 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:375: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        368 |         fn clone(&self) -> (result: Self)
             ...
        373 |                 edges: self.edges.clone(),
        374 |             };
        376 |             result
        377 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap52/EdgeSetGraphStPer.rs:391: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        387 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        389 |         {
@@ -164,9 +164,9 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 19:49:13 -07:00
-Ended:     2026-03-30 19:49:13 -07:00
-Duration:  93ms
+Started:   2026-03-30 20:22:20 -07:00
+Ended:     2026-03-30 20:22:20 -07:00
+Duration:  66ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+c/Chap52/analyses/veracity-review-verus-proof-holes.log

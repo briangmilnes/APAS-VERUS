@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap53/GraphSearchMtPer.rs:179: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:179: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
        127 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
        177 |                 proof {
@@ -89,9 +89,9 @@ Real Proof Targets: 0 (1 total - 1 rwlock)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 19:49:13 -07:00
-Ended:     2026-03-30 19:49:13 -07:00
-Duration:  32ms
+Started:   2026-03-30 20:22:20 -07:00
+Ended:     2026-03-30 20:22:21 -07:00
+Duration:  28ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
+proof-holes.log
