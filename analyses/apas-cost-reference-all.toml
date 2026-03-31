@@ -336,7 +336,7 @@ ref = "Ch21 Alg 21.4"
 chapter = 21
 description = "Brute-force primality test"
 operations = [
-    { name = "isPrime", work = "O(sqrt(n))", span = "O(lg n)" },
+    { name = "is_prime", work = "O(sqrt(n))", span = "O(lg n)" },
 ]
 
 [[cost_spec]]
@@ -344,7 +344,7 @@ ref = "Ch21 Alg 21.5"
 chapter = 21
 description = "Brute-force primes via filter"
 operations = [
-    { name = "primesBF", work = "O(n^(3/2))", span = "O(lg n)" },
+    { name = "primes_bf", work = "O(n^(3/2))", span = "O(lg n)" },
 ]
 
 [[cost_spec]]
@@ -352,7 +352,7 @@ ref = "Ch21 Alg 21.6"
 chapter = 21
 description = "Sieve of Eratosthenes using ninject"
 operations = [
-    { name = "primeSieve", work = "O(n lg n)", span = "O(lg n)" },
+    { name = "prime_sieve", work = "O(n lg n)", span = "O(lg n)" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -456,9 +456,13 @@ operations = [
 [[cost_spec]]
 ref = "Ch26 Alg 26.2"
 chapter = 26
-description = "Reduce via divide and conquer"
+description = "Reduce via divide and conquer (specific instantiations)"
 operations = [
-    { name = "reduce", work = "O(n)", span = "O(lg n)", notes = "assumes O(1) associative binary op" },
+    { name = "max_element", work = "O(n)", span = "O(lg n)", notes = "reduce with max" },
+    { name = "sum",         work = "O(n)", span = "O(lg n)", notes = "reduce with addition" },
+    { name = "product",     work = "O(n)", span = "O(lg n)", notes = "reduce with multiplication" },
+    { name = "any",         work = "O(n)", span = "O(lg n)", notes = "reduce with logical or" },
+    { name = "all",         work = "O(n)", span = "O(lg n)", notes = "reduce with logical and" },
 ]
 
 [[cost_spec]]
@@ -482,7 +486,7 @@ ref = "Ch26 Alg 26.7"
 chapter = 26
 description = "Divide-and-conquer heuristic for planar Euclidean TSP"
 operations = [
-    { name = "etsp_dc", work = "O(n^2)", span = "O(lg^2 n)" },
+    { name = "etsp", work = "O(n^2)", span = "O(lg^2 n)" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -514,7 +518,7 @@ ref = "Ch28 Alg 28.6"
 chapter = 28
 description = "Brute-force MCS"
 operations = [
-    { name = "mcs_brute_force", work = "O(n^3)", span = "O(lg n)" },
+    { name = "max_contig_sub_sum_brute", work = "O(n^3)", span = "O(lg n)" },
 ]
 
 [[cost_spec]]
@@ -522,7 +526,7 @@ ref = "Ch28 Alg 28.15"
 chapter = 28
 description = "Kadane's iterative MCSS"
 operations = [
-    { name = "mcss_kadane", work = "O(n)", span = "O(n)", notes = "work-optimal but no parallelism" },
+    { name = "max_contig_sub_sum_iter", work = "O(n)", span = "O(n)", notes = "Kadane's algorithm; work-optimal but no parallelism" },
 ]
 
 [[cost_spec]]
@@ -530,7 +534,7 @@ ref = "Ch28 Alg 28.16"
 chapter = 28
 description = "Work-optimal parallel MCSS using scans"
 operations = [
-    { name = "mcss_scan", work = "O(n)", span = "O(lg n)", notes = "two scans + tabulate" },
+    { name = "max_contig_sub_sum_reduced", work = "O(n)", span = "O(lg n)", notes = "scan-based reduction; two scans + tabulate" },
 ]
 
 [[cost_spec]]
@@ -538,7 +542,7 @@ ref = "Ch28 Alg 28.17"
 chapter = 28
 description = "Simple divide-and-conquer MCSS"
 operations = [
-    { name = "mcss_dc", work = "O(n lg n)", span = "O(lg^2 n)" },
+    { name = "max_contig_sub_sum_divcon", work = "O(n lg n)", span = "O(lg^2 n)" },
 ]
 
 [[cost_spec]]
@@ -546,7 +550,7 @@ ref = "Ch28 Alg 28.19"
 chapter = 28
 description = "Linear-work divide-and-conquer MCSS with MCSSPS strengthening"
 operations = [
-    { name = "mcss_dc_strengthened", work = "O(n)", span = "O(lg^2 n)", notes = "returns (max, prefix, suffix, total); combine is O(1)" },
+    { name = "max_contig_sub_sum_divcon_opt", work = "O(n)", span = "O(lg^2 n)", notes = "MCSSPS strengthening; returns (max, prefix, suffix, total); combine is O(1)" },
 ]
 #
 #
@@ -587,8 +591,9 @@ ref = "Ch36 Alg 36.1"
 chapter = 36
 description = "Randomized quicksort"
 operations = [
-    { name = "quicksort (expected)", work = "O(n lg n)", span = "O(lg^2 n)", notes = "expected bounds; E[comparisons] = 2n*H_n" },
-    { name = "quicksort (worst case)", work = "O(n^2)", span = "O(n lg n)", notes = "pivot always extreme element" },
+    { name = "quick_sort_random", work = "O(n lg n)", span = "O(lg^2 n)", notes = "expected bounds; E[comparisons] = 2n*H_n" },
+    { name = "quick_sort_first", work = "O(n^2)", span = "O(n lg n)", notes = "worst case: pivot always extreme element" },
+    { name = "quick_sort_median3", work = "O(n lg n)", span = "O(lg^2 n)", notes = "median-of-three pivot selection" },
 ]
 #
 # (CS = Cost Specification, Alg = Algorithm, DT = Data Type).
@@ -858,7 +863,7 @@ ref = "Ch49 Alg 49.2"
 chapter = 49
 description = "Subset Sum with DP"
 operations = [
-    { name = "SS", work = "O(k * |S|)", span = "O(|S|)", notes = "pseudo-polynomial" },
+    { name = "subset_sum", work = "O(k * |S|)", span = "O(|S|)", notes = "pseudo-polynomial" },
 ]
 
 [[cost_spec]]
@@ -866,7 +871,7 @@ ref = "Ch49 Alg 49.5"
 chapter = 49
 description = "Minimum Edit Distance with DP"
 operations = [
-    { name = "MED", work = "O(|S| * |T|)", span = "O(|S| + |T|)" },
+    { name = "min_edit_distance", work = "O(|S| * |T|)", span = "O(|S| + |T|)" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -890,7 +895,7 @@ ref = "Ch51 Alg 51.1"
 chapter = 51
 description = "Bottom-up MED (anti-diagonal pebbling)"
 operations = [
-    { name = "MED_bottom_up", work = "O(|S| * |T|)", span = "O(|S| + |T|)", notes = "same asymptotic as recursive DP" },
+    { name = "med_bottom_up", work = "O(|S| * |T|)", span = "O(|S| + |T|)", notes = "same asymptotic as recursive DP" },
 ]
 #
 #
@@ -904,57 +909,58 @@ operations = [
 [[cost_spec]]
 ref = "Ch52 CS 52.1"
 chapter = 52
+file_stem = "EdgeSetGraph"
 description = "Edge-set graph representation (tree-based sets)"
 operations = [
-    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
-    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
-    { name = "map_over_neighbors",   work = "O(m)", span = "O(lg n)" },
-    { name = "find_degree",          work = "O(m)", span = "O(lg n)" },
-    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
-    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
-    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+    { name = "num_vertices",  work = "O(1)", span = "O(1)" },
+    { name = "num_edges",     work = "O(1)", span = "O(1)" },
+    { name = "has_edge",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "out_neighbors", work = "O(m)", span = "O(lg n)" },
+    { name = "out_degree",    work = "O(m)", span = "O(lg n)" },
+    { name = "set_edge",      work = "O(lg n)", span = "O(lg n)" },
 ]
 
 [[cost_spec]]
 ref = "Ch52 CS 52.3"
 chapter = 52
+file_stem = "AdjTableGraph"
 description = "Adjacency-table graph representation (tree-based)"
 operations = [
-    { name = "map_over_vertices",    work = "O(n)", span = "O(lg n)" },
-    { name = "map_over_edges",       work = "O(m)", span = "O(lg n)" },
-    { name = "map_over_neighbors",   work = "O(lg n + d_g(v))", span = "O(lg n)" },
-    { name = "find_degree",          work = "O(lg n)", span = "O(lg n)" },
-    { name = "is_edge",              work = "O(lg n)", span = "O(lg n)" },
-    { name = "insert_delete_vertex", work = "O(lg n)", span = "O(lg n)" },
-    { name = "insert_delete_edge",   work = "O(lg n)", span = "O(lg n)" },
+    { name = "num_vertices",  work = "O(1)", span = "O(1)" },
+    { name = "num_edges",     work = "O(1)", span = "O(1)" },
+    { name = "has_edge",      work = "O(lg n)", span = "O(lg n)" },
+    { name = "out_neighbors", work = "O(lg n + d_g(v))", span = "O(lg n)" },
+    { name = "out_degree",    work = "O(lg n)", span = "O(lg n)" },
+    { name = "set_edge",      work = "O(lg n)", span = "O(lg n)" },
 ]
 
 [[cost_spec]]
 ref = "Ch52 CS 52.5"
 chapter = 52
+file_stem = "AdjSeqGraph"
 description = "Adjacency-sequence graph representation (array-based)"
 operations = [
-    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
-    { name = "map_over_edges",       work = "O(n + m)", span = "O(1)" },
-    { name = "map_over_neighbors",   work = "O(d_g(v))", span = "O(1)" },
-    { name = "find_degree",          work = "O(1)", span = "O(1)" },
-    { name = "is_edge",              work = "O(d_g(u))", span = "O(lg d_g(u))" },
-    { name = "insert_delete_vertex", work = "O(n)", span = "O(1)" },
-    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+    { name = "num_vertices",  work = "O(1)", span = "O(1)" },
+    { name = "num_edges",     work = "O(1)", span = "O(1)" },
+    { name = "has_edge",      work = "O(d_g(u))", span = "O(lg d_g(u))" },
+    { name = "out_neighbors", work = "O(d_g(v))", span = "O(1)" },
+    { name = "out_degree",    work = "O(1)", span = "O(1)" },
+    { name = "set_edge",      work = "O(n)", span = "O(1)" },
 ]
 
 [[cost_spec]]
 ref = "Ch52 CS 52.6"
 chapter = 52
+file_stem = "AdjMatrixGraph"
 description = "Adjacency-matrix graph representation"
 operations = [
-    { name = "map_over_vertices",    work = "O(n)", span = "O(1)" },
-    { name = "map_over_edges",       work = "O(n^2)", span = "O(1)" },
-    { name = "map_over_neighbors",   work = "O(n)", span = "O(1)" },
-    { name = "find_degree",          work = "O(n)", span = "O(lg n)" },
-    { name = "is_edge",              work = "O(1)", span = "O(1)" },
-    { name = "insert_delete_vertex", work = "O(n^2)", span = "O(1)" },
-    { name = "insert_delete_edge",   work = "O(n)", span = "O(1)" },
+    { name = "num_vertices",  work = "O(1)", span = "O(1)" },
+    { name = "num_edges",     work = "O(1)", span = "O(1)" },
+    { name = "has_edge",      work = "O(1)", span = "O(1)" },
+    { name = "out_neighbors", work = "O(n)", span = "O(1)" },
+    { name = "out_degree",    work = "O(n)", span = "O(lg n)" },
+    { name = "set_edge",      work = "O(1)", span = "O(1)" },
+    { name = "complement",    work = "O(n^2)", span = "O(1)" },
 ]
 
 # ---------------------------------------------------------------------------
@@ -1058,7 +1064,7 @@ ref = "Ch62 Thm 62.3"
 chapter = 62
 description = "Star contraction to isolated vertices"
 operations = [
-    { name = "starContract", work = "O((n + m) lg n)", span = "O(lg^2 n)" },
+    { name = "star_contract", work = "O((n + m) lg n)", span = "O(lg^2 n)" },
 ]
 
 # ---------------------------------------------------------------------------
