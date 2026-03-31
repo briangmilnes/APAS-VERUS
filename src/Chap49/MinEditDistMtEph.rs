@@ -110,7 +110,8 @@ pub mod MinEditDistMtEph {
                 edit_dist.spec_target_len() == target.spec_len();
 
         /// Compute minimum edit distance.
-        /// - APAS: Work Θ(|S|×|T|), Span Θ(|S|+|T|)
+        /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn min_edit_distance(&mut self) -> (dist: usize)
         where
             T: Send + Sync + 'static

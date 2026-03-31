@@ -97,8 +97,8 @@ pub mod BottomUpDPStEph {
                 self.spec_s() == old(self).spec_s(),
                 self.spec_t() == t@;
 
-        /// - APAS: Work O(|S|*|T|), Span O(|S|+|T|) (Algorithm 51.1)
-        /// - Claude-Opus-4.6: Work O(|S|*|T|), Span O(|S|*|T|) -- sequential row fill, no parallelism.
+        /// - Alg Analysis: APAS (Ch51 Alg 51.1): Work O(|S| * |T|), Span O(|S| + |T|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn med_bottom_up(&mut self) -> (distance: usize)
             requires
                 old(self).spec_bottomupdpsteph_wf(),

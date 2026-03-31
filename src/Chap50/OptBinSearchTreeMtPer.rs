@@ -114,6 +114,8 @@ broadcast use {
 
     // 9. impls
 
+    /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability)
         requires i + l <= table@.keys.len(),
         ensures true,

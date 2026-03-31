@@ -372,15 +372,16 @@ pub mod ParaHashTableStEph {
         /// - Claude-Opus-4.6: N/A — abstract trait method.
         fn new() -> (entry: Self)
             ensures entry.spec_entry_to_map() == Map::<Key, Value>::empty();
-        /// - APAS: N/A — inner table interface, cost depends on implementation.
-        /// - Claude-Opus-4.6: N/A — abstract trait method.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert(&mut self, key: Key, value: Value)
             ensures self.spec_entry_to_map().dom().contains(key);
-        /// - APAS: N/A — inner table interface, cost depends on implementation.
-        /// - Claude-Opus-4.6: N/A — abstract trait method.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
+        /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn lookup(&self, key: &Key) -> (found: Option<Value>);
-        /// - APAS: N/A — inner table interface, cost depends on implementation.
-        /// - Claude-Opus-4.6: N/A — abstract trait method.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
@@ -471,8 +472,8 @@ pub mod ParaHashTableStEph {
         }
 
         /// Inserts a key-value pair into the hash table.
-        /// - APAS: Work O(1) expected, Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: Key, value: Value)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),
@@ -490,8 +491,9 @@ pub mod ParaHashTableStEph {
                     old(table).table@, table.table@, s);
 
         /// Looks up a key in the hash table, returning its value if found.
-        /// - APAS: Work O(1) expected, Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
+        /// - Alg Analysis: APAS (Ch47 Alg 47.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn lookup(table: &HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (found: Option<Value>)
             requires
                 Self::spec_parahashtablesteph_wf(table),
@@ -502,8 +504,8 @@ pub mod ParaHashTableStEph {
                 !table@.dom().contains(*key) ==> found is None;
 
         /// Deletes a key from the hash table if it exists.
-        /// - APAS: Work O(1) expected, Span O(1).
-        /// - Claude-Opus-4.6: N/A — abstract trait method; cost depends on implementation.
+        /// - Alg Analysis: APAS (Ch47 Def 47.3): Work O(1 + alpha), Span O(1 + alpha)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(table: &mut HashTable<Key, Value, Entry, Metrics, H>, key: &Key) -> (deleted: bool)
             requires
                 Self::spec_parahashtablesteph_wf(old(table)),

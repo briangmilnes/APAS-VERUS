@@ -126,8 +126,8 @@ broadcast use {
     pub trait MaxContigSubSumIterTrait {
         /// Compute MCSS using Kadane's iterative algorithm (Algorithm 28.15).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n), Span Θ(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: APAS (Ch28 Alg 28.15): Work O(n), Span O(n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),

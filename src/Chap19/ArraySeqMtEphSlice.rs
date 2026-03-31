@@ -82,6 +82,8 @@ pub mod ArraySeqMtEphSlice {
         /// The raw backing subrange as a Seq<T> (not View-mapped).
         spec fn spec_backing_seq(&self) -> Seq<T>;
 
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn length(&self) -> (len: usize)
             requires self.spec_arrayseqmtephslice_wf(),
             ensures len as int == self.spec_len();
@@ -124,11 +126,15 @@ pub mod ArraySeqMtEphSlice {
                 forall|i: int| #![trigger seq.spec_index(i)]
                     0 <= i < data@.len() ==> seq.spec_index(i) == data@[i];
 
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn empty() -> (empty_seq: Self)
             ensures
                 empty_seq.spec_arrayseqmtephslice_wf(),
                 empty_seq.spec_len() == 0;
 
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn singleton(item: T) -> (s: Self)
             requires obeys_feq_clone::<T>(),
             ensures

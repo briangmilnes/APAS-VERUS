@@ -125,8 +125,8 @@ pub mod MergeSortStPer {
                     Seq::new(merged.spec_len(), |i: int| merged.spec_index(i)));
 
         /// Sort a sequence using merge sort. Algorithm 26.4.
-        /// - APAS: Work Θ(n lg n), Span Θ(lg² n) — with parallel merge and recursive parallelism.
-        /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential merge sort, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.4): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures

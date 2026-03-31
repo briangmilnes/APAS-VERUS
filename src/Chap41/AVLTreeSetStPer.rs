@@ -182,12 +182,16 @@ broadcast use {
     pub trait AVLTreeSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_avltreesetstper_wf(&self) -> bool;
 
-        /// - APAS Cost Spec 41.4: Work 1, Span 1
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn size(&self) -> (count: usize)
             requires self.spec_avltreesetstper_wf(),
             ensures count == self@.len();
-        /// - APAS Cost Spec 41.4: Work |a|, Span lg |a|
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         /// - claude-4-sonet: Work Θ(n), Span Θ(n), Parallelism Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
             requires self.spec_avltreesetstper_wf(),
@@ -201,13 +205,18 @@ broadcast use {
             ensures
                 empty@ == Set::<<T as View>::V>::empty(),
                 empty.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work 1, Span 1
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn singleton(x: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
                 tree.spec_avltreesetstper_wf();
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(n log n), Parallelism Θ(1)
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqstper_wf(),
@@ -216,7 +225,9 @@ broadcast use {
             ensures
                 constructed@ =~= seq@.to_set(),
                 constructed.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work Σ W(f(x)), Span lg |a| + max S(f(x))
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -236,7 +247,9 @@ broadcast use {
                     ==> self@.contains(v) && spec_pred(v),
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
-        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -246,7 +259,9 @@ broadcast use {
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -256,7 +271,9 @@ broadcast use {
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -267,14 +284,18 @@ broadcast use {
             ensures
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetstper_wf(),
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
-        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(&self, x: &T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),
@@ -283,7 +304,9 @@ broadcast use {
             ensures
                 updated@ == self@.remove(x@),
                 updated.spec_avltreesetstper_wf();
-        /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_avltreesetstper_wf(),

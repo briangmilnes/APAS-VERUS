@@ -376,8 +376,8 @@ broadcast use {
             where Self: Sized,
             requires old(self).spec_augorderedtablemteph_wf()
             ensures self@.dom().finite();
-        /// - APAS: Work O(1), Span O(1) -- augmented tables cache the reduction
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) -- returns clone of cached_reduction
+        /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn reduce_val(&self) -> (reduced: V)
             requires self@.dom().finite()
             ensures self@.dom().finite();

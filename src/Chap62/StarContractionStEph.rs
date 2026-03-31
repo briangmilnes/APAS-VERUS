@@ -41,6 +41,8 @@ pub mod StarContractionStEph {
 
         /// Sequential star contraction higher-order function.
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
+        /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn star_contract<V, R, F, G>(
             graph: &UnDirGraphStEph<V>, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -148,8 +150,8 @@ pub mod StarContractionStEph {
     /// - Base case: No edges, call base function on vertices
     /// - Recursive case: Partition graph, build quotient graph, recur, then expand
     ///
-    /// - APAS: Work O((n + m) lg n), Span O((n + m) lg n)
-    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
+    /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract

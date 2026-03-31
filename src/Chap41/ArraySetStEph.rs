@@ -302,14 +302,16 @@ pub mod ArraySetStEph {
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_arraysetsteph_wf(&self) -> bool;
 
-        /// - APAS: no cost spec (unordered array set, not in Cost Spec 41.3 or 41.4)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- cached length via backing ArraySeq.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetsteph_wf()
             ensures count == self@.len(), self@.finite();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- clones backing seq.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
             requires self.spec_arraysetsteph_wf(),
             ensures
@@ -322,20 +324,23 @@ pub mod ArraySetStEph {
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn singleton(x: T) -> (tree: Self)
             ensures tree@ == Set::<<T as View>::V>::empty().insert(x@), tree.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- inserts each element with linear find.
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
             ensures
                 constructed@ =~= seq@.to_set(),
                 constructed.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n * W(f)), Span Θ(n * W(f)) -- sequential scan.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -355,8 +360,9 @@ pub mod ArraySetStEph {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span Θ(|self| * |other|) -- linear scan per element.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -367,8 +373,9 @@ pub mod ArraySetStEph {
                 common@ == self@.intersect(other@),
                 common.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span Θ(|self| * |other|) -- linear scan per element.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -379,8 +386,9 @@ pub mod ArraySetStEph {
                 remaining@ == self@.difference(other@),
                 remaining.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other| + |other|), Span same -- linear scan per element.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetsteph_wf(),
@@ -391,14 +399,16 @@ pub mod ArraySetStEph {
                 combined@ == self@.union(other@),
                 combined.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, x: &T) -> (found: bool)
             requires self@.finite(),
             ensures found == self@.contains(x@);
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- filter and rebuild.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_arraysetsteph_wf(),
@@ -407,8 +417,9 @@ pub mod ArraySetStEph {
                 self@ == old(self)@.remove(x@),
                 self.spec_arraysetsteph_wf();
 
-        /// - APAS: no cost spec (unordered array set)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear find + append.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_arraysetsteph_wf(),

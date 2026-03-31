@@ -1604,6 +1604,8 @@ pub mod BSTTreapStEph {
     }
 
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority.
+    /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     fn join_with_priority_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)
@@ -1879,6 +1881,8 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     fn join_pair_inner_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, right: BSTTreapStEph<T>,
     ) -> (joined: BSTTreapStEph<T>)
@@ -2751,7 +2755,8 @@ pub mod BSTTreapStEph {
                 tree@ =~= Set::<<T as View>::V>::empty().insert(key@),
                 tree.spec_parambsttreapsteph_wf();
 
-        /// - APAS: Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn expose(&self) -> (exposed: ExposedTreap<T>)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -2774,7 +2779,8 @@ pub mod BSTTreapStEph {
                     && spec_param_wf_link(&r.root)
                 );
 
-        /// - APAS: Work O(log(|left| + |right|)), Span O(log(|left| + |right|))
+        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),

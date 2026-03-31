@@ -45,8 +45,9 @@ pub mod BellmanFordStEphF64 {
 
     pub trait BellmanFordStEphF64Trait {
         /// Bellman-Ford single-source shortest path algorithm.
-        /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E| (with sequences).
-        /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation.
+        /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
+        /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn bellman_ford(graph: &WeightedDirGraphStEphF64<usize>, source: usize)
             -> (sssp: Result<SSSPResultStEphF64, BellmanFordError>)
             requires
@@ -147,8 +148,9 @@ pub mod BellmanFordStEphF64 {
     /// Computes single-source shortest paths for graphs with arbitrary (including negative) edge
     /// weights. Detects negative-weight cycles and returns an error if one exists.
     ///
-    /// - APAS: Work O(nm), Span O(n lg n) where n = |V|, m = |E| (with sequences).
-    /// - Claude-Opus-4.6: Work O(nm), Span O(nm) — sequential implementation, no parallelism.
+    /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm lg n), Span O(n lg n)
+    /// - Alg Analysis: APAS (Ch58 Alg 58.2): Work O(nm), Span O(n lg n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     pub fn bellman_ford(graph: &WeightedDirGraphStEphF64<usize>, source: usize)
         -> (sssp: Result<SSSPResultStEphF64, BellmanFordError>)
         requires

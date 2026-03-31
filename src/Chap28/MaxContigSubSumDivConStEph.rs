@@ -148,8 +148,8 @@ broadcast use {
     pub trait MaxContigSubSumDivConTrait {
         /// Compute MCSS using divide-and-conquer (Algorithm 28.17).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n log n), Span Θ(log² n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — sequential
+        /// - Alg Analysis: APAS (Ch28 Alg 28.17): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),

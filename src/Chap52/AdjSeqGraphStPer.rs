@@ -111,11 +111,15 @@ broadcast use {
                     ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphstper_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(n + m)
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphstper_wf(),
@@ -130,6 +134,8 @@ broadcast use {
                 );
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(u)), Span O(lg d_g(u))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
@@ -137,6 +143,8 @@ broadcast use {
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(v)), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_neighbors(&self, u: usize) -> (neighbors: &ArraySeqStPerS<usize>)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures
@@ -145,6 +153,8 @@ broadcast use {
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphstper_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);

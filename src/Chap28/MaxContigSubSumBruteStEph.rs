@@ -47,8 +47,8 @@ pub mod MaxContigSubSumBruteStEph {
     pub trait MaxContigSubSumBruteTrait {
         /// Compute MCSS using brute force (Algorithm 28.8).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n³), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n³), Span Θ(n³) — sequential
+        /// - Alg Analysis: APAS (Ch28 Alg 28.6): Work O(n^3), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),

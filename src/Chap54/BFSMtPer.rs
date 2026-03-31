@@ -281,7 +281,8 @@ pub mod BFSMtPer {
 
     pub trait BFSMtPerTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
-        /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
+        /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn bfs(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: ArraySeqMtPerS<usize>)
             requires
                 source < graph.spec_len(),
@@ -298,7 +299,8 @@ pub mod BFSMtPer {
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
-        /// - APAS: Work O(|V| + |E|), Span O(d·lg n)
+        /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn bfs_tree(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),

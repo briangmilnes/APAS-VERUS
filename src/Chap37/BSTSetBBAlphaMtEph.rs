@@ -72,6 +72,8 @@ pub mod BSTSetBBAlphaMtEph {
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures true;
+        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, value: &T) -> (found: Option<T>)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures true;

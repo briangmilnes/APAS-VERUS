@@ -317,8 +317,8 @@ pub mod ETSPStEph {
     pub trait ETSPStTrait {
         /// Solve the planar Euclidean TSP using divide-and-conquer heuristic.
         /// Returns a tour as a sequence of directed edges forming a cycle through all points.
-        /// - APAS: Work Θ(n²), Span Θ(lg² n) — Algorithm 26.7, D&C eTSP heuristic.
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential implementation, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)
             requires
                 points@.len() >= 2,

@@ -181,14 +181,16 @@ broadcast use {
                 empty.spec_arraysetenummteph_wf(),
                 empty.spec_universe_size() == u;
 
-        /// - APAS Cost Spec 41.3: Work u, Span 1
-        /// - Claude-Opus-4.6: Work Θ(u), Span Θ(1) -- agrees with APAS; popcount over u/w words.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len(), self@.finite();
 
-        /// - APAS Cost Spec 41.3: Work u, Span 1
-        /// - Claude-Opus-4.6: Work Θ(u), Span Θ(1) -- agrees with APAS; scans all words.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
@@ -203,8 +205,9 @@ broadcast use {
                 empty.spec_arraysetenummteph_wf(),
                 empty.spec_universe_size() == u;
 
-        /// - APAS Cost Spec 41.3: Work u, Span 1
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(1) -- allocate + set one bit; better than APAS bound.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -212,14 +215,17 @@ broadcast use {
                 tree.spec_arraysetenummteph_wf(),
                 tree.spec_universe_size() == u;
 
-        /// - Claude-Opus-4.6: Work Θ(u/w + |seq|), Span Θ(1) -- allocate + set bits.
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
                 constructed.spec_universe_size() == u;
 
-        /// - APAS Cost Spec 41.3: Work u + Σ W(f(x)), Span 1 + max S(f(x))
-        /// - Claude-Opus-4.6: Work Θ(u + Σ W(f(x))), Span Θ(1 + max S(f(x))) -- agrees with APAS; parallel filter via join().
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -229,8 +235,9 @@ broadcast use {
                 filtered.spec_arraysetenummteph_wf(),
                 filtered.spec_universe_size() == self.spec_universe_size();
 
-        /// - APAS Cost Spec 41.3: Work u/w, Span u/w
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise AND per word.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -241,8 +248,9 @@ broadcast use {
                 common.spec_arraysetenummteph_wf(),
                 common.spec_universe_size() == self.spec_universe_size();
 
-        /// - APAS Cost Spec 41.3: Work u/w, Span u/w
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise AND-NOT per word.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -253,8 +261,9 @@ broadcast use {
                 remaining.spec_arraysetenummteph_wf(),
                 remaining.spec_universe_size() == self.spec_universe_size();
 
-        /// - APAS Cost Spec 41.3: Work u/w, Span u/w
-        /// - Claude-Opus-4.6: Work Θ(u/w), Span Θ(u/w) -- agrees with APAS; bitwise OR per word.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -265,14 +274,16 @@ broadcast use {
                 combined.spec_arraysetenummteph_wf(),
                 combined.spec_universe_size() == self.spec_universe_size();
 
-        /// - APAS Cost Spec 41.3: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit test.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, x: usize) -> (found: bool)
             requires self.spec_arraysetenummteph_wf(),
             ensures found == self@.contains(x);
 
-        /// - APAS Cost Spec 41.3: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit clear.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -280,8 +291,9 @@ broadcast use {
                 self.spec_arraysetenummteph_wf(),
                 self.spec_universe_size() == old(self).spec_universe_size();
 
-        /// - APAS Cost Spec 41.3: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; single bit set.
+        /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
+        /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures

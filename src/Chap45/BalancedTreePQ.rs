@@ -73,6 +73,9 @@ broadcast use {
                     self@.len() > 0 ==> min_elem.is_some(),
                     self@.len() > 0 ==> min_elem.unwrap()@ == self@[0];
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -82,6 +85,9 @@ broadcast use {
                     pq.spec_balancedtreepq_wf(),
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -91,6 +97,9 @@ broadcast use {
                     self@.len() == 0 ==> min_and_rest.0@.len() == self@.len(),
                     min_and_rest.0.spec_balancedtreepq_wf();
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(m * lg(1 + n/m)), Span O(m * lg(1 + n/m))
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg |A| + lg |B|), Span O(lg |A| + lg |B|)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -98,6 +107,9 @@ broadcast use {
                     self@.len() + other@.len() < usize::MAX as nat,
                 ensures pq@.len() == self@.len() + other@.len(), pq.spec_balancedtreepq_wf();
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(n lg n), Span O(n lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(n), Span O(lg^2 n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();

@@ -153,23 +153,24 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < vec@.len() ==> seq.spec_index(i) == vec@[i];
 
         /// Returns the number of elements in the sequence.
-        /// - APAS: Cost Spec 23.2. Work Θ(1), Span Θ(1).
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn length(&self) -> (len: usize)
             requires self.spec_primtreeseqstper_wf(),
             ensures len == self.spec_len();
 
         /// Algorithm 23.3 (nth). Return a reference to the element at `index`.
-        /// - APAS: Algorithm 23.3. Work Θ(log n), Span Θ(log n) — tree-based recursive.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) — Vec-backed direct index.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires self.spec_primtreeseqstper_wf(),
                      index < self.spec_len(),
             ensures *nth_elem == self.spec_index(index as int);
 
         /// Exposes the internal structure as Zero, One, or Two parts.
-        /// - APAS: Cost Spec 23.2. Work Θ(1), Span Θ(1) — tree-based, just look at root.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — Vec-backed, clones elements into two halves.
+        /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
             requires
@@ -201,8 +202,8 @@ pub mod PrimTreeSeqStPer {
                 tree@ is Two ==> joined@ =~= tree@->Two_0 + tree@->Two_1;
 
         /// Definition 18.13 (append). Concatenate two sequences.
-        /// - APAS: Algorithm 23.3. append = join(Two(a,b)). Work Θ(1 + |r(a) − r(b)|), Span same.
-        /// - Claude-Opus-4.6: Work Θ(|a| + |b|), Span Θ(|a| + |b|) — sequential clone loops.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(|lg(|a|/|b|)|), Span O(|lg(|a|/|b|)|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn append(a: &Self, b: &Self) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -217,8 +218,8 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger b.spec_index(i)] 0 <= i < b.spec_len() ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);
 
         /// Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - APAS: Algorithm 23.3. subseq = take(drop(S,a), n). Tree cost depends on drop+take.
-        /// - Claude-Opus-4.6: Work Θ(length), Span Θ(length) — sequential clone loop.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn subseq(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -232,8 +233,9 @@ pub mod PrimTreeSeqStPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
         /// Definition 18.16 (update). Return a copy with the element at `index` replaced.
-        /// - APAS: Algorithm 23.3. Tree-based Work Θ(log² n), Span Θ(log² n).
-        /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(|a|) — copies entire Vec.
+        /// - Alg Analysis: APAS (Ch20 CS 20.6): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn update(a: &Self, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires

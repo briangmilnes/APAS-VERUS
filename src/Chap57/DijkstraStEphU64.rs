@@ -83,8 +83,8 @@ pub mod DijkstraStEphU64 {
 
     pub trait DijkstraStEphU64Trait {
         /// Dijkstra's single source shortest path algorithm.
-        /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|.
-        /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — agrees with APAS.
+        /// - Alg Analysis: APAS (Ch57 Alg 57.2): Work O(m lg n), Span O(m lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize)
             -> (sssp: SSSPResultStEphI64)
             requires
@@ -160,8 +160,8 @@ pub mod DijkstraStEphU64 {
     /// Runs Dijkstra's algorithm on a weighted directed graph.
     /// Computes single-source shortest paths for non-negative edge weights.
     ///
-    /// - APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|.
-    /// - Claude-Opus-4.6: Work O(m log n), Span O(m log n) — sequential implementation.
+    /// - Alg Analysis: APAS (Ch57 Alg 57.2): Work O(m lg n), Span O(m lg n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     #[verifier::exec_allows_no_decreases_clause]
     pub fn dijkstra(graph: &WeightedDirGraphStEphI128<usize>, source: usize) -> (sssp: SSSPResultStEphI64)
         requires

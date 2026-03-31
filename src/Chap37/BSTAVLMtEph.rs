@@ -883,6 +883,8 @@ pub mod BSTAVLMtEph {
             requires self.spec_bstavlmteph_wf(),
             ensures h as nat == self@.spec_height();
 
+        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq
             requires self.spec_bstavlmteph_wf(),
             ensures

@@ -33,6 +33,8 @@ pub mod JohnsonMtEphI64 {
         pub trait JohnsonMtEphI64Trait {
             /// Parallel Johnson's all-pairs shortest path algorithm
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
+            /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
                 requires
                     graph@.V.len() > 0,
@@ -74,8 +76,8 @@ pub mod JohnsonMtEphI64 {
     /// 2. Reweight edges (sequential)
     /// 3. Parallel Dijkstra from each vertex using ParaPair! divide-and-conquer
     ///
-    /// - APAS: Work O(mn log n), Span O(m log n), Parallelism Θ(n)
-    /// - Claude-Opus-4.6: Work O(mn log n), Span O(m log n) — agrees with APAS; ParaPair! recursion achieves Θ(n) parallelism in Phase 3
+    /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(mn lg n), Span O(m lg n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     pub fn johnson_apsp(graph: &WeightedDirGraphStEphI128<usize>) -> (apsp: AllPairsResultStEphI64)
         requires
             graph@.V.len() > 0,

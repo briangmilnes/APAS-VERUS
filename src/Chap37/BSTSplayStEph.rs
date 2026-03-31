@@ -214,6 +214,8 @@ pub mod BSTSplayStEph {
                 self.spec_bstsplaysteph_wf(),
                 self.spec_contains(value),
                 forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
+        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, target: &T) -> (found: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
@@ -296,8 +298,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    /// - APAS: N/A -- Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1) -- recomputes cached size.
+    /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     // veracity: no_requires
     fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
         ensures

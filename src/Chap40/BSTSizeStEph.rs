@@ -316,14 +316,16 @@ pub mod BSTSizeStEph {
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             requires self.spec_bstsizesteph_wf(),
             ensures ordered.spec_len() == self.spec_size();
-        /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
+        /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn rank(&self, key: &T) -> (rank: usize)
             requires
                 self.spec_size() < usize::MAX as nat,
                 self.spec_bstsizesteph_wf(),
             ensures
                 rank as nat <= self.spec_size();
-        /// - APAS: Work Θ(log n), Span Θ(log n) — Algorithm 40.1
+        /// - Alg Analysis: APAS (Ch40 Alg 40.1): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn select(&self, rank: usize) -> (selected: Option<&T>)
             ensures (rank == 0 || rank as nat > self.spec_size()) ==> selected is None;
         /// - APAS: Work Θ(log n), Span Θ(log n) — Exercise 40.1

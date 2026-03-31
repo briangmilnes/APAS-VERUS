@@ -184,8 +184,8 @@ pub mod OrderedSetMtEph {
             ensures constructed@.finite();
 
         // Ordering operations (ADT 43.1)
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + first)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -194,8 +194,8 @@ pub mod OrderedSetMtEph {
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + last)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -204,8 +204,8 @@ pub mod OrderedSetMtEph {
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -215,8 +215,8 @@ pub mod OrderedSetMtEph {
                 predecessor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + scan)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
@@ -226,46 +226,46 @@ pub mod OrderedSetMtEph {
                 successor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
                 old(self).spec_orderedsetmteph_wf(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures self@.finite();
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(log n log m)
-        /// - Claude-Opus-4.6: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1)) -- acquires lock, delegates to StEph.join (union)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn join(&mut self, other: Self)
             requires
                 old(self).spec_orderedsetmteph_wf(),
                 other.spec_orderedsetmteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@.finite();
-        /// - APAS: Work Θ(log n + m), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + filter)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetmteph_wf(),
                 self@.len() + 1 < usize::MAX as nat,
             ensures self@.finite();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + count)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + index)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetmteph_wf(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires lock, delegates to StEph (to_seq + partition)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires

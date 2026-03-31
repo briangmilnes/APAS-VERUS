@@ -57,8 +57,8 @@ pub mod Algorithm21_6 {
     /// 2. Build boolean sieve array, marking composites false (the ninject step).
     /// 3. Collect indices where sieve is true.
     ///
-    /// - APAS: Work Θ(n lg n), Span Θ(lg n)
-    /// - Claude-Opus-4.6: Work Θ(n lg n), Span Θ(n lg n) — sequential StPer; O(|composites|) ninject + O(n) collect.
+    /// - Alg Analysis: APAS (Ch21 Alg 21.6): Work O(n lg n), Span O(lg n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     pub fn prime_sieve(n: usize) -> (primes: ArraySeqStPerS<usize>)
         requires n < usize::MAX,
         ensures

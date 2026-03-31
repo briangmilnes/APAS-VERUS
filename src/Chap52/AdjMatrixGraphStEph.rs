@@ -129,14 +129,14 @@ broadcast use {
                     0 <= u < matrix.spec_len() && 0 <= v < matrix.spec_len()
                     ==> #[trigger] constructed.spec_edge(u, v) == matrix.spec_index(u).spec_index(v);
 
-        /// - APAS: (no explicit cost; constant-time field access)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — returns stored n.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjmatrixgraphsteph_wf()
             ensures n as nat == self.spec_n();
 
-        /// - APAS: Work Theta(n^2), Span Theta(1) [Cost Spec 52.6, map edges]
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — sequential double loop.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjmatrixgraphsteph_wf(),
@@ -150,14 +150,14 @@ broadcast use {
                     |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
                 );
 
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.6]
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees with APAS.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n(), v < self.spec_n()
             ensures found == self.spec_edge(u as int, v as int);
 
-        /// - APAS: Work Theta(n), Span Theta(1) [Cost Spec 52.6, map over neighbors]
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — sequential scan of row.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures
@@ -168,8 +168,8 @@ broadcast use {
                     ==> exists|k: int|
                         0 <= k < neighbors.spec_len() && #[trigger] neighbors.spec_index(k) == v as usize;
 
-        /// - APAS: Work Theta(n), Span Theta(lg n) [Cost Spec 52.6, degree]
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — sequential count loop.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjmatrixgraphsteph_wf(), u < self.spec_n()
             ensures d as nat == spec_count_true(
@@ -177,8 +177,8 @@ broadcast use {
                 self.spec_n() as int,
             );
 
-        /// - APAS: Work Theta(n), Span Theta(1) [Cost Spec 52.6, insert/delete edge with ephemeral]
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — rebuilds entire matrix via tabulate.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjmatrixgraphsteph_wf(),
@@ -193,8 +193,8 @@ broadcast use {
                     && !(i == u as int && j == v as int)
                     ==> #[trigger] self.spec_edge(i, j) == old(self).spec_edge(i, j);
 
-        /// - APAS: (Exercise 52.6: complement in constant span)
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — sequential nested tabulate.
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n^2), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn complement(&self) -> (complemented: Self)
             requires self.spec_adjmatrixgraphsteph_wf()
             ensures

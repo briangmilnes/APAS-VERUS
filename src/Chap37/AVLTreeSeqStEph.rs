@@ -274,6 +274,8 @@ pub mod AVLTreeSeqStEph {
             requires self.spec_avltreeseqsteph_wf(),
             ensures len as nat == self.spec_seq().len();
 
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqsteph_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
@@ -306,6 +308,8 @@ pub mod AVLTreeSeqStEph {
         fn new_root() -> (tree: Self)
             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqsteph_wf();
 
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn update(&mut self, index: usize, item: T)
             requires
                 old(self).spec_avltreeseqsteph_wf(),

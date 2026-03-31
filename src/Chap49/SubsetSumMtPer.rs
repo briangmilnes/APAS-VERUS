@@ -105,7 +105,8 @@ pub mod SubsetSumMtPer {
                 subset_sum.spec_multiset_len() == multiset.spec_len();
 
         /// Solve subset sum for the given target.
-        /// - APAS: Work Θ(k×|S|), Span Θ(|S|)
+        /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static

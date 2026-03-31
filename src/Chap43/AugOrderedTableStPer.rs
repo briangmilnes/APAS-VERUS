@@ -432,8 +432,8 @@ broadcast use {
                 forall|key| #[trigger] self@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
                 split.0.spec_augorderedtablestper_wf(),
                 split.1.spec_augorderedtablestper_wf();
-        /// - APAS: Work O(1), Span O(1) -- augmented tables cache the reduction
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) -- calculate_reduction is external_body, iterates all values
+        /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn reduce_val(&self) -> (reduced: V)
             requires self.spec_augorderedtablestper_wf(),
             ensures self@.dom().finite();

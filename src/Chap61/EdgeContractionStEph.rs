@@ -36,6 +36,8 @@ pub mod EdgeContractionStEph {
 
         /// Sequential edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
+        /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn edge_contract<V: HashOrd>(
             graph: &UnDirGraphStEph<V>,
             matching: &SetStEph<Edge<V>>,
@@ -56,8 +58,8 @@ pub mod EdgeContractionStEph {
     /// Each edge in the matching forms a block of two vertices.
     /// Unmatched vertices form singleton blocks.
     ///
-    /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-    /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — agrees with APAS
+    /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,

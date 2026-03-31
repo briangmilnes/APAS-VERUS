@@ -89,8 +89,8 @@ pub mod SubsetSumStEph {
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
         /// Solve subset sum for the given target.
-        /// - APAS: Work O(k*|S|), Span O(|S|)
-        /// - Claude-Opus-4.6: Work O(k*|S|), Span O(|S|) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn subset_sum(&mut self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy

@@ -76,8 +76,8 @@ pub mod DocumentIndex {
         /// Well-formedness spec.
         spec fn spec_documentindex_wf(&self) -> bool;
 
-        /// - APAS: Work O(n log n), Span O(log^2 n)
-        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — sequential table-based insert; no sort
+        /// - Alg Analysis: APAS (Ch44 Alg 44.2): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn make_index(docs: &DocumentCollection) -> (di: Self)
             requires
                 docs.spec_len() <= usize::MAX as nat / 2,
@@ -87,8 +87,8 @@ pub mod DocumentIndex {
                 view_ord_consistent::<DocumentId>(),
             ensures di.spec_documentindex_wf();
 
-        /// - APAS: Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work O(log n), Span O(log n) — agrees with APAS; delegates to Table.find
+        /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_documentindex_wf(),
@@ -99,8 +99,8 @@ pub mod DocumentIndex {
                 found@.len() <= usize::MAX as nat / 2,
         ;
 
-        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.intersection (sequential)
+        /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -112,8 +112,8 @@ pub mod DocumentIndex {
                 combined.spec_avltreesetstper_wf(),
         ;
 
-        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.union (sequential)
+        /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -126,8 +126,8 @@ pub mod DocumentIndex {
                 combined.spec_avltreesetstper_wf(),
         ;
 
-        /// - APAS: Work O(m log(1 + n/m)), Span O(log n + log m)
-        /// - Claude-Opus-4.6: Work O(m log(1 + n/m)), Span O(m log(1 + n/m)) — delegates to AVLTreeSetStPer.difference (sequential)
+        /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(m * lg(1+n/m)), Span O(lg n + lg m)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet)
             requires
                 docs_a.spec_avltreesetstper_wf(),
@@ -439,8 +439,8 @@ pub mod DocumentIndex {
             requires spec_documentindex_wf(index)
             ensures qb.spec_index_wf();
 
-        /// - APAS: N/A — delegates to DocumentIndex::find.
-        /// - Claude-Opus-4.6: Work O(log n), Span O(log n)
+        /// - Alg Analysis: APAS (Ch44 Alg 44.3): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, word: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),

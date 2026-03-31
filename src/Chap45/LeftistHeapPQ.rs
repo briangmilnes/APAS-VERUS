@@ -278,6 +278,9 @@ broadcast use {
                     self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,
                     self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
                         #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -286,6 +289,9 @@ broadcast use {
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == self.spec_size() + 1,
                     pq@ =~= self@.insert(element);
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     self.spec_leftistheappq_wf(),
@@ -300,6 +306,9 @@ broadcast use {
                         min_and_rest.0@.insert(min_and_rest.1.unwrap()),
                     self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
                         #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(m * lg(1 + n/m)), Span O(m * lg(1 + n/m))
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg |A| + lg |B|), Span O(lg |A| + lg |B|)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -309,6 +318,9 @@ broadcast use {
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == self.spec_size() + other.spec_size(),
                     pq@ =~= self@.add(other@);
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(n lg n), Span O(n lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(n), Span O(lg^2 n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures

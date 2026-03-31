@@ -422,8 +422,8 @@ broadcast use {
                 split.1@.dom().finite(),
                 split.0@.dom().subset_of(old(self)@.dom()),
                 split.1@.dom().subset_of(old(self)@.dom());
-        /// - APAS: Work Θ(1), Span Θ(1)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- calculate_reduction is external_body (iterates all entries)
+        /// - Alg Analysis: APAS (Ch43 Def 43.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn reduce_val(&self) -> (reduced: V)
             requires self.spec_augorderedtablesteph_wf(),
             ensures self@.dom().finite();

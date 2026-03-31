@@ -195,8 +195,9 @@ broadcast use vstd::seq::group_seq_axioms;
 
     pub trait DFSStEphTrait {
         /// Performs DFS from source vertex s on adjacency list graph G.
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|) [Cost Spec 55.8, array sequences]
-        /// - Claude-Opus-4.6: Work O(|V| + |E|), Span O(|V| + |E|) — agrees with APAS.
+        /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O((m+n) lg n), Span O((m+n) lg n)
+        /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(m + n), Span O(m + n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
             requires
                 source < graph@.len(),

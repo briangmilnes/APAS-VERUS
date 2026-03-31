@@ -223,12 +223,12 @@ broadcast use {
                     && #[trigger] table@.index(u).contains(v)
                     ==> table@.dom().contains(v),
             ensures out.spec_adjtablegraphsteph_wf();
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; table size.
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphsteph_wf();
-        /// - APAS: Work Theta(|V| + |E|), Span Theta(|V| + |E|) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Theta(|V| + |E|), Span Theta(|V| + |E|) — agrees; iterates all adjacency sets.
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
@@ -239,20 +239,20 @@ broadcast use {
                 self.spec_adjtablegraphsteph_wf(),
                 self.spec_adj().dom().len() < usize::MAX as nat,
             ensures verts@ == self.spec_adj().dom();
-        /// - APAS: Work Theta(lg n + lg m), Span Theta(lg n + lg m) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set find.
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphsteph_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
-        /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table find.
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + d_g(v)), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_adjtablegraphsteph_wf()
             ensures
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
-        /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
-        /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; delegates to out_neighbors.
+        /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]

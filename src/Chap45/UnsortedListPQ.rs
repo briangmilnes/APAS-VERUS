@@ -84,6 +84,9 @@ broadcast use {
                         0 <= j < self.spec_seq().len() ==>
                             #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[j]);
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -92,6 +95,9 @@ broadcast use {
                     pq@.len() == self@.len() + 1,
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@);
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -112,6 +118,9 @@ broadcast use {
                     self@.len() > 0 ==> self@.to_multiset() =~=
                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@);
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(m * lg(1 + n/m)), Span O(m * lg(1 + n/m))
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg |A| + lg |B|), Span O(lg |A| + lg |B|)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -120,6 +129,9 @@ broadcast use {
                     pq@.len() == self@.len() + other@.len(),
                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(n lg n), Span O(n lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(n), Span O(lg^2 n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq@ =~= seq@;

@@ -320,7 +320,8 @@ broadcast use {
                 constructed.spec_orderedsetsteph_wf();
 
         // Ordering operations (ADT 43.1) — postconditions in cmp_spec style.
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn first(&self) -> (first: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -329,7 +330,8 @@ broadcast use {
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn last(&self) -> (last: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -338,7 +340,8 @@ broadcast use {
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -348,7 +351,8 @@ broadcast use {
                 predecessor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn next(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
@@ -358,6 +362,8 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -375,14 +381,16 @@ broadcast use {
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
-        /// - APAS: Work Θ(m log(n/m + 1)), Span Θ(m log(n/m + 1))
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn join(&mut self, other: Self)
             requires
                 old(self).spec_orderedsetsteph_wf(),
                 other.spec_orderedsetsteph_wf(),
                 old(self)@.len() + other@.len() < usize::MAX as nat,
             ensures self@ == old(self)@.union(other@), self@.finite(), self.spec_orderedsetsteph_wf();
-        /// - APAS: Work Θ(log n + m), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetsteph_wf(),
@@ -391,20 +399,23 @@ broadcast use {
                 self@.finite(),
                 range@.finite(),
                 range@.subset_of(self@);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn rank(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn select(&self, i: usize) -> (selected: Option<T>)
             requires self.spec_orderedsetsteph_wf(),
             ensures
                 self@.finite(),
                 i >= self@.len() ==> selected matches None,
                 selected matches Some(v) ==> self@.contains(v@);
-        /// - APAS: Work Θ(log n), Span Θ(log n)
+        /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires

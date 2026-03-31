@@ -58,8 +58,8 @@ pub mod DivConReduceStPer {
     pub trait DivConReduceStTrait {
         /// Find maximum element via reduce.
         /// Pattern: reduce max identity
-        /// - APAS: Work Θ(n), Span Θ(lg n) — Example 26.2, D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential while loop, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn max_element(a: &ArraySeqStPerS<usize>) -> (max: Option<usize>)
             requires a.spec_len() <= usize::MAX,
             ensures
@@ -74,8 +74,8 @@ pub mod DivConReduceStPer {
 
         /// Sum all elements via reduce.
         /// Pattern: reduce (+) 0 identity
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn sum(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -86,8 +86,8 @@ pub mod DivConReduceStPer {
 
         /// Product of all elements via reduce.
         /// Pattern: reduce (*) 1 identity
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn product(a: &ArraySeqStPerS<usize>) -> (total: usize)
             requires
                 a.spec_len() <= usize::MAX,
@@ -98,8 +98,8 @@ pub mod DivConReduceStPer {
 
         /// Logical OR of all elements via reduce.
         /// Pattern: reduce (||) false identity
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn any(a: &ArraySeqStPerS<bool>) -> (found: bool)
             requires
                 a.spec_len() <= usize::MAX,
@@ -110,8 +110,8 @@ pub mod DivConReduceStPer {
 
         /// Logical AND of all elements via reduce.
         /// Pattern: reduce (&&) true identity
-        /// - APAS: Work Θ(n), Span Θ(lg n) — D&C reduce with constant-time op.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential reduce, Span = Work.
+        /// - Alg Analysis: APAS (Ch26 Alg 26.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn all(a: &ArraySeqStPerS<bool>) -> (all_true: bool)
             requires
                 a.spec_len() <= usize::MAX,

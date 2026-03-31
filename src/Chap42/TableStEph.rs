@@ -293,8 +293,8 @@ broadcast use {
         /// Useful for transferring exec-level properties (e.g., wf) through find_ref.
         spec fn spec_stored_value(&self, key: K::V) -> V;
 
-        /// - APAS Cost Spec 42.5: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS; cached length via backing ArraySeq.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn size(&self) -> (count: usize)
             requires self.spec_tablesteph_wf()
             ensures count == self@.len();
@@ -302,18 +302,18 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablesteph_wf();
-        /// - APAS Cost Spec 42.5: Work 1, Span 1
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn singleton(key: K, value: V) -> (tree: Self)
             requires obeys_feq_clone::<Pair<K, V>>()
             ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablesteph_wf();
-        /// - APAS Cost Spec 42.5: Work |a|, Span lg |a|
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- sequential scan; disagrees with APAS span (no parallelism).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
-        /// - APAS Cost Spec 42.5: Work |s| * W(f), Span lg |s| + S(f)
-        /// - Claude-Opus-4.6: Work Θ(|s| * W(f)), Span Θ(|s| * W(f)) -- sequential; disagrees with APAS span.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
             requires keys.spec_arraysetsteph_wf(), forall|k: &K| f.requires((k,)), obeys_feq_full::<K>()
             ensures
@@ -323,8 +323,8 @@ broadcast use {
                     (exists|key_arg: K, result: V|
                         key_arg@ == k && f.ensures((&key_arg,), result)
                         && tabulated@[k] == result@);
-        /// - APAS Cost Spec 42.5: Work Σ W(f(v)), Span lg |a| + max S(f(v))
-        /// - Claude-Opus-4.6: Work Θ(Σ W(f(v))), Span Θ(Σ W(f(v))) -- sequential; disagrees with APAS span.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn map<F: Fn(&V) -> V>(&mut self, f: F)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -338,8 +338,8 @@ broadcast use {
                         old_val@ == old(self)@[k]
                         && f.ensures((&old_val,), result)
                         && self@[k] == result@);
-        /// - APAS Cost Spec 42.5: Work Σ W(p(k,v)), Span lg |a| + max S(p(k,v))
-        /// - Claude-Opus-4.6: Work Θ(n * W(p)), Span Θ(n * W(p)) -- sequential; disagrees with APAS span.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn filter<F: Fn(&K, &V) -> bool>(
             &mut self,
             f: F,
@@ -357,8 +357,8 @@ broadcast use {
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
                 forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
                     ==> #[trigger] self@.dom().contains(k);
-        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -374,8 +374,8 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
                         && self@[k] == r@);
-        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, combine: F)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -395,8 +395,8 @@ broadcast use {
                         v1@ == old(self)@[k] && v2@ == other@[k]
                         && combine.ensures((&v1, &v2), r)
                         && self@[k] == r@);
-        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |other|), Span same -- linear scan; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn difference(&mut self, other: &Self)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -406,8 +406,8 @@ broadcast use {
                 self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>(), obeys_feq_full::<V>()
             ensures
@@ -426,8 +426,8 @@ broadcast use {
                         && *v == self.spec_stored_value(key@),
                     None => !self@.contains_key(key@),
                 };
-        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn delete(&mut self, key: &K)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -435,8 +435,8 @@ broadcast use {
                 obeys_view_eq::<K>(),
                 obeys_feq_full::<Pair<K, V>>(),
             ensures self@ =~= old(self)@.remove(key@), self.spec_tablesteph_wf();
-        /// - APAS Cost Spec 42.5: Work lg |a|, Span lg |a|
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- linear scan + rebuild; disagrees with APAS (not tree-based).
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn insert<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -501,8 +501,8 @@ broadcast use {
                 self.spec_tablesteph_wf(),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     self.spec_stored_value(k).spec_wf();
-        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),
@@ -512,8 +512,8 @@ broadcast use {
                 self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().intersect(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// - APAS Cost Spec 42.5: Work m * lg(1 + n/m), Span lg(n + m)
-        /// - Claude-Opus-4.6: Work Θ(|self| * |keys|), Span same -- linear scan; disagrees with APAS.
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires
                 old(self).spec_tablesteph_wf(),

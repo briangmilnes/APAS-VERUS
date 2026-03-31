@@ -43,8 +43,8 @@ pub mod MaxContigSubSumReducedStEph {
     pub trait MaxContigSubSumReducedTrait {
         /// Compute MCSS using reduced force (Algorithm 28.13).
         /// Returns None for empty sequence (representing -infinity).
-        /// - APAS: Work Θ(n²), Span Θ(log n)
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — sequential
+        /// - Alg Analysis: APAS (Ch28 Alg 28.16): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn max_contig_sub_sum_reduced(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),

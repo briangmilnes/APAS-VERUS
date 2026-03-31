@@ -163,8 +163,8 @@ pub mod ReduceContractStEph {
     pub trait ReduceContractStEphTrait<T: StT> {
         /// Reduce a sequence using contraction: contract→solve→expand.
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
-        /// - APAS: Work Θ(n), Span Θ(log n) — Algorithm 27.2.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — sequential implementation, no parallelism.
+        /// - Alg Analysis: APAS (Ch27 Alg 27.2): Work O(n), Span O(lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn reduce_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

@@ -195,6 +195,9 @@ pub mod BinaryHeapPQ {
                     self@.len() > 0 ==> forall|i: int| 0 <= i < self.spec_seq().len() ==>
                         #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[i]);
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -205,6 +208,9 @@ pub mod BinaryHeapPQ {
                     pq@.to_multiset() =~= self@.to_multiset().insert(element@),
                     Self::spec_is_exec_heap(pq.spec_seq());
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
@@ -224,6 +230,9 @@ pub mod BinaryHeapPQ {
                         #[trigger] TotalOrder::le(min_and_rest.1.unwrap(),
                             min_and_rest.0.spec_seq()[i]));
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(m * lg(1 + n/m)), Span O(m * lg(1 + n/m))
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(lg |A| + lg |B|), Span O(lg |A| + lg |B|)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn meld(&self, other: &Self) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -233,6 +242,9 @@ pub mod BinaryHeapPQ {
                     pq@.len() == self@.len() + other@.len(),
                     pq@.to_multiset() =~= self@.to_multiset().add(other@.to_multiset());
 
+            /// - Alg Analysis: APAS (Ch45 DT 45.1): Work O(n lg n), Span O(n lg n)
+            /// - Alg Analysis: APAS (Ch45 DT 45.3): Work O(n), Span O(lg^2 n)
+            /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),

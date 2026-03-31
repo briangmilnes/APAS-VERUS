@@ -214,6 +214,8 @@ pub mod AVLTreeSeqMtPer {
             requires self.spec_avltreeseqmtper_wf(),
             ensures len as nat == self.spec_seq().len();
 
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];

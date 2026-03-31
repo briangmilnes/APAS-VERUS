@@ -128,6 +128,8 @@ pub mod BoruvkaMtEph {
 
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             edges_vec: Vec<LabeledEdge<V>>,
@@ -145,6 +147,8 @@ pub mod BoruvkaMtEph {
 
         /// Parallel Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(log² n)
+        /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -744,8 +748,8 @@ pub mod BoruvkaMtEph {
     /// Computes the Minimum Spanning Tree using recursive bridge-based contraction.
     /// All per-round operations parallelized via ParaPair!.
     ///
-    /// - APAS: Work O(m log n), Span O(log² n)
-    /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — each round is O(log n) span (bridges O(log m), partition O(log n), reroute O(log m)); O(log n) rounds total.
+    /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     #[verifier::exec_allows_no_decreases_clause]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
@@ -976,8 +980,8 @@ pub mod BoruvkaMtEph {
     /// Create Borůvka MST with a specific seed.
     /// Wrapper that converts sets to vecs and delegates to `boruvka_mst_mt`.
     ///
-    /// - APAS: Work O(m log n), Span O(log² n)
-    /// - Claude-Opus-4.6: Work O(m log n), Span O(log² n) — delegates to boruvka_mst_mt which achieves O(log n) span per round.
+    /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
+    /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,

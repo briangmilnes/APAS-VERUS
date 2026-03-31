@@ -140,7 +140,8 @@ pub mod BFSStEph {
     // 8. traits
     pub trait BFSStEphTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn bfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: ArraySeqStEphS<usize>)
             requires
                 source < graph.spec_len(),
@@ -157,7 +158,8 @@ pub mod BFSStEph {
         ;
 
         /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
-        /// - APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// - Alg Analysis: APAS (Ch54 Alg 54.6): Work O(n + m), Span O(d lg n)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
             requires
                 source < graph.spec_len(),

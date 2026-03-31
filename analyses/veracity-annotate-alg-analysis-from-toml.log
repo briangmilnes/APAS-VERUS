@@ -1,0 +1,1098 @@
+veracity-annotate-alg-analysis-from-toml
+=========================================
+Started at: 2026-03-30 23:03:39 -07:00
+Codebase: /home/milnes/projects/APAS-VERUS
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-annotate-alg-analysis-from-toml.log
+
+Loaded 90 cost_spec entries (249 operations) from /home/milnes/projects/APAS-VERUS/analyses/apas-cost-reference-all.toml
+
+Phase 1: Indexing 235 source files
+Indexed 962 unique (chapter, fn_name) keys, 2769 total fn locations
+
+Phase 2: Matching TOML operations to source fns
+
+  flatten (Ch19 Alg 19.15) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  length (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  nth (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  empty (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  singleton (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  isEmpty (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  isSingleton (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  subseq (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  tabulate f n (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  map f a (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  filter f a (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  append a b (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  flatten a (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  update a (i,x) (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  inject a b (Ch20 CS 20.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  ninject a b (Ch20 CS 20.2) -> 1 fns: src/Chap18/ArraySeqMtEph.rs
+  iterate f x a (Ch20 CS 20.3) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  reduce f x a (Ch20 CS 20.4) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  scan f x a (Ch20 CS 20.5) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  collect cmp a (Ch20 CS 20.6) -> 1 fns: src/Chap18/ArraySeq.rs
+  length (Ch20 CS 20.2) -> 4 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqMtEphSlice.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  nth (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  empty (Ch20 CS 20.2) -> 4 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqMtEphSlice.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  singleton (Ch20 CS 20.2) -> 4 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqMtEphSlice.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  isEmpty (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  isSingleton (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  subseq (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  tabulate f n (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  map f a (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  filter f a (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  append a b (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  flatten a (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  update a (i,x) (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  inject a b (Ch20 CS 20.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  ninject a b (Ch20 CS 20.2) -> 1 fns: src/Chap19/ArraySeqMtEph.rs
+  iterate f x a (Ch20 CS 20.3) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  reduce f x a (Ch20 CS 20.4) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  scan f x a (Ch20 CS 20.5) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  nth (Ch20 CS 20.6) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  append (Ch20 CS 20.6) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  update (Ch20 CS 20.6) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  subseq (Ch20 CS 20.6) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  nth (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  subseq (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  append (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  tabulate (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  map (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  filter (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  reduce (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  scan (Ch20 CS 20.7) -> 2 fns: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  primes_bf (Ch21 Alg 21.5) -> 1 fns: src/Chap21/Algorithm21_5.rs
+  prime_sieve (Ch21 Alg 21.6) -> 1 fns: src/Chap21/Algorithm21_6.rs
+  nth (Ch22 CS 22.2) -> 7 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs, src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  update (Ch22 CS 22.2) -> 7 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs, src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  inject (Ch22 CS 22.2) -> 5 fns: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  nth (Ch22 CS 22.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  update (Ch22 CS 22.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  inject (Ch22 CS 22.2) -> 3 fns: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  nth (Ch22 CS 22.2) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  update (Ch22 CS 22.2) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  nth (Ch22 CS 22.2) -> 4 fns: src/Chap37/AVLTreeSeq.rs, src/Chap37/AVLTreeSeqMtPer.rs, src/Chap37/AVLTreeSeqStEph.rs, src/Chap37/AVLTreeSeqStPer.rs
+  update (Ch22 CS 22.2) -> 5 fns: src/Chap37/AVLTreeSeq.rs, src/Chap37/AVLTreeSeqStEph.rs, src/Chap37/BSTRBMtEph.rs, src/Chap37/BSTSplayMtEph.rs, src/Chap37/BSTSplayStEph.rs
+  length (Ch23 CS 23.2) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  expose (Ch23 CS 23.2) -> 1 fns: src/Chap23/PrimTreeSeqStPer.rs
+  max_element (Ch26 Alg 26.2) -> 1 fns: src/Chap26/DivConReduceStPer.rs
+  sum (Ch26 Alg 26.2) -> 1 fns: src/Chap26/DivConReduceStPer.rs
+  product (Ch26 Alg 26.2) -> 1 fns: src/Chap26/DivConReduceStPer.rs
+  any (Ch26 Alg 26.2) -> 1 fns: src/Chap26/DivConReduceStPer.rs
+  all (Ch26 Alg 26.2) -> 1 fns: src/Chap26/DivConReduceStPer.rs
+  merge_sort (Ch26 Alg 26.4) -> 1 fns: src/Chap26/MergeSortStPer.rs
+  scan_dc (Ch26 Alg 26.5) -> 1 fns: src/Chap26/ScanDCStPer.rs
+  etsp (Ch26 Alg 26.7) -> 1 fns: src/Chap26/ETSPStEph.rs
+  reduce_contract (Ch27 Alg 27.2) -> 1 fns: src/Chap27/ReduceContractStEph.rs
+  scan_contract (Ch27 Alg 27.3) -> 1 fns: src/Chap27/ScanContractStEph.rs
+  max_contig_sub_sum_brute (Ch28 Alg 28.6) -> 1 fns: src/Chap28/MaxContigSubSumBruteStEph.rs
+  max_contig_sub_sum_iter (Ch28 Alg 28.15) -> 1 fns: src/Chap28/MaxContigSubSumIterStEph.rs
+  max_contig_sub_sum_reduced (Ch28 Alg 28.16) -> 1 fns: src/Chap28/MaxContigSubSumReducedStEph.rs
+  max_contig_sub_sum_divcon (Ch28 Alg 28.17) -> 1 fns: src/Chap28/MaxContigSubSumDivConStEph.rs
+  max_contig_sub_sum_divcon_opt (Ch28 Alg 28.19) -> 1 fns: src/Chap28/MaxContigSubSumDivConOptStEph.rs
+  select (Ch35 Alg 35.2) -> 4 fns: src/Chap35/OrderStatSelectMtEph.rs, src/Chap35/OrderStatSelectMtPer.rs, src/Chap35/OrderStatSelectStEph.rs, src/Chap35/OrderStatSelectStPer.rs
+  quick_sort_random (Ch36 Alg 36.1) -> 3 fns: src/Chap36/QuickSortMtEph.rs, src/Chap36/QuickSortMtEphSlice.rs, src/Chap36/QuickSortStEph.rs
+  quick_sort_first (Ch36 Alg 36.1) -> 3 fns: src/Chap36/QuickSortMtEph.rs, src/Chap36/QuickSortMtEphSlice.rs, src/Chap36/QuickSortStEph.rs
+  quick_sort_median3 (Ch36 Alg 36.1) -> 3 fns: src/Chap36/QuickSortMtEph.rs, src/Chap36/QuickSortMtEphSlice.rs, src/Chap36/QuickSortStEph.rs
+  find (Ch37 Alg 37.4) -> 15 fns: src/Chap37/BSTAVLMtEph.rs, src/Chap37/BSTAVLStEph.rs, src/Chap37/BSTBBAlphaMtEph.rs, src/Chap37/BSTBBAlphaStEph.rs, src/Chap37/BSTPlainMtEph.rs, src/Chap37/BSTPlainStEph.rs, src/Chap37/BSTRBMtEph.rs, src/Chap37/BSTRBStEph.rs, src/Chap37/BSTSetAVLMtEph.rs, src/Chap37/BSTSetBBAlphaMtEph.rs, src/Chap37/BSTSetPlainMtEph.rs, src/Chap37/BSTSetRBMtEph.rs, src/Chap37/BSTSetSplayMtEph.rs, src/Chap37/BSTSplayMtEph.rs, src/Chap37/BSTSplayStEph.rs
+  singleton (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  split (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  join (Ch38 CS 38.11) -> 7 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs, src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs, src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs, src/Chap38/BSTParaMtEph.rs
+  joinM (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  joinPair (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  find (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  insert (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  delete (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  union (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  intersect (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  difference (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  filter (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  reduce (Ch38 CS 38.11) -> 2 fns: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  join (Ch39 DS 39.3) -> 9 fns: src/Chap39/BSTSetTreapMtEph.rs, src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs, src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTSetTreapMtEph.rs, src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs, src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs
+  split (Ch39 DS 39.3) -> 2 fns: src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTSetTreapMtEph.rs
+  expose (Ch39 DS 39.3) -> 2 fns: src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs
+  joinMid (Ch39 DS 39.3) -> 2 fns: src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs
+  rank (Ch40 Alg 40.1) -> 1 fns: src/Chap40/BSTSizeStEph.rs
+  select (Ch40 Alg 40.1) -> 1 fns: src/Chap40/BSTSizeStEph.rs
+  size (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  singleton (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  toSeq (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  filter (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  intersection (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  union (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  difference (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  find (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  insert (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  delete (Ch41 CS 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  size (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  singleton (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  toSeq (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  filter (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  intersection (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  union (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  difference (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  find (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  insert (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  delete (Ch41 CS 41.4) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  fromSeq (sequential) (Ch41 Ex 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  fromSeq (parallel) (Ch41 Ex 41.3) -> 6 fns: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  size (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  singleton (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  domain (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  filter (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  map (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  find (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  delete (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  insert (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  intersection (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  union (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  difference (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  restrict (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  subtract (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  tabulate (Ch42 CS 42.5) -> 3 fns: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  first (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  last (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  previous (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  next (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  split (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  join (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  getRange (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  rank (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  select (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  splitRank (Ch43 CS 43.2) -> 3 fns: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  reduceVal (Ch43 Def 43.3) -> 3 fns: src/Chap43/AugOrderedTableMtEph.rs, src/Chap43/AugOrderedTableStEph.rs, src/Chap43/AugOrderedTableStPer.rs
+  makeIndex (Ch44 Alg 44.2) -> 1 fns: src/Chap44/DocumentIndex.rs
+  find (Ch44 Alg 44.3) -> 2 fns: src/Chap44/DocumentIndex.rs, src/Chap44/DocumentIndex.rs
+  queryAnd (Ch44 Alg 44.3) -> 1 fns: src/Chap44/DocumentIndex.rs
+  queryOr (Ch44 Alg 44.3) -> 1 fns: src/Chap44/DocumentIndex.rs
+  queryAndNot (Ch44 Alg 44.3) -> 1 fns: src/Chap44/DocumentIndex.rs
+  insert (Ch45 DT 45.1) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  deleteMin (Ch45 DT 45.1) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  meld (Ch45 DT 45.1) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  fromSeq (Ch45 DT 45.1) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  meld (Ch45 DT 45.3) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  insert (Ch45 DT 45.3) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  deleteMin (Ch45 DT 45.3) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  fromSeq (Ch45 DT 45.3) -> 5 fns: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  insert (Ch47 Def 47.3) -> 2 fns: src/Chap47/ParaHashTableStEph.rs, src/Chap47/ParaHashTableStEph.rs
+  lookup (Ch47 Def 47.3) -> 2 fns: src/Chap47/ParaHashTableStEph.rs, src/Chap47/ParaHashTableStEph.rs
+  delete (Ch47 Def 47.3) -> 2 fns: src/Chap47/ParaHashTableStEph.rs, src/Chap47/ParaHashTableStEph.rs
+  lookup (Ch47 Alg 47.4) -> 2 fns: src/Chap47/ParaHashTableStEph.rs, src/Chap47/ParaHashTableStEph.rs
+  subset_sum (Ch49 Alg 49.2) -> 4 fns: src/Chap49/SubsetSumMtEph.rs, src/Chap49/SubsetSumMtPer.rs, src/Chap49/SubsetSumStEph.rs, src/Chap49/SubsetSumStPer.rs
+  min_edit_distance (Ch49 Alg 49.5) -> 4 fns: src/Chap49/MinEditDistMtEph.rs, src/Chap49/MinEditDistMtPer.rs, src/Chap49/MinEditDistStEph.rs, src/Chap49/MinEditDistStPer.rs
+  OBST (Ch50 Alg 50.2) -> 4 fns: src/Chap50/OptBinSearchTreeMtEph.rs, src/Chap50/OptBinSearchTreeMtPer.rs, src/Chap50/OptBinSearchTreeStEph.rs, src/Chap50/OptBinSearchTreeStPer.rs
+  med_bottom_up (Ch51 Alg 51.1) -> 2 fns: src/Chap51/BottomUpDPStEph.rs, src/Chap51/BottomUpDPStPer.rs
+  num_vertices (Ch52 CS 52.1) -> 3 fns: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  num_edges (Ch52 CS 52.1) -> 3 fns: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  has_edge (Ch52 CS 52.1) -> 3 fns: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  out_neighbors (Ch52 CS 52.1) -> 3 fns: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  out_degree (Ch52 CS 52.1) -> 3 fns: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  num_vertices (Ch52 CS 52.3) -> 3 fns: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+  num_edges (Ch52 CS 52.3) -> 3 fns: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+  has_edge (Ch52 CS 52.3) -> 3 fns: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+  out_neighbors (Ch52 CS 52.3) -> 3 fns: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+  out_degree (Ch52 CS 52.3) -> 3 fns: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+  num_vertices (Ch52 CS 52.5) -> 4 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  num_edges (Ch52 CS 52.5) -> 4 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  has_edge (Ch52 CS 52.5) -> 4 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  out_neighbors (Ch52 CS 52.5) -> 4 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  out_degree (Ch52 CS 52.5) -> 4 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  set_edge (Ch52 CS 52.5) -> 2 fns: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphStEph.rs
+  num_vertices (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  num_edges (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  has_edge (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  out_neighbors (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  out_degree (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  set_edge (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  complement (Ch52 CS 52.6) -> 4 fns: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  bfs (Ch54 Alg 54.4) -> 4 fns: src/Chap54/BFSMtEph.rs, src/Chap54/BFSMtPer.rs, src/Chap54/BFSStEph.rs, src/Chap54/BFSStPer.rs
+  bfs_tree (Ch54 Alg 54.6) -> 4 fns: src/Chap54/BFSMtEph.rs, src/Chap54/BFSMtPer.rs, src/Chap54/BFSStEph.rs, src/Chap54/BFSStPer.rs
+  dfs (adjacency table) (Ch55 CS 55.8) -> 2 fns: src/Chap55/DFSStEph.rs, src/Chap55/DFSStPer.rs
+  dfs (adjacency sequence) (Ch55 CS 55.8) -> 2 fns: src/Chap55/DFSStEph.rs, src/Chap55/DFSStPer.rs
+  dijkstra (Ch57 Alg 57.2) -> 4 fns: src/Chap57/DijkstraStEphF64.rs, src/Chap57/DijkstraStEphF64.rs, src/Chap57/DijkstraStEphU64.rs, src/Chap57/DijkstraStEphU64.rs
+  bellman_ford (tables) (Ch58 Alg 58.2) -> 4 fns: src/Chap58/BellmanFordStEphF64.rs, src/Chap58/BellmanFordStEphF64.rs, src/Chap58/BellmanFordStEphI64.rs, src/Chap58/BellmanFordStEphI64.rs
+  bellman_ford (sequences) (Ch58 Alg 58.2) -> 4 fns: src/Chap58/BellmanFordStEphF64.rs, src/Chap58/BellmanFordStEphF64.rs, src/Chap58/BellmanFordStEphI64.rs, src/Chap58/BellmanFordStEphI64.rs
+  johnson_apsp (Ch59 Alg 59.1) -> 8 fns: src/Chap59/JohnsonMtEphF64.rs, src/Chap59/JohnsonMtEphF64.rs, src/Chap59/JohnsonMtEphI64.rs, src/Chap59/JohnsonMtEphI64.rs, src/Chap59/JohnsonStEphF64.rs, src/Chap59/JohnsonStEphF64.rs, src/Chap59/JohnsonStEphI64.rs, src/Chap59/JohnsonStEphI64.rs
+  edge_contract (Ch61 Alg 61.6) -> 2 fns: src/Chap61/EdgeContractionStEph.rs, src/Chap61/EdgeContractionStEph.rs
+  parallel_star_partition (Ch62 Thm 62.1) -> 2 fns: src/Chap62/StarPartitionMtEph.rs, src/Chap62/StarPartitionMtEph.rs
+  star_contract (Ch62 Thm 62.3) -> 2 fns: src/Chap62/StarContractionStEph.rs, src/Chap62/StarContractionStEph.rs
+  boruvka (Ch66 Alg 66.1) -> 6 fns: src/Chap66/BoruvkaStEph.rs, src/Chap66/BoruvkaMtEph.rs, src/Chap66/BoruvkaMtEph.rs, src/Chap66/BoruvkaMtEph.rs, src/Chap66/BoruvkaMtEph.rs, src/Chap66/BoruvkaStEph.rs
+  boruvka_mst_with_seed (Ch66 Alg 66.3) -> 1 fns: src/Chap66/BoruvkaStEph.rs
+
+Phase 2 summary: 207 ops matched, 42 ops unmatched, 699 annotations pending
+
+Phase 3: Applying annotations to 126 files
+
+
+TOML:Ch2 Def 2.1:0: warning: TOML op `seq_compose` (Ch2 Def 2.1): no matching fn in Chap02
+TOML:Ch2 Def 2.1:0: warning: TOML op `par_compose` (Ch2 Def 2.1): no matching fn in Chap02
+TOML:Ch2 Ex 2.8:0: warning: TOML op `merge_sort` (Ch2 Ex 2.8): no matching fn in Chap02
+TOML:Ch3 CS 3.2:0: warning: TOML op `sort` (Ch3 CS 3.2): no matching fn in Chap03
+TOML:Ch3 CS 3.3:0: warning: TOML op `sort` (Ch3 CS 3.3): no matching fn in Chap03
+TOML:Ch3 DT 3.4 / CS 3.5:0: warning: TOML op `empty` (Ch3 DT 3.4 / CS 3.5): no matching fn in Chap03
+TOML:Ch3 DT 3.4 / CS 3.5:0: warning: TOML op `insert` (Ch3 DT 3.4 / CS 3.5): no matching fn in Chap03
+TOML:Ch3 DT 3.4 / CS 3.5:0: warning: TOML op `removeMin` (Ch3 DT 3.4 / CS 3.5): no matching fn in Chap03
+TOML:Ch4 Alg 4.14:0: info: TOML op `greedyApproxSS` (Ch4 Alg 4.14): no src/Chap04 directory exists
+TOML:Ch15 Ex 15.6:0: info: TOML op `mergesort` (Ch15 Ex 15.6): no src/Chap15 directory exists
+TOML:Ch15 Def 15.7:0: info: TOML op `greedy_schedule` (Ch15 Def 15.7): no src/Chap15 directory exists
+TOML:Ch16 Ex 16.2:0: info: TOML op `mergesort` (Ch16 Ex 16.2): no src/Chap16 directory exists
+TOML:Ch16 Thm 16.1:0: info: TOML op `superlinear_recurrence` (Ch16 Thm 16.1): no src/Chap16 directory exists
+TOML:Ch20 CS 20.6:0: warning: TOML op `collect cmp a` (Ch20 CS 20.6): no matching fn in Chap19
+TOML:Ch20 CS 20.6:0: warning: TOML op `inject` (Ch20 CS 20.6): no matching fn in Chap23
+TOML:Ch20 CS 20.6:0: warning: TOML op `ninject` (Ch20 CS 20.6): no matching fn in Chap23
+TOML:Ch21 Alg 21.4:0: warning: TOML op `is_prime` (Ch21 Alg 21.4): no matching fn in Chap21
+TOML:Ch22 CS 22.2:0: warning: TOML op `fromSeq` (Ch22 CS 22.2): no matching fn in Chap18
+TOML:Ch22 CS 22.2:0: warning: TOML op `toSeq` (Ch22 CS 22.2): no matching fn in Chap18
+TOML:Ch22 CS 22.2:0: warning: TOML op `fromSeq` (Ch22 CS 22.2): no matching fn in Chap19
+TOML:Ch22 CS 22.2:0: warning: TOML op `toSeq` (Ch22 CS 22.2): no matching fn in Chap19
+TOML:Ch22 CS 22.2:0: warning: TOML op `fromSeq` (Ch22 CS 22.2): no matching fn in Chap23
+TOML:Ch22 CS 22.2:0: warning: TOML op `toSeq` (Ch22 CS 22.2): no matching fn in Chap23
+TOML:Ch22 CS 22.2:0: warning: TOML op `inject` (Ch22 CS 22.2): no matching fn in Chap23
+TOML:Ch22 CS 22.2:0: warning: TOML op `fromSeq` (Ch22 CS 22.2): no matching fn in Chap37
+TOML:Ch22 CS 22.2:0: warning: TOML op `toSeq` (Ch22 CS 22.2): no matching fn in Chap37
+TOML:Ch22 CS 22.2:0: warning: TOML op `inject` (Ch22 CS 22.2): no matching fn in Chap37
+TOML:Ch23 CS 23.2:0: warning: TOML op `join(Zero)` (Ch23 CS 23.2): no matching fn in Chap23
+TOML:Ch23 CS 23.2:0: warning: TOML op `join(One(x))` (Ch23 CS 23.2): no matching fn in Chap23
+TOML:Ch23 CS 23.2:0: warning: TOML op `join(Two(L,R))` (Ch23 CS 23.2): no matching fn in Chap23
+TOML:Ch25 Ex 25.2:0: info: TOML op `find_min_via_max` (Ch25 Ex 25.2): no src/Chap25 directory exists
+TOML:Ch25 Ex 25.5:0: info: TOML op `overlap_brute_force` (Ch25 Ex 25.5): no src/Chap25 directory exists
+TOML:Ch33 Darts Game:0: info: TOML op `darts_game` (Ch33 Darts Game): no src/Chap33 directory exists
+TOML:Ch38 CS 38.11:0: warning: TOML op `empty` (Ch38 CS 38.11): no matching fn in Chap38
+TOML:Ch45 Alg 45.2:0: warning: TOML op `sort` (Ch45 Alg 45.2): no matching fn in Chap45
+TOML:Ch47 Def 47.5:0: warning: TOML op `unsuccessful lookup / insert` (Ch47 Def 47.5): no matching fn in Chap47
+TOML:Ch47 Def 47.5:0: warning: TOML op `successful lookup` (Ch47 Def 47.5): no matching fn in Chap47
+TOML:Ch52 CS 52.1:0: warning: TOML op `set_edge` (Ch52 CS 52.1): no matching fn in Chap52
+TOML:Ch52 CS 52.3:0: warning: TOML op `set_edge` (Ch52 CS 52.3): no matching fn in Chap52
+TOML:Ch65 Alg 65.1:0: info: TOML op `prim (binary heap)` (Ch65 Alg 65.1): no src/Chap65 directory exists
+TOML:Ch65 Alg 65.1:0: info: TOML op `prim (Fibonacci heap)` (Ch65 Alg 65.1): no src/Chap65 directory exists
+TOML:Ch65 Alg 65.2:0: info: TOML op `kruskal` (Ch65 Alg 65.2): no src/Chap65 directory exists
+src/Chap18/ArraySeq.rs:339: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:345: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeq.rs:353: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:359: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:367: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:380: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:393: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:415: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeq.rs:429: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:435: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:442: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap18/ArraySeq.rs:453: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap18/ArraySeq.rs:467: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap18/ArraySeq.rs:487: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeq.rs:581: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.6)
+src/Chap18/ArraySeq.rs:1253: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:1284: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeq.rs:1316: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:291: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:297: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtEph.rs:319: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:346: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:352: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:361: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:375: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:397: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtEph.rs:413: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtEph.rs:430: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:444: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:450: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:456: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap18/ArraySeqMtEph.rs:466: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap18/ArraySeqMtEph.rs:479: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap18/ArraySeqMtEph.rs:496: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:506: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtEph.rs:517: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:131: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:137: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtPer.rs:159: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:186: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:192: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:201: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:215: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:237: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtPer.rs:253: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqMtPer.rs:269: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:275: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:281: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap18/ArraySeqMtPer.rs:291: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap18/ArraySeqMtPer.rs:304: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap18/ArraySeqMtPer.rs:321: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:331: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqMtPer.rs:342: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:135: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:141: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStEph.rs:163: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:190: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:196: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:205: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:219: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:241: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStEph.rs:257: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStEph.rs:273: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:279: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:285: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap18/ArraySeqStEph.rs:295: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap18/ArraySeqStEph.rs:308: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap18/ArraySeqStEph.rs:325: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:335: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStEph.rs:346: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:125: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:131: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStPer.rs:153: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:180: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:186: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:195: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:209: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:231: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStPer.rs:247: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap18/ArraySeqStPer.rs:263: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:269: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:275: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap18/ArraySeqStPer.rs:285: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap18/ArraySeqStPer.rs:298: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap18/ArraySeqStPer.rs:315: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:325: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/ArraySeqStPer.rs:336: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap18/LinkedListStEph.rs:125: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.7, Ch22 CS 22.2)
+src/Chap18/LinkedListStEph.rs:132: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:170: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:180: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:189: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:204: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:232: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap18/LinkedListStEph.rs:264: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStEph.rs:276: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:117: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.7, Ch22 CS 22.2)
+src/Chap18/LinkedListStPer.rs:124: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:162: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:172: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:181: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:196: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:224: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap18/LinkedListStPer.rs:256: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap18/LinkedListStPer.rs:268: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.7)
+src/Chap19/ArraySeqMtEph.rs:210: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:216: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqMtEph.rs:238: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:261: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:267: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:278: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:292: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:310: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqMtEph.rs:326: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqMtEph.rs:343: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:357: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:363: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:379: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap19/ArraySeqMtEph.rs:403: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap19/ArraySeqMtEph.rs:416: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap19/ArraySeqMtEph.rs:431: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:441: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEph.rs:452: info: replacing 3 existing annotation lines (APAS: Ch19 Alg 19.15, Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEphSlice.rs:85: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEphSlice.rs:129: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqMtEphSlice.rs:136: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:198: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:204: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStEph.rs:226: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:249: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:255: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:266: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:280: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:298: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStEph.rs:314: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStEph.rs:330: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:336: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:352: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap19/ArraySeqStEph.rs:376: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap19/ArraySeqStEph.rs:389: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap19/ArraySeqStEph.rs:404: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:414: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStEph.rs:425: info: replacing 3 existing annotation lines (APAS: Ch19 Alg 19.15, Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:184: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:190: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStPer.rs:212: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:235: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:241: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:252: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:266: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:284: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStPer.rs:300: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.2, Ch22 CS 22.2)
+src/Chap19/ArraySeqStPer.rs:316: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:322: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:338: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.3)
+src/Chap19/ArraySeqStPer.rs:362: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.4)
+src/Chap19/ArraySeqStPer.rs:375: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.5)
+src/Chap19/ArraySeqStPer.rs:390: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:400: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.2)
+src/Chap19/ArraySeqStPer.rs:411: info: replacing 3 existing annotation lines (APAS: Ch19 Alg 19.15, Ch20 CS 20.2)
+src/Chap21/Algorithm21_5.rs:44: info: replacing 2 existing annotation lines (APAS: Ch21 Alg 21.5)
+src/Chap21/Algorithm21_6.rs:60: info: replacing 2 existing annotation lines (APAS: Ch21 Alg 21.6)
+src/Chap23/PrimTreeSeqStPer.rs:156: info: replacing 2 existing annotation lines (APAS: Ch23 CS 23.2)
+src/Chap23/PrimTreeSeqStPer.rs:163: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.6, Ch22 CS 22.2)
+src/Chap23/PrimTreeSeqStPer.rs:172: info: replacing 2 existing annotation lines (APAS: Ch23 CS 23.2)
+src/Chap23/PrimTreeSeqStPer.rs:205: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.6)
+src/Chap23/PrimTreeSeqStPer.rs:221: info: replacing 2 existing annotation lines (APAS: Ch20 CS 20.6)
+src/Chap23/PrimTreeSeqStPer.rs:236: info: replacing 3 existing annotation lines (APAS: Ch20 CS 20.6, Ch22 CS 22.2)
+src/Chap26/DivConReduceStPer.rs:61: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.2)
+src/Chap26/DivConReduceStPer.rs:77: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.2)
+src/Chap26/DivConReduceStPer.rs:89: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.2)
+src/Chap26/DivConReduceStPer.rs:101: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.2)
+src/Chap26/DivConReduceStPer.rs:113: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.2)
+src/Chap26/ETSPStEph.rs:320: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.7)
+src/Chap26/MergeSortStPer.rs:128: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.4)
+src/Chap26/ScanDCStPer.rs:101: info: replacing 2 existing annotation lines (APAS: Ch26 Alg 26.5)
+src/Chap27/ReduceContractStEph.rs:166: info: replacing 2 existing annotation lines (APAS: Ch27 Alg 27.2)
+src/Chap27/ScanContractStEph.rs:226: info: replacing 2 existing annotation lines (APAS: Ch27 Alg 27.3)
+src/Chap28/MaxContigSubSumBruteStEph.rs:50: info: replacing 2 existing annotation lines (APAS: Ch28 Alg 28.6)
+src/Chap28/MaxContigSubSumDivConOptStEph.rs:260: info: replacing 2 existing annotation lines (APAS: Ch28 Alg 28.19)
+src/Chap28/MaxContigSubSumDivConStEph.rs:151: info: replacing 2 existing annotation lines (APAS: Ch28 Alg 28.17)
+src/Chap28/MaxContigSubSumIterStEph.rs:129: info: replacing 2 existing annotation lines (APAS: Ch28 Alg 28.15)
+src/Chap28/MaxContigSubSumReducedStEph.rs:46: info: replacing 2 existing annotation lines (APAS: Ch28 Alg 28.16)
+src/Chap35/OrderStatSelectMtEph.rs:110: info: replacing 2 existing annotation lines (APAS: Ch35 Alg 35.2)
+src/Chap35/OrderStatSelectMtPer.rs:110: info: replacing 2 existing annotation lines (APAS: Ch35 Alg 35.2)
+src/Chap35/OrderStatSelectStEph.rs:88: info: replacing 2 existing annotation lines (APAS: Ch35 Alg 35.2)
+src/Chap35/OrderStatSelectStPer.rs:87: info: replacing 2 existing annotation lines (APAS: Ch35 Alg 35.2)
+src/Chap36/QuickSortMtEph.rs:183: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortMtEph.rs:193: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortMtEph.rs:203: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortMtEphSlice.rs:208: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortMtEphSlice.rs:222: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortMtEphSlice.rs:236: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortStEph.rs:181: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortStEph.rs:191: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap36/QuickSortStEph.rs:201: info: replacing 2 existing annotation lines (APAS: Ch36 Alg 36.1)
+src/Chap37/AVLTreeSeq.rs:243: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/AVLTreeSeq.rs:278: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/AVLTreeSeqMtPer.rs:217: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/AVLTreeSeqStEph.rs:277: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/AVLTreeSeqStEph.rs:311: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/AVLTreeSeqStPer.rs:246: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/BSTAVLMtEph.rs:886: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTAVLStEph.rs:171: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTBBAlphaMtEph.rs:602: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTBBAlphaStEph.rs:113: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTPlainMtEph.rs:602: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTPlainStEph.rs:128: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTRBMtEph.rs:257: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/BSTRBMtEph.rs:1069: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTRBStEph.rs:147: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSetAVLMtEph.rs:91: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSetBBAlphaMtEph.rs:75: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSetPlainMtEph.rs:75: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSetRBMtEph.rs:90: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSetSplayMtEph.rs:91: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSplayMtEph.rs:194: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap37/BSTSplayMtEph.rs:1852: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSplayStEph.rs:217: info: replacing 2 existing annotation lines (APAS: Ch37 Alg 37.4)
+src/Chap37/BSTSplayStEph.rs:301: info: replacing 2 existing annotation lines (APAS: Ch22 CS 22.2)
+src/Chap38/BSTParaMtEph.rs:249: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:273: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:297: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:308: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:319: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:324: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:338: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:347: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:359: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:367: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:372: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:377: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:397: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaMtEph.rs:414: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:251: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:275: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:291: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:311: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:322: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:333: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:340: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:367: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:378: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:386: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:393: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:400: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap38/BSTParaStEph.rs:421: info: replacing 2 existing annotation lines (APAS: Ch38 CS 38.11)
+src/Chap39/BSTParaTreapMtEph.rs:480: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTParaTreapMtEph.rs:807: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTParaTreapMtEph.rs:1863: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTParaTreapMtEph.rs:1880: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTParaTreapMtEph.rs:1924: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTParaTreapMtEph.rs:1937: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTSetTreapMtEph.rs:130: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTSetTreapMtEph.rs:146: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTSetTreapMtEph.rs:158: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTTreapStEph.rs:1607: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTTreapStEph.rs:1884: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTTreapStEph.rs:2758: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap39/BSTTreapStEph.rs:2782: info: replacing 2 existing annotation lines (APAS: Ch39 DS 39.3)
+src/Chap40/BSTSizeStEph.rs:319: info: replacing 2 existing annotation lines (APAS: Ch40 Alg 40.1)
+src/Chap40/BSTSizeStEph.rs:327: info: replacing 2 existing annotation lines (APAS: Ch40 Alg 40.1)
+src/Chap41/AVLTreeSetMtEph.rs:112: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:119: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:136: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:145: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/AVLTreeSetMtEph.rs:156: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:179: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:192: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:205: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:219: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:229: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtEph.rs:241: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:100: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:107: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:122: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:129: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/AVLTreeSetMtPer.rs:140: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:163: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:174: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:185: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:196: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:206: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetMtPer.rs:216: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:191: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:198: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:214: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:223: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/AVLTreeSetStEph.rs:234: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:256: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:268: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:280: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:293: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:302: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStEph.rs:313: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:185: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:192: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:208: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:217: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/AVLTreeSetStPer.rs:228: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:250: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:262: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:274: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:287: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:296: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/AVLTreeSetStPer.rs:307: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:184: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:191: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:208: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:218: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/ArraySetEnumMtEph.rs:226: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:238: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:251: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:264: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:277: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:284: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetEnumMtEph.rs:294: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:305: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:312: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:327: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:333: info: replacing 3 existing annotation lines (APAS: Ch41 Ex 41.3, Ch41 Ex 41.3)
+src/Chap41/ArraySetStEph.rs:341: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:363: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:376: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:389: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:402: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:409: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap41/ArraySetStEph.rs:420: info: replacing 3 existing annotation lines (APAS: Ch41 CS 41.3, Ch41 CS 41.4)
+src/Chap42/TableMtEph.rs:547: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:556: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:561: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:566: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:580: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:595: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:613: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:630: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:651: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:661: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:670: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:675: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:692: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableMtEph.rs:702: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:296: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:305: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:310: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:315: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:326: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:341: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:360: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:377: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:398: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:409: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:429: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:438: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:504: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStEph.rs:515: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:381: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:392: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:398: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:404: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:416: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:432: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:452: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:470: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:492: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:501: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:523: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:533: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:599: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap42/TableStPer.rs:608: info: replacing 2 existing annotation lines (APAS: Ch42 CS 42.5)
+src/Chap43/AugOrderedTableMtEph.rs:379: info: replacing 2 existing annotation lines (APAS: Ch43 Def 43.3)
+src/Chap43/AugOrderedTableStEph.rs:425: info: replacing 2 existing annotation lines (APAS: Ch43 Def 43.3)
+src/Chap43/AugOrderedTableStPer.rs:435: info: replacing 2 existing annotation lines (APAS: Ch43 Def 43.3)
+src/Chap43/OrderedSetMtEph.rs:187: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:197: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:207: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:218: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:229: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:237: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:245: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:252: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:259: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetMtEph.rs:267: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:323: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:333: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:343: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:354: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:365: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:384: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:392: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:402: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:409: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStEph.rs:417: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:297: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:307: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:317: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:328: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:339: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:357: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:365: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:375: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:382: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap43/OrderedSetStPer.rs:390: info: replacing 2 existing annotation lines (APAS: Ch43 CS 43.2)
+src/Chap44/DocumentIndex.rs:79: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.2)
+src/Chap44/DocumentIndex.rs:90: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.3)
+src/Chap44/DocumentIndex.rs:102: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.3)
+src/Chap44/DocumentIndex.rs:115: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.3)
+src/Chap44/DocumentIndex.rs:129: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.3)
+src/Chap44/DocumentIndex.rs:442: info: replacing 2 existing annotation lines (APAS: Ch44 Alg 44.3)
+src/Chap45/BalancedTreePQ.rs:76: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BalancedTreePQ.rs:88: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BalancedTreePQ.rs:100: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BalancedTreePQ.rs:110: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BinaryHeapPQ.rs:198: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BinaryHeapPQ.rs:211: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BinaryHeapPQ.rs:233: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/BinaryHeapPQ.rs:245: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/LeftistHeapPQ.rs:281: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/LeftistHeapPQ.rs:292: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/LeftistHeapPQ.rs:309: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/LeftistHeapPQ.rs:321: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/SortedListPQ.rs:94: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/SortedListPQ.rs:107: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/SortedListPQ.rs:123: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/SortedListPQ.rs:137: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/UnsortedListPQ.rs:87: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/UnsortedListPQ.rs:98: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/UnsortedListPQ.rs:121: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap45/UnsortedListPQ.rs:132: info: replacing 3 existing annotation lines (APAS: Ch45 DT 45.1, Ch45 DT 45.3)
+src/Chap47/ParaHashTableStEph.rs:375: info: replacing 2 existing annotation lines (APAS: Ch47 Def 47.3)
+src/Chap47/ParaHashTableStEph.rs:379: info: replacing 3 existing annotation lines (APAS: Ch47 Def 47.3, Ch47 Alg 47.4)
+src/Chap47/ParaHashTableStEph.rs:383: info: replacing 2 existing annotation lines (APAS: Ch47 Def 47.3)
+src/Chap47/ParaHashTableStEph.rs:475: info: replacing 2 existing annotation lines (APAS: Ch47 Def 47.3)
+src/Chap47/ParaHashTableStEph.rs:494: info: replacing 3 existing annotation lines (APAS: Ch47 Def 47.3, Ch47 Alg 47.4)
+src/Chap47/ParaHashTableStEph.rs:507: info: replacing 2 existing annotation lines (APAS: Ch47 Def 47.3)
+src/Chap49/MinEditDistMtEph.rs:113: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.5)
+src/Chap49/MinEditDistMtPer.rs:112: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.5)
+src/Chap49/MinEditDistStEph.rs:104: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.5)
+src/Chap49/MinEditDistStPer.rs:102: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.5)
+src/Chap49/SubsetSumMtEph.rs:109: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.2)
+src/Chap49/SubsetSumMtPer.rs:108: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.2)
+src/Chap49/SubsetSumStEph.rs:92: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.2)
+src/Chap49/SubsetSumStPer.rs:90: info: replacing 2 existing annotation lines (APAS: Ch49 Alg 49.2)
+src/Chap50/OptBinSearchTreeMtEph.rs:146: info: replacing 2 existing annotation lines (APAS: Ch50 Alg 50.2)
+src/Chap50/OptBinSearchTreeMtPer.rs:117: info: replacing 2 existing annotation lines (APAS: Ch50 Alg 50.2)
+src/Chap50/OptBinSearchTreeStEph.rs:145: info: replacing 2 existing annotation lines (APAS: Ch50 Alg 50.2)
+src/Chap50/OptBinSearchTreeStPer.rs:128: info: replacing 2 existing annotation lines (APAS: Ch50 Alg 50.2)
+src/Chap51/BottomUpDPStEph.rs:100: info: replacing 2 existing annotation lines (APAS: Ch51 Alg 51.1)
+src/Chap51/BottomUpDPStPer.rs:75: info: replacing 2 existing annotation lines (APAS: Ch51 Alg 51.1)
+src/Chap52/AdjMatrixGraphMtEph.rs:131: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:138: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:154: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:163: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:176: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:188: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtEph.rs:205: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:132: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:139: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:155: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:164: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:180: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:192: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphMtPer.rs:209: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:132: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:138: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:153: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:159: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:171: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:180: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStEph.rs:196: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:136: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:143: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:159: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:166: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:179: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:189: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjMatrixGraphStPer.rs:206: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.6)
+src/Chap52/AdjSeqGraphMtEph.rs:111: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtEph.rs:118: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtEph.rs:134: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtEph.rs:143: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtEph.rs:153: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtEph.rs:180: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtPer.rs:108: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtPer.rs:115: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtPer.rs:131: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtPer.rs:140: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphMtPer.rs:150: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:112: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:118: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:133: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:141: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:150: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStEph.rs:217: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStPer.rs:114: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStPer.rs:121: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStPer.rs:137: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStPer.rs:146: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjSeqGraphStPer.rs:156: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.5)
+src/Chap52/AdjTableGraphMtPer.rs:116: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphMtPer.rs:121: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphMtPer.rs:127: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphMtPer.rs:133: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphMtPer.rs:142: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStEph.rs:226: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStEph.rs:230: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStEph.rs:242: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStEph.rs:247: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStEph.rs:254: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStPer.rs:128: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStPer.rs:133: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStPer.rs:145: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStPer.rs:151: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/AdjTableGraphStPer.rs:159: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.3)
+src/Chap52/EdgeSetGraphMtPer.rs:98: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphMtPer.rs:103: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphMtPer.rs:114: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphMtPer.rs:119: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphMtPer.rs:127: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStEph.rs:96: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStEph.rs:100: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStEph.rs:112: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStEph.rs:116: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStEph.rs:121: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStPer.rs:101: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStPer.rs:106: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStPer.rs:117: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStPer.rs:122: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap52/EdgeSetGraphStPer.rs:128: info: replacing 2 existing annotation lines (APAS: Ch52 CS 52.1)
+src/Chap54/BFSMtEph.rs:282: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.4)
+src/Chap54/BFSMtEph.rs:300: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.6)
+src/Chap54/BFSMtPer.rs:284: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.4)
+src/Chap54/BFSMtPer.rs:302: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.6)
+src/Chap54/BFSStEph.rs:143: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.4)
+src/Chap54/BFSStEph.rs:161: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.6)
+src/Chap54/BFSStPer.rs:142: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.4)
+src/Chap54/BFSStPer.rs:160: info: replacing 2 existing annotation lines (APAS: Ch54 Alg 54.6)
+src/Chap55/DFSStEph.rs:198: info: replacing 3 existing annotation lines (APAS: Ch55 CS 55.8, Ch55 CS 55.8)
+src/Chap55/DFSStPer.rs:195: info: replacing 3 existing annotation lines (APAS: Ch55 CS 55.8, Ch55 CS 55.8)
+src/Chap57/DijkstraStEphF64.rs:90: info: replacing 2 existing annotation lines (APAS: Ch57 Alg 57.2)
+src/Chap57/DijkstraStEphF64.rs:176: info: replacing 2 existing annotation lines (APAS: Ch57 Alg 57.2)
+src/Chap57/DijkstraStEphU64.rs:86: info: replacing 2 existing annotation lines (APAS: Ch57 Alg 57.2)
+src/Chap57/DijkstraStEphU64.rs:163: info: replacing 2 existing annotation lines (APAS: Ch57 Alg 57.2)
+src/Chap58/BellmanFordStEphF64.rs:48: info: replacing 3 existing annotation lines (APAS: Ch58 Alg 58.2, Ch58 Alg 58.2)
+src/Chap58/BellmanFordStEphF64.rs:151: info: replacing 3 existing annotation lines (APAS: Ch58 Alg 58.2, Ch58 Alg 58.2)
+src/Chap58/BellmanFordStEphI64.rs:45: info: replacing 3 existing annotation lines (APAS: Ch58 Alg 58.2, Ch58 Alg 58.2)
+src/Chap58/BellmanFordStEphI64.rs:178: info: replacing 3 existing annotation lines (APAS: Ch58 Alg 58.2, Ch58 Alg 58.2)
+src/Chap59/JohnsonMtEphF64.rs:57: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonMtEphF64.rs:100: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonMtEphI64.rs:36: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonMtEphI64.rs:79: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonStEphF64.rs:55: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonStEphF64.rs:348: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonStEphI64.rs:52: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap59/JohnsonStEphI64.rs:378: info: replacing 2 existing annotation lines (APAS: Ch59 Alg 59.1)
+src/Chap61/EdgeContractionStEph.rs:39: info: replacing 2 existing annotation lines (APAS: Ch61 Alg 61.6)
+src/Chap61/EdgeContractionStEph.rs:61: info: replacing 2 existing annotation lines (APAS: Ch61 Alg 61.6)
+src/Chap62/StarContractionStEph.rs:44: info: replacing 2 existing annotation lines (APAS: Ch62 Thm 62.3)
+src/Chap62/StarContractionStEph.rs:153: info: replacing 2 existing annotation lines (APAS: Ch62 Thm 62.3)
+src/Chap62/StarPartitionMtEph.rs:51: info: replacing 2 existing annotation lines (APAS: Ch62 Thm 62.1)
+src/Chap62/StarPartitionMtEph.rs:80: info: replacing 2 existing annotation lines (APAS: Ch62 Thm 62.1)
+src/Chap66/BoruvkaMtEph.rs:131: info: replacing 2 existing annotation lines (APAS: Ch66 Alg 66.1)
+src/Chap66/BoruvkaMtEph.rs:150: info: replacing 2 existing annotation lines (APAS: Ch66 Alg 66.1)
+src/Chap66/BoruvkaMtEph.rs:751: info: replacing 2 existing annotation lines (APAS: Ch66 Alg 66.1)
+src/Chap66/BoruvkaMtEph.rs:983: info: replacing 2 existing annotation lines (APAS: Ch66 Alg 66.1)
+src/Chap66/BoruvkaStEph.rs:150: info: replacing 2 existing annotation lines (APAS: Ch66 Alg 66.1)
+src/Chap66/BoruvkaStEph.rs:172: info: replacing 3 existing annotation lines (APAS: Ch66 Alg 66.1, Ch66 Alg 66.3)
+
+Summary: 249 TOML ops (207 matched, 42 unmatched), 567 annotations applied, 126 files modified, 0 errors, 31 warnings, 578 info
+
+=========================================
+Cost spec match summary by ref
+=========================================
+
+FULLY MATCHED (58 refs, all ops found source fns):
+
+  Chap18 Ch20 CS 20.2 (15/15 ops) -> 5 files
+    ops: length, nth, empty, singleton, isEmpty, isSingleton, subseq, tabulate f n, map f a, filter f a, append a b, flatten a, update a (i,x), inject a b, ninject a b
+    files: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  Chap18 Ch20 CS 20.3 (1/1 ops) -> 5 files
+    ops: iterate f x a
+    files: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  Chap18 Ch20 CS 20.4 (1/1 ops) -> 5 files
+    ops: reduce f x a
+    files: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  Chap18 Ch20 CS 20.5 (1/1 ops) -> 5 files
+    ops: scan f x a
+    files: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs
+  Chap18 Ch20 CS 20.6 (1/1 ops) -> 1 files
+    ops: collect cmp a
+    files: src/Chap18/ArraySeq.rs
+  Chap18 Ch20 CS 20.7 (8/8 ops) -> 2 files
+    ops: nth, subseq, append, tabulate, map, filter, reduce, scan
+    files: src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  Chap19 Ch19 Alg 19.15 (1/1 ops) -> 3 files
+    ops: flatten
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap19 Ch20 CS 20.2 (15/15 ops) -> 4 files
+    ops: length, nth, empty, singleton, isEmpty, isSingleton, subseq, tabulate f n, map f a, filter f a, append a b, flatten a, update a (i,x), inject a b, ninject a b
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqMtEphSlice.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap19 Ch20 CS 20.3 (1/1 ops) -> 3 files
+    ops: iterate f x a
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap19 Ch20 CS 20.4 (1/1 ops) -> 3 files
+    ops: reduce f x a
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap19 Ch20 CS 20.5 (1/1 ops) -> 3 files
+    ops: scan f x a
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap21 Ch21 Alg 21.5 (1/1 ops) -> 1 files
+    ops: primes_bf
+    files: src/Chap21/Algorithm21_5.rs
+  Chap21 Ch21 Alg 21.6 (1/1 ops) -> 1 files
+    ops: prime_sieve
+    files: src/Chap21/Algorithm21_6.rs
+  Chap26 Ch26 Alg 26.2 (5/5 ops) -> 1 files
+    ops: max_element, sum, product, any, all
+    files: src/Chap26/DivConReduceStPer.rs
+  Chap26 Ch26 Alg 26.4 (1/1 ops) -> 1 files
+    ops: merge_sort
+    files: src/Chap26/MergeSortStPer.rs
+  Chap26 Ch26 Alg 26.5 (1/1 ops) -> 1 files
+    ops: scan_dc
+    files: src/Chap26/ScanDCStPer.rs
+  Chap26 Ch26 Alg 26.7 (1/1 ops) -> 1 files
+    ops: etsp
+    files: src/Chap26/ETSPStEph.rs
+  Chap27 Ch27 Alg 27.2 (1/1 ops) -> 1 files
+    ops: reduce_contract
+    files: src/Chap27/ReduceContractStEph.rs
+  Chap27 Ch27 Alg 27.3 (1/1 ops) -> 1 files
+    ops: scan_contract
+    files: src/Chap27/ScanContractStEph.rs
+  Chap28 Ch28 Alg 28.15 (1/1 ops) -> 1 files
+    ops: max_contig_sub_sum_iter
+    files: src/Chap28/MaxContigSubSumIterStEph.rs
+  Chap28 Ch28 Alg 28.16 (1/1 ops) -> 1 files
+    ops: max_contig_sub_sum_reduced
+    files: src/Chap28/MaxContigSubSumReducedStEph.rs
+  Chap28 Ch28 Alg 28.17 (1/1 ops) -> 1 files
+    ops: max_contig_sub_sum_divcon
+    files: src/Chap28/MaxContigSubSumDivConStEph.rs
+  Chap28 Ch28 Alg 28.19 (1/1 ops) -> 1 files
+    ops: max_contig_sub_sum_divcon_opt
+    files: src/Chap28/MaxContigSubSumDivConOptStEph.rs
+  Chap28 Ch28 Alg 28.6 (1/1 ops) -> 1 files
+    ops: max_contig_sub_sum_brute
+    files: src/Chap28/MaxContigSubSumBruteStEph.rs
+  Chap35 Ch35 Alg 35.2 (1/1 ops) -> 4 files
+    ops: select
+    files: src/Chap35/OrderStatSelectMtEph.rs, src/Chap35/OrderStatSelectMtPer.rs, src/Chap35/OrderStatSelectStEph.rs, src/Chap35/OrderStatSelectStPer.rs
+  Chap36 Ch36 Alg 36.1 (3/3 ops) -> 3 files
+    ops: quick_sort_random, quick_sort_first, quick_sort_median3
+    files: src/Chap36/QuickSortMtEph.rs, src/Chap36/QuickSortMtEphSlice.rs, src/Chap36/QuickSortStEph.rs
+  Chap37 Ch37 Alg 37.4 (1/1 ops) -> 15 files
+    ops: find
+    files: src/Chap37/BSTAVLMtEph.rs, src/Chap37/BSTAVLStEph.rs, src/Chap37/BSTBBAlphaMtEph.rs, src/Chap37/BSTBBAlphaStEph.rs, src/Chap37/BSTPlainMtEph.rs, src/Chap37/BSTPlainStEph.rs, src/Chap37/BSTRBMtEph.rs, src/Chap37/BSTRBStEph.rs, src/Chap37/BSTSetAVLMtEph.rs, src/Chap37/BSTSetBBAlphaMtEph.rs, src/Chap37/BSTSetPlainMtEph.rs, src/Chap37/BSTSetRBMtEph.rs, src/Chap37/BSTSetSplayMtEph.rs, src/Chap37/BSTSplayMtEph.rs, src/Chap37/BSTSplayStEph.rs
+  Chap39 Ch39 DS 39.3 (4/4 ops) -> 3 files
+    ops: join, split, expose, joinMid
+    files: src/Chap39/BSTParaTreapMtEph.rs, src/Chap39/BSTSetTreapMtEph.rs, src/Chap39/BSTTreapStEph.rs
+  Chap40 Ch40 Alg 40.1 (2/2 ops) -> 1 files
+    ops: rank, select
+    files: src/Chap40/BSTSizeStEph.rs
+  Chap41 Ch41 CS 41.3 (10/10 ops) -> 6 files
+    ops: size, singleton, toSeq, filter, intersection, union, difference, find, insert, delete
+    files: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  Chap41 Ch41 CS 41.4 (10/10 ops) -> 6 files
+    ops: size, singleton, toSeq, filter, intersection, union, difference, find, insert, delete
+    files: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  Chap41 Ch41 Ex 41.3 (2/2 ops) -> 6 files
+    ops: fromSeq (sequential), fromSeq (parallel)
+    files: src/Chap41/AVLTreeSetMtEph.rs, src/Chap41/AVLTreeSetMtPer.rs, src/Chap41/AVLTreeSetStEph.rs, src/Chap41/AVLTreeSetStPer.rs, src/Chap41/ArraySetEnumMtEph.rs, src/Chap41/ArraySetStEph.rs
+  Chap42 Ch42 CS 42.5 (14/14 ops) -> 3 files
+    ops: size, singleton, domain, filter, map, find, delete, insert, intersection, union, difference, restrict, subtract, tabulate
+    files: src/Chap42/TableMtEph.rs, src/Chap42/TableStEph.rs, src/Chap42/TableStPer.rs
+  Chap43 Ch43 CS 43.2 (10/10 ops) -> 3 files
+    ops: first, last, previous, next, split, join, getRange, rank, select, splitRank
+    files: src/Chap43/OrderedSetMtEph.rs, src/Chap43/OrderedSetStEph.rs, src/Chap43/OrderedSetStPer.rs
+  Chap43 Ch43 Def 43.3 (1/1 ops) -> 3 files
+    ops: reduceVal
+    files: src/Chap43/AugOrderedTableMtEph.rs, src/Chap43/AugOrderedTableStEph.rs, src/Chap43/AugOrderedTableStPer.rs
+  Chap44 Ch44 Alg 44.2 (1/1 ops) -> 1 files
+    ops: makeIndex
+    files: src/Chap44/DocumentIndex.rs
+  Chap44 Ch44 Alg 44.3 (4/4 ops) -> 1 files
+    ops: find, queryAnd, queryOr, queryAndNot
+    files: src/Chap44/DocumentIndex.rs
+  Chap45 Ch45 DT 45.1 (4/4 ops) -> 5 files
+    ops: insert, deleteMin, meld, fromSeq
+    files: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  Chap45 Ch45 DT 45.3 (4/4 ops) -> 5 files
+    ops: meld, insert, deleteMin, fromSeq
+    files: src/Chap45/BalancedTreePQ.rs, src/Chap45/BinaryHeapPQ.rs, src/Chap45/LeftistHeapPQ.rs, src/Chap45/SortedListPQ.rs, src/Chap45/UnsortedListPQ.rs
+  Chap47 Ch47 Alg 47.4 (1/1 ops) -> 1 files
+    ops: lookup
+    files: src/Chap47/ParaHashTableStEph.rs
+  Chap47 Ch47 Def 47.3 (3/3 ops) -> 1 files
+    ops: insert, lookup, delete
+    files: src/Chap47/ParaHashTableStEph.rs
+  Chap49 Ch49 Alg 49.2 (1/1 ops) -> 4 files
+    ops: subset_sum
+    files: src/Chap49/SubsetSumMtEph.rs, src/Chap49/SubsetSumMtPer.rs, src/Chap49/SubsetSumStEph.rs, src/Chap49/SubsetSumStPer.rs
+  Chap49 Ch49 Alg 49.5 (1/1 ops) -> 4 files
+    ops: min_edit_distance
+    files: src/Chap49/MinEditDistMtEph.rs, src/Chap49/MinEditDistMtPer.rs, src/Chap49/MinEditDistStEph.rs, src/Chap49/MinEditDistStPer.rs
+  Chap50 Ch50 Alg 50.2 (1/1 ops) -> 4 files
+    ops: OBST
+    files: src/Chap50/OptBinSearchTreeMtEph.rs, src/Chap50/OptBinSearchTreeMtPer.rs, src/Chap50/OptBinSearchTreeStEph.rs, src/Chap50/OptBinSearchTreeStPer.rs
+  Chap51 Ch51 Alg 51.1 (1/1 ops) -> 2 files
+    ops: med_bottom_up
+    files: src/Chap51/BottomUpDPStEph.rs, src/Chap51/BottomUpDPStPer.rs
+  Chap52 Ch52 CS 52.5 (6/6 ops) -> 4 files
+    ops: num_vertices, num_edges, has_edge, out_neighbors, out_degree, set_edge
+    files: src/Chap52/AdjSeqGraphMtEph.rs, src/Chap52/AdjSeqGraphMtPer.rs, src/Chap52/AdjSeqGraphStEph.rs, src/Chap52/AdjSeqGraphStPer.rs
+  Chap52 Ch52 CS 52.6 (7/7 ops) -> 4 files
+    ops: num_vertices, num_edges, has_edge, out_neighbors, out_degree, set_edge, complement
+    files: src/Chap52/AdjMatrixGraphMtEph.rs, src/Chap52/AdjMatrixGraphMtPer.rs, src/Chap52/AdjMatrixGraphStEph.rs, src/Chap52/AdjMatrixGraphStPer.rs
+  Chap54 Ch54 Alg 54.4 (1/1 ops) -> 4 files
+    ops: bfs
+    files: src/Chap54/BFSMtEph.rs, src/Chap54/BFSMtPer.rs, src/Chap54/BFSStEph.rs, src/Chap54/BFSStPer.rs
+  Chap54 Ch54 Alg 54.6 (1/1 ops) -> 4 files
+    ops: bfs_tree
+    files: src/Chap54/BFSMtEph.rs, src/Chap54/BFSMtPer.rs, src/Chap54/BFSStEph.rs, src/Chap54/BFSStPer.rs
+  Chap55 Ch55 CS 55.8 (2/2 ops) -> 2 files
+    ops: dfs (adjacency table), dfs (adjacency sequence)
+    files: src/Chap55/DFSStEph.rs, src/Chap55/DFSStPer.rs
+  Chap57 Ch57 Alg 57.2 (1/1 ops) -> 2 files
+    ops: dijkstra
+    files: src/Chap57/DijkstraStEphF64.rs, src/Chap57/DijkstraStEphU64.rs
+  Chap58 Ch58 Alg 58.2 (2/2 ops) -> 2 files
+    ops: bellman_ford (tables), bellman_ford (sequences)
+    files: src/Chap58/BellmanFordStEphF64.rs, src/Chap58/BellmanFordStEphI64.rs
+  Chap59 Ch59 Alg 59.1 (1/1 ops) -> 4 files
+    ops: johnson_apsp
+    files: src/Chap59/JohnsonMtEphF64.rs, src/Chap59/JohnsonMtEphI64.rs, src/Chap59/JohnsonStEphF64.rs, src/Chap59/JohnsonStEphI64.rs
+  Chap61 Ch61 Alg 61.6 (1/1 ops) -> 1 files
+    ops: edge_contract
+    files: src/Chap61/EdgeContractionStEph.rs
+  Chap62 Ch62 Thm 62.1 (1/1 ops) -> 1 files
+    ops: parallel_star_partition
+    files: src/Chap62/StarPartitionMtEph.rs
+  Chap62 Ch62 Thm 62.3 (1/1 ops) -> 1 files
+    ops: star_contract
+    files: src/Chap62/StarContractionStEph.rs
+  Chap66 Ch66 Alg 66.1 (1/1 ops) -> 2 files
+    ops: boruvka
+    files: src/Chap66/BoruvkaMtEph.rs, src/Chap66/BoruvkaStEph.rs
+  Chap66 Ch66 Alg 66.3 (1/1 ops) -> 1 files
+    ops: boruvka_mst_with_seed
+    files: src/Chap66/BoruvkaStEph.rs
+
+PARTIALLY MATCHED (9 refs, some ops missing):
+
+  Chap18 Ch22 CS 22.2 (3/5 ops) -> 7 files
+    matched: nth, update, inject
+    MISSING: fromSeq, toSeq
+    files: src/Chap18/ArraySeq.rs, src/Chap18/ArraySeqMtEph.rs, src/Chap18/ArraySeqMtPer.rs, src/Chap18/ArraySeqStEph.rs, src/Chap18/ArraySeqStPer.rs, src/Chap18/LinkedListStEph.rs, src/Chap18/LinkedListStPer.rs
+  Chap19 Ch22 CS 22.2 (3/5 ops) -> 3 files
+    matched: nth, update, inject
+    MISSING: fromSeq, toSeq
+    files: src/Chap19/ArraySeqMtEph.rs, src/Chap19/ArraySeqStEph.rs, src/Chap19/ArraySeqStPer.rs
+  Chap23 Ch20 CS 20.6 (4/6 ops) -> 1 files
+    matched: nth, append, update, subseq
+    MISSING: inject, ninject
+    files: src/Chap23/PrimTreeSeqStPer.rs
+  Chap23 Ch22 CS 22.2 (2/5 ops) -> 1 files
+    matched: nth, update
+    MISSING: fromSeq, toSeq, inject
+    files: src/Chap23/PrimTreeSeqStPer.rs
+  Chap23 Ch23 CS 23.2 (2/5 ops) -> 1 files
+    matched: length, expose
+    MISSING: join(Zero), join(One(x)), join(Two(L,R))
+    files: src/Chap23/PrimTreeSeqStPer.rs
+  Chap37 Ch22 CS 22.2 (2/5 ops) -> 7 files
+    matched: nth, update
+    MISSING: fromSeq, toSeq, inject
+    files: src/Chap37/AVLTreeSeq.rs, src/Chap37/AVLTreeSeqMtPer.rs, src/Chap37/AVLTreeSeqStEph.rs, src/Chap37/AVLTreeSeqStPer.rs, src/Chap37/BSTRBMtEph.rs, src/Chap37/BSTSplayMtEph.rs, src/Chap37/BSTSplayStEph.rs
+  Chap38 Ch38 CS 38.11 (13/14 ops) -> 2 files
+    matched: singleton, split, join, joinM, joinPair, find, insert, delete, union, intersect, difference, filter, reduce
+    MISSING: empty
+    files: src/Chap38/BSTParaMtEph.rs, src/Chap38/BSTParaStEph.rs
+  Chap52 Ch52 CS 52.1 (5/6 ops) -> 3 files
+    matched: num_vertices, num_edges, has_edge, out_neighbors, out_degree
+    MISSING: set_edge
+    files: src/Chap52/EdgeSetGraphMtPer.rs, src/Chap52/EdgeSetGraphStEph.rs, src/Chap52/EdgeSetGraphStPer.rs
+  Chap52 Ch52 CS 52.3 (5/6 ops) -> 3 files
+    matched: num_vertices, num_edges, has_edge, out_neighbors, out_degree
+    MISSING: set_edge
+    files: src/Chap52/AdjTableGraphMtPer.rs, src/Chap52/AdjTableGraphStEph.rs, src/Chap52/AdjTableGraphStPer.rs
+
+UNMATCHED (19 refs, no ops found):
+
+  Chap02 Ch2 Def 2.1 (2 ops) — no matching fns
+    ops: seq_compose, par_compose
+  Chap02 Ch2 Ex 2.8 (1 ops) — no matching fns
+    ops: merge_sort
+  Chap03 Ch3 CS 3.2 (1 ops) — no matching fns
+    ops: sort
+  Chap03 Ch3 CS 3.3 (1 ops) — no matching fns
+    ops: sort
+  Chap03 Ch3 DT 3.4 / CS 3.5 (3 ops) — no matching fns
+    ops: empty, insert, removeMin
+  Chap04 Ch4 Alg 4.14 (1 ops) — no source directory
+    ops: greedyApproxSS
+  Chap15 Ch15 Def 15.7 (1 ops) — no source directory
+    ops: greedy_schedule
+  Chap15 Ch15 Ex 15.6 (1 ops) — no source directory
+    ops: mergesort
+  Chap16 Ch16 Ex 16.2 (1 ops) — no source directory
+    ops: mergesort
+  Chap16 Ch16 Thm 16.1 (1 ops) — no source directory
+    ops: superlinear_recurrence
+  Chap19 Ch20 CS 20.6 (1 ops) — no matching fns
+    ops: collect cmp a
+  Chap21 Ch21 Alg 21.4 (1 ops) — no matching fns
+    ops: is_prime
+  Chap25 Ch25 Ex 25.2 (1 ops) — no source directory
+    ops: find_min_via_max
+  Chap25 Ch25 Ex 25.5 (1 ops) — no source directory
+    ops: overlap_brute_force
+  Chap33 Ch33 Darts Game (1 ops) — no source directory
+    ops: darts_game
+  Chap45 Ch45 Alg 45.2 (1 ops) — no matching fns
+    ops: sort
+  Chap47 Ch47 Def 47.5 (2 ops) — no matching fns
+    ops: unsuccessful lookup / insert, successful lookup
+  Chap65 Ch65 Alg 65.1 (2 ops) — no source directory
+    ops: prim (binary heap), prim (Fibonacci heap)
+  Chap65 Ch65 Alg 65.2 (1 ops) — no source directory
+    ops: kruskal

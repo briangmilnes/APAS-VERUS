@@ -109,14 +109,14 @@ broadcast use {
                     && 0 <= j < adj.spec_index(i).spec_len()
                     ==> #[trigger] constructed.spec_neighbor(i, j) == adj.spec_index(i).spec_index(j);
 
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; array length.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphsteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
-        /// - APAS: Work Theta(n + m), Span Theta(n + m)
-        /// - Claude-Opus-4.6: Work Theta(n + m), Span Theta(n + m) — agrees; sums all neighbor lengths.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphsteph_wf(),
@@ -130,16 +130,16 @@ broadcast use {
                     |i: int| self.spec_degree(i),
                 );
 
-        /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; linear scan of neighbor list.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(u)), Span O(lg d_g(u))
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
                 0 <= j < self.spec_degree(u as int)
                 && #[trigger] self.spec_neighbor(u as int, j) == v;
 
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — tabulate copies neighbor list.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(v)), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures
@@ -147,8 +147,8 @@ broadcast use {
                 forall|j: int| 0 <= j < neighbors.spec_len()
                     ==> #[trigger] neighbors.spec_index(j) == self.spec_neighbor(u as int, j);
 
-        /// - APAS: Work Theta(1), Span Theta(1) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; neighbor array length.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphsteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
@@ -214,8 +214,8 @@ broadcast use {
                     0 <= j < self.spec_degree(u as int)
                     ==> #[trigger] self.spec_neighbor(u as int, j) != v;
 
-        /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
-        /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; rebuilds neighbor list.
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1)
+        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
