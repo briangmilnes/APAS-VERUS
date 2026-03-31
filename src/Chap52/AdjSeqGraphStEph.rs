@@ -174,6 +174,46 @@ broadcast use {
                     && 0 <= j < old(self).spec_degree(i)
                     ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);
 
+        /// - APAS: Work Theta(n + deg(u)), Span Theta(n + deg(u))
+        /// - Claude-Opus-4.6: Delegates to set_edge(u, v, true).
+        fn insert_edge(&mut self, u: usize, v: usize)
+            requires
+                old(self).spec_adjseqgraphsteph_wf(),
+                u < old(self).spec_num_vertices(),
+                v < old(self).spec_num_vertices(),
+            ensures
+                self.spec_adjseqgraphsteph_wf(),
+                self.spec_num_vertices() == old(self).spec_num_vertices(),
+                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int
+                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),
+                forall|i: int, j: int|
+                    0 <= i < old(self).spec_num_vertices() && i != u as int
+                    && 0 <= j < old(self).spec_degree(i)
+                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),
+                exists|j: int|
+                    0 <= j < self.spec_degree(u as int)
+                    && #[trigger] self.spec_neighbor(u as int, j) == v;
+
+        /// - APAS: Work Theta(n + deg(u)), Span Theta(n + deg(u))
+        /// - Claude-Opus-4.6: Delegates to set_edge(u, v, false).
+        fn delete_edge(&mut self, u: usize, v: usize)
+            requires
+                old(self).spec_adjseqgraphsteph_wf(),
+                u < old(self).spec_num_vertices(),
+                v < old(self).spec_num_vertices(),
+            ensures
+                self.spec_adjseqgraphsteph_wf(),
+                self.spec_num_vertices() == old(self).spec_num_vertices(),
+                forall|i: int| 0 <= i < old(self).spec_num_vertices() && i != u as int
+                    ==> #[trigger] self.spec_degree(i) == old(self).spec_degree(i),
+                forall|i: int, j: int|
+                    0 <= i < old(self).spec_num_vertices() && i != u as int
+                    && 0 <= j < old(self).spec_degree(i)
+                    ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j),
+                forall|j: int|
+                    0 <= j < self.spec_degree(u as int)
+                    ==> #[trigger] self.spec_neighbor(u as int, j) != v;
+
         /// - APAS: Work Theta(deg(u)), Span Theta(deg(u)) [Cost Spec 52.5]
         /// - Claude-Opus-4.6: Work Theta(deg(u)), Span Theta(deg(u)) — agrees; rebuilds neighbor list.
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
@@ -320,6 +360,14 @@ broadcast use {
                     assert(self.adj.spec_index(u) == old(self).adj.spec_index(u));
                 }
             }
+        }
+
+        fn insert_edge(&mut self, u: usize, v: usize) {
+            self.set_edge(u, v, true);
+        }
+
+        fn delete_edge(&mut self, u: usize, v: usize) {
+            self.set_edge(u, v, false);
         }
 
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {

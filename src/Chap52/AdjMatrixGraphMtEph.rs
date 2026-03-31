@@ -148,8 +148,10 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
-            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n(), v < self.spec_n()
-            ensures found == self.spec_edge(u as int, v as int);
+            requires self.spec_adjmatrixgraphmteph_wf()
+            ensures
+                u < self.spec_n() && v < self.spec_n() ==> found == self.spec_edge(u as int, v as int),
+                (u >= self.spec_n() || v >= self.spec_n()) ==> !found;
 
         /// Work Theta(n), Span Theta(n)
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)
@@ -164,11 +166,13 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         fn out_degree(&self, u: usize) -> (d: usize)
-            requires self.spec_adjmatrixgraphmteph_wf(), u < self.spec_n()
-            ensures d as nat == spec_count_true(
-                |v: int| self.spec_edge(u as int, v),
-                self.spec_n() as int,
-            );
+            requires self.spec_adjmatrixgraphmteph_wf()
+            ensures
+                u < self.spec_n() ==> d as nat == spec_count_true(
+                    |v: int| self.spec_edge(u as int, v),
+                    self.spec_n() as int,
+                ),
+                u >= self.spec_n() ==> d == 0;
 
         /// Work Theta(1), Span Theta(1)
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
@@ -286,6 +290,9 @@ broadcast use {
         }
 
         fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
+            if u >= self.n || v >= self.n {
+                return false;
+            }
             *self.matrix.nth(u).nth(v)
         }
 
@@ -348,6 +355,9 @@ broadcast use {
         }
 
         fn out_degree(&self, u: usize) -> (d: usize) {
+            if u >= self.n {
+                return 0;
+            }
             let n = self.n;
             let row = self.matrix.nth(u);
             let mut count: usize = 0;
