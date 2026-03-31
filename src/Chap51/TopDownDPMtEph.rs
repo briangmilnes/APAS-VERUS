@@ -119,7 +119,7 @@ pub mod TopDownDPMtEph {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequences into struct.
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self)
             ensures
@@ -129,25 +129,25 @@ pub mod TopDownDPMtEph {
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_s_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpmteph_wf(),
             ensures len as nat == self.spec_t_len();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- two length checks.
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpmteph_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_s(&mut self, s: ArraySeqMtEphS<char>)
             requires old(self).spec_topdowndpmteph_wf(),
@@ -156,7 +156,7 @@ pub mod TopDownDPMtEph {
                 self.spec_s() == s@,
                 self.spec_t() == old(self).spec_t();
 
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move sequence.
         fn set_t(&mut self, t: ArraySeqMtEphS<char>)
             requires old(self).spec_topdowndpmteph_wf(),

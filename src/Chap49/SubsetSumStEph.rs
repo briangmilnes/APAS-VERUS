@@ -74,7 +74,7 @@ pub mod SubsetSumStEph {
         spec fn spec_multiset_len(&self) -> nat;
 
         /// Create new subset sum solver.
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- allocate empty structures.
         fn new() -> (empty: Self)
         where
@@ -83,7 +83,7 @@ pub mod SubsetSumStEph {
             ensures empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- move multiset into struct.
         fn from_multiset(multiset: ArraySeqStEphS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
@@ -97,26 +97,26 @@ pub mod SubsetSumStEph {
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get the multiset.
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return reference.
         fn multiset(&self) -> (ms: &ArraySeqStEphS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Set element at index (ephemeral mutation).
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- array set plus memo clear.
         fn set(&mut self, index: usize, value: T)
             requires index < old(self).spec_multiset_len(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Clear memoization table.
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(n), Span O(n) -- clear hash map.
         fn clear_memo(&mut self)
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return cached length.
         fn memo_size(&self) -> (count: usize);
     }
@@ -226,7 +226,7 @@ pub mod SubsetSumStEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait SubsetSumStEphMutTrait<T: StT> {
         /// Get mutable multiset (ephemeral allows mutation).
-        /// - APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
         /// - Claude-Opus-4.6: Work O(1), Span O(1) -- return mutable reference.
         fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T>;
     }

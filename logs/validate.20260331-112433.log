@@ -1,0 +1,56 @@
+error[E0432]: unresolved import `state_machines_macros`
+  --> src/experiments/state_machine_set_mt.rs:25:9
+   |
+25 |     use state_machines_macros::tokenized_state_machine;
+   |         ^^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `state_machines_macros`
+   |
+help: there is a crate or module with a similar name
+   |
+25 |     use verus_state_machines_macros::tokenized_state_machine;
+   |         ++++++
+
+error[E0433]: failed to resolve: use of undeclared type `SetSM`
+   --> src/experiments/state_machine_set_mt.rs:163:17
+    |
+163 |             ) = SetSM::Instance::initialize();
+    |                 ^^^^^ use of undeclared type `SetSM`
+    |
+help: consider importing one of these structs
+    |
+ 20 +     use crate::experiments::state_machine_set_mt::state_machine_set_mt::RwLockToks::Instance;
+    |
+ 20 +     use vstd::rwlock::RwLockToks::Instance;
+    |
+ 20 +     use vstd::shared::Dupe::Instance;
+    |
+help: if you import `Instance`, refer to it directly
+    |
+163 -             ) = SetSM::Instance::initialize();
+163 +             ) = Instance::initialize();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `SetSM`
+   --> src/experiments/state_machine_set_mt.rs:117:37
+    |
+117 |         pub ghost_contents: Tracked<SetSM::contents>,
+    |                                     ^^^^^ use of undeclared type `SetSM`
+
+error[E0433]: failed to resolve: use of undeclared type `SetSM`
+   --> src/experiments/state_machine_set_mt.rs:121:23
+    |
+121 |         pub instance: SetSM::Instance,
+    |                       ^^^^^ use of undeclared type `SetSM`
+
+error[E0433]: failed to resolve: use of undeclared type `SetSM`
+   --> src/experiments/state_machine_set_mt.rs:139:27
+    |
+139 |         pub inst: Tracked<SetSM::Instance>,
+    |                           ^^^^^ use of undeclared type `SetSM`
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0432, E0433.
+For more information about an error, try `rustc --explain E0432`.
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22700MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

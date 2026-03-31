@@ -47,7 +47,7 @@ pub mod SSSPResultStEphF64 {
 
         spec fn spec_source(&self) -> usize;
 
-        /// - APAS: (no cost stated) — data structure scaffolding.
+        /// - Alg Analysis: APAS: (no cost stated) — data structure scaffolding.
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — initializes distance and predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
             requires source < n,
@@ -57,7 +57,7 @@ pub mod SSSPResultStEphF64 {
                 empty.spec_predecessors().len() == n,
                 empty.spec_source() == source;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index lookup.
         fn get_distance(&self, v: usize) -> (dist: WrappedF64)
             requires self.spec_ssspresultstephf64_wf(),
@@ -65,7 +65,7 @@ pub mod SSSPResultStEphF64 {
                 v >= self.spec_distances().len() ==> dist@ == UNREACHABLE_SPEC(),
                 v < self.spec_distances().len() ==> dist == self.spec_distances()[v as int];
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index update.
         fn set_distance(&mut self, v: usize, dist: WrappedF64)
             requires old(self).spec_ssspresultstephf64_wf(),
@@ -77,7 +77,7 @@ pub mod SSSPResultStEphF64 {
                 self.spec_predecessors() == old(self).spec_predecessors(),
                 self.spec_source() == old(self).spec_source();
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index lookup.
         fn get_predecessor(&self, v: usize) -> (pred: Option<usize>)
             requires self.spec_ssspresultstephf64_wf(),
@@ -86,7 +86,7 @@ pub mod SSSPResultStEphF64 {
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] == NO_PREDECESSOR ==> pred is None,
                 v < self.spec_predecessors().len() && self.spec_predecessors()[v as int] != NO_PREDECESSOR ==> pred == Some(self.spec_predecessors()[v as int]);
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — array index update.
         fn set_predecessor(&mut self, v: usize, pred: usize)
             requires old(self).spec_ssspresultstephf64_wf(),
@@ -98,7 +98,7 @@ pub mod SSSPResultStEphF64 {
                 self.spec_distances() == old(self).spec_distances(),
                 self.spec_source() == old(self).spec_source();
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, v: usize) -> (b: bool)
             requires self.spec_ssspresultstephf64_wf(),
@@ -106,7 +106,7 @@ pub mod SSSPResultStEphF64 {
                 v >= self.spec_distances().len() ==> !b,
                 v < self.spec_distances().len() ==> b == self.spec_distances()[v as int].spec_is_finite();
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             requires self.spec_ssspresultstephf64_wf();

@@ -45,7 +45,7 @@ pub mod AllPairsResultStPerI64 {
 
         spec fn spec_predecessor_at(&self, u: int, v: int) -> usize;
 
-        /// - APAS: (no cost stated) — data structure scaffolding.
+        /// - Alg Analysis: APAS: (no cost stated) — data structure scaffolding.
         /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
         fn new(n: usize) -> (empty: Self)
             ensures
@@ -63,7 +63,7 @@ pub mod AllPairsResultStPerI64 {
                     0 <= r < n && 0 <= c < n ==>
                     empty.spec_predecessor_at(r, c) == NO_PREDECESSOR;
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
             ensures
@@ -71,7 +71,7 @@ pub mod AllPairsResultStPerI64 {
                 (u as int) < self.spec_distances_len() && (v as int) >= self.spec_distances_row_len(u as int) ==> dist == UNREACHABLE,
                 (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
         fn set_distance(self, u: usize, v: usize, dist: i64) -> (updated: Self)
             ensures
@@ -97,7 +97,7 @@ pub mod AllPairsResultStPerI64 {
                     && 0 <= c < self.spec_predecessors_row_len(r)
                     ==> updated.spec_predecessor_at(r, c) == self.spec_predecessor_at(r, c);
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
             ensures
@@ -106,7 +106,7 @@ pub mod AllPairsResultStPerI64 {
                 (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) == NO_PREDECESSOR ==> pred is None,
                 (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row (persistent: returns new struct).
         fn set_predecessor(self, u: usize, v: usize, pred: usize) -> (updated: Self)
             ensures
@@ -132,7 +132,7 @@ pub mod AllPairsResultStPerI64 {
                     && 0 <= c < self.spec_distances_row_len(r)
                     ==> updated.spec_distance_at(r, c) == self.spec_distance_at(r, c);
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool)
             ensures
@@ -141,7 +141,7 @@ pub mod AllPairsResultStPerI64 {
                 (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==>
                     b == (self.spec_distance_at(u as int, v as int) != UNREACHABLE);
 
-        /// - APAS: (no cost stated)
+        /// - Alg Analysis: APAS: (no cost stated)
         /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             ensures

@@ -47,7 +47,7 @@ pub mod Algorithm21_1 {
     //		7. proof fns/broadcast groups
 
     /// Lemma: sum_inner_lens is monotonically increasing.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_mono<T>(ss: Seq<ArraySeqStPerS<T>>, a: int, b: int)
         requires 0 <= a <= b <= ss.len()
@@ -60,7 +60,7 @@ pub mod Algorithm21_1 {
     }
 
     /// Lemma: if all inner sequences have the same length m, then sum = k * m.
-    /// - APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: N/A — proof function, no runtime cost.
     proof fn lemma_sum_inner_lens_uniform<T>(ss: Seq<ArraySeqStPerS<T>>, k: int, m: int)
         requires

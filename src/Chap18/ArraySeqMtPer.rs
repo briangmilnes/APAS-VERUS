@@ -115,7 +115,7 @@ pub mod ArraySeqMtPer {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
@@ -142,7 +142,7 @@ pub mod ArraySeqMtPer {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
@@ -170,7 +170,7 @@ pub mod ArraySeqMtPer {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
@@ -894,7 +894,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel map. Transform each element via `f` using fork-join.
-        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
@@ -952,7 +952,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel filter. Keep elements satisfying `pred` using fork-join.
-        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
@@ -1049,7 +1049,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// - Parallel reduce. Combine elements using associative `f` and identity `id` via fork-join.
-        /// - APAS: no cost spec (semantics-only chapter).
+        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Claude-Opus-4.6: Work Θ(|a|), Span Θ(log|a|).
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,

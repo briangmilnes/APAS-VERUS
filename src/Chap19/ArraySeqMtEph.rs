@@ -183,7 +183,7 @@ pub mod ArraySeqMtEph {
             recommends i < self.spec_len();
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
@@ -196,7 +196,7 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// - Set the element at `index` to `item` in place (ephemeral mutation).
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1).
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
@@ -221,7 +221,7 @@ pub mod ArraySeqMtEph {
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(length), Span Θ(log length).
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
@@ -249,7 +249,7 @@ pub mod ArraySeqMtEph {
                 forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
 
         /// - Create sequence from Vec.
-        /// - APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
         /// - Claude-Opus-4.6: Work Θ(n) worst case, Θ(1) best case, Span Θ(1).
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
