@@ -109,14 +109,14 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; seq len
         fn num_vertices(&self) -> (n: usize)
             requires self.spec_adjseqgraphmteph_wf()
             ensures n as nat == self.spec_num_vertices();
 
         /// Work Theta(n + m), Span Theta(lg n)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(lg n) — DIFFERS: APAS assumes cached; impl sums degrees
         fn num_edges(&self) -> (m: usize)
             requires
                 self.spec_adjseqgraphmteph_wf(),
@@ -132,7 +132,7 @@ broadcast use {
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(u)), Span O(lg d_g(u))
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — matches APAS work; sequential scan
         fn has_edge(&self, u: usize, v: usize) -> (found: bool)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures found == exists|j: int|
@@ -141,7 +141,7 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(d_g(v)), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(v)), Span O(d_g(v)) — matches APAS work; clone inner seq
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures
@@ -151,7 +151,7 @@ broadcast use {
 
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; inner seq len
         fn out_degree(&self, u: usize) -> (d: usize)
             requires self.spec_adjseqgraphmteph_wf(), u < self.spec_num_vertices()
             ensures d as nat == self.spec_degree(u as int);
@@ -178,7 +178,7 @@ broadcast use {
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — DIFFERS: APAS says O(n), O(1); impl rebuilds neighbor list
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphmteph_wf(),

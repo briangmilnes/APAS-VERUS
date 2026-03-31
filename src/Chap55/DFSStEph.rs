@@ -197,7 +197,7 @@ broadcast use vstd::seq::group_seq_axioms;
         /// Performs DFS from source vertex s on adjacency list graph G.
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O((m+n) lg n), Span O((m+n) lg n)
         /// - Alg Analysis: APAS (Ch55 CS 55.8): Work O(m + n), Span O(m + n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((m+n) lg n), Span O((m+n) lg n) — matches APAS tree-based; uses AVL set for visited, adj seq for graph
         fn dfs(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (reachable: AVLTreeSetStEph<usize>)
             requires
                 source < graph@.len(),

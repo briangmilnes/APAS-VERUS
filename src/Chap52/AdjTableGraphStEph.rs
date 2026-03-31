@@ -224,11 +224,11 @@ broadcast use {
                     ==> table@.dom().contains(v),
             ensures out.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; table size
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — DIFFERS: APAS assumes cached; impl sums degrees sequentially
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphsteph_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
@@ -240,19 +240,19 @@ broadcast use {
                 self.spec_adj().dom().len() < usize::MAX as nat,
             ensures verts@ == self.spec_adj().dom();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find + set find
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             requires self.spec_adjtablegraphsteph_wf()
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@));
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + d_g(v)), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find returns neighbor set
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             requires self.spec_adjtablegraphsteph_wf()
             ensures
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
                 !self.spec_adj().dom().contains(u@) ==> neighbors@ == Set::<<V as View>::V>::empty();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n)
-        /// - Alg Analysis: Claude-Opus-4.6 (1M): NONE
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; table find + set len
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphsteph_wf();
         /// - APAS: Work Theta(lg n), Span Theta(lg n) [Cost Spec 52.3]
