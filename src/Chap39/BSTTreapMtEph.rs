@@ -243,6 +243,10 @@ pub mod BSTTreapMtEph {
         spec fn spec_link_size_wf(link: &Link<T>) -> bool;
         spec fn spec_height_link(link: &Link<T>) -> nat;
         spec fn spec_bst_link(link: &Link<T>) -> bool;
+        spec fn spec_in_order_link(link: &Link<T>) -> Seq<T>;
+        spec fn spec_pre_order_link(link: &Link<T>) -> Seq<T>;
+        spec fn spec_min_link(link: &Link<T>) -> Option<T>;
+        spec fn spec_max_link(link: &Link<T>) -> Option<T>;
     }
 
     /// Treap trait for multi-threaded ephemeral access.
@@ -253,6 +257,113 @@ pub mod BSTTreapMtEph {
     /// Interior mutability via RwLock precludes `old()` specs on insert/delete.
     pub trait BSTTreapMtEphTrait<T: StTInMtT + Ord + IsLtTransitive>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_bsttreapmteph_wf(&self) -> bool;
+        spec fn spec_size(self) -> nat;
+        spec fn spec_contains(self, target: T) -> bool;
+
+        proof fn lemma_bst_decompose(link: &Link<T>)
+            requires Lnk::spec_bst_link(link),
+            ensures match link {
+                None => true,
+                Some(node) => {
+                    Lnk::spec_bst_link(&node.left)
+                    && Lnk::spec_bst_link(&node.right)
+                    && (forall|k: T| #[trigger] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
+                    && (forall|k: T| #[trigger] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
+                },
+            };
+
+        proof fn lemma_contains_left(node: &Box<Node<T>>, k: T)
+            requires spec_contains_link(&node.left, k),
+            ensures spec_contains_link(&Some(*node), k);
+
+        proof fn lemma_contains_right(node: &Box<Node<T>>, k: T)
+            requires spec_contains_link(&node.right, k),
+            ensures spec_contains_link(&Some(*node), k);
+
+        proof fn lemma_contains_root(node: &Box<Node<T>>)
+            ensures spec_contains_link(&Some(*node), node.key);
+
+        proof fn lemma_height_le_size(link: &Link<T>)
+            requires
+                Lnk::spec_link_size_wf(link),
+                Lnk::spec_size_link(link) < usize::MAX as nat,
+            ensures Lnk::spec_height_link(link) <= Lnk::spec_size_link(link);
+
+        proof fn lemma_size_wf_child_bounded(link: &Link<T>)
+            requires
+                Lnk::spec_link_size_wf(link),
+                Lnk::spec_size_link(link) > 0,
+                Lnk::spec_size_link(link) < usize::MAX as nat,
+            ensures
+                match link {
+                    None => true,
+                    Some(node) => {
+                        Lnk::spec_size_link(&node.left) < usize::MAX as nat
+                        && Lnk::spec_size_link(&node.right) < usize::MAX as nat
+                    },
+                };
+
+        proof fn lemma_wf_decompose(link: &Link<T>)
+            requires Lnk::spec_link_size_wf(link),
+            ensures match link {
+                None => true,
+                Some(node) => {
+                    node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right)
+                    && Lnk::spec_link_size_wf(&node.left)
+                    && Lnk::spec_link_size_wf(&node.right)
+                },
+            };
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        proof fn lemma_wf_assemble_node(node: &Node<T>)
+            requires
+                node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right),
+                Lnk::spec_link_size_wf(&node.left),
+                Lnk::spec_link_size_wf(&node.right),
+            ensures Lnk::spec_link_size_wf(&Some(Box::new(*node)));
+
+        /// - APAS: Work Θ(1), Span Θ(1)
+        fn size_link(link: &Link<T>) -> (sz: usize)
+            requires Lnk::spec_link_size_wf(link),
+            ensures sz as nat == Lnk::spec_size_link(link);
+
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+            requires
+                Lnk::spec_bst_link(link),
+                T::obeys_partial_cmp_spec(),
+            ensures
+                found.is_some() <==> spec_contains_link(link, *target),
+                found.is_some() ==> *found.unwrap() == *target;
+
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
+            requires Lnk::spec_bst_link(link),
+            ensures
+                min_val.is_some() ==> spec_contains_link(link, *min_val.unwrap()),
+                match (min_val, Lnk::spec_min_link(link)) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                };
+
+        /// - APAS: Work O(log n) expected, Span O(log n) expected
+        fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
+            requires Lnk::spec_bst_link(link),
+            ensures
+                max_val.is_some() ==> spec_contains_link(link, *max_val.unwrap()),
+                match (max_val, Lnk::spec_max_link(link)) {
+                    (Some(rv), Some(sv)) => *rv == sv,
+                    (None, None) => true,
+                    _ => false,
+                };
+
+        /// - APAS: Work Θ(n), Span Θ(n)
+        fn height_link(link: &Link<T>) -> (h: usize)
+            requires
+                Lnk::spec_size_link(link) < usize::MAX as nat,
+                Lnk::spec_link_size_wf(link),
+            ensures h as nat == Lnk::spec_height_link(link);
 
         /// - APAS: Work Θ(1), Span Θ(1)
         fn new() -> (empty_tree: Self)
@@ -345,6 +456,56 @@ pub mod BSTTreapMtEph {
                         && (forall|k: T| #![trigger spec_contains_link(&node.left, k)] spec_contains_link(&node.left, k) ==> k.is_lt(&node.key))
                         && (forall|k: T| #![trigger spec_contains_link(&node.right, k)] spec_contains_link(&node.right, k) ==> node.key.is_lt(&k))
                 }
+            }
+        }
+
+        open spec fn spec_in_order_link(link: &Link<T>) -> Seq<T>
+            decreases *link,
+        {
+            match link {
+                None => Seq::empty(),
+                Some(node) => {
+                    Self::spec_in_order_link(&node.left)
+                        + seq![node.key]
+                        + Self::spec_in_order_link(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_pre_order_link(link: &Link<T>) -> Seq<T>
+            decreases *link,
+        {
+            match link {
+                None => Seq::empty(),
+                Some(node) => {
+                    seq![node.key]
+                        + Self::spec_pre_order_link(&node.left)
+                        + Self::spec_pre_order_link(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_min_link(link: &Link<T>) -> Option<T>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.left {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_min_link(&node.left),
+                },
+            }
+        }
+
+        open spec fn spec_max_link(link: &Link<T>) -> Option<T>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.right {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_max_link(&node.right),
+                },
             }
         }
     }
@@ -918,7 +1079,13 @@ pub mod BSTTreapMtEph {
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn min_link<T: StTInMtT + Ord>(link: &Link<T>) -> (min_val: Option<&T>)
         requires Lnk::spec_bst_link(link),
-        ensures min_val.is_some() ==> spec_contains_link(link, *min_val.unwrap()),
+        ensures
+            min_val.is_some() ==> spec_contains_link(link, *min_val.unwrap()),
+            match (min_val, Lnk::spec_min_link(link)) {
+                (Some(rv), Some(sv)) => *rv == sv,
+                (None, None) => true,
+                _ => false,
+            },
         decreases *link,
     {
         match link {
@@ -943,7 +1110,13 @@ pub mod BSTTreapMtEph {
     /// - Claude-Opus-4.6: Work Θ(log n) expected, Θ(n) worst case; Span Θ(log n) expected
     fn max_link<T: StTInMtT + Ord>(link: &Link<T>) -> (max_val: Option<&T>)
         requires Lnk::spec_bst_link(link),
-        ensures max_val.is_some() ==> spec_contains_link(link, *max_val.unwrap()),
+        ensures
+            max_val.is_some() ==> spec_contains_link(link, *max_val.unwrap()),
+            match (max_val, Lnk::spec_max_link(link)) {
+                (Some(rv), Some(sv)) => *rv == sv,
+                (None, None) => true,
+                _ => false,
+            },
         decreases *link,
     {
         match link {
@@ -1022,6 +1195,84 @@ pub mod BSTTreapMtEph {
     impl<T: StTInMtT + Ord + IsLtTransitive> BSTTreapMtEphTrait<T> for BSTTreapMtEph<T> {
         open spec fn spec_bsttreapmteph_wf(&self) -> bool {
             self@.finite()
+        }
+
+        open spec fn spec_size(self) -> nat {
+            self@.len()
+        }
+
+        open spec fn spec_contains(self, target: T) -> bool {
+            self@.contains(target@)
+        }
+
+        proof fn lemma_bst_decompose(link: &Link<T>) {
+        }
+
+        proof fn lemma_contains_left(node: &Box<Node<T>>, k: T) {
+        }
+
+        proof fn lemma_contains_right(node: &Box<Node<T>>, k: T) {
+        }
+
+        proof fn lemma_contains_root(node: &Box<Node<T>>) {
+        }
+
+        proof fn lemma_height_le_size(link: &Link<T>)
+            decreases *link,
+        {
+            match link {
+                None => {},
+                Some(node) => {
+                    lemma_size_wf_child_bounded(link);
+                    lemma_height_le_size(&node.left);
+                    lemma_height_le_size(&node.right);
+                }
+            }
+        }
+
+        proof fn lemma_size_wf_child_bounded(link: &Link<T>)
+            decreases *link,
+        {
+            match link {
+                None => {},
+                Some(node) => {
+                    assert(node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right));
+                }
+            }
+        }
+
+        proof fn lemma_wf_decompose(link: &Link<T>) {
+        }
+
+        proof fn lemma_wf_assemble_node(node: &Node<T>) {
+        }
+
+        fn size_link(link: &Link<T>) -> (sz: usize) {
+            size_link(link)
+        }
+
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+            decreases *link,
+        {
+            find_link(link, target)
+        }
+
+        fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
+            decreases *link,
+        {
+            min_link(link)
+        }
+
+        fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
+            decreases *link,
+        {
+            max_link(link)
+        }
+
+        fn height_link(link: &Link<T>) -> (h: usize)
+            decreases *link,
+        {
+            height_link(link)
         }
 
         fn new() -> (empty_tree: Self)

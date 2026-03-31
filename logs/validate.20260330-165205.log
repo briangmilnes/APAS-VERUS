@@ -1,0 +1,124 @@
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>, alloc::alloc::Global>>
+   --> src/Chap37/BSTRBMtEph.rs:560:25
+    |
+560 |                         insert_link(&mut node.left, value);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:469:21
+    |
+469 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:473:20
+    |
+473 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:493:21
+    |
+493 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:23
+    |
+496 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:468:21
+    |
+468 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetRBMtEph.rs:472:20
+    |
+472 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:492:21
+    |
+492 |           

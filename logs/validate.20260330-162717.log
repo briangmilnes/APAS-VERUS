@@ -1,0 +1,191 @@
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>, alloc::alloc::Global>>
+   --> src/Chap37/BSTRBMtEph.rs:560:25
+    |
+560 |                         insert_link(&mut node.left, value);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:469:21
+    |
+469 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:473:20
+    |
+473 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:493:21
+    |
+493 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:23
+    |
+496 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:468:21
+    |
+468 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetRBMtEph.rs:472:20
+    |
+472 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:492:21
+    |
+492 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetRBMtEph.rs:495:23
+    |
+495 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTSplayMtEph::BSTSplayMtEph::Node<T>, alloc::alloc::Global>>
+    --> src/Chap37/BSTSplayMtEph.rs:1186:25
+     |
+1186 |                         bst_insert(&mut node.left, value);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>, alloc::alloc::Global>>
+    --> src/Chap37/BSTSplayStEph.rs:1324:25
+     |
+1324 |                         bst_insert(&mut node.left, value);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetSplayMtEph.rs:469:21
+    |
+469 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetSplayMtEph.rs:473:20
+    |
+473 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetSplayMtEph.rs:493:21
+    |
+493 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetSplayMtEph.rs:496:23
+    |
+496 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap65/UnionFindStEph.rs:1685:9
+     |
+1685 |         fn union(&mut self, u: &V, v: &V) {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 24 previous errors
+
+Elapsed: 80s
+Sampled Memory Usage: peak rust_verify RSS: 2959MB, peak z3 RSS: 3419MB, min free: 16073MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 46s

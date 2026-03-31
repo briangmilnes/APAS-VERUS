@@ -1,0 +1,466 @@
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/DirGraphStEph.rs:29:9
+    |
+ 29 |     use crate::SetLit;
+    |         ^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/Chap05/SetStEph.rs:926:5
+    |
+926 | /     macro_rules! SetLit {
+927 | |         () => {{
+928 | |             < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+929 | |         }};
+...   |
+934 | |         }};
+935 | |     }
+    | |_____^
+    = note: `#[deny(macro_expanded_macro_exports_accessed_by_absolute_paths)]` (part of `#[deny(future_incompatible)]`) on by default
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/DirGraphMtEph.rs:35:17
+    |
+ 35 |     use crate::{ParaPair, ParaPairDisjoint, SetLit};
+    |                 ^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/DirGraphMtEph.rs:35:27
+    |
+ 35 |     use crate::{ParaPair, ParaPairDisjoint, SetLit};
+    |                           ^^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:111:1
+    |
+111 | / macro_rules! ParaPairDisjoint {
+112 | |     ( $f1:expr, $f2:expr ) => {
+113 | |         $crate::ParaPairs::ParaPairs::para_pair_disjoint($f1, $f2)
+114 | |     };
+115 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/DirGraphMtEph.rs:35:45
+    |
+ 35 |     use crate::{ParaPair, ParaPairDisjoint, SetLit};
+    |                                             ^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/Chap05/SetStEph.rs:926:5
+    |
+926 | /     macro_rules! SetLit {
+927 | |         () => {{
+928 | |             < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+929 | |         }};
+...   |
+934 | |         }};
+935 | |     }
+    | |_____^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/UnDirGraphMtEph.rs:35:17
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                 ^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/UnDirGraphMtEph.rs:35:27
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                           ^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/Chap05/SetStEph.rs:926:5
+    |
+926 | /     macro_rules! SetLit {
+927 | |         () => {{
+928 | |             < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+929 | |         }};
+...   |
+934 | |         }};
+935 | |     }
+    | |_____^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/LabDirGraphMtEph.rs:35:17
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                 ^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/LabDirGraphMtEph.rs:35:27
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                           ^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/Chap05/SetStEph.rs:926:5
+    |
+926 | /     macro_rules! SetLit {
+927 | |         () => {{
+928 | |             < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+929 | |         }};
+...   |
+934 | |         }};
+935 | |     }
+    | |_____^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/LabUnDirGraphMtEph.rs:35:17
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                 ^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap06/LabUnDirGraphMtEph.rs:35:27
+    |
+ 35 |     use crate::{ParaPair, SetLit};
+    |                           ^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/Chap05/SetStEph.rs:926:5
+    |
+926 | /     macro_rules! SetLit {
+927 | |         () => {{
+928 | |             < $crate::Chap05::SetStEph::SetStEph::SetStEph<_> >::empty()
+929 | |         }};
+...   |
+934 | |         }};
+935 | |     }
+    | |_____^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetPlainMtEph.rs:271:49
+    |
+271 |             let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetPlainMtEph.rs:301:49
+    |
+301 |             let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetPlainMtEph.rs:334:47
+    |
+334 |             let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
+    |                                               ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetAVLMtEph.rs:289:49
+    |
+289 |             let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetAVLMtEph.rs:326:49
+    |
+326 |             let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetAVLMtEph.rs:359:47
+    |
+359 |             let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
+    |                                               ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetRBMtEph.rs:288:49
+    |
+288 |             let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetRBMtEph.rs:325:49
+    |
+325 |             let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetRBMtEph.rs:358:47
+    |
+358 |             let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
+    |                                               ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetSplayMtEph.rs:289:49
+    |
+289 |             let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetSplayMtEph.rs:326:49
+    |
+326 |             let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetSplayMtEph.rs:359:47
+    |
+359 |             let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
+    |                                               ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:271:49
+    |
+271 |             let Pair(left_union, right_union) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:301:49
+    |
+301 |             let Pair(left_inter, right_inter) = crate::ParaPair!(f1, f2);
+    |                                                 ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: macro-expanded `macro_export` macros from the current crate cannot be referred to by absolute paths
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:334:47
+    |
+334 |             let Pair(left_diff, right_diff) = crate::ParaPair!(f1, f2);
+    |                                               ^^^^^^^^^^^^^^^
+    |
+    = warning: this was previously accepted by the compiler but is being phased out; it will become a hard error in a future release!
+    = note: for more information, see issue #52234 <https://github.com/rust-lang/rust/issues/52234>
+note: the macro is defined here
+   --> src/ParaPairs.rs:103:1
+    |
+103 | / macro_rules! ParaPair {
+104 | |     ( $f1:expr, $f2:expr ) => {
+105 | |         $crate::ParaPairs::ParaPairs::para_pair($f1, $f2)
+106 | |     };
+107 | | }
+    | |_^
+
+error: aborting due to 25 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 566MB, peak z3 RSS: 0MB, min free: 22149MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

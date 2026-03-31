@@ -1,0 +1,695 @@
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/vstdplus/pervasives_plus.rs:31:13
+   |
+31 |             v@.len() == old(v)@.len(),
+   |             ^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/vstdplus/VecQueue.rs:38:21
+   |
+38 |             ensures self@ == old(self)@.push(val);
+   |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/vstdplus/hash_set_with_view_plus.rs:144:13
+    |
+144 |             self@ == old(self)@.insert(k@),
+    |             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/vstdplus/hash_set_with_view_plus.rs:184:25
+    |
+184 |                     &&& self@ == old(self)@
+    |                         ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/vstdplus/hash_map_with_view_plus.rs:78:17
+   |
+78 |         ensures self@ == old(self)@.insert(k@, v);
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/vstdplus/hash_map_with_view_plus.rs:185:25
+    |
+185 |                     &&& self@ == old(self)@
+    |                         ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/vstdplus/strings.rs:52:17
+   |
+52 |         ensures s@ == old(s)@.push(c)
+   |                 ^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/vstdplus/strings.rs:58:17
+   |
+58 |         ensures s@ == Seq::<char>::empty()
+   |                 ^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/SetStEph.rs:175:17
+    |
+175 |                 self.spec_setsteph_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/SetStEph.rs:801:29
+    |
+801 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/SetMtEph.rs:188:17
+    |
+188 |                 self.spec_setmteph_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/SetMtEph.rs:877:29
+    |
+877 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap05/SetMtEph.rs:1020:17
+     |
+1020 |                 self@.finite(),
+     |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/RelationStEph.rs:310:29
+    |
+310 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap05/MappingStEph.rs:498:29
+    |
+498 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/DirGraphStEph.rs:585:29
+    |
+585 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/UnDirGraphStEph.rs:374:29
+    |
+374 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabDirGraphStEph.rs:113:21
+    |
+113 |             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabDirGraphStEph.rs:437:29
+    |
+437 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabUnDirGraphStEph.rs:110:21
+    |
+110 |             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabUnDirGraphStEph.rs:408:29
+    |
+408 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphU32.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/DirGraphMtEph.rs:707:29
+    |
+707 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/UnDirGraphMtEph.rs:464:29
+    |
+464 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabDirGraphMtEph.rs:143:42
+    |
+143 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                                          ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabDirGraphMtEph.rs:620:29
+    |
+620 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabDirGraphMtEph.rs:776:17
+    |
+776 |                 self.spec_labdirgraphmteph_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabUnDirGraphMtEph.rs:151:42
+    |
+151 |             ensures spec_labgraphview_wf(self@), self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
+    |                                          ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabUnDirGraphMtEph.rs:581:29
+    |
+581 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap06/LabUnDirGraphMtEph.rs:754:38
+    |
+754 |                 spec_labgraphview_wf(self@),
+    |                                      ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphU8.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphU16.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphU64.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphU128.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphUsize.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphI8.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphI16.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphI32.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphI64.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphI128.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphIsize.rs:57:17
+   |
+57 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap06/WeightedDirGraphStEphF64.rs:54:17
+   |
+54 |                 self@.V == old(self)@.V.insert(from@).insert(to@),
+   |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/ArraySeq.rs:334:37
+    |
+334 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap18/ArraySeq.rs:1518:29
+     |
+1518 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/ArraySeqStPer.rs:921:29
+    |
+921 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/ArraySeqStEph.rs:130:37
+    |
+130 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/ArraySeqStEph.rs:949:29
+    |
+949 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/LinkedListStPer.rs:767:29
+    |
+767 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/LinkedListStEph.rs:116:37
+    |
+116 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/LinkedListStEph.rs:784:29
+    |
+784 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap18/ArraySeqMtEph.rs:286:37
+    |
+286 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap18/ArraySeqMtEph.rs:1467:29
+     |
+1467 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap18/ArraySeqMtPer.rs:1072:29
+     |
+1072 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap19/ArraySeqStPer.rs:1084:29
+     |
+1084 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap19/ArraySeqStEph.rs:193:37
+    |
+193 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap19/ArraySeqStEph.rs:1076:29
+     |
+1076 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap19/ArraySeqMtEph.rs:205:37
+    |
+205 |                 success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+    |                                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap19/ArraySeqMtEph.rs:1362:29
+     |
+1362 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:310:29
+    |
+310 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap23/PrimTreeSeqStPer.rs:789:29
+    |
+789 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap23/BalBinTreeStEph.rs:569:29
+    |
+569 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap23/BalBinTreeStEph.rs:596:29
+    |
+596 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap23/BalBinTreeStEph.rs:623:29
+    |
+623 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeq.rs:250:17
+    |
+250 |                 self.spec_avltreeseq_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeq.rs:374:13
+    |
+374 |             n.left_size as nat == spec_avltreeseq_cached_size(&n.left),
+    |             ^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeq.rs:563:14
+    |
+563 |             *next_key == *old(next_key) + 1,
+    |              ^^^^^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeq.rs:653:33
+    |
+653 |             spec_avltreeseq_wf(*node),
+    |                                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeq.rs:678:13
+    |
+678 |             out@.map_values(|t: T| t@) =~=
+    |             ^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/AVLTreeSeq.rs:1128:29
+     |
+1128 |                         &&& self@ == old(self)@
+     |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStEph.rs:285:17
+    |
+285 |                 self.spec_avltreeseqsteph_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStEph.rs:407:13
+    |
+407 |             n.left_size as nat == spec_cached_size(&n.left),
+    |             ^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStEph.rs:576:14
+    |
+576 |             *next_key == *old(next_key) + 1,
+    |              ^^^^^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStEph.rs:653:38
+    |
+653 |             spec_avltreeseqsteph_wf(*node),
+    |                                      ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/AVLTreeSeqStEph.rs:1103:13
+     |
+1103 |             it@.0 == old(it)@.0,
+     |             ^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/AVLTreeSeqStEph.rs:1123:33
+     |
+1123 | ...                   &&& self@ == old(self)@
+     |                           ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStPer.rs:828:13
+    |
+828 |             it@.0 == old(it)@.0,
+    |             ^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqStPer.rs:852:33
+    |
+852 | ...                   &&& self@ == old(self)@
+    |                           ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqMtPer.rs:504:13
+    |
+504 |             out@.map_values(|t: T| t@) =~=
+    |             ^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/AVLTreeSeqMtPer.rs:729:29
+    |
+729 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTPlainMtEph.rs:268:21
+    |
+268 |             ensures self.spec_bstplainmteph_wf(),
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTAVLMtEph.rs:455:21
+    |
+455 |             ensures self.spec_bstavlmteph_wf(),
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:233:13
+    |
+233 |             node.left == old(node).left,
+    |             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:248:31
+    |
+248 |             spec_is_bst_link(*link),
+    |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:328:31
+    |
+328 |             spec_is_bst_link(*link),
+    |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:408:31
+    |
+408 |             spec_is_bst_link(*link),
+    |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:469:31
+    |
+469 |             spec_is_bst_link(*link),
+    |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:538:31
+    |
+538 |             spec_is_bst_link(*link),
+    |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTRBMtEph.rs:998:21
+    |
+998 |             ensures self.spec_bstrbmteph_wf(),
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSplayStEph.rs:214:17
+    |
+214 |                 self.spec_bstsplaysteph_wf(),
+    |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSplayStEph.rs:304:13
+    |
+304 |             node.key == old(node).key,
+    |             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayStEph.rs:1302:30
+     |
+1302 |             spec_is_bst_link(link),
+     |                              ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayStEph.rs:1445:30
+     |
+1445 |             spec_is_bst_link(link),
+     |                              ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayStEph.rs:1608:17
+     |
+1608 |         ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
+     |                 ^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayStEph.rs:1623:17
+     |
+1623 |         ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
+     |                 ^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSplayMtEph.rs:168:13
+    |
+168 |             node.left == old(node).left,
+    |             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayMtEph.rs:1164:31
+     |
+1164 |             spec_is_bst_link(*link),
+     |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayMtEph.rs:1297:31
+     |
+1297 |             spec_is_bst_link(*link),
+     |                               ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap37/BSTSplayMtEph.rs:1791:21
+     |
+1791 |             ensures self.spec_bstsplaymteph_wf(),
+     |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTBBAlphaMtEph.rs:268:21
+    |
+268 |             ensures self.spec_bstbbalphamteph_wf(),
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap37/BSTSetPlainMtEph.rs:89:21
+   |
+89 |             ensures self.spec_bstsetplainmteph_wf();
+   |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetPlainMtEph.rs:459:29
+    |
+459 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetAVLMtEph.rs:105:21
+    |
+105 |             ensures self.spec_bstsetavlmteph_wf();
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetAVLMtEph.rs:524:29
+    |
+524 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetRBMtEph.rs:104:21
+    |
+104 |             ensures self.spec_bstsetrbmteph_wf();
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetRBMtEph.rs:523:29
+    |
+523 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetSplayMtEph.rs:105:21
+    |
+105 |             ensures self.spec_bstsetsplaymteph_wf();
+    |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetSplayMtEph.rs:524:29
+    |
+524 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap37/BSTSetBBAlphaMtEph.rs:89:21
+   |
+89 |             ensures self.spec_bstsetbbalphamteph_wf();
+   |                     ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:459:29
+    |
+459 |                         &&& self@ == old(self)@
+    |                             ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap65/UnionFindStEph.rs:987:13
+    |
+987 |             uf.parent@.dom() =~= old(uf).parent@.dom(),
+    |             ^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap65/UnionFindStEph.rs:1426:13
+     |
+1426 |             uf.spec_unionfindsteph_wf(),
+     |             ^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+    --> src/Chap65/UnionFindStEph.rs:1551:17
+     |
+1551 |                 self.spec_unionfindsteph_wf(),
+     |                 ^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+  --> src/Chap65/KruskalStEph.rs:65:30
+   |
+65 |                 uf_wf_opaque(uf),
+   |                              ^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap65/KruskalStEph.rs:165:13
+    |
+165 |             mst_edges.spec_setsteph_wf(),
+    |             ^^^^^^^^^
+
+error: to dereference a mutable reference parameter in a postcondition, disambiguate by wrapping it in either `old` or `final`
+   --> src/Chap65/KruskalStEph.rs:240:13
+    |
+240 |             edges@.len() == old(edges)@.len(),
+    |             ^^^^^
+
+error: aborting due to 115 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 593MB, peak z3 RSS: 0MB, min free: 22909MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s
