@@ -142,11 +142,14 @@ operations = [
 
 # ---------------------------------------------------------------------------
 # Ch20: Sequences (CS 20.2–20.7)
+# APAS Ch20 cost specs; implementations in Chap18 (ArraySeq, LinkedList),
+# Chap19 (flatten), and Chap23 (PrimTreeSeq).
 # ---------------------------------------------------------------------------
 
 [[cost_spec]]
 ref = "Ch20 CS 20.2"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence cost specification: basic operations"
 operations = [
     { name = "length",      work = "O(1)", span = "O(1)" },
@@ -160,7 +163,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.2"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence cost specification: higher-order operations"
 operations = [
     { name = "tabulate f n", work = "O(1 + Sigma W(f(i)))", span = "O(1 + max S(f(i)))" },
@@ -170,7 +174,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.2"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence cost specification: combining operations"
 operations = [
     { name = "append a b",    work = "O(|a| + |b|)", span = "O(1)" },
@@ -182,7 +187,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.3"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence iterate (inherently sequential)"
 operations = [
     { name = "iterate f x a", work = "O(1 + Sigma W(f))", span = "O(1 + Sigma S(f))", notes = "span sums because sequential" },
@@ -190,7 +196,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.4"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence reduce (parallel)"
 operations = [
     { name = "reduce f x a", work = "O(1 + Sigma W(f))", span = "O(lg |a| * max S(f))", notes = "log-depth tree of combines" },
@@ -198,7 +205,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.5"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence scan"
 operations = [
     { name = "scan f x a", work = "O(|a|)", span = "O(lg |a|)", notes = "assumes f is O(1)" },
@@ -206,15 +214,93 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.6"
-chapter = 20
+chapter = 18  # ArraySeq implementations live in src/Chap18/
+file_stem = "ArraySeq"
 description = "Array-sequence collect (sort-based grouping)"
+operations = [
+    { name = "collect cmp a", work = "O(W(cmp) * |a| * lg |a|)", span = "O(S(cmp) * lg^2 |a|)", notes = "dominated by comparison sort" },
+]
+
+# Chap19 also has ArraySeq variants; duplicate the cost specs.
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence cost specification: basic operations (Chap19 copy)"
+operations = [
+    { name = "length",      work = "O(1)", span = "O(1)" },
+    { name = "nth",         work = "O(1)", span = "O(1)" },
+    { name = "empty",       work = "O(1)", span = "O(1)" },
+    { name = "singleton",   work = "O(1)", span = "O(1)" },
+    { name = "isEmpty",     work = "O(1)", span = "O(1)" },
+    { name = "isSingleton", work = "O(1)", span = "O(1)" },
+    { name = "subseq",      work = "O(1)", span = "O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence cost specification: higher-order operations (Chap19 copy)"
+operations = [
+    { name = "tabulate f n", work = "O(1 + Sigma W(f(i)))", span = "O(1 + max S(f(i)))" },
+    { name = "map f a",      work = "O(1 + Sigma W(f(x)))", span = "O(1 + max S(f(x)))" },
+    { name = "filter f a",   work = "O(1 + Sigma W(f(x)))", span = "O(lg |a| + max S(f(x)))", notes = "lg |a| from compaction" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.2"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence cost specification: combining operations (Chap19 copy)"
+operations = [
+    { name = "append a b",    work = "O(|a| + |b|)", span = "O(1)" },
+    { name = "flatten a",     work = "O(|a| + sum |a[i]|)", span = "O(lg |a|)" },
+    { name = "update a (i,x)", work = "O(|a|)", span = "O(1)", notes = "functional: full copy" },
+    { name = "inject a b",    work = "O(|a| + |b|)", span = "O(lg(degree(b)))", notes = "degree = max updates per position" },
+    { name = "ninject a b",   work = "O(|a| + |b|)", span = "O(1)", notes = "nondeterministic" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.3"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence iterate (Chap19 copy)"
+operations = [
+    { name = "iterate f x a", work = "O(1 + Sigma W(f))", span = "O(1 + Sigma S(f))", notes = "span sums because sequential" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.4"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence reduce (Chap19 copy)"
+operations = [
+    { name = "reduce f x a", work = "O(1 + Sigma W(f))", span = "O(lg |a| * max S(f))", notes = "log-depth tree of combines" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.5"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence scan (Chap19 copy)"
+operations = [
+    { name = "scan f x a", work = "O(|a|)", span = "O(lg |a|)", notes = "assumes f is O(1)" },
+]
+
+[[cost_spec]]
+ref = "Ch20 CS 20.6"
+chapter = 19  # ArraySeq variants also in src/Chap19/
+file_stem = "ArraySeq"
+description = "Array-sequence collect (Chap19 copy)"
 operations = [
     { name = "collect cmp a", work = "O(W(cmp) * |a| * lg |a|)", span = "O(S(cmp) * lg^2 |a|)", notes = "dominated by comparison sort" },
 ]
 
 [[cost_spec]]
 ref = "Ch20 CS 20.6"
-chapter = 20
+chapter = 23  # PrimTreeSeq implementations live in src/Chap23/
+file_stem = "PrimTreeSeq"
 description = "Tree-sequence cost specification: key differences from array-sequence"
 operations = [
     { name = "nth",     work = "O(lg |a|)", span = "O(lg |a|)" },
@@ -227,7 +313,8 @@ operations = [
 
 [[cost_spec]]
 ref = "Ch20 CS 20.7"
-chapter = 20
+chapter = 18  # LinkedList implementations live in src/Chap18/
+file_stem = "LinkedList"
 description = "List-sequence cost specification (inherently sequential)"
 operations = [
     { name = "nth",     work = "O(i)", span = "O(i)" },
@@ -272,10 +359,50 @@ operations = [
 # Ch22: Single-Threaded Array Sequences (CS 22.2)
 # ---------------------------------------------------------------------------
 
+# Ch22 CS 22.2: Single-threaded array sequence (ephemeral).
+# APAS Ch22 cost specs; implementations in Chap18 (ArraySeq),
+# Chap19 (ArraySeq extras), Chap23 (PrimTreeSeq), Chap37 (AVLTreeSeq).
+
 [[cost_spec]]
 ref = "Ch22 CS 22.2"
-chapter = 22
-description = "Single-threaded array sequence (ephemeral)"
+chapter = 18  # ArraySeq in src/Chap18/
+description = "Single-threaded array sequence (ephemeral) — Chap18"
+operations = [
+    { name = "fromSeq", work = "O(|a|)", span = "O(1)" },
+    { name = "toSeq",   work = "O(|a|)", span = "O(1)" },
+    { name = "nth",     work = "O(1)", span = "O(1)", notes = "O(1) for latest version" },
+    { name = "update",  work = "O(1)", span = "O(1)", notes = "in-place mutation" },
+    { name = "inject",  work = "O(|b|)", span = "O(lg(degree(b)))" },
+]
+
+[[cost_spec]]
+ref = "Ch22 CS 22.2"
+chapter = 19  # ArraySeq extras in src/Chap19/
+description = "Single-threaded array sequence (ephemeral) — Chap19"
+operations = [
+    { name = "fromSeq", work = "O(|a|)", span = "O(1)" },
+    { name = "toSeq",   work = "O(|a|)", span = "O(1)" },
+    { name = "nth",     work = "O(1)", span = "O(1)", notes = "O(1) for latest version" },
+    { name = "update",  work = "O(1)", span = "O(1)", notes = "in-place mutation" },
+    { name = "inject",  work = "O(|b|)", span = "O(lg(degree(b)))" },
+]
+
+[[cost_spec]]
+ref = "Ch22 CS 22.2"
+chapter = 23  # PrimTreeSeq in src/Chap23/
+description = "Single-threaded array sequence (ephemeral) — Chap23"
+operations = [
+    { name = "fromSeq", work = "O(|a|)", span = "O(1)" },
+    { name = "toSeq",   work = "O(|a|)", span = "O(1)" },
+    { name = "nth",     work = "O(1)", span = "O(1)", notes = "O(1) for latest version" },
+    { name = "update",  work = "O(1)", span = "O(1)", notes = "in-place mutation" },
+    { name = "inject",  work = "O(|b|)", span = "O(lg(degree(b)))" },
+]
+
+[[cost_spec]]
+ref = "Ch22 CS 22.2"
+chapter = 37  # AVLTreeSeq in src/Chap37/
+description = "Single-threaded array sequence (ephemeral) — Chap37"
 operations = [
     { name = "fromSeq", work = "O(|a|)", span = "O(1)" },
     { name = "toSeq",   work = "O(|a|)", span = "O(1)" },
@@ -839,7 +966,7 @@ ref = "Ch54 Alg 54.4"
 chapter = 54
 description = "Parallel BFS reachability (tree-based sets and tables)"
 operations = [
-    { name = "bfs_reach", work = "O(m lg n)", span = "O(d lg^2 n)", notes = "d = diameter" },
+    { name = "bfs", work = "O(m lg n)", span = "O(d lg^2 n)", notes = "d = diameter" },
 ]
 
 [[cost_spec]]
@@ -911,7 +1038,7 @@ ref = "Ch61 Alg 61.6"
 chapter = 61
 description = "Parallel edge contraction on cycle graphs"
 operations = [
-    { name = "parallel_edge_contraction", work = "O(n)", span = "O(lg^2 n)", notes = "O(lg n) rounds w.h.p." },
+    { name = "edge_contract", work = "O(n)", span = "O(lg^2 n)", notes = "O(lg n) rounds w.h.p." },
 ]
 
 # ---------------------------------------------------------------------------
@@ -923,7 +1050,7 @@ ref = "Ch62 Thm 62.1"
 chapter = 62
 description = "Star partition"
 operations = [
-    { name = "starPartition", work = "O(n + m)", span = "O(lg n)", notes = "array-based" },
+    { name = "parallel_star_partition", work = "O(n + m)", span = "O(lg n)", notes = "array-based" },
 ]
 
 [[cost_spec]]
@@ -972,5 +1099,5 @@ ref = "Ch66 Alg 66.3"
 chapter = 66
 description = "Boruvka's parallel MST with star contraction"
 operations = [
-    { name = "boruvka_star", work = "O(m lg n)", span = "O(lg^2 n)", notes = "removes expected n/4 vertices per round" },
+    { name = "boruvka_mst_with_seed", work = "O(m lg n)", span = "O(lg^2 n)", notes = "star contraction variant; removes expected n/4 vertices per round" },
 ]
