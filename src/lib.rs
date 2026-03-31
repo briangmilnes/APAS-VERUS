@@ -6,6 +6,10 @@
 // vstdplus/feq.rs uses it as a supertrait bound.
 #![cfg_attr(verus_keep_ghost, feature(allocator_api))]
 #![cfg_attr(verus_keep_ghost, feature(sized_hierarchy))]
+// R115 EXPERIMENT: new-mut-ref encoding — compat layer so old ensures syntax works.
+#![cfg_attr(verus_keep_ghost, verifier::deprecated_postcondition_mut_ref_style(true))]
+// R115 EXPERIMENT: suppress macro_export lint triggered by new-mut-ref pipeline.
+#![allow(macro_expanded_macro_exports_accessed_by_absolute_paths)]
 #![allow(non_snake_case)]
 #![allow(non_camel_case_types)]
 
@@ -172,6 +176,7 @@ pub mod experiments {
 //    pub mod mut_struct_quantifier_limit;                   // FAILS: Z3 17.7GB on &mut 4-field struct with quantified maps
 //    pub mod f32_ieee_total_order;                         // FAILS: by(bit_vector) flaky — antisymmetric/add_zero/add_monotone fail
 //    pub mod f64_ieee_total_order;                         // FAILS: f64 by(bit_vector) crashes Verus — bitvector_to_air.rs:424
+    pub mod new_mut_ref_matching_loop;                     // R115: new-mut-ref matching loop experiment
 }
 
 #[cfg(all(not(feature = "experiments_only"), not(feature = "isolate")))]
@@ -658,14 +663,14 @@ pub mod Chap64 {
     pub mod TSPApproxStEph;
 }
 
-// Chap65: commented out — tricky three proof holes (union, uf_wf_opaque, kruskal).
+// Chap65: tricky three proof holes (union, uf_wf_opaque, kruskal).
 // union_merge proved (R106). union trait impl + Kruskal remain.
-// #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
-// pub mod Chap65 {
-//     pub mod UnionFindStEph;
-//     pub mod KruskalStEph;
-//     pub mod PrimStEph;
-// }
+#[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap65")))]
+pub mod Chap65 {
+    pub mod UnionFindStEph;
+    pub mod KruskalStEph;
+    pub mod PrimStEph;
+}
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap66")))]
 pub mod Chap66 {

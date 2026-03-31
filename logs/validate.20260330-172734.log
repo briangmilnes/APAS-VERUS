@@ -1,0 +1,46 @@
+
+thread '<unnamed>' (2108500) panicked at rust_verify/src/verifier.rs:836:21:
+internal error: generated ill-typed AIR code: error 'in call to ens%core!option.impl&%0.take., argument #5 has type "Poly" when it should have type "core!option.Option."' in expression '(ens%core!option.impl&%0.take. (BOX $ TYPE%alloc!alloc.Global. $) (TYPE%lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node.
+  T&. T&
+ ) (lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node./Node/left (%Poly%lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node.
+   (Poly%lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node. (old snap%CALL node@))
+  )
+ ) (lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node./Node/left (%Poly%lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node.
+   (Poly%lib!Chap39.BSTTreapMtEph.BSTTreapMtEph.Node. node@)
+  )
+ ) link!
+)'
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (2108500) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+
+thread '<unnamed>' (2108518) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2108511) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2108517) panicked at rust_verify/src/verifier.rs:194:64:
+could not send!: SendError { .. }
+
+thread '<unnamed>' (2108508) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2108517) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2108518) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2108507) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (2108508) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (2108511) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 703MB, peak z3 RSS: 0MB, min free: 21624MB
+Sampled CPU Usage: rust_verify: 3s, z3 children: 0s

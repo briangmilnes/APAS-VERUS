@@ -1,0 +1,306 @@
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTRBMtEph::BSTRBMtEph::Node<T>, alloc::alloc::Global>>
+   --> src/Chap37/BSTRBMtEph.rs:560:25
+    |
+560 |                         insert_link(&mut node.left, value);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:469:21
+    |
+469 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:473:20
+    |
+473 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetAVLMtEph.rs:493:21
+    |
+493 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetAVLMtEph.rs:496:23
+    |
+496 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetBBAlphaMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:408:21
+    |
+408 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:411:20
+    |
+411 |                 if predicate(seq.nth(i)) {
+    |                    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetPlainMtEph.rs:431:21
+    |
+431 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetPlainMtEph.rs:434:23
+    |
+434 |                 acc = op(acc, seq.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTSplayMtEph::BSTSplayMtEph::Node<T>, alloc::alloc::Global>>
+    --> src/Chap37/BSTSplayMtEph.rs:1186:25
+     |
+1186 |                         bst_insert(&mut node.left, value);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:468:21
+    |
+468 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetRBMtEph.rs:472:20
+    |
+472 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: internal error: unsupported type for decreases &mut core::option::Option<Box<lib::Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>, alloc::alloc::Global>>
+    --> src/Chap37/BSTSplayStEph.rs:1324:25
+     |
+1324 |                         bst_insert(&mut node.left, value);
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetRBMtEph.rs:492:21
+    |
+492 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetRBMtEph.rs:495:23
+    |
+495 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetSplayMtEph.rs:469:21
+    |
+469 |                     forall|t: &T| #[trigger] predicate.requires((t,)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetSplayMtEph.rs:473:20
+    |
+473 |                 if predicate(elem) {
+    |                    ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap37/BSTSetSplayMtEph.rs:493:21
+    |
+493 |                     forall|a: T, b: T| #[trigger] op.requires((a, b)),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+   --> src/Chap37/BSTSetSplayMtEph.rs:496:23
+    |
+496 |                 acc = op(acc, sorted.nth(i).clone());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(tmp%, tmp%) 
+
+error: function body check: Resource limit (rlimit) exceeded
+    --> src/Chap65/UnionFindStEph.rs:1758:5
+     |
+1758 | /     fn union_experiment_merge_only<V: StT + Hash>(
+1759 | |         uf: &mut UnionFindStEph<V>,
+1760 | |         u: &V,
+1761 | |         v: &V,
+1762 | |     )
+     | |_____^
+
+Z3 4.12.5
+note: Analyzing prover log for (profile rerun) lib::Chap65::UnionFindStEph::UnionFindStEph::union_experiment_merge_only ...
+
+note: Log analysis complete for (profile rerun) lib::Chap65::UnionFindStEph::UnionFindStEph::union_experiment_merge_only
+
+note: Profile statistics for lib::Chap65::UnionFindStEph::UnionFindStEph::union_experiment_merge_only
+
+note: Observed 1,658,397 total instantiations of user-level quantifiers
+
+note: Cost * Instantiations: 2684446311184 (Instantiated 1,638,428 times - 98% of the total, cost 1638428) top 1 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:144:13
+    |
+140 | /         forall|i: int, j: int|
+141 | |             0 <= i < uf.elements@.len() as int &&
+142 | |             0 <= j < uf.elements@.len() as int &&
+143 | |             i != j ==>
+144 | |             #[trigger] uf.elements@[i]@ != #[trigger] uf.elements@[j]@
+    | |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^-
+    | |______________________________________________________________________|
+    |                                                                        Triggers selected for this quantifier
+
+note: Cost * Instantiations: 142040005230 (Instantiated 3,389 times - 0% of the total, cost 41912070) top 2 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:120:46
+    |
+120 |           forall|v: <V as View>::V| #[trigger] uf.parent@.contains_key(v) ==>
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+121 | |             uf.parent@.contains_key(uf.parent@[v]@)
+    | |___________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3988405652 (Instantiated 3,389 times - 0% of the total, cost 1176868) top 3 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:135:46
+    |
+135 |           forall|v: <V as View>::V| #[trigger] uf.parent@.contains_key(v) ==>
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+136 | |             exists|i: int| 0 <= i < uf.elements@.len() as int && #[trigger] uf.elements@[i]@ == v
+    | |_________________________________________________________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 679299175 (Instantiated 1,513 times - 0% of the total, cost 448975) top 4 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:125:46
+    |
+125 |           forall|v: <V as View>::V| #[trigger] uf.roots@.contains_key(v) ==>
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+126 | |             uf.parent@.contains_key(uf.roots@[v])
+    | |_________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 24031399 (Instantiated 3,389 times - 0% of the total, cost 7091) top 5 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:164:46
+    |
+164 |           forall|v: <V as View>::V| #[trigger] uf.rank@.contains_key(v) ==>
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+165 | |             uf.rank@[v] <= uf.rank@[uf.roots@[v]]
+    | |_________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 20391613 (Instantiated 3,389 times - 0% of the total, cost 6017) top 6 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:153:46
+    |
+153 |           forall|v: <V as View>::V| #[trigger] uf.parent@.contains_key(v) ==>
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+154 | |             uf.roots@[uf.parent@[v]@] == uf.roots@[v]
+    | |_____________________________________________________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 7313842 (Instantiated 1,513 times - 0% of the total, cost 4834) top 7 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:105:46
+    |
+105 |           forall|v: <V as View>::V| #[trigger] uf.roots@.contains_key(v) ==> {
+    |  _________-                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+106 | |             &&& uf.roots@.contains_key(uf.roots@[v])
+107 | |             &&& uf.roots@[uf.roots@[v]] == uf.roots@[v]
+108 | |         }
+    | |_________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 3396016 (Instantiated 1,508 times - 0% of the total, cost 2252) top 8 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:149:13
+    |
+148 | /         forall|v: <V as View>::V| uf.parent@.contains_key(v) && uf.parent@[v]@ == v ==>
+149 | |             #[trigger] uf.roots@[v] == v
+    | |_____________^^^^^^^^^^^^^^^^^^^^^^^____- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 1272384 (Instantiated 1,128 times - 0% of the total, cost 1128) top 9 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:200:13
+    |
+199 |           &&& forall|x: <V as View>::V| mid.roots@.contains_key(x) ==> (
+    |  _____________-
+200 | |             #[trigger] uf.roots@[x] == (
+    | |             ^^^^^^^^^^^^^^^^^^^^^^^
+201 | |                 if mid.roots@[x] == root_u_view || mid.roots@[x] == root_v_view {
+202 | |                     winner_view
+...   |
+207 | |         )
+    | |_________- Triggers selected for this quantifier
+
+note: Cost * Instantiations: 553536 (Instantiated 744 times - 0% of the total, cost 744) top 10 of 11 user-level quantifiers.
+      
+   --> src/Chap65/UnionFindStEph.rs:160:27
+    |
+158 | /         forall|v: <V as View>::V| uf.parent@.contains_key(v)
+159 | |             && uf.parent@[v]@ != v ==>
+160 | |             uf.rank@[v] < #[trigger] uf.rank@[uf.parent@[v]@]
+    | |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-
+    | |_____________________________________________________________|
+    |                                                               Triggers selected for this quantifier
+
+error: aborting due to 24 previous errors
+
+Elapsed: 156s
+Sampled Memory Usage: peak rust_verify RSS: 9019MB, peak z3 RSS: 6920MB, min free: 8646MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 73s

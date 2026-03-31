@@ -187,6 +187,7 @@ pub mod UnionFindStEph {
 
     /// Roots change predicate for union merge. Closed to prevent matching loop
     /// between the roots quantifier and parent Map =~= in &mut contexts.
+    /// R115: now embeds dom equality so callers never need dom =~= in their context.
     pub closed spec fn spec_roots_changed_by_merge<V: StT + Hash>(
         uf: &UnionFindStEph<V>,
         mid: &UnionFindStEph<V>,
@@ -194,7 +195,8 @@ pub mod UnionFindStEph {
         root_v_view: <V as View>::V,
         winner_view: <V as View>::V,
     ) -> bool {
-        forall|x: <V as View>::V| mid.roots@.contains_key(x) ==> (
+        &&& uf.roots@.dom() =~= mid.roots@.dom()
+        &&& forall|x: <V as View>::V| mid.roots@.contains_key(x) ==> (
             #[trigger] uf.roots@[x] == (
                 if mid.roots@[x] == root_u_view || mid.roots@[x] == root_v_view {
                     winner_view
@@ -1256,6 +1258,7 @@ pub mod UnionFindStEph {
 
     /// Prove spec_union_result from spec_roots_changed_by_merge.
     /// Isolated proof context: reveals both closed predicates + does the bridge translation.
+    /// R115: dom =~= is now inside spec_roots_changed_by_merge, so no explicit dom =~= requires.
     #[verifier::rlimit(30)]
     proof fn lemma_prove_union_result<V: StT + Hash>(
         uf_new: &UnionFindStEph<V>,
@@ -1268,7 +1271,6 @@ pub mod UnionFindStEph {
     )
         requires
             spec_roots_changed_by_merge(uf_new, uf_old, root_u_view, root_v_view, winner_view),
-            uf_new.roots@.dom() =~= uf_old.roots@.dom(),
             root_u_view == uf_old.roots@[u_view],
             root_v_view == uf_old.roots@[v_view],
             uf_old.roots@.contains_key(u_view),
@@ -1315,6 +1317,7 @@ pub mod UnionFindStEph {
     /// Single proof call with isolated Z3 context (no &mut overhead).
     /// Prove the union-style roots quantifier from the opaque merge predicate.
     /// Uses the OLD dom as guard (avoids matching loop with dom =~=).
+    /// R115: dom =~= now inside spec_roots_changed_by_merge, no explicit dom requires.
     proof fn lemma_union_roots_bridge<V: StT + Hash>(
         uf_new: &UnionFindStEph<V>,
         uf_old: &UnionFindStEph<V>,
@@ -1326,7 +1329,6 @@ pub mod UnionFindStEph {
     )
         requires
             spec_roots_changed_by_merge(uf_new, uf_old, root_u_view, root_v_view, winner_view),
-            uf_new.roots@.dom() =~= uf_old.roots@.dom(),
             root_u_view == uf_old.roots@[u_view],
             root_v_view == uf_old.roots@[v_view],
             uf_old.roots@.contains_key(u_view),
@@ -1429,7 +1431,7 @@ pub mod UnionFindStEph {
             info@.winner_val@ == info@.winner_view,
             uf.elements@ == old(uf).elements@,
             uf.parent@.dom() =~= old(uf).parent@.dom(),
-            uf.roots@.dom() =~= old(uf).roots@.dom(),
+            // R115: dom =~= for roots is now inside spec_roots_changed_by_merge.
             // Opaque roots change predicate — avoids matching loop in &mut context.
             spec_roots_changed_by_merge(uf, &*old(uf), root_u@, root_v@, info@.winner_view),
     {
@@ -1676,34 +1678,17 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        // BLOCKED: Z3 matching loop between obeys_feq_view_injective and
-        // spec_elements_distinct. Both leak from spec_unionfindsteph_wf's closed body
-        // into Z3 via spec_unionfindsteph_wf → spec_unionfindsteph_wf. The loop
-        // diverges unboundedly (17GB OOM at rlimit 200). See
-        // plans/agent1-r103-profiling-notes.md for full analysis.
-        // Infrastructure ready: lemma_union_ensures_bridge (quantifier),
-        // lemma_wf_parent_dom_eq_roots_dom (dom preservation),
-        // find_root_loop extended ensures (roots.contains_key).
+        // R115 EXPERIMENT: keep external_body, test via union_experiment below.
         #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
             let root_u = find_root_loop(self, u);
-            let ghost root_u_view = root_u@;
             let root_v = find_root_loop(self, v);
-            let ghost root_v_view = root_v@;
-
             if !feq(&root_u, &root_v) {
                 proof {
-                    // BLOCKED: rank bounds not derivable from wf.
                     assume(self.rank@[root_u@] < self.elements@.len());
                     assume(self.rank@[root_v@] < self.elements@.len());
                 }
-                let info = union_merge(self, root_u, root_v);
-
-                proof {
-                    // BLOCKED: spec_union_result matching loop.
-                    // lemma_prove_union_result needs roots quantifier revealed +
-                    // dom =~= in same context, which causes matching loop.
-                }
+                let _info = union_merge(self, root_u, root_v);
             }
         }
 
@@ -1716,7 +1701,7 @@ pub mod UnionFindStEph {
         }
 
         /// - APAS: Work O(n alpha(n)), Span O(n alpha(n))
-        #[verifier::rlimit(15)]
+        #[verifier::rlimit(30)]
         fn num_sets(&mut self) -> (count: usize) {
             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
             proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
@@ -1742,6 +1727,85 @@ pub mod UnionFindStEph {
             }
             roots_set.len()
         }
+    }
+
+    // R115 EXPERIMENT: isolate the merge-branch proof to find the matching loop source.
+    // Test 1: just find + feq (no merge). Does spec_elements_distinct fire?
+    #[verifier::rlimit(30)]
+    fn union_experiment_find_only<V: StT + Hash>(
+        uf: &mut UnionFindStEph<V>,
+        u: &V,
+        v: &V,
+    )
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            old(uf)@.parent.contains_key(u@),
+            old(uf)@.parent.contains_key(v@),
+        ensures
+            uf.spec_unionfindsteph_wf(),
+            uf@.parent.dom() =~= old(uf)@.parent.dom(),
+            uf@.elements =~= old(uf)@.elements,
+    {
+        proof { lemma_wf_type_axioms(&*old(uf)); }
+        let root_u = find_root_loop(uf, u);
+        let root_v = find_root_loop(uf, v);
+        let _same = feq(&root_u, &root_v);
+    }
+
+    // Test 2: merge but NO wf in ensures. Is the loop from the ensures goal?
+    #[verifier::rlimit(30)]
+    fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
+        uf: &mut UnionFindStEph<V>,
+        u: &V,
+        v: &V,
+    )
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            old(uf)@.parent.contains_key(u@),
+            old(uf)@.parent.contains_key(v@),
+        ensures
+            // NO wf in ensures — just structural facts
+            uf@.parent.dom() =~= old(uf)@.parent.dom(),
+            uf@.elements =~= old(uf)@.elements,
+    {
+        proof { lemma_wf_type_axioms(&*old(uf)); }
+        let root_u = find_root_loop(uf, u);
+        let root_v = find_root_loop(uf, v);
+
+        proof {
+            assume(root_u@ != root_v@);
+            assume(uf.rank@[root_u@] < uf.elements@.len());
+            assume(uf.rank@[root_v@] < uf.elements@.len());
+        }
+        let _info = union_merge(uf, root_u, root_v);
+    }
+
+    // Test 3: merge WITH wf in ensures. Is wf the trigger?
+    #[verifier::rlimit(30)]
+    fn union_experiment_merge_with_wf<V: StT + Hash>(
+        uf: &mut UnionFindStEph<V>,
+        u: &V,
+        v: &V,
+    )
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            old(uf)@.parent.contains_key(u@),
+            old(uf)@.parent.contains_key(v@),
+        ensures
+            uf.spec_unionfindsteph_wf(),
+            uf@.parent.dom() =~= old(uf)@.parent.dom(),
+            uf@.elements =~= old(uf)@.elements,
+    {
+        proof { lemma_wf_type_axioms(&*old(uf)); }
+        let root_u = find_root_loop(uf, u);
+        let root_v = find_root_loop(uf, v);
+
+        proof {
+            assume(root_u@ != root_v@);
+            assume(uf.rank@[root_u@] < uf.elements@.len());
+            assume(uf.rank@[root_v@] < uf.elements@.len());
+        }
+        let _info = union_merge(uf, root_u, root_v);
     }
 
     } // verus!

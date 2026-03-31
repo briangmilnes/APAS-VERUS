@@ -1,0 +1,11 @@
+error: cannot access spec-mode place in executable context
+   --> src/experiments/new_mut_ref_matching_loop.rs:146:12
+    |
+146 |         if root_u != root_v {
+    |            ^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23335MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
