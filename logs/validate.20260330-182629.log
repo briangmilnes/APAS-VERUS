@@ -1,0 +1,103 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:566:5
+    |
+566 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:658:17
+     |
+ 658 |                   self.spec_tablemteph_wf(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1859 |               proof {
+     |  ___________________-
+1860 | |                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+1861 | |                 let ghost target_dom = spec_entries_to_map(old_self_view).dom().difference(
+1862 | |                     other@.dom());
+...    |
+1896 | |                 };
+1897 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:658:17
+    |
+658 |                 self.spec_tablemteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablemteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.view().dom() =~= old(self).view().dom().difference(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:699:17
+     |
+ 699 |                   self.spec_tablemteph_wf(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2311 |               proof {
+     |  ___________________-
+2312 | |                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+2313 | |                 let ghost target_dom = spec_entries_to_map(old_view).dom().intersect(keys@);
+...    |
+2346 | |                 };
+2347 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:699:17
+    |
+699 |                 self.spec_tablemteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablemteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.view().dom() =~= old(self).view().dom().intersect(old(keys).view()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+error: postcondition not satisfied
+    --> src/Chap42/TableMtEph.rs:709:17
+     |
+ 709 |                   self.spec_tablemteph_wf(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2406 |               proof {
+     |  ___________________-
+2407 | |                 let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+2408 | |                 let ghost target_dom = spec_entries_to_map(old_view).dom().difference(keys@);
+...    |
+2441 | |                 };
+2442 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:709:17
+    |
+709 |                 self.spec_tablemteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablemteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.view().dom() =~= old(self).view().dom().difference(old(keys).view()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+verification results:: 2170 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 1811MB, peak z3 RSS: 379MB, min free: 21825MB
+Sampled CPU Usage: rust_verify: 31s, z3 children: 38s
