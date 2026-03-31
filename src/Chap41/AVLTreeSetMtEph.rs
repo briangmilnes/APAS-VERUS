@@ -121,6 +121,7 @@ broadcast use {
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
+                seq.spec_avltreeseqsteph_wf(),
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
@@ -152,6 +153,8 @@ broadcast use {
         ) -> (filtered: Self)
             requires
                 self.spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -165,14 +168,22 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
-            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            requires
+                self.spec_avltreesetmteph_wf(),
+                other.spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetmteph_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
-            requires self.spec_avltreesetmteph_wf(), other.spec_avltreesetmteph_wf(),
+            requires
+                self.spec_avltreesetmteph_wf(),
+                other.spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 remaining@ == self@.difference(other@),
                 remaining.spec_avltreesetmteph_wf();
@@ -182,6 +193,8 @@ broadcast use {
             requires
                 self.spec_avltreesetmteph_wf(),
                 other.spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 self@.len() + other@.len() < usize::MAX as nat,
             ensures
                 combined@ == self@.union(other@),
@@ -197,7 +210,10 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&mut self, x: &T)
-            requires old(self).spec_avltreesetmteph_wf(),
+            requires
+                old(self).spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetmteph_wf();
@@ -206,6 +222,8 @@ broadcast use {
         fn insert(&mut self, x: T)
             requires
                 old(self).spec_avltreesetmteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 old(self)@.len() + 1 < usize::MAX as nat,
             ensures
                 self@ == old(self)@.insert(x@),
@@ -302,11 +320,6 @@ broadcast use {
         {
             let handle = self.inner.acquire_read();
             let inner_ref = handle.borrow();
-            proof {
-                // structural_false_positive TYPE_AXIOM filter — StEph filter requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let inner_filtered = inner_ref.filter(f, Ghost(spec_pred));
             handle.release_read();
             assert(AVLTreeSetMtEphInv.inv(inner_filtered));
@@ -330,11 +343,6 @@ broadcast use {
         {
             let self_handle = self.inner.acquire_read();
             let other_handle = other.inner.acquire_read();
-            proof {
-                // structural_false_positive TYPE_AXIOM intersection — StEph intersection requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let common_st = self_handle.borrow().intersection(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -355,11 +363,6 @@ broadcast use {
         {
             let self_handle = self.inner.acquire_read();
             let other_handle = other.inner.acquire_read();
-            proof {
-                // structural_false_positive TYPE_AXIOM difference — StEph difference requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let remaining_st = self_handle.borrow().difference(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -385,9 +388,6 @@ broadcast use {
             proof {
                 // Reader accept: inner views match ghost shadows.
                 assume(self_st@.len() + other_st@.len() < usize::MAX as nat);
-                // structural_false_positive TYPE_AXIOM union — StEph union requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
             }
             let combined_st = self_st.union(other_st);
             self_handle.release_read();
@@ -419,11 +419,6 @@ broadcast use {
             let ghost old_view = self.ghost_set_view@;
             let ghost x_view = x@;
             let (mut current, write_handle) = self.inner.acquire_write();
-            proof {
-                // structural_false_positive TYPE_AXIOM delete — StEph delete requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             current.delete(x);
             assert(AVLTreeSetMtEphInv.inv(current));
             write_handle.release_write(current);
@@ -437,9 +432,6 @@ broadcast use {
             let (mut current, write_handle) = self.inner.acquire_write();
             proof {
                 assume(current@.len() + 1 < usize::MAX as nat); // RWLOCK_GHOST
-                // structural_false_positive TYPE_AXIOM insert — StEph insert requires type axioms.
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
             }
             current.insert(x);
             assert(AVLTreeSetMtEphInv.inv(current));

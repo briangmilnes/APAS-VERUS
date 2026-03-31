@@ -136,6 +136,9 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
             requires
+                self.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
                 forall|t: &T| #[trigger] f.requires((t,)),
                 forall|x: T, keep: bool|
                     f.ensures((&x,), keep) ==> keep == spec_pred(x@),
@@ -149,14 +152,29 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
+            requires
+                self.spec_avltreesetmtper_wf(),
+                other.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
+            requires
+                self.spec_avltreesetmtper_wf(),
+                other.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work m·lg(1+n/m), Span lg(n)
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
+            requires
+                self.spec_avltreesetmtper_wf(),
+                other.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
@@ -169,10 +187,18 @@ broadcast use {
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn delete(&self, x: &T) -> (updated: Self)
+            requires
+                self.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
         /// - APAS Cost Spec 41.4: Work lg |a|, Span lg |a|
         /// - claude-4-sonet: Work Θ(log n), Span Θ(log n), Parallelism Θ(1)
         fn insert(&self, x: T) -> (updated: Self)
+            requires
+                self.spec_avltreesetmtper_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
             ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
     }
 
@@ -338,10 +364,6 @@ broadcast use {
         ) -> (filtered: Self)
         {
             let handle = self.locked_set.acquire_read();
-            proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let inner_filtered = handle.borrow().filter(f, Ghost(spec_pred));
             handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(inner_filtered));
@@ -364,10 +386,6 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let common_st = self_handle.borrow().intersection(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -387,10 +405,6 @@ broadcast use {
         {
             let self_handle = self.locked_set.acquire_read();
             let other_handle = other.locked_set.acquire_read();
-            proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let remaining_st = self_handle.borrow().difference(other_handle.borrow());
             self_handle.release_read();
             other_handle.release_read();
@@ -413,8 +427,7 @@ broadcast use {
             let self_st: &AVLTreeSetStPer<T> = self_handle.borrow();
             let other_st: &AVLTreeSetStPer<T> = other_handle.borrow();
             proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
+                // Reader accept: inner views match ghost shadows.
                 assume(self_st@.len() + other_st@.len() < usize::MAX as nat);
             }
             let combined_st = self_st.union(other_st);
@@ -447,10 +460,6 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let handle = self.locked_set.acquire_read();
-            proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
-            }
             let updated_st = handle.borrow().delete(x);
             handle.release_read();
             assert(AVLTreeSetMtPerInv.inv(updated_st));
@@ -470,8 +479,7 @@ broadcast use {
             let handle = self.locked_set.acquire_read();
             let st: &AVLTreeSetStPer<T> = handle.borrow();
             proof {
-                assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-                assume(view_ord_consistent::<T>());
+                // Reader accept: inner view matches ghost shadow.
                 assume(st@.len() + 1 < usize::MAX as nat);
             }
             let updated_st = st.insert(x);
