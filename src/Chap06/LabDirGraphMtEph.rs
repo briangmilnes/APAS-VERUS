@@ -90,20 +90,31 @@ pub mod LabDirGraphMtEph {
 
     //		8. traits
 
-    pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> 
-        : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized 
+    pub trait LabDirGraphMtEphTrait<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static>
+        : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
     {
+        spec fn spec_labdirgraphmteph_wf(&self) -> bool;
+
+        open spec fn spec_finite(&self) -> bool {
+            self@.V.finite() && self@.A.finite()
+        }
+
         open spec fn spec_vertices(&self) -> Set<V::V> { self@.V }
         open spec fn spec_labeled_arcs(&self) -> Set<(V::V, V::V, L::V)> { self@.A }
+
+        open spec fn spec_arcs(&self) -> Set<(V::V, V::V)> {
+            Set::new(|e: (V::V, V::V)| exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)))
+        }
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
+                g.spec_labdirgraphmteph_wf(),
                 spec_labgraphview_wf(g@),
-                g@.V == Set::<<V as View>::V>::empty(),
-                g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
+                g@.V =~= Set::<<V as View>::V>::empty(),
+                g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         /// - APAS: Work Θ(|V| + |A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|V| + |A|), Span Θ(1)
@@ -115,9 +126,10 @@ pub mod LabDirGraphMtEph {
                 forall |u: V::V, w: V::V, l: L::V|
                     #[trigger] labeled_arcs@.contains((u, w, l)) ==> vertices@.contains(u) && vertices@.contains(w),
             ensures
+                g.spec_labdirgraphmteph_wf(),
                 spec_labgraphview_wf(g@),
-                g@.V == vertices@,
-                g@.A == labeled_arcs@;
+                g@.V =~= vertices@,
+                g@.A =~= labeled_arcs@;
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -127,14 +139,13 @@ pub mod LabDirGraphMtEph {
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
-            ensures a@ == self@.A;
+            ensures a@ =~= self@.A;
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential map
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>(), valid_key_type_Edge::<V>()
-            ensures forall |u: V::V, w: V::V| arcs@.contains((u, w)) == 
-                (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
+            ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
         /// - APAS: Work Θ(1), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
@@ -155,10 +166,9 @@ pub mod LabDirGraphMtEph {
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_for_lab_graph::<V, L>()
-            ensures match label {
-                Some(l) => self@.A.contains((from@, to@, l@)),
-                None => forall |l: L::V| !self@.A.contains((from@, to@, l)),
-            };
+            ensures
+                label.is_some() == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l))),
+                label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
 
         /// - APAS: Work Θ(|A|), Span Θ(1)
         /// - Claude-Opus-4.6: Work Θ(|A|), Span Θ(|A|) — sequential search
@@ -204,6 +214,7 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_plus.spec_setsteph_wf(),
+                n_plus@.finite(),
                 n_plus@ == self.spec_n_plus(v@),
                 n_plus@ <= self@.V;
 
@@ -217,6 +228,7 @@ pub mod LabDirGraphMtEph {
                 self@.V.contains(v@),
             ensures
                 n_minus.spec_setsteph_wf(),
+                n_minus@.finite(),
                 n_minus@ == self.spec_n_minus(v@),
                 n_minus@ <= self@.V;
 
@@ -253,6 +265,10 @@ pub mod LabDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static, L: StTInMtT + Hash + 'static> LabDirGraphMtEphTrait<V, L>
         for LabDirGraphMtEph<V, L>
     {
+        open spec fn spec_labdirgraphmteph_wf(&self) -> bool {
+            spec_labgraphview_wf(self@)
+        }
+
         fn empty() -> (g: Self) {
             LabDirGraphMtEph {
                 vertices: SetStEph::empty(),
@@ -297,14 +313,15 @@ pub mod LabDirGraphMtEph {
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
-                            assert forall |e: (V::V, V::V)| 
-                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies 
+                            assert forall |e: (V::V, V::V)|
+                                (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies
                                 arcs@.contains(e) by {
                                 if exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l)) {
                                     let l = choose |l: L::V| #![trigger la_view.contains((e.0, e.1, l))] la_view.contains((e.0, e.1, l));
                                     lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
                                 }
                             }
+                            assert(arcs@ =~= self.spec_arcs());
                         }
                         return arcs;
                     },

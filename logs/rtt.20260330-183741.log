@@ -1,0 +1,190 @@
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.14s
+────────────
+ Nextest run ID 8290ce03-47e4-4f3c-be35-da10a9177c17 with nextest profile: default
+    Starting 171 tests across 212 binaries (3358 tests skipped)
+        PASS [   0.003s] apas-verus::TestAdjMatrixGraphStEph test_complete_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphMtPer test_complement_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphMtPer test_has_edge_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphMtPer test_out_degree_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphMtPer test_new_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphMtPer test_out_neighbors_empty_graph
+        PASS [   0.003s] apas-verus::TestAdjSeqGraphMtPer test_has_edge_empty_graph
+        PASS [   0.003s] apas-verus::TestAdjSeqGraphMtPer test_out_degree_empty_graph
+        PASS [   0.003s] apas-verus::TestAdjSeqGraphStEph test_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjMatrixGraphStEph test_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjSeqGraphMtPer test_new_empty_graph
+        PASS [   0.004s] apas-verus::TestAdjSeqGraphMtPer test_out_neighbors_empty_graph
+        PASS [   0.003s] apas-verus::TestAdjSeqGraphStPer test_empty_graph
+        PASS [   0.003s] apas-verus::TestBFSMtEph test_line_graph
+        PASS [   0.004s] apas-verus::TestBFSMtEph test_star_graph
+        PASS [   0.004s] apas-verus::TestBFSMtEph test_tree_line_graph
+        PASS [   0.004s] apas-verus::TestBFSMtPer test_tree_line_graph
+        PASS [   0.004s] apas-verus::TestBFSMtPer test_line_graph
+        PASS [   0.004s] apas-verus::TestBFSStEph test_complete_graph
+        PASS [   0.003s] apas-verus::TestBFSStEph test_line_graph
+        PASS [   0.003s] apas-verus::TestBFSStEph test_star_graph
+        PASS [   0.004s] apas-verus::TestBFSStEph test_complete_graph_distances
+        PASS [   0.003s] apas-verus::TestBFSStPer test_line_graph
+        PASS [   0.003s] apas-verus::TestBFSStEph test_tree_line_graph
+        PASS [   0.004s] apas-verus::TestBFSStPer test_star_graph
+        PASS [   0.003s] apas-verus::TestBellmanFordStEphF64 test_diamond_graph
+        PASS [   0.003s] apas-verus::TestBFSStPer test_tree_line_graph
+        PASS [   0.003s] apas-verus::TestBellmanFordStEphI64 test_complete_graph_4
+        PASS [   0.004s] apas-verus::TestBellmanFordStEphI64 test_diamond_graph
+        PASS [   0.004s] apas-verus::TestBellmanFordStEphI64 test_star_graph
+        PASS [   0.003s] apas-verus::TestConnectivityStEph test_connected_components_complete_graph
+        PASS [   0.004s] apas-verus::TestBoruvkaStEph test_boruvka_larger_graph
+        PASS [   0.004s] apas-verus::TestConnectivityStEph test_connected_components_star_graph
+        PASS [   0.003s] apas-verus::TestConnectivityStEph test_count_components_star_graph
+        PASS [   0.004s] apas-verus::TestConnectivityStEph test_count_components_path_graph
+        PASS [   0.003s] apas-verus::TestDijkstraStEphF64 test_diamond_graph
+        PASS [   0.004s] apas-verus::TestDijkstraStEphF64 test_larger_graph
+        PASS [   0.004s] apas-verus::TestDijkstraStEphF64 test_diamond_graph_fractional
+        PASS [   0.003s] apas-verus::TestDijkstraStEphU64 test_larger_graph
+        PASS [   0.009s] apas-verus::TestBoruvkaMtEph test_boruvka_mt_larger_graph
+        PASS [   0.004s] apas-verus::TestDijkstraStEphU64 test_diamond_graph
+        PASS [   0.003s] apas-verus::TestDijkstraStEphU64 test_star_graph
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_basic_operations
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_degree
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_empty
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_incident
+        PASS [   0.006s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_concurrent_access
+        PASS [   0.003s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_neighbor
+        PASS [   0.005s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_indegree
+        PASS [   0.003s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_ng
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_nminus
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_ngofvertices
+        PASS [   0.003s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_nminusofvertices
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_nplus
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_nplusofvertices
+        PASS [   0.003s] apas-verus::TestDirGraphMtEph test_dirgraphmtephlit_macro_functionality
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_thread_safety
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_dirgraphmteph_outdegree
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_empty_graph_operations
+        PASS [   0.003s] apas-verus::TestDirGraphStEph test_dirgraph_clone
+        PASS [   0.004s] apas-verus::TestDirGraphMtEph test_race_condition_verification_mixed_graph_operations
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_digraph_vertices_and_arcs
+        PASS [   0.003s] apas-verus::TestDirGraphStEph test_dirgraph_debug_display
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_empty
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_degree
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_empty_graph_edge_cases
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_equality
+        PASS [   0.003s] apas-verus::TestDirGraphStEph test_dirgraph_incident
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_extreme_vertex_references_graceful
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_indegree
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_large_graph_stress
+        PASS [   0.003s] apas-verus::TestDirGraphStEph test_dirgraph_ng
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_neighbor
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_ngofvertices
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_nminusofvertices
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_nonexistent_vertex_edge_cases
+        PASS [   0.005s] apas-verus::TestDirGraphStEph test_dirgraph_nminus
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_nplus
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_outdegree
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_nplusofvertices
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_selfloop_edge_cases
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraph_single_vertex_edge_cases
+        PASS [   0.004s] apas-verus::TestDirGraphStEph test_dirgraphstephlit_macro_functionality
+        PASS [   0.004s] apas-verus::TestGraphSearchStEph test_disconnected_graph
+        PASS [   0.004s] apas-verus::TestGraphSearchStEph test_diamond_graph
+        PASS [   0.003s] apas-verus::TestGraphSearchStEph test_empty_graph
+        PASS [   0.004s] apas-verus::TestGraphSearchStEph test_graph_search_single_source
+        PASS [   0.005s] apas-verus::TestGraphSearchStEph test_graph_search_multi_source
+        PASS [   0.004s] apas-verus::TestGraphSearchStEph test_star_graph
+        PASS [   0.004s] apas-verus::TestGraphSearchStPer test_empty_graph
+        PASS [   0.004s] apas-verus::TestGraphSearchStPer test_star_graph
+        PASS [   0.004s] apas-verus::TestJohnsonMtEphF64 test_mt_simple_graph
+        PASS [   0.004s] apas-verus::TestJohnsonMtEphI64 test_disconnected_graph
+        PASS [   0.005s] apas-verus::TestJohnsonMtEphI64 test_chain_graph
+        PASS [   0.004s] apas-verus::TestJohnsonMtEphI64 test_empty_graph
+        PASS [   0.003s] apas-verus::TestJohnsonStEphF64 test_simple_graph
+        PASS [   0.004s] apas-verus::TestJohnsonMtEphI64 test_simple_graph
+        PASS [   0.004s] apas-verus::TestJohnsonStEphF64 test_disconnected_graph
+        PASS [   0.004s] apas-verus::TestJohnsonStEphI64 test_disconnected_graph
+        PASS [   0.004s] apas-verus::TestJohnsonStEphI64 test_simple_graph
+        PASS [   0.005s] apas-verus::TestJohnsonStEphI64 test_chain_graph
+        PASS [   0.004s] apas-verus::TestJohnsonStEphI64 test_complete_graph_4
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_add_vertex
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_add_labeled_arc
+        PASS [   0.005s] apas-verus::TestJohnsonStEphI64 test_star_out_graph
+        PASS [   0.005s] apas-verus::TestLabDirGraphStEph test_labdirgraphstephlit_macro_functionality
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_different_label_types
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_debug
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_arcs
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_display
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_empty
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_macro_empty
+        PASS [   0.004s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_neighbors
+        PASS [   0.005s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_macro_with_data
+        PASS [   0.005s] apas-verus::TestLabDirGraphStEph test_labelled_dir_graph_self_loop
+        PASS [   0.005s] apas-verus::TestPQMinStEph test_pq_min_disconnected_graph
+        PASS [   0.005s] apas-verus::TestPQMinStEph test_pq_min_complete_graph
+        PASS [   0.005s] apas-verus::TestLabUnDirGraphStEph test_empty_graph_operations
+        PASS [   0.005s] apas-verus::TestPQMinStEph test_pq_min_empty_graph
+        PASS [   0.004s] apas-verus::TestPQMinStEph test_pq_min_star_graph
+        PASS [   0.004s] apas-verus::TestPQMinStPer test_pq_min_empty_graph
+        PASS [   0.004s] apas-verus::TestSpanTreeStEph test_spanning_tree_complete_graph_4
+        PASS [   0.003s] apas-verus::TestSpanTreeStEph test_spanning_tree_wheel_graph
+        PASS [   0.004s] apas-verus::TestSpanTreeStEph test_spanning_tree_path_graph
+        PASS [   0.004s] apas-verus::TestSpanTreeStEph test_spanning_tree_star_graph
+        PASS [   0.004s] apas-verus::TestStarContractionStEph test_complete_graph_contraction
+        PASS [   0.004s] apas-verus::TestStarContractionStEph test_empty_graph_contraction
+        PASS [   0.004s] apas-verus::TestStarContractionStEph test_star_graph_contraction
+        PASS [   0.004s] apas-verus::TestStarPartitionStEph test_complete_graph
+        PASS [   0.004s] apas-verus::TestStarPartitionStEph test_empty_graph
+        PASS [   0.004s] apas-verus::TestStarPartitionStEph test_wheel_graph
+        PASS [   0.004s] apas-verus::TestStarPartitionStEph test_path_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_clone_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_cycle_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_empty_graph_all_operations
+        PASS [   0.005s] apas-verus::TestUnDirGraphMtEph test_star_graph
+        PASS [   0.005s] apas-verus::TestUnDirGraphMtEph test_path_graph
+        PASS [   0.008s] apas-verus::TestUnDirGraphMtEph test_large_parallel_graph
+        PASS [   0.006s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_complete_graph
+        PASS [   0.007s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_basic_operations
+        PASS [   0.005s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_edge_cases
+        PASS [   0.009s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_concurrent_access
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_incident_operations
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_empty
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_ngofvertices
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_nonexistent_vertex
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmteph_nplusminusofvertices
+        PASS [   0.004s] apas-verus::TestUnDirGraphMtEph test_undirgraphmtephlit_macro_functionality
+        PASS [   0.004s] apas-verus::TestUnDirGraphStEph test_complete_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphStEph test_disconnected_graph
+        PASS [   0.005s] apas-verus::TestUnDirGraphStEph test_cycle_graph
+        PASS [   0.005s] apas-verus::TestUnDirGraphStEph test_path_graph
+        PASS [   0.005s] apas-verus::TestUnDirGraphStEph test_star_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphStEph test_undigraph_vertices_and_edges
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphI128 test_empty_graph
+        PASS [   0.004s] apas-verus::TestUnDirGraphStEph test_undirgraphstephlit_macro_functionality
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphI16 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphI32 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphI8 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphI64 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphIsize test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphU128 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphU16 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphU32 test_complete_graph_weighted
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphU32 test_empty_graph
+        PASS [   0.003s] apas-verus::TestWeightedDirGraphStEphU32 test_no_edges_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphU64 test_empty_graph
+        PASS [   0.005s] apas-verus::TestWeightedDirGraphStEphU8 test_empty_graph
+        PASS [   0.004s] apas-verus::TestWeightedDirGraphStEphUsize test_empty_graph
+        PASS [   0.368s] apas-verus::TestDirGraphMtEph test_race_condition_verification_concurrent_graph_reads
+        PASS [   2.005s] apas-verus::TestDirGraphMtEph test_deadlock_prevention_concurrent_graph_operations
+────────────
+     Summary [   2.032s] 171 tests run: 171 passed, 3358 skipped
+Elapsed: 3s
