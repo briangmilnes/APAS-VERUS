@@ -1216,7 +1216,6 @@ pub mod ArraySeqMtPer {
             requires
                 obeys_feq_clone::<T>(),
                 spec_monoid(spec_f, id),
-                a.seq@.len() > 0,
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
             ensures
@@ -1225,7 +1224,13 @@ pub mod ArraySeqMtPer {
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
-            if len == 1 {
+            if len == 0 {
+                proof {
+                    assert(s =~= Seq::<T>::empty());
+                    reveal_with_fuel(Seq::fold_left, 1);
+                }
+                id
+            } else if len == 1 {
                 let element = a.seq[0].clone();
                 proof {
                     assert(cloned(a.seq[0 as int], element));
@@ -1506,7 +1511,6 @@ pub mod ArraySeqMtPer {
             requires
                 obeys_feq_clone::<T>(),
                 spec_monoid(spec_f, id),
-                a.seq@.len() > 0,
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
             ensures
@@ -1515,7 +1519,13 @@ pub mod ArraySeqMtPer {
         {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
-            if len == 1 {
+            if len == 0 {
+                proof {
+                    assert(s =~= Seq::<T>::empty());
+                    reveal_with_fuel(Seq::fold_left, 1);
+                }
+                id
+            } else if len == 1 {
                 let element = a.seq[0].clone();
                 proof {
                     assert(cloned(a.seq[0 as int], element));
