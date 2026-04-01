@@ -164,6 +164,7 @@ pub mod BSTSplayMtEph {
 
     // Verified splay tree algorithms (Layer 1).
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn new_node<T: StTInMtT + Ord + TotalOrder>(key: T) -> (node: Node<T>)
         requires link_spec_size::<T>(None) + 1 <= usize::MAX as nat,
         ensures
@@ -181,6 +182,7 @@ pub mod BSTSplayMtEph {
     }
 
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: usize)
         ensures size as nat == link_spec_size(*link),
     {
@@ -212,6 +214,7 @@ pub mod BSTSplayMtEph {
 
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         requires spec_is_bst_link(Some(root)),
         ensures
@@ -1189,6 +1192,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn bst_insert<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -1322,6 +1326,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
         requires spec_is_bst_link(*old(link)),
         ensures
@@ -1340,6 +1345,7 @@ pub mod BSTSplayMtEph {
         inserted
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn find_link<'a, T: StTInMtT + Ord + TotalOrder>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         requires spec_is_bst_link(*link),
         ensures
@@ -1377,6 +1383,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn min_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (min: Option<&T>)
         requires spec_is_bst_link(*link),
         ensures
@@ -1425,6 +1432,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn max_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (max: Option<&T>)
         requires spec_is_bst_link(*link),
         ensures
@@ -1473,6 +1481,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn in_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
@@ -1485,6 +1494,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn pre_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
@@ -1497,6 +1507,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn in_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
@@ -1506,6 +1517,7 @@ pub mod BSTSplayMtEph {
         out
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
     fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
         requires link_spec_size(*link) <= usize::MAX as nat,
         ensures true,
@@ -1517,6 +1529,7 @@ pub mod BSTSplayMtEph {
 
     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
         ensures c == *link,
         decreases *link,
@@ -1541,6 +1554,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
         requires
             obeys_feq_clone::<T>(),
@@ -1681,6 +1695,7 @@ pub mod BSTSplayMtEph {
         Some(node)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
     fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
         where
             F: Fn(&T) -> bool + Send + Sync,
@@ -1710,6 +1725,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
     fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync,
@@ -1736,6 +1752,7 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: usize)
         requires link_height(*link) <= usize::MAX as nat,
         ensures h as nat == link_height(*link),
@@ -1754,6 +1771,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// Exec mirror of link_spec_size for runtime size guards.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn compute_link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (n: usize)
         requires link_spec_size(*link) <= usize::MAX,
         ensures n as nat == link_spec_size(*link),
@@ -1807,12 +1825,14 @@ pub mod BSTSplayMtEph {
         spec fn spec_in_order(&self) -> Seq<T>;
         spec fn spec_pre_order(&self) -> Seq<T>;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self)
             ensures tree.spec_bstsplaymteph_wf(),
                     tree@ is None,
                     link_spec_size(tree@) == 0,
                     forall|x: T| !link_contains(tree@, x);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_sorted_slice(values: &[T]) -> (tree: Self)
             requires
                 obeys_feq_clone::<T>(),
@@ -1821,6 +1841,7 @@ pub mod BSTSplayMtEph {
                     && values@[i] != values@[j],
             ensures tree.spec_bstsplaymteph_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsplaymteph_wf(),
             ensures self.spec_bstsplaymteph_wf(),
@@ -1834,18 +1855,22 @@ pub mod BSTSplayMtEph {
                         Err(_) => self@ == old(self)@,
                     };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures found == link_contains(self@, *target);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (n: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures n as nat == link_spec_size(self@);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaymteph_wf(),
             ensures b == (self@ is None);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
             requires self.spec_bstsplaymteph_wf(),
             ensures h as nat == link_height(self@);
@@ -1857,6 +1882,7 @@ pub mod BSTSplayMtEph {
             ensures
                 found.is_some() <==> link_contains(self@, *target),
                 found.is_some() ==> found.unwrap() == *target;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures
@@ -1864,6 +1890,7 @@ pub mod BSTSplayMtEph {
                 min.is_some() ==> link_contains(self@, min.unwrap()),
                 min.is_some() ==> forall|x: T| link_contains(self@, x) ==>
                     #[trigger] TotalOrder::le(min.unwrap(), x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures
@@ -1871,12 +1898,15 @@ pub mod BSTSplayMtEph {
                 max.is_some() ==> link_contains(self@, max.unwrap()),
                 max.is_some() ==> forall|x: T| link_contains(self@, x) ==>
                     #[trigger] TotalOrder::le(x, max.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaymteph_wf(),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
         fn filter<F>(&self, predicate: F) -> (seq: ArraySeqStPerS<T>)
         where
             F: Fn(&T) -> bool + Send + Sync
@@ -1884,6 +1914,7 @@ pub mod BSTSplayMtEph {
                 self.spec_bstsplaymteph_wf(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync
@@ -1904,6 +1935,7 @@ pub mod BSTSplayMtEph {
         open spec fn spec_in_order(&self) -> Seq<T> { spec_in_order_link(self@) }
         open spec fn spec_pre_order(&self) -> Seq<T> { spec_pre_order_link(self@) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> Self {
             BSTSplayMtEph {
                 root: RwLock::new(None, Ghost(BSTSplayMtEphInv)),
@@ -1911,6 +1943,7 @@ pub mod BSTSplayMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_sorted_slice(values: &[T]) -> Self {
             let vlen = values.len();
             let link = build_balanced(values);
@@ -1923,6 +1956,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
@@ -1944,6 +1978,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: assume return value matches ghost.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
             let found = find_link(handle.borrow(), target).is_some();
@@ -1953,6 +1988,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: assume return value matches ghost.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
             let n = size_link(handle.borrow());
@@ -1962,6 +1998,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Predicate: assume return predicate matches spec predicate.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool) {
             let handle = self.root.acquire_read();
             let b = handle.borrow().is_none();
@@ -1971,6 +2008,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Reader: height bounded by node count from lock predicate.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize) {
             let handle = self.root.acquire_read();
             let data = handle.borrow();
@@ -1983,6 +2021,7 @@ pub mod BSTSplayMtEph {
             h
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
             let found = find_link(handle.borrow(), target).cloned();
@@ -1994,6 +2033,7 @@ pub mod BSTSplayMtEph {
             found
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>) {
             let handle = self.root.acquire_read();
             let min = min_link(handle.borrow()).cloned();
@@ -2007,6 +2047,7 @@ pub mod BSTSplayMtEph {
             min
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>) {
             let handle = self.root.acquire_read();
             let max = max_link(handle.borrow()).cloned();
@@ -2020,6 +2061,7 @@ pub mod BSTSplayMtEph {
             max
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let out = in_order_parallel(handle.borrow());
@@ -2027,6 +2069,7 @@ pub mod BSTSplayMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
             let out = pre_order_parallel(handle.borrow());
@@ -2034,6 +2077,7 @@ pub mod BSTSplayMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
         fn filter<F>(&self, predicate: F) -> ArraySeqStPerS<T>
         where
             F: Fn(&T) -> bool + Send + Sync,
@@ -2046,6 +2090,7 @@ pub mod BSTSplayMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F>(&self, op: F, identity: T) -> (accumulated: T)
         where
             F: Fn(T, T) -> T + Send + Sync,

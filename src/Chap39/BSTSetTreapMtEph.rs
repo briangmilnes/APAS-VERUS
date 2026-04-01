@@ -227,6 +227,7 @@ pub mod BSTSetTreapMtEph {
     // 9. impls
 
     #[verifier::exec_allows_no_decreases_clause]
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
     fn minimum_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (min: Option<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
@@ -250,6 +251,7 @@ pub mod BSTSetTreapMtEph {
     }
 
     #[verifier::exec_allows_no_decreases_clause]
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
     fn maximum_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (max: Option<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
@@ -274,10 +276,12 @@ pub mod BSTSetTreapMtEph {
             self@.finite()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (set: Self) {
             BSTSetTreapMtEph { tree: ParamTreap::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(value: T) -> (set: Self) {
             let set = Self::join_m(Self::empty(), value, Self::empty());
             proof {
@@ -290,25 +294,32 @@ pub mod BSTSetTreapMtEph {
             set
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (count: usize) { self.tree.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) { self.tree.is_empty() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find(&self, value: &T) -> (found: Option<T>) { self.tree.find(value) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn contains(&self, value: &T) -> (found: bool)
         {
             self.find(value).is_some()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn minimum(&self) -> (min: Option<T>) {
             minimum_inner(&self.tree)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn maximum(&self) -> (max: Option<T>) {
             maximum_inner(&self.tree)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert(&mut self, value: T) {
             let ghost old_len = self@.len();
             let (left, _found, right) = self.split(&value);
@@ -321,6 +332,7 @@ pub mod BSTSetTreapMtEph {
             *self = Self::join_m(left, value, right);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete(&mut self, target: &T) {
             let ghost kref = *target;
             let ghost old_view = self@;
@@ -342,27 +354,33 @@ pub mod BSTSetTreapMtEph {
             *self = Self::join_pair(left, right);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn union(&self, other: &Self) -> (combined: Self) {
             BSTSetTreapMtEph { tree: self.tree.union(&other.tree) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn intersection(&self, other: &Self) -> (common: Self) {
             BSTSetTreapMtEph { tree: self.tree.intersect(&other.tree) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn difference(&self, other: &Self) -> (diff: Self) {
             BSTSetTreapMtEph { tree: self.tree.difference(&other.tree) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self)) {
             let (left, found, right) = self.tree.split(pivot);
             (BSTSetTreapMtEph { tree: left }, found, BSTSetTreapMtEph { tree: right })
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_pair(left: Self, right: Self) -> (joined: Self) {
             BSTSetTreapMtEph { tree: left.tree.join_pair(right.tree) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self) {
             param_treap_assert_finite(&left.tree);
             param_treap_assert_finite(&right.tree);
@@ -371,6 +389,7 @@ pub mod BSTSetTreapMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn filter<F: Pred<T>>(
             &self,
             predicate: F,
@@ -379,6 +398,7 @@ pub mod BSTSetTreapMtEph {
             BSTSetTreapMtEph { tree: self.tree.filter(predicate, Ghost(spec_pred)) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -386,8 +406,10 @@ pub mod BSTSetTreapMtEph {
             self.tree.reduce(op, base)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn iter_in_order(&self) -> (ordered: ArraySeqStPerS<T>) { self.tree.in_order() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
     }
 

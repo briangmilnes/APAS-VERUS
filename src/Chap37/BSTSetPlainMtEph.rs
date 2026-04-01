@@ -61,15 +61,19 @@ pub mod BSTSetPlainMtEph {
     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetplainmteph_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (set: Self)
             requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(value: T) -> (set: Self)
             requires obeys_feq_clone::<T>()
             ensures set.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
@@ -78,52 +82,67 @@ pub mod BSTSetPlainMtEph {
         fn find(&self, value: &T) -> (found: Option<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, value: &T) -> (found: bool)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsetplainmteph_wf()
             ensures self.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(&mut self, target: &T)
             requires old(self).spec_bstsetplainmteph_wf()
             ensures self.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> (combined: Self)
             requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures combined.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures common.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn difference(&self, other: &Self) -> (diff: Self)
             requires self.spec_bstsetplainmteph_wf(), other.spec_bstsetplainmteph_wf()
             ensures diff.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires self.spec_bstsetplainmteph_wf()
             ensures parts.0.spec_bstsetplainmteph_wf(), parts.2.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_pair(left: Self, right: Self) -> (joined: Self)
             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
             ensures joined.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
             requires left.spec_bstsetplainmteph_wf(), right.spec_bstsetplainmteph_wf()
             ensures joined.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
             requires
                 self.spec_bstsetplainmteph_wf(),
                 forall|t: &T| #[trigger] predicate.requires((t,)),
             ensures filtered.spec_bstsetplainmteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: FnMut(T, T) -> T + Send>(&self, op: F, base: T) -> (reduced: T)
             requires
                 self.spec_bstsetplainmteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn iter_in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn as_tree(&self) -> (tree: &BSTPlainMtEph<T>)
             requires self.spec_bstsetplainmteph_wf()
             ensures true;
@@ -132,6 +151,7 @@ pub mod BSTSetPlainMtEph {
             ensures it@.0 == 0, bstsetplainmteph_iter_invariant(&it);
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
         requires tree.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
         ensures true,
@@ -152,6 +172,7 @@ pub mod BSTSetPlainMtEph {
         out
     }
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (tree: BSTPlainMtEph<T>)
         ensures tree.spec_bstplainmteph_wf(),
     {
@@ -169,6 +190,7 @@ pub mod BSTSetPlainMtEph {
         tree
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
     fn from_vec<T: StTInMtT + Ord + TotalOrder>(values: Vec<T>) -> (set: BSTSetPlainMtEph<T>)
         requires obeys_feq_clone::<T>(),
         ensures set.spec_bstsetplainmteph_wf(),
@@ -187,6 +209,7 @@ pub mod BSTSetPlainMtEph {
         BSTSetPlainMtEph { tree }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetPlainMtEph<T>) -> (out: BSTSetPlainMtEph<T>)
         requires set.spec_bstsetplainmteph_wf()
         ensures out.spec_bstsetplainmteph_wf()
@@ -199,32 +222,42 @@ pub mod BSTSetPlainMtEph {
             self.tree.spec_bstplainmteph_wf() && obeys_feq_clone::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> Self {
             Self {
                 tree: BSTPlainMtEph::new(),
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(value: T) -> Self {
             let mut tree = BSTPlainMtEph::new();
             let _ = tree.insert(value);
             Self { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> usize { self.tree.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> bool { self.tree.is_empty() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, value: &T) -> Option<T> { self.tree.find(value) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, value: &T) -> bool { self.tree.contains(value) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> Option<T> { self.tree.minimum() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(&mut self, target: &T) {
             if !self.contains(target) {
                 return;
@@ -248,6 +281,7 @@ pub mod BSTSetPlainMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return copy_set(other);
@@ -281,6 +315,7 @@ pub mod BSTSetPlainMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
@@ -311,6 +346,7 @@ pub mod BSTSetPlainMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -343,6 +379,7 @@ pub mod BSTSetPlainMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn split(&self, pivot: &T) -> (Self, bool, Self) {
             let seq = self.tree.in_order();
             let n = seq.length();
@@ -367,6 +404,7 @@ pub mod BSTSetPlainMtEph {
             (from_vec(left), found, from_vec(right))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_pair(left: Self, right: Self) -> Self {
             let mut combined = values_vec(&left.tree);
             let right_vals = values_vec(&right.tree);
@@ -381,6 +419,7 @@ pub mod BSTSetPlainMtEph {
             from_vec(combined)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             let mut combined = values_vec(&left.tree);
             combined.push(pivot);
@@ -396,6 +435,7 @@ pub mod BSTSetPlainMtEph {
             from_vec(combined)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn filter<F>(&self, mut predicate: F) -> Self
         where
             F: FnMut(&T) -> bool,
@@ -419,6 +459,7 @@ pub mod BSTSetPlainMtEph {
             from_vec(filtered)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F>(&self, mut op: F, base: T) -> T
         where
             F: FnMut(T, T) -> T,
@@ -440,8 +481,10 @@ pub mod BSTSetPlainMtEph {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn iter_in_order(&self) -> ArraySeqStPerS<T> { self.tree.in_order() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn as_tree(&self) -> &BSTPlainMtEph<T> { &self.tree }
 
         fn iter(&self) -> BSTSetPlainMtEphIter<T> {

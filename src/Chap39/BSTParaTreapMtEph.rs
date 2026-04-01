@@ -123,6 +123,7 @@ pub mod BSTParaTreapMtEph {
 
     /// Clone a MtKey element with a view-preserving postcondition.
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn clone_elem<T: MtKey + ClonePreservesView>(x: &T) -> (c: T)
         ensures c@ == x@,
     {
@@ -205,6 +206,7 @@ pub mod BSTParaTreapMtEph {
     /// Expose the type invariant guarantee of finiteness to callers in other modules.
     /// Calling this is a no-op at runtime; the spec-level ensures establishes tree@.finite().
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     pub fn param_treap_assert_finite<T: MtKey>(tree: &ParamTreap<T>)
         ensures tree@.finite(),
     {
@@ -289,6 +291,7 @@ pub mod BSTParaTreapMtEph {
 
     // 9. impls
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn new_param_treap<T: MtKey>(
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
@@ -306,12 +309,14 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn new_leaf<T: MtKey>() -> (tree: ParamTreap<T>)
         ensures tree@ =~= Set::<<T as View>::V>::empty()
     {
         new_param_treap(None, Ghost(Set::empty()))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
@@ -373,6 +378,7 @@ pub mod BSTParaTreapMtEph {
         exposed
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_with_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
@@ -419,6 +425,7 @@ pub mod BSTParaTreapMtEph {
         hasher.finish() as i64
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn tree_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (p: i64)
         requires tree.spec_bstparatreapmteph_wf(),
         ensures true,
@@ -433,6 +440,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// Build a new tree from (left, key, priority, right) maintaining BST and heap ordering.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn make_node<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -636,6 +644,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
     fn split_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
@@ -1043,6 +1052,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn union_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -1224,6 +1234,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn intersect_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -1398,6 +1409,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn difference_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -1577,6 +1589,7 @@ pub mod BSTParaTreapMtEph {
     // full predicate semantics. Parallel closures cannot capture Ghost<spec_fn(T::V) -> bool>
     // because T::V is a ghost type that does not implement Send. Sequential recursion avoids
     // the Send constraint entirely while preserving correctness.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn filter_inner<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: &Arc<F>,
@@ -1760,6 +1773,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
     fn filter_parallel<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: F,
@@ -1784,6 +1798,7 @@ pub mod BSTParaTreapMtEph {
         filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -1818,6 +1833,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
     fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
@@ -1832,6 +1848,7 @@ pub mod BSTParaTreapMtEph {
         reduce_inner(tree, &op, base)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn collect_in_order<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -2019,10 +2036,13 @@ pub mod BSTParaTreapMtEph {
     impl<T: MtKey + ClonePreservesView + 'static> ParamTreapTrait<T> for ParamTreap<T> {
         open spec fn spec_bstparatreapmteph_wf(&self) -> bool { self@.finite() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self) { new_param_treap(None, Ghost(Set::empty())) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>) { expose_internal(self) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_mid(exposed: Exposed<T>) -> (tree: Self) {
             match exposed {
                 | Exposed::Leaf => ParamTreap::new(),
@@ -2038,6 +2058,7 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (count: usize) {
             proof { use_type_invariant(self); }
             let handle = self.root.acquire_read();
@@ -2054,8 +2075,10 @@ pub mod BSTParaTreapMtEph {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) { self.size() == 0 }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert(&mut self, key: T) {
             let ghost old_view = self@;
             proof { use_type_invariant(&*self); assert(old_view.finite()); }
@@ -2073,6 +2096,7 @@ pub mod BSTParaTreapMtEph {
             *self = new_tree;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete(&mut self, key: &T) {
             let ghost old_view = self@;
             proof { use_type_invariant(&*self); assert(old_view.finite()); }
@@ -2094,6 +2118,7 @@ pub mod BSTParaTreapMtEph {
             *self = new_tree;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find(&self, key: &T) -> (found: Option<T>)
             decreases self@.len(),
         {
@@ -2117,32 +2142,40 @@ pub mod BSTParaTreapMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn split(&self, key: &T) -> (parts: (Self, bool, Self)) {
             proof { use_type_invariant(self); }
             split_inner(self, key)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_pair(&self, other: Self) -> (joined: Self) {
             join_pair_inner(self.clone(), other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn union(&self, other: &Self) -> (combined: Self) { union_inner(self, other) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn intersect(&self, other: &Self) -> (common: Self) { intersect_inner(self, other) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn difference(&self, other: &Self) -> (diff: Self) { difference_inner(self, other) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn filter<F: Pred<T>>(
             &self,
             predicate: F,
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self) { filter_parallel(self, predicate, Ghost(spec_pred)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F>(&self, op: F, base: T) -> (reduced: T)
         where
             F: Fn(T, T) -> T + Send + Sync + 'static
         { reduce_parallel(self, op, base) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             let mut out = Vec::with_capacity(self.size());
             collect_in_order(self, &mut out);

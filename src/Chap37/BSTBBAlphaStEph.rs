@@ -78,24 +78,29 @@ pub mod BSTBBAlphaStEph {
         spec fn spec_root(self) -> BalBinTree<T>;
         spec fn spec_bstbbalphasteph_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self)
             ensures
                 tree.spec_bstbbalphasteph_wf(),
                 tree.spec_root().tree_is_bst(),
                 forall|x: T| !tree.spec_root().tree_contains(x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize)
             requires
                 self.spec_bstbbalphasteph_wf(),
                 self.spec_root().spec_size() <= usize::MAX,
             ensures n == self.spec_root().spec_size();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstbbalphasteph_wf(),
             ensures b == (self.spec_root().spec_size() == 0);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
             requires
                 self.spec_bstbbalphasteph_wf(),
                 self.spec_root().spec_height() <= usize::MAX,
             ensures h == self.spec_root().spec_height();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(self, value: T) -> (inserted: Self)
             requires
                 self.spec_bstbbalphasteph_wf(),
@@ -106,6 +111,7 @@ pub mod BSTBBAlphaStEph {
                 inserted.spec_root().tree_contains(value),
                 forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bstbbalphasteph_wf(),
@@ -120,6 +126,7 @@ pub mod BSTBBAlphaStEph {
             ensures
                 found.is_some() == self.spec_root().tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(self, target: &T) -> (deleted: Self)
             requires
                 self.spec_bstbbalphasteph_wf(),
@@ -130,6 +137,7 @@ pub mod BSTBBAlphaStEph {
                 !deleted.spec_root().tree_contains(*target),
                 forall|x: T| (#[trigger] deleted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) && x != *target);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<&T>)
             requires
                 self.spec_bstbbalphasteph_wf(),
@@ -138,6 +146,7 @@ pub mod BSTBBAlphaStEph {
                 self.spec_root().spec_size() == 0 ==> min.is_none(),
                 self.spec_root().spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> self.spec_root().tree_contains(*min.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<&T>)
             requires
                 self.spec_bstbbalphasteph_wf(),
