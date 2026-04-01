@@ -704,36 +704,12 @@ src/Chap35/OrderStatSelectStPer.rs:116: info: St fn `select_inner` sequential as
 src/Chap36/QuickSortMtEph.rs:186: error: Mt fn `quick_sort_first` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
 src/Chap36/QuickSortMtEph.rs:196: error: Mt fn `quick_sort_median3` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
 src/Chap36/QuickSortMtEph.rs:206: error: Mt fn `quick_sort_random` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
-src/Chap36/QuickSortMtEph.rs:214: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:220: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:228: error: fn `concat_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:240: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:289: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:303: error: fn `concat_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:388: error: fn `quick_sort_first` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:504: error: fn `quick_sort_median3` missing alg analysis annotation
-src/Chap36/QuickSortMtEph.rs:628: error: fn `quick_sort_random` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:251: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:257: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:269: error: fn `concat_three_vecs` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:285: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:334: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:352: error: fn `concat_three_vecs` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:440: error: fn `quick_sort_first` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:600: error: fn `quick_sort_median3` missing alg analysis annotation
-src/Chap36/QuickSortMtEphSlice.rs:760: error: fn `quick_sort_random` missing alg analysis annotation
 src/Chap36/QuickSortStEph.rs:184: info: St fn `quick_sort_first` sequential as expected
 src/Chap36/QuickSortStEph.rs:194: info: St fn `quick_sort_median3` sequential as expected
 src/Chap36/QuickSortStEph.rs:204: info: St fn `quick_sort_random` sequential as expected
-src/Chap36/QuickSortStEph.rs:212: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:218: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:226: error: fn `concat_three` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:238: error: fn `median_of_three` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:287: error: fn `median3_pivot_idx` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:301: error: fn `concat_three` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:386: error: fn `quick_sort_first` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:490: error: fn `quick_sort_median3` missing alg analysis annotation
-src/Chap36/QuickSortStEph.rs:591: error: fn `quick_sort_random` missing alg analysis annotation
+src/Chap36/QuickSortStEph.rs:393: info: St fn `quick_sort_first` sequential as expected
+src/Chap36/QuickSortStEph.rs:498: info: St fn `quick_sort_median3` sequential as expected
+src/Chap36/QuickSortStEph.rs:600: info: St fn `quick_sort_random` sequential as expected
 src/Chap37/AVLTreeSeq.rs:234: error: fn `empty` missing alg analysis annotation
 src/Chap37/AVLTreeSeq.rs:237: error: fn `new` missing alg analysis annotation
 src/Chap37/AVLTreeSeq.rs:240: error: fn `length` missing alg analysis annotation
@@ -3249,17 +3225,17 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2213  (fns with any APAS or Code review line)
-  Missing alg analysis:      2871  <- errors
+  Alg analysis annotations:  2240  (fns with any APAS or Code review line)
+  Missing alg analysis:      2844  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
-  St DIFFERS (expected):      263  <- info
+  St DIFFERS (expected):      266  <- info
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2976
+  Errors: 2949
   Warnings: 0
-  Info: 263
+  Info: 266
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log
