@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    3 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjMatrixGraphStPer.rs:491: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:491: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        487 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        489 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    2 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjSeqGraphStPer.rs:523: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:523: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        519 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        521 |         {
@@ -49,7 +49,7 @@ Table of Contents:
        524 |             equal
        525 |         }
 ❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjTableGraphMtPer.rs:450: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:450: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
        435 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
        448 |                     proof {
@@ -66,7 +66,7 @@ Table of Contents:
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStEph.rs:415: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:415: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        408 |         fn clone(&self) -> (result: Self)
             ...
        413 |                 edges: self.edges.clone(),
@@ -74,14 +74,14 @@ Table of Contents:
        416 |             result
        417 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStPer.rs:386: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:386: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        379 |         fn clone(&self) -> (result: Self)
             ...
        384 |                 edges: self.edges.clone(),
        385 |             };
        387 |             result
        388 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStPer.rs:402: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:402: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        398 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        400 |         {
@@ -164,11 +164,15 @@ Warnings: 5 total
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:30:17 -07:00
-Ended:     2026-04-01 07:30:18 -07:00
-Duration:  72ms
+Started:   2026-04-01 08:29:31 -07:00
+Ended:     2026-04-01 08:29:31 -07:00
+Duration:  65ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-Duration:  72ms
+===================
+
+Started:   2026-04-01 08:29:31 -07:00
+Ended:     2026-04-01 08:29:31 -07:00
+Duration:  65ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
