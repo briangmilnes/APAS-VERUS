@@ -305,6 +305,7 @@ pub mod LinkedListStEph {
             self.seq@[i]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -312,6 +313,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -321,14 +323,17 @@ pub mod LinkedListStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -356,6 +361,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_vec(elts: Vec<T>) -> (seq: LinkedListStEphS<T>) {
             LinkedListStEphS { seq: elts }
         }
@@ -364,16 +370,19 @@ pub mod LinkedListStEph {
     //		9. impl RedefinableTrait for Struct
 
     impl<T> LinkedListStEphRedefinableTrait<T> for LinkedListStEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: LinkedListStEphS<T>) {
             LinkedListStEphS { seq: Vec::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: LinkedListStEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStEphS<T>)
         {
             let mut seq = Vec::with_capacity(n);
@@ -392,6 +401,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStEphS<T>, f: &F) -> (mapped: LinkedListStEphS<U>)
         {
             let len = a.seq.len();
@@ -412,6 +422,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
         fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (appended: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -459,6 +470,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -502,6 +514,7 @@ pub mod LinkedListStEph {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total length), Span O(total length)
         fn flatten(a: &LinkedListStEphS<LinkedListStEphS<T>>) -> (flattened: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -554,6 +567,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: LinkedListStEphS<T>)
             where T: Clone + Eq
         {
@@ -591,14 +605,17 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
@@ -634,6 +651,7 @@ pub mod LinkedListStEph {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -671,6 +689,7 @@ pub mod LinkedListStEph {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStEphS<T>, T))
             where T: Clone + Eq
         {

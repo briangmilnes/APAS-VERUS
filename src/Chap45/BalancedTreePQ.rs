@@ -61,12 +61,15 @@ broadcast use {
         pub trait BalancedTreePQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_balancedtreepq_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn empty() -> (pq: Self)
                 ensures pq@.len() == 0, pq.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn singleton(element: T) -> (pq: Self)
                 ensures pq@.len() == 1, pq.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -111,18 +114,22 @@ broadcast use {
                 requires seq.spec_avltreeseqstper_wf(),
                 ensures pq@.len() == seq@.len(), pq.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn size(&self) -> (n: usize)
                 requires self.spec_balancedtreepq_wf(),
                 ensures n as int == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (b: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures b == (self@.len() == 0);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures seq@ =~= self@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn find_max(&self) -> (max_elem: Option<&T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -130,6 +137,7 @@ broadcast use {
                     self@.len() > 0 ==> max_elem.is_some(),
                     self@.len() > 0 ==> max_elem.unwrap()@ == self@[self@.len() - 1];
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn delete_max(&self) -> (max_and_rest: (Self, Option<T>))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -139,6 +147,7 @@ broadcast use {
                     self@.len() == 0 ==> max_and_rest.0@.len() == self@.len(),
                     max_and_rest.0.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> (pq: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -146,14 +155,17 @@ broadcast use {
                     self@.len() + elements@.len() < usize::MAX as nat,
                 ensures pq@.len() == self@.len() + elements@.len(), pq.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn extract_all_sorted(&self) -> (sorted: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures sorted@.len() == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn contains(&self, element: &T) -> (found: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures found == self@.contains(element@);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn remove(&self, element: &T) -> (rest_and_found: (Self, bool))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -161,30 +173,37 @@ broadcast use {
                     !rest_and_found.1 ==> rest_and_found.0@.len() == self@.len(),
                     rest_and_found.0.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn range(&self, min_val: &T, max_val: &T) -> (sub: AVLTreeSeqStPerS<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures sub@.len() <= self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn from_vec(elements: Vec<T>) -> (pq: Self)
                 requires elements@.len() < usize::MAX as nat,
                 ensures pq@.len() == elements@.len(), pq.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (vec: Vec<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_sorted_vec(&self) -> (vec: Vec<T>)
                 requires self.spec_balancedtreepq_wf(),
                 ensures vec@.len() == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_sorted(&self) -> (sorted: bool)
                 requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() <= 1 ==> sorted;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn height(&self) -> (h: usize)
                 requires self.spec_balancedtreepq_wf(),
                 ensures self@.len() == 0 ==> h == 0;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn split(&self, element: &T) -> (parts: (Self, bool, Self))
                 requires self.spec_balancedtreepq_wf(),
                 ensures
@@ -192,6 +211,7 @@ broadcast use {
                     parts.0.spec_balancedtreepq_wf(),
                     parts.2.spec_balancedtreepq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn join(left: &Self, right: &Self) -> (pq: Self)
                 requires
                     left.spec_balancedtreepq_wf(),
@@ -202,11 +222,13 @@ broadcast use {
 
         /// Extended operations requiring closure parameters.
         pub trait BalancedTreePQExtTrait<T: StT + Ord + TotalOrder>: Sized + BalancedTreePQTrait<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
                 requires
                     self.spec_balancedtreepq_wf(),
                     forall|t: &T| #[trigger] predicate.requires((t,)),
                 ensures filtered.spec_balancedtreepq_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
                 requires
                     self.spec_balancedtreepq_wf(),
@@ -428,12 +450,16 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn size(&self) -> usize { self.elements.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> bool { self.elements.length() == 0 }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_seq(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn find_max(&self) -> Option<&T> {
                 let n = self.elements.length();
                 if n == 0 {
@@ -472,6 +498,7 @@ broadcast use {
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn insert_all(&self, elements: &AVLTreeSeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 proof {
@@ -483,9 +510,11 @@ broadcast use {
             }
 
             /// Already sorted — clone the backing tree.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn extract_all_sorted(&self) -> AVLTreeSeqStPerS<T> { self.elements.clone() }
 
             #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn contains(&self, element: &T) -> bool {
                 let n = self.elements.length();
                 let mut i: usize = 0;
@@ -511,6 +540,7 @@ broadcast use {
                 false
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn remove(&self, element: &T) -> (Self, bool) {
                 let n = self.elements.length();
                 let mut values: Vec<T> = Vec::new();
@@ -538,6 +568,7 @@ broadcast use {
                 (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, found)
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn range(&self, min_val: &T, max_val: &T) -> AVLTreeSeqStPerS<T> {
                 let n = self.elements.length();
                 let mut values: Vec<T> = Vec::new();
@@ -562,6 +593,7 @@ broadcast use {
                 AVLTreeSeqStPerS::from_vec(values)
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn from_vec(elements: Vec<T>) -> Self {
                               assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
@@ -583,6 +615,7 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
                 let mut result: Vec<T> = Vec::new();
@@ -601,10 +634,12 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_sorted_vec(&self) -> Vec<T> {
                 self.to_vec()
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_sorted(&self) -> bool {
                 let n = self.elements.length();
                 if n <= 1 {
@@ -626,6 +661,7 @@ broadcast use {
             }
 
             /// Approximate balanced tree height: ceil(log2(n)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn height(&self) -> usize {
                 let n = self.elements.length();
                 if n == 0 {
@@ -645,6 +681,7 @@ broadcast use {
                 if h == 0 { 1 } else { h }
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn split(&self, element: &T) -> (Self, bool, Self) {
                 let mut left = Self::empty();
                 let mut right = Self::empty();
@@ -682,6 +719,7 @@ broadcast use {
                 (left, found, right)
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg(1+n/m)), Span O(m lg(1+n/m))
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 
@@ -694,6 +732,7 @@ broadcast use {
         }
 
         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
             {
                 let mut result = Self::empty();
@@ -727,6 +766,7 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn map<U: StT + Ord + TotalOrder, G: Fn(&T) -> U>(&self, f: G) -> (mapped: BalancedTreePQ<U>)
             {
                 let mut result = BalancedTreePQ::<U>::empty();

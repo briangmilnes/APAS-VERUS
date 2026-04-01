@@ -64,12 +64,14 @@ broadcast use {
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
                     pq@.to_multiset() =~= Multiset::empty(),
                     pq.spec_unsortedlistpq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -77,6 +79,7 @@ broadcast use {
                     pq@.to_multiset() =~= Multiset::empty().insert(element@),
                     pq.spec_unsortedlistpq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn find_min(&self) -> (min_elem: Option<&T>)
                 ensures
                     self@.len() == 0 ==> min_elem.is_none(),
@@ -133,16 +136,20 @@ broadcast use {
                 requires obeys_feq_clone::<T>(),
                 ensures pq@ =~= seq@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (b: bool)
                 ensures b == (self.spec_size() == 0);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures seq@ =~= self@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -151,6 +158,7 @@ broadcast use {
                     pq@.len() == self@.len() + elements@.len(),
                     pq@.to_multiset() =~= self@.to_multiset().add(elements@.to_multiset());
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -159,14 +167,17 @@ broadcast use {
                     sorted@.len() == self@.len(),
                     Self::spec_sorted(sorted.seq@);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures pq@ =~= vec@.map(|_i: int, t: T| t@);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures v@.len() == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -473,18 +484,23 @@ broadcast use {
                 pq
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn size(&self) -> (n: usize) { self.elements.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (b: bool) { self.elements.length() == 0 }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) { self.elements.clone() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 self.meld(&other)
             }
 
             #[verifier::exec_allows_no_decreases_clause]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>) {
                 let mut result = ArraySeqStPerS::empty();
                 let mut current_pq = self.clone();
@@ -568,6 +584,7 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn from_vec(vec: Vec<T>) -> Self {
                 let ghost vec_view = vec@;
                 let seq = ArraySeqStPerS::from_vec(vec);
@@ -591,6 +608,7 @@ broadcast use {
                 pq
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> Vec<T> {
                 let n = self.elements.length();
                 let mut result: Vec<T> = Vec::new();
@@ -606,6 +624,7 @@ broadcast use {
                 result
             }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();

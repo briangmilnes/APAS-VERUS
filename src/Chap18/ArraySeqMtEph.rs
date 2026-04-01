@@ -544,6 +544,7 @@ pub mod ArraySeqMtEph {
             self.seq[i]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -551,6 +552,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -560,14 +562,17 @@ pub mod ArraySeqMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -595,6 +600,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq(a: &ArraySeqMtEphS<T>, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -622,6 +628,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: elts }
         }
@@ -630,16 +637,19 @@ pub mod ArraySeqMtEph {
     //		9. impl RedefinableTrait for Struct
 
     impl<T> ArraySeqMtEphRedefinableTrait<T> for ArraySeqMtEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: ArraySeqMtEphS<T>) {
             ArraySeqMtEphS { seq: Vec::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: ArraySeqMtEphS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -687,6 +697,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
         {
@@ -704,6 +715,7 @@ pub mod ArraySeqMtEph {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -741,6 +753,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -813,6 +826,7 @@ pub mod ArraySeqMtEph {
             injected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -837,14 +851,17 @@ pub mod ArraySeqMtEph {
             injected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
@@ -880,12 +897,14 @@ pub mod ArraySeqMtEph {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq + Send + Sync + 'static
         {
             Self::reduce_dc(a, f, Ghost(spec_f), id)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone + Eq
         {
@@ -941,12 +960,14 @@ pub mod ArraySeqMtEph {
             (scanned_seq, acc)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
         {
             Self::map_dc(a, f)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -965,6 +986,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total length), Span O(total length)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -1260,6 +1282,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel divide-and-conquer reduce. Called by trait method reduce.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
         fn reduce_dc<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: &F,
@@ -1347,6 +1370,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel divide-and-conquer map. Called by trait method map.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map_dc<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: &F,
@@ -1473,6 +1497,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel divide-and-conquer filter. Called by trait method filter.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: &F,

@@ -172,12 +172,14 @@ pub mod BinaryHeapPQ {
             spec fn left_child_spec(i: int) -> int;
             spec fn right_child_spec(i: int) -> int;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn empty() -> (pq: Self)
                 ensures
                     pq@.len() == 0,
                     pq@.to_multiset() =~= Multiset::empty(),
                     pq.spec_binaryheappq_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn singleton(element: T) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -186,6 +188,7 @@ pub mod BinaryHeapPQ {
                     pq.spec_binaryheappq_wf(),
                     Self::spec_is_exec_heap(pq.spec_seq());
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires
                     Self::spec_is_exec_heap(self.spec_seq()),
@@ -249,16 +252,20 @@ pub mod BinaryHeapPQ {
                 ensures
                     pq@.len() == seq@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn size(&self) -> (n: usize)
                 ensures n as int == self.spec_size();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (empty: bool)
                 ensures empty == (self.spec_size() == 0);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_seq(&self) -> (seq: ArraySeqStPerS<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures seq@ =~= self@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m + n), Span O(m + n)
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -266,6 +273,7 @@ pub mod BinaryHeapPQ {
                     (self@.len() + elements@.len()) * 2 <= usize::MAX as int,
                 ensures pq@.len() == self@.len() + elements@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn extract_all_sorted(&self) -> (sorted: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -275,29 +283,35 @@ pub mod BinaryHeapPQ {
                     sorted@.len() == self@.len(),
                     Self::spec_sorted(sorted.seq@);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_valid_heap(&self) -> (valid: bool)
                 requires self@.len() * 2 <= usize::MAX as int;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn height(&self) -> (levels: usize)
                 requires self@.len() <= usize::MAX as int,
                 ensures self@.len() == 0 ==> levels == 0;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(2^level), Span O(2^level)
             fn level_elements(&self, level: usize) -> (elts: ArraySeqStPerS<T>)
                 requires
                     obeys_feq_clone::<T>(),
                     level < 63,
                     usize::BITS >= 64;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
                     vec@.len() * 2 <= usize::MAX as int,
                 ensures pq@.len() == vec@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>)
                 requires obeys_feq_clone::<T>(),
                 ensures v@.len() == self@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     obeys_feq_clone::<T>(),
@@ -317,6 +331,7 @@ pub mod BinaryHeapPQ {
             open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn left_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
             ensures child_idx as int == 2 * (i as int) + 1,
@@ -324,6 +339,7 @@ pub mod BinaryHeapPQ {
             2 * i + 1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn right_child(i: usize) -> (child_idx: usize)
             requires i <= usize::MAX / 2 - 1,
             ensures child_idx as int == 2 * (i as int) + 2,
@@ -331,6 +347,7 @@ pub mod BinaryHeapPQ {
             2 * i + 2
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn parent(i: usize) -> (parent_idx: usize)
             requires i > 0,
             ensures parent_idx as int == (i as int - 1) / 2,
@@ -387,6 +404,7 @@ pub mod BinaryHeapPQ {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn swap_elements<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, i: usize, j: usize) -> (swapped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -455,6 +473,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn bubble_up<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>, mut i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -507,6 +526,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn bubble_down<T: StT + Ord + TotalOrder>(heap: &ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -570,6 +590,7 @@ pub mod BinaryHeapPQ {
 
         /// Sifts down from position 0, restoring full heap property.
         /// Takes ownership to enable in-place vec_swap for T-level identity.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn bubble_down_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>) -> (heaped: ArraySeqStPerS<T>)
             requires
                 heap.seq@.len() > 0,
@@ -745,6 +766,7 @@ pub mod BinaryHeapPQ {
 
         /// Sifts up from position i, restoring full heap property.
         /// Takes ownership to enable in-place vec_swap for T-level identity.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn bubble_up_heap<T: StT + Ord + TotalOrder>(heap: ArraySeqStPerS<T>, i: usize) -> (heaped: ArraySeqStPerS<T>)
             requires
                 heap.seq@.len() > 0,
@@ -929,6 +951,7 @@ pub mod BinaryHeapPQ {
             ArraySeqStPerS { seq: v }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn heapify<T: StT + Ord + TotalOrder>(seq: &ArraySeqStPerS<T>) -> (heap: ArraySeqStPerS<T>)
             requires
                 obeys_feq_clone::<T>(),
@@ -979,6 +1002,7 @@ pub mod BinaryHeapPQ {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn is_heap<T: StT + Ord + TotalOrder>(elements: &ArraySeqStPerS<T>) -> (valid: bool)
             requires elements@.len() * 2 <= usize::MAX as int,
             ensures true,
@@ -1007,6 +1031,7 @@ pub mod BinaryHeapPQ {
             valid
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(e), Span O(e)
         fn exec_pow2(e: usize) -> (power: usize)
             requires pow2(e as nat) <= usize::MAX as int,
             ensures power as int == pow2(e as nat),
@@ -1034,6 +1059,7 @@ pub mod BinaryHeapPQ {
             power
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn exec_log2(n: usize) -> (log_val: usize)
             requires n >= 1,
             ensures log_val as int == log(2, n as int),
