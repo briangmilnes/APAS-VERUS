@@ -38,6 +38,7 @@ pub mod BSTBBAlphaMtEph {
 
     // Verified BST insert (Layer 1).
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
         requires node.tree_is_bst(),
         ensures
@@ -130,6 +131,7 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
         requires (*node).tree_is_bst(),
         ensures found == (*node).tree_contains(*target),
@@ -155,6 +157,7 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -182,6 +185,7 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -199,6 +203,7 @@ pub mod BSTBBAlphaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
         requires (*node).tree_is_bst(),
         ensures
@@ -219,6 +224,7 @@ pub mod BSTBBAlphaMtEph {
     // Verified BST delete (Layer 1).
 
     /// Remove and return the minimum element from a non-empty BST subtree.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
         requires
             node.spec_size() > 0,
@@ -335,6 +341,7 @@ pub mod BSTBBAlphaMtEph {
     }
 
     /// Delete a key from the BST, returning the modified tree.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn delete_node<T: TotalOrder>(node: BalBinTree<T>, target: &T) -> (deleted: BalBinTree<T>)
         requires node.tree_is_bst(),
         ensures
@@ -558,12 +565,14 @@ pub mod BSTBBAlphaMtEph {
     pub trait BSTBBAlphaMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_bstbbalphamteph_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self)
             ensures tree.spec_bstbbalphamteph_wf(),
                     tree@.spec_is_leaf(),
                     tree@.tree_is_bst(),
                     forall|x: T| !tree@.tree_contains(x);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstbbalphamteph_wf(),
             ensures self.spec_bstbbalphamteph_wf(),
@@ -574,6 +583,7 @@ pub mod BSTBBAlphaMtEph {
                         Err(_) => self@ == old(self)@,
                     };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(&mut self, target: &T) -> (r: Result<(), ()>)
             requires old(self).spec_bstbbalphamteph_wf(),
             ensures self.spec_bstbbalphamteph_wf(),
@@ -584,18 +594,22 @@ pub mod BSTBBAlphaMtEph {
                         Err(_) => self@ == old(self)@,
                     };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstbbalphamteph_wf(),
             ensures found == self@.tree_contains(*target);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize)
             requires self.spec_bstbbalphamteph_wf(),
             ensures n as nat == self@.spec_size();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstbbalphamteph_wf(),
             ensures b == (self@ is Leaf);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
             requires self.spec_bstbbalphamteph_wf(),
             ensures h as nat == self@.spec_height();
@@ -607,21 +621,25 @@ pub mod BSTBBAlphaMtEph {
             ensures
                 found.is_some() == self@.tree_contains(*target),
                 found.is_some() ==> found.unwrap() == *target;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq
             requires self.spec_bstbbalphamteph_wf(),
             ensures
                 self@.spec_size() == 0 ==> min.is_none(),
                 self@.spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> self@.tree_contains(min.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq
             requires self.spec_bstbbalphamteph_wf(),
             ensures
                 self@.spec_size() == 0 ==> max.is_none(),
                 self@.spec_size() > 0 ==> max.is_some(),
                 max.is_some() ==> self@.tree_contains(max.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstbbalphamteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
@@ -634,6 +652,7 @@ pub mod BSTBBAlphaMtEph {
             && self@.spec_height() <= usize::MAX
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self) {
             BSTBBAlphaMtEph {
                 root: RwLock::new(
@@ -645,6 +664,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
@@ -667,6 +687,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Writer: assume ghost == inner, delete always succeeds (no capacity check needed).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(&mut self, target: &T) -> (r: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
@@ -678,6 +699,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Reader: assume return value matches ghost.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -688,6 +710,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Reader: assume return value matches ghost.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -699,6 +722,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Predicate: assume return predicate matches spec predicate.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -709,6 +733,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Reader: assume return value matches ghost.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -719,6 +744,7 @@ pub mod BSTBBAlphaMtEph {
             h
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -731,6 +757,7 @@ pub mod BSTBBAlphaMtEph {
             found
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -744,6 +771,7 @@ pub mod BSTBBAlphaMtEph {
             min
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -757,6 +785,7 @@ pub mod BSTBBAlphaMtEph {
             max
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
@@ -765,6 +794,7 @@ pub mod BSTBBAlphaMtEph {
             ArraySeqStPerS::from_vec(out)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> ArraySeqStPerS<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();

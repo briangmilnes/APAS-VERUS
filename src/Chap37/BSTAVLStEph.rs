@@ -135,24 +135,29 @@ pub mod BSTAVLStEph {
         spec fn spec_root(self) -> BalBinTree<T>;
         spec fn spec_bstavlsteph_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self)
             ensures
                 tree.spec_bstavlsteph_wf(),
                 tree_is_avl::<T>(tree.spec_root()),
                 forall|x: T| !tree.spec_root().tree_contains(x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (n: usize)
             requires
                 self.spec_bstavlsteph_wf(),
                 self.spec_root().spec_size() <= usize::MAX,
             ensures n == self.spec_root().spec_size();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstavlsteph_wf(),
             ensures b == (self.spec_root().spec_size() == 0);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
             requires
                 self.spec_bstavlsteph_wf(),
                 self.spec_root().spec_height() <= usize::MAX,
             ensures h == self.spec_root().spec_height();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn insert(self, value: T) -> (inserted: Self)
             requires
                 self.spec_bstavlsteph_wf(),
@@ -164,6 +169,7 @@ pub mod BSTAVLStEph {
                 inserted.spec_root().tree_contains(value),
                 forall|x: T| (#[trigger] inserted.spec_root().tree_contains(x)) <==>
                     (self.spec_root().tree_contains(x) || x == value);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bstavlsteph_wf(),

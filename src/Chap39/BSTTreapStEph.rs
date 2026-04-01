@@ -143,6 +143,7 @@ pub mod BSTTreapStEph {
 
     /// Clone a StT element with a cmp_spec-preserving postcondition.
     // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
         ensures c@ == x@,
     {
@@ -152,6 +153,7 @@ pub mod BSTTreapStEph {
     }
 
     /// Clone a BSTTreapStEph with view preservation.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
         requires spec_param_wf_link(&tree.root), tree.spec_bsttreapsteph_wf(),
         ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root), cloned.spec_bsttreapsteph_wf(),
@@ -401,6 +403,7 @@ pub mod BSTTreapStEph {
 
     /// Hash-based priority for treap heap ordering.
     #[verifier::external_body]
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn priority_for_st<T: StT + Ord + IsLtTransitive>(key: &T) -> (p: u64) {
         let mut hasher = std::collections::hash_map::DefaultHasher::new();
         let mut buf = String::new();
@@ -606,6 +609,7 @@ pub mod BSTTreapStEph {
                 node.left == old(node).left,
                 node.right == old(node).right;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_left(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
                 Self::spec_link_size_wf(&Some(x)),
@@ -616,6 +620,7 @@ pub mod BSTTreapStEph {
                 Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_right(x: Box<Node<T>>) -> (rotated: Box<Node<T>>)
             requires
                 Self::spec_link_size_wf(&Some(x)),
@@ -626,17 +631,20 @@ pub mod BSTTreapStEph {
                 Self::spec_bst_link(&Some(x)) ==> Self::spec_bst_link(&Some(rotated)),
                 forall|k: T| spec_contains_link(&Some(rotated), k) <==> spec_contains_link(&Some(x), k);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             ensures
                 Self::spec_size_link(&c) == Self::spec_size_link(link),
                 Self::spec_link_size_wf(link) ==> Self::spec_link_size_wf(&c);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Self::spec_size_link(link) < usize::MAX as nat,
                 Self::spec_link_size_wf(link),
             ensures h as nat == Self::spec_height_link(link);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             requires
                 Self::spec_size_link(&link) + 1 <= usize::MAX as nat,
@@ -651,6 +659,7 @@ pub mod BSTTreapStEph {
                 spec_contains_link(&inserted, value),
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&inserted);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
             requires
                 Self::spec_link_size_wf(&link),
@@ -661,6 +670,7 @@ pub mod BSTTreapStEph {
                 forall|k: T| spec_contains_link(&deleted, k) ==> spec_contains_link(&link, k),
                 Self::spec_bst_link(&link) ==> Self::spec_bst_link(&deleted);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             requires
                 Self::spec_bst_link(link),
@@ -669,6 +679,7 @@ pub mod BSTTreapStEph {
                 found.is_some() <==> spec_contains_link(link, *target),
                 found.is_some() ==> *found.unwrap() == *target;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             ensures match (min_val, Self::spec_min_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -676,6 +687,7 @@ pub mod BSTTreapStEph {
                 _ => false,
             };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             ensures match (max_val, Self::spec_max_link(link)) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -683,9 +695,11 @@ pub mod BSTTreapStEph {
                 _ => false,
             };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             ensures ordered@.len() == Self::spec_in_order_link(link).len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             ensures ordered@.len() == Self::spec_pre_order_link(link).len();
 
@@ -851,40 +865,52 @@ pub mod BSTTreapStEph {
         proof fn lemma_contains_root(node: &Box<Node<T>>) {
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> Self { BSTTreapStEph { root: None } }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> usize { Self::size_link(&self.root) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> bool { self.size() == 0 }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> usize {
             Self::height_link(&self.root)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert(&mut self, value: T, priority: u64) {
             self.root = Self::insert_link(self.root.take(), value, priority);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete(&mut self, target: &T) {
             self.root = Self::delete_link(self.root.take(), target);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find(&self, target: &T) -> Option<&T> {
             Self::find_link(&self.root, target)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn contains(&self, target: &T) -> bool {
             self.find(target).is_some()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn minimum(&self) -> Option<&T> { Self::min_link(&self.root) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn maximum(&self) -> Option<&T> { Self::max_link(&self.root) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::from_vec(Self::in_order_vec(&self.root))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             ArraySeqStPerS::from_vec(Self::pre_order_vec(&self.root))
         }
@@ -921,6 +947,7 @@ pub mod BSTTreapStEph {
             node.size = 1 + l + r;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_left(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
@@ -990,6 +1017,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn rotate_right(mut x: Box<Node<T>>) -> (rotated: Box<Node<T>>) {
             let ghost bst_input = Self::spec_bst_link(&Some(x));
             let ghost xk = x.key;
@@ -1058,6 +1086,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clone_link(link: &Link<T>) -> (c: Link<T>)
             decreases *link,
         {
@@ -1077,6 +1106,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<T>) -> (h: usize)
             decreases *link,
         {
@@ -1100,6 +1130,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert_link(link: Link<T>, value: T, priority: u64) -> (inserted: Link<T>)
             decreases link,
         {
@@ -1213,6 +1244,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete_link(link: Link<T>, target: &T) -> (deleted: Link<T>)
             decreases Self::spec_size_link(&link),
         {
@@ -1395,6 +1427,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
@@ -1453,6 +1486,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             decreases *link,
         {
@@ -1465,6 +1499,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             decreases *link,
         {
@@ -1477,6 +1512,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             decreases *link,
         {
@@ -1492,6 +1528,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order_vec(link: &Link<T>) -> (ordered: Vec<T>)
             decreases *link,
         {
@@ -1519,6 +1556,7 @@ pub mod BSTTreapStEph {
     // 9b. parametric internal functions
 
     /// Build a new tree from (left, key, priority, right) maintaining BST ordering.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn make_node_treap_st<T: StT + Ord + IsLtTransitive>(
         left: BSTTreapStEph<T>, key: T, priority: u64, right: BSTTreapStEph<T>,
     ) -> (node: BSTTreapStEph<T>)
@@ -1562,6 +1600,7 @@ pub mod BSTTreapStEph {
     }
 
     /// Read the priority of a tree's root node (i64::MIN for empty).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn tree_priority_st<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (p: u64)
         requires tree.spec_bsttreapsteph_wf(),
         ensures true,
@@ -1573,6 +1612,7 @@ pub mod BSTTreapStEph {
     }
 
     /// Expose a tree into its constituent parts. Consumes the tree.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_to_parts_st<T: StT + Ord + IsLtTransitive>(tree: BSTTreapStEph<T>) -> (parts: Option<(BSTTreapStEph<T>, T, u64, BSTTreapStEph<T>)>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -1706,6 +1746,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
     fn split_inner_st<T: StT + Ord + IsLtTransitive>(
         tree: BSTTreapStEph<T>, key: &T,
     ) -> (parts: (BSTTreapStEph<T>, bool, BSTTreapStEph<T>))
@@ -2082,6 +2123,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn union_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (combined: BSTTreapStEph<T>)
@@ -2236,6 +2278,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn intersect_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (common: BSTTreapStEph<T>)
@@ -2389,6 +2432,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn difference_inner_st<T: StT + Ord + IsLtTransitive>(
         a: BSTTreapStEph<T>, b: BSTTreapStEph<T>,
     ) -> (remaining: BSTTreapStEph<T>)
@@ -2552,6 +2596,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
     fn filter_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(&T) -> bool>(
         tree: BSTTreapStEph<T>,
         predicate: &F,
@@ -2686,6 +2731,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn reduce_inner_st<T: StT + Ord + IsLtTransitive, F: Fn(T, T) -> T>(
         tree: BSTTreapStEph<T>, op: &F, identity: T,
     ) -> (reduced: T)
@@ -2718,6 +2764,7 @@ pub mod BSTTreapStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn collect_in_order_st<T: StT + Ord + IsLtTransitive>(
         tree: BSTTreapStEph<T>, out: &mut Vec<T>,
     )
@@ -2990,10 +3037,12 @@ pub mod BSTTreapStEph {
             spec_param_wf_link(&self.root)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn param_new() -> (tree: Self) {
             BSTTreapStEph { root: None }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self) {
             let priority = priority_for_st(&key);
             make_node_treap_st(
@@ -3004,6 +3053,7 @@ pub mod BSTTreapStEph {
             )
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: ExposedTreap<T>) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let cloned = clone_with_view(self);
@@ -3013,6 +3063,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
             match exposed {
                 ExposedTreap::Leaf => BSTTreapStEph { root: None },
@@ -3028,6 +3079,7 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn param_size(&self) -> (count: usize) {
             proof {
                 lemma_wf_implies_finite(&self.root);
@@ -3036,10 +3088,12 @@ pub mod BSTTreapStEph {
             BSTTreapStEph::<T>::size_link(&self.root)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn param_is_empty(&self) -> (empty: bool) {
             self.param_size() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn param_insert(&mut self, key: T) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let ghost old_view = self@;
@@ -3058,6 +3112,7 @@ pub mod BSTTreapStEph {
             *self = new_tree;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn param_delete(&mut self, key: &T) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let ghost old_view = self@;
@@ -3080,6 +3135,7 @@ pub mod BSTTreapStEph {
             *self = new_tree;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn param_find(&self, key: &T) -> (found: Option<T>)
             decreases self@.len(),
         {
@@ -3163,12 +3219,14 @@ pub mod BSTTreapStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let cloned = clone_with_view(self);
             split_inner_st(cloned, key)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn param_join_pair(&self, other: Self) -> (joined: Self) {
             proof {
                 lemma_param_wf_implies_size_wf::<T>(&self.root);
@@ -3178,6 +3236,7 @@ pub mod BSTTreapStEph {
             join_pair_inner_st(cloned, other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn param_union(&self, other: &Self) -> (combined: Self) {
             proof {
                 lemma_param_wf_implies_size_wf::<T>(&self.root);
@@ -3188,6 +3247,7 @@ pub mod BSTTreapStEph {
             union_inner_st(a, b)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn param_intersect(&self, other: &Self) -> (common: Self) {
             proof {
                 lemma_param_wf_implies_size_wf::<T>(&self.root);
@@ -3198,6 +3258,7 @@ pub mod BSTTreapStEph {
             intersect_inner_st(a, b)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn param_difference(&self, other: &Self) -> (diff: Self) {
             proof {
                 lemma_param_wf_implies_size_wf::<T>(&self.root);
@@ -3208,6 +3269,7 @@ pub mod BSTTreapStEph {
             difference_inner_st(a, b)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
         fn param_filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -3218,6 +3280,7 @@ pub mod BSTTreapStEph {
             filter_inner_st(cloned, &predicate, Ghost(spec_pred))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let cloned = clone_with_view(self);
@@ -3225,6 +3288,7 @@ pub mod BSTTreapStEph {
             reduce_inner_st(cloned, &op, base)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
             proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
             let cloned = clone_with_view(self);

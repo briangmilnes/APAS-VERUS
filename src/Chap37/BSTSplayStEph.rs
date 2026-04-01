@@ -191,6 +191,7 @@ pub mod BSTSplayStEph {
         spec fn spec_in_order(self) -> Seq<T>;
         spec fn spec_pre_order(self) -> Seq<T>;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self)
         where
             Self: Sized,
@@ -198,17 +199,21 @@ pub mod BSTSplayStEph {
                 tree.spec_bstsplaysteph_wf(),
                 tree.spec_size() == 0,
                 forall|x: T| !tree.spec_contains(x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (n: usize)
             requires self.spec_bstsplaysteph_wf(),
             ensures n as nat == self.spec_size();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (b: bool)
             requires self.spec_bstsplaysteph_wf(),
             ensures b == (self.spec_size() == 0);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
             requires
                 self.spec_bstsplaysteph_wf(),
                 self.spec_height() < usize::MAX as nat,
             ensures h as nat == self.spec_height();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn insert(&mut self, value: T)
             requires old(self).spec_bstsplaysteph_wf(),
             ensures
@@ -222,24 +227,29 @@ pub mod BSTSplayStEph {
             ensures
                 found.is_some() <==> self.spec_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool)
             requires self.spec_bstsplaysteph_wf(),
             ensures found == self.spec_contains(*target);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> min.is_some(),
                 min.is_some() ==> self.spec_contains(*min.unwrap()),
                 min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<&T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures
                 self.spec_size() > 0 ==> max.is_some(),
                 max.is_some() ==> self.spec_contains(*max.unwrap()),
                 max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures seq.spec_len() == self.spec_in_order().len();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
             requires self.spec_bstsplaysteph_wf(),
             ensures seq.spec_len() == self.spec_pre_order().len();

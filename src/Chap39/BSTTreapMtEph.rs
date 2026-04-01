@@ -550,6 +550,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn clone_link<T: StTInMtT + Ord + Clone>(link: &Link<T>) -> (c: Link<T>)
         requires Lnk::spec_link_size_wf(link),
         ensures
@@ -597,6 +598,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
     fn update<T: StTInMtT + Ord>(node: &mut Node<T>)
         requires
             Lnk::spec_link_size_wf(&old(node).left),
@@ -689,6 +691,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn rotate_right<T: StTInMtT + Ord + IsLtTransitive>(link: &mut Link<T>)
         requires
             Lnk::spec_link_size_wf(old(link)),
@@ -1178,6 +1181,7 @@ pub mod BSTTreapMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn height_link<T: StTInMtT + Ord>(link: &Link<T>) -> (h: usize)
         requires
             Lnk::spec_size_link(link) < usize::MAX as nat,
@@ -1288,34 +1292,40 @@ pub mod BSTTreapMtEph {
         proof fn lemma_wf_assemble_node(node: &Node<T>) {
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size_link(link: &Link<T>) -> (sz: usize) {
             size_link(link)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
             decreases *link,
         {
             find_link(link, target)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn min_link(link: &Link<T>) -> (min_val: Option<&T>)
             decreases *link,
         {
             min_link(link)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn max_link(link: &Link<T>) -> (max_val: Option<&T>)
             decreases *link,
         {
             max_link(link)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<T>) -> (h: usize)
             decreases *link,
         {
             height_link(link)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty_tree: Self)
             ensures empty_tree@ == Set::<<T as View>::V>::empty(), empty_tree.spec_bsttreapmteph_wf()
         {
@@ -1325,6 +1335,7 @@ pub mod BSTTreapMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn insert(&mut self, value: T, priority: u64)
         {
             proof { use_type_invariant(&*self); }
@@ -1339,6 +1350,7 @@ pub mod BSTTreapMtEph {
             self.ghost_locked_root = Ghost(old_set.insert(value_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn delete(&mut self, target: &T)
         {
             proof { use_type_invariant(&*self); }
@@ -1350,6 +1362,7 @@ pub mod BSTTreapMtEph {
             self.ghost_locked_root = Ghost(old_set.remove(target_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn find(&self, target: &T) -> (found: Option<T>)
         {
             let handle = self.locked_root.acquire_read();
@@ -1362,11 +1375,13 @@ pub mod BSTTreapMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn contains(&self, target: &T) -> (found: bool)
         {
             self.find(target).is_some()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
@@ -1378,12 +1393,14 @@ pub mod BSTTreapMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite()
         {
             self.size() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (h: usize)
         {
             let handle = self.locked_root.acquire_read();
@@ -1393,6 +1410,7 @@ pub mod BSTTreapMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn minimum(&self) -> (min_val: Option<T>)
             ensures min_val.is_some() ==> self@.contains(min_val.unwrap()@)
         {
@@ -1403,6 +1421,7 @@ pub mod BSTTreapMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
         fn maximum(&self) -> (max_val: Option<T>)
             ensures max_val.is_some() ==> self@.contains(max_val.unwrap()@)
         {
@@ -1413,6 +1432,7 @@ pub mod BSTTreapMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (ordered: ArraySeqStPerS<T>)
             ensures ordered@.len() == self@.len()
         {
@@ -1425,6 +1445,7 @@ pub mod BSTTreapMtEph {
             ordered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> (preordered: ArraySeqStPerS<T>)
             ensures preordered@.len() == self@.len()
         {
