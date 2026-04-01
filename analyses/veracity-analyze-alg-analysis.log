@@ -3036,38 +3036,10 @@ src/Chap53/PQMinStPer.rs:128: info: St fn `pq_min` sequential as expected
 src/Chap53/PQMinStPer.rs:165: info: St fn `pq_find_min_priority` sequential as expected
 src/Chap53/PQMinStPer.rs:195: info: St fn `pq_explore` sequential as expected
 src/Chap53/PQMinStPer.rs:447: info: St fn `pq_min_multi` sequential as expected
-src/Chap54/BFSMtEph.rs:162: error: fn `copy_distances` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:180: error: fn `copy_graph` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:264: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:272: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:327: error: fn `process_frontier_parallel` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:485: error: fn `process_frontier_tree_parallel` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:618: error: fn `bfs` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:762: error: fn `bfs_tree` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:893: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSMtEph.rs:898: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:162: error: fn `copy_distances` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:180: error: fn `copy_graph` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:266: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:274: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:330: error: fn `process_frontier_parallel` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:497: error: fn `process_frontier_tree_parallel` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:630: error: fn `bfs` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:771: error: fn `bfs_tree` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:902: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSMtPer.rs:906: error: fn `bottom_up_order` missing alg analysis annotation
 src/Chap54/BFSStEph.rs:146: info: St fn `bfs` sequential as expected
-src/Chap54/BFSStEph.rs:188: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSStEph.rs:194: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap54/BFSStEph.rs:330: error: fn `bfs_tree` missing alg analysis annotation
-src/Chap54/BFSStEph.rs:448: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSStEph.rs:453: error: fn `bottom_up_order` missing alg analysis annotation
+src/Chap54/BFSStEph.rs:333: info: St fn `bfs_tree` sequential as expected
 src/Chap54/BFSStPer.rs:145: info: St fn `bfs` sequential as expected
-src/Chap54/BFSStPer.rs:188: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSStPer.rs:194: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap54/BFSStPer.rs:320: error: fn `bfs_tree` missing alg analysis annotation
-src/Chap54/BFSStPer.rs:437: error: fn `top_down_order` missing alg analysis annotation
-src/Chap54/BFSStPer.rs:442: error: fn `bottom_up_order` missing alg analysis annotation
+src/Chap54/BFSStPer.rs:323: info: St fn `bfs_tree` sequential as expected
 src/Chap55/CycleDetectStEph.rs:283: info: St fn `dfs_check_cycle` sequential as expected
 src/Chap55/CycleDetectStEph.rs:776: info: St fn `has_cycle` sequential as expected
 src/Chap55/CycleDetectStPer.rs:257: info: St fn `has_cycle` sequential as expected
@@ -3210,17 +3182,17 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2308  (fns with any APAS or Code review line)
-  Missing alg analysis:      2776  <- errors
+  Alg analysis annotations:  2338  (fns with any APAS or Code review line)
+  Missing alg analysis:      2746  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
-  St DIFFERS (expected):      319  <- info
+  St DIFFERS (expected):      321  <- info
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2881
+  Errors: 2851
   Warnings: 0
-  Info: 319
+  Info: 321
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log

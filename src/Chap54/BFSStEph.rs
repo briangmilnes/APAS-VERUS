@@ -185,12 +185,14 @@ pub mod BFSStEph {
     pub trait BFSTreeStEphTrait {
         spec fn spec_order(&self) -> ArraySeqStEphS<usize>;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
         fn top_down_order(&self) -> (order: &ArraySeqStEphS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
                 forall|i: int| 0 <= i < order.spec_len() ==>
                     #[trigger] order.spec_index(i) == self.spec_order().spec_index(i);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
         fn bottom_up_order(&self) -> (order: ArraySeqStEphS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
@@ -326,6 +328,7 @@ pub mod BFSStEph {
     }
 
     /// Algorithm 54.6: BFS Tree. Returns parent array and BFS-order vertex sequence.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — standard BFS with VecDeque frontier; St sequential.
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {
@@ -445,11 +448,13 @@ pub mod BFSStEph {
         }
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
         fn top_down_order(&self) -> (order: &ArraySeqStEphS<usize>) {
             &self.order
         }
 
         /// Vertices in reverse BFS order (furthest from root first).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
         fn bottom_up_order(&self) -> (order: ArraySeqStEphS<usize>) {
             let n = self.order.length();
             ArraySeqStEphS::tabulate(
