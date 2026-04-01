@@ -338,6 +338,7 @@ pub mod ReduceContractMtEph {
     }
 
     impl<T: StTInMtT + Clone + 'static> ReduceContractMtEphTrait<T> for ArraySeqMtEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — recursive contraction halving n each step; Mt parallel contract via join.
         fn reduce_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,

@@ -195,23 +195,30 @@ pub mod BottomUpDPStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self) {
             BottomUpDPStEphS { seq_s: s, seq_t: t }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
             s_empty && t_empty
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
         fn set_s(&mut self, s: ArraySeqStEphS<char>) { self.seq_s = s; }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
         fn set_t(&mut self, t: ArraySeqStEphS<char>) { self.seq_t = t; }
 
         /// Compute MED using bottom-up row-by-row fill (Algorithm 51.1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — bottom-up DP table fill; St sequential.
         fn med_bottom_up(&mut self) -> (distance: usize) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -362,6 +369,7 @@ pub mod BottomUpDPStEph {
             table[s_len][t_len]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — allocates (n+1)*(m+1) table; St sequential.
         fn initialize_base_cases(&self) -> (table: Vec<Vec<usize>>) {
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -428,6 +436,7 @@ pub mod BottomUpDPStEph {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
         fn compute_cell_value(
             &self,
             table: &Vec<Vec<usize>>,

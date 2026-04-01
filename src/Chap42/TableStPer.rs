@@ -513,6 +513,7 @@ pub mod TableStPer {
         /// Like find, but returns a reference to the stored value.
         /// The ensures `*v == self.spec_stored_value(key@)` lets callers transfer
         /// exec-level properties (e.g., wf) from the stored value to the result.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>()
             ensures
@@ -553,6 +554,7 @@ pub mod TableStPer {
                     && old_v == self.spec_stored_value(key@)
                     && updated.spec_stored_value(key@) == r);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + rebuild with wf preservation
         /// Like insert, but additionally ensures all stored values preserve well-formedness.
         fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
@@ -582,6 +584,7 @@ pub mod TableStPer {
                 forall|k: K::V| #[trigger] updated@.contains_key(k) ==>
                     updated.spec_stored_value(k).spec_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan + rebuild with wf preservation
         /// Like delete, but additionally ensures all remaining stored values preserve well-formedness.
         /// Requires K: ClonePreservesView, V: ClonePreservesWf.
         fn delete_wf(&self, key: &K) -> (updated: Self)
@@ -667,6 +670,7 @@ pub mod TableStPer {
             self.entries.seq@[i].1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
             proof {
@@ -675,6 +679,7 @@ pub mod TableStPer {
             self.entries.length()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
             let entries = ArraySeqStPerS::empty();
@@ -682,6 +687,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: K, value: V) -> (tree: Self)
         {
             let entries = ArraySeqStPerS::singleton(Pair(key, value));
@@ -696,6 +702,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let mut keys = ArraySetStEph::empty();
@@ -760,6 +767,7 @@ pub mod TableStPer {
             keys
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             let key_seq = keys.to_seq();
@@ -838,6 +846,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (mapped: Self)
         {
             let ghost old_view = self.entries@;
@@ -903,6 +912,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -1026,6 +1036,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (common: Self)
         {
             let ghost self_view = self.entries@;
@@ -1198,6 +1209,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: F) -> (combined: Self)
         {
             let ghost self_view = self.entries@;
@@ -1398,6 +1410,7 @@ pub mod TableStPer {
             combined
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost self_view = self.entries@;
@@ -1544,6 +1557,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find(&self, key: &K) -> (found: Option<V>)
         {
             let mut i: usize = 0;
@@ -1574,6 +1588,7 @@ pub mod TableStPer {
             None
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
         {
             let mut i: usize = 0;
@@ -1614,6 +1629,7 @@ pub mod TableStPer {
             None
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete(&self, key: &K) -> (updated: Self)
         {
             let ghost self_view = self.entries@;
@@ -1736,6 +1752,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
         {
             let ghost key_view: K::V = key@;
@@ -1938,6 +1955,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
         {
@@ -2210,6 +2228,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete_wf(&self, key: &K) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
         {
@@ -2373,6 +2392,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (restricted: Self)
         {
             let ghost self_view = self.entries@;
@@ -2482,6 +2502,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (subtracted: Self)
         {
             let ghost self_view = self.entries@;
@@ -2591,6 +2612,7 @@ pub mod TableStPer {
             TableStPer { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn collect(&self) -> (collected: ArraySeqStPerS<Pair<K, V>>)
         {
             let collected = self.entries.clone();
@@ -2605,6 +2627,7 @@ pub mod TableStPer {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     // veracity: no_requires
     pub fn from_sorted_entries<K: StT + Ord, V: StT>(
         entries: Vec<Pair<K, V>>,
@@ -2620,6 +2643,7 @@ pub mod TableStPer {
 
     /// APAS Algorithm 42.3: collect groups a sequence of (key, value) pairs into a table
     /// mapping each key to the subsequence of values for that key, preserving order.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
     pub fn collect_by_key<K: StT + Ord + Eq, V: StT>(
         pairs: &ArraySeqStPerS<Pair<K, V>>,
     ) -> (grouped: TableStPer<K, ArraySeqStPerS<V>>)

@@ -43,11 +43,13 @@ pub mod ConnectivityMtEph {
 
         /// Count connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
         fn count_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find connected components using parallel star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
         fn connected_components_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -56,11 +58,13 @@ pub mod ConnectivityMtEph {
 
         /// Count components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
         fn count_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> usize
             requires Self::spec_connectivitymteph_wf(graph), valid_key_type_Edge::<V>();
 
         /// Find components using higher-order function approach.
         /// APAS: Work O(|V| + |E|), Span O(lg^2 |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — star_contract_mt with base/expand closures; Mt parallel.
         fn connected_components_hof<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,

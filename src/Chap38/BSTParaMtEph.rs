@@ -94,6 +94,7 @@ pub mod BSTParaMtEph {
         pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty BST.
     fn new_param_bst<T: MtKey>(
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
@@ -152,6 +153,7 @@ pub mod BSTParaMtEph {
 
     // 7. proof fns/broadcast groups
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clones a single element.
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
     fn clone_elem<T: MtKey>(x: &T) -> (c: T)
         requires obeys_feq_clone::<T>(),
@@ -272,7 +274,7 @@ pub mod BSTParaMtEph {
                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 };
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: parametric impl wraps node without rebalancing
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             requires
                 exposed matches Exposed::Node(l, k, r) ==> {
@@ -337,7 +339,7 @@ pub mod BSTParaMtEph {
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(lg^2 n) — DIFFERS: delegates to union_inner (ParaPair)
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
                 self@.len() + other@.len() <= usize::MAX as nat,
@@ -346,7 +348,7 @@ pub mod BSTParaMtEph {
             ensures joined@ == self@.union(other@), joined@.finite();
         /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — sequential join by exposing right subtree
         fn join_pair_inner(&self, right: &Self) -> (joined: Self)
             requires
                 self@.finite(), right@.finite(),
@@ -413,7 +415,7 @@ pub mod BSTParaMtEph {
                 minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
                     minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: delegates to join_mid which is O(1) in parametric impl
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
             requires
                 left@.finite(), right@.finite(),
@@ -453,6 +455,7 @@ pub mod BSTParaMtEph {
             && obeys_feq_full::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparamteph_wf()
         {
@@ -460,6 +463,7 @@ pub mod BSTParaMtEph {
             new_param_bst(None, Ghost(Set::empty()))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: T) -> (tree: Self)
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(key@),
@@ -476,6 +480,7 @@ pub mod BSTParaMtEph {
             )
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn expose(&self) -> (exposed: Exposed<T>)
             ensures
                 self@.len() == 0 ==> exposed is Leaf,
@@ -496,6 +501,7 @@ pub mod BSTParaMtEph {
             expose_internal(self)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
         {
             match exposed {
@@ -530,6 +536,7 @@ pub mod BSTParaMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite()
         {
@@ -548,10 +555,12 @@ pub mod BSTParaMtEph {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool)
             ensures empty == (self@.len() == 0), self@.finite()
         { self.size() == 0 }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn insert(&mut self, key: T)
             ensures
                 self.spec_bstparamteph_wf(),
@@ -568,6 +577,7 @@ pub mod BSTParaMtEph {
             *self = Self::join_mid(Exposed::Node(left, key, right));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn delete(&mut self, key: &T)
             ensures
                 self.spec_bstparamteph_wf(),
@@ -590,6 +600,7 @@ pub mod BSTParaMtEph {
             *self = left.join_pair_inner(&right);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn find(&self, key: &T) -> (found: Option<T>)
             ensures found.is_some() <==> self@.contains(key@)
         {
@@ -597,6 +608,7 @@ pub mod BSTParaMtEph {
             find_recursive(self, key)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn split(&self, key: &T) -> (parts: (Self, bool, Self))
             ensures
                 parts.1 == self@.contains(key@),
@@ -629,6 +641,7 @@ pub mod BSTParaMtEph {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@ == self@.union(other@), joined@.finite()
         {
@@ -636,6 +649,7 @@ pub mod BSTParaMtEph {
             union_inner(self, &other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn join_pair_inner(&self, right: &Self) -> (joined: Self)
             ensures joined@.finite(), joined@ =~= self@.union(right@),
             decreases right@.len(),
@@ -710,6 +724,7 @@ pub mod BSTParaMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
         fn union(&self, other: &Self) -> (combined: Self)
             ensures combined@ == self@.union(other@), combined@.finite()
         {
@@ -717,6 +732,7 @@ pub mod BSTParaMtEph {
             union_inner(self, other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
         fn intersect(&self, other: &Self) -> (common: Self)
             ensures common@ == self@.intersect(other@), common@.finite()
         {
@@ -724,6 +740,7 @@ pub mod BSTParaMtEph {
             intersect_inner(self, other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures remaining@ == self@.difference(other@), remaining@.finite()
         {
@@ -731,6 +748,7 @@ pub mod BSTParaMtEph {
             difference_inner(self, other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
             predicate: F,
@@ -740,12 +758,14 @@ pub mod BSTParaMtEph {
             filter_parallel(self, predicate, Ghost(spec_pred))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> (reduced: T)
             ensures self@.len() == 0 ==> reduced@ == base@,
         {
             reduce_parallel(self, op, base)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn min_key(&self) -> (minimum: Option<T>)
             ensures
                 self@.len() == 0 <==> minimum.is_none(),
@@ -757,11 +777,13 @@ pub mod BSTParaMtEph {
             min_key_inner(self)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
         {
             Self::join_mid(Exposed::Node(left, key, right))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn collect_in_order(&self, out: &mut Vec<T>)
             ensures
                 out@.len() == old(out)@.len() + self@.len(),
@@ -775,6 +797,7 @@ pub mod BSTParaMtEph {
             collect_in_order_inner(self, out)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),
@@ -846,6 +869,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones entire tree.
     impl<T: MtKey> Clone for ParamBST<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
@@ -869,12 +893,14 @@ pub mod BSTParaMtEph {
 
     // Free functions (algorithmic helpers)
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn new_leaf<T: MtKey>() -> (tree: ParamBST<T>)
         ensures tree@ =~= Set::<<T as View>::V>::empty()
     {
         new_param_bst(None, Ghost(Set::empty()))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn expose_internal<T: MtKey>(tree: &ParamBST<T>) -> (exposed: Exposed<T>)
         requires
             tree@.finite(),
@@ -934,6 +960,7 @@ pub mod BSTParaMtEph {
         exposed
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
     fn split_inner<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (parts: (ParamBST<T>, bool, ParamBST<T>))
         requires
             tree@.finite(),
@@ -1100,6 +1127,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — BST search.
     fn find_recursive<T: MtKey>(tree: &ParamBST<T>, key: &T) -> (found: Option<T>)
         requires
             tree@.finite(),
@@ -1128,6 +1156,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
     fn min_key_inner<T: MtKey>(tree: &ParamBST<T>) -> (min: Option<T>)
         requires
             tree@.finite(),
@@ -1180,6 +1209,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
     fn union_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (combined: ParamBST<T>)
         requires
             a@.finite(), b@.finite(), a@.len() + b@.len() <= usize::MAX as nat,
@@ -1294,6 +1324,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
     fn intersect_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (common: ParamBST<T>)
         requires
             a@.finite(), b@.finite(),
@@ -1466,6 +1497,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
     fn difference_inner<T: MtKey>(a: &ParamBST<T>, b: &ParamBST<T>) -> (remaining: ParamBST<T>)
         requires
             a@.finite(), b@.finite(),
@@ -1637,6 +1669,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
     fn filter_inner<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: &Arc<F>,
@@ -1756,6 +1789,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
     fn filter_parallel<T: MtKey, F: Fn(&T) -> bool + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         predicate: F,
@@ -1780,6 +1814,7 @@ pub mod BSTParaMtEph {
         filter_inner(tree, &predicate, Ghost(spec_pred))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
     fn reduce_inner<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: &Arc<F>,
@@ -1818,6 +1853,7 @@ pub mod BSTParaMtEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
     fn reduce_parallel<T: MtKey, F: Fn(T, T) -> T + Send + Sync + 'static>(
         tree: &ParamBST<T>,
         op: F,
@@ -1832,6 +1868,7 @@ pub mod BSTParaMtEph {
         reduce_inner(tree, &op, base)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn collect_in_order_inner<T: MtKey>(tree: &ParamBST<T>, out: &mut Vec<T>)
         requires
             tree@.finite(),

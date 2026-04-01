@@ -326,6 +326,7 @@ pub mod ScanDCMtPer {
     }
 
     impl ScanDCMtTrait for ArraySeqMtPerS<usize> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg^2 n) — parallel D&C scan with join; Mt parallel.
         fn prefix_sums_dc_parallel(a: &ArraySeqMtPerS<usize>) -> (sums: (ArraySeqMtPerS<usize>, usize)) {
             prefix_sums_dc_inner(a)
         }

@@ -105,14 +105,17 @@ broadcast use {
             self@.len() <= usize::MAX as int
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec allocation.
         fn new() -> (empty: Self)
             ensures empty@ == Seq::<T>::empty(),
         { StackStEph { elements: Vec::new() } }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
         fn push(&mut self, item: T)
             ensures self@ == old(self)@.push(item),
         { self.elements.push(item); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
         fn pop(&mut self) -> (popped: Option<T>)
             ensures
                 old(self)@.len() > 0 ==> popped == Some(old(self)@.last()) && self@ == old(self)@.drop_last(),
@@ -120,16 +123,19 @@ broadcast use {
                 old(self)@.len() == 0 ==> self@ == old(self)@,
         { self.elements.pop() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec last.
         fn peek(&self) -> (top: Option<&T>)
             ensures
                 self@.len() > 0 ==> (top matches Option::Some(_)),
                 self@.len() == 0 ==> (top matches Option::None),
         { self.elements.last() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec is_empty.
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == (self@.len() == 0),
         { self.elements.is_empty() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
         fn size(&self) -> (count: usize)
             ensures count == self@.len(),
         { self.elements.len() }

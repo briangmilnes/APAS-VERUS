@@ -295,12 +295,14 @@ pub mod MathSeq {
                 self.data@
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills Vec of length n.
             fn new(length: usize, init_value: T) -> (new_seq: Self)
             {
                 let v = vec![init_value; length];
                 MathSeqS { data: v }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             fn set(&mut self, index: usize, value: T) -> (success: bool)
             {
                 if index < self.data.len() {
@@ -311,56 +313,67 @@ pub mod MathSeq {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
             fn length(&self) -> (len: usize)
             {
                 self.data.len()
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
             fn nth(&self, index: usize) -> (elem: &T)
             {
                 &self.data[index]
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
             fn empty() -> (empty_seq: Self)
             {
                 MathSeqS { data: Vec::new() }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
             fn singleton(item: T) -> (singleton: Self)
             {
                 MathSeqS { data: vec![item] }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — Vec push.
             fn add_last(&mut self, value: T)
             {
                 self.data.push(value);
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec pop.
             fn delete_last(&mut self) -> (shortened: Option<T>)
             {
                 self.data.pop()
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
             fn is_empty(&self) -> (emptiness: bool)
             {
                 self.data.len() == 0
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length check.
             fn is_singleton(&self) -> (singularity: bool)
             {
                 self.data.len() == 1
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
             fn from_vec(data: Vec<T>) -> (seq: Self)
             {
                 MathSeqS { data }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to new().
             fn with_len(length: usize, init_value: T) -> (seq_of_len_value: Self)
             {
                 Self::new(length, init_value)
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — slice_subrange returns a view, no copy.
             fn subseq(&self, start: usize, length: usize) -> (subseq: &[T])
             {
                 let n = self.data.len();
@@ -370,6 +383,7 @@ pub mod MathSeq {
                 slice_subrange(slice, s, e)
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — copies k = length elements from slice.
             fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) where T: Copy
             {
                 let _n = self.data.len();
@@ -379,6 +393,7 @@ pub mod MathSeq {
                 MathSeqS { data: vec }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — builds Vec of indices 0..n.
             fn domain(&self) -> (domain: Vec<usize>)
             {
                 let mut v = Vec::new();
@@ -397,6 +412,7 @@ pub mod MathSeq {
                 v
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass deduplicating with HashSet.
             fn range(&self) -> (range: Vec<T>)
             {
                 let mut seen: HashSetWithViewPlus<T> = HashSetWithViewPlus::new();
@@ -480,6 +496,7 @@ pub mod MathSeq {
                 out
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass counting with HashMap + second pass emitting pairs.
             fn multiset_range(&self) -> (range: Vec<(usize, T)>)
             {
                 proof { lemma_reveal_view_injective::<T>(); }

@@ -120,6 +120,7 @@ pub mod TopDownDPMtPer {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)
             ensures
                 dp.spec_topdowndpmtper_wf(),
@@ -128,24 +129,29 @@ pub mod TopDownDPMtPer {
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpmtper_wf(),
             ensures len as nat == self.spec_s_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn t_length(&self) -> (len: usize)
             requires self.spec_topdowndpmtper_wf(),
             ensures len as nat == self.spec_t_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&self) -> (distance: usize)
             requires
                 self.spec_topdowndpmtper_wf(),
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
         fn med_memoized_parallel(&self) -> (distance: usize)
             requires
                 self.spec_topdowndpmtper_wf(),
@@ -156,6 +162,7 @@ pub mod TopDownDPMtPer {
     // 9. impls
 
     /// Sequential recursive MED with verified memoization.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential recursion with memo.
     fn med_recursive_sequential(
         seq_s: &ArraySeqMtPerS<char>,
         seq_t: &ArraySeqMtPerS<char>,
@@ -230,6 +237,7 @@ pub mod TopDownDPMtPer {
     }
 
     /// Parallel recursive MED with thread-safe memoization.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert.
     fn med_recursive_parallel(
         seq_s: &ArraySeqMtPerS<char>,
         seq_t: &ArraySeqMtPerS<char>,
@@ -374,13 +382,17 @@ pub mod TopDownDPMtPer {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self) {
             TopDownDPMtPerS { seq_s: s, seq_t: t }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
@@ -388,6 +400,7 @@ pub mod TopDownDPMtPer {
         }
 
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&self) -> (distance: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
@@ -397,6 +410,7 @@ pub mod TopDownDPMtPer {
         }
 
         /// Compute MED with parallel subproblem exploration.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
         fn med_memoized_parallel(&self) -> (distance: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();

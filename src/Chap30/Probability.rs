@@ -47,10 +47,14 @@ pub mod Probability {
 
     // 9. impls
     impl ProbabilityTrait for Probability {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 wrapper construction.
         fn new(p: f64) -> Self { Probability(p) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 field access.
         fn value(&self) -> f64 { self.0 }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
         #[verifier::external_body] // accept hole
         fn infinity() -> Self { Probability(f64::INFINITY) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
         fn zero() -> Self { Probability(0.0) }
     }
 

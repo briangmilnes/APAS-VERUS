@@ -43,6 +43,7 @@ pub mod StarContractionMtEph {
 
         /// Parallel star contraction higher-order function.
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
         fn star_contract_mt<V, R, F, G>(
             graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G,
             Ghost(r_inv): Ghost<spec_fn(R) -> bool>,
@@ -65,6 +66,7 @@ pub mod StarContractionMtEph {
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
         fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<V>
             requires
                 Self::spec_starcontractionmteph_wf(graph),
@@ -92,6 +94,7 @@ pub mod StarContractionMtEph {
     }
 
     /// Inner recursive star contraction with fuel for termination (parallel version).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
     fn star_contract_mt_fuel<V, R, F, G>(
         graph: &UnDirGraphMtEph<V>, seed: u64, base: &F, expand: &G, fuel: usize,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,

@@ -209,12 +209,14 @@ pub mod QuickSortStEph {
             decreases old(a).spec_len();
 
         /// Compute the median of three values.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
         fn median_of_three(a: T, b: T, c: T) -> (median: T)
             ensures
                 median == a || median == b || median == c,
                 median == spec_median_of_three(a, b, c);
 
         /// Returns index of median among a[0], a[n/2], a[n-1].
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
         fn median3_pivot_idx(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize)
             requires n >= 2, n == a.spec_len(),
             ensures
@@ -223,6 +225,7 @@ pub mod QuickSortStEph {
                 a.seq@[idx as int] == spec_median_of_three(a.seq@[0], a.seq@[(n / 2) as int], a.seq@[(n - 1) as int]);
 
         /// Concatenate three ArraySeqStEphS into one Vec.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three arrays into one Vec.
         fn concat_three(
             left: &ArraySeqStEphS<T>,
             mid: &ArraySeqStEphS<T>,
@@ -235,6 +238,7 @@ pub mod QuickSortStEph {
     // 9. impls
 
     impl<T: TotalOrder + Copy> QuickSortStEphTrait<T> for ArraySeqStEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
         fn median_of_three(a: T, b: T, c: T) -> (median: T) {
             match TotalOrder::cmp(&a, &b) {
                 core::cmp::Ordering::Less | core::cmp::Ordering::Equal => {
@@ -284,6 +288,7 @@ pub mod QuickSortStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
         fn median3_pivot_idx(a: &ArraySeqStEphS<T>, n: usize) -> (idx: usize) {
             let first = *a.nth(0);
             let mid = *a.nth(n / 2);
@@ -298,6 +303,7 @@ pub mod QuickSortStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three arrays into one Vec.
         fn concat_three(
             left: &ArraySeqStEphS<T>,
             mid: &ArraySeqStEphS<T>,
@@ -383,6 +389,7 @@ pub mod QuickSortStEph {
             out
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — first-element pivot quicksort; St sequential.
         fn quick_sort_first(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -487,6 +494,7 @@ pub mod QuickSortStEph {
             a.seq = sorted;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — median-of-three pivot quicksort; St sequential.
         fn quick_sort_median3(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {
@@ -588,6 +596,7 @@ pub mod QuickSortStEph {
             a.seq = sorted;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n log n) expected — random pivot quicksort; St sequential.
         fn quick_sort_random(a: &mut ArraySeqStEphS<T>)
             decreases old(a).spec_len(),
         {

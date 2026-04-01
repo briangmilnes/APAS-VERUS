@@ -225,7 +225,7 @@ pub mod ArraySeqStPer {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(n) worst case, O(1) best case — DIFFERS: St sequential, APAS parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps Vec in struct, no copy.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqstper_wf(),
@@ -450,6 +450,7 @@ pub mod ArraySeqStPer {
             self.seq[i]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -457,14 +458,17 @@ pub mod ArraySeqStPer {
             ArraySeqStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -492,6 +496,7 @@ pub mod ArraySeqStPer {
             ArraySeqStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
         fn subseq(a: &ArraySeqStPerS<T>, start: usize, length: usize) -> (subseq: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -519,6 +524,7 @@ pub mod ArraySeqStPer {
             ArraySeqStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqStPerS<T>) {
             ArraySeqStPerS { seq: elts }
         }
@@ -527,6 +533,7 @@ pub mod ArraySeqStPer {
         // The closure is never called (length 0) but must return T.
         // Rust has no value of unbounded generic T, so the body is an
         // unreachable loop; `requires false` makes this dead code.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: ArraySeqStPerS<T>) {
             Self::tabulate(
                 &(|_i: usize| -> (r: T)
@@ -542,6 +549,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.2: singleton x = tabulate (lambda i.x) 1.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -563,6 +571,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.4: append a b = tabulate (select(a,b)) (|a|+|b|)
         // where select(a,b) i = if i < |a| then a[i] else b[i-|a|].
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|+|b|), Span O(|a|+|b|)
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -599,6 +608,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.5: filter f a = let b = map (deflate f) a in flatten b end.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -663,6 +673,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.6: update a (i, x) = tabulate (lambda j. if i=j then x else a[j]) |a|.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -697,6 +708,7 @@ pub mod ArraySeqStPer {
             )
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
         fn inject(a: &ArraySeqStPerS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -787,16 +799,19 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
         // Algorithm 19.7: isSingleton a = (|a| = 1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
         // Algorithm 19.8: iterate f x a (iterative form for single-threaded).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let len = a.seq.len();
             let mut acc = seed;
@@ -831,6 +846,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.8: iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         // Delegates to iterate_iter which has the full proof.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
         {
@@ -838,6 +854,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -874,6 +891,7 @@ pub mod ArraySeqStPer {
 
         // Algorithm 19.9: reduce f id a = if |a|=0 then id; |a|=1 then a[0]; else f(reduce f id b, reduce f id c).
         // Delegates to reduce_iter which has the full proof.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq
         {
@@ -881,6 +899,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone
         {
@@ -922,6 +941,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.3: map f a = tabulate (lambda i.f(a[i])) |a|.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
         {
             let n = a.seq.len();
@@ -940,6 +960,7 @@ pub mod ArraySeqStPer {
         }
 
         // Primitive: tabulate. Same as Chapter 18.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -959,6 +980,7 @@ pub mod ArraySeqStPer {
         }
 
         // Primitive: flatten. Same as Chapter 18.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total elements), Span O(total elements)
         fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {
@@ -1012,6 +1034,7 @@ pub mod ArraySeqStPer {
         }
 
         // Algorithm 19.5 (deflate): deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: ArraySeqStPerS<T>)
             where T: Clone + Eq
         {

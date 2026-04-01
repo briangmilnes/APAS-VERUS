@@ -300,6 +300,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumDivConTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — D&C with O(n) merge at each level; St sequential.
         fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {

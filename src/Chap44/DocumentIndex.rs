@@ -178,6 +178,7 @@ pub mod DocumentIndex {
 
         /// Algorithm 44.2: Make Index — table-based insert.
         /// Iterate docs, iterate words per doc, insert each word into the table.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(D * W * lg n), Span O(D * W * lg n) — nested loops: D docs × W words/doc × O(lg n) table insert; St sequential.
         fn make_index(docs: &DocumentCollection) -> (di: Self) {
             proof {
                 assert(Pair_feq_trigger::<Word, DocumentSet>());
@@ -341,6 +342,7 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: find function - simple table lookup.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — BST table lookup + clone; St sequential.
         fn find(&self, word: &Word) -> (found: DocumentSet) {
             match self.word_to_docs.find_ref(word) {
                 Some(doc_set_ref) => {
@@ -351,26 +353,31 @@ pub mod DocumentIndex {
         }
 
         /// Algorithm 44.3: queryAnd - set intersection.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set intersection; St sequential.
         fn query_and(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.intersection(docs_b)
         }
 
         /// Algorithm 44.3: queryOr - set union.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set union; St sequential.
         fn query_or(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (combined: DocumentSet) {
             docs_a.union(docs_b)
         }
 
         /// Algorithm 44.3: queryAndNot - set difference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — AVL tree set difference; St sequential.
         fn query_and_not(docs_a: &DocumentSet, docs_b: &DocumentSet) -> (remaining: DocumentSet) {
             docs_a.difference(docs_b)
         }
 
         /// Algorithm 44.3: size function.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — AVL tree cached size.
         fn size(docs: &DocumentSet) -> (count: usize) {
             docs.size()
         }
 
         /// Algorithm 44.3: toSeq function.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal collecting n elements; St sequential.
         fn to_seq(docs: &DocumentSet) -> (seq: ArraySeqStPerS<DocumentId>) {
             let avl_seq = docs.to_seq();
             let len = avl_seq.length();
@@ -391,12 +398,14 @@ pub mod DocumentIndex {
             ArraySeqStPerS::from_vec(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty table allocation.
         fn empty() -> (di: Self) {
             DocumentIndex {
                 word_to_docs: TableStPer::empty(),
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collect all table entries then extract keys; St sequential.
         fn get_all_words(&self) -> (words: ArraySeqStPerS<Word>) {
             let entries = self.word_to_docs.collect();
             let len = entries.length();
@@ -416,6 +425,7 @@ pub mod DocumentIndex {
             ArraySeqStPerS::from_vec(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — table size query.
         fn word_count(&self) -> (count: usize) {
             self.word_to_docs.size()
         }
@@ -511,27 +521,33 @@ pub mod DocumentIndex {
             spec_documentindex_wf(self.index)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — reference copy.
         fn new(index: &'a DocumentIndex) -> (qb: Self) {
             QueryBuilder { index }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — delegates to DocumentIndex::find.
         fn find(&self, word: &Word) -> (found: DocumentSet) {
             self.index.find(word)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_and.
         fn and(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
             DocumentIndex::query_and(&docs_a, &docs_b)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_or.
         fn or(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (combined: DocumentSet) {
             DocumentIndex::query_or(&docs_a, &docs_b)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — delegates to query_and_not.
         fn and_not(&self, docs_a: DocumentSet, docs_b: DocumentSet) -> (remaining: DocumentSet) {
             DocumentIndex::query_and_not(&docs_a, &docs_b)
         }
 
         /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — 4 finds + 3 set ops; St sequential.
         fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);

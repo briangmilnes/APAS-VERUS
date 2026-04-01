@@ -159,6 +159,7 @@ pub mod BFSMtEph {
     }
 
     // Builds an owned copy of the distances array with proven spec equality.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — tabulate copies all elements.
     fn copy_distances(distances: &ArraySeqMtEphS<usize>) -> (copied: ArraySeqMtEphS<usize>)
         requires distances.spec_len() <= usize::MAX,
         ensures
@@ -177,6 +178,7 @@ pub mod BFSMtEph {
     }
 
     // Builds an owned copy of the graph with proven spec equality.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — deep copies all adjacency lists.
     fn copy_graph(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (copied: ArraySeqMtEphS<ArraySeqMtEphS<usize>>)
         requires graph.spec_len() <= usize::MAX,
         ensures
@@ -261,6 +263,7 @@ pub mod BFSMtEph {
         spec fn spec_order(&self) -> ArraySeqMtEphS<usize>;
 
         /// Vertices in BFS order (root first, then distance 1, 2, ...).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
         fn top_down_order(&self) -> (order: &ArraySeqMtEphS<usize>)
             ensures
                 order.spec_len() == self.spec_order().spec_len(),
@@ -269,6 +272,7 @@ pub mod BFSMtEph {
         ;
 
         /// Vertices in reverse BFS order (furthest from root first).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
         fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<usize>)
             requires self.spec_order().spec_len() <= usize::MAX,
             ensures
@@ -324,6 +328,7 @@ pub mod BFSMtEph {
     // 9. impls
 
     // Parallel frontier processing via fork-join divide-and-conquer.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(frontier_edges), Span O(max_deg * lg |frontier|) — D&C fork-join over frontier vertices; Mt parallel.
     fn process_frontier_parallel(
         graph: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
         distances: ArraySeqMtEphS<usize>,
@@ -482,6 +487,7 @@ pub mod BFSMtEph {
     }
 
     // Parallel frontier processing for BFS tree: collects (neighbor, parent) pairs.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(frontier_edges), Span O(max_deg * lg |frontier|) — D&C fork-join over frontier; Mt parallel.
     fn process_frontier_tree_parallel(
         graph: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
         parents: ArraySeqMtEphS<usize>,
@@ -614,6 +620,7 @@ pub mod BFSMtEph {
 
     impl BFSMtEphTrait for BFSMtEph {
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(diam * lg |V|) — parallel BFS with D&C frontier processing; Mt parallel.
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: ArraySeqMtEphS<usize>)
     {
@@ -758,6 +765,7 @@ pub mod BFSMtEph {
     }
 
     /// Algorithm 54.6: BFS Tree with parallel frontier processing.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(diam * lg |V|) — parallel BFS tree with D&C frontier; Mt parallel.
     #[verifier::exec_allows_no_decreases_clause]
     fn bfs_tree(graph: &ArraySeqMtEphS<ArraySeqMtEphS<usize>>, source: usize) -> (traversal: BFSTreeS)
     {
@@ -890,11 +898,13 @@ pub mod BFSMtEph {
             self.order
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
         fn top_down_order(&self) -> (order: &ArraySeqMtEphS<usize>) {
             &self.order
         }
 
         /// Vertices in reverse BFS order (furthest from root first).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
         fn bottom_up_order(&self) -> (order: ArraySeqMtEphS<usize>) {
             let n = self.order.length();
             ArraySeqMtEphS::tabulate(

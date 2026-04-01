@@ -27,6 +27,7 @@ impl FetchAddCasTrait for AtomicUsize {
     /// Note: vstd's std_specs::atomic provides assume_specification for AtomicUsize
     /// methods but without value postconditions, so we cannot prove functional
     /// correctness. The implementation is verified to be well-formed.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
     #[verifier::exec_allows_no_decreases_clause]
     fn fetch_add_cas(&self, delta: usize) -> (previous: usize)
     {

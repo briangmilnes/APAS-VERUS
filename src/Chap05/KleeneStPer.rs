@@ -233,10 +233,11 @@ verus! {
             valid_key_type::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(alphabet: SetStEph<T>) -> (kleene: Self) {
             KleeneStPer { alphabet }
         }
-
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates slice, O(1) hash lookup per element.
         fn mem_star(&self, s: &[T]) -> (member: bool) {
             let mut i: usize = 0;
             while i < s.len()
@@ -264,6 +265,7 @@ verus! {
             true
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — length check + delegates to mem_star.
         fn mem_plus(&self, s: &[T]) -> (member: bool) {
             if s.len() == 0 {
                 proof { assert(viewed::<T>(s@).len() == 0); }
@@ -275,6 +277,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
         fn alphabet(&self) -> (alpha: &SetStEph<T>) {
             &self.alphabet
         }

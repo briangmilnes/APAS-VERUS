@@ -105,7 +105,7 @@ pub mod MinEditDistMtEph {
 
         /// Create from source and target sequences.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_mineditdistmteph_wf(),
@@ -114,7 +114,7 @@ pub mod MinEditDistMtEph {
 
         /// Compute minimum edit distance.
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
         fn min_edit_distance(&mut self) -> (dist: usize)
         where
             T: Send + Sync + 'static
@@ -139,7 +139,7 @@ pub mod MinEditDistMtEph {
 
         /// Set element in source sequence.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set_source(&mut self, index: usize, value: T)
             requires
                 old(self).spec_mineditdistmteph_wf(),
@@ -150,7 +150,7 @@ pub mod MinEditDistMtEph {
 
         /// Set element in target sequence.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set_target(&mut self, index: usize, value: T)
             requires
                 old(self).spec_mineditdistmteph_wf(),
@@ -161,7 +161,7 @@ pub mod MinEditDistMtEph {
 
         /// Clear memoization table.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clear_memo(&mut self)
             requires old(self).spec_mineditdistmteph_wf(),
             ensures
@@ -177,6 +177,7 @@ pub mod MinEditDistMtEph {
     // 9. impls
 
     /// Create Arc-wrapped memo lock.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
@@ -187,6 +188,7 @@ pub mod MinEditDistMtEph {
     }
 
     /// Clone Arc memo (reference count increment).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtEphS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtEphMemoInv>>)
@@ -302,6 +304,7 @@ pub mod MinEditDistMtEph {
             self.memo.pred() == MinEditDistMtEphMemoInv
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -314,6 +317,7 @@ pub mod MinEditDistMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -323,6 +327,7 @@ pub mod MinEditDistMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — memoized recursive DP with parallel join; Mt parallel.
         fn min_edit_distance(&mut self) -> (dist: usize)
         where
             T: Send + Sync + 'static,
@@ -339,10 +344,13 @@ pub mod MinEditDistMtEph {
             min_edit_distance_rec(&self.source, &self.target, &self.memo, source_len, target_len)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn source(&self) -> (s: &ArraySeqMtEphS<T>) { &self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn target(&self) -> (t: &ArraySeqMtEphS<T>) { &self.target }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write O(1) plus memo clear O(n).
         fn set_source(&mut self, index: usize, value: T) {
             let _ = self.source.set(index, value);
             let (mut memo, write_handle) = self.memo.acquire_write();
@@ -350,6 +358,7 @@ pub mod MinEditDistMtEph {
             write_handle.release_write(memo);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write O(1) plus memo clear O(n).
         fn set_target(&mut self, index: usize, value: T) {
             let _ = self.target.set(index, value);
             let (mut memo, write_handle) = self.memo.acquire_write();
@@ -357,12 +366,14 @@ pub mod MinEditDistMtEph {
             write_handle.release_write(memo);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map under lock.
         fn clear_memo(&mut self) {
             let (mut memo, write_handle) = self.memo.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
         fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();

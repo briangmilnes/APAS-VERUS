@@ -66,6 +66,7 @@ pub mod StarContractionStEph {
 
         /// Contract graph to just vertices (no edges).
         /// APAS: Work O((n + m) lg n), Span O((n + m) lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive star contraction halving vertices; St sequential.
         fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> SetStEph<V>
             requires
                 Self::spec_starcontractionsteph_wf(graph),
@@ -75,6 +76,7 @@ pub mod StarContractionStEph {
     pub type T<V> = UnDirGraphStEph<V>;
 
     /// Inner recursive star contraction with fuel for termination.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
     fn star_contract_fuel<V, R, F, G>(
         graph: &UnDirGraphStEph<V>, base: &F, expand: &G, fuel: usize,
         Ghost(r_inv): Ghost<spec_fn(R) -> bool>,

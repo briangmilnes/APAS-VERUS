@@ -133,7 +133,7 @@ verus! {
         spec fn is_functional(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch05 Def 5.6): Work O(|v|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — DIFFERS: St sequential, APAS parallel. Iterates vec, checks domain uniqueness via hash set.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2) — disagrees. For each element calls is_functional_vec_at which is O(|v|).
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool)
             requires Self::spec_valid_key_type()
             ensures functional == is_functional_seq(v@);
@@ -252,6 +252,7 @@ verus! {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — linear scan checking each element against p.
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
@@ -267,7 +268,7 @@ verus! {
             }
             true
         }
-
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|^2), Span O(|v|^2) — for each element calls is_functional_vec_at which is O(|v|).
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
@@ -293,6 +294,7 @@ verus! {
             true
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — iterates set, compares each element's key against p.
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let mut iter = s.iter();
             let ghost the_seq = iter@.1;
@@ -324,6 +326,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|^2), Span O(|s|^2) — for each element calls is_functional_SetStEph_at which is O(|s|).
         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool) {
             let mut outer_iter = s.iter();
             let ghost the_seq = outer_iter@.1;
@@ -365,10 +368,12 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|^2), Span O(|r|^2) — delegates to is_functional_SetStEph.
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool) {
             Self::is_functional_SetStEph(&r.pairs)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> MappingStEph<X, Y> {
                       assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: RelationStEph::empty() };
@@ -378,6 +383,7 @@ verus! {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec + RelationStEph::from_set.
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
                       assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let ghost v_seq = v@;
@@ -405,6 +411,7 @@ verus! {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — clones the relation.
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
                       assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: r.clone() };
@@ -423,6 +430,7 @@ verus! {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation size().
         fn size(&self) -> (size: usize) {
             let size = self.mapping.size();
             proof {
@@ -441,10 +449,13 @@ verus! {
             }
             size
         }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to relation relates().
         fn mem(&self, p: &Pair<X, Y>) -> bool { self.mapping.relates(p) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation domain().
         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
 
-        fn range(&self) -> SetStEph<Y> { 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|m|), Span O(|m|) — delegates to relation range().
+        fn range(&self) -> SetStEph<Y> {
             let result = self.mapping.range();
             proof {
                 assert forall |y: Y::V| result@.contains(y) implies 
@@ -459,7 +470,8 @@ verus! {
             result
         }
 
-        fn iter(&self) -> MappingStEphIter<'_, X, Y> { 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
+        fn iter(&self) -> MappingStEphIter<'_, X, Y> {
             MappingStEphIter { inner: self.mapping.iter() }
         }
     }

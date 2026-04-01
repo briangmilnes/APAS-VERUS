@@ -80,6 +80,7 @@ pub mod MaxContigSubSumBruteStEph {
     }
 
     impl MaxContigSubSumBruteTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — nested loops over all (lo,hi) pairs; St sequential.
         fn max_contig_sub_sum_brute(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
 

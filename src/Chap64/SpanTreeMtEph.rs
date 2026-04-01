@@ -40,6 +40,7 @@ pub mod SpanTreeMtEph {
 
         /// Parallel spanning tree via star contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg² |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O(lg^2 n) — delegates to star_contract_mt; Mt parallel.
         fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
         ) -> SetStEph<Edge<V>>
@@ -47,6 +48,7 @@ pub mod SpanTreeMtEph {
 
         /// Verify spanning tree properties.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — connectivity check + edge count; sequential despite Mt module.
         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreemteph_wf(graph);
     }

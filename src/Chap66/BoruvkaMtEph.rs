@@ -100,6 +100,7 @@ pub mod BoruvkaMtEph {
 
         /// Find vertex bridges for parallel Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(lg |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |E|) — D&C fork-join over edges; Mt parallel.
         fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: Arc<Vec<LabeledEdge<V>>>,
             start: usize,
@@ -115,6 +116,7 @@ pub mod BoruvkaMtEph {
 
         /// Parallel bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(lg |V|) — parallel coin flips + partition map; Mt parallel.
         fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
@@ -167,6 +169,7 @@ pub mod BoruvkaMtEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; sequential despite Mt module.
         fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,
@@ -180,6 +183,7 @@ pub mod BoruvkaMtEph {
 
     // Hash-based coin flip: deterministic from (seed, round, vertex index).
     // Replaces sequential StdRng coin flips with a parallelizable hash function.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
     #[verifier::external_body]
     fn hash_coin(seed: u64, round: usize, index: usize) -> bool {
         use std::hash::{Hash, Hasher};
@@ -194,6 +198,7 @@ pub mod BoruvkaMtEph {
     /// Parallel coin flip generation using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel hash-based coin generation via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
     fn hash_coin_flips_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
@@ -265,6 +270,7 @@ pub mod BoruvkaMtEph {
     /// Parallel remaining-vertex filter using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel filter via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering vertices; Mt parallel.
     fn compute_remaining_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
@@ -332,6 +338,7 @@ pub mod BoruvkaMtEph {
     /// Parallel MST label collection using divide-and-conquer.
     ///
     /// - Work O(n), Span O(log n) — parallel label extraction via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join extracting labels; Mt parallel.
     fn collect_mst_labels_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         keys: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
@@ -399,6 +406,7 @@ pub mod BoruvkaMtEph {
     /// Maps tails->heads from partition, remaining->identity.
     ///
     /// - Work O(n), Span O(log n) — parallel map building via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join building partition map; Mt parallel.
     fn build_partition_map_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         partition: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,

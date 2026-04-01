@@ -172,15 +172,20 @@ verus! {
             valid_key_type_Pair::<X, Y>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec which iterates vec.
         fn from_vec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
             RelationStEph { pairs: SetStEph::from_vec(v), } }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to set size().
         fn size(&self) -> usize { self.pairs.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — iterates pairs, inserts each first element.
         fn domain(&self) -> SetStEph<X> {
             let mut out = SetStEph::<X>::empty();
             let it: RelationStEphIter<X, Y> = self.iter();
@@ -221,6 +226,7 @@ verus! {
             out
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|R|), Span O(|R|) — iterates pairs, inserts each second element.
         fn range(&self) -> SetStEph<Y> {
             let mut out = SetStEph::<Y>::empty();
             let it: RelationStEphIter<X, Y> = self.iter();
@@ -259,17 +265,19 @@ verus! {
             }
             out
         }
-
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash set lookup via clone + mem.
         fn mem(&self, a: &X, b: &Y) -> bool {
             let a_clone = a.clone_plus();
             let b_clone = b.clone_plus();
             self.pairs.mem(&Pair(a_clone, b_clone))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to mem.
         fn relates(&self, p: &Pair<X, Y>) -> bool {
             self.mem(&p.0, &p.1)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator handle.
         fn iter(&self) -> RelationStEphIter<'_, X, Y> {
             RelationStEphIter { inner: self.pairs.iter() }
         }

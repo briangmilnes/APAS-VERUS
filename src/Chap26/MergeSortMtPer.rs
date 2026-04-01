@@ -567,11 +567,13 @@ pub mod MergeSortMtPer {
     }
 
     impl MergeSortMtTrait for ArraySeqMtPerS<usize> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(lg^2(n + m)) — parallel D&C merge via join; Mt parallel.
         fn merge_parallel(left: &ArraySeqMtPerS<usize>, right: &ArraySeqMtPerS<usize>) -> (merged: ArraySeqMtPerS<usize>) {
             merge_dc(left, right)
         }
 
         // Verified parallel merge sort: structural logic proven, recursion parallelized.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — parallel D&C sort with parallel merge; Mt parallel.
         fn merge_sort_parallel(a: &ArraySeqMtPerS<usize>) -> (sorted: ArraySeqMtPerS<usize>)
             decreases a.spec_len(),
         {

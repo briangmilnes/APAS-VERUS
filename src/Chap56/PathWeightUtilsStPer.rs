@@ -148,6 +148,7 @@ pub mod PathWeightUtilsStPer {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (weight: Option<i64>)
         ensures weight == Self::spec_path_weight_int(path, weights, 0, 0),
     {
@@ -183,6 +184,7 @@ pub mod PathWeightUtilsStPer {
         Some(total)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
         weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
@@ -214,6 +216,7 @@ pub mod PathWeightUtilsStPer {
         Some(total)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — iterates path edges checking sub-path property; k = path length.
     fn validate_subpath_property_int(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<i64>,
@@ -259,6 +262,7 @@ pub mod PathWeightUtilsStPer {
         true
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — iterates path edges checking sub-path property; k = path length.
     fn validate_subpath_property_float(
         path: &ArraySeqStPerS<usize>,
         distances: &ArraySeqStPerS<WrappedF64>,

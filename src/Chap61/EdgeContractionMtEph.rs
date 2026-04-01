@@ -38,6 +38,7 @@ pub mod EdgeContractionMtEph {
 
         /// Parallel edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(lg |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel vertex-to-block mapping + edge rebuilding.
         fn edge_contract_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             matching: &SetStEph<Edge<V>>,
@@ -46,6 +47,7 @@ pub mod EdgeContractionMtEph {
 
         /// Single round of parallel edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|) — parallel matching + contraction in one round.
         fn contract_round_mt<V: StT + MtT + Hash + Ord + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,

@@ -156,6 +156,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumIterTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass Kadane's algorithm; St sequential.
         fn max_contig_sub_sum_iter(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {

@@ -89,6 +89,7 @@ pub mod ArraySeqMtEphSlice {
             requires self.spec_arrayseqmtephslice_wf(),
             ensures len as int == self.spec_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index + clone.
         fn nth_cloned(&self, index: usize) -> (elem: T)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -96,6 +97,7 @@ pub mod ArraySeqMtEphSlice {
                 obeys_feq_clone::<T>(),
             ensures elem == self.spec_index(index as int);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc clone + window adjust.
         /// O(1) slice: shares backing storage, adjusts window.
         fn slice(&self, start: usize, length: usize) -> (sliced: Self)
             requires
@@ -109,6 +111,7 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < length ==> sliced.spec_index(i) == self.spec_index(start as int + i);
 
         /// O(1) subseq: same as slice (shares backing storage).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -120,6 +123,7 @@ pub mod ArraySeqMtEphSlice {
                 forall|i: int| #![trigger subseq.spec_index(i)]
                     0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(data: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmtephslice_wf(),
@@ -143,6 +147,7 @@ pub mod ArraySeqMtEphSlice {
                 s.spec_len() == 1,
                 s.spec_index(0) == item;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             requires
                 length <= usize::MAX,
@@ -154,6 +159,7 @@ pub mod ArraySeqMtEphSlice {
                     0 <= i < length ==> new_seq.spec_index(i) == init_value;
 
         /// Materialize the slice window into a freshly-allocated Vec.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_vec(&self) -> (v: Vec<T>)
             requires
                 self.spec_arrayseqmtephslice_wf(),
@@ -191,15 +197,18 @@ pub mod ArraySeqMtEphSlice {
             (*self.data)@.subrange(self.start as int, (self.start + self.len) as int)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.len
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth_cloned(&self, index: usize) -> (elem: T) {
             let v: &Vec<T> = arc_deref(&self.data);
             v[self.start + index].clone_plus()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn slice(&self, start: usize, length: usize) -> (sliced: Self) {
             let new_data = Arc::clone(&self.data);
             ArraySeqMtEphSliceS {
@@ -209,10 +218,12 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self) {
             self.slice(start, length)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(data: Vec<T>) -> (seq: Self) {
             let len = data.len();
             ArraySeqMtEphSliceS {
@@ -222,6 +233,7 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: Self) {
             ArraySeqMtEphSliceS {
                 data: Arc::new(Vec::new()),
@@ -230,6 +242,7 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (s: Self) {
             let mut v: Vec<T> = Vec::new();
             v.push(item);
@@ -240,6 +253,7 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: Self) {
             let mut v: Vec<T> = Vec::with_capacity(length);
             let mut i: usize = 0;
@@ -262,6 +276,7 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_vec(&self) -> (v: Vec<T>) {
             let mut v: Vec<T> = Vec::with_capacity(self.len);
             let mut i: usize = 0;

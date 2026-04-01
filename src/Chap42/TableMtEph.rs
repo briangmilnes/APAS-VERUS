@@ -537,6 +537,7 @@ broadcast use {
 //		7b. parallel D&C helpers
 
     /// Parallel D&C map for table entries: clone keys, apply f to values.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C map via join.
     fn map_table_dc<K: MtKey, V: MtVal, F: Fn(&V) -> V + Clone + Send + Sync + 'static>(
         entries: &ArraySeqMtEphS<Pair<K, V>>,
         f: &F,
@@ -653,6 +654,7 @@ broadcast use {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C tabulate via join.
     /// Parallel D&C tabulate for table entries: apply f to each key.
     fn tabulate_table_dc<K: MtKey, V: MtVal, F: Fn(&K) -> V + Clone + Send + Sync + 'static>(
         f: &F,
@@ -893,7 +895,7 @@ broadcast use {
                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
         /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: linear scan on unsorted array
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
         fn find(&self, key: &K) -> (found: Option<V>)
             requires self.spec_tablemteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -944,6 +946,7 @@ broadcast use {
                 self@.dom() =~= old(self)@.dom().difference(keys@),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone of backing array.
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
             ensures spec_entries_to_map(entries@) == self@;
     }
@@ -963,6 +966,7 @@ broadcast use {
             self.entries.seq@[i].1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
             proof {
@@ -971,6 +975,7 @@ broadcast use {
             self.entries.length()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
                       assert(obeys_feq_full_trigger::<K>());
@@ -981,6 +986,7 @@ broadcast use {
             TableMtEph { entries }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(key: K, value: V) -> (tree: Self)
         {
                       assert(obeys_feq_full_trigger::<K>());
@@ -1002,6 +1008,7 @@ broadcast use {
             tree
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let mut keys = ArraySetStEph::empty();
@@ -1065,6 +1072,7 @@ broadcast use {
             keys
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
         fn tabulate<F: Fn(&K) -> V + Clone + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             assert(obeys_feq_full_trigger::<K>());
@@ -1124,6 +1132,7 @@ broadcast use {
             TableMtEph { entries: seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
         fn map<F: Fn(&V) -> V + Clone + Send + Sync + 'static>(&mut self, f: F)
         {
             let ghost old_entries = self.entries@;
@@ -1162,6 +1171,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         #[verifier::loop_isolation(false)]
         fn filter<F: Fn(&K, &V) -> bool + Clone + Send + Sync + 'static>(
             &mut self,
@@ -1279,6 +1289,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
             proof {
@@ -1458,6 +1469,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         #[verifier::loop_isolation(false)]
         fn union<F: Fn(&V, &V) -> V + Send + Sync>(&mut self, other: &Self, combine: F)
         {
@@ -1932,6 +1944,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         #[verifier::loop_isolation(false)]
         fn difference(&mut self, other: &Self)
         {
@@ -2082,6 +2095,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find(&self, key: &K) -> (found: Option<V>)
         {
             let mut i: usize = 0;
@@ -2112,6 +2126,7 @@ broadcast use {
             None
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         #[verifier::loop_isolation(false)]
         fn delete(&mut self, key: &K)
         {
@@ -2221,6 +2236,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         #[verifier::loop_isolation(false)]
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
         {
@@ -2439,6 +2455,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         #[verifier::loop_isolation(false)]
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
@@ -2543,6 +2560,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         #[verifier::loop_isolation(false)]
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
@@ -2649,6 +2667,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>) {
             let entries = self.entries.clone();
             proof {
@@ -2662,6 +2681,7 @@ broadcast use {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     // veracity: no_requires
     pub fn from_sorted_entries<K: MtKey, V: MtVal>(entries: Vec<Pair<K, V>>) -> (constructed: TableMtEph<K, V>)
         ensures constructed@.dom().finite()

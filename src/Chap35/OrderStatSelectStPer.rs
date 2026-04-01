@@ -98,6 +98,7 @@ pub mod OrderStatSelectStPer {
     // 9. impls
 
     impl<T: TotalOrder + Copy> OrderStatSelectStPerTrait<T> for ArraySeqStPerS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — delegates to select_inner; St sequential.
         fn select(a: &ArraySeqStPerS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();

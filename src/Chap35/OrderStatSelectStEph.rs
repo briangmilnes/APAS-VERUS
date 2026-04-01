@@ -99,6 +99,7 @@ pub mod OrderStatSelectStEph {
     // 9. impls
 
     impl<T: TotalOrder + Copy> OrderStatSelectStEphTrait<T> for ArraySeqStEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — delegates to select_inner; St sequential.
         fn select(a: &ArraySeqStEphS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();

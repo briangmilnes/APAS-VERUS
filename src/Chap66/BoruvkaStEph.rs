@@ -104,6 +104,7 @@ pub mod BoruvkaStEph {
     //		7. proof fns/broadcast groups
 
     /// Deterministic coin flip from seed and vertex iteration index.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single XOR + mask.
     // veracity: no_requires
     fn coin_flip(seed: u64, index: usize) -> (flip: bool)
         ensures flip == (((seed ^ (index as u64)) & 1u64) == 1u64)
@@ -123,6 +124,7 @@ pub mod BoruvkaStEph {
 
         /// Find vertex bridges for Borůvka's algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
         fn vertex_bridges<V: HashOrd + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
         ) -> (bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>)
@@ -134,6 +136,7 @@ pub mod BoruvkaStEph {
 
         /// Bridge-based star partition.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — single pass over vertices with coin flips; St sequential.
         fn bridge_star_partition<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             bridges: &HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
@@ -192,6 +195,7 @@ pub mod BoruvkaStEph {
 
         /// Compute total weight of MST.
         /// APAS: Work O(m), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over edges filtering by labels; St sequential.
         fn mst_weight<V: StT + Hash + Ord + Copy>(
             edges: &SetStEph<LabeledEdge<V>>,
             mst_labels: &SetStEph<usize>,

@@ -124,7 +124,7 @@ pub mod MinEditDistStEph {
 
         /// Set element in source sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
         fn set_source(&mut self, index: usize, value: T)
             requires index < old(self).spec_source_len(),
             ensures
@@ -133,7 +133,7 @@ pub mod MinEditDistStEph {
 
         /// Set element in target sequence.
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
         fn set_target(&mut self, index: usize, value: T)
             requires index < old(self).spec_target_len(),
             ensures
@@ -158,7 +158,7 @@ pub mod MinEditDistStEph {
 
     /// Recursive memoized minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|*|T|), Span O(|S|+|T|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS. — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStEphS<T>,
         i: usize,
@@ -211,6 +211,7 @@ pub mod MinEditDistStEph {
 
         open spec fn spec_target_len(&self) -> nat { self.target.spec_len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -223,6 +224,7 @@ pub mod MinEditDistStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -232,6 +234,7 @@ pub mod MinEditDistStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — memoized recursive DP; St sequential.
         fn min_edit_distance(&mut self) -> (dist: usize) {
             self.memo.clear();
 
@@ -241,22 +244,28 @@ pub mod MinEditDistStEph {
             min_edit_distance_rec(self, source_len, target_len)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn source(&self) -> (s: &ArraySeqStEphS<T>) { &self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn target(&self) -> (t: &ArraySeqStEphS<T>) { &self.target }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
         fn set_source(&mut self, index: usize, value: T) {
             let _ = self.source.set(index, value);
             self.memo.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
         fn set_target(&mut self, index: usize, value: T) {
             let _ = self.target.set(index, value);
             self.memo.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map.
         fn clear_memo(&mut self) { self.memo.clear(); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

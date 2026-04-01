@@ -422,23 +422,30 @@ pub mod TopDownDPMtEph {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self) {
             TopDownDPMtEphS { seq_s: s, seq_t: t }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
             s_empty && t_empty
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
         fn set_s(&mut self, s: ArraySeqMtEphS<char>) { self.seq_s = s; }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
         fn set_t(&mut self, t: ArraySeqMtEphS<char>) { self.seq_t = t; }
 
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
@@ -448,6 +455,7 @@ pub mod TopDownDPMtEph {
         }
 
         /// Compute MED with parallel subproblem exploration.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
         fn med_memoized_parallel(&mut self) -> (distance: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();

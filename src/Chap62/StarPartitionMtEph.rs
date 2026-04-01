@@ -99,6 +99,7 @@ pub mod StarPartitionMtEph {
 
     /// Deterministic hash-based coin flip from (seed, index).
     /// Replaces sequential RNG with a parallelizable hash function.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash computation.
     #[verifier::external_body]
     fn hash_coin(seed: u64, index: usize) -> bool {
         use std::hash::{Hash, Hasher};
@@ -112,6 +113,7 @@ pub mod StarPartitionMtEph {
     /// Parallel coin flip generation using divide-and-conquer.
     ///
     /// Work O(n), Span O(lg n) — parallel hash-based coin generation via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
     fn hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         seed: u64,
@@ -249,6 +251,7 @@ pub mod StarPartitionMtEph {
     ///
     /// For each edge in [start, end), classifies tail-to-head edges and collects them.
     /// Work O(m), Span O(lg m) — binary fork-join via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — D&C fork-join over m edges; Mt parallel.
     fn build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<Vec<Edge<V>>>,
         coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
@@ -432,6 +435,7 @@ pub mod StarPartitionMtEph {
     /// Parallel clone of a vertex slice into a Vec using D&C + join.
     ///
     /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
     fn build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         start: usize,
@@ -535,6 +539,7 @@ pub mod StarPartitionMtEph {
     /// Parallel build of partition_map (vertex → center) using D&C + join.
     ///
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
     fn build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         p_vec: Arc<Vec<V>>,
@@ -738,6 +743,7 @@ pub mod StarPartitionMtEph {
     ///
     /// A vertex is a center if p_vec[j] == vertices[j] (self-pointing).
     /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join filtering self-pointing vertices; Mt parallel.
     fn build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         vertices: Arc<Vec<V>>,
         p_vec: Arc<Vec<V>>,

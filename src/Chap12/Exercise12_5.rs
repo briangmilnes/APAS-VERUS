@@ -94,6 +94,7 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
 
 impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic pointer store.
     #[verifier::external_body] // accept hole
     fn new() -> (stack: Self) {
         ConcurrentStackMt {
@@ -101,6 +102,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
     #[verifier::external_body] // accept hole
     fn push(&self, value: T) {
         let mut new_node = Box::new(Node { value, next: null_mut() });
@@ -115,6 +117,7 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — CAS retry loop; O(contention) worst case.
     #[verifier::external_body] // accept hole
     fn pop(&self) -> (possible_top: Option<T>) {
         loop {
@@ -130,11 +133,13 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic load.
     #[verifier::external_body] // accept hole
     fn is_empty(&self) -> (empty: bool) {
         self.head.load(Ordering::Acquire).is_null()
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — pops all n elements sequentially.
     #[verifier::external_body] // accept hole
     fn drain(&self) -> (items: Vec<T>) {
         let mut items = Vec::new();

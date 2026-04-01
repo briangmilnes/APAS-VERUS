@@ -391,6 +391,7 @@ pub mod OrderStatSelectMtEph {
     }
 
     impl<T: TotalOrder + Copy + Send + Sync + Eq + 'static> OrderStatSelectMtEphTrait<T> for ArraySeqMtEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n^(3/4)) expected — delegates to select_inner; Mt parallel partition via join.
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();

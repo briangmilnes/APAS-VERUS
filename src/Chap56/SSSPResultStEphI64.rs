@@ -131,6 +131,7 @@ pub mod SSSPResultStEphI64 {
 
         open spec fn spec_source(&self) -> usize { self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
         {
             let mut dist_vec: Vec<i64> = Vec::new();
@@ -166,6 +167,7 @@ pub mod SSSPResultStEphI64 {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
         fn get_distance(&self, v: usize) -> (dist: i64) {
             if v >= self.distances.length() {
                 return UNREACHABLE;
@@ -173,6 +175,7 @@ pub mod SSSPResultStEphI64 {
             *self.distances.nth(v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         fn set_distance(&mut self, v: usize, dist: i64)
         {
             if v < self.distances.length() {
@@ -180,6 +183,7 @@ pub mod SSSPResultStEphI64 {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
         fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
@@ -188,6 +192,7 @@ pub mod SSSPResultStEphI64 {
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         fn set_predecessor(&mut self, v: usize, pred: usize)
         {
             if v < self.predecessors.length() {
@@ -195,10 +200,12 @@ pub mod SSSPResultStEphI64 {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, v: usize) -> (b: bool) {
             self.get_distance(v) != UNREACHABLE
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
         fn extract_path(&self, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if !self.is_reachable(v) {
                 return None;

@@ -47,6 +47,7 @@ pub mod EdgeContractionStEph {
 
         /// Single round of sequential edge contraction.
         /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — greedy matching + contraction; St sequential.
         fn contract_round<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> UnDirGraphStEph<V>
             requires Self::spec_edgecontractionsteph_wf(graph);
     }

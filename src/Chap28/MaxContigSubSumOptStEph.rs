@@ -88,6 +88,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumOptTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; St sequential.
         #[verifier::rlimit(50)]
         fn max_contig_sub_sum_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();

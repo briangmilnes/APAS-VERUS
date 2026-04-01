@@ -382,6 +382,7 @@ broadcast use {
     }
 
     impl MaxContigSubSumDivConOptTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C with O(1) merge returning 4-tuple; St sequential.
         fn max_contig_sub_sum_divcon_opt(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             if a.length() == 0 {
                 return None;

@@ -47,6 +47,7 @@ pub mod KruskalStEph {
         }
 
         /// Process one edge: if endpoints are in different components, add to MST and union.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — two finds + conditional union; amortized.
         pub fn kruskal_process_edge<V: HashOrd>(
             uf: &mut UnionFindStEph<V>,
             mst_edges: &mut SetStEph<LabEdge<V, u64>>,

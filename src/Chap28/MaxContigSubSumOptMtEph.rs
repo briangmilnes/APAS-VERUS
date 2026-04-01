@@ -31,6 +31,7 @@ pub mod MaxContigSubSumOptMtEph {
     }
 
     impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; sequential despite Mt module (no join).
         fn max_contig_sub_sum_opt_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 { return None; }
