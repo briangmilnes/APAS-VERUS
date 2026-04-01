@@ -4,9 +4,9 @@
 //! Implements Union-Find (Disjoint Set Union) with union by rank.
 //! Used in Kruskal's MST algorithm for efficient cycle detection.
 //!
-//! Tricky three proof holes (1 of 3):
+//! Proof status:
 //! - union_merge: PROVED (R106, agent1 — opaque roots predicate eliminates matching loop).
-//! - union (trait impl): external_body — needs to bridge union_merge ensures to trait ensures.
+//! - union (trait impl): PROVED (R130, agent1 — bridge lemmas + rank bound from wf).
 //!
 //! NOTE: find currently uses root-chasing without path compression (O(log n) per call).
 //! Path compression lemmas are written and commented out — the assembly lemma needs
@@ -1061,6 +1061,7 @@ pub mod UnionFindStEph {
         root_v: V,
     ) -> (info: Ghost<UnionMergeInfo<V>>)
         requires
+            old(uf).spec_unionfindsteph_wf(),
             spec_key_model::<V>(),
             spec_feq_full::<V>(),
             old(uf)@.parent.dom() =~= old(uf)@.rank.dom(),
@@ -1318,6 +1319,38 @@ pub mod UnionFindStEph {
             spec_feq_full::<V>(),
     {
         reveal(spec_unionfindsteph_wf);
+    }
+
+    /// Derive rank[root] < elements.len() from wf + roots.contains_key.
+    proof fn lemma_root_rank_lt_elements<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        root_view: <V as View>::V,
+    )
+        requires
+            uf.spec_unionfindsteph_wf(),
+            uf.roots@.contains_key(root_view),
+        ensures
+            uf.rank@.contains_key(root_view),
+            uf.rank@[root_view] < uf.elements@.len(),
+    {
+        lemma_wf_parent_dom_eq_roots_dom(uf);
+        lemma_rank_lt_elements(uf, root_view);
+    }
+
+    /// Prove spec_union_result for the identity case (same root, no mutation).
+    proof fn lemma_union_result_identity<VV>(
+        roots: Map<VV, VV>,
+        u_view: VV,
+        v_view: VV,
+    )
+        requires
+            roots.contains_key(u_view),
+            roots.contains_key(v_view),
+            roots[u_view] == roots[v_view],
+        ensures
+            spec_union_result(roots, roots, u_view, v_view),
+    {
+        reveal(spec_union_result);
     }
 
     /// Derive all union_merge_exec prerequisites from wf + root conditions.
@@ -1776,17 +1809,31 @@ pub mod UnionFindStEph {
 
         /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
-        // R115 EXPERIMENT: keep external_body, test via union_experiment below.
-        #[verifier::external_body]
+        #[verifier::rlimit(30)]
         fn union(&mut self, u: &V, v: &V) {
+            proof { lemma_wf_type_axioms(&*old(self)); }
             let root_u = find_root_loop(self, u);
             let root_v = find_root_loop(self, v);
             if !feq(&root_u, &root_v) {
                 proof {
-                    assume(self.rank@[root_u@] < self.elements@.len());
-                    assume(self.rank@[root_v@] < self.elements@.len());
+                    lemma_root_rank_lt_elements(self, root_u@);
+                    lemma_root_rank_lt_elements(self, root_v@);
                 }
-                let _info = union_merge(self, root_u, root_v);
+                let ghost mid_uf = *self;
+                let info = union_merge(self, root_u, root_v);
+                proof {
+                    lemma_prove_union_result(
+                        &*self, &mid_uf,
+                        root_u@, root_v@,
+                        u@, v@,
+                        info@.winner_view,
+                    );
+                }
+            } else {
+                proof {
+                    lemma_wf_parent_dom_eq_roots_dom(self);
+                    lemma_union_result_identity(self.roots@, u@, v@);
+                }
             }
         }
 
@@ -1864,20 +1911,19 @@ pub mod UnionFindStEph {
             old(uf)@.parent.contains_key(u@),
             old(uf)@.parent.contains_key(v@),
         ensures
-            // NO wf in ensures — just structural facts
             uf@.parent.dom() =~= old(uf)@.parent.dom(),
             uf@.elements =~= old(uf)@.elements,
     {
         proof { lemma_wf_type_axioms(&*old(uf)); }
         let root_u = find_root_loop(uf, u);
         let root_v = find_root_loop(uf, v);
-
-        proof {
-            assume(root_u@ != root_v@);
-            assume(uf.rank@[root_u@] < uf.elements@.len());
-            assume(uf.rank@[root_v@] < uf.elements@.len());
+        if !feq(&root_u, &root_v) {
+            proof {
+                lemma_root_rank_lt_elements(uf, root_u@);
+                lemma_root_rank_lt_elements(uf, root_v@);
+            }
+            let _info = union_merge(uf, root_u, root_v);
         }
-        let _info = union_merge(uf, root_u, root_v);
     }
 
     // Test 3: merge WITH wf in ensures. Is wf the trigger?
@@ -1899,13 +1945,13 @@ pub mod UnionFindStEph {
         proof { lemma_wf_type_axioms(&*old(uf)); }
         let root_u = find_root_loop(uf, u);
         let root_v = find_root_loop(uf, v);
-
-        proof {
-            assume(root_u@ != root_v@);
-            assume(uf.rank@[root_u@] < uf.elements@.len());
-            assume(uf.rank@[root_v@] < uf.elements@.len());
+        if !feq(&root_u, &root_v) {
+            proof {
+                lemma_root_rank_lt_elements(uf, root_u@);
+                lemma_root_rank_lt_elements(uf, root_v@);
+            }
+            let _info = union_merge(uf, root_u, root_v);
         }
-        let _info = union_merge(uf, root_u, root_v);
     }
 
     } // verus!

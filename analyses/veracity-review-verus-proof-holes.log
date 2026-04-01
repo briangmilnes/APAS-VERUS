@@ -194,24 +194,24 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1601: info: external_accept_hole
    Info: 2 total
 ⚠ src/Chap18/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1760: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1756 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1931: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1927 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1758 |         {
-      1759 |             let equal = self.seq == other.seq;
-      1761 |             equal
-      1762 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:535: info: trivial_spec_wf
+      1929 |         {
+      1930 |             let equal = self.seq == other.seq;
+      1932 |             equal
+      1933 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:536: info: trivial_spec_wf
    Info: 1 total
 ⚠ src/Chap18/ArraySeqMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1633: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1629 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1815: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1811 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1631 |         {
-      1632 |             let equal = self.seq == other.seq;
-      1634 |             equal
-      1635 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:360: info: trivial_spec_wf
+      1813 |         {
+      1814 |             let equal = self.seq == other.seq;
+      1816 |             equal
+      1817 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:357: info: trivial_spec_wf
    Info: 1 total
 ⚠ src/Chap18/ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1061: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
@@ -268,14 +268,14 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:289: info: trivial_spec_wf
    Info: 1 total
 ⚠ src/Chap19/ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1644: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1640 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1775: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1771 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1642 |         {
-      1643 |             let equal = self.seq == other.seq;
-      1645 |             equal
-      1646 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:483: info: trivial_spec_wf
+      1773 |         {
+      1774 |             let equal = self.seq == other.seq;
+      1776 |             equal
+      1777 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:484: info: trivial_spec_wf
    Info: 1 total
 ✓ src/Chap19/ArraySeqMtEphSlice.rs
 ⚠ src/Chap19/ArraySeqStEph.rs
@@ -371,56 +371,8 @@ Table of Contents:
        940 |                     let equal = *l1 == *l2 && *r1 == *r2;
        942 |                     equal
        943 |                 },
-❌ src/Chap26/DivConReduceMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:227: error: external_body - #[verifier::external_body]
-       228 |     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:234: error: assume_new() - Ghost::assume_new(), 0)
-       228 |     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-            ...
-       232 |         ArraySeqMtPerS::reduce(a,
-       233 |             &|x: &usize, y: &usize| if *x >= *y { *x } else { *y },
-       235 |     }
-       236 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:237: error: external_body - #[verifier::external_body]
-       238 |     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:244: error: assume_new() - Ghost::assume_new(), 0)
-       238 |     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-            ...
-       242 |         ArraySeqMtPerS::reduce(a,
-       243 |             &|x: &usize, y: &usize| (*x).wrapping_add(*y),
-       245 |     }
-       246 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:247: error: external_body - #[verifier::external_body]
-       248 |     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:254: error: assume_new() - Ghost::assume_new(), 1)
-       248 |     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
-            ...
-       252 |         ArraySeqMtPerS::reduce(a,
-       253 |             &|x: &usize, y: &usize| (*x).wrapping_mul(*y),
-       255 |     }
-       256 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:257: error: external_body - #[verifier::external_body]
-       258 |     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:264: error: assume_new() - Ghost::assume_new(), false)
-       258 |     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
-            ...
-       262 |         ArraySeqMtPerS::reduce(a,
-       263 |             &|x: &bool, y: &bool| *x || *y,
-       265 |     }
-       266 | 
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:267: error: external_body - #[verifier::external_body]
-       268 |     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:274: error: assume_new() - Ghost::assume_new(), true)
-       268 |     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
-            ...
-       272 |         ArraySeqMtPerS::reduce(a,
-       273 |             &|x: &bool, y: &bool| *x && *y,
-       275 |     }
-       276 | 
-   Holes: 10 total
-      5 × Tracked::assume_new()
-      5 × external_body
-   Proof functions: 3 total (3 clean, 0 holed)
+✓ src/Chap26/DivConReduceMtPer.rs
+   3 clean proof functions
 ✓ src/Chap26/DivConReduceStPer.rs
 ℹ src/Chap26/ETSPMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
@@ -1204,20 +1156,20 @@ Table of Contents:
       1276 |                 lemma_seq_map_cloned_view_eq(
       1277 |                     self.elements.seq@,
 ⚠ src/Chap42/TableMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2518: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2514 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2690: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2686 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      2516 |         {
-      2517 |             let equal = self.entries == other.entries;
-      2519 |             equal
-      2520 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2530: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      2524 |         fn clone(&self) -> (cloned: Self)
+      2688 |         {
+      2689 |             let equal = self.entries == other.entries;
+      2691 |             equal
+      2692 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableMtEph.rs:2702: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      2696 |         fn clone(&self) -> (cloned: Self)
             ...
-      2528 |                 entries: self.entries.clone(),
-      2529 |             };
-      2531 |             cloned
-      2532 |         }
+      2700 |                 entries: self.entries.clone(),
+      2701 |             };
+      2703 |             cloned
+      2704 |         }
 ⚠ src/Chap42/TableStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap42/TableStEph.rs:2725: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2721 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -1899,22 +1851,17 @@ Table of Contents:
 ✓ src/Chap61/VertexMatchingStEph.rs
 ✓ src/Chap62/StarContractionMtEph.rs
 ✓ src/Chap62/StarContractionStEph.rs
-✓ src/Chap62/StarPartitionMtEph.rs
+ℹ src/Chap62/StarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarPartitionMtEph.rs:101: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
 ✓ src/Chap62/StarPartitionStEph.rs
 ✓ src/Chap63/ConnectivityMtEph.rs
 ✓ src/Chap63/ConnectivityStEph.rs
 ✓ src/Chap64/SpanTreeMtEph.rs
 ✓ src/Chap64/SpanTreeStEph.rs
 ✓ src/Chap64/TSPApproxStEph.rs
-❌ src/Chap65/KruskalStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:44: error: opaque - #[verifier::opaque]
-        45 |         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/KruskalStEph.rs:53: error: external_body - #[verifier::external_body]
-        54 |         pub fn kruskal_process_edge<V: HashOrd>(
-   Holes: 2 total
-      1 × external_body
-      1 × opaque
-   Proof functions: 1 total (1 clean, 0 holed)
+✓ src/Chap65/KruskalStEph.rs
+   1 clean proof function
 ⚠ src/Chap65/PrimStEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:459: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        455 |         fn clone(&self) -> (cloned: Self)
@@ -1924,76 +1871,8 @@ Table of Contents:
        460 |             cloned
        461 |         }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:218: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
-❌ src/Chap65/UnionFindStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1780: error: external_body - #[verifier::external_body]
-      1781 |         fn union(&mut self, u: &V, v: &V) {
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1786: error: assume() [algorithmic] - assume(self.rank@[root_u@] < self.elements@.len());
-      1781 |         fn union(&mut self, u: &V, v: &V) {
-            ...
-      1784 |             if !feq(&root_u, &root_v) {
-      1785 |                 proof {
-      1787 |                     assume(self.rank@[root_v@] < self.elements@.len());
-      1788 |                 }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1787: error: assume() [algorithmic] - assume(self.rank@[root_v@] < self.elements@.len());
-      1781 |         fn union(&mut self, u: &V, v: &V) {
-            ...
-      1785 |                 proof {
-      1786 |                     assume(self.rank@[root_u@] < self.elements@.len());
-      1788 |                 }
-      1789 |                 let _info = union_merge(self, root_u, root_v);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1876: error: assume() [algorithmic] - assume(root_u@ != root_v@);
-      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
-            ...
-      1874 | 
-      1875 |         proof {
-      1877 |             assume(uf.rank@[root_u@] < uf.elements@.len());
-      1878 |             assume(uf.rank@[root_v@] < uf.elements@.len());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1877: error: assume() [algorithmic] - assume(uf.rank@[root_u@] < uf.elements@.len());
-      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
-            ...
-      1875 |         proof {
-      1876 |             assume(root_u@ != root_v@);
-      1878 |             assume(uf.rank@[root_v@] < uf.elements@.len());
-      1879 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1878: error: assume() [algorithmic] - assume(uf.rank@[root_v@] < uf.elements@.len());
-      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
-            ...
-      1876 |             assume(root_u@ != root_v@);
-      1877 |             assume(uf.rank@[root_u@] < uf.elements@.len());
-      1879 |         }
-      1880 |         let _info = union_merge(uf, root_u, root_v);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1904: error: assume() [algorithmic] - assume(root_u@ != root_v@);
-      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
-            ...
-      1902 | 
-      1903 |         proof {
-      1905 |             assume(uf.rank@[root_u@] < uf.elements@.len());
-      1906 |             assume(uf.rank@[root_v@] < uf.elements@.len());
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1905: error: assume() [algorithmic] - assume(uf.rank@[root_u@] < uf.elements@.len());
-      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
-            ...
-      1903 |         proof {
-      1904 |             assume(root_u@ != root_v@);
-      1906 |             assume(uf.rank@[root_v@] < uf.elements@.len());
-      1907 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1906: error: assume() [algorithmic] - assume(uf.rank@[root_v@] < uf.elements@.len());
-      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
-            ...
-      1904 |             assume(root_u@ != root_v@);
-      1905 |             assume(uf.rank@[root_u@] < uf.elements@.len());
-      1907 |         }
-      1908 |         let _info = union_merge(uf, root_u, root_v);
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/UnionFindStEph.rs:1058: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
-      1034 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
-            ...
-      1056 |     /// the quantified wf proof, keeping Z3 under 4 GB.
-      1057 |     #[verifier::rlimit(30)]
-      1059 |         uf: &mut UnionFindStEph<V>,
-      1060 |         root_u: V,
-   Holes: 9 total
-      8 × assume()
-      1 × external_body
-   Proof functions: 22 total (22 clean, 0 holed)
+✓ src/Chap65/UnionFindStEph.rs
+   24 clean proof functions
 ⚠ src/Chap66/BoruvkaMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap66/BoruvkaMtEph.rs:64: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         60 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -2256,7 +2135,7 @@ Chap63::ConnectivityStEph  depends upon only clean modules
 Chap64::SpanTreeMtEph  depends upon only clean modules
 Chap64::SpanTreeStEph  depends upon only clean modules
 Chap64::TSPApproxStEph  depends upon only clean modules
-Chap65::KruskalStEph  depends upon holed modules: Chap65::UnionFindStEph
+Chap65::KruskalStEph  depends upon only clean modules
 Chap65::PrimStEph  depends upon only clean modules
 Chap65::UnionFindStEph  depends upon only clean modules
 Chap66::BoruvkaMtEph  depends upon only clean modules
@@ -2507,7 +2386,7 @@ src/Chap63/ConnectivityStEph.rs  depends upon only clean modules
 src/Chap64/SpanTreeMtEph.rs  depends upon only clean modules
 src/Chap64/SpanTreeStEph.rs  depends upon only clean modules
 src/Chap64/TSPApproxStEph.rs  depends upon only clean modules
-src/Chap65/KruskalStEph.rs  depends upon holed modules: Chap65::UnionFindStEph
+src/Chap65/KruskalStEph.rs  depends upon only clean modules
 src/Chap65/PrimStEph.rs  depends upon only clean modules
 src/Chap65/UnionFindStEph.rs  depends upon only clean modules
 src/Chap66/BoruvkaMtEph.rs  depends upon only clean modules
@@ -2522,39 +2401,34 @@ bugs/ice-set-type-projection/reproducer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   233 clean (no holes, no errors; 94%)
-   13 holed (holes or errors, 5%)
+   236 clean (no holes, no errors; 95%)
+   10 holed (holes or errors, 4%)
    246 total
 
 Proof Functions:
-   565 clean (100%)
+   567 clean (100%)
    0 holed (0%)
-   565 total
+   567 total
 
 Function Specs:
-   5453 exec fns with complete spec (requires+ensures) (66%)
+   5461 exec fns with complete spec (requires+ensures) (66%)
    60 exec fns missing spec (0%)
-   2687 proof/spec fns clean (32%)
+   2690 proof/spec fns clean (32%)
    0 proof/spec fns with holes (0%)
-   8200 total fns
+   8211 total fns
 
 
-Holes Found: 30 (actionable)
-   14 × assume() [algorithmic] (46%)
-   2 × assume() [rwlock:predicate] (6%)
-   1 × assume() [rwlock] (3%)
-   5 × Tracked::assume_new() (16%)
-   7 × external_body (23%)
-   1 × opaque (3%)
-Real Proof Targets: 27 (30 total - 3 rwlock)
+Holes Found: 9 (actionable)
+   6 × assume() [algorithmic] (66%)
+   2 × assume() [rwlock:predicate] (22%)
+   1 × assume() [rwlock] (11%)
+Real Proof Targets: 6 (9 total - 3 rwlock)
 
 Per-Chapter Holes:
-  Chap26: 10  Chap37:  5  Chap39:  1
-  Chap43:  1  Chap52:  1  Chap53:  1
-  Chap65: 11
+  Chap37:  5  Chap39:  1  Chap43:  1
+  Chap52:  1  Chap53:  1
 
-Warnings: 160 total
-   1 × fn_missing_wf_requires
+Warnings: 159 total
    1 × fn_missing_wf_ensures
    158 × assume_eq_clone_workaround
 
@@ -2576,10 +2450,10 @@ Accepted by Chapter:
   Chap39:  2  Chap40:  3  Chap41:  2
   Chap43:  2  Chap51:  6  Chap57:  5
 
-Structural (info only): 186
+Structural (info only): 187
    144 × RWLOCK_GHOST
    17 × STD_TRAIT_IMPL
-   11 × OPAQUE_EXTERNAL
+   12 × OPAQUE_EXTERNAL
    10 × UNSAFE_SEND_SYNC
    4 × THREAD_SPAWN
 
@@ -2593,77 +2467,74 @@ Structural (info only): 186
 4.1. Worst src/* Directories (all dirs, by holes)
 =================================================================
 
-   1  Chap65  (11 holes, 3 files)
-   2  Chap26  (10 holes, 8 files)
-   3  Chap37  (5 holes, 19 files)
-   4  Chap43  (1 holes, 10 files)
-   5  Chap53  (1 holes, 5 files)
-   6  Chap52  (1 holes, 14 files)
-   7  Chap39  (1 holes, 4 files)
-   8  Chap18  (0 holes, 7 files)
+   1  Chap37  (5 holes, 19 files)
+   2  Chap53  (1 holes, 5 files)
+   3  Chap43  (1 holes, 10 files)
+   4  Chap52  (1 holes, 14 files)
+   5  Chap39  (1 holes, 4 files)
+   6  Chap35  (0 holes, 4 files)
+   7  Chap27  (0 holes, 4 files)
+   8  Chap51  (0 holes, 8 files)
    9  Chap56  (0 holes, 10 files)
-   10  Chap55  (0 holes, 8 files)
-   11  Chap54  (0 holes, 4 files)
-   12  Chap44  (0 holes, 1 files)
-   13  Chap06  (0 holes, 21 files)
-   14  Chap35  (0 holes, 4 files)
-   15  Chap40  (0 holes, 3 files)
-   16  Chap11  (0 holes, 5 files)
-   17  Chap59  (0 holes, 4 files)
-   18  Chap02  (0 holes, 2 files)
-   19  Chap45  (0 holes, 6 files)
-   20  Concurrency  (0 holes, 1 files)
-   21  Chap57  (0 holes, 3 files)
-   22  Chap51  (0 holes, 8 files)
-   23  Chap42  (0 holes, 3 files)
-   24  Chap41  (0 holes, 6 files)
-   25  Chap63  (0 holes, 2 files)
-   26  Chap12  (0 holes, 3 files)
-   27  Chap47  (0 holes, 9 files)
-   28  Chap50  (0 holes, 8 files)
-   29  Chap27  (0 holes, 4 files)
-   30  Chap03  (0 holes, 1 files)
-   31  Chap19  (0 holes, 4 files)
-   32  Chap28  (0 holes, 11 files)
-   33  Chap38  (0 holes, 2 files)
-   34  ParaPairs  (0 holes, 1 files)
-   35  Chap62  (0 holes, 4 files)
-   36  Chap30  (0 holes, 1 files)
-   37  Chap17  (0 holes, 1 files)
-   38  Chap58  (0 holes, 2 files)
-   39  Chap36  (0 holes, 3 files)
-   40  Chap66  (0 holes, 2 files)
-   41  Chap49  (0 holes, 8 files)
-   42  Chap21  (0 holes, 5 files)
+   10  Chap26  (0 holes, 8 files)
+   11  Chap50  (0 holes, 8 files)
+   12  Chap45  (0 holes, 6 files)
+   13  Concurrency  (0 holes, 1 files)
+   14  Chap64  (0 holes, 3 files)
+   15  Chap57  (0 holes, 3 files)
+   16  Chap55  (0 holes, 8 files)
+   17  Chap49  (0 holes, 8 files)
+   18  Chap12  (0 holes, 3 files)
+   19  Chap58  (0 holes, 2 files)
+   20  Chap36  (0 holes, 3 files)
+   21  Chap61  (0 holes, 4 files)
+   22  Chap21  (0 holes, 5 files)
+   23  Chap40  (0 holes, 3 files)
+   24  Chap28  (0 holes, 11 files)
+   25  Chap41  (0 holes, 6 files)
+   26  Chap02  (0 holes, 2 files)
+   27  Chap42  (0 holes, 3 files)
+   28  Chap17  (0 holes, 1 files)
+   29  Chap44  (0 holes, 1 files)
+   30  Chap30  (0 holes, 1 files)
+   31  Chap63  (0 holes, 2 files)
+   32  Chap03  (0 holes, 1 files)
+   33  Chap62  (0 holes, 4 files)
+   34  Chap06  (0 holes, 21 files)
+   35  Chap47  (0 holes, 9 files)
+   36  ParaPairs  (0 holes, 1 files)
+   37  Chap54  (0 holes, 4 files)
+   38  Chap65  (0 holes, 3 files)
+   39  Chap11  (0 holes, 5 files)
+   40  Chap18  (0 holes, 7 files)
+   41  Chap59  (0 holes, 4 files)
+   42  Chap23  (0 holes, 2 files)
    43  Chap05  (0 holes, 5 files)
-   44  Chap61  (0 holes, 4 files)
-   45  Chap23  (0 holes, 2 files)
-   46  Chap64  (0 holes, 3 files)
+   44  Chap19  (0 holes, 4 files)
+   45  Chap66  (0 holes, 2 files)
+   46  Chap38  (0 holes, 2 files)
 
 =================================================================
 4.2. Next Target Files (clean deps only, by holes)
 =================================================================
 
-   1  src/Chap26/DivConReduceMtPer.rs  (10 holes)
-   2  src/Chap65/UnionFindStEph.rs  (9 holes)
-   3  src/Chap39/BSTTreapMtEph.rs  (1 holes)
-   4  src/Chap37/BSTAVLMtEph.rs  (1 holes)
-   5  src/Chap37/BSTSplayMtEph.rs  (1 holes)
-   6  src/Chap53/GraphSearchMtPer.rs  (1 holes)
-   7  src/Chap37/BSTRBMtEph.rs  (1 holes)
-   8  src/Chap37/BSTBBAlphaMtEph.rs  (1 holes)
-   9  src/Chap43/OrderedSetMtEph.rs  (1 holes)
-   10  src/Chap37/BSTPlainMtEph.rs  (1 holes)
-   11  src/Chap52/AdjTableGraphMtPer.rs  (1 holes)
+   1  src/Chap53/GraphSearchMtPer.rs  (1 holes)
+   2  src/Chap39/BSTTreapMtEph.rs  (1 holes)
+   3  src/Chap43/OrderedSetMtEph.rs  (1 holes)
+   4  src/Chap37/BSTSplayMtEph.rs  (1 holes)
+   5  src/Chap37/BSTAVLMtEph.rs  (1 holes)
+   6  src/Chap37/BSTBBAlphaMtEph.rs  (1 holes)
+   7  src/Chap52/AdjTableGraphMtPer.rs  (1 holes)
+   8  src/Chap37/BSTPlainMtEph.rs  (1 holes)
+   9  src/Chap37/BSTRBMtEph.rs  (1 holes)
 
 =================================================================
 4.3. Next Target Directories
 =================================================================
 
-   1  src/Chap26  (10 holes, 8 files)
-   2  src/Chap52  (1 holes, 14 files)
-   3  src/Chap53  (1 holes, 5 files)
-   4  src/Chap39  (1 holes, 4 files)
+   1  src/Chap39  (1 holes, 4 files)
+   2  src/Chap53  (1 holes, 5 files)
+   3  src/Chap52  (1 holes, 14 files)
 
 =================================================================
 4.4. Not Verusified
@@ -2681,9 +2552,9 @@ Structural (info only): 186
 4.6. Chapter by Chapter Proof Targeting
 =================================================================
 
-Chapter Status — 46 chapters, 39 clean, 7 holed, 30 holes (global), 244 modules
+Chapter Status — 46 chapters, 41 clean, 5 holed, 9 holes (global), 244 modules
 
-CLEAN CHAPTERS (39)
+CLEAN CHAPTERS (41)
   Chapter        Files
   -------------- -----
   Chap02             2
@@ -2697,6 +2568,7 @@ CLEAN CHAPTERS (39)
   Chap19             4
   Chap21             5
   Chap23             2
+  Chap26             8
   Chap27             4
   Chap28            11
   Chap30             1
@@ -2722,20 +2594,19 @@ CLEAN CHAPTERS (39)
   Chap62             4
   Chap63             2
   Chap64             3
+  Chap65             3
   Chap66             2
   Concurrency        1
   ParaPairs          1
 
-HOLED CHAPTERS (7) — 30 holes
+HOLED CHAPTERS (5) — 9 holes
   Chapter        Holes Files  ClnDeps?  Blocked by (external holed modules)
   -------------- ----- -----  --------  -----------------------------------
-  Chap26            10     8  YES       
-  Chap37             5    19  internal  Chap37::BSTAVLMtEph, Chap37::BSTRBMtEph, Chap37::BSTSplayMtEph, Chap37::BSTBBAlphaMtEph, Chap37::BSTPlainMtEph
+  Chap37             5    19  internal  Chap37::BSTPlainMtEph, Chap37::BSTAVLMtEph, Chap37::BSTBBAlphaMtEph, Chap37::BSTSplayMtEph, Chap37::BSTRBMtEph
   Chap39             1     4  YES       
   Chap43             1    10  internal  Chap43::OrderedSetMtEph
   Chap52             1    14  YES       
   Chap53             1     5  YES       
-  Chap65            11     3  internal  Chap65::UnionFindStEph
 
 DEPENDENCY CHAIN (chapter-level, external only)
   Chapter         Blocked by chapters
@@ -2745,8 +2616,8 @@ DEPENDENCY CHAIN (chapter-level, external only)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-31 23:03:48 -07:00
-Ended:     2026-03-31 23:03:51 -07:00
-Duration:  2880ms
+Started:   2026-04-01 07:14:30 -07:00
+Ended:     2026-04-01 07:14:33 -07:00
+Duration:  3041ms
 
 Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-review-verus-proof-holes.log

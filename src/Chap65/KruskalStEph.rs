@@ -4,9 +4,9 @@
 //! Implements Algorithm 65.2: Kruskal's algorithm for computing Minimum Spanning Trees.
 //! Uses Union-Find data structure for efficient cycle detection.
 //!
-//! Tricky three proof holes (2 of 3):
-//! - opaque_spec_unionfindsteph_wf (line 45): opaque wf wrapper, no external_body needed.
-//! - kruskal_process_edge (line 54): external_body — blocked by UnionFindStEph union proof.
+//! Proof status:
+//! - opaque_spec_unionfindsteph_wf: removed opaque (R130 — wf is already closed, double opacity unnecessary).
+//! - kruskal_process_edge: PROVED (R130, agent1 — union now proved, wf propagation is automatic).
 
 pub mod KruskalStEph {
 
@@ -40,17 +40,12 @@ pub mod KruskalStEph {
 
         verus! {
 
-        /// Opaque wrapper for UF well-formedness.
-        #[verifier::opaque]
+        /// Wrapper for UF well-formedness. Delegates to the closed spec_unionfindsteph_wf.
         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
             uf.spec_unionfindsteph_wf()
         }
 
         /// Process one edge: if endpoints are in different components, add to MST and union.
-        /// external_body: Z3 diverges on the 13-quantifier wf through equals+union+if.
-        /// Spec is obviously correct: equals preserves wf/dom, union preserves wf/dom,
-        /// insert preserves setsteph_wf.
-        #[verifier::external_body]
         pub fn kruskal_process_edge<V: HashOrd>(
             uf: &mut UnionFindStEph<V>,
             mst_edges: &mut SetStEph<LabEdge<V, u64>>,

@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1644: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1640 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:1775: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1771 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1642 |         {
-      1643 |             let equal = self.seq == other.seq;
-      1645 |             equal
-      1646 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:483: info: trivial_spec_wf
+      1773 |         {
+      1774 |             let equal = self.seq == other.seq;
+      1776 |             equal
+      1777 |         }
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap19/ArraySeqMtEph.rs:484: info: trivial_spec_wf
    Info: 1 total
 ✓ ArraySeqMtEphSlice.rs
 ⚠ ArraySeqStEph.rs
@@ -89,11 +89,11 @@ Proof Functions:
    14 total
 
 Function Specs:
-   189 exec fns with complete spec (requires+ensures) (66%)
+   190 exec fns with complete spec (requires+ensures) (66%)
    0 exec fns missing spec (0%)
    97 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   286 total fns
+   287 total fns
 
 
 Holes Found: 0 (actionable)
@@ -111,9 +111,11 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-31 23:03:44 -07:00
-Ended:     2026-03-31 23:03:44 -07:00
-Duration:  133ms
+Started:   2026-04-01 07:14:27 -07:00
+Ended:     2026-04-01 07:14:27 -07:00
+Duration:  91ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
-utput: src/Chap19/analyses/veracity-review-verus-proof-holes.log
+Duration:  91ms
+
+Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
