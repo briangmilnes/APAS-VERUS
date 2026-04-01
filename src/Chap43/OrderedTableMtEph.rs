@@ -127,7 +127,7 @@ broadcast use {
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match found {
-                    Some(v) => self@.contains_key(k@),
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
 
@@ -138,7 +138,7 @@ broadcast use {
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 match value {
-                    Some(v) => self@.contains_key(k@),
+                    Some(v) => self@.contains_key(k@) && v@ == self@[k@],
                     None => !self@.contains_key(k@),
                 };
 
