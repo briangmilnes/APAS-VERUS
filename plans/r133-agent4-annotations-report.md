@@ -12,7 +12,15 @@ Added `/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(...), Span O(..
 
 ## DIFFERS from APAS
 
-Only **2 new annotations** in this round explicitly mark a difference from the APAS textbook cost. The 305 total DIFFERS in the codebase are from prior rounds' trait-level annotations. My annotations were predominantly on `impl` functions that delegate to already-annotated free functions.
+Convention: only DIFFERS is called out explicitly; silence means the code review
+agrees with the APAS textbook cost.
+
+Only **2 new annotations** in this round explicitly mark "DIFFERS" from the APAS
+textbook cost. The remaining 839 agree with APAS (or have no APAS annotation to
+compare against — scaffolding helpers, impl delegates, etc.).
+
+The 305 total DIFFERS already in the codebase are from prior rounds' trait-level
+annotations, not from this round.
 
 ## Chapters Completed
 
