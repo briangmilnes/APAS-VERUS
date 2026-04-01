@@ -48,6 +48,11 @@ is to get code to **verify (prove)** with Verus.
 | 24 | `no_unsafe_standard.rs` | No unsafe — no `unsafe impl`, `unsafe fn`, or `unsafe {}` blocks |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
+- **NEVER run linters, formatters, or auto-fix tools.** No `cargo fix`, no `rustfmt`,
+  no `cargo clippy --fix`, no auto-formatting of any kind. These tools revert proof work
+  and destroy hours of edits. Only run `scripts/validate.sh`, `scripts/rtt.sh`, and
+  `scripts/ptt.sh`. If a pre-commit hook runs a linter, investigate and disable it —
+  do NOT let it rewrite source files.
 - Prefer verified code over unverified code, even if it requires restructuring
 - **Never sequentialize parallel files**: Mt (multi-threaded) implementations must remain
   parallel. Do not replace threaded code with sequential loops to satisfy the verifier.
@@ -875,6 +880,14 @@ Use `SetLit!`, `RelationLit!`, `MappingLit!`, `PairLit!` for constructing test v
 
 When an experiment fails verification: do NOT modify it to pass. Add `RESULT: FAILS` comment,
 comment out the module in lib.rs. Failed experiments are documentation.
+
+### Experiments Must Be Commented Out Before Agent Rounds
+
+**Before launching any agent round**, verify that ALL experiment modules in lib.rs are
+commented out. Experiments may have RTT failures, compilation issues, or unverified code
+that breaks agent validation. The orchestrator must check `pub mod experiments { ... }` in
+lib.rs and ensure every `pub mod` inside it is commented out with a status annotation
+(SUCCEEDS, FAILS, TESTING, PARTIAL). Agents must never uncomment experiments.
 
 ### PTT Commands
 

@@ -86,14 +86,14 @@ pub mod experiments {
 //    pub mod pub_crate_test;                               // SUCCEEDS: pub(crate) test patterns
 //    pub mod pub_crate_type_invariant_with_accessors;      // SUCCEEDS: closed spec fn accessors for pub(crate) fields
 //    pub mod rwlock_inc_token_inside_lock;                 // SUCCEEDS: increment token inside lock
-    pub mod locked_wrapper_generic;                        // TESTING: generic LockedWrapper<T>, 1 assume for all Mt
+//    pub mod locked_wrapper_generic;                        // SUCCEEDS: generic LockedWrapper<T>, 1 assume for all Mt
 //    pub mod pcell_rwlock_zero_assume;                      // TESTING: PCell+RwLock<PointsTo>, broken Arc type mismatch
-    pub mod state_machine_set_mt;                          // TESTING: tokenized_state_machine for Mt set, zero assumes
-    pub mod bst_plain_mt_tsm;                              // TESTING: TSM scaled to 10 ops, zero assumes
-    pub mod bst_plain_mt_pcell;                            // TESTING: PCell+RwLock, zero assumes, View experiment
+//    pub mod state_machine_set_mt;                          // SUCCEEDS: tokenized_state_machine for Mt set, zero assumes
+//    pub mod bst_plain_mt_tsm;                              // SUCCEEDS: TSM scaled to 10 ops, zero assumes
+//    pub mod bst_plain_mt_pcell;                            // SUCCEEDS: PCell+RwLock, zero assumes, View experiment
 //    pub mod closure_clone_first_class;                     // FAILS: Verus 3390e9af0 — Clone on closures still not recognized
-    pub mod named_fn_clone_bounds;                         // TESTING: named fns vs closures for Clone bounds
-    pub mod rwlock_no_ghost_field;                         // TESTING: PCell+PointsTo eliminates assumes
+//    pub mod named_fn_clone_bounds;                         // PARTIAL: named fns — tests 4,6 pass, 1,2,3,5 fail (Clone)
+//    pub mod rwlock_no_ghost_field;                         // SUCCEEDS: PCell+PointsTo eliminates assumes
 //    pub mod rwlock_tsm;                                   // SUCCEEDS: RwLock TSM pattern
 //    pub mod rwlock_tsm_increment;                         // SUCCEEDS: coarse-grained lock caller sees specs via ghost TSM token
 //    pub mod seq_array_equality;                           // SUCCEEDS: seq/array equality patterns
