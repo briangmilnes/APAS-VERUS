@@ -339,6 +339,7 @@ pub mod DirGraphMtEph {
                 neighbors@ <= self@.V;
 
         /// Parallel arc filtering for out-neighbors using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
         fn n_plus_par(&self, v: V, arcs: SetStEph<Edge<V>>) -> (out_neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -352,6 +353,7 @@ pub mod DirGraphMtEph {
             decreases arcs@.len();
 
         /// Parallel arc filtering for in-neighbors using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
         fn n_minus_par(&self, v: V, arcs: SetStEph<Edge<V>>) -> (in_neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -365,6 +367,7 @@ pub mod DirGraphMtEph {
             decreases arcs@.len();
 
         /// Parallel out-neighbors over a set of vertices using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_plus_of_vertices_par(&self, verts: SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -378,6 +381,7 @@ pub mod DirGraphMtEph {
             decreases verts@.len();
 
         /// Parallel in-neighbors over a set of vertices using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_minus_of_vertices_par(&self, verts: SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -391,6 +395,7 @@ pub mod DirGraphMtEph {
             decreases verts@.len();
 
         /// Parallel all-neighbors over a set of vertices using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn ng_of_vertices_par(&self, verts: SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -413,45 +418,63 @@ pub mod DirGraphMtEph {
             spec_graphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V: SetStEph::empty(), A: SetStEph::empty() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sets(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (g: DirGraphMtEph<V>) {
             DirGraphMtEph { V, A }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn arcs(&self) -> (a: &SetStEph<Edge<V>>) { &self.A }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeV(&self) -> (n: usize) { self.V.size() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeA(&self) -> (n: usize) { self.A.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.A.mem(&Edge(u.clone_plus(), v.clone_plus()))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { feq(&e.0, v) || feq(&e.1, v) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_plus_par
         fn n_plus(&self, v: &V) -> SetStEph<V> {
             let arcs = self.A.clone();
             self.n_plus_par(v.clone_plus(), arcs)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
         fn out_degree(&self, v: &V) -> (n: usize) { self.n_plus(v).size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_minus_par
         fn n_minus(&self, v: &V) -> SetStEph<V> {
             let arcs = self.A.clone();
             self.n_minus_par(v.clone_plus(), arcs)
         }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
         fn in_degree(&self, v: &V) -> (n: usize) { self.n_minus(v).size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) { self.n_plus(v).union(&self.n_minus(v)) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|)
         fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { self.n_plus_of_vertices_par(u_set.clone()) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { self.n_minus_of_vertices_par(u_set.clone()) }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> SetStEph<V> { self.ng_of_vertices_par(u_set.clone()) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
         fn n_plus_par(&self, v: V, arcs: SetStEph<Edge<V>>) -> (out_neighbors: SetStEph<V>)
             decreases arcs@.len()
         {
@@ -489,6 +512,7 @@ pub mod DirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on arcs
         fn n_minus_par(&self, v: V, arcs: SetStEph<Edge<V>>) -> (in_neighbors: SetStEph<V>)
             decreases arcs@.len()
         {
@@ -526,6 +550,7 @@ pub mod DirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_plus_of_vertices_par(&self, verts: SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             decreases verts@.len()
         {
@@ -578,6 +603,7 @@ pub mod DirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn n_minus_of_vertices_par(&self, verts: SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             decreases verts@.len()
         {
@@ -630,6 +656,7 @@ pub mod DirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|)
         fn ng_of_vertices_par(&self, verts: SetStEph<V>) -> (neighbors: SetStEph<V>)
             decreases verts@.len()
         {
@@ -868,6 +895,7 @@ pub mod DirGraphMtEph {
             recommends spec_graphview_wf(self@), vertices <= self@.V
         { Set::new(|w: V::V| exists |u: V::V| #![trigger vertices.contains(u)] vertices.contains(u) && self.spec_ng(u).contains(w)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (s: Self)
             requires
                 valid_key_type_for_graph::<V>(),
@@ -880,22 +908,27 @@ pub mod DirGraphMtEph {
                 s@.V == V@,
                 s@.A == A@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
         fn vertices(&self) -> (v: SetStEph<V>)
             requires self.spec_dirgraphmteph_wf()
             ensures v@ == self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- clones arc set under lock
         fn arcs(&self) -> (a: SetStEph<Edge<V>>)
             requires self.spec_dirgraphmteph_wf()
             ensures a@ == self@.A;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeV(&self) -> (n: usize)
             requires self.spec_dirgraphmteph_wf()
             ensures n == self@.V.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeA(&self) -> (n: usize)
             requires self.spec_dirgraphmteph_wf()
             ensures n == self@.A.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn neighbor(&self, u: &V, v: &V) -> (b: bool)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -903,6 +936,7 @@ pub mod DirGraphMtEph {
                 self@.V.contains(v@),
             ensures b == self@.A.contains((u@, v@));
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -912,6 +946,7 @@ pub mod DirGraphMtEph {
                 out_neighbors@ == Set::new(|w: V::V| self@.A.contains((v@, w))),
                 out_neighbors@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -921,6 +956,7 @@ pub mod DirGraphMtEph {
                 in_neighbors@ == Set::new(|u: V::V| self@.A.contains((u, v@))),
                 in_neighbors@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -930,6 +966,7 @@ pub mod DirGraphMtEph {
                 neighbors@ == self.spec_ng(v@),
                 neighbors@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -939,6 +976,7 @@ pub mod DirGraphMtEph {
                 out_neighbors@ == self.spec_n_plus_of_vertices(u_set@),
                 out_neighbors@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -948,6 +986,7 @@ pub mod DirGraphMtEph {
                 in_neighbors@ == self.spec_n_minus_of_vertices(u_set@),
                 in_neighbors@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>)
             requires
                 self.spec_dirgraphmteph_wf(),
@@ -963,6 +1002,7 @@ pub mod DirGraphMtEph {
             spec_graphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(V: SetStEph<V>, A: SetStEph<Edge<V>>) -> (s: Self) {
             let g = DirGraphMtEph::from_sets(V, A);
             let ghost gv = g@;
@@ -972,6 +1012,7 @@ pub mod DirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones vertex set under lock
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -981,6 +1022,7 @@ pub mod DirGraphMtEph {
             v
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- clones arc set under lock
         fn arcs(&self) -> (a: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -990,6 +1032,7 @@ pub mod DirGraphMtEph {
             a
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeV(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -999,6 +1042,7 @@ pub mod DirGraphMtEph {
             n
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn sizeA(&self) -> (n: usize) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1008,6 +1052,7 @@ pub mod DirGraphMtEph {
             n
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1017,6 +1062,7 @@ pub mod DirGraphMtEph {
             b
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_plus(&self, v: &V) -> (out_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1026,6 +1072,7 @@ pub mod DirGraphMtEph {
             out_neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_minus(&self, v: &V) -> (in_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1035,6 +1082,7 @@ pub mod DirGraphMtEph {
             in_neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1044,6 +1092,7 @@ pub mod DirGraphMtEph {
             neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn n_plus_of_vertices(&self, u_set: &SetStEph<V>) -> (out_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1053,6 +1102,7 @@ pub mod DirGraphMtEph {
             out_neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn n_minus_of_vertices(&self, u_set: &SetStEph<V>) -> (in_neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -1062,6 +1112,7 @@ pub mod DirGraphMtEph {
             in_neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |A|), Span O(log |S| * log |A|) -- RwLock wrapper
         fn ng_of_vertices(&self, u_set: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();

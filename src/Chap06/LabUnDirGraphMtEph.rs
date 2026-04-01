@@ -211,6 +211,7 @@ pub mod LabUnDirGraphMtEph {
                 ng@ <= self@.V;
 
         /// Parallel edge filtering for neighbors using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on labeled edges
         fn ng_par(&self, v: V, edges: SetStEph<LabEdge<V, L>>) -> (neighbors: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -235,6 +236,7 @@ pub mod LabUnDirGraphMtEph {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self) {
             LabUnDirGraphMtEph {
                 vertices: SetStEph::empty(),
@@ -242,6 +244,7 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: Self) {
             LabUnDirGraphMtEph {
                 vertices,
@@ -249,10 +252,13 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();
@@ -299,8 +305,10 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
             let _ = self.vertices.insert(v1.clone_plus());
             let _ = self.vertices.insert(v2.clone_plus());
@@ -311,6 +319,7 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
@@ -359,6 +368,7 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
@@ -408,11 +418,13 @@ pub mod LabUnDirGraphMtEph {
         }
 
         /// neighbors
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- delegates to ng_par
         fn ng(&self, v: &V) -> (ng: SetStEph<V>) {
             let edges = self.labeled_edges.clone();
             self.ng_par(v.clone_plus(), edges)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- parallel split on labeled edges
         fn ng_par(&self, v: V, edges: SetStEph<LabEdge<V, L>>) -> (neighbors: SetStEph<V>)
             decreases edges@.len()
         {
@@ -736,6 +748,7 @@ pub mod LabUnDirGraphMtEph {
         { Set::new(|w: V::V| exists |l: L::V|
             self@.A.contains((v, w, l)) || self@.A.contains((w, v, l))) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn empty() -> (g: Self)
             requires valid_key_type_for_lab_graph::<V, L>()
             ensures
@@ -743,23 +756,28 @@ pub mod LabUnDirGraphMtEph {
                 g@.V == Set::<<V as View>::V>::empty(),
                 g@.A == Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
         fn vertices(&self) -> (v: SetStEph<V>)
             ensures v@ == self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones under lock
         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>)
             ensures e@ == self@.A;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
         fn edges(&self) -> (edges: SetStEph<Edge<V>>)
             requires valid_key_type_Edge::<V>()
             ensures forall |u: V::V, w: V::V| edges@.contains((u, w)) ==
                 (exists |l: L::V| #![trigger self@.A.contains((u, w, l))] self@.A.contains((u, w, l)));
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
         fn has_edge(&self, v1: V, v2: V) -> (b: bool)
             ensures b == (exists |l: L::V|
                 #![trigger self@.A.contains((v1@, v2@, l))]
                 #![trigger self@.A.contains((v2@, v1@, l))]
                 self@.A.contains((v1@, v2@, l)) || self@.A.contains((v2@, v1@, l)));
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
         fn ng(&self, v: V) -> (ng: SetStEph<V>)
             requires self@.V.contains(v@)
             ensures
@@ -767,12 +785,14 @@ pub mod LabUnDirGraphMtEph {
                 ng@ == self.spec_ng(v@),
                 ng@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
             ensures
                 spec_labgraphview_wf(self@),
                 self@.V == old(self)@.V.insert(v@),
                 self@.A == old(self)@.A;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>)
             ensures
                 spec_labgraphview_wf(self@),
@@ -788,6 +808,7 @@ pub mod LabUnDirGraphMtEph {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn empty() -> (g: Self) {
             let inner = LabUnDirGraphMtEph::empty();
             let ghost view = inner@;
@@ -797,6 +818,7 @@ pub mod LabUnDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) -- clones under lock
         fn vertices(&self) -> (v: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -806,6 +828,7 @@ pub mod LabUnDirGraphMtEph {
             v
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- clones under lock
         fn labeled_edges(&self) -> (e: SetStEph<LabEdge<V, L>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -815,6 +838,7 @@ pub mod LabUnDirGraphMtEph {
             e
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -824,6 +848,7 @@ pub mod LabUnDirGraphMtEph {
             edges
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- RwLock wrapper
         fn has_edge(&self, v1: V, v2: V) -> (b: bool) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -833,6 +858,7 @@ pub mod LabUnDirGraphMtEph {
             b
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(log |E|) -- RwLock wrapper
         fn ng(&self, v: V) -> (ng: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -842,6 +868,7 @@ pub mod LabUnDirGraphMtEph {
             ng
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
@@ -852,6 +879,7 @@ pub mod LabUnDirGraphMtEph {
             Ok(())
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }

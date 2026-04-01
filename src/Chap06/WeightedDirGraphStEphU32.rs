@@ -344,6 +344,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: u32) -> (edges_above: SetStEph<WeightedEdge<V, u32>>) {
             let mut edges: SetStEph<WeightedEdge<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -390,6 +391,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: u32) -> (edges_below: SetStEph<WeightedEdge<V, u32>>) {
             let mut edges: SetStEph<WeightedEdge<V, u32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();

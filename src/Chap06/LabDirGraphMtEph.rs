@@ -234,6 +234,7 @@ pub mod LabDirGraphMtEph {
                 n_minus@ <= self@.V;
 
         /// Parallel out-neighbor arc filtering using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
         fn n_plus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_plus: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -247,6 +248,7 @@ pub mod LabDirGraphMtEph {
             decreases arcs@.len();
 
         /// Parallel in-neighbor arc filtering using set split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
         fn n_minus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_minus: SetStEph<V>)
             requires
                 valid_key_type::<V>(),
@@ -270,6 +272,7 @@ pub mod LabDirGraphMtEph {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: Self) {
             LabDirGraphMtEph {
                 vertices: SetStEph::empty(),
@@ -277,14 +280,18 @@ pub mod LabDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self) {
             LabDirGraphMtEph { vertices, labeled_arcs }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
             let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
@@ -333,14 +340,17 @@ pub mod LabDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
             let _ = self.vertices.insert(from.clone_plus());
             let _ = self.vertices.insert(to.clone_plus());
             let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -382,6 +392,7 @@ pub mod LabDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -424,17 +435,20 @@ pub mod LabDirGraphMtEph {
         }
 
         /// out-neighbors
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_plus_par
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
             self.n_plus_par(v.clone_plus(), arcs)
         }
 
         /// in-neighbors
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- delegates to n_minus_par
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let arcs = self.labeled_arcs.clone();
             self.n_minus_par(v.clone_plus(), arcs)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
         fn n_plus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_plus: SetStEph<V>)
             decreases arcs@.len()
         {
@@ -522,6 +536,7 @@ pub mod LabDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- parallel split on labeled arcs
         fn n_minus_par(&self, v: V, arcs: SetStEph<LabEdge<V, L>>) -> (n_minus: SetStEph<V>)
             decreases arcs@.len()
         {
@@ -776,6 +791,7 @@ pub mod LabDirGraphMtEph {
             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
         { Set::new(|u: V::V| exists |l: L::V| #![trigger self@.A.contains((u, v, l))] self@.A.contains((u, v, l))) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self)
             requires
                 valid_key_type_for_lab_graph::<V, L>(),
@@ -788,6 +804,7 @@ pub mod LabDirGraphMtEph {
                 s@.V == vertices@,
                 s@.A == labeled_arcs@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
             requires old(self).spec_labdirgraphmteph_wf()
             ensures
@@ -797,6 +814,7 @@ pub mod LabDirGraphMtEph {
                     Err(_) => self@ == old(self)@,
                 };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>)
             requires old(self).spec_labdirgraphmteph_wf()
             ensures
@@ -807,6 +825,7 @@ pub mod LabDirGraphMtEph {
                     Err(_) => self@ == old(self)@,
                 };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires
                 self.spec_labdirgraphmteph_wf(),
@@ -816,6 +835,7 @@ pub mod LabDirGraphMtEph {
                 n_plus@ == self.spec_n_plus(v@),
                 n_plus@ <= self@.V;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires
                 self.spec_labdirgraphmteph_wf(),
@@ -831,6 +851,7 @@ pub mod LabDirGraphMtEph {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn new(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (s: Self) {
             let g = LabDirGraphMtEph::from_vertices_and_labeled_arcs(vertices, labeled_arcs);
             let ghost gv = g@;
@@ -840,6 +861,7 @@ pub mod LabDirGraphMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
@@ -850,6 +872,7 @@ pub mod LabDirGraphMtEph {
             Ok(())
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
@@ -860,6 +883,7 @@ pub mod LabDirGraphMtEph {
             Ok(())
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();
@@ -869,6 +893,7 @@ pub mod LabDirGraphMtEph {
             n_plus
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(log |A|) -- RwLock wrapper
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let read_handle = self.locked_graph.acquire_read();
             let inner = read_handle.borrow();

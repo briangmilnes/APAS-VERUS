@@ -196,31 +196,39 @@ verus! {
             spec_graphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: UnDirGraphStEph<V>)
             ensures g.spec_undirgraphsteph_wf()
         {
             UnDirGraphStEph { V: SetStEph::empty(), E: SetStEph::empty() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sets(V: SetStEph<V>, E: SetStEph<Edge<V>>) -> (g: UnDirGraphStEph<V>)
             ensures g.spec_undirgraphsteph_wf()
         {
             UnDirGraphStEph { V, E }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.V }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn edges(&self) -> (e: &SetStEph<Edge<V>>) { &self.E }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeV(&self) -> (n: usize) { self.V.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn sizeE(&self) -> (n: usize) { self.E.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn neighbor(&self, u: &V, v: &V) -> (b: bool) {
             self.E.mem(&Edge(u.clone_plus(), v.clone_plus())) || 
             self.E.mem(&Edge(v.clone_plus(), u.clone_plus()))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of edges
         fn ng(&self, v: &V) -> (neighbors: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.E.iter();
@@ -279,6 +287,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S| * |E|), Span O(|S| * |E|) -- iterates vertices, calls ng for each
         fn ng_of_vertices(&self, vertices: &SetStEph<V>) -> (neighbors: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = vertices.iter();
@@ -334,10 +343,12 @@ verus! {
             }
         }
 
-        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) { 
-            feq(&e.0, v) || feq(&e.1, v) 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn incident(&self, e: &Edge<V>, v: &V) -> (b: bool) {
+            feq(&e.0, v) || feq(&e.1, v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
         fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
     }
 

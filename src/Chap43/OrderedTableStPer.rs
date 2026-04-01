@@ -368,6 +368,7 @@ broadcast use {
     }
 
     /// Find by key in a ParamBST of pairs via in-order scan.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
     fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
         k: &K,
@@ -505,6 +506,7 @@ broadcast use {
                 forall|k2: K::V| k2 != k@ && #[trigger] self@.contains_key(k2) ==> table@[k2] == self@[k2],
                 table.spec_orderedtablestper_wf();
         /// Like insert, but additionally ensures the inserted value mapping.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_wf(&self, k: K, v: V) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -524,6 +526,7 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
         /// Like delete, but additionally ensures value preservation for remaining keys.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_wf(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -766,6 +769,7 @@ broadcast use {
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
                 parts.0.spec_orderedtablestper_wf(),
                 parts.1.spec_orderedtablestper_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -773,6 +777,7 @@ broadcast use {
                     Some(v) => self@.contains_key(k@) && self@[k@] == v@,
                     None => !self@.contains_key(k@),
                 };
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_iter(&self, k: K, v: V) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -781,12 +786,14 @@ broadcast use {
             ensures
                 table@.dom() =~= self@.dom().insert(k@),
                 table.spec_orderedtablestper_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_iter(&self, k: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_feq_clone::<Pair<K, V>>(),
                 obeys_view_eq::<K>(),
             ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take first
         fn first_key_iter(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -795,6 +802,7 @@ broadcast use {
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take last
         fn last_key_iter(&self) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -803,6 +811,7 @@ broadcast use {
                 self@.dom().len() == 0 <==> key matches None,
                 key matches Some(k) ==> self@.dom().contains(k@),
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
         fn previous_key_iter(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -811,6 +820,7 @@ broadcast use {
                 key matches Some(pk) ==> self@.dom().contains(pk@),
                 key matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
         fn next_key_iter(&self, k: &K) -> (key: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablestper_wf(),
@@ -819,6 +829,7 @@ broadcast use {
                 key matches Some(nk) ==> self@.dom().contains(nk@),
                 key matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts
         fn split_key_iter(&self, k: &K) -> (parts: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -836,6 +847,7 @@ broadcast use {
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.2@.dom().contains(key) || key == k@,
                 parts.0.spec_orderedtablestper_wf(),
                 parts.2.spec_orderedtablestper_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (table: Self)
             requires
                 self.spec_orderedtablestper_wf(),
@@ -843,6 +855,7 @@ broadcast use {
                 table@.dom().subset_of(self@.dom()),
                 forall|key| #[trigger] table@.dom().contains(key) ==> table@[key] == self@[key],
                 table.spec_orderedtablestper_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -852,6 +865,7 @@ broadcast use {
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts
         fn split_rank_key_iter(&self, i: usize) -> (parts: (Self, Self))
             where Self: Sized
             requires

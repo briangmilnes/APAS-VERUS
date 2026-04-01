@@ -906,6 +906,7 @@ broadcast use {
                 split.0.spec_orderedtablesteph_wf(),
                 split.1.spec_orderedtablesteph_wf();
         /// Iterative alternative to `find`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -914,6 +915,7 @@ broadcast use {
                     None => !self@.contains_key(k@),
                 };
         /// Iterative alternative to `insert`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -930,6 +932,7 @@ broadcast use {
                 self@.dom().finite(),
                 self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `delete`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_orderedtablesteph_wf(),
@@ -937,6 +940,7 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `first_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
@@ -946,6 +950,7 @@ broadcast use {
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// Iterative alternative to `last_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
@@ -955,6 +960,7 @@ broadcast use {
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// Iterative alternative to `previous_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
@@ -964,6 +970,7 @@ broadcast use {
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// Iterative alternative to `next_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
@@ -973,6 +980,7 @@ broadcast use {
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// Iterative alternative to `split_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + rebuild
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -994,6 +1002,7 @@ broadcast use {
                 split.0.spec_orderedtablesteph_wf(),
                 split.2.spec_orderedtablesteph_wf();
         /// Iterative alternative to `get_key_range`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + filter
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
             requires
                 self.spec_orderedtablesteph_wf(),
@@ -1003,6 +1012,7 @@ broadcast use {
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablesteph_wf();
         /// Iterative alternative to `rank_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires
@@ -1013,6 +1023,7 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// Iterative alternative to `split_rank_key`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + rebuild
         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -1033,6 +1044,7 @@ broadcast use {
     // 9. impls
 
     /// Find by key in a ParamBST of pairs via in-order scan.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
     fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
         k: &K,
@@ -1129,6 +1141,7 @@ broadcast use {
             && view_ord_consistent::<K>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
@@ -1140,6 +1153,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty()
         {
@@ -1150,6 +1164,7 @@ broadcast use {
             OrderedTableStEph { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (tree: Self)
             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf()
         {
@@ -1172,15 +1187,18 @@ broadcast use {
             OrderedTableStEph { tree: bst }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to bst_find_by_key
         fn find(&self, k: &K) -> (found: Option<V>)
         {
             bst_find_by_key(&self.tree, k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
@@ -1192,18 +1210,21 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>)
         {
             // Delegate to recursive find for now.
             self.find(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_iter<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
             // Delegate to recursive insert for now.
             self.insert(k, v, combine)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- find + BST delete/insert
         fn insert<F: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: F)
         {
             // Find existing value for this key.
@@ -1284,11 +1305,13 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_iter(&mut self, k: &K) -> (updated: Option<V>)
         {
             self.delete(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- find + BST delete
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
         {
             let existing = self.find(k);
@@ -1322,6 +1345,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + collect keys
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             let sorted = self.tree.in_order();
@@ -1381,6 +1405,7 @@ broadcast use {
             domain
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts into treap
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
         {
             proof {
@@ -1518,6 +1543,7 @@ broadcast use {
             tabulated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts
         fn map<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
         {
             // Collect sorted, apply f, rebuild.
@@ -1629,6 +1655,7 @@ broadcast use {
             mapped
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -1691,6 +1718,7 @@ broadcast use {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
         fn reduce<R, F: Fn(R, &K, &V) -> R>(&self, init: R, f: F) -> (reduced: R)
             ensures self@.dom().finite()
         {
@@ -1713,6 +1741,7 @@ broadcast use {
             reduced
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- find per element
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
             // Collect both tables, iterate self's entries, keep those in other.
@@ -1913,6 +1942,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- insert per element
         fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
             let ghost old_tree = self.tree@;
@@ -2290,6 +2320,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delete per element
         fn difference(&mut self, other: &Self)
         {
             let ghost old_tree = self.tree@;
@@ -2420,6 +2451,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- filter by key set membership
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_tree = self.tree@;
@@ -2541,6 +2573,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- filter by key set exclusion
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
             let ghost old_tree = self.tree@;
@@ -2662,6 +2695,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures
                 self@.dom().finite(),
@@ -2696,12 +2730,14 @@ broadcast use {
             collected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
             self.first_key_iter()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take first
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -2783,12 +2819,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
             self.last_key_iter()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns last element
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -2871,12 +2909,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to previous_key_iter
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
             self.previous_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for predecessor
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -2988,12 +3028,14 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to next_key_iter
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
             self.next_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for successor
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -3105,12 +3147,14 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to split_key_iter
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
             self.split_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts into two new trees
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
@@ -3357,16 +3401,19 @@ broadcast use {
             (left_table, found_val, right_table)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to union
         fn join_key(&mut self, other: Self)
         {
             self.union(&other, |v1, _v2| v1.clone());
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to get_key_range_iter
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
         {
             self.get_key_range_iter(k1, k2)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
         {
             let sorted = self.tree.in_order();
@@ -3472,12 +3519,14 @@ broadcast use {
             range
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             self.rank_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
         #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
@@ -3604,6 +3653,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index into sorted sequence
         #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
@@ -3660,12 +3710,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to split_rank_key_iter
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
             self.split_rank_key_iter(i)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts into two new trees
         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -3998,6 +4050,7 @@ broadcast use {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
     #[verifier::loop_isolation(false)]
     pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
