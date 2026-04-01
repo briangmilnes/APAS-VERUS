@@ -126,7 +126,7 @@ pub mod SubsetSumStEph {
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) -- agrees with APAS. — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|) — DIFFERS: St sequential, APAS parallel
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStEphS<T>,
         i: usize,

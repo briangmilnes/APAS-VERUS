@@ -112,7 +112,7 @@ pub mod SubsetSumStPer {
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|) — DIFFERS: St sequential, APAS parallel
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStPerS<T>,
         i: usize,

@@ -166,7 +166,7 @@ pub mod LinkedListChainedHashTableStEph {
             for LinkedListChainedHashTableStEph
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst — matches APAS
             fn insert(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -321,7 +321,7 @@ pub mod LinkedListChainedHashTableStEph {
             }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(n) worst, Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — matches APAS
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst — matches APAS
             fn delete(table: &mut HashTable<Key, Value, LinkedListStEphS<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;

@@ -158,7 +158,7 @@ pub mod MinEditDistStEph {
 
     /// Recursive memoized minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|*|T|), Span O(|S|+|T|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) -- agrees with APAS. — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|) — DIFFERS: St sequential, APAS parallel
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStEphS<T>,
         i: usize,

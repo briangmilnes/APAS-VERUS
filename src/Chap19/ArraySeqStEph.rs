@@ -351,7 +351,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.8 (iterate). iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) — matches APAS (inherently sequential)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)) — DIFFERS: St sequential, APAS parallel
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
             requires
