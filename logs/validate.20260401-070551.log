@@ -1,0 +1,34 @@
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {experiments::named_fn_clone_bounds::named_fn_clone_bounds::named_max} as std::clone::Clone>
+  --> src/experiments/named_fn_clone_bounds.rs:56:18
+   |
+56 |         let _r = takes_clone(&named_max);
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {experiments::named_fn_clone_bounds::named_fn_clone_bounds::named_max} as std::clone::Clone>
+  --> src/experiments/named_fn_clone_bounds.rs:65:18
+   |
+65 |         let _r = takes_mt_bounds(&named_max);
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {experiments::named_fn_clone_bounds::named_fn_clone_bounds::named_max} as std::clone::Clone>
+  --> src/experiments/named_fn_clone_bounds.rs:91:18
+   |
+91 |           let _r = reduce_like(
+   |  __________________^
+92 | |             &10usize, &20usize,
+93 | |             &named_max,
+94 | |             Ghost(|x: usize, y: usize| -> usize { spec_max(x, y) }),
+95 | |         );
+   | |_________^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {experiments::named_fn_clone_bounds::named_fn_clone_bounds::named_max} as std::clone::Clone>
+   --> src/experiments/named_fn_clone_bounds.rs:115:18
+    |
+115 |         let f2 = clone_fn2(&f);
+    |                  ^^^^^^^^^^^^^
+
+error: aborting due to 4 previous errors
+
+Elapsed: 25s
+Sampled Memory Usage: peak rust_verify RSS: 1910MB, peak z3 RSS: 0MB, min free: 22494MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 0s

@@ -23,3 +23,7 @@
   └────────────────────────────────────────────┴──────────┴─────────────────────────┘
   do we give these to vstd?
 
+11) Named functions instead of moves. Update verus.
+
+12) < usize::Max in wfs?
+

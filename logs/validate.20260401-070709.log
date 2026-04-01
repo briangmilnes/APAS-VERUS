@@ -1,0 +1,28 @@
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+  --> src/experiments/named_fn_clone_bounds.rs:52:9
+   |
+52 |         f(&3usize, &4usize)
+   |         ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureReq(f, tmp%) 
+
+error: Call to non-static function fails to satisfy `callee.requires(args)`
+  --> src/experiments/named_fn_clone_bounds.rs:62:9
+   |
+62 |         f(&3usize, &4usize)
+   |         ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(f, tmp%) 
+
+verification results:: 5552 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 108s
+Sampled Memory Usage: peak rust_verify RSS: 10257MB, peak z3 RSS: 503MB, min free: 13994MB
+Sampled CPU Usage: rust_verify: 264s, z3 children: 170s

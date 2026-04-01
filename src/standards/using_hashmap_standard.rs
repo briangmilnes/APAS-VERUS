@@ -99,7 +99,40 @@
 //!   - Do NOT use HashMap::values(), HashMap::keys(), or HashMap::iter() — these return
 //!     unverified iterators. Use HashMapWithViewPlus::iter() which has Verus specs.
 //!
+//! ## Mt modules in Chap43+ should prefer OrderedTableMtEph
+//!
+//! `HashMapWithViewPlus` is unordered and sequential. `OrderedTableMtEph` (Chap43)
+//! is BST-backed (via BSTParaMtEph from Chap38) and inherits parallel operations:
+//! parallel build via tabulate, parallel union/intersect/difference via ParaPair!.
+//!
+//! For Mt modules in chapters AFTER Chap43, prefer `OrderedTableMtEph` over
+//! `HashMapWithViewPlus` when:
+//! - The map is used in a parallel context (fork-join, D&C)
+//! - Parallel build or parallel merge would improve span
+//! - The key type supports `Ord` (required for BST ordering)
+//!
+//! Trade-off: O(1) hash lookup → O(lg n) tree lookup. But parallel build
+//! (O(lg² n) span) vs sequential HashMap build (O(n) span) often outweighs
+//! the per-lookup cost.
+//!
+//! Keep `HashMapWithViewPlus` when:
+//! - The map is built once and only read (no parallel build benefit)
+//! - O(1) lookup is critical to the work bound
+//! - The chapter is before Chap43 (can't use a later chapter's data structure)
+//!
+//! ## All Rust primitives implement View (and therefore StT)
+//!
+//! `usize`, `bool`, `u8`..`u128`, `i8`..`i128`, `isize`, `char` all have identity
+//! `View` impls in vstd (`vstd/view.rs:264-292`): `View::V = Self`, `view(&self) = *self`.
+//! They also satisfy `Eq + Clone + Display + Debug + Sized`, so they are `StT`.
+//!
+//! This means `OrderedTableMtEph<V, usize>` and `OrderedTableMtEph<V, bool>` are
+//! valid — do NOT assume primitives are excluded from verified collection types.
+//! Tuples of View types also implement View (`vstd/view.rs:297`), so
+//! `OrderedTableMtEph<(usize, usize), T>` works if `(usize, usize): Ord`.
+//!
 //! See: `src/vstdplus/hash_map_with_view_plus.rs` for the implementation.
+//! See: `src/Chap43/OrderedTableMtEph.rs` for the parallel ordered table.
 //! See: `src/standards/arc_usage_standard.rs` for when Arc is actually needed.
 
 pub mod using_hashmap_standard {}

@@ -92,6 +92,7 @@ pub mod experiments {
     pub mod bst_plain_mt_tsm;                              // TESTING: TSM scaled to 10 ops, zero assumes
     pub mod bst_plain_mt_pcell;                            // TESTING: PCell+RwLock, zero assumes, View experiment
 //    pub mod closure_clone_first_class;                     // FAILS: Verus 3390e9af0 — Clone on closures still not recognized
+    pub mod named_fn_clone_bounds;                         // TESTING: named fns vs closures for Clone bounds
     pub mod rwlock_no_ghost_field;                         // TESTING: PCell+PointsTo eliminates assumes
 //    pub mod rwlock_tsm;                                   // SUCCEEDS: RwLock TSM pattern
 //    pub mod rwlock_tsm_increment;                         // SUCCEEDS: coarse-grained lock caller sees specs via ghost TSM token
