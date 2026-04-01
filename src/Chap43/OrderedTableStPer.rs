@@ -904,6 +904,7 @@ broadcast use {
             && view_ord_consistent::<K>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize) {
             let r = self.tree.size();
             proof {
@@ -913,6 +914,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (table: Self) {
             let tree = ParamBST::<Pair<K, V>>::new();
             proof {
@@ -925,6 +927,7 @@ broadcast use {
             OrderedTableStPer { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (table: Self) {
             let bst = ParamBST::singleton(Pair(k, v));
             proof {
@@ -942,10 +945,12 @@ broadcast use {
             OrderedTableStPer { tree: bst }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to bst_find_by_key
         fn find(&self, k: &K) -> (found: Option<V>) {
             bst_find_by_key(&self.tree, k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- bst_find_by_key + treap insert/delete
         fn insert(&self, k: K, v: V) -> (table: Self) {
             let mut tree = self.tree.clone();
             let ghost old_tree_view = self.tree@;
@@ -1014,10 +1019,12 @@ broadcast use {
             OrderedTableStPer { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_wf(&self, k: K, v: V) -> (table: Self) {
             self.insert(k, v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- bst_find_by_key + treap delete
         fn delete(&self, k: &K) -> (table: Self) {
             let mut tree = self.tree.clone();
             let ghost old_tree_view = self.tree@;
@@ -1048,6 +1055,7 @@ broadcast use {
             OrderedTableStPer { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_wf(&self, k: &K) -> (table: Self) {
             let table = self.delete(k);
             proof {
@@ -1060,6 +1068,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + collect keys
         fn domain(&self) -> (domain: ArraySetStEph<K>) {
             let sorted = self.tree.in_order();
             let len = sorted.length();
@@ -1116,6 +1125,7 @@ broadcast use {
             domain
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts into treap
         #[verifier::loop_isolation(false)]
         fn tabulate<F: Fn(&K) -> V>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             proof {
@@ -1243,6 +1253,7 @@ broadcast use {
             tabulated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts
         #[verifier::loop_isolation(false)]
         fn map<F: Fn(&V) -> V>(&self, f: F) -> (table: Self) {
             let sorted = self.tree.in_order();
@@ -1374,6 +1385,7 @@ broadcast use {
             mapped
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST recursive filter + join
         fn filter<F: Fn(&K, &V) -> bool>(
             &self,
             f: F,
@@ -1425,6 +1437,7 @@ broadcast use {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, find per element in other
         #[verifier::loop_isolation(false)]
         fn intersection<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
             let ghost old_tree = self.tree@;
@@ -1573,6 +1586,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate both, find per element
         #[verifier::loop_isolation(false)]
         fn union<F: Fn(&V, &V) -> V>(&self, other: &Self, f: F) -> (table: Self) {
             let ghost old_tree = self.tree@;
@@ -1908,6 +1922,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, find per element in other
         #[verifier::loop_isolation(false)]
         fn difference(&self, other: &Self) -> (table: Self) {
             let ghost old_tree = self.tree@;
@@ -2016,6 +2031,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, check key membership per element
         #[verifier::loop_isolation(false)]
         fn restrict(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
             let ghost old_tree = self.tree@;
@@ -2117,6 +2133,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, check key exclusion per element
         #[verifier::loop_isolation(false)]
         fn subtract(&self, keys: &ArraySetStEph<K>) -> (table: Self) {
             let ghost old_tree = self.tree@;
@@ -2218,6 +2235,7 @@ broadcast use {
             table
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         #[verifier::loop_isolation(false)]
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
             let sorted = self.tree.in_order();
@@ -2248,12 +2266,14 @@ broadcast use {
             collected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
             self.first_key_iter()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns first
         #[verifier::loop_isolation(false)]
         fn first_key_iter(&self) -> (first: Option<K>)
             where K: TotalOrder
@@ -2334,12 +2354,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
             self.last_key_iter()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns last
         #[verifier::loop_isolation(false)]
         fn last_key_iter(&self) -> (last: Option<K>)
             where K: TotalOrder
@@ -2420,12 +2442,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to previous_key_iter
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
             self.previous_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for predecessor
         #[verifier::loop_isolation(false)]
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
@@ -2531,12 +2555,14 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to next_key_iter
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
             self.next_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for successor
         #[verifier::loop_isolation(false)]
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
@@ -2640,12 +2666,14 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to split_key_iter
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
             self.split_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts into two trees
         #[verifier::loop_isolation(false)]
         fn split_key_iter(&self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
@@ -2864,14 +2892,17 @@ broadcast use {
             (left_table, found_val, right_table)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to union
         fn join_key(left: &Self, right: &Self) -> (table: Self) {
             left.union(right, |v1: &V, _v2: &V| -> (r: V) { v1.clone() })
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to get_key_range_iter
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
             self.get_key_range_iter(k1, k2)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
         #[verifier::loop_isolation(false)]
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self) {
             let sorted = self.tree.in_order();
@@ -2963,12 +2994,14 @@ broadcast use {
             range
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             self.rank_key_iter(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
         #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
@@ -3095,6 +3128,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index access
         #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
@@ -3151,12 +3185,14 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to split_rank_key_iter
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
             self.split_rank_key_iter(i)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + n BST inserts into two trees
         #[verifier::loop_isolation(false)]
         fn split_rank_key_iter(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
@@ -3335,14 +3371,17 @@ broadcast use {
             (left_table, right_table)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>) {
             self.find(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
         fn insert_iter(&self, k: K, v: V) -> (table: Self) {
             self.insert(k, v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
         fn delete_iter(&self, k: &K) -> (table: Self) {
             self.delete(k)
         }
@@ -3507,6 +3546,7 @@ broadcast use {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
     pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (result: OrderedTableStPer<K, V>)
