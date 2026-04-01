@@ -1,0 +1,12 @@
+error[E0614]: type `V` cannot be dereferenced
+   --> src/Chap62/StarPartitionMtEph.rs:627:49
+    |
+627 |                     merged@[it_seq[idx].0@]@ == (*it_seq[idx].1)@,
+    |                                                 ^^^^^^^^^^^^^^^^ can't be dereferenced
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0614`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 2415MB, peak z3 RSS: 0MB, min free: 21032MB
+Sampled CPU Usage: rust_verify: 50s, z3 children: 0s

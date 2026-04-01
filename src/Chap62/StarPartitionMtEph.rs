@@ -50,7 +50,7 @@ pub mod StarPartitionMtEph {
         /// Parallel star partition using randomized coin flips.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 2, 3 parallel D&C; loops 1, 4, 5, 6 sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
         fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -428,10 +428,413 @@ pub mod StarPartitionMtEph {
         result
     }
 
+    /// Parallel clone of a vertex slice into a Vec using D&C + join.
+    ///
+    /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
+    fn build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        vertices: Arc<Vec<V>>,
+        start: usize,
+        end: usize,
+    ) -> (result: Vec<V>)
+        requires
+            start <= end,
+            end <= vertices@.len(),
+        ensures
+            result@.len() == (end - start) as int,
+            forall|j: int| 0 <= j < result@.len() ==>
+                #[trigger] result@[j]@ == vertices@[(start as int + j)]@,
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return Vec::new();
+        }
+        if size == 1 {
+            let verts = arc_deref(&vertices);
+            let mut result: Vec<V> = Vec::new();
+            result.push(verts[start].clone_view());
+            return result;
+        }
+
+        let mid = start + size / 2;
+        let ghost verts_view = vertices@;
+        let v1 = vertices.clone();
+        let v2 = vertices;
+
+        let f1 = move || -> (r: Vec<V>)
+            requires
+                start <= mid, mid <= v1@.len(),
+            ensures
+                r@.len() == (mid - start) as int,
+                forall|j: int| 0 <= j < r@.len() ==>
+                    #[trigger] r@[j]@ == v1@[(start as int + j)]@,
+        {
+            build_p_vec_mt(v1, start, mid)
+        };
+
+        let f2 = move || -> (r: Vec<V>)
+            requires
+                mid <= end, end <= v2@.len(),
+            ensures
+                r@.len() == (end - mid) as int,
+                forall|j: int| 0 <= j < r@.len() ==>
+                    #[trigger] r@[j]@ == v2@[(mid as int + j)]@,
+        {
+            build_p_vec_mt(v2, mid, end)
+        };
+
+        let Pair(mut result, right) = crate::ParaPair!(f1, f2);
+
+        // Concatenate right onto result.
+        let ghost left_len = result@.len();
+        let mut i: usize = 0;
+        while i < right.len()
+            invariant
+                i <= right@.len(),
+                result@.len() == left_len + i as int,
+                left_len == (mid - start) as int,
+                // Left portion preserved.
+                forall|j: int| 0 <= j < left_len ==>
+                    #[trigger] result@[j]@ == verts_view[(start as int + j)]@,
+                // Right portion appended.
+                forall|j: int| 0 <= j < i as int ==>
+                    #[trigger] result@[(left_len + j)]@ == verts_view[(mid as int + j)]@,
+                // Source right ensures.
+                forall|j: int| 0 <= j < right@.len() ==>
+                    #[trigger] right@[j]@ == verts_view[(mid as int + j)]@,
+            decreases right@.len() - i,
+        {
+            result.push(right[i].clone_view());
+            i = i + 1;
+        }
+
+        // Post-merge: result covers [start, end).
+        proof {
+            assert(result@.len() == (end - start) as int);
+            assert forall|j: int| 0 <= j < result@.len() implies
+                #[trigger] result@[j]@ == verts_view[(start as int + j)]@ by {
+                if j < left_len {
+                    // From left half — direct from invariant.
+                } else {
+                    // From right half: j >= left_len, so index into right portion.
+                    let rj = j - left_len;
+                    assert(0 <= rj < right@.len());
+                    // Loop invariant: result@[(left_len + rj)]@ == verts_view[(mid + rj)]@.
+                    assert(result@[(left_len + rj)]@ == verts_view[(mid as int + rj)]@);
+                    // left_len + rj == j, and mid + rj == start + j.
+                    assert(left_len + rj == j);
+                    assert(mid as int + rj == start as int + j);
+                }
+            };
+        }
+
+        result
+    }
+
+    /// Parallel build of partition_map (vertex → center) using D&C + join.
+    ///
+    /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
+    fn build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        vertices: Arc<Vec<V>>,
+        p_vec: Arc<Vec<V>>,
+        start: usize,
+        end: usize,
+    ) -> (pm: HashMapWithViewPlus<V, V>)
+        requires
+            start <= end,
+            end <= vertices@.len(),
+            p_vec@.len() == vertices@.len(),
+            vertices@.no_duplicates(),
+            valid_key_type_Edge::<V>(),
+        ensures
+            forall|j: int| start as int <= j < end as int ==>
+                #[trigger] pm@.contains_key(vertices@[j]@) &&
+                pm@[vertices@[j]@]@ == p_vec@[j]@,
+            forall|v_view: V::V| #[trigger] pm@.contains_key(v_view) ==>
+                exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return HashMapWithViewPlus::new();
+        }
+        if size == 1 {
+            let verts = arc_deref(&vertices);
+            let pv = arc_deref(&p_vec);
+            let mut pm = HashMapWithViewPlus::new();
+            pm.insert(verts[start].clone_view(), pv[start].clone_view());
+            return pm;
+        }
+
+        let mid = start + size / 2;
+        let ghost verts_view = vertices@;
+        let ghost pv_view = p_vec@;
+        // Keep Arc clones for the merge step after ParaPair!.
+        let v_merge = vertices.clone();
+        let p_merge = p_vec.clone();
+        let v1 = vertices.clone();
+        let v2 = vertices;
+        let p1 = p_vec.clone();
+        let p2 = p_vec;
+
+        let f1 = move || -> (r: HashMapWithViewPlus<V, V>)
+            requires
+                start <= mid, mid <= v1@.len(),
+                p1@.len() == v1@.len(),
+                v1@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                forall|j: int| start as int <= j < mid as int ==>
+                    #[trigger] r@.contains_key(v1@[j]@) && r@[v1@[j]@]@ == p1@[j]@,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|j: int| start as int <= j < mid as int && #[trigger] v1@[j]@ == v_view,
+        {
+            build_partition_map_mt(v1, p1, start, mid)
+        };
+
+        let f2 = move || -> (r: HashMapWithViewPlus<V, V>)
+            requires
+                mid <= end, end <= v2@.len(),
+                p2@.len() == v2@.len(),
+                v2@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                forall|j: int| mid as int <= j < end as int ==>
+                    #[trigger] r@.contains_key(v2@[j]@) && r@[v2@[j]@]@ == p2@[j]@,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|j: int| mid as int <= j < end as int && #[trigger] v2@[j]@ == v_view,
+        {
+            build_partition_map_mt(v2, p2, mid, end)
+        };
+
+        let Pair(mut merged, _right) = crate::ParaPair!(f1, f2);
+
+        // Merge: insert right half entries directly from vertex/p_vec Arcs.
+        // This avoids HashMap iterator complexity while preserving value correspondence.
+        let verts = arc_deref(&v_merge);
+        let pv = arc_deref(&p_merge);
+        // Ghost domain set: tracks exactly which V::V keys are in merged@.
+        let ghost mut dom_witnesses: Map<V::V, int> = Map::empty();
+        // Initialize with left D&C domain witnesses.
+        proof {
+            dom_witnesses = Map::new(
+                |v_view: V::V| merged@.contains_key(v_view),
+                |v_view: V::V| {
+                    let j2 = choose|j2: int| start as int <= j2 < mid as int && #[trigger] verts_view[j2]@ == v_view;
+                    j2
+                },
+            );
+        }
+        let mut j: usize = mid;
+        while j < end
+            invariant
+                valid_key_type_Edge::<V>(),
+                start <= mid,
+                mid <= j <= end,
+                end <= verts_view.len(),
+                verts_view == verts@,
+                pv_view == pv@,
+                pv_view.len() == verts_view.len(),
+                verts_view.no_duplicates(),
+                // merged covers [start, mid) with correct values.
+                forall|j2: int| start as int <= j2 < mid as int ==>
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@,
+                // merged covers [mid, j) with correct values.
+                forall|j2: int| mid as int <= j2 < j as int ==>
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@,
+                // Ghost domain tracking: every key in merged@ has a witness in [start, j).
+                forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    dom_witnesses.contains_key(v_view) &&
+                    start as int <= dom_witnesses[v_view] &&
+                    dom_witnesses[v_view] < j as int &&
+                    verts_view[dom_witnesses[v_view]]@ == v_view,
+            decreases end - j,
+        {
+            let ghost jv = verts_view[j as int]@;
+            let ghost pre_merged = merged@;
+            let ghost pre_dom = dom_witnesses;
+            merged.insert(verts[j].clone_view(), pv[j].clone_view());
+            proof {
+                lemma_reveal_view_injective::<V>();
+                // New entry at j.
+                assert(merged@.contains_key(jv));
+                assert(merged@[jv]@ == pv_view[j as int]@);
+                // Update domain witnesses: add jv -> j.
+                dom_witnesses = pre_dom.insert(jv, j as int);
+                // Prior left entries preserved.
+                assert forall|j2: int| start as int <= j2 < mid as int implies
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@ by {
+                    let ghost j2v = verts_view[j2]@;
+                    if j2v != jv {
+                        assert(pre_merged.contains_key(j2v));
+                        assert(merged@[j2v] == pre_merged[j2v]);
+                    } else {
+                        assert(verts_view[j2] == verts_view[j as int]);
+                        assert(false);
+                    }
+                };
+                // Prior right entries [mid, j) preserved + new entry j.
+                assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@ by {
+                    if j2 == j as int {
+                        assert(verts_view[j2]@ == jv);
+                    } else {
+                        let ghost j2v = verts_view[j2]@;
+                        if j2v != jv {
+                            assert(pre_merged.contains_key(j2v));
+                            assert(merged@[j2v] == pre_merged[j2v]);
+                        } else {
+                            assert(verts_view[j2] == verts_view[j as int]);
+                            assert(false);
+                        }
+                    }
+                };
+                // Domain witnesses updated.
+                assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                    dom_witnesses.contains_key(v_view) &&
+                    start as int <= dom_witnesses[v_view] &&
+                    dom_witnesses[v_view] < j as int + 1 &&
+                    verts_view[dom_witnesses[v_view]]@ == v_view by {
+                    if v_view == jv {
+                        // New key: dom_witnesses[jv] == j.
+                        assert(dom_witnesses.contains_key(jv));
+                        assert(dom_witnesses[jv] == j as int);
+                        assert(start <= mid && mid <= j); // from invariant
+                        assert(verts_view[j as int]@ == jv);
+                    } else {
+                        // Old key: map insert preserves other entries.
+                        assert(pre_merged.contains_key(v_view));
+                        assert(pre_dom.contains_key(v_view));
+                        assert(dom_witnesses.contains_key(v_view));
+                        assert(dom_witnesses[v_view] == pre_dom[v_view]);
+                        assert(start as int <= pre_dom[v_view]);
+                        assert(pre_dom[v_view] < j as int);
+                        assert(verts_view[pre_dom[v_view]]@ == v_view);
+                    }
+                };
+            }
+            j = j + 1;
+        }
+
+        // Post-merge: domain bound follows from ghost witnesses.
+        proof {
+            assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
+                let w = dom_witnesses[v_view];
+                assert(start as int <= w < end as int);
+                assert(verts_view[w]@ == v_view);
+            };
+        }
+
+        merged
+    }
+
+    /// Parallel build of centers set using D&C + join.
+    ///
+    /// A vertex is a center if p_vec[j] == vertices[j] (self-pointing).
+    /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
+    fn build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        vertices: Arc<Vec<V>>,
+        p_vec: Arc<Vec<V>>,
+        start: usize,
+        end: usize,
+    ) -> (centers: SetStEph<V>)
+        requires
+            start <= end,
+            end <= vertices@.len(),
+            p_vec@.len() == vertices@.len(),
+            valid_key_type_Edge::<V>(),
+        ensures
+            centers.spec_setsteph_wf(),
+            forall|j: int| start as int <= j < end as int ==>
+                p_vec@[j]@ == vertices@[j]@ ==>
+                #[trigger] centers@.contains(p_vec@[j]@),
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return SetLit![];
+        }
+        if size == 1 {
+            let verts = arc_deref(&vertices);
+            let pv = arc_deref(&p_vec);
+            if feq(&verts[start], &pv[start]) {
+                let mut s: SetStEph<V> = SetLit![];
+                let _ = s.insert(verts[start].clone_view());
+                return s;
+            } else {
+                return SetLit![];
+            }
+        }
+
+        let mid = start + size / 2;
+        let ghost verts_view = vertices@;
+        let ghost pv_view = p_vec@;
+        let v1 = vertices.clone();
+        let v2 = vertices;
+        let p1 = p_vec.clone();
+        let p2 = p_vec;
+
+        let f1 = move || -> (r: SetStEph<V>)
+            requires
+                start <= mid, mid <= v1@.len(),
+                p1@.len() == v1@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+                forall|j: int| start as int <= j < mid as int ==>
+                    p1@[j]@ == v1@[j]@ ==>
+                    #[trigger] r@.contains(p1@[j]@),
+        {
+            build_centers_mt(v1, p1, start, mid)
+        };
+
+        let f2 = move || -> (r: SetStEph<V>)
+            requires
+                mid <= end, end <= v2@.len(),
+                p2@.len() == v2@.len(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                r.spec_setsteph_wf(),
+                forall|j: int| mid as int <= j < end as int ==>
+                    p2@[j]@ == v2@[j]@ ==>
+                    #[trigger] r@.contains(p2@[j]@),
+        {
+            build_centers_mt(v2, p2, mid, end)
+        };
+
+        let Pair(left, right) = crate::ParaPair!(f1, f2);
+        let result = left.union(&right);
+
+        // Post-union: result covers [start, end).
+        proof {
+            assert forall|j: int| (start as int <= j < end as int && pv_view[j]@ == verts_view[j]@) implies
+                 #[trigger] result@.contains(pv_view[j]@) by {
+                if j < mid as int {
+                    if pv_view[j]@ == verts_view[j]@ {
+                        assert(left@.contains(pv_view[j]@));
+                        assert(result@ == left@.union(right@));
+                    }
+                } else {
+                    if pv_view[j]@ == verts_view[j]@ {
+                        assert(right@.contains(pv_view[j]@));
+                        assert(result@ == left@.union(right@));
+                    }
+                }
+            };
+        }
+
+        result
+    }
+
     /// Algorithm 62.3: Parallel Star Partition.
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 2, 3 use parallel D&C coin flips and edge classification; loops 1, 4, 5, 6 remain sequential (HashMap build, array copy, priority write, partition build)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -589,46 +992,8 @@ pub mod StarPartitionMtEph {
             };
         }
 
-        // Loop 4: initialize p_vec = vertices_vec.
-        let mut p_vec: Vec<V> = Vec::new();
-        let mut m: usize = 0;
-        while m < nv
-            invariant
-                valid_key_type_Edge::<V>(),
-                m <= nv,
-                nv == vertices_vec@.len(),
-                vertices_vec@.no_duplicates(),
-                p_vec@.len() == m as int,
-                forall|j2: int| 0 <= j2 < m as int ==> #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@,
-                // Carry-through: vertex_to_index invariants.
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
-                    vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
-                forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
-                // Carry-through: coin_flips covers all vertices.
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    #[trigger] coin_flips@.contains_key(vertices_vec@[j2]@),
-                // Carry-through: th_edges invariant.
-                forall|s: int| 0 <= s < th_edges@.len() ==>
-                    (th_edges@[s].0 as usize) < nv &&
-                    #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
-                    !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
-                    coin_flips@.contains_key(th_edges@[s].1@) &&
-                    coin_flips@[th_edges@[s].1@] &&
-                    vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                    (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
-                // Carry-through: graph@.V <==> vertex_to_index.
-                forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) ==>
-                    vertex_to_index@.contains_key(v_view),
-                // Carry-through: to_seq ensures for vertices.
-                forall|x: V::V| #[trigger] graph@.V.contains(x) <==>
-                    vertices_vec@.map(|_i: int, t: V| t@).contains(x),
-            decreases nv - m,
-        {
-            p_vec.push(vertices_vec[m].clone_view());
-            m = m + 1;
-        }
+        // Loop 4: parallel initialize p_vec = vertices_vec (Work O(n), Span O(lg n)).
+        let mut p_vec = build_p_vec_mt(vertices_arc.clone(), 0, nv);
 
         // Loop 5: apply th_edges to p_vec.
         // Key invariant: heads vertices always keep p_vec[j] == vertices_vec[j].
@@ -753,129 +1118,51 @@ pub mod StarPartitionMtEph {
             t = t + 1;
         }
 
-        // Loop 6: build centers and partition_map.
-        let mut centers: SetStEph<V> = SetLit![];
-        let mut partition_map = HashMapWithViewPlus::<V, V>::new();
-        let mut q: usize = 0;
-        while q < nv
-            invariant
+        // Loop 6: parallel build of centers and partition_map (Work O(n), Span O(lg n)).
+        // Wrap p_vec in Arc for parallel access.
+        let p_vec_arc: Arc<Vec<V>> = Arc::new(p_vec);
+        let p_vec = arc_deref(&p_vec_arc);
+
+        // Build centers and partition_map in parallel via join.
+        let ghost verts_view6 = vertices_vec@;
+        let ghost pv_view6 = p_vec@;
+        let va1 = vertices_arc.clone();
+        let va2 = vertices_arc.clone();
+        let pa1 = p_vec_arc.clone();
+        let pa2 = p_vec_arc.clone();
+
+        let f_centers = move || -> (r: SetStEph<V>)
+            requires
+                va1@.len() == pa1@.len(),
+                va1@.no_duplicates(),
                 valid_key_type_Edge::<V>(),
-                centers.spec_setsteph_wf(),
-                q <= nv,
-                nv == vertices_vec@.len(),
-                vertices_vec@.no_duplicates(),
-                p_vec@.len() == nv as int,
-                // to_seq ensures for vertices: vertex membership ↔ graph@.V.
-                forall|x: V::V| #[trigger] graph@.V.contains(x) <==>
-                    vertices_vec@.map(|_i: int, t: V| t@).contains(x),
-                // Heads preserve and modified=heads (from loop 5, unchanged in loop 6).
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    coin_flips@.contains_key(vertices_vec@[j2]@) &&
-                    (coin_flips@[vertices_vec@[j2]@] ==>
-                     #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@),
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    p_vec@[j2]@ != vertices_vec@[j2]@ ==>
-                    (coin_flips@.contains_key(p_vec@[j2]@) &&
-                     #[trigger] coin_flips@[p_vec@[j2]@]),
-                // All p_vec entries in vertex_to_index.
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                    (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
-                // vertex_to_index domain.
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
-                    vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
-                forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
-                // Prefix: partition_map covers vertices_vec[0..q] with correct values.
-                forall|j2: int| 0 <= j2 < q as int ==>
-                    #[trigger] partition_map@.contains_key(vertices_vec@[j2]@) &&
-                    partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@,
-                // Prefix: processed heads are in centers.
-                forall|j2: int| 0 <= j2 < q as int ==>
-                    p_vec@[j2]@ == vertices_vec@[j2]@ ==>
-                    #[trigger] centers@.contains(p_vec@[j2]@),
-                // All partition_map keys come from vertices_vec[0..q].
-                forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < q as int && #[trigger] vertices_vec@[j2]@ == v_view,
-            decreases nv - q,
+            ensures
+                r.spec_setsteph_wf(),
+                forall|j: int| 0 <= j < va1@.len() as int ==>
+                    pa1@[j]@ == va1@[j]@ ==>
+                    #[trigger] r@.contains(pa1@[j]@),
         {
-            let vertex = &vertices_vec[q];
-            let center = p_vec[q].clone_view();
-            let ghost qv = (*vertex)@;
-            let ghost cv = center@;
-            let ghost pre_pm = partition_map@;
-            let ghost pre_ctr = centers@;
+            let n = arc_deref(&va1).len();
+            build_centers_mt(va1, pa1, 0, n)
+        };
 
-            partition_map.insert(vertex.clone_view(), center.clone_view());
+        let f_pm = move || -> (r: HashMapWithViewPlus<V, V>)
+            requires
+                va2@.len() == pa2@.len(),
+                va2@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                forall|j: int| 0 <= j < va2@.len() as int ==>
+                    #[trigger] r@.contains_key(va2@[j]@) &&
+                    r@[va2@[j]@]@ == pa2@[j]@,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|j: int| 0 <= j < va2@.len() as int && #[trigger] va2@[j]@ == v_view,
+        {
+            let n = arc_deref(&va2).len();
+            build_partition_map_mt(va2, pa2, 0, n)
+        };
 
-            proof {
-                lemma_reveal_view_injective::<V>();
-                assert(partition_map@ == pre_pm.insert(qv, center));
-                assert(cv == p_vec@[q as int]@);
-                assert(partition_map@[qv]@ == cv);
-                // Prior entries are unchanged (qv can't equal earlier vertices by no_duplicates).
-                assert forall|j2: int| 0 <= j2 < q as int implies
-                    #[trigger] partition_map@.contains_key(vertices_vec@[j2]@) &&
-                    partition_map@[vertices_vec@[j2]@]@ == p_vec@[j2]@ by {
-                    let ghost jv = vertices_vec@[j2]@;
-                    if jv != qv {
-                        assert(pre_pm.contains_key(jv));
-                        assert(partition_map@[jv] == pre_pm[jv]);
-                    } else {
-                        // jv == qv (view-equal). By obeys_feq_view_injective, value-equal.
-                        assert(vertices_vec@[j2 as int] == vertices_vec@[q as int]);
-                        assert(vertices_vec@.no_duplicates());
-                        assert(false);
-                    }
-                };
-                // All keys come from vertices_vec[0..q+1].
-                assert forall|v_view: V::V| partition_map@.contains_key(v_view) implies
-                    exists|j2: int| 0 <= j2 < q as int + 1 && #[trigger] vertices_vec@[j2]@ == v_view by {
-                    if v_view != qv {
-                        assert(pre_pm.contains_key(v_view));
-                        let j2 = choose|j2: int| 0 <= j2 < q as int && #[trigger] vertices_vec@[j2]@ == v_view;
-                        assert(0 <= j2 < q as int + 1);
-                    }
-                    // v_view == qv: witness j2 = q.
-                };
-            }
-
-            if feq(vertex, &center) {
-                let _ = centers.insert(vertex.clone_view());
-                proof {
-                    assert(centers@ == pre_ctr.insert(qv));
-                    // feq ensures: feq(vertex, &center) == (vertex@ == center@), so cv == qv.
-                    assert(cv == qv);
-                    assert(p_vec@[q as int]@ == qv);
-                    // q-th entry: p_vec@[q]@ == qv == vertices_vec@[q]@.
-                    // centers@.contains(qv) from insert. ✓
-                    assert(centers@.contains(qv));
-                    // Prior heads-in-centers: pre_ctr had them; centers@ = pre_ctr.insert(qv) still does.
-                    assert forall|j2: int|
-                        (0 <= j2 < q as int && #[trigger] p_vec@[j2]@ == #[trigger] vertices_vec@[j2]@) implies
-                        centers@.contains(p_vec@[j2]@) by {
-                        // Both antecedents assumed via implies. Old invariant gives pre_ctr membership.
-                        assert(pre_ctr.contains(p_vec@[j2]@));
-                    };
-                }
-            } else {
-                proof {
-                    // feq returned false => vertex@ != center@.
-                    assert((*vertex)@ != center@);
-                    assert(qv != cv);
-                    assert(p_vec@[q as int]@ != vertices_vec@[q as int]@);
-                    // Prior entries unchanged.
-                    assert forall|j2: int|
-                        (0 <= j2 < q as int && #[trigger] p_vec@[j2]@ == #[trigger] vertices_vec@[j2]@) implies
-                        centers@.contains(p_vec@[j2]@) by {
-                        assert(pre_ctr.contains(p_vec@[j2]@));
-                    };
-                }
-            }
-
-            q = q + 1;
-        }
+        let Pair(centers, partition_map) = crate::ParaPair!(f_centers, f_pm);
 
         // Post-loop 6: prove spec_valid_partition_map.
         proof {
@@ -886,22 +1173,21 @@ pub mod StarPartitionMtEph {
                 let k2 = vertices_vec@.map(|_i: int, t: V| t@).index_of(v_view);
                 assert(0 <= k2 < nv as int);
                 assert(vertices_vec@[k2]@ == v_view);
-                // Loop 6 (q==nv): partition_map@.contains_key(vertices_vec@[k2]@).
                 assert(partition_map@.contains_key(vertices_vec@[k2]@));
             };
 
             // Part B: all partition_map values are in centers.
             assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view) implies
                 centers@.contains(partition_map@[v_view]@) by {
-                // Any partition_map key came from vertices_vec (loop 6 domain invariant).
+                // Any partition_map key came from vertices_vec (D&C domain invariant).
                 let j = choose|j: int| 0 <= j < nv as int && #[trigger] vertices_vec@[j]@ == v_view;
-                // partition_map@[v_view]@ == p_vec@[j]@ (loop 6 prefix).
+                // partition_map@[v_view]@ == p_vec@[j]@.
                 let ghost h = p_vec@[j]@;
                 assert(partition_map@[vertices_vec@[j]@]@ == h);
                 assert(partition_map@[v_view]@ == h);
 
                 if h == vertices_vec@[j]@ {
-                    // p_vec@[j]@ == vertices_vec@[j]@, so centers@.contains(h) from loop 6.
+                    // p_vec@[j]@ == vertices_vec@[j]@, so centers@.contains(h) from D&C.
                     assert(centers@.contains(h));
                 } else {
                     // h != vertices_vec@[j]@: from loop 5, h is a heads vertex.
@@ -910,19 +1196,15 @@ pub mod StarPartitionMtEph {
                     assert(vertex_to_index@.contains_key(h));
                     let ghost q_h = vertex_to_index@[h] as usize;
                     assert(q_h < nv);
-                    // vertex_to_index domain invariant: h ∈ domain => ∃j3 < nv: vertices_vec@[j3]@ == h.
                     let j3 = choose|j3: int| 0 <= j3 < nv as int && #[trigger] vertices_vec@[j3]@ == h;
-                    // vertex_to_index@[h] == vertex_to_index@[vertices_vec@[j3]@] == j3 == q_h.
                     assert(vertex_to_index@[vertices_vec@[j3]@] as usize == j3);
                     assert(j3 as usize == q_h);
                     assert(vertices_vec@[q_h as int]@ == h);
-                    // Heads preserve at q_h: coin_flips@[vertices_vec@[q_h]@] == coin_flips@[h] == true
-                    // => p_vec@[q_h]@ == vertices_vec@[q_h]@ == h.
+                    // Heads preserve at q_h: coin_flips@[h] == true => p_vec@[q_h]@ == vertices_vec@[q_h]@.
                     assert(coin_flips@[vertices_vec@[q_h as int]@]);
                     assert(p_vec@[q_h as int]@ == vertices_vec@[q_h as int]@);
                     assert(p_vec@[q_h as int]@ == h);
-                    // Loop 6 prefix at q_h (q_h < nv = q after loop):
-                    // p_vec@[q_h]@ == vertices_vec@[q_h]@ => centers@.contains(p_vec@[q_h]@).
+                    // centers contains h from D&C.
                     assert(centers@.contains(p_vec@[q_h as int]@));
                     assert(centers@.contains(h));
                 }

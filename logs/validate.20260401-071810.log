@@ -1,0 +1,272 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:786:13
+    |
+786 |             assert forall|j: int| start as int <= j < end as int implies
+    |             ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:520:28
+    |
+520 |                     assert(result@[j]@ == verts_view[(mid as int + rj)]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.view().index(j).view() == verts_view.index(mid + rj).view() 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:501:60
+    |
+501 |                     #[trigger] result@[(left_len + j)]@ == verts_view[(mid as int + j)]@,
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:504:46
+    |
+504 |                     #[trigger] right@[j]@ == verts_view[(mid as int + j)]@,
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:498:47
+    |
+498 |                     #[trigger] result@[j]@ == verts_view[(start as int + j)]@,
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:470:42
+    |
+470 |                     #[trigger] r@[j]@ == v1@[(start as int + j)]@,
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:481:42
+    |
+481 |                     #[trigger] r@[j]@ == v2@[(mid as int + j)]@,
+    |                                          ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:625:17
+    |
+625 | /                 forall|idx: int| 0 <= idx < it@.0 ==>
+626 | |                     #[trigger] merged@.contains_key(it_seq[idx].0@) &&
+627 | |                     merged@[it_seq[idx].0@]@ == it_seq[idx].1@,
+    | |______________________________________________________________^
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:656:36
+    |
+656 | ...                   assert(verts_view[j]@ == verts_view[j2]@);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:659:36
+    |
+659 | ...                   assert(false);
+    |                              ^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:699:17
+    |
+699 |                 exists|j: int| start as int <= j < end as int && #[trigger] verts_view[j]@ == v_view by {
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+verts_view.index(j).view() == verts_view.index(j2).view() 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:633:52
+    |
+633 |                     #[trigger] right@.contains_key(verts_view[j]@) &&
+    |                                                    ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:634:28
+    |
+634 |                     right@[verts_view[j]@]@ == pv_view[j]@,
+    |                            ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:634:48
+    |
+634 |                     right@[verts_view[j]@]@ == pv_view[j]@,
+    |                                                ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:637:79
+    |
+637 |                     exists|j: int| mid as int <= j < end as int && #[trigger] verts_view[j]@ == v_view,
+    |                                                                               ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:649:40
+    |
+649 |                         let ghost jv = verts_view[j]@;
+    |                                        ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:655:98
+    |
+655 | ...                   let j2 = choose|j2: int| mid as int <= j2 < end as int && #[trigger] verts_view[j2]@ == k@;
+    |                                                                                            ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:655:54
+    |
+655 | ...                   let j2 = choose|j2: int| mid as int <= j2 < end as int && #[trigger] verts_view[j2]@ == k@;
+    |                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:656:36
+    |
+656 | ...                   assert(verts_view[j]@ == verts_view[j2]@);
+    |                              ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:656:54
+    |
+656 | ...                   assert(verts_view[j]@ == verts_view[j2]@);
+    |                                                ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:657:36
+    |
+657 | ...                   assert(verts_view[j] == verts_view[j2]);
+    |                              ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:657:53
+    |
+657 | ...                   assert(verts_view[j] == verts_view[j2]);
+    |                                               ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:647:57
+    |
+647 |                         #[trigger] merged@.contains_key(verts_view[j]@) &&
+    |                                                         ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:648:33
+    |
+648 |                         merged@[verts_view[j]@]@ == pv_view[j]@ by {
+    |                                 ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:648:53
+    |
+648 |                         merged@[verts_view[j]@]@ == pv_view[j]@ by {
+    |                                                     ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:622:53
+    |
+622 |                     #[trigger] merged@.contains_key(verts_view[j]@) &&
+    |                                                     ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:623:29
+    |
+623 |                     merged@[verts_view[j]@]@ == pv_view[j]@,
+    |                             ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:623:49
+    |
+623 |                     merged@[verts_view[j]@]@ == pv_view[j]@,
+    |                                                 ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1330 verified, 3 errors
+error: aborting due to 5 previous errors; 1 warning emitted
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 10195MB, peak z3 RSS: 226MB, min free: 15037MB
+Sampled CPU Usage: rust_verify: 251s, z3 children: 148s
