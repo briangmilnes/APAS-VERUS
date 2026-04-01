@@ -239,7 +239,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
 
         /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe find_slot then set.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — matches APAS
         fn insert(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: Key, value: Value) {
             let h = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -520,7 +520,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
 
         /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — matches APAS
         fn lookup(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (found: Option<Value>) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -647,7 +647,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
 
         /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until found or empty, then tombstone.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — matches APAS
         fn delete(table: &mut HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (deleted: bool) {
             let h = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
             let m = table.current_size;
@@ -978,7 +978,7 @@ pub mod DoubleHashFlatHashTableStEph {
         }
 
         /// - Alg Analysis: APAS (Ch47 ref): Work O(1/(1−α)) expected, Span O(1/(1−α)).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — double hash probe until empty/deleted/matching.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1/(1−α)) expected, Span O(1/(1−α)) — matches APAS
         fn find_slot(table: &HashTable<Key, Value, FlatEntry<Key, Value>, Metrics, H>, key: &Key) -> (slot: usize) {
             let mut attempt: usize = 0;
             while attempt < table.current_size

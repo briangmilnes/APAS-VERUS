@@ -80,7 +80,7 @@ pub mod VecChainedHashTableStEph {
             { Vec::new() }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, Span O(n) — linear scan for duplicate key, n = chain length.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, Span O(n) — matches APAS
             fn insert(&mut self, key: Key, value: Value)
                 ensures
                     self@.len() >= 1,
@@ -167,7 +167,7 @@ pub mod VecChainedHashTableStEph {
             for VecChainedHashTableStEph
         {
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone bucket, dedup insert, set back.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — matches APAS
             fn insert(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: Key, value: Value) {
                 let index = call_hash_fn(&table.hash_fn, &key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;
@@ -322,7 +322,7 @@ pub mod VecChainedHashTableStEph {
             }
 
             /// - Alg Analysis: APAS (Ch47 ref): Work O(1+α) expected, Span O(1+α).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — hash, clone bucket, filter out key, set back.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst, Span O(n) — matches APAS
             fn delete(table: &mut HashTable<Key, Value, Vec<(Key, Value)>, Metrics, H>, key: &Key) -> (deleted: bool) {
                 let index = call_hash_fn(&table.hash_fn, key, table.current_size, table.spec_hash);
                 let ghost old_table = table.table@;

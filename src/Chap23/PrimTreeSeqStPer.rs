@@ -129,14 +129,14 @@ pub mod PrimTreeSeqStPer {
 
         /// Creates an empty sequence.
         /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn empty() -> (empty_seq: Self)
             ensures empty_seq.spec_primtreeseqstper_wf(),
                     empty_seq.spec_len() == 0;
 
         /// Builds a sequence containing a single element.
         /// - Alg Analysis: APAS (Ch23 Alg 23.3): Work O(1), Span O(1).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn singleton(value: T) -> (single: Self)
             ensures
                 single.spec_primtreeseqstper_wf(),
@@ -193,7 +193,7 @@ pub mod PrimTreeSeqStPer {
 
         /// Reassembles a primitive tree sequence from an exposed tree.
         /// - Alg Analysis: APAS (Ch23 CS 23.2): Work O(1 + |r(L) − r(R)|), Span O(1 + |r(L) − r(R)|) for Two; O(1) for Zero/One.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|L| + |R|), Span O(|L| + |R|) for Two; O(1) for Zero/One — Vec append.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|L| + |R|), Span O(|L| + |R|) for Two; O(1) for Zero/One — DIFFERS: Vec append vs APAS O(1 + |r(L) - r(R)|)
         fn join(tree: PrimTreeSeqStTree<T>) -> (joined: Self)
             ensures
                 joined.spec_primtreeseqstper_wf(),
@@ -314,14 +314,14 @@ pub mod PrimTreeSeqStPer {
 
         /// Borrows the inner slice.
         /// - Alg Analysis: APAS: N/A — utility method, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn as_slice(&self) -> (slice: &[T])
             requires self.spec_primtreeseqstper_wf(),
             ensures slice@ =~= self@;
 
         /// Unwraps into the inner Vec.
         /// - Alg Analysis: APAS: N/A — utility method, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn into_vec(self) -> (vec: Vec<T>)
             requires self.spec_primtreeseqstper_wf(),
             ensures vec@ =~= self@;

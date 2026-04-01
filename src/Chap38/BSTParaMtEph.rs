@@ -357,7 +357,7 @@ pub mod BSTParaMtEph {
                     self@.contains(s@) && right@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= self@.union(right@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(lg^2 n) — matches APAS; parallel recursion via ParaPair!
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self@.len() + other@.len() <= usize::MAX as nat,
@@ -365,17 +365,17 @@ pub mod BSTParaMtEph {
                 view_ord_consistent::<T>(),
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(lg^2 n) — matches APAS; parallel recursion via ParaPair!
         fn intersect(&self, other: &Self) -> (common: Self)
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(lg^2 n) — matches APAS; parallel recursion via ParaPair!
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential tree traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential recursion in filter_inner (spec_fn not Send)
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
             predicate: F,
@@ -395,7 +395,7 @@ pub mod BSTParaMtEph {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential tree traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x))) — matches APAS; parallel recursion via ParaPair!
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T + Send + Sync + 'static>(&self, op: F, base: T) -> (reduced: T)
             requires forall|a: T, b: T| #[trigger] op.requires((a, b)),

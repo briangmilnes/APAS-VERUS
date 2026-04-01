@@ -63,12 +63,12 @@ broadcast use {
         spec fn spec_stacksteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn new() -> (empty: Self)
             ensures empty.spec_stacksteph_wf();
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1) amortized, Span O(1) amortized.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — no APAS cost spec
         fn push(&mut self, item: T)
             requires
                 old(self).spec_stacksteph_wf(),
@@ -76,23 +76,23 @@ broadcast use {
             ensures self.spec_stacksteph_wf();
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1) amortized, Span O(1) amortized.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — no APAS cost spec
         fn pop(&mut self) -> (popped: Option<T>)
             requires old(self).spec_stacksteph_wf()
             ensures self.spec_stacksteph_wf();
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn peek(&self) -> (top: Option<&T>)
             requires self.spec_stacksteph_wf();
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_stacksteph_wf();
 
         /// - Alg Analysis: APAS: (no cost stated) — standard stack.
-        /// - Claude-Opus-4.6: Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — no APAS cost spec
         fn size(&self) -> (count: usize)
             requires self.spec_stacksteph_wf();
     }
