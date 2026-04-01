@@ -572,7 +572,7 @@ pub mod BSTBBAlphaMtEph {
                     tree@.tree_is_bst(),
                     forall|x: T| !tree@.tree_contains(x);
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstbbalphamteph_wf(),
             ensures self.spec_bstbbalphamteph_wf(),
@@ -664,7 +664,7 @@ pub mod BSTBBAlphaMtEph {
         }
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }

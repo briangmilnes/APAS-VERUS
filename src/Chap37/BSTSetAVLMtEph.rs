@@ -118,31 +118,31 @@ pub mod BSTSetAVLMtEph {
         fn delete(&mut self, target: &T)
             requires old(self).spec_bstsetavlmteph_wf()
             ensures self.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> (combined: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures combined.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn intersection(&self, other: &Self) -> (common: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures common.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn difference(&self, other: &Self) -> (diff: Self)
             requires self.spec_bstsetavlmteph_wf(), other.spec_bstsetavlmteph_wf()
             ensures diff.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn split(&self, pivot: &T) -> (parts: (Self, bool, Self))
             requires self.spec_bstsetavlmteph_wf()
             ensures parts.0.spec_bstsetavlmteph_wf(), parts.2.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_pair(left: Self, right: Self) -> (joined: Self)
             requires left.spec_bstsetavlmteph_wf(), right.spec_bstsetavlmteph_wf()
             ensures joined.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_m(left: Self, pivot: T, right: Self) -> (joined: Self)
             requires left.spec_bstsetavlmteph_wf(), right.spec_bstsetavlmteph_wf()
             ensures joined.spec_bstsetavlmteph_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn filter<F: FnMut(&T) -> bool + Send>(&self, predicate: F) -> (filtered: Self)
             requires
                 self.spec_bstsetavlmteph_wf(),
@@ -292,7 +292,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return copy_set(other);
@@ -333,7 +333,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn intersection(&self, other: &Self) -> Self {
             if self.is_empty() || other.is_empty() {
                 return Self::empty();
@@ -371,7 +371,7 @@ pub mod BSTSetAVLMtEph {
         }
 
         #[verifier::exec_allows_no_decreases_clause]
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn difference(&self, other: &Self) -> Self {
             if self.is_empty() {
                 return Self::empty();
@@ -404,7 +404,7 @@ pub mod BSTSetAVLMtEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn split(&self, pivot: &T) -> (Self, bool, Self) {
             let sorted = self.tree.in_order();
             let n = sorted.length();
@@ -431,7 +431,7 @@ pub mod BSTSetAVLMtEph {
             (build_from_vec(left), found, build_from_vec(right))
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_pair(left: Self, right: Self) -> Self {
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
@@ -463,7 +463,7 @@ pub mod BSTSetAVLMtEph {
             BSTSetAVLMtEph { tree }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn join_m(left: Self, pivot: T, right: Self) -> Self {
             let left_sorted = left.tree.in_order();
             let right_sorted = right.tree.in_order();
@@ -496,7 +496,7 @@ pub mod BSTSetAVLMtEph {
             BSTSetAVLMtEph { tree }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n h(T)), Span O(n h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn filter<F>(&self, mut predicate: F) -> Self
         where
             F: FnMut(&T) -> bool,

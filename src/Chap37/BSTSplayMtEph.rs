@@ -1841,7 +1841,7 @@ pub mod BSTSplayMtEph {
                     && values@[i] != values@[j],
             ensures tree.spec_bstsplaymteph_wf();
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>)
             requires old(self).spec_bstsplaymteph_wf(),
             ensures self.spec_bstsplaymteph_wf(),
@@ -1956,7 +1956,7 @@ pub mod BSTSplayMtEph {
         }
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
