@@ -3,7 +3,7 @@
 ## Task
 
 Add missing `Alg Analysis: Code review (Claude Opus 4.6)` annotations to 773 functions
-across 5 chapters.
+across 5 chapters (Chap52, Chap40, Chap45, Chap18, Chap41).
 
 ## Results
 
@@ -22,38 +22,72 @@ across 5 chapters.
 - RTT: 3583 passed, 0 skipped
 - PTT: 221 passed, 0 skipped
 
-## Annotation Patterns Used
+## Code Review Pass
 
-**Chap52 (Graphs):**
-- AdjMatrix: new/set_edge/complement O(n^2), has_edge O(1), out_neighbors/out_degree O(n)
-- AdjSeq: new O(n), has_edge/insert_edge/delete_edge O(d), out_degree O(1)
-- AdjTable: has_edge/out_degree O(log n), delete_vertex O(n*(log n + d)), insert/delete_edge O(log n + d)
-- EdgeSet: has_edge O(log m), out_neighbors O(m), delete_vertex O(m log m)
+After initial bulk annotation, read every annotated function body. Found and fixed 18 wrong
+annotations in 9 files:
 
-**Chap40 (BSTs):**
-- Tree operations: O(log n) expected, O(n) worst
-- Rotations/make_node/update_size: O(1)
-- Collects/clone_link: O(n)
-- build_treap_from_vec: O(n log n) expected, O(n^2) worst
+| # | Chap | File | Function | Was | Fixed To | Reason |
+|---|------|------|----------|-----|----------|--------|
+| 1 | 18 | ArraySeq.rs | from_vec | O(n) | O(1) | wraps Vec |
+| 2 | 18 | ArraySeqStPer.rs | nth | O(log n) | O(1) | Vec index, not tree |
+| 3 | 18 | ArraySeqStPer.rs | from_vec | O(n) | O(1) | wraps Vec |
+| 4 | 18 | ArraySeqMtPer.rs | nth | O(log n) | O(1) | Vec index, not tree |
+| 5 | 18 | ArraySeqMtPer.rs | from_vec | O(n) | O(1) | wraps Vec |
+| 6 | 18 | ArraySeqMtPer.rs | tabulate_inner span | O(log n) | O(n) | append dominates join |
+| 7 | 18 | LinkedListStEph.rs | set | O(n) | O(1) | Vec set, not linked list |
+| 8 | 18 | LinkedListStEph.rs | length | O(n) | O(1) | Vec len |
+| 9 | 18 | LinkedListStEph.rs | nth | O(n) | O(1) | Vec index |
+| 10 | 18 | LinkedListStEph.rs | from_vec | O(n) | O(1) | wraps Vec |
+| 11 | 18 | LinkedListStPer.rs | length | O(n) | O(1) | Vec len |
+| 12 | 18 | LinkedListStPer.rs | nth | O(n) | O(1) | Vec index |
+| 13 | 18 | LinkedListStPer.rs | from_vec | O(n) | O(1) | wraps Vec |
+| 14 | 40 | BSTKeyValueStEph.rs | height/height_link (x3) | O(log n) | O(n) | visits all nodes |
+| 15 | 40 | BSTKeyValueStEph.rs | size impl | O(n) | O(1) | cached field |
+| 16 | 40 | BSTSizeStEph.rs | height/height_link (x3) | O(log n) | O(n) | visits all nodes |
+| 17 | 40 | BSTSizeStEph.rs | split_rank | O(log n) | O(n log n) | collect + rebuild |
+| 18 | 40 | BSTReducedStEph.rs | height/height_link (x3) | O(log n) | O(n) | visits all nodes |
 
-**Chap45 (Priority Queues):**
-- BalancedTree: insert O(lg n), meld O(m lg(1+n/m)), from_vec O(n lg n)
-- BinaryHeap: bubble_up_heap/bubble_down_heap O(log n), heapify O(n^2)
-- LeftistHeap: meld O(log n), insert/delete_min O(log n)
-- SortedList: insert O(n), find_min O(1)
-- UnsortedList: insert O(1), find_min O(n)
+Root causes: assumed "LinkedList = linked list" and "StPer = persistent tree" without
+reading the structs (both Vec-backed); assumed "height = one path" without reading that
+it recurses into both children.
 
-**Chap18 (Sequences):**
-- Array: nth O(1), append O(n+m), filter/map/reduce/scan O(n)
-- Persistent: nth O(log n), otherwise same patterns
-- LinkedList: nth O(n), all traversals O(n)
+## APAS Comparison Markers
 
-**Chap41 (Sets):**
-- AVLTreeSet: find/insert/delete O(log n), intersection/union/difference O(m lg(1+n/m))
-- ArraySet: find/insert/delete O(n), intersection/union/difference O(n*m)
+Of 773 annotations, 101 sit below an existing APAS annotation. Added comparison markers:
 
-## Notes
+| Category | Count |
+|----------|-------|
+| DIFFERS from APAS | 20 |
+| Matches APAS | 70 |
+| No APAS cost spec (N/A) | 11 |
+| No APAS annotation above | 672 |
 
-- St files: Span = Work (sequential)
-- Mt files without join: same as St (lock overhead O(1))
-- D&C parallel variants (reduce_dc, map_dc, etc.): annotated with O(log n) span where applicable
+### 20 DIFFERS Explanations
+
+| # | Chap | File | Function | APAS | Impl | Reason |
+|---|------|------|----------|------|------|--------|
+| 1 | 18 | ArraySeqMtEph.rs | filter (trait) | O(Sigma W(f)) | O(n), Span O(lg n) | parallel D&C |
+| 2 | 18 | ArraySeqMtEph.rs | map (trait) | O(Sigma W(f)) | O(n), Span O(lg n) | parallel D&C |
+| 3 | 18 | ArraySeqMtPer.rs | filter (trait) | O(Sigma W(f)) | O(n), Span O(lg n) | parallel D&C |
+| 4 | 18 | ArraySeqMtPer.rs | reduce (trait) | O(lg n * max S(f)) | O(n), Span O(n) | sequential fold |
+| 5 | 18 | ArraySeqMtPer.rs | map (trait) | O(Sigma W(f)) | O(n), Span O(n) | sequential loop |
+| 6 | 45 | BalancedTreePQ.rs | find_min | O(log n) | O(1) | indexed first element |
+| 7 | 45 | BalancedTreePQ.rs | insert | O(log n) | O(n) | sorted array rebuild |
+| 8 | 45 | BalancedTreePQ.rs | delete_min | O(log n) | O(n) | clone + rebuild |
+| 9 | 45 | BalancedTreePQ.rs | meld | O(m lg(1+n/m)) | O(m+n) | merge sorted seqs |
+| 10 | 45 | BalancedTreePQ.rs | from_seq | O(n log n) | O(n^2) | n O(n) inserts |
+| 11 | 45 | BalancedTreePQ.rs | delete_max | O(log n) | O(n) | clone + rebuild |
+| 12 | 45 | BinaryHeapPQ.rs | insert | O(log n) | O(n) | persistent array copy |
+| 13 | 45 | BinaryHeapPQ.rs | delete_min | O(log n) | O(n) | persistent array rebuild |
+| 14 | 45 | BinaryHeapPQ.rs | insert_all | O((m+n)lg(m+n)) | O(m+n) | heapify-based meld |
+| 15 | 45 | BinaryHeapPQ.rs | extract_all_sorted | O(n log n) | O(n^2) | n O(n) delete_mins |
+| 16 | 45 | BinaryHeapPQ.rs | to_sorted_vec | O(n log n) | O(n^2) | delegates to extract |
+| 17 | 45 | LeftistHeapPQ.rs | from_seq | O(n) | O(n log n) | sequential inserts |
+| 18 | 45 | SortedListPQ.rs | delete_min | O(1) | O(n) | subseq_copy rebuilds |
+| 19 | 45 | SortedListPQ.rs | from_seq | O(n log n) | O(n^2) | n O(n) inserts |
+| 20 | 45 | UnsortedListPQ.rs | insert | O(1) | O(n) | persistent array copy |
+
+Common themes: persistent array overhead (O(n) copy instead of O(1) mutation),
+sequential implementations of APAS parallel algorithms, sorted-array insert O(n)
+instead of balanced-tree O(log n).
