@@ -146,6 +146,7 @@ broadcast use {
 
         open spec fn spec_source(&self) -> usize { self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
         {
             let unreach = unreachable_dist();
@@ -170,12 +171,14 @@ broadcast use {
             let predecessors = ArraySeqStPerS::<usize>::new(n, NO_PREDECESSOR);
             SSSPResultStPerF64 { distances, predecessors, source }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
             }
             *self.distances.nth(v)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         }
 
         fn set_distance(self, v: usize, dist: WrappedF64) -> (updated: Self)
@@ -187,6 +190,7 @@ broadcast use {
                 distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 source: self.source,
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
             }
         }
 
@@ -194,6 +198,7 @@ broadcast use {
             if v >= self.predecessors.length() {
                 return None;
             }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let pred = *self.predecessors.nth(v);
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
@@ -205,10 +210,12 @@ broadcast use {
             pred_vec.set(v, pred);
             SSSPResultStPerF64 {
                 distances: self.distances,
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
                 predecessors: ArraySeqStPerS { seq: pred_vec },
                 source: self.source,
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain; St sequential.
 
         fn is_reachable(&self, v: usize) -> (reachable: bool) {
             let dist = self.get_distance(v);

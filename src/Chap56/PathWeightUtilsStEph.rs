@@ -112,6 +112,7 @@ pub mod PathWeightUtilsStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStEphS<ArraySeqStEphS<i64>>) -> (weight: Option<i64>) {
         let k = path.length();
         if k < 2 {
@@ -144,6 +145,7 @@ pub mod PathWeightUtilsStEph {
         }
         Some(total)
     }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
 
     fn path_weight_float(
         path: &ArraySeqStPerS<usize>,
@@ -213,6 +215,7 @@ pub mod PathWeightUtilsStEph {
                 }
             }
         }
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2), Span O(|V|^2) — checks triangle inequality for all vertex triples; St sequential.
     }
 
     fn validate_subpath_property_int(
@@ -255,6 +258,7 @@ pub mod PathWeightUtilsStEph {
             }
             i = i + 1;
         }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2), Span O(|V|^2) — checks triangle inequality for all vertex triples; St sequential.
         true
     }
 

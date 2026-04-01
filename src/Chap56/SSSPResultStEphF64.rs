@@ -134,6 +134,7 @@ pub mod SSSPResultStEphF64 {
 
         open spec fn spec_source(&self) -> usize { self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
         {
             let unreach = unreachable_dist();
@@ -158,17 +159,20 @@ pub mod SSSPResultStEphF64 {
             let predecessors = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
             SSSPResultStEphF64 { distances, predecessors, source }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
             }
             *self.distances.nth(v)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         }
 
         fn set_distance(&mut self, v: usize, dist: WrappedF64) {
             if v < self.distances.length() {
                 self.distances.seq.set(v, dist);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
             }
         }
 
@@ -176,15 +180,18 @@ pub mod SSSPResultStEphF64 {
             if v >= self.predecessors.length() {
                 return None;
             }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let pred = *self.predecessors.nth(v);
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
         fn set_predecessor(&mut self, v: usize, pred: usize) {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
             if v < self.predecessors.length() {
                 self.predecessors.seq.set(v, pred);
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain; St sequential.
 
         fn is_reachable(&self, v: usize) -> (b: bool) {
             let dist = self.get_distance(v);

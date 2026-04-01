@@ -3070,70 +3070,6 @@ src/Chap55/TopoSortStPer.rs:282: info: St fn `dfs_finish_order` sequential as ex
 src/Chap55/TopoSortStPer.rs:589: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
 src/Chap55/TopoSortStPer.rs:687: info: St fn `topological_sort_opt` sequential as expected
 src/Chap55/TopoSortStPer.rs:711: info: St fn `topo_sort` sequential as expected
-src/Chap56/AllPairsResultStEphF64.rs:109: error: fn `new` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:168: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:179: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:202: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:214: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:237: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphF64.rs:241: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:198: error: fn `new` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:267: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:279: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:290: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:303: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:314: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/AllPairsResultStEphI64.rs:318: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:108: error: fn `new` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:163: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:174: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:203: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:215: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:244: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerF64.rs:248: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:197: error: fn `new` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:278: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:290: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:307: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:320: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:337: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/AllPairsResultStPerI64.rs:342: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStEph.rs:115: error: fn `path_weight_int` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStEph.rs:148: error: fn `path_weight_float` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStEph.rs:218: error: fn `validate_subpath_property_int` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStEph.rs:261: error: fn `validate_subpath_property_float` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStPer.rs:151: error: fn `path_weight_int` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStPer.rs:186: error: fn `path_weight_float` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStPer.rs:217: error: fn `validate_subpath_property_int` missing alg analysis annotation
-src/Chap56/PathWeightUtilsStPer.rs:262: error: fn `validate_subpath_property_float` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:137: error: fn `new` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:162: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:169: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:175: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:183: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:189: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/SSSPResultStEphF64.rs:194: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:134: error: fn `new` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:169: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:176: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:183: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:191: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:198: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/SSSPResultStEphI64.rs:202: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:149: error: fn `new` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:174: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:181: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:193: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:201: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:213: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/SSSPResultStPerF64.rs:218: error: fn `extract_path` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:131: error: fn `new` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:153: error: fn `get_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:161: error: fn `set_distance` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:173: error: fn `get_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:182: error: fn `set_predecessor` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:194: error: fn `is_reachable` missing alg analysis annotation
-src/Chap56/SSSPResultStPerI64.rs:199: error: fn `extract_path` missing alg analysis annotation
 src/Chap61/EdgeContractionStEph.rs:42: info: St fn `edge_contract` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:51: info: St fn `contract_round` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:65: info: St fn `edge_contract` sequential as expected
@@ -3178,12 +3114,12 @@ src/Chap66/BoruvkaStEph.rs:510: error: St fn `boruvka_mst_with_seed` Code review
 Summary
 =============================================================
 
-  Total exec fns scanned:    5084
+  Total exec fns scanned:    4956
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2338  (fns with any APAS or Code review line)
-  Missing alg analysis:      2746  <- errors
+  Alg analysis annotations:  2274  (fns with any APAS or Code review line)
+  Missing alg analysis:      2682  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -3191,7 +3127,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2851
+  Errors: 2787
   Warnings: 0
   Info: 321
 
