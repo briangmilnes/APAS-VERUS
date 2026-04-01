@@ -157,7 +157,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — DIFFERS: sequential clone loop, not O(1) slice
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — DIFFERS: Vec-backed, sequential clone loop; O(1) requires tree representation
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -199,7 +199,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.13 (append). Concatenate two sequences.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: span O(|a|+|b|) not O(1), sequential loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: Vec-backed, sequential clone loops; O(1) requires tree representation
         fn append(a: &ArraySeqMtPerS<T>, b: &ArraySeqMtPerS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -213,7 +213,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel filter_inner available but multiset proof requires sequential structure
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -236,7 +236,7 @@ pub mod ArraySeqMtPer {
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential clone loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: Vec-backed, sequential clone loop; O(1) requires tree representation
         fn update(a: &ArraySeqMtPerS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -252,7 +252,7 @@ pub mod ArraySeqMtPer {
         ///   the ordering of `updates` takes effect when positions collide.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: span O(n+m) not O(lg degree), sequential loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: sequential apply; parallel inject requires sort-by-position
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -289,7 +289,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential fold
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential fold; parallel reduce_inner available via bare impl
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -302,7 +302,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel scan requires upsweep/downsweep
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
             where T: Clone + Eq
             requires
@@ -319,7 +319,7 @@ pub mod ArraySeqMtPer {
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel map_inner available via bare impl
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -329,7 +329,7 @@ pub mod ArraySeqMtPer {
 
         /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel tabulate_inner available via bare impl
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtPerS<T>)
             requires
                 length <= usize::MAX,
@@ -340,7 +340,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — DIFFERS: span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — DIFFERS: sequential nested loops; D&C flatten requires outer array cloning proof
         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: ArraySeqMtPerS<T>)
             where T: Clone + Eq
             requires
@@ -500,6 +500,8 @@ pub mod ArraySeqMtPer {
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtPerS<T>)
             where T: Clone + Eq
         {
+            // Sequential implementation: multiset proof requires loop invariant structure.
+            // Parallel filter available via filter_inner (without multiset ensures).
             let len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
@@ -825,6 +827,7 @@ pub mod ArraySeqMtPer {
         fn flatten(a: &ArraySeqMtPerS<ArraySeqMtPerS<T>>) -> (flattened: ArraySeqMtPerS<T>)
             where T: Clone + Eq
         {
+            // Sequential: D&C flatten requires outer array cloning with complex proof.
             let outer_len = a.seq.len();
             let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
@@ -1140,6 +1143,371 @@ pub mod ArraySeqMtPer {
                 combined
             }
         }
+
+        /// Parallel map inner recursive helper with decreases.
+        pub fn map_inner<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtPerS<T>,
+            f: &F,
+        ) -> (mapped: ArraySeqMtPerS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                obeys_feq_clone::<U>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
+            decreases a.seq@.len(),
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                ArraySeqMtPerS { seq: Vec::new() }
+            } else if len == 1 {
+                let mut seq = Vec::with_capacity(1);
+                seq.push(f(&a.seq[0]));
+                ArraySeqMtPerS { seq }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let f1 = clone_fn(f);
+                let f2 = clone_fn(f);
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len()
+                        implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
+                        left_seq.lemma_spec_index(i);
+                        a.lemma_spec_index(i);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len()
+                        implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
+                        right_seq.lemma_spec_index(i);
+                        a.lemma_spec_index(mid as int + i);
+                    }
+                }
+
+                let ghost left_g = left_seq.seq@;
+                let ghost right_g = right_seq.seq@;
+
+                let fa = move || -> (r: ArraySeqMtPerS<U>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        obeys_feq_clone::<U>(),
+                        forall|i: int| 0 <= i < left_seq.seq@.len()
+                            ==> #[trigger] f1.requires((&left_seq.seq@[i],)),
+                    ensures
+                        r.seq@.len() == left_g.len(),
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_g.len()
+                            ==> f1.ensures((&left_g[i],), r.seq@[i]),
+                {
+                    Self::map_inner(&left_seq, &f1)
+                };
+
+                let fb = move || -> (r: ArraySeqMtPerS<U>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        obeys_feq_clone::<U>(),
+                        forall|i: int| 0 <= i < right_seq.seq@.len()
+                            ==> #[trigger] f2.requires((&right_seq.seq@[i],)),
+                    ensures
+                        r.seq@.len() == right_g.len(),
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_g.len()
+                            ==> f2.ensures((&right_g[i],), r.seq@[i]),
+                {
+                    Self::map_inner(&right_seq, &f2)
+                };
+
+                let (left_mapped, right_mapped) = join(fa, fb);
+                let combined = ArraySeqMtPerS::<U>::append(&left_mapped, &right_mapped);
+
+                proof {
+                    assert forall|i: int| #![trigger combined.seq@[i]] 0 <= i < a.seq@.len()
+                        implies f.ensures((&a.seq@[i],), combined.seq@[i]) by {
+                        combined.lemma_spec_index(i);
+                        if i < mid as int {
+                            left_mapped.lemma_spec_index(i);
+                            assert(combined.spec_index(i) == left_mapped.seq@[i]);
+                            assert(f1.ensures((&left_g[i],), left_mapped.seq@[i]));
+                            left_seq.lemma_spec_index(i);
+                            a.lemma_spec_index(i);
+                        } else {
+                            let j = i - mid as int;
+                            right_mapped.lemma_spec_index(j);
+                            assert(combined.spec_index(i) == right_mapped.seq@[j]);
+                            assert(f2.ensures((&right_g[j],), right_mapped.seq@[j]));
+                            right_seq.lemma_spec_index(j);
+                            a.lemma_spec_index(i);
+                        }
+                    }
+                }
+
+                combined
+            }
+        }
+
+        /// Parallel filter inner recursive helper with decreases.
+        pub fn filter_inner<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtPerS<T>,
+            pred: &F,
+            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
+        ) -> (filtered: ArraySeqMtPerS<T>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
+            ensures
+                filtered.spec_arrayseqmtper_wf(),
+                filtered.spec_len() <= a.seq@.len(),
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()
+                    ==> pred.ensures((&filtered.spec_index(i),), true),
+            decreases a.seq@.len(),
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                ArraySeqMtPerS { seq: Vec::new() }
+            } else if len == 1 {
+                if pred(&a.seq[0]) {
+                    let elem = a.seq[0].clone();
+                    proof { axiom_cloned_implies_eq_owned(a.seq[0 as int], elem); }
+                    let mut seq = Vec::with_capacity(1);
+                    seq.push(elem);
+                    ArraySeqMtPerS { seq }
+                } else {
+                    ArraySeqMtPerS { seq: Vec::new() }
+                }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let p1 = clone_pred(pred);
+                let p2 = clone_pred(pred);
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len()
+                        implies #[trigger] p1.requires((&left_seq.seq@[i],)) by {
+                        left_seq.lemma_spec_index(i);
+                        a.lemma_spec_index(i);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len()
+                        implies #[trigger] p2.requires((&right_seq.seq@[i],)) by {
+                        right_seq.lemma_spec_index(i);
+                        a.lemma_spec_index(mid as int + i);
+                    }
+                }
+
+                let fa = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < left_seq.seq@.len()
+                            ==> #[trigger] p1.requires((&left_seq.seq@[i],)),
+                        forall|v: T, keep: bool| p1.ensures((&v,), keep) ==> spec_pred(v) == keep,
+                    ensures
+                        r.spec_arrayseqmtper_wf(),
+                        r.spec_len() <= left_seq.spec_len(),
+                        forall|i: int| #![trigger r.spec_index(i)] 0 <= i < r.spec_len()
+                            ==> p1.ensures((&r.spec_index(i),), true),
+                {
+                    Self::filter_inner(&left_seq, &p1, Ghost(spec_pred))
+                };
+
+                let fb = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < right_seq.seq@.len()
+                            ==> #[trigger] p2.requires((&right_seq.seq@[i],)),
+                        forall|v: T, keep: bool| p2.ensures((&v,), keep) ==> spec_pred(v) == keep,
+                    ensures
+                        r.spec_arrayseqmtper_wf(),
+                        r.spec_len() <= right_seq.spec_len(),
+                        forall|i: int| #![trigger r.spec_index(i)] 0 <= i < r.spec_len()
+                            ==> p2.ensures((&r.spec_index(i),), true),
+                {
+                    Self::filter_inner(&right_seq, &p2, Ghost(spec_pred))
+                };
+
+                let (left_filtered, right_filtered) = join(fa, fb);
+                let combined = Self::append(&left_filtered, &right_filtered);
+
+                proof {
+                    assert forall|i: int| #![trigger combined.spec_index(i)] 0 <= i < combined.spec_len()
+                        implies pred.ensures((&combined.spec_index(i),), true) by {
+                        combined.lemma_spec_index(i);
+                        if i < left_filtered.spec_len() {
+                            left_filtered.lemma_spec_index(i);
+                        } else {
+                            right_filtered.lemma_spec_index(i - left_filtered.spec_len());
+                        }
+                    }
+                }
+
+                combined
+            }
+        }
+
+        /// Parallel reduce inner recursive helper with decreases.
+        pub fn reduce_inner<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtPerS<T>,
+            f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
+            id: T,
+        ) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                a.seq@.len() > 0,
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),
+            decreases a.seq@.len(),
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            if len == 1 {
+                let element = a.seq[0].clone();
+                proof {
+                    assert(cloned(a.seq[0 as int], element));
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
+                    a.lemma_spec_index(0);
+                    assert(s =~= seq![a.spec_index(0)]);
+                    reveal_with_fuel(Seq::fold_left, 2);
+                    assert(spec_f(id, s[0]) == s[0]);
+                }
+                element
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let f1 = clone_fn2(f);
+                let f2 = clone_fn2(f);
+                let id1 = id.clone();
+                proof { axiom_cloned_implies_eq_owned(id, id1); }
+                let id2 = id.clone();
+                proof { axiom_cloned_implies_eq_owned(id, id2); }
+
+                let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
+                let ghost right_s = Seq::new(right_seq.spec_len(), |i: int| right_seq.spec_index(i));
+
+                let fa = move || -> (r: T)
+                    requires
+                        left_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(left_s, spec_f, id),
+                {
+                    Self::reduce_inner(&left_seq, &f1, Ghost(spec_f), id1)
+                };
+
+                let fb = move || -> (r: T)
+                    requires
+                        right_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(right_s, spec_f, id),
+                {
+                    Self::reduce_inner(&right_seq, &f2, Ghost(spec_f), id2)
+                };
+
+                let (left_result, right_result) = join(fa, fb);
+                let combined = f(&left_result, &right_result);
+                proof {
+                    assert(left_s =~= s.subrange(0, mid as int));
+                    assert(right_s =~= s.subrange(mid as int, len as int));
+                    s.lemma_fold_left_split(id, spec_f, mid as int);
+                    Self::lemma_monoid_fold_left(right_s, spec_f, id, left_result);
+                }
+                combined
+            }
+        }
+
+        /// Parallel tabulate inner recursive helper with decreases.
+        pub fn tabulate_inner<F: Fn(usize) -> T + Clone + Send + Sync + 'static>(
+            f: &F,
+            offset: usize,
+            length: usize,
+        ) -> (tab_seq: ArraySeqMtPerS<T>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                offset + length <= usize::MAX,
+                forall|i: usize| offset <= i < offset + length ==> #[trigger] f.requires((i,)),
+            ensures
+                tab_seq.seq@.len() == length,
+                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length
+                    ==> f.ensures(((offset + i) as usize,), tab_seq.seq@[i]),
+            decreases length,
+        {
+            if length == 0 {
+                ArraySeqMtPerS { seq: Vec::new() }
+            } else if length == 1 {
+                let mut seq = Vec::with_capacity(1);
+                seq.push(f(offset));
+                ArraySeqMtPerS { seq }
+            } else {
+                let mid = length / 2;
+                let f1 = clone_fn_usize(f);
+                let f2 = clone_fn_usize(f);
+
+                let fa = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        offset + length <= usize::MAX,
+                        forall|i: usize| offset <= i < offset + length ==> #[trigger] f1.requires((i,)),
+                    ensures
+                        r.seq@.len() == mid as int,
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < mid
+                            ==> f1.ensures(((offset + i) as usize,), r.seq@[i]),
+                {
+                    Self::tabulate_inner(&f1, offset, mid)
+                };
+
+                let fb = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        offset + length <= usize::MAX,
+                        mid <= length,
+                        forall|i: usize| offset <= i < offset + length ==> #[trigger] f2.requires((i,)),
+                    ensures
+                        r.seq@.len() == (length - mid) as int,
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < (length - mid)
+                            ==> f2.ensures(((offset + mid + i) as usize,), r.seq@[i]),
+                {
+                    Self::tabulate_inner(&f2, offset + mid, length - mid)
+                };
+
+                let (left, right) = join(fa, fb);
+                let combined = Self::append(&left, &right);
+
+                proof {
+                    assert forall|i: int| #![trigger combined.seq@[i]] 0 <= i < length
+                        implies f.ensures(((offset + i) as usize,), combined.seq@[i]) by {
+                        combined.lemma_spec_index(i);
+                        if i < mid as int {
+                            left.lemma_spec_index(i);
+                            assert(combined.spec_index(i) == left.seq@[i]);
+                            assert(f1.ensures(((offset + i) as usize,), left.seq@[i]));
+                        } else {
+                            let j = i - mid as int;
+                            right.lemma_spec_index(j);
+                            assert(combined.spec_index(i) == right.seq@[j]);
+                            assert(f2.ensures(((offset + mid + j) as usize,), right.seq@[j]));
+                        }
+                    }
+                }
+
+                combined
+            }
+        }
+
+        // BYPASSED: flatten_inner — D&C flatten requires outer array cloning proof
+        // that is incompatible with subseq_copy's element-level ensures.
+        // The sequential flatten in the trait impl is correct and verified.
     }
 
     #[cfg(verus_keep_ghost)]

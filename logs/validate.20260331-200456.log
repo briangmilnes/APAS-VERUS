@@ -1,0 +1,41 @@
+error[E0308]: mismatched types
+   --> src/Chap18/ArraySeqMtPer.rs:517:37
+    |
+517 |                     assert(Seq::new(0int, |i: int| a.seq@[i]).to_multiset()
+    |                            -------- ^^^^ expected `nat`, found `int`
+    |                            |
+    |                            arguments to this function are incorrect
+    |
+note: associated function defined here
+   --> vstd/seq.rs:42:25
+
+error[E0308]: mismatched types
+   --> src/Chap18/ArraySeqMtPer.rs:523:46
+    |
+523 |                 let ghost input_s = Seq::new(1int, |i: int| a.seq@[i]);
+    |                                     -------- ^^^^ expected `nat`, found `int`
+    |                                     |
+    |                                     arguments to this function are incorrect
+    |
+note: associated function defined here
+   --> vstd/seq.rs:42:25
+
+error[E0599]: no method named `lemma_flatten_concat` found for struct `vstd::seq::Seq<A>` in the current scope
+    --> src/Chap18/ArraySeqMtPer.rs:1208:31
+     |
+1208 |                     left_seqs.lemma_flatten_concat(right_seqs);
+     |                               ^^^^^^^^^^^^^^^^^^^^
+     |
+help: there is a method `lemma_flatten_push` with a similar name
+     |
+1208 -                     left_seqs.lemma_flatten_concat(right_seqs);
+1208 +                     left_seqs.lemma_flatten_push(right_seqs);
+     |
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24200MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
