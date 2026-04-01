@@ -6,7 +6,7 @@ This document describes the target Mt module architecture for APAS-VERUS.
 It combines three layers to achieve thread safety, zero assumes, and parallel
 computation simultaneously.
 
-## The Problem
+## 1. The Problem
 
 APAS Mt modules need:
 1. **Thread safety** — multiple threads call operations concurrently
@@ -18,17 +18,78 @@ inside the lock is sequential on St types. The Mt types have parallel operations
 (map_dc, reduce_dc, filter_dc, ParaPair union/intersect/difference) but they're
 trapped behind their own lock boundaries.
 
-## The Key Insight: Mt Inside Mt
+## 2. Mt Trait Architecture: Locked and Unlocked
+
+Each Mt module exposes two trait layers:
+
+**Locked trait** — the public API. Takes `&self` / `&mut self`. Acquires the lock,
+delegates to the unlocked trait on the owned interior, releases the lock. Returns
+`Result` for capacity-bounded operations. This is what external callers use.
+
+```rust
+pub trait FooMtLockedTrait: Sized {
+    fn insert(&mut self, x: T) -> Result<(), ()>
+        requires old(self).wf(),
+        ensures ...;
+
+    fn size(&self) -> (n: usize)
+        requires self.wf(),
+        ensures ...;
+
+    fn parallel_map(&mut self, f: &F) -> Result<(), ()>
+        requires self.wf(), ...
+        ensures ...;
+}
+```
+
+**Unlocked trait** — the parallel implementation. Takes owned data (not behind a lock).
+Contains the D&C fork-join operations. Called by the locked trait after `acquire_write`,
+or called directly when the data is already owned (e.g., inside another module's lock).
+
+```rust
+pub trait FooMtUnlockedTrait: Sized {
+    fn map_dc(self, f: &F) -> Self
+        requires self.wf(), ...
+        ensures ...;
+
+    fn reduce_dc(&self, f: &F, id: T) -> T
+        requires self.wf(), ...
+        ensures ...;
+
+    fn filter_dc(self, pred: &F) -> Self
+        requires self.wf(), ...
+        ensures ...;
+}
+```
+
+The locked trait acquires the lock, calls the unlocked trait, releases:
+
+```rust
+fn parallel_map(&mut self, f: &F) -> Result<(), ()> {
+    let (interior, write_handle) = self.lock.acquire_write();
+    // capacity check...
+    let new_data = interior.data.map_dc(f);  // unlocked parallel operation
+    // step TSM...
+    write_handle.release_write(new_interior);
+    Ok(())
+}
+```
+
+When M1 stores M2 inside its lock, M1's locked trait calls M2's **unlocked** trait
+directly on the owned M2 data — bypassing M2's lock since M1 already has exclusive
+access.
+
+## 3. Mt Inside Mt: Composable Parallelism
 
 If module M1 stores module M2 (an Mt type) inside M1's locked interior, then
-after M1's `acquire_write`, you own M2. You call M2's parallel operations
-directly — not through M2's lock, but through M2's parallel implementation
-methods on owned data. M1's lock already gives exclusive access to M2.
+after M1's `acquire_write`, you own M2. You call M2's unlocked parallel operations
+directly — not through M2's lock, but through M2's unlocked trait on owned data.
+M1's lock already gives exclusive access to M2.
 
 This is composition: M1 provides the lock boundary. M2 provides the parallel
-algorithms. No nested locks. No unsafe.
+algorithms via its unlocked trait. No nested locks. No unsafe.
 
-## Slice-Backed Sequences: O(1) Split
+## 4. Slice-Backed Sequences: O(1) Split
 
 `ArraySeqMtEphSliceS` (Chap19) stores `Arc<Vec<T>>` with offset+length window.
 `slice()` and `subseq_copy()` are O(1) — Arc::clone + adjust window. Both halves
@@ -37,7 +98,7 @@ into `join()` closures.
 
 This makes splitting data for fork-join free.
 
-## Pre-Allocated Output: O(1) Rejoin
+## 5. Pre-Allocated Output: O(1) Rejoin
 
 For operations producing new sequences (map, filter, tabulate), pre-allocate the
 output Vec before forking:
@@ -59,26 +120,26 @@ requires either PCell-per-element with PointsTo tokens, or Verus's new-mut-ref
 support for mutable references to disjoint sub-places. The FIFO example in
 Verus demonstrates disjoint concurrent writes via PCell + PointsTo.
 
-## The Three Layers
+## 6. The Three Layers
 
-### Layer 1 — Thread Safety
+### 6.1. Layer 1 — Thread Safety
 
 One coarse `RwLock` on the outer module. `&mut self` for writes, `&self` for
 reads. The lock serializes concurrent access to the whole module.
 
-### Layer 2 — Zero Assumes
+### 6.2. Layer 2 — Zero Assumes
 
 TSM token inside the lock alongside the data. `RwLockPredicate` ties
 `token.value() == data.abstract_state()`. After acquire, the predicate proves
 the relationship. No ghost field outside the lock, no assume bridge.
 
-### Layer 3 — Parallel Computation
+### 6.3. Layer 3 — Parallel Computation
 
 After `acquire_write`, you own the interior including its Mt data structures.
-Call their parallel operations directly. `join()` arms take owned slices or
-subtrees. Pre-allocate output for O(1) rejoin. Step TSM token. Release.
+Call their unlocked parallel operations directly. `join()` arms take owned slices
+or subtrees. Pre-allocate output for O(1) rejoin. Step TSM token. Release.
 
-## Interior Structure
+## 7. Interior Structure
 
 ```
 FooMtEph {
@@ -94,16 +155,16 @@ FooInterior {
 }
 ```
 
-## Operation Lifecycle
+## 8. Operation Lifecycle
 
-### Write (parallel)
+### 8.1. Write (parallel)
 
 ```
 acquire_write → own (interior, write_handle)
   ↓
 exec-time capacity check → Err if full
   ↓
-call Mt data structure's parallel operation on owned data
+call Mt data structure's unlocked parallel operation on owned data
   (internally: O(1) slice split, join, pre-allocated output)
   ↓
 step TSM token (proof block)
@@ -111,7 +172,7 @@ step TSM token (proof block)
 release_write(updated interior)
 ```
 
-### Read
+### 8.2. Read
 
 ```
 acquire_read → borrow interior
@@ -123,13 +184,13 @@ compute from real data
 release_read → return value
 ```
 
-## View
+## 9. View
 
 Since writes take `&mut self`, PCell Approach B gives View + zero assumes.
 Ghost field outside the lock updated atomically with release_write. `&mut self`
 guarantees sole ownership during write — no other thread observes the gap.
 
-## Cost Analysis vs APAS
+## 10. Cost Analysis vs APAS
 
 | Operation  | APAS Span              | Current Span    | New Span               | Notes                          |
 |------------|------------------------|-----------------|------------------------|--------------------------------|
@@ -149,7 +210,7 @@ guarantees sole ownership during write — no other thread observes the gap.
 | intersect  | O(lg n)                | O(lg² n)        | O(lg² n)               | Fork-join vs PRAM gap          |
 | difference | O(lg n)                | O(lg² n)        | O(lg² n)               | Fork-join vs PRAM gap          |
 
-### Remaining gaps
+### 10.1. Remaining gaps
 
 **O(lg n) vs O(1) for map/tabulate**: APAS assumes PRAM O(1) fork. Fork-join D&C
 has O(lg n) recursion depth. This is the fundamental PRAM-vs-fork-join gap —
@@ -165,7 +226,7 @@ but architecturally possible with O(1) slice split.
 **inject**: Needs parallel inject implementation. Deterministic ordering
 constraint makes this harder than map/filter.
 
-## Disjoint Parallel Writes
+## 11. Disjoint Parallel Writes
 
 The pre-allocated output pattern requires two `join()` arms to write to disjoint
 regions of the same Vec. Options:
@@ -186,9 +247,9 @@ regions of the same Vec. Options:
 Option 3 is simplest with current Verus. Options 1-2 give true O(1) span for
 the output construction.
 
-## What's Needed
+## 12. What's Needed
 
-### Experiments
+### 12.1. Experiments
 
 1. **coarse_lock_parallel_tsm.rs**: Rewrite with `ArraySeqMtEphSliceS` as one
    inner Mt type and an AVLTreeSet/OrderedTable as another. Demonstrate parallel
@@ -199,14 +260,14 @@ the output construction.
    Two join arms write to disjoint PointsTo regions. Proves O(1) rejoin for
    map/tabulate.
 
-### Migration
+### 12.2. Migration
 
 1. Verify experiments
 2. Migrate one real module (graph module from Chap52+ — has both sequences and sets)
 3. Update `toplevel_coarse_rwlocks_for_mt_modules.rs` standard
 4. Systematize across all Mt modules
 
-### Verus Dependencies
+### 12.3. Verus Dependencies
 
 - `make-ghost-send-sync` branch: fixes `Ghost<T>` Send/Sync, eliminates need for
   `unsafe impl Send/Sync` on types containing Ghost fields
