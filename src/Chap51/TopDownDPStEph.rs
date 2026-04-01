@@ -243,6 +243,7 @@ pub mod TopDownDPStEph {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStEphS<char>, t: ArraySeqStEphS<char>) -> (dp: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStEphS {
@@ -251,22 +252,27 @@ pub mod TopDownDPStEph {
                 memo_table: HashMapWithViewPlus::new(),
             }
         }
-
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
             s_empty && t_empty
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn memo_size(&self) -> (size: usize) { self.memo_table.len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool) {
             self.memo_table.contains_key(&Pair(i, j))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table lookup.
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>) {
             match self.memo_table.get(&Pair(i, j)) {
                 Some(v) => Some(*v),
@@ -274,25 +280,30 @@ pub mod TopDownDPStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — memo table insert.
         fn insert_memo(&mut self, i: usize, j: usize, value: usize) {
             self.memo_table.insert(Pair(i, j), value);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clears memo table.
         fn clear_memo(&mut self) {
             self.memo_table.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write + memo clear.
         fn set_s(&mut self, s: ArraySeqStEphS<char>) {
             self.seq_s = s;
             self.memo_table.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write + memo clear.
         fn set_t(&mut self, t: ArraySeqStEphS<char>) {
             self.seq_t = t;
             self.memo_table.clear();
         }
 
         /// Compute MED using top-down memoization (Algorithm 51.4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
         fn med_memoized(&mut self) -> (distance: usize) {
             self.memo_table.clear();
             let s_len = self.seq_s.length();
@@ -301,6 +312,7 @@ pub mod TopDownDPStEph {
         }
 
         /// Recursive MED with memoization (medOne from Algorithm 51.4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — memoized recursion filling n×m table; St sequential.
         fn med_recursive(&mut self, i: usize, j: usize) -> (distance: usize)
             decreases i + j,
         {

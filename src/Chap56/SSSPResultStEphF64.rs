@@ -134,6 +134,7 @@ pub mod SSSPResultStEphF64 {
 
         open spec fn spec_source(&self) -> usize { self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
         {
@@ -158,17 +159,20 @@ pub mod SSSPResultStEphF64 {
             let distances = ArraySeqStEphS::from_vec(dist_vec);
             let predecessors = ArraySeqStEphS::<usize>::new(n, NO_PREDECESSOR);
             SSSPResultStEphF64 { distances, predecessors, source }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         }
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             }
             *self.distances.nth(v)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         fn set_distance(&mut self, v: usize, dist: WrappedF64) {
             if v < self.distances.length() {
                 self.distances.seq.set(v, dist);
@@ -176,15 +180,18 @@ pub mod SSSPResultStEphF64 {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         fn get_predecessor(&self, v: usize) -> (pred: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
             }
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             let pred = *self.predecessors.nth(v);
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
         fn set_predecessor(&mut self, v: usize, pred: usize) {
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
             if v < self.predecessors.length() {

@@ -106,6 +106,7 @@ pub mod AllPairsResultStEphF64 {
 
         open spec fn spec_n(&self) -> usize { self.n }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — allocates n×n distance + predecessor matrices.
         fn new(n: usize) -> (empty: Self)
         {
@@ -164,6 +165,7 @@ pub mod AllPairsResultStEphF64 {
                 predecessors: ArraySeqStEphS { seq: pred_rows },
                 n,
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         }
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
 
@@ -174,6 +176,7 @@ pub mod AllPairsResultStEphF64 {
             let row = self.distances.nth(u);
             if v >= row.length() {
                 return unreachable_dist();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             }
             *row.nth(v)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index write.
@@ -196,6 +199,7 @@ pub mod AllPairsResultStEphF64 {
                         if r == u as int {
                         } else {
                             assert(self.distances.spec_index(r) == old_distances.spec_index(r));
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
                         }
                     };
                 }
@@ -207,6 +211,7 @@ pub mod AllPairsResultStEphF64 {
             if u >= self.predecessors.length() {
                 return None;
             }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let row = self.predecessors.nth(u);
             if v >= row.length() {
                 return None;
@@ -229,9 +234,11 @@ pub mod AllPairsResultStEphF64 {
                     let _ = self.predecessors.set(u, row);
                     assert forall|r: int| 0 <= r < n
                         implies #[trigger] self.predecessors.spec_index(r).spec_len() == n as nat
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                     by {
                         if r == u as int {
                         } else {
+                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                             assert(self.predecessors.spec_index(r) == old_predecessors.spec_index(r));
                         }
                     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.

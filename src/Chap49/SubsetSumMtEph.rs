@@ -148,6 +148,7 @@ pub mod SubsetSumMtEph {
     // 9. impls
 
     /// Create Arc-wrapped memo lock with empty map.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, i32>, bool>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>)
@@ -157,6 +158,7 @@ pub mod SubsetSumMtEph {
         new_arc_rwlock(val, Ghost(SubsetSumMtEphMemoInv))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     /// Clone Arc memo (reference count increment).
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtEphS<T>,
@@ -246,6 +248,7 @@ pub mod SubsetSumMtEph {
 
         open spec fn spec_subsetsummteph_wf(&self) -> bool {
             self.memo.pred() == SubsetSumMtEphMemoInv
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         }
 
         fn new() -> Self
@@ -256,6 +259,7 @@ pub mod SubsetSumMtEph {
             Self {
                 multiset: ArraySeqMtEphS::new(0, T::default()),
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
             }
         }
 
@@ -263,6 +267,7 @@ pub mod SubsetSumMtEph {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — DP with parallel diagonal wavefront; Mt parallel.
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
@@ -281,18 +286,22 @@ pub mod SubsetSumMtEph {
                 memo.clear();
                 write_handle.release_write(memo);
             }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let n = self.multiset.length();
             subset_sum_rec(&self.multiset, &self.memo, n, target)
         }
 
         fn multiset(&self) -> (ms: &ArraySeqMtEphS<T>) { &self.multiset }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
         fn set(&mut self, index: usize, value: T) {
             let _ = self.multiset.set(index, value);
             let (mut memo, write_handle) = self.memo.acquire_write();
             memo.clear();
             write_handle.release_write(memo);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         }
 
         fn clear_memo(&mut self) {

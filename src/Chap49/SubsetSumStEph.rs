@@ -164,6 +164,7 @@ pub mod SubsetSumStEph {
     impl<T: StT> SubsetSumStEphTrait<T> for SubsetSumStEphS<T> {
         open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -174,6 +175,7 @@ pub mod SubsetSumStEph {
                 memo: HashMapWithViewPlus::new(),
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
         fn from_multiset(multiset: ArraySeqStEphS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
@@ -181,6 +183,7 @@ pub mod SubsetSumStEph {
                 multiset,
                 memo: HashMapWithViewPlus::new(),
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
         fn subset_sum(&mut self, target: i32) -> (found: bool)
@@ -194,12 +197,16 @@ pub mod SubsetSumStEph {
             self.memo.clear();
 
             let n = self.multiset.length();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             subset_sum_rec(self, n, target)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         }
 
         fn multiset(&self) -> (ms: &ArraySeqStEphS<T>) { &self.multiset }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
         fn set(&mut self, index: usize, value: T) {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             let _ = self.multiset.set(index, value);
             self.memo.clear();
         }

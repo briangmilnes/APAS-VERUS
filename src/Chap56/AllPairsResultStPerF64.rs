@@ -105,6 +105,7 @@ pub mod AllPairsResultStPerF64 {
 
         open spec fn spec_n(&self) -> usize { self.n }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — allocates n×n distance + predecessor matrices.
         fn new(n: usize) -> (empty: Self)
         {
@@ -159,6 +160,7 @@ pub mod AllPairsResultStPerF64 {
                 predecessors: ArraySeqStPerS { seq: pred_rows },
                 n,
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         }
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
 
@@ -169,6 +171,7 @@ pub mod AllPairsResultStPerF64 {
             let row = self.distances.nth(u);
             if v >= row.length() {
                 return unreachable_dist();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             }
             *row.nth(v)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index write.
@@ -197,6 +200,7 @@ pub mod AllPairsResultStPerF64 {
                 }
             };
             AllPairsResultStPerF64 {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
                 distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 n: self.n,
@@ -208,6 +212,7 @@ pub mod AllPairsResultStPerF64 {
             if u >= self.predecessors.length() {
                 return None;
             }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let row = self.predecessors.nth(u);
             if v >= row.length() {
                 return None;
@@ -236,9 +241,11 @@ pub mod AllPairsResultStPerF64 {
             by {
                 if r == u as int {
                 } else {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                     assert(pred_vec@[r] == old_predecessors.spec_index(r));
                 }
             };
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             AllPairsResultStPerF64 {
                 distances: self.distances,
                 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.

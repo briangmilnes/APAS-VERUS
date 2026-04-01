@@ -182,6 +182,7 @@ pub mod MinEditDistStPer {
 
         open spec fn spec_target_len(&self) -> nat { self.target.spec_len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -193,6 +194,7 @@ pub mod MinEditDistStPer {
                 memo: HashMapWithViewPlus::new(),
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -201,6 +203,7 @@ pub mod MinEditDistStPer {
                 target,
                 memo: HashMapWithViewPlus::new(),
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
         fn min_edit_distance(&self) -> (dist: usize) {
@@ -214,8 +217,11 @@ pub mod MinEditDistStPer {
             let source_len = solver.source.length();
             let target_len = solver.target.length();
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             min_edit_distance_rec(&mut solver, source_len, target_len)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
 
         fn source(&self) -> (s: &ArraySeqStPerS<T>) { &self.source }
 

@@ -130,6 +130,7 @@ pub mod SubsetSumMtPer {
     // 9. impls
 
     /// Create Arc-wrapped memo lock with empty map.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, i32>, bool>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
@@ -139,6 +140,7 @@ pub mod SubsetSumMtPer {
         new_arc_rwlock(val, Ghost(SubsetSumMtPerMemoInv))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     /// Clone Arc memo (reference count increment).
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtPerS<T>,
@@ -228,6 +230,7 @@ pub mod SubsetSumMtPer {
 
         open spec fn spec_subsetsummtper_wf(&self) -> bool {
             self.memo.pred() == SubsetSumMtPerMemoInv
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         }
 
         fn new() -> Self
@@ -238,6 +241,7 @@ pub mod SubsetSumMtPer {
             Self {
                 multiset: ArraySeqMtPerS::new(0, T::default()),
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
             }
         }
 
@@ -245,6 +249,7 @@ pub mod SubsetSumMtPer {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — DP with parallel diagonal wavefront; Mt parallel.
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
@@ -263,7 +268,9 @@ pub mod SubsetSumMtPer {
                 memo.clear();
                 write_handle.release_write(memo);
             }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             let n = self.multiset.length();
             subset_sum_rec(&self.multiset, &self.memo, n, target)
         }

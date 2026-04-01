@@ -420,6 +420,7 @@ broadcast use {
         /// Like find, but returns a reference to the stored value.
         /// The ensures `*v == self.spec_stored_value(key@)` lets callers transfer
         /// exec-level properties (e.g., wf) from the stored value to the result.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_tablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -459,6 +460,7 @@ broadcast use {
                     && old_v == old(self).spec_stored_value(key@)
                     && self.spec_stored_value(key@) == r);
         /// Like insert, but additionally ensures all stored values preserve well-formedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion with wf preservation.
         /// Requires K: ClonePreservesView, V: ClonePreservesWf, and that combine preserves wf.
         fn insert_wf<F: Fn(&V, &V) -> V>(&mut self, key: K, value: V, combine: F)
             where K: ClonePreservesView, V: ClonePreservesWf
@@ -488,6 +490,7 @@ broadcast use {
                     && self.spec_stored_value(key@) == r),
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==>
                     self.spec_stored_value(k).spec_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
         /// Like delete, but additionally ensures all remaining stored values preserve well-formedness.
         /// Requires K: ClonePreservesView, V: ClonePreservesWf.
         fn delete_wf(&mut self, key: &K)
@@ -524,6 +527,7 @@ broadcast use {
             ensures
                 self.spec_tablesteph_wf(),
                 self@.dom() =~= old(self)@.dom().difference(keys@),
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal or linear construction.
                 forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
 
         /// Returns a flat sequence of (K, V) pairs in key order.
@@ -582,6 +586,7 @@ broadcast use {
 
         open spec fn spec_stored_value(&self, key: K::V) -> V {
             let i = choose|i: int| 0 <= i < self.entries.seq@.len()
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
                 && (#[trigger] self.entries.seq@[i]).0@ == key;
             self.entries.seq@[i].1
         }
@@ -589,6 +594,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
         {
             proof {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
                 lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
             }
             self.entries.length()
@@ -600,6 +606,7 @@ broadcast use {
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
             proof {
                 assert(obeys_feq_full_trigger::<K>());
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element collection.
                 assert(obeys_feq_full_trigger::<V>());
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
             }
@@ -616,6 +623,7 @@ broadcast use {
                 assert(obeys_feq_full_trigger::<Pair<K, V>>());
                 let s = entries@;
                 assert(s.len() == 1);
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
                 assert(s.drop_last() =~= Seq::<(K::V, V::V)>::empty());
                 assert(spec_entries_to_map(s.drop_last()) =~= Map::<K::V, V::V>::empty());
                 assert(s.last() == (key@, value@));
@@ -762,6 +770,7 @@ broadcast use {
                     let j = choose|j: int| 0 <= j < seq@.len()
                         && (#[trigger] seq@[j]).0 == k;
                     assert(seq.spec_index(j) == entries@[j]);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — applies f to each of n elements.
                     lemma_entries_to_map_get::<K::V, V::V>(seq@, j);
                     assert(f.ensures((&key_seq.seq@[j],), entries@[j].1));
                     assert(key_seq.seq@[j]@ == key_seq@[j]);
@@ -828,6 +837,7 @@ broadcast use {
                     let j = choose|j: int| 0 <= j < self.entries@.len()
                         && (#[trigger] self.entries@[j]).0 == k;
                     assert(self.entries.spec_index(j) == mapped@[j]);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass filter.
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_entries, j);
                     assert(f.ensures((&old_raw[j].1,), mapped@[j].1));
@@ -948,6 +958,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_view, k);
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set intersection.
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
                     assert(spec_pred(old_view[si].0, old_view[si].1));
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
@@ -1121,6 +1132,7 @@ broadcast use {
                     let s1 = self_srcs[idx];
                     let s2 = other_srcs[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set operation.
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, s1);
                     lemma_entries_to_map_get::<K::V, V::V>(other_view, s2);
                     assert(combine.ensures(
@@ -1524,6 +1536,7 @@ broadcast use {
                         assert(!spec_entries_to_map(other.entries@).contains_key(
                             old_self_view[si].0));
                         assert(false);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                     }
                     let oj = phase1_matches[si];
                     lemma_entries_to_map_get::<K::V, V::V>(other.entries@, oj);
@@ -1673,6 +1686,7 @@ broadcast use {
                 // Value preservation.
                 assert forall|k: K::V|
                     #[trigger] self@.contains_key(k)
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
                     implies self@[k] == spec_entries_to_map(old_self_view)[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
@@ -1702,6 +1716,7 @@ broadcast use {
             {
                 let pair = self.entries.nth(i);
                 proof { reveal(obeys_view_eq); }
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
                 if pair.0.eq(key) {
                     let v = pair.1.clone_plus();
                     proof {
@@ -1745,6 +1760,7 @@ broadcast use {
                                 // entries@[j].0 == entries.seq@[j].0@ (by View definition)
                                 assert(self.entries@[j].0 != key@);
                             } else if j > i as int {
+                                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
                                 // From spec_keys_no_dups: distinct indices have distinct keys.
                                 assert(self.entries@[i as int].0 != self.entries@[j].0);
                             }
@@ -1850,6 +1866,7 @@ broadcast use {
                         // src is injective, so si != sj.
                         // old_view has no dups, so old_view[si].0 != old_view[sj].0.
                     };
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion.
                 };
                 assert forall|k: K::V|
                     #[trigger] result_map.dom().contains(k) && target_map.dom().contains(k)
@@ -2050,6 +2067,7 @@ broadcast use {
                     // is the unique index in old entries with this key.
                     let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[i]).0@ == key_view;
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion with wf preservation.
                     assert(old_exec_seq[old_chosen].0@ == key_view);
                     assert(old_exec_seq[match_index as int].0@ == key_view);
                     if old_chosen != match_index as int {
@@ -2309,6 +2327,7 @@ broadcast use {
                     // all@[idx].1.spec_wf() — from loop invariant or final_value wf.
                     if idx == last {
                         // final_value case: wf from combine or value.
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
                         if match_index < n as usize {
                             // combine result: combine.ensures((&old_v, &value), final_value)
                             // && old_v.spec_wf() && value.spec_wf() ==> final_value.spec_wf()
@@ -2451,6 +2470,7 @@ broadcast use {
                 };
                 // Prove stored-value wf for all remaining keys.
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — tree set operation; St sequential.
                     implies self.spec_stored_value(k).spec_wf()
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
@@ -2553,6 +2573,7 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — tree set operation; St sequential.
                         assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
                     };
                 };
@@ -2654,6 +2675,7 @@ broadcast use {
                             != (#[trigger] self.entries@[j2]).0
                     by {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal or linear construction.
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
                         assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
@@ -2667,6 +2689,7 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
                     let idx = choose|idx: int| 0 <= idx < self.entries@.len()
                         && (#[trigger] self.entries@[idx]).0 == k;
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal or linear construction.
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);

@@ -53,6 +53,7 @@ pub mod BottomUpDPStPer {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)
             ensures
                 dp.spec_bottomupdpstper_wf(),
@@ -60,12 +61,15 @@ pub mod BottomUpDPStPer {
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
 
         fn s_length(&self) -> (len: usize)
             requires self.spec_bottomupdpstper_wf(),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             requires self.spec_bottomupdpstper_wf(),
             ensures len as nat == self.spec_t_len();
 
@@ -81,6 +85,7 @@ pub mod BottomUpDPStPer {
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures
                 distance as nat == self.spec_med(
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — fills first row and column.
                     self.spec_s_len(),
                     self.spec_t_len()
                 );
@@ -97,6 +102,7 @@ pub mod BottomUpDPStPer {
                     table@[i]@.len() == self.spec_t_len() + 1,
                 forall|i: int| #![trigger table@[i]]
                     0 <= i <= self.spec_s_len() as int ==>
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
                     table@[i]@[0] == i as nat,
                 forall|j: int|
                     0 <= j <= self.spec_t_len() as int ==>
@@ -157,16 +163,21 @@ pub mod BottomUpDPStPer {
             if i == 0 || j == 0 {
             } else if self.seq_s@[i as int - 1] == self.seq_t@[j as int - 1] {
                 self.lemma_spec_med_bounded((i - 1) as nat, (j - 1) as nat);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
             } else {
                 self.lemma_spec_med_bounded((i - 1) as nat, j);
                 self.lemma_spec_med_bounded(i, (j - 1) as nat);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
 
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self) {
             BottomUpDPStPerS { seq_s: s, seq_t: t }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — bottom-up DP table fill; St sequential.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
@@ -305,6 +316,7 @@ pub mod BottomUpDPStPer {
                     row.push(val);
                     j = j + 1;
                 }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — fills first row and column.
 
                 // Row complete: row.len() == t_len + 1, row[0] == i.
                 assert(row@.len() == t_len as nat + 1);
@@ -370,6 +382,7 @@ pub mod BottomUpDPStPer {
                         t_len as nat == self.spec_t_len(),
                         row@.len() == jj as nat,
                         row@[0] == i as nat,
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
                     decreases (t_len + 1 - jj),
                 {
                     row.push(0);

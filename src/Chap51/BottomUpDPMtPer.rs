@@ -53,6 +53,7 @@ pub mod BottomUpDPMtPer {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self)
             ensures
                 dp.spec_bottomupdpmtper_wf(),
@@ -60,15 +61,19 @@ pub mod BottomUpDPMtPer {
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
 
         fn s_length(&self) -> (len: usize)
             requires self.spec_bottomupdpmtper_wf(),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             requires self.spec_bottomupdpmtper_wf(),
             ensures len as nat == self.spec_t_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — bottom-up DP with parallel diagonal; Mt parallel.
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_bottomupdpmtper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
@@ -78,6 +83,7 @@ pub mod BottomUpDPMtPer {
                 self.spec_bottomupdpmtper_wf(),
                 self.spec_s_len() + self.spec_t_len() < usize::MAX,
             ensures
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — fills first row and column.
                 distance as nat == self.spec_med(
                     self.spec_s_len(),
                     self.spec_t_len()
@@ -94,6 +100,7 @@ pub mod BottomUpDPMtPer {
                     0 <= i < table@.len() ==>
                     table@[i]@.len() == self.spec_t_len() + 1,
                 forall|i: int| #![trigger table@[i]]
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
                     0 <= i <= self.spec_s_len() as int ==>
                     table@[i]@[0] == i as nat,
                 forall|j: int|
@@ -154,16 +161,21 @@ pub mod BottomUpDPMtPer {
         {
             if i == 0 || j == 0 {
             } else if self.seq_s@[i as int - 1] == self.seq_t@[j as int - 1] {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
                 self.lemma_spec_med_bounded((i - 1) as nat, (j - 1) as nat);
             } else {
                 self.lemma_spec_med_bounded((i - 1) as nat, j);
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
                 self.lemma_spec_med_bounded(i, (j - 1) as nat);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             }
         }
 
         fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self) {
             BottomUpDPMtPerS { seq_s: s, seq_t: t }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — bottom-up DP with parallel diagonal; Mt parallel.
 
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
@@ -291,6 +303,7 @@ pub mod BottomUpDPMtPer {
 
                     assert(val as nat == self.spec_med(i as nat, j as nat));
                     row.push(val);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — fills first row and column.
                     j = j + 1;
                 }
 
@@ -356,6 +369,7 @@ pub mod BottomUpDPMtPer {
                         t_len < usize::MAX,
                         t_len as nat == self.spec_t_len(),
                         row@.len() == jj as nat,
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — computes one DP cell.
                         row@[0] == i as nat,
                     decreases (t_len + 1 - jj),
                 {

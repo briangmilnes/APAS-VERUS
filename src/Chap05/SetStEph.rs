@@ -313,6 +313,7 @@ verus! {
             valid_key_type::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
         fn from_vec(v: Vec<T>) -> (s: Self) {
                       assert(obeys_feq_full_trigger::<T>());
             let mut s: SetStEph<T> = SetStEph::empty();
@@ -344,6 +345,7 @@ verus! {
             }
             SetStEphIter { inner }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies n elements.
 
         fn to_seq(&self) -> (seq: Vec<T>) {
             let mut seq: Vec<T> = Vec::new();
@@ -361,21 +363,27 @@ verus! {
                 seq.push(x.clone_plus());
             }
             seq
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         }
 
         fn empty() -> SetStEph<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element collection.
         assert(obeys_feq_full_trigger::<T>());
          SetStEph { elements: HashSetWithViewPlus::new() } }
 
         fn singleton(x: T) -> (s: SetStEph<T>) {
                       assert(obeys_feq_full_trigger::<T>());
             let mut s = HashSetWithViewPlus::new();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             let _ = s.insert(x);
             SetStEph { elements: s }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear insertion with dedup check.
         fn size(&self) -> (size: usize)
             ensures size == self@.len()
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set operation.
         { self.elements.len() }
 
         fn mem(&self, x: &T) -> (contains: bool) { self.elements.contains(x) }
@@ -396,6 +404,7 @@ verus! {
                     iter.elements == s2_seq,
                     s2_seq.map(|i: int, k: T| k@).to_set() == s2@,
                     union@ == s1_view.union(s2_seq.take(iter.pos).map(|i: int, k: T| k@).to_set()),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set operation.
             {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
                 let x_clone = x.clone_plus();
@@ -443,6 +452,7 @@ verus! {
             {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it2_seq, iter2.pos); }
                 let _ = union.insert(x.clone_plus());
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set intersection.
             }
             
             proof {
@@ -471,6 +481,7 @@ verus! {
                     iter.pos < iter.elements.len() ==> s1mem == iter.elements[iter.pos as int],
             {
                 proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — product operation.
                 
                 if s2.mem(s1mem) {
                     let s1mem_clone = s1mem.clone_plus();
@@ -497,6 +508,7 @@ verus! {
                     iter.elements == s1_seq,
                     s1_seq.map(|i: int, k: T| k@).to_set() == s1_view,
                     s2_view == s2@,
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — product operation.
                     forall |av: T::V, bv: U::V| 
                         product@.contains((av, bv)) <==>
                             (s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().contains(av) && s2_view.contains(bv)),
@@ -527,6 +539,7 @@ verus! {
                     forall |av: T::V, bv: U::V| 
                         #![trigger product@.contains((av, bv))]
                         product@.contains((av, bv)) <==>
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — checks each partition is nonempty.
                         (av == a_view && s2_seq.take(iter.pos).map(|i: int, k: U| k@).to_set().contains(bv)),
             {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
@@ -560,6 +573,7 @@ verus! {
                 match parts_it.next() {
                     Some(subset) => {
                         if subset.size() == 0 {
+                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass partition.
                             proof {
                                 lemma_seq_index_in_map_to_set(parts_seq, old_pos);
                             }
@@ -620,6 +634,7 @@ verus! {
                         }
                     },
                     None => {
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass partition.
                         if count == 0 {
                             return false;
                         } else {
@@ -666,6 +681,7 @@ verus! {
             {
                 let ghost old_pos = s1_it@.0;
                 match s1_it.next() {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass partition.
                     Some(x) => {
                         if !Self::partition_on_elt(x, parts) {
                             proof {
@@ -712,6 +728,7 @@ verus! {
                         lemma_reveal_view_injective::<T>();
                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
                             let mapped = iter_seq.take(iter.pos).map(|_i: int, k: T| k@);
+                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns first element.
                             let j = mapped.lemma_contains_to_index(x@);
                         }
                     };

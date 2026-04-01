@@ -146,6 +146,7 @@ broadcast use {
 
         open spec fn spec_source(&self) -> usize { self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and fills distance + predecessor arrays.
         fn new(n: usize, source: usize) -> (empty: Self)
         {
@@ -170,12 +171,14 @@ broadcast use {
             let distances = ArraySeqStPerS::from_vec(dist_vec);
             let predecessors = ArraySeqStPerS::<usize>::new(n, NO_PREDECESSOR);
             SSSPResultStPerF64 { distances, predecessors, source }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         }
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
 
         fn get_distance(&self, v: usize) -> (dist: WrappedF64) {
             if v >= self.distances.length() {
                 return unreachable_dist();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             }
             *self.distances.nth(v)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
@@ -187,6 +190,7 @@ broadcast use {
             let mut dist_vec = self.distances.seq;
             dist_vec.set(v, dist);
             SSSPResultStPerF64 {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
                 distances: ArraySeqStPerS { seq: dist_vec },
                 predecessors: self.predecessors,
                 source: self.source,
@@ -194,6 +198,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         fn get_predecessor(&self, v: usize) -> (predecessor: Option<usize>) {
             if v >= self.predecessors.length() {
                 return None;
@@ -205,10 +210,12 @@ broadcast use {
 
         fn set_predecessor(self, v: usize, pred: usize) -> (updated: Self)
         {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             if v >= self.predecessors.seq.len() { return self; }
             let mut pred_vec = self.predecessors.seq;
             pred_vec.set(v, pred);
             SSSPResultStPerF64 {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                 distances: self.distances,
                 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index read.
                 predecessors: ArraySeqStPerS { seq: pred_vec },

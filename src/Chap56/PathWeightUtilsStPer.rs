@@ -148,6 +148,7 @@ pub mod PathWeightUtilsStPer {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
     fn path_weight_int(path: &ArraySeqStPerS<usize>, weights: &ArraySeqStPerS<ArraySeqStPerS<i64>>) -> (weight: Option<i64>)
         ensures weight == Self::spec_path_weight_int(path, weights, 0, 0),
@@ -182,6 +183,7 @@ pub mod PathWeightUtilsStPer {
             i = i + 1;
         }
         Some(total)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
     }
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|path|), Span O(|path|) — sums edge weights along path; St sequential.
 
@@ -212,6 +214,7 @@ pub mod PathWeightUtilsStPer {
             let edge_weight = *weights.nth(u).nth(v);
             total = total.dist_add(&edge_weight);
             i = i + 1;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
         }
         Some(total)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2), Span O(|V|^2) — checks triangle inequality for all vertex triples; St sequential.
@@ -256,6 +259,7 @@ pub mod PathWeightUtilsStPer {
                     Some(expected) => { if dist_v != expected { return false; } }
                     None => { return false; }
                 }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             }
             i = i + 1;
         }

@@ -95,6 +95,7 @@ pub mod BSTParaStEph {
         pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty BST.
     fn new_param_bst<T: StT + Ord>(
         val: Option<Box<NodeInner<T>>>,
         Ghost(contents): Ghost<Set<<T as View>::V>>,
@@ -153,6 +154,7 @@ pub mod BSTParaStEph {
 
     // 7. proof fns
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
     fn clone_elem<T: StT>(x: &T) -> (c: T)
         requires obeys_feq_clone::<T>(),
@@ -454,11 +456,13 @@ pub mod BSTParaStEph {
         open spec fn spec_bstparasteph_wf(&self) -> bool {
             self@.finite()
             && obeys_feq_full::<T>()
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty tree/table allocation.
         }
 
         fn new() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_bstparasteph_wf()
         {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element collection.
         assert(obeys_feq_full_trigger::<T>());
          new_param_bst(None, Ghost(Set::empty())) }
 
@@ -470,6 +474,7 @@ pub mod BSTParaStEph {
         {
                       assert(obeys_feq_full_trigger::<T>());
             let left: Self = Self::new();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             let right: Self = Self::new();
             Self::join_mid(Exposed::Node(left, key, right))
         }
@@ -522,6 +527,7 @@ pub mod BSTParaStEph {
                     }
                     Exposed::Node(l, k, r)
                 }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — balanced tree join.
             };
             handle.release_read();
             exposed
@@ -560,10 +566,12 @@ pub mod BSTParaStEph {
                     }
                     new_param_bst(
                         Some(Box::new(NodeInner { key, size, left, right })),
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — balanced tree join.
                         Ghost(contents),
                     )
                 }
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
 
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
@@ -581,9 +589,11 @@ pub mod BSTParaStEph {
                 Some(node) => {
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
                     }
                     node.size
                 }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion.
             };
             handle.release_read();
             count
@@ -600,6 +610,7 @@ pub mod BSTParaStEph {
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                 // left@ ∪ right@ =~= old_view.remove(kv), disjoint.
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
                 // disjoint_lens: left@.len() + right@.len() == old_view.remove(kv).len().
                 // old_view.remove(kv).len() ≤ old_view.len() < usize::MAX (from requires).
                 assert(left@.union(right@) =~= old_view.remove(kv));
@@ -619,6 +630,7 @@ pub mod BSTParaStEph {
                 assert(left@.union(right@) =~= old_view.remove(kref@));
                 assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
                 assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies
@@ -641,6 +653,7 @@ pub mod BSTParaStEph {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                         assert(!left@.union(right@).contains(root_key@));
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass partition.
                         assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match key.cmp(&root_key) {
@@ -795,6 +808,7 @@ pub mod BSTParaStEph {
                                 assert forall|t: T| (#[trigger] left@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
                                     lemma_cmp_equal_congruent_right(t, kval, rk);
+                                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree extremum lookup.
                                 };
                                 assert forall|t: T| (#[trigger] right@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
@@ -851,6 +865,7 @@ pub mod BSTParaStEph {
                             proof {
                                 assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
                                     key.cmp_spec(&t) == Less || key@ == t@ by {
+                                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — balanced tree join.
                                     if right@.contains(t@) {
                                         lemma_cmp_antisymmetry(t, key);
                                     }
@@ -895,6 +910,7 @@ pub mod BSTParaStEph {
                         // merged ⊥ right.
                         assert forall|x| !(mv.contains(x) && rv.contains(x)) by {
                             if rv.contains(x) { assert(ov.contains(x)); }
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set operation.
                         };
                         // key ∉ merged.
                         assert(ov.contains(kv));
@@ -1013,6 +1029,7 @@ pub mod BSTParaStEph {
                         assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
                             result@.contains(x) by {
                             if blv.contains(x) || brv.contains(x) {
+                                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — tree set operation; St sequential.
                                 assert(other@.remove(akv).contains(x));
                                 assert(other@.contains(x));
                             }
@@ -1179,6 +1196,7 @@ pub mod BSTParaStEph {
                                         assert(arv.contains(x));
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
+                                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                                         assert(arv.contains(t@));
                                         assert(t.cmp_spec(&ak) == Greater);
                                         assert(!blv.contains(x));
@@ -1355,6 +1373,7 @@ pub mod BSTParaStEph {
                                     assert(!blv.contains(x));
                                     assert(!blv.union(brv).contains(x));
                                 }
+                                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass filter.
                                 if sv.contains(x) && !other@.contains(x) && x != akv {
                                     assert(!blv.union(brv).contains(x));
                                     if alv.contains(x) {
@@ -1364,9 +1383,11 @@ pub mod BSTParaStEph {
                                     }
                                 }
                             };
+                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass over n elements.
                             assert(result@ =~= sv.difference(other@));
                         }
                         result
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                     }
                 }
             }
@@ -1471,6 +1492,7 @@ pub mod BSTParaStEph {
                                 assert(!left@.contains(key@));
                             } else if i < g1 as int && j >= g2 as int {
                                 // i in left, j in right: disjoint sets.
+                                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                                 assert(out@[i] == out_2[i]);
                                 assert(out_2[i] == out_1[i]);
                                 assert(left@.contains(out_1[i]@));
@@ -1511,6 +1533,7 @@ pub mod BSTParaStEph {
                     assert(result.spec_index(i) == out@[i]);
                     assert(out@[i]@ == v);
                     assert(self@.contains(out@[i]@));
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                 };
                 // No duplicates: collect_in_order gives view-level no-dups, lift to result@.
                 assert forall|i: int, j: int| 0 <= i < result@.len() && 0 <= j < result@.len() && i != j
@@ -1584,6 +1607,7 @@ pub mod BSTParaStEph {
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree reduction.
                     proof {
                         assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
                             if right_filtered@.contains(x) { assert(right@.contains(x)); }

@@ -150,6 +150,7 @@ pub mod SubsetSumStPer {
     impl<T: StT> SubsetSumStPerTrait<T> for SubsetSumStPerS<T> {
         open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -160,6 +161,7 @@ pub mod SubsetSumStPer {
                 memo: HashMapWithViewPlus::new(),
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
@@ -167,6 +169,7 @@ pub mod SubsetSumStPer {
                 multiset,
                 memo: HashMapWithViewPlus::new(),
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
         fn subset_sum(&self, target: i32) -> (found: bool)
@@ -184,7 +187,9 @@ pub mod SubsetSumStPer {
             };
 
             let n = solver.multiset.length();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             subset_sum_rec(&mut solver, n, target)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         }
 
         fn multiset(&self) -> (ms: &ArraySeqStPerS<T>) { &self.multiset }

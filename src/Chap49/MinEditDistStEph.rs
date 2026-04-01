@@ -211,6 +211,7 @@ pub mod MinEditDistStEph {
 
         open spec fn spec_target_len(&self) -> nat { self.target.spec_len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -222,6 +223,7 @@ pub mod MinEditDistStEph {
                 memo: HashMapWithViewPlus::new(),
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
         fn from_sequences(source: ArraySeqStEphS<T>, target: ArraySeqStEphS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -230,6 +232,7 @@ pub mod MinEditDistStEph {
                 target,
                 memo: HashMapWithViewPlus::new(),
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
         fn min_edit_distance(&mut self) -> (dist: usize) {
@@ -238,17 +241,23 @@ pub mod MinEditDistStEph {
             let source_len = self.source.length();
             let target_len = self.target.length();
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             min_edit_distance_rec(self, source_len, target_len)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
 
         fn source(&self) -> (s: &ArraySeqStEphS<T>) { &self.source }
 
         fn target(&self) -> (t: &ArraySeqStEphS<T>) { &self.target }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
 
         fn set_source(&mut self, index: usize, value: T) {
             let _ = self.source.set(index, value);
             self.memo.clear();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
 
         fn set_target(&mut self, index: usize, value: T) {
             let _ = self.target.set(index, value);

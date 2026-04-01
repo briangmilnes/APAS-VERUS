@@ -172,11 +172,16 @@ verus! {
             valid_key_type_Pair::<X, Y>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — constructs from existing collection.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn from_vec(v: Vec<Pair<X, Y>>) -> RelationStEph<X, Y> {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
             RelationStEph { pairs: SetStEph::from_vec(v), } }
 
         fn size(&self) -> usize { self.pairs.size() }
@@ -216,6 +221,7 @@ verus! {
                         let y = choose |y: Y::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
                         lemma_map_to_set_contains_index(pairs_seq, (x, y));
                     }
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
                 }
             }
             out
@@ -254,11 +260,13 @@ verus! {
                     if exists |x: X::V| self@.contains((x, y)) {
                         let x = choose |x: X::V| #![trigger self@.contains((x, y))] self@.contains((x, y));
                         lemma_map_to_set_contains_index(pairs_seq, (x, y));
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan.
                     }
                 }
             }
             out
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan.
 
         fn mem(&self, a: &X, b: &Y) -> bool {
             let a_clone = a.clone_plus();

@@ -142,6 +142,7 @@ pub mod MinEditDistMtPer {
     // 9. impls
 
     /// Create Arc-wrapped memo lock.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn new_arc_memo(
         val: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     ) -> (memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
@@ -151,6 +152,7 @@ pub mod MinEditDistMtPer {
         new_arc_rwlock(val, Ghost(MinEditDistMtPerMemoInv))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     /// Clone Arc memo (reference count increment).
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtPerS<T>,
@@ -262,6 +264,7 @@ pub mod MinEditDistMtPer {
 
         open spec fn spec_mineditdistmtper_wf(&self) -> bool {
             self.memo.pred() == MinEditDistMtPerMemoInv
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         }
 
         fn new() -> Self
@@ -273,6 +276,7 @@ pub mod MinEditDistMtPer {
                 source: ArraySeqMtPerS::new(0, T::default()),
                 target: ArraySeqMtPerS::new(0, T::default()),
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
             }
         }
 
@@ -281,6 +285,7 @@ pub mod MinEditDistMtPer {
             Self {
                 source,
                 target,
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — DP with parallel diagonal wavefront; Mt parallel.
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
@@ -297,8 +302,11 @@ pub mod MinEditDistMtPer {
             }
 
             let source_len = self.source.length();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             let target_len = self.target.length();
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             min_edit_distance_rec(&self.source, &self.target, &self.memo, source_len, target_len)
         }
 

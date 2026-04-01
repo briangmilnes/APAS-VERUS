@@ -422,17 +422,24 @@ pub mod TopDownDPMtEph {
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqMtEphS<char>, t: ArraySeqMtEphS<char>) -> (dp: Self) {
             TopDownDPMtEphS { seq_s: s, seq_t: t }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
         fn is_empty(&self) -> (empty: bool) {
             let s_empty = self.seq_s.length() == 0;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write.
             let t_empty = self.seq_t.length() == 0;
             s_empty && t_empty
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — top-down DP with parallel subproblems; Mt parallel.
         }
 
         fn set_s(&mut self, s: ArraySeqMtEphS<char>) { self.seq_s = s; }
@@ -441,6 +448,7 @@ pub mod TopDownDPMtEph {
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
         fn med_memoized_concurrent(&mut self) -> (distance: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — top-down DP with parallel subproblems; Mt parallel.
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
             let mut memo = HashMapWithViewPlus::new();

@@ -252,6 +252,7 @@ verus! {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan checking functionality.
         fn is_functional_vec_at(v: &Vec<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
             let n = v.len();
             for i in 0..n
@@ -267,6 +268,7 @@ verus! {
             }
             true
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan checking functionality.
 
         fn is_functional_vec(v: &Vec<Pair<X, Y>>) -> (functional: bool) {
             let n = v.len();
@@ -291,6 +293,7 @@ verus! {
             }
             // TRY: removed proof block
             true
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan checking functionality.
         }
 
         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
@@ -321,6 +324,7 @@ verus! {
                         }
                     }
                 }
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan checking functionality.
             }
         }
 
@@ -361,9 +365,11 @@ verus! {
                             return false;
                         }
                     }
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan checking functionality.
                 }
             }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
 
         fn is_functional_RelationStEph(r: &RelationStEph<X, Y>) -> (functional: bool) {
             Self::is_functional_SetStEph(&r.pairs)
@@ -372,6 +378,7 @@ verus! {
         fn empty() -> MappingStEph<X, Y> {
                       assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: RelationStEph::empty() };
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
             proof { 
                assert(result@.dom() =~= Set::empty());
             }
@@ -398,6 +405,7 @@ verus! {
                     // So exists y such that (x, y) in mapping@ — domain containment.
                     assert(result@.dom().contains(pair_view.0));
                     // The chosen y must equal pair_view.1 by functionality.
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — constructs from existing collection.
                     let chosen_y = choose |y: Y::V| result.mapping@.contains((pair_view.0, y));
                     // is_functional_set gives y uniqueness.
                 }
@@ -415,6 +423,7 @@ verus! {
                 assert forall |x: X::V, y: Y::V| r@.contains((x, y)) implies
                     result@.dom().contains(x) && result@[x] == y by {
                     assert(result.mapping@.contains((x, y)));
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
                     assert(result@.dom().contains(x));
                     // By functionality, the chosen y' must equal y.
                     let chosen = choose |y2: Y::V| result.mapping@.contains((x, y2));
@@ -432,7 +441,10 @@ verus! {
                 assert forall |p1: (X::V, Y::V), p2: (X::V, Y::V)|
                     s.contains(p1) && s.contains(p2) && #[trigger] proj(p1) == #[trigger] proj(p2)
                     implies p1 == p2 by {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan.
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
                     // p1.0 == p2.0. By functionality, p1.1 == p2.1. So p1 == p2.
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
                 }
                 assert(vstd::relations::injective_on(proj, s));
                 // s.map(proj) == self@.dom()

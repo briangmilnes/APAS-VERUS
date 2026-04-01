@@ -513,6 +513,7 @@ pub mod TableStPer {
         /// Like find, but returns a reference to the stored value.
         /// The ensures `*v == self.spec_stored_value(key@)` lets callers transfer
         /// exec-level properties (e.g., wf) from the stored value to the result.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
         fn find_ref(&self, key: &K) -> (found: Option<&V>)
             requires self.spec_tablestper_wf(), obeys_view_eq::<K>()
             ensures
@@ -553,6 +554,7 @@ pub mod TableStPer {
                     && old_v == self.spec_stored_value(key@)
                     && updated.spec_stored_value(key@) == r);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion with wf preservation.
         /// Like insert, but additionally ensures all stored values preserve well-formedness.
         fn insert_wf<F: Fn(&V, &V) -> V>(&self, key: K, value: V, combine: F) -> (updated: Self)
             where K: ClonePreservesView, V: ClonePreservesWf
@@ -582,6 +584,7 @@ pub mod TableStPer {
                 forall|k: K::V| #[trigger] updated@.contains_key(k) ==>
                     updated.spec_stored_value(k).spec_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
         /// Like delete, but additionally ensures all remaining stored values preserve well-formedness.
         /// Requires K: ClonePreservesView, V: ClonePreservesWf.
         fn delete_wf(&self, key: &K) -> (updated: Self)
@@ -664,6 +667,7 @@ pub mod TableStPer {
         open spec fn spec_stored_value(&self, key: K::V) -> V {
             let i = choose|i: int| 0 <= i < self.entries.seq@.len()
                 && (#[trigger] self.entries.seq@[i]).0@ == key;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             self.entries.seq@[i].1
         }
 
@@ -671,12 +675,14 @@ pub mod TableStPer {
         {
             proof {
                 lemma_entries_to_map_len::<K::V, V::V>(self.entries@);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
             }
             self.entries.length()
         }
 
         fn empty() -> (empty: Self)
         {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element collection.
             let entries = ArraySeqStPerS::empty();
             assert(entries@ =~= Seq::<(K::V, V::V)>::empty());
             TableStPer { entries }
@@ -690,6 +696,7 @@ pub mod TableStPer {
                 let s = entries@;
                 assert(s.len() == 1);
                 assert(s.drop_last() =~= Seq::<(K::V, V::V)>::empty());
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — collects distinct elements.
                 assert(spec_entries_to_map(s.drop_last()) =~= Map::<K::V, V::V>::empty());
                 assert(s.last() == (key@, value@));
             }
@@ -830,6 +837,7 @@ pub mod TableStPer {
                         && (#[trigger] entries@[j]).0 == k;
                     assert(entries.spec_index(j) == entry_vec@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(entries@, j);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — applies f to each of n elements.
                     assert(f.ensures((&key_seq.seq@[j],), entry_vec@[j].1));
                     assert(key_seq.seq@[j]@ == key_seq@[j]);
                     assert(entries@[j].1 == entry_vec@[j].1@);
@@ -894,6 +902,7 @@ pub mod TableStPer {
                     let j = choose|j: int| 0 <= j < entries@.len()
                         && (#[trigger] entries@[j]).0 == k;
                     assert(entries.spec_index(j) == new_entries@[j]);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass filter.
                     lemma_entries_to_map_get::<K::V, V::V>(entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, j);
                     assert(f.ensures((&self.entries.spec_index(j).1,), new_entries@[j].1));
@@ -1016,6 +1025,7 @@ pub mod TableStPer {
                         && (#[trigger] self_view[si]).0 == k;
                     lemma_entries_to_map_get::<K::V, V::V>(self_view, si);
                     assert(spec_pred(self_view[si].0, self_view[si].1));
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set intersection.
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
                     assert(entries.spec_index(j) == kept@[j]);
                     assert(kept@[j].0@ == self_view[si].0);
@@ -1187,6 +1197,7 @@ pub mod TableStPer {
                     let os = other_srcs[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
                     lemma_entries_to_map_get::<K::V, V::V>(other_view, os);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) — pairwise set operation.
                     assert(combine.ensures(
                         (&self.entries.spec_index(s).1, &other.entries.spec_index(os).1),
                         kept@[idx].1));
@@ -1386,6 +1397,7 @@ pub mod TableStPer {
                     self@.contains_key(k) && other@.contains_key(k)
                     implies exists|v1: V, v2: V, r: V|
                         v1@ == self@[k] && v2@ == other@[k]
+                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                         && combine.ensures((&v1, &v2), r)
                         && combined@[k] == r@
                 by {
@@ -1531,6 +1543,7 @@ pub mod TableStPer {
                     implies spec_entries_to_map(entries@)[k]
                         == spec_entries_to_map(self_view)[k]
                 by {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
                     let idx = choose|idx: int| 0 <= idx < entries@.len()
                         && (#[trigger] entries@[idx]).0 == k;
@@ -1560,6 +1573,7 @@ pub mod TableStPer {
                 let pair = self.entries.nth(i);
                 proof { reveal(obeys_view_eq); }
                 if pair.0.eq(key) {
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — BST/AVL tree lookup.
                     let v = pair.1.clone_plus();
                     proof {
                         lemma_entries_to_map_get::<K::V, V::V>(self.entries@, i as int);
@@ -1599,6 +1613,7 @@ pub mod TableStPer {
                         by {
                             if j < i as int {
                                 assert(self.entries@[j].0 != key@);
+                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
                             } else if j > i as int {
                                 assert(self.entries@[i as int].0 != self.entries@[j].0);
                             }
@@ -1720,6 +1735,7 @@ pub mod TableStPer {
                 };
                 // Values.
                 assert forall|k: K::V| #[trigger] result_map.dom().contains(k) && target_map.dom().contains(k)
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion.
                     implies result_map[k] == target_map[k]
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
@@ -1921,6 +1937,7 @@ pub mod TableStPer {
                     assert(self_view[fi as int].0 == key_view);
                     let ghost old_chosen = choose|i: int| 0 <= i < self.entries.seq@.len()
                         && (#[trigger] self.entries.seq@[i]).0@ == key_view;
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree insertion with wf preservation.
                     if old_chosen != fi as int {
                         assert(self.entries@[old_chosen].0 == key_view);
                         assert(self.entries@[fi as int].0 == key_view);
@@ -2192,6 +2209,7 @@ pub mod TableStPer {
                     assert(entries@[sv_idx].0 == k);
                     assert(entries@[idx].0 == k);
                     if sv_idx != idx {}
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — tree deletion.
                     assert(sv_idx == idx);
                     assert(entries.seq@[idx] == all@[idx]);
                     if idx == last {
@@ -2354,6 +2372,7 @@ pub mod TableStPer {
                     implies entries.seq@[
                         choose|i: int| 0 <= i < entries.seq@.len()
                             && (#[trigger] entries.seq@[i]).0@ == k
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — tree set operation; St sequential.
                     ].1.spec_wf()
                 by {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
@@ -2462,6 +2481,7 @@ pub mod TableStPer {
                         assert(sources[j1] < sources[j2]);
                         assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
                     };
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — tree set operation; St sequential.
                 };
                 // Value preservation.
                 assert forall|k: K::V| #[trigger]
@@ -2570,6 +2590,7 @@ pub mod TableStPer {
                         assert(entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
                         assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal or linear construction.
                     };
                 };
                 // Value preservation.
@@ -2584,6 +2605,7 @@ pub mod TableStPer {
                     assert(entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(entries@, idx);
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal or linear construction.
                     lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
                     assert(kept@[idx].1@ == self_view[s].1);
                 };
@@ -2597,6 +2619,7 @@ pub mod TableStPer {
             proof {
                 assert(Pair_feq_trigger::<K, V>());
                 lemma_seq_map_cloned_view_eq(
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                     self.entries.seq@,
                     collected.seq@,
                 );

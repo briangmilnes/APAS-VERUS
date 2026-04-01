@@ -95,6 +95,7 @@ pub mod TopDownDPStPer {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self)
             ensures
                 dp.spec_topdowndpstper_wf(),
@@ -102,21 +103,27 @@ pub mod TopDownDPStPer {
                 dp.spec_t() == t@,
                 dp.spec_s_len() == s.spec_len(),
                 dp.spec_t_len() == t.spec_len();
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
 
         fn s_length(&self) -> (len: usize)
             requires self.spec_topdowndpstper_wf(),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
             ensures len as nat == self.spec_s_len();
 
         fn t_length(&self) -> (len: usize)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             requires self.spec_topdowndpstper_wf(),
             ensures len as nat == self.spec_t_len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn is_empty(&self) -> (empty: bool)
             requires self.spec_topdowndpstper_wf(),
             ensures empty == (self.spec_s_len() == 0 && self.spec_t_len() == 0);
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
 
         fn memo_size(&self) -> (size: usize)
             requires self.spec_topdowndpstper_wf(),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             ensures size == self.spec_memo().len();
 
         fn is_memoized(&self, i: usize, j: usize) -> (memoized: bool)
@@ -125,20 +132,24 @@ pub mod TopDownDPStPer {
 
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>)
             requires self.spec_topdowndpstper_wf(),
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             ensures
                 match val {
                     Some(v) => self.spec_memo().contains_key((i, j))
                         && v == self.spec_memo()[(i, j)],
+                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
                     None => !self.spec_memo().contains_key((i, j)),
                 };
 
         fn with_memo_table(self, memo: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (dp: Self)
             ensures
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
                 dp.spec_s() == self.spec_s(),
                 dp.spec_t() == self.spec_t();
 
         fn clear_memo(self) -> (dp: Self)
             ensures
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(2^(n+m)), Span O(2^(n+m)) — naive recursive DP without memoization.
                 dp.spec_topdowndpstper_wf(),
                 dp.spec_s() == self.spec_s(),
                 dp.spec_t() == self.spec_t();
@@ -183,6 +194,7 @@ pub mod TopDownDPStPer {
             forall|a: usize, b: usize| #[trigger] memo.contains_key((a, b)) ==>
                 memo[(a, b)] as nat == self.spec_med(a as nat, b as nat)
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
 
         open spec fn spec_topdowndpstper_wf(&self) -> bool {
             self.spec_memo_correct(self.spec_memo())
@@ -191,25 +203,33 @@ pub mod TopDownDPStPer {
         proof fn lemma_spec_med_bounded(&self, i: nat, j: nat)
             ensures self.spec_med(i, j) <= i + j,
         {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
             lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
 
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStPerS {
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
                 seq_s: s,
+                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — checks memo entry.
                 seq_t: t,
                 memo_table: HashMapWithViewPlus::new(),
             }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
         }
 
         fn s_length(&self) -> (len: usize) { self.seq_s.length() }
         fn t_length(&self) -> (len: usize) { self.seq_t.length() }
 
         fn is_empty(&self) -> (empty: bool) {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
             let s_empty = self.seq_s.length() == 0;
             let t_empty = self.seq_t.length() == 0;
             s_empty && t_empty
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
         }
 
         fn memo_size(&self) -> (size: usize) { self.memo_table.len() }
@@ -219,6 +239,7 @@ pub mod TopDownDPStPer {
         }
 
         fn get_memoized(&self, i: usize, j: usize) -> (val: Option<usize>) {
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
             match self.memo_table.get(&Pair(i, j)) {
                 Some(v) => Some(*v),
                 None => None,
@@ -227,6 +248,7 @@ pub mod TopDownDPStPer {
 
         fn with_memo_table(self, memo: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> (dp: Self) {
             TopDownDPStPerS { seq_s: self.seq_s, seq_t: self.seq_t, memo_table: memo }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(2^(n+m)), Span O(2^(n+m)) — naive recursive DP without memoization.
         }
 
         fn clear_memo(self) -> (dp: Self) {

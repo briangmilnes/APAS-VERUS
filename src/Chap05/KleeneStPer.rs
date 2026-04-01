@@ -233,9 +233,11 @@ verus! {
             valid_key_type::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(alphabet: SetStEph<T>) -> (kleene: Self) {
             KleeneStPer { alphabet }
         }
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * |alphabet|^n), Span O(n * |alphabet|^n) — generates all strings up to length n.
 
         fn mem_star(&self, s: &[T]) -> (member: bool) {
             let mut i: usize = 0;
@@ -262,6 +264,7 @@ verus! {
                 };
             }
             true
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * |alphabet|^n), Span O(n * |alphabet|^n) — delegates to mem_star for length >= 1.
         }
 
         fn mem_plus(&self, s: &[T]) -> (member: bool) {
@@ -272,6 +275,7 @@ verus! {
                 let r = self.mem_star(s);
                 proof { assert(viewed::<T>(s@).len() > 0); }
                 r
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference to alphabet set.
             }
         }
 
