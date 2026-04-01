@@ -3501,10 +3501,24 @@ broadcast use {
             obeys_feq_full::<Pair<K, V>>(),
             vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
             view_ord_consistent::<Pair<K, V>>(),
+            spec_pair_key_determines_order::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            view_ord_consistent::<K>(),
+            obeys_feq_fulls::<K, V>(),
             entries@.len() < usize::MAX as nat,
+            // Entries must have unique keys.
+            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures
             result@.dom().finite(),
+            result.spec_orderedtablestper_wf(),
     {
+        proof {
+            assert(obeys_feq_full_trigger::<K>());
+            assert(obeys_feq_full_trigger::<V>());
+            assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            lemma_key_unique_empty::<K::V, V::V>();
+        }
         let len = entries.length();
         let mut tree = ParamBST::<Pair<K, V>>::new();
         let mut i: usize = 0;
@@ -3519,8 +3533,16 @@ broadcast use {
                 view_ord_consistent::<Pair<K, V>>(),
                 tree@.len() <= i as nat,
                 tree@.len() < usize::MAX as nat,
+                spec_key_unique_pairs_set(tree@),
+                // Provenance: every element in the tree came from entries[0..i].
+                forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv)) ==>
+                    exists|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv),
+                // Entries have unique keys (from requires).
+                forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                    ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
             decreases len - i,
         {
+            let ghost old_tree = tree@;
             let elem = entries.nth(i);
             let cloned = elem.clone_plus();
             proof { lemma_cloned_view_eq(*elem, cloned); }
@@ -3529,6 +3551,45 @@ broadcast use {
                 assert(tree@.len() <= i as nat + 1);
                 assert(i as nat + 1 <= len as nat);
                 assert(tree@.len() < usize::MAX as nat);
+                // Prove provenance for the new tree.
+                assert forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv))
+                    implies exists|j: int| #![trigger entries@[j]] 0 <= j < i as int + 1 && entries@[j] == (kv, vv) by {
+                    if old_tree.contains((kv, vv)) {
+                        let j = choose|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv);
+                        assert(entries@[j] == (kv, vv) && j < i as int + 1);
+                    } else {
+                        // Must be the newly inserted element.
+                        assert((kv, vv) == cloned@);
+                        assert(entries@[i as int] == cloned@);
+                    }
+                };
+                // Prove key uniqueness is maintained.
+                assert(spec_key_unique_pairs_set(tree@)) by {
+                    assert forall|k: K::V, v1: V::V, v2: V::V|
+                        tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
+                        if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {
+                            // Both in old tree: follows from old invariant.
+                        } else if !old_tree.contains((k, v1)) && !old_tree.contains((k, v2)) {
+                            // Both are the new element.
+                            assert((k, v1) == cloned@ && (k, v2) == cloned@);
+                        } else {
+                            // One old, one new: contradiction via unique keys.
+                            if old_tree.contains((k, v1)) {
+                                let j1 = choose|j: int| #![trigger entries@[j]]
+                                    0 <= j < i as int && entries@[j] == (k, v1);
+                                assert(entries@[j1].0 == entries@[i as int].0);
+                                assert(j1 < i as int);
+                                assert(false); // contradicts unique keys
+                            } else {
+                                let j2 = choose|j: int| #![trigger entries@[j]]
+                                    0 <= j < i as int && entries@[j] == (k, v2);
+                                assert(entries@[j2].0 == entries@[i as int].0);
+                                assert(j2 < i as int);
+                                assert(false);
+                            }
+                        }
+                    };
+                };
             }
             i = i + 1;
         }

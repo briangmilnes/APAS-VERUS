@@ -22,7 +22,9 @@ Table of Contents:
 
 ✓ StarContractionMtEph.rs
 ✓ StarContractionStEph.rs
-✓ StarPartitionMtEph.rs
+ℹ StarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap62/StarPartitionMtEph.rs:101: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+   Info: 1 × structural_false_positive
 ✓ StarPartitionStEph.rs
 
 =================================================================
@@ -62,15 +64,18 @@ Proof Functions:
    0 total
 
 Function Specs:
-   17 exec fns with complete spec (requires+ensures) (70%)
+   20 exec fns with complete spec (requires+ensures) (71%)
    0 exec fns missing spec (0%)
-   7 proof/spec fns clean (29%)
+   8 proof/spec fns clean (28%)
    0 proof/spec fns with holes (0%)
-   24 total fns
+   28 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
+
+Structural (info only): 1
+   1 × OPAQUE_EXTERNAL
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -78,9 +83,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-31 23:03:48 -07:00
-Ended:     2026-03-31 23:03:48 -07:00
-Duration:  50ms
+Started:   2026-04-01 07:30:18 -07:00
+Ended:     2026-04-01 07:30:18 -07:00
+Duration:  18ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+veracity-review-verus-proof-holes.log
