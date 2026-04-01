@@ -184,7 +184,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential bit scan, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len(), self@.finite();
@@ -227,7 +227,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — DIFFERS: sequential loop, not parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — DIFFERS: sequential loop; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
