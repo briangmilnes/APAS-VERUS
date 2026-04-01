@@ -1,0 +1,210 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:570:5
+    |
+570 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:652:13
+    |
+652 | /             forall|j: int| 0 <= j < key_seq.seq@.len() ==>
+653 | |                 (#[trigger] entries.seq@[j]).0@ == key_seq.seq@[j]@,
+    | |___________________________________________________________________^ failed this postcondition
+...
+659 | /         if len == 0 {
+660 | |             ArraySeqMtEphS { seq: Vec::new() }
+661 | |         } else if len == 1 {
+662 | |             let key = key_seq.nth(0);
+...   |
+739 | |             appended
+740 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:654:13
+    |
+654 | /             forall|j: int| #![trigger key_seq.seq@[j]] 0 <= j < key_seq.seq@.len() ==>
+655 | |                 f.ensures((&key_seq.seq@[j],), entries.seq@[j].1),
+    | |_________________________________________________________________^ failed this postcondition
+...
+659 | /         if len == 0 {
+660 | |             ArraySeqMtEphS { seq: Vec::new() }
+661 | |         } else if len == 1 {
+662 | |             let key = key_seq.nth(0);
+...   |
+739 | |             appended
+740 | |         }
+    | |_________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap42/TableMtEph.rs:683:21
+    |
+683 |                     #[trigger] lk_raw[i] == k_raw[i] by {}
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap42/TableMtEph.rs:685:21
+    |
+685 |                     #[trigger] rk_raw[j] == k_raw[mid as int + j] by {}
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap42/TableMtEph.rs:713:28
+    |
+713 |             let appended = ArraySeqMtEphS::<Pair<K, V>>::append(&lm, &rm);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:283:17
+    |
+283 |                 obeys_feq_clone::<T>(),
+    |                 ---------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+lk_raw.index(i) == k_raw.index(i) 
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:695:29
+    |
+695 | ...                   (#[trigger] result.seq@[j]).0@ == lk_raw[j]@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:697:55
+    |
+697 | ...                   f1.ensures((&lk_raw[j],), result.seq@[j].1),
+    |                                                 ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:705:29
+    |
+705 | ...                   (#[trigger] result.seq@[j]).0@ == rk_raw[j]@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:707:55
+    |
+707 | ...                   f2.ensures((&rk_raw[j],), result.seq@[j].1),
+    |                                                 ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:549:13
+    |
+549 | /             forall|i: int| 0 <= i < entries.seq@.len() ==>
+550 | |                 (#[trigger] mapped.seq@[i]).0@ == entries.seq@[i].0@,
+    | |____________________________________________________________________^ failed this postcondition
+...
+556 | /         if len == 0 {
+557 | |             ArraySeqMtEphS { seq: Vec::new() }
+558 | |         } else if len == 1 {
+559 | |             let pair = entries.nth(0);
+...   |
+638 | |             appended
+639 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap42/TableMtEph.rs:551:13
+    |
+551 | /             forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < entries.seq@.len() ==>
+552 | |                 f.ensures((&entries.seq@[i].1,), mapped.seq@[i].1),
+    | |__________________________________________________________________^ failed this postcondition
+...
+556 | /         if len == 0 {
+557 | |             ArraySeqMtEphS { seq: Vec::new() }
+558 | |         } else if len == 1 {
+559 | |             let pair = entries.nth(0);
+...   |
+638 | |             appended
+639 | |         }
+    | |_________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap42/TableMtEph.rs:580:21
+    |
+580 |                     #[trigger] l_raw[i] == e_raw[i] by {}
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap42/TableMtEph.rs:582:21
+    |
+582 |                     #[trigger] r_raw[j] == e_raw[mid as int + j] by {}
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap42/TableMtEph.rs:580:21
+    |
+580 |                     #[trigger] l_raw[i] == e_raw[i] by {}
+    |                     ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+l_raw.index(i) == e_raw.index(i)
+|   l_raw.index(i).0 == e_raw.index(i).0 ✘
+|   l_raw.index(i).1 == e_raw.index(i).1 ✘
++---
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:596:29
+    |
+596 | ...                   (#[trigger] result.seq@[i]).0@ == l_raw[i].0@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:598:56
+    |
+598 | ...                   f1.ensures((&l_raw[i].1,), result.seq@[i].1),
+    |                                                  ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:606:29
+    |
+606 | ...                   (#[trigger] result.seq@[i]).0@ == r_raw[i].0@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:608:56
+    |
+608 | ...                   f2.ensures((&r_raw[i].1,), result.seq@[i].1),
+    |                                                  ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2244 verified, 3 errors
+error: aborting due to 10 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1922MB, peak z3 RSS: 350MB, min free: 21813MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 30s
