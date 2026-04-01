@@ -877,6 +877,17 @@ with no internal underscores. Do not use bare `spec_wf`. E.g., `spec_orderedtabl
 
 Use `SetLit!`, `RelationLit!`, `MappingLit!`, `PairLit!` for constructing test values.
 
+### Alg Analysis Annotations Must Be Based on Reading the Code
+
+**Every `/// - Alg Analysis: Code review` annotation must be based on reading the
+function body.** Never guess complexity from the function name. `nth` might be O(1)
+(Vec index) or O(n) (linked list traversal). `height` might be O(1) (cached) or O(n)
+(full tree walk). `from_vec` might be O(1) (wrap) or O(n) (copy). `insert` might be
+O(1) (push) or O(lg n) (BST) or O(n) (sorted array). You cannot know without reading.
+
+Do NOT use sed, regex, or pattern-matching to batch-insert annotations based on
+function names. Each annotation is a cost analysis of a specific implementation.
+
 ### Failed Experiments
 
 When an experiment fails verification: do NOT modify it to pass. Add `RESULT: FAILS` comment,
