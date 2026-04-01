@@ -1,0 +1,228 @@
+error[E0277]: `T` cannot be sent between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:672:42
+    |
+672 |             let filtered = Self::flatten(&deflated);
+    |                            ------------- ^^^^^^^^^ `T` cannot be sent between threads safely
+    |                            |
+    |                            required by a bound introduced by this call
+    |
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::flatten`
+   --> src/Chap19/ArraySeqMtEph.rs:458:35
+    |
+457 |         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
+    |            ------- required by a bound in this associated function
+458 |             where T: Clone + Eq + Send + Sync + 'static
+    |                                   ^^^^ required by this bound in `ArraySeqMtEphTrait::flatten`
+help: consider restricting type parameter `T` with trait `Send`
+    |
+482 |     impl<T: std::marker::Send> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0277]: `T` cannot be shared between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:672:42
+    |
+672 |             let filtered = Self::flatten(&deflated);
+    |                            ------------- ^^^^^^^^^ `T` cannot be shared between threads safely
+    |                            |
+    |                            required by a bound introduced by this call
+    |
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::flatten`
+   --> src/Chap19/ArraySeqMtEph.rs:458:42
+    |
+457 |         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
+    |            ------- required by a bound in this associated function
+458 |             where T: Clone + Eq + Send + Sync + 'static
+    |                                          ^^^^ required by this bound in `ArraySeqMtEphTrait::flatten`
+help: consider restricting type parameter `T` with trait `Sync`
+    |
+482 |     impl<T: std::marker::Sync> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1021:29
+     |
+1021 |             let a_owned = a.subseq_copy(0, a.seq.len());
+     |                             ^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::subseq_copy`
+    --> src/Chap19/ArraySeqMtEph.rs:227:30
+     |
+ 226 |         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+     |            ----------- required by a bound in this associated function
+ 227 |             where T: Clone + Eq
+     |                              ^^ required by this bound in `ArraySeqMtEphTrait::subseq_copy`
+help: consider restricting type parameter `T` with trait `View`
+     |
+ 482 |     impl<T: vstd::string::View> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1424:35
+     |
+1424 |                 obeys_feq_clone::<ArraySeqMtEphS<T>>(),
+     |                                   ^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+    --> src/vstdplus/feq.rs:50:41
+     |
+  50 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+     |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1434:19
+     |
+1434 |                 a.subseq_copy(0, 1).seq.into_iter().next().unwrap_or(ArraySeqMtEphS { seq: Vec::new() })
+     |                   ^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::subseq_copy`
+    --> src/Chap19/ArraySeqMtEph.rs:227:30
+     |
+ 226 |         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+     |            ----------- required by a bound in this associated function
+ 227 |             where T: Clone + Eq
+     |                              ^^ required by this bound in `ArraySeqMtEphTrait::subseq_copy`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1438:36
+     |
+1438 |                 let left_outer = a.subseq_copy(0, mid);
+     |                                    ^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::subseq_copy`
+    --> src/Chap19/ArraySeqMtEph.rs:227:30
+     |
+ 226 |         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+     |            ----------- required by a bound in this associated function
+ 227 |             where T: Clone + Eq
+     |                              ^^ required by this bound in `ArraySeqMtEphTrait::subseq_copy`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1439:37
+     |
+1439 |                 let right_outer = a.subseq_copy(mid, len - mid);
+     |                                     ^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::subseq_copy`
+    --> src/Chap19/ArraySeqMtEph.rs:227:30
+     |
+ 226 |         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+     |            ----------- required by a bound in this associated function
+ 227 |             where T: Clone + Eq
+     |                              ^^ required by this bound in `ArraySeqMtEphTrait::subseq_copy`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1459:43
+     |
+1459 |                         obeys_feq_clone::<ArraySeqMtEphS<T>>(),
+     |                                           ^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+    --> src/vstdplus/feq.rs:50:41
+     |
+  50 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+     |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstd::string::View` is not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1469:43
+     |
+1469 |                         obeys_feq_clone::<ArraySeqMtEphS<T>>(),
+     |                                           ^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` to implement `std::cmp::Eq`
+    --> src/Chap19/ArraySeqMtEph.rs:1674:24
+     |
+1674 |     impl<T: Eq + View> Eq for ArraySeqMtEphS<T> {}
+     |                  ----  ^^     ^^^^^^^^^^^^^^^^^
+     |                  |
+     |                  unsatisfied trait bound introduced here
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+    --> src/vstdplus/feq.rs:50:41
+     |
+  50 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+     |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider restricting type parameter `T` with trait `View`
+     |
+1084 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0599]: no method named `lemma_flatten_push_seq` found for struct `vstd::seq::Seq<A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1487:29
+     |
+1487 |                     left_mv.lemma_flatten_push_seq(right_mv);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^
+     |
+help: there is a method `lemma_flatten_push` with a similar name
+     |
+1487 -                     left_mv.lemma_flatten_push_seq(right_mv);
+1487 +                     left_mv.lemma_flatten_push(right_mv);
+     |
+
+error: aborting due to 10 previous errors
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23386MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

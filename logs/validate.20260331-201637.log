@@ -1,0 +1,74 @@
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1431:73
+     |
+1431 |                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+     |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1437:36
+     |
+1437 | ...                   assert(right_view[j] == a_view[mid as int + j]);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+right_view.index(j) == a_view.index(mid + j) 
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1411:113
+     |
+1411 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+     |                                                                                                                 ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1423:115
+     |
+1423 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+     |                                                                                                                   ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+   --> src/Chap19/ArraySeqMtEph.rs:980:17
+    |
+980 |                 assert forall|i: int| 0 <= i < a_owned_view.len() implies a_owned_view[i] == a.seq@[i] by {
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap19/ArraySeqMtEph.rs:980:75
+    |
+980 |                 assert forall|i: int| 0 <= i < a_owned_view.len() implies a_owned_view[i] == a.seq@[i] by {
+    |                                                                           ^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap19/ArraySeqMtEph.rs:980:17
+    |
+980 |                 assert forall|i: int| 0 <= i < a_owned_view.len() implies a_owned_view[i] == a.seq@[i] by {
+    |                 ^^^^^^
+
+verification results:: 846 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1457MB, peak z3 RSS: 186MB, min free: 22646MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 6s

@@ -1,0 +1,54 @@
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1427:73
+     |
+1427 |                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+     |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1433:36
+     |
+1433 | ...                   assert(right_view[j] == a_view[mid as int + j]);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+right_view.index(j) == a_view.index(mid + j) 
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1407:113
+     |
+1407 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+     |                                                                                                                 ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1419:115
+     |
+1419 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+     |                                                                                                                   ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEph.rs:988:28
+    |
+988 |                     assert(a_owned_view[i] == a.seq@[i]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+a_owned_view.index(i) == a.seq.view().index(i) 
+
+verification results:: 845 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 478MB, peak z3 RSS: 0MB, min free: 23812MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

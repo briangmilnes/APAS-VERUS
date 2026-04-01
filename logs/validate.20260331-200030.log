@@ -1,0 +1,94 @@
+error[E0403]: the name `T` is already used for a generic parameter in this item's generic parameters
+    --> src/Chap19/ArraySeqMtEph.rs:1526:46
+     |
+1072 |     impl<T> ArraySeqMtEphS<T> {
+     |          - first use of `T`
+...
+1526 |         proof fn lemma_spec_filter_len_split<T>(s: Seq<T>, pred: spec_fn(T) -> bool, mid: int)
+     |                                              ^ already used
+
+error[E0403]: the name `T` is already used for a generic parameter in this item's generic parameters
+    --> src/Chap19/ArraySeqMtEph.rs:1550:46
+     |
+1072 |     impl<T> ArraySeqMtEphS<T> {
+     |          - first use of `T`
+...
+1550 |         proof fn lemma_multiset_filter_split<T>(s: Seq<T>, pred: spec_fn(T) -> bool, mid: int)
+     |                                              ^ already used
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap19/ArraySeqMtEph.rs:1418:64
+     |
+1418 |                     assert(Seq::<T>::empty().to_multiset() =~= Multiset::<T>::empty());
+     |                                                                ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  26 +     use vstd::multiset::Multiset;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap19/ArraySeqMtEph.rs:1419:28
+     |
+1419 |                     assert(Multiset::<T>::empty().filter(spec_pred) =~= Multiset::<T>::empty());
+     |                            ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  26 +     use vstd::multiset::Multiset;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap19/ArraySeqMtEph.rs:1419:73
+     |
+1419 |                     assert(Multiset::<T>::empty().filter(spec_pred) =~= Multiset::<T>::empty());
+     |                                                                         ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  26 +     use vstd::multiset::Multiset;
+     |
+
+error[E0425]: cannot find function `lemma_spec_filter_len_split` in this scope
+    --> src/Chap19/ArraySeqMtEph.rs:1512:21
+     |
+1512 |                       lemma_spec_filter_len_split(a_view, spec_pred, mid as int);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/multiset.rs:41:1
+     |
+  41 | / pub proof fn lemma_spec_filter_len_le_len<T>(s: Seq<T>, pred: spec_fn(T) -> bool)
+  42 | |     ensures spec_filter_len(s, pred) <= s.len(),
+  43 | |     decreases s.len(),
+...    |
+  48 | | }
+     | |_- similarly named function `lemma_spec_filter_len_le_len` defined here
+     |
+help: consider using the associated function on `Self`
+     |
+1512 |                     Self::lemma_spec_filter_len_split(a_view, spec_pred, mid as int);
+     |                     ++++++
+help: a function with a similar name exists
+     |
+1512 -                     lemma_spec_filter_len_split(a_view, spec_pred, mid as int);
+1512 +                     lemma_spec_filter_len_le_len(a_view, spec_pred, mid as int);
+     |
+
+error[E0425]: cannot find function `lemma_multiset_filter_split` in this scope
+    --> src/Chap19/ArraySeqMtEph.rs:1519:21
+     |
+1519 |                     lemma_multiset_filter_split(a_view, spec_pred, mid as int);
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider using the associated function on `Self`
+     |
+1519 |                     Self::lemma_multiset_filter_split(a_view, spec_pred, mid as int);
+     |                     ++++++
+
+error: aborting due to 7 previous errors
+
+Some errors have detailed explanations: E0403, E0425, E0433.
+For more information about an error, try `rustc --explain E0403`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24243MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
