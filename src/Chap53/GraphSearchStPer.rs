@@ -37,6 +37,7 @@ pub mod GraphSearchStPer {
     pub trait SelectionStrategy<V: StT + Ord> {
         /// Select subset U ⊆ F where |U| ≥ 1.
         /// Returns (selected vertices, should_track_parents).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool))
             requires
                 frontier.spec_avltreesetstper_wf(),
@@ -102,10 +103,12 @@ pub mod GraphSearchStPer {
 
     // 9. impls
     impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool)) { (frontier.clone(), false) }
     }
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element via to_seq + nth.
         fn select(&self, frontier: &AVLTreeSetStPer<V>) -> (selected: (AVLTreeSetStPer<V>, bool)) {
             let n = frontier.size();
             if n == 0 {
@@ -137,6 +140,7 @@ pub mod GraphSearchStPer {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; St sequential.
     pub fn graph_search<V: StT + Ord, G, S>(
         graph: &G, source: V, strategy: &S,
         Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
@@ -167,6 +171,7 @@ pub mod GraphSearchStPer {
     }
 
     /// Graph exploration loop (Algorithm 53.4).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; St sequential.
     #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
@@ -269,6 +274,7 @@ pub mod GraphSearchStPer {
     }
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; St sequential.
     pub fn graph_search_multi<V: StT + Ord, G, S>(
         graph: &G,
         sources: AVLTreeSetStPer<V>,
@@ -295,14 +301,17 @@ pub mod GraphSearchStPer {
     }
 
     impl<V: StT + Ord> GraphSearchStPerTrait<V> for SearchResult<V> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
         { graph_search(graph, source, strategy, Ghost(vertex_universe)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>, S: SelectionStrategy<V>,
         { graph_search_multi(graph, sources, strategy, Ghost(vertex_universe)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStPer<V>)
         where G: Fn(&V) -> AVLTreeSetStPer<V>,
         { reachable(graph, source, Ghost(vertex_universe)) }

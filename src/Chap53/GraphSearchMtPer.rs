@@ -34,6 +34,7 @@ pub mod GraphSearchMtPer {
 
     // 8. traits
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool))
             requires obeys_feq_clone::<V>(), frontier.spec_avltreesetmtper_wf(),
             ensures selected.0@.subset_of(frontier@);
@@ -97,10 +98,12 @@ pub mod GraphSearchMtPer {
 
     // 9. impls
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectAll {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) { (frontier.clone(), false) }
     }
 
     impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectOne {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) {
             if frontier.size() == 0 {
                 (AVLTreeSetMtPer::empty(), false)
@@ -127,6 +130,7 @@ pub mod GraphSearchMtPer {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; sequential despite Mt module (no join).
     pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
@@ -154,6 +158,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// Graph exploration loop (Algorithm 53.4).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; sequential despite Mt module (no join).
     #[verifier::exec_allows_no_decreases_clause]
     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
@@ -261,6 +266,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; sequential despite Mt module.
     pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
         graph: &G,
         sources: AVLTreeSetMtPer<V>,
@@ -287,16 +293,19 @@ pub mod GraphSearchMtPer {
     }
 
     impl<V: StTInMtT + Ord + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
         { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::graph_search(graph, source, strategy, Ghost(vertex_universe)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
         {
             crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>,
         { crate::Chap53::GraphSearchMtPer::GraphSearchMtPer::reachable(graph, source, Ghost(vertex_universe)) }

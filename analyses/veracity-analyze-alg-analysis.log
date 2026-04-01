@@ -3013,33 +3013,18 @@ src/Chap52/EdgeSetGraphStPer.rs:292: error: fn `insert_vertex` missing alg analy
 src/Chap52/EdgeSetGraphStPer.rs:307: error: fn `delete_vertex` missing alg analysis annotation
 src/Chap52/EdgeSetGraphStPer.rs:342: error: fn `insert_edge` missing alg analysis annotation
 src/Chap52/EdgeSetGraphStPer.rs:361: error: fn `delete_edge` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:37: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:100: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:104: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:130: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:158: error: fn `graph_search_explore` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:264: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:290: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:294: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchMtPer.rs:300: error: fn `reachable` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:32: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:97: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:101: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:127: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:158: error: fn `graph_search_explore` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:259: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:285: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:289: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchStEph.rs:293: error: fn `reachable` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:40: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:105: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:109: error: fn `select` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:140: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:171: error: fn `graph_search_explore` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:272: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:298: error: fn `graph_search` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:302: error: fn `graph_search_multi` missing alg analysis annotation
-src/Chap53/GraphSearchStPer.rs:306: error: fn `reachable` missing alg analysis annotation
+src/Chap53/GraphSearchStEph.rs:131: info: St fn `graph_search` sequential as expected
+src/Chap53/GraphSearchStEph.rs:163: info: St fn `graph_search_explore` sequential as expected
+src/Chap53/GraphSearchStEph.rs:265: info: St fn `graph_search_multi` sequential as expected
+src/Chap53/GraphSearchStEph.rs:292: info: St fn `graph_search` sequential as expected
+src/Chap53/GraphSearchStEph.rs:297: info: St fn `graph_search_multi` sequential as expected
+src/Chap53/GraphSearchStEph.rs:302: info: St fn `reachable` sequential as expected
+src/Chap53/GraphSearchStPer.rs:144: info: St fn `graph_search` sequential as expected
+src/Chap53/GraphSearchStPer.rs:176: info: St fn `graph_search_explore` sequential as expected
+src/Chap53/GraphSearchStPer.rs:278: info: St fn `graph_search_multi` sequential as expected
+src/Chap53/GraphSearchStPer.rs:305: info: St fn `graph_search` sequential as expected
+src/Chap53/GraphSearchStPer.rs:310: info: St fn `graph_search_multi` sequential as expected
+src/Chap53/GraphSearchStPer.rs:315: info: St fn `reachable` sequential as expected
 src/Chap53/PQMinStEph.rs:115: error: fn `pq_min` missing alg analysis annotation
 src/Chap53/PQMinStEph.rs:122: error: fn `pq_min_multi` missing alg analysis annotation
 src/Chap53/PQMinStEph.rs:174: error: fn `pq_find_min_priority` missing alg analysis annotation
@@ -3225,17 +3210,17 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2240  (fns with any APAS or Code review line)
-  Missing alg analysis:      2844  <- errors
+  Alg analysis annotations:  2267  (fns with any APAS or Code review line)
+  Missing alg analysis:      2817  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
-  St DIFFERS (expected):      266  <- info
+  St DIFFERS (expected):      278  <- info
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2949
+  Errors: 2922
   Warnings: 0
-  Info: 266
+  Info: 278
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log
