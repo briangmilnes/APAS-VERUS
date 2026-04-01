@@ -1,0 +1,525 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/rwlock_no_ghost_field.rs:111:19
+    |
+111 |         pub cell: PCell<u64>,
+    |                   ^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/rwlock_no_ghost_field.rs:152:41
+    |
+152 |             let (cell, Tracked(perm)) = PCell::empty();
+    |                                         ^^^^^
+
+error[E0373]: closure may outlive the current function, but it borrows `u`, which is owned by the current function
+   --> src/Chap52/AdjSeqGraphMtPer.rs:368:18
+    |
+368 |                 &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `u`
+...
+382 |                     if k == u {
+    |                             - `u` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjSeqGraphMtPer.rs:367:30
+    |
+367 |               let result_adj = ArraySeqMtPerS::tabulate(
+    |  ______________________________^
+368 | |                 &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+369 | |                     requires k < n_v
+370 | |                     ensures
+...   |
+403 | |                 n_v,
+404 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `u` (and any other referenced variables), use the `move` keyword
+    |
+368 |                 &move |k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                  ++++
+
+error[E0597]: `new_neighbors` does not live long enough
+   --> src/Chap52/AdjSeqGraphMtPer.rs:383:38
+    |
+324 |               let new_neighbors: ArraySeqMtPerS<usize>;
+    |                   ------------- binding `new_neighbors` declared here
+...
+368 |                   &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                    --------------------------------------- value captured here
+...
+383 |                           let nn_len = new_neighbors.length();
+    |                                        ^^^^^^^^^^^^^ borrowed value does not live long enough
+384 | /                         ArraySeqMtPerS::tabulate(
+385 | |                             &|i: usize| -> (r: usize)
+386 | |                                 requires i < nn_len
+387 | |                                 ensures r == new_neighbors.spec_index(i as int)
+388 | |                             { *new_neighbors.nth(i) },
+389 | |                             nn_len,
+390 | |                         )
+    | |_________________________- argument requires that `new_neighbors` is borrowed for `'static`
+...
+411 |           }
+    |           - `new_neighbors` dropped here while still borrowed
+
+error[E0521]: borrowed data escapes outside of method
+   --> src/Chap52/AdjSeqGraphMtPer.rs:394:25
+    |
+293 |           fn insert_edge(&self, u: usize, v: usize) -> (updated: Self) {
+    |                          -----
+    |                          |
+    |                          `self` is a reference that is only valid in the method body
+    |                          let's call the lifetime of this reference `'1`
+...
+394 | /                         ArraySeqMtPerS::tabulate(
+395 | |                             &|i: usize| -> (r: usize)
+396 | |                                 requires i < len
+397 | |                                 ensures r == src.spec_index(i as int)
+398 | |                             { *src.nth(i) },
+399 | |                             len,
+400 | |                         )
+    | |                         ^
+    | |                         |
+    | |_________________________`self` escapes the method body here
+    |                           argument requires that `'1` must outlive `'static`
+
+error[E0373]: closure may outlive the current function, but it borrows `u`, which is owned by the current function
+   --> src/Chap52/AdjSeqGraphMtPer.rs:444:18
+    |
+444 |                 &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `u`
+...
+458 |                     if k == u {
+    |                             - `u` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjSeqGraphMtPer.rs:443:30
+    |
+443 |               let result_adj = ArraySeqMtPerS::tabulate(
+    |  ______________________________^
+444 | |                 &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+445 | |                     requires k < n_v
+446 | |                     ensures
+...   |
+479 | |                 n_v,
+480 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `u` (and any other referenced variables), use the `move` keyword
+    |
+444 |                 &move |k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                  ++++
+
+error[E0597]: `new_neighbors` does not live long enough
+   --> src/Chap52/AdjSeqGraphMtPer.rs:459:38
+    |
+440 |               let new_neighbors = ArraySeqMtPerS::from_vec(nvec);
+    |                   ------------- binding `new_neighbors` declared here
+...
+444 |                   &|k: usize| -> (r: ArraySeqMtPerS<usize>)
+    |                    --------------------------------------- value captured here
+...
+459 |                           let nn_len = new_neighbors.length();
+    |                                        ^^^^^^^^^^^^^ borrowed value does not live long enough
+460 | /                         ArraySeqMtPerS::tabulate(
+461 | |                             &|i: usize| -> (r: usize)
+462 | |                                 requires i < nn_len
+463 | |                                 ensures r == new_neighbors.spec_index(i as int)
+464 | |                             { *new_neighbors.nth(i) },
+465 | |                             nn_len,
+466 | |                         )
+    | |_________________________- argument requires that `new_neighbors` is borrowed for `'static`
+...
+493 |           }
+    |           - `new_neighbors` dropped here while still borrowed
+
+error[E0521]: borrowed data escapes outside of method
+   --> src/Chap52/AdjSeqGraphMtPer.rs:470:25
+    |
+413 |           fn delete_edge(&self, u: usize, v: usize) -> (updated: Self) {
+    |                          -----
+    |                          |
+    |                          `self` is a reference that is only valid in the method body
+    |                          let's call the lifetime of this reference `'1`
+...
+470 | /                         ArraySeqMtPerS::tabulate(
+471 | |                             &|i: usize| -> (r: usize)
+472 | |                                 requires i < len
+473 | |                                 ensures r == src.spec_index(i as int)
+474 | |                             { *src.nth(i) },
+475 | |                             len,
+476 | |                         )
+    | |                         ^
+    | |                         |
+    | |_________________________`self` escapes the method body here
+    |                           argument requires that `'1` must outlive `'static`
+
+error[E0373]: closure may outlive the current function, but it borrows `n`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:239:18
+    |
+239 |                 &|_i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `n`
+...
+246 |                         n,
+    |                         - `n` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:238:26
+    |
+238 |               let matrix = ArraySeqMtPerS::tabulate(
+    |  __________________________^
+239 | |                 &|_i: usize| -> (r: ArraySeqMtPerS<bool>)
+240 | |                     ensures
+241 | |                         r.spec_len() == n,
+...   |
+249 | |                 n,
+250 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `n` (and any other referenced variables), use the `move` keyword
+    |
+239 |                 &move |_i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `v`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:408:18
+    |
+408 |                 &|j: usize| -> (r: bool)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `v`
+...
+417 |                     if j == v {
+    |                             - `v` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:407:27
+    |
+407 |               let new_row = ArraySeqMtPerS::tabulate(
+    |  ___________________________^
+408 | |                 &|j: usize| -> (r: bool)
+409 | |                     requires j < n
+410 | |                     ensures
+...   |
+423 | |                 n,
+424 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `v` (and any other referenced variables), use the `move` keyword
+    |
+408 |                 &move |j: usize| -> (r: bool)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `exists`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:408:18
+    |
+408 |                 &|j: usize| -> (r: bool)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `exists`
+...
+418 |                         exists
+    |                         ------ `exists` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:407:27
+    |
+407 |               let new_row = ArraySeqMtPerS::tabulate(
+    |  ___________________________^
+408 | |                 &|j: usize| -> (r: bool)
+409 | |                     requires j < n
+410 | |                     ensures
+...   |
+423 | |                 n,
+424 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `exists` (and any other referenced variables), use the `move` keyword
+    |
+408 |                 &move |j: usize| -> (r: bool)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `u`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:408:18
+    |
+408 |                 &|j: usize| -> (r: bool)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `u`
+...
+420 |                         *self.matrix.nth(u).nth(j)
+    |                                          - `u` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:407:27
+    |
+407 |               let new_row = ArraySeqMtPerS::tabulate(
+    |  ___________________________^
+408 | |                 &|j: usize| -> (r: bool)
+409 | |                     requires j < n
+410 | |                     ensures
+...   |
+423 | |                 n,
+424 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `u` (and any other referenced variables), use the `move` keyword
+    |
+408 |                 &move |j: usize| -> (r: bool)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `new_row`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:426:18
+    |
+426 |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `new_row`
+...
+440 |                         new_row.clone()
+    |                         ------- `new_row` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:425:26
+    |
+425 |               let matrix = ArraySeqMtPerS::tabulate(
+    |  __________________________^
+426 | |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+427 | |                     requires i < n
+428 | |                     ensures
+...   |
+452 | |                 n,
+453 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `new_row` (and any other referenced variables), use the `move` keyword
+    |
+426 |                 &move |i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `n`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:426:18
+    |
+426 |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `n`
+...
+448 |                             n,
+    |                             - `n` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:425:26
+    |
+425 |               let matrix = ArraySeqMtPerS::tabulate(
+    |  __________________________^
+426 | |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+427 | |                     requires i < n
+428 | |                     ensures
+...   |
+452 | |                 n,
+453 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `n` (and any other referenced variables), use the `move` keyword
+    |
+426 |                 &move |i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `u`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:426:18
+    |
+426 |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `u`
+...
+439 |                     if i == u {
+    |                             - `u` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:425:26
+    |
+425 |               let matrix = ArraySeqMtPerS::tabulate(
+    |  __________________________^
+426 | |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+427 | |                     requires i < n
+428 | |                     ensures
+...   |
+452 | |                 n,
+453 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `u` (and any other referenced variables), use the `move` keyword
+    |
+426 |                 &move |i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ++++
+
+error[E0521]: borrowed data escapes outside of method
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:443:25
+    |
+405 |           fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self) {
+    |                       -----
+    |                       |
+    |                       `self` is a reference that is only valid in the method body
+    |                       let's call the lifetime of this reference `'1`
+...
+443 | /                         ArraySeqMtPerS::tabulate(
+444 | |                             &|j: usize| -> (r: bool)
+445 | |                                 requires j < n
+446 | |                                 ensures r == row.spec_index(j as int)
+447 | |                             { *row.nth(j) },
+448 | |                             n,
+449 | |                         )
+    | |                         ^
+    | |                         |
+    | |_________________________`self` escapes the method body here
+    |                           argument requires that `'1` must outlive `'static`
+
+error[E0373]: closure may outlive the current function, but it borrows `i`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:469:26
+    |
+469 |                         &|j: usize| -> (r: bool)
+    |                          ^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `i`
+...
+473 |                             i != j && !*row.nth(j)
+    |                             - `i` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:468:21
+    |
+468 | /                     ArraySeqMtPerS::tabulate(
+469 | |                         &|j: usize| -> (r: bool)
+470 | |                             requires j < n
+471 | |                             ensures r == (i as int != j as int && !row.spec_index(j as int))
+...   |
+475 | |                         n,
+476 | |                     )
+    | |_____________________^
+help: to force the closure to take ownership of `i` (and any other referenced variables), use the `move` keyword
+    |
+469 |                         &move |j: usize| -> (r: bool)
+    |                          ++++
+
+error[E0373]: closure may outlive the current function, but it borrows `n`, which is owned by the current function
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:460:18
+    |
+460 |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `n`
+...
+475 |                         n,
+    |                         - `n` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:459:26
+    |
+459 |               let matrix = ArraySeqMtPerS::tabulate(
+    |  __________________________^
+460 | |                 &|i: usize| -> (r: ArraySeqMtPerS<bool>)
+461 | |                     requires i < n
+462 | |                     ensures
+...   |
+478 | |                 n,
+479 | |             );
+    | |_____________^
+help: to force the closure to take ownership of `n` (and any other referenced variables), use the `move` keyword
+    |
+460 |                 &move |i: usize| -> (r: ArraySeqMtPerS<bool>)
+    |                  ++++
+
+error[E0521]: borrowed data escapes outside of method
+   --> src/Chap52/AdjMatrixGraphMtPer.rs:468:21
+    |
+457 |           fn complement(&self) -> (complemented: Self) {
+    |                         -----
+    |                         |
+    |                         `self` is a reference that is only valid in the method body
+    |                         let's call the lifetime of this reference `'1`
+...
+468 | /                     ArraySeqMtPerS::tabulate(
+469 | |                         &|j: usize| -> (r: bool)
+470 | |                             requires j < n
+471 | |                             ensures r == (i as int != j as int && !row.spec_index(j as int))
+...   |
+475 | |                         n,
+476 | |                     )
+    | |                     ^
+    | |                     |
+    | |_____________________`self` escapes the method body here
+    |                       argument requires that `'1` must outlive `'static`
+
+error[E0521]: borrowed data escapes outside of function
+   --> src/Chap54/BFSMtPer.rs:169:9
+    |
+161 |       fn copy_distances(distances: &ArraySeqMtPerS<usize>) -> (copied: ArraySeqMtPerS<usize>)
+    |                         ---------  - let's call the lifetime of this reference `'1`
+    |                         |
+    |                         `distances` is a reference that is only valid in the function body
+...
+169 | /         ArraySeqMtPerS::tabulate(
+170 | |             &|idx: usize| -> (r: usize)
+171 | |                 requires idx < n, n == distances.spec_len()
+172 | |                 ensures r == distances.spec_index(idx as int)
+173 | |             { *distances.nth(idx) },
+174 | |             n,
+175 | |         )
+    | |         ^
+    | |         |
+    | |_________`distances` escapes the function body here
+    |           argument requires that `'1` must outlive `'static`
+
+error[E0521]: borrowed data escapes outside of function
+   --> src/Chap54/BFSMtPer.rs:200:17
+    |
+179 |       fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<usize>>)
+    |                     -----  - let's call the lifetime of this reference `'1`
+    |                     |
+    |                     `graph` is a reference that is only valid in the function body
+...
+200 | /                 ArraySeqMtPerS::tabulate(
+201 | |                     &|k: usize| -> (r: usize)
+202 | |                         requires k < adj_len, adj_len == adj.spec_len()
+203 | |                         ensures r == adj.spec_index(k as int)
+204 | |                     { *adj.nth(k) },
+205 | |                     adj_len,
+206 | |                 )
+    | |                 ^
+    | |                 |
+    | |_________________`graph` escapes the function body here
+    |                   argument requires that `'1` must outlive `'static`
+
+error[E0521]: borrowed data escapes outside of method
+   --> src/Chap54/BFSMtPer.rs:907:13
+    |
+905 |           fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>) {
+    |                              -----
+    |                              |
+    |                              `self` is a reference that is only valid in the method body
+    |                              let's call the lifetime of this reference `'1`
+906 |               let n = self.order.length();
+907 | /             ArraySeqMtPerS::tabulate(
+908 | |                 &|i: usize| -> (r: usize)
+909 | |                     requires i < n, n == self.order.spec_len()
+910 | |                     ensures r == self.order.spec_index((n - 1 - i) as int)
+911 | |                 { *self.order.nth(n - 1 - i) },
+912 | |                 n,
+913 | |             )
+    | |             ^
+    | |             |
+    | |_____________`self` escapes the method body here
+    |               argument requires that `'1` must outlive `'static`
+
+error[E0373]: closure may outlive the current function, but it borrows `n`, which is owned by the current function
+   --> src/Chap54/BFSMtPer.rs:908:18
+    |
+908 |                 &|i: usize| -> (r: usize)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^ may outlive borrowed value `n`
+...
+911 |                 { *self.order.nth(n - 1 - i) },
+    |                                   - `n` is borrowed here
+    |
+note: function requires argument type to outlive `'static`
+   --> src/Chap54/BFSMtPer.rs:907:13
+    |
+907 | /             ArraySeqMtPerS::tabulate(
+908 | |                 &|i: usize| -> (r: usize)
+909 | |                     requires i < n, n == self.order.spec_len()
+910 | |                     ensures r == self.order.spec_index((n - 1 - i) as int)
+911 | |                 { *self.order.nth(n - 1 - i) },
+912 | |                 n,
+913 | |             )
+    | |_____________^
+help: to force the closure to take ownership of `n` (and any other referenced variables), use the `move` keyword
+    |
+908 |                 &move |i: usize| -> (r: usize)
+    |                  ++++
+
+Some errors have detailed explanations: E0373, E0521, E0597.
+For more information about an error, try `rustc --explain E0373`.
+warning: `apas-verus` (lib test) generated 2 warnings
+error: could not compile `apas-verus` (lib test) due to 21 previous errors; 2 warnings emitted
+warning: build failed, waiting for other jobs to finish...
+warning: `apas-verus` (lib) generated 2 warnings (2 duplicates)
+error: could not compile `apas-verus` (lib) due to 21 previous errors; 2 warnings emitted
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 8s

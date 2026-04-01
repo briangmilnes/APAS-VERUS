@@ -53,6 +53,16 @@ pub mod clone_plus {
         f.clone()
     }
 
+    /// Clone a Fn(usize) -> T function preserving requires and ensures.
+    #[verifier::external_body]
+    pub fn clone_fn_usize<T, F: Fn(usize) -> T + Clone>(f: &F) -> (res: F)
+        ensures
+            forall|i: usize| f.requires((i,)) == res.requires((i,)),
+            forall|i: usize, r: T| f.ensures((i,), r) == res.ensures((i,), r),
+    {
+        f.clone()
+    }
+
     } // verus!
 }
 
@@ -69,4 +79,5 @@ pub mod clone_plus {
     pub fn clone_fn<T, U, F: Fn(&T) -> U + Clone>(f: &F) -> F { f.clone() }
     pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> F { f.clone() }
     pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> F { f.clone() }
+    pub fn clone_fn_usize<T, F: Fn(usize) -> T + Clone>(f: &F) -> F { f.clone() }
 }

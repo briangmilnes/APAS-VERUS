@@ -1,0 +1,73 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1426:17
+     |
+1426 |                   flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtPerS<T>| inner.seq@).flatten(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1430 | /             if outer_len == 0 {
+1431 | |                 proof {
+1432 | |                     assert(a.seq@.take(0int) =~= Seq::<ArraySeqMtPerS<T>>::empty());
+1433 | |                     assert(a.seq@ =~= a.seq@.take(0int));
+...    |
+1523 | |                 combined
+1524 | |             }
+     | |_____________- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap18/ArraySeqMtPer.rs:1457:25
+     |
+1457 | /                         forall|j: int| #![trigger left_outer_vec@[j]] 0 <= j < k
+1458 | |                             ==> left_outer_vec@[j].seq@.len() == a.seq@[j].seq@.len()
+1459 | |                             && forall|m: int| #![trigger left_outer_vec@[j].seq@[m]]
+1460 | |                                 0 <= m < a.seq@[j].seq@.len()
+1461 | |                                 ==> left_outer_vec@[j].seq@[m] == a.seq@[j].seq@[m],
+     | |___________________________________________________________________________________^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap18/ArraySeqMtPer.rs:1481:25
+     |
+1481 | /                         forall|j: int| #![trigger right_outer_vec@[j]] 0 <= j < k2
+1482 | |                             ==> right_outer_vec@[j].seq@.len() == a.seq@[mid as int + j].seq@.len()
+1483 | |                             && forall|m: int| #![trigger right_outer_vec@[j].seq@[m]]
+1484 | |                                 0 <= m < a.seq@[mid as int + j].seq@.len()
+1485 | |                                 ==> right_outer_vec@[j].seq@[m] == a.seq@[mid as int + j].seq@[m],
+     | |_________________________________________________________________________________________________^
+
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1509:32
+     |
+ 207 |                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
+     |                 ------------------------------------------------ failed precondition
+...
+1509 |                 let combined = Self::append(&left_flat, &right_flat);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1516:28
+     |
+1516 |                     assert(left_seqs =~= a.seq@.take(mid as int).map_values(|inner: ArraySeqMtPerS<T>| inner.seq@));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1517:28
+     |
+1517 |                     assert(right_seqs =~= a.seq@.skip(mid as int).map_values(|inner: ArraySeqMtPerS<T>| inner.seq@));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqMtPer.rs:207:17
+    |
+207 |                 a.seq@.len() + b.seq@.len() <= usize::MAX as int,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone() ✔
+clip(nat, left_flat.seq.view().len() + right_flat.seq.view().len()) <= UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 1011 verified, 3 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 876MB, peak z3 RSS: 216MB, min free: 23132MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 2s
