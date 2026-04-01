@@ -1829,40 +1829,6 @@ src/Chap42/TableStPer.rs:2485: error: fn `subtract` missing alg analysis annotat
 src/Chap42/TableStPer.rs:2594: error: fn `collect` missing alg analysis annotation
 src/Chap42/TableStPer.rs:2609: error: fn `from_sorted_entries` missing alg analysis annotation
 src/Chap42/TableStPer.rs:2623: error: fn `collect_by_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:80: error: fn `recalculate_reduction` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:91: error: fn `calculate_reduction` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:447: error: fn `size` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:454: error: fn `empty` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:471: error: fn `singleton` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:488: error: fn `find` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:492: error: fn `lookup` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:496: error: fn `is_empty` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:503: error: fn `insert` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:511: error: fn `delete` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:520: error: fn `domain` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:527: error: fn `tabulate` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:548: error: fn `map` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:564: error: fn `filter` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:580: error: fn `intersection` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:588: error: fn `union` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:596: error: fn `difference` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:604: error: fn `restrict` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:612: error: fn `subtract` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:620: error: fn `reduce` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:627: error: fn `collect` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:634: error: fn `first_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:641: error: fn `last_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:648: error: fn `previous_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:655: error: fn `next_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:662: error: fn `split_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:688: error: fn `join_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:696: error: fn `get_key_range` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:712: error: fn `rank_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:719: error: fn `select_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:726: error: fn `split_rank_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:752: error: fn `reduce_val` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:759: error: fn `reduce_range` missing alg analysis annotation
-src/Chap43/AugOrderedTableMtEph.rs:767: error: fn `reduce_range_parallel` missing alg analysis annotation
 src/Chap43/OrderedTableStPer.rs:728: error: St fn `get_key_range` Code review claims parallel span — Work O(log n + m) but Span O(log n) (St files are sequential)
 src/Chap44/DocumentIndex.rs:181: error: fn `make_index` missing alg analysis annotation
 src/Chap44/DocumentIndex.rs:344: error: fn `find` missing alg analysis annotation
@@ -2857,8 +2823,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2546  (fns with any APAS or Code review line)
-  Missing alg analysis:      2538  <- errors
+  Alg analysis annotations:  2580  (fns with any APAS or Code review line)
+  Missing alg analysis:      2504  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -2866,7 +2832,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2643
+  Errors: 2609
   Warnings: 0
   Info: 204
 
