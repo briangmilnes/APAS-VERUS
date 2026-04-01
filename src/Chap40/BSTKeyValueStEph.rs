@@ -506,7 +506,7 @@ pub mod BSTKeyValueStEph {
                     spec_root_key_link(link) != spec_root_key_link(old(link))
                     && TotalOrder::le(spec_root_key_link(link), spec_root_key_link(old(link)))
                 );
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
             requires spec_ordered_link(old(link)),
             ensures
@@ -515,7 +515,7 @@ pub mod BSTKeyValueStEph {
                 spec_ordered_link(link),
                 spec_node_count_link(link) == spec_node_count_link(old(link)) + if inserted { 1nat } else { 0nat },
             decreases old(link);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn delete_link(link: &mut Link<K, V>, key: &K) -> (deleted: bool)
             requires spec_ordered_link(old(link)),
             ensures
@@ -523,7 +523,7 @@ pub mod BSTKeyValueStEph {
                 spec_ordered_link(link),
                 spec_node_count_link(link) + if deleted { 1nat } else { 0nat } == spec_node_count_link(old(link)),
             decreases spec_node_count_link(old(link));
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
             requires
                 spec_ordered_link(link),
@@ -533,7 +533,7 @@ pub mod BSTKeyValueStEph {
                 found is Some ==> *found.unwrap() == spec_content_link(link)[*key],
                 spec_content_link(link).contains_key(*key) ==> found is Some,
             decreases *link;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn min_key_link(link: &Link<K, V>) -> (minimum: Option<&K>)
             ensures
                 link.is_none() ==> minimum.is_none(),
@@ -544,7 +544,7 @@ pub mod BSTKeyValueStEph {
                     _ => false,
                 },
             decreases *link;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn max_key_link(link: &Link<K, V>) -> (maximum: Option<&K>)
             ensures
                 link.is_none() ==> maximum.is_none(),
@@ -573,7 +573,7 @@ pub mod BSTKeyValueStEph {
         ) -> (maximum: usize)
             requires start < end, end <= items.len(),
             ensures start <= maximum && maximum < end;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst, Span O(n log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst
         fn build_treap_from_vec(
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
         ) -> (maximum: Link<K, V>)
@@ -756,7 +756,7 @@ pub mod BSTKeyValueStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert(&mut self, key: K, value: V, priority: u64) {
             let ghost old_count = spec_node_count_link(&self.root);
             let inserted = Self::insert_link(&mut self.root, key, value, priority);
@@ -765,7 +765,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn delete(&mut self, key: &K) {
             let deleted = Self::delete_link(&mut self.root, key);
             if deleted {
@@ -774,13 +774,13 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find(&self, key: &K) -> Option<&V> { Self::find_link(&self.root, key) }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn contains(&self, key: &K) -> bool { self.find(key).is_some() }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn get(&self, key: &K) -> Option<&V> { self.find(key) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -797,10 +797,10 @@ pub mod BSTKeyValueStEph {
             ArraySeqStPerS::from_vec(out)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn minimum_key(&self) -> Option<&K> { Self::min_key_link(&self.root) }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn maximum_key(&self) -> Option<&K> { Self::max_key_link(&self.root) }
 
         // Internal associated functions.
@@ -1029,7 +1029,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn insert_link(link: &mut Link<K, V>, key: K, value: V, priority: u64) -> (inserted: bool)
             decreases old(link),
         {
@@ -1167,7 +1167,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn delete_link(link: &mut Link<K, V>, key: &K) -> (deleted: bool)
             decreases spec_node_count_link(old(link)),
         {
@@ -1359,7 +1359,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn find_link<'a>(link: &'a Link<K, V>, key: &K) -> (found: Option<&'a V>)
             decreases *link,
         {
@@ -1428,7 +1428,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn min_key_link(link: &Link<K, V>) -> (minimum: Option<&K>)
             decreases *link,
         {
@@ -1441,7 +1441,7 @@ pub mod BSTKeyValueStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst
         fn max_key_link(link: &Link<K, V>) -> (maximum: Option<&K>)
             decreases *link,
         {
@@ -1507,7 +1507,7 @@ pub mod BSTKeyValueStEph {
             min_idx
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst, Span O(n log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst
         fn build_treap_from_vec(
             items: &Vec<(K, V, u64)>, start: usize, end: usize,
         ) -> (maximum: Link<K, V>)
