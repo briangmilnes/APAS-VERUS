@@ -42,21 +42,31 @@ pub trait FooMtLockedTrait: Sized {
 }
 ```
 
-**Unlocked trait** — the parallel implementation. Takes owned data (not behind a lock).
-Contains the D&C fork-join operations. Called by the locked trait after `acquire_write`,
-or called directly when the data is already owned (e.g., inside another module's lock).
+**Unlocked trait** — the full implementation on owned data (not behind a lock).
+Contains all operations: sequential (insert, find, size, nth) and parallel
+(map, reduce, filter, union). Called by the locked trait after `acquire_write`,
+or called directly when the data is already owned (e.g., inside another
+module's lock).
 
 ```rust
 pub trait FooMtUnlockedTrait: Sized {
-    fn map_dc(self, f: &F) -> Self
+    fn insert(self, x: T) -> Self
         requires self.wf(), ...
         ensures ...;
 
-    fn reduce_dc(&self, f: &F, id: T) -> T
+    fn find(&self, x: &T) -> Option<&T>
         requires self.wf(), ...
         ensures ...;
 
-    fn filter_dc(self, pred: &F) -> Self
+    fn size(&self) -> usize
+        requires self.wf(), ...
+        ensures ...;
+
+    fn map(self, f: &F) -> Self          // parallel internally where applicable
+        requires self.wf(), ...
+        ensures ...;
+
+    fn reduce(&self, f: &F, id: T) -> T  // parallel internally where applicable
         requires self.wf(), ...
         ensures ...;
 }
@@ -65,19 +75,26 @@ pub trait FooMtUnlockedTrait: Sized {
 The locked trait acquires the lock, calls the unlocked trait, releases:
 
 ```rust
-fn parallel_map(&mut self, f: &F) -> Result<(), ()> {
+fn map(&mut self, f: &F) -> Result<(), ()> {
     let (interior, write_handle) = self.lock.acquire_write();
     // capacity check...
-    let new_data = interior.data.map_dc(f);  // unlocked parallel operation
+    let new_data = interior.data.map(f);  // unlocked trait — parallel internally
     // step TSM...
     write_handle.release_write(new_interior);
     Ok(())
+}
+
+fn size(&self) -> usize {
+    let read_handle = self.lock.acquire_read();
+    let n = read_handle.borrow().data.size();  // unlocked trait — sequential
+    read_handle.release_read();
+    n
 }
 ```
 
 When M1 stores M2 inside its lock, M1's locked trait calls M2's **unlocked** trait
 directly on the owned M2 data — bypassing M2's lock since M1 already has exclusive
-access.
+access. This works for all operations, sequential or parallel.
 
 ## 3. Mt Inside Mt: Composable Parallelism
 
