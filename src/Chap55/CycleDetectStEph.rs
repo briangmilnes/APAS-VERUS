@@ -279,6 +279,7 @@ broadcast use vstd::seq::group_seq_axioms;
     /// Recursive DFS cycle detection using an ancestor array.
     /// Returns true if a cycle is found.
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — visits each vertex/edge once; St sequential.
     fn dfs_check_cycle(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -771,6 +772,7 @@ broadcast use vstd::seq::group_seq_axioms;
     impl CycleDetectStEphTrait for CycleDetectStEph {
         /// Detects if a directed graph contains a cycle.
         /// Returns true if a cycle exists, false otherwise.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS from each unvisited vertex; St sequential.
         fn has_cycle(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (has_cycle: bool)
         {
             let n = graph.length();

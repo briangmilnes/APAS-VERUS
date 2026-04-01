@@ -112,6 +112,7 @@ pub mod PQMinStEph {
             && obeys_feq_fulls::<P, V>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_min_multi; St sequential.
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
@@ -119,6 +120,7 @@ pub mod PQMinStEph {
         assert(obeys_feq_full_trigger::<V>());
          pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to free fn pq_min_multi; St sequential.
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
@@ -171,6 +173,7 @@ pub mod PQMinStEph {
         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — AVL to_seq + nth(0) for min; St sequential.
     fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
     ) -> (min_vertex: Option<V>)
@@ -197,6 +200,7 @@ pub mod PQMinStEph {
         }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — |V| rounds × (find_min O(log V) + neighbor scan O(deg) × AVL insert O(log V)); St sequential.
     #[verifier::exec_allows_no_decreases_clause]
     fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
         graph: &G,
@@ -484,6 +488,7 @@ pub mod PQMinStEph {
     }
 
     /// Priority-first search from multiple sources (Section 53.4).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_explore; St sequential.
     pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,

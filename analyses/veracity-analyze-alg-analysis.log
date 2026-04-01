@@ -3025,17 +3025,17 @@ src/Chap53/GraphSearchStPer.rs:278: info: St fn `graph_search_multi` sequential 
 src/Chap53/GraphSearchStPer.rs:305: info: St fn `graph_search` sequential as expected
 src/Chap53/GraphSearchStPer.rs:310: info: St fn `graph_search_multi` sequential as expected
 src/Chap53/GraphSearchStPer.rs:315: info: St fn `reachable` sequential as expected
-src/Chap53/PQMinStEph.rs:115: error: fn `pq_min` missing alg analysis annotation
-src/Chap53/PQMinStEph.rs:122: error: fn `pq_min_multi` missing alg analysis annotation
-src/Chap53/PQMinStEph.rs:174: error: fn `pq_find_min_priority` missing alg analysis annotation
-src/Chap53/PQMinStEph.rs:201: error: fn `pq_explore` missing alg analysis annotation
-src/Chap53/PQMinStEph.rs:487: error: fn `pq_min_multi` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:111: error: fn `pq_min` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:117: error: fn `pq_min_multi` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:125: error: fn `pq_min` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:161: error: fn `pq_find_min_priority` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:190: error: fn `pq_explore` missing alg analysis annotation
-src/Chap53/PQMinStPer.rs:441: error: fn `pq_min_multi` missing alg analysis annotation
+src/Chap53/PQMinStEph.rs:116: info: St fn `pq_min` sequential as expected
+src/Chap53/PQMinStEph.rs:124: info: St fn `pq_min_multi` sequential as expected
+src/Chap53/PQMinStEph.rs:177: info: St fn `pq_find_min_priority` sequential as expected
+src/Chap53/PQMinStEph.rs:205: info: St fn `pq_explore` sequential as expected
+src/Chap53/PQMinStEph.rs:492: info: St fn `pq_min_multi` sequential as expected
+src/Chap53/PQMinStPer.rs:112: info: St fn `pq_min` sequential as expected
+src/Chap53/PQMinStPer.rs:119: info: St fn `pq_min_multi` sequential as expected
+src/Chap53/PQMinStPer.rs:128: info: St fn `pq_min` sequential as expected
+src/Chap53/PQMinStPer.rs:165: info: St fn `pq_find_min_priority` sequential as expected
+src/Chap53/PQMinStPer.rs:195: info: St fn `pq_explore` sequential as expected
+src/Chap53/PQMinStPer.rs:447: info: St fn `pq_min_multi` sequential as expected
 src/Chap54/BFSMtEph.rs:162: error: fn `copy_distances` missing alg analysis annotation
 src/Chap54/BFSMtEph.rs:180: error: fn `copy_graph` missing alg analysis annotation
 src/Chap54/BFSMtEph.rs:264: error: fn `top_down_order` missing alg analysis annotation
@@ -3068,36 +3068,36 @@ src/Chap54/BFSStPer.rs:194: error: fn `bottom_up_order` missing alg analysis ann
 src/Chap54/BFSStPer.rs:320: error: fn `bfs_tree` missing alg analysis annotation
 src/Chap54/BFSStPer.rs:437: error: fn `top_down_order` missing alg analysis annotation
 src/Chap54/BFSStPer.rs:442: error: fn `bottom_up_order` missing alg analysis annotation
-src/Chap55/CycleDetectStEph.rs:282: error: fn `dfs_check_cycle` missing alg analysis annotation
-src/Chap55/CycleDetectStEph.rs:774: error: fn `has_cycle` missing alg analysis annotation
-src/Chap55/CycleDetectStPer.rs:256: error: fn `has_cycle` missing alg analysis annotation
-src/Chap55/CycleDetectStPer.rs:268: error: fn `dfs_check_cycle` missing alg analysis annotation
-src/Chap55/CycleDetectStPer.rs:604: error: fn `has_cycle` missing alg analysis annotation
-src/Chap55/DFSStEph.rs:222: error: fn `dfs_recursive` missing alg analysis annotation
-src/Chap55/DFSStEph.rs:461: error: fn `dfs` missing alg analysis annotation
-src/Chap55/DFSStPer.rs:218: error: fn `dfs_recursive` missing alg analysis annotation
-src/Chap55/DFSStPer.rs:420: error: fn `dfs` missing alg analysis annotation
-src/Chap55/SCCStEph.rs:92: error: fn `compute_finish_order` missing alg analysis annotation
-src/Chap55/SCCStEph.rs:186: error: fn `transpose_graph` missing alg analysis annotation
-src/Chap55/SCCStEph.rs:316: error: fn `check_wf_adj_list_eph` missing alg analysis annotation
-src/Chap55/SCCStEph.rs:369: error: fn `dfs_reach` missing alg analysis annotation
-src/Chap55/SCCStEph.rs:488: error: fn `scc` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:71: error: fn `scc` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:83: error: fn `dfs_finish_order` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:176: error: fn `compute_finish_order` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:264: error: fn `transpose_graph` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:390: error: fn `check_wf_adj_list_per` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:445: error: fn `dfs_reach` missing alg analysis annotation
-src/Chap55/SCCStPer.rs:547: error: fn `scc` missing alg analysis annotation
-src/Chap55/TopoSortStEph.rs:412: error: fn `dfs_finish_order` missing alg analysis annotation
-src/Chap55/TopoSortStEph.rs:752: error: fn `dfs_finish_order_cycle_detect` missing alg analysis annotation
-src/Chap55/TopoSortStEph.rs:875: error: fn `topological_sort_opt` missing alg analysis annotation
-src/Chap55/TopoSortStEph.rs:898: error: fn `topo_sort` missing alg analysis annotation
-src/Chap55/TopoSortStPer.rs:267: error: fn `topo_sort` missing alg analysis annotation
-src/Chap55/TopoSortStPer.rs:280: error: fn `dfs_finish_order` missing alg analysis annotation
-src/Chap55/TopoSortStPer.rs:586: error: fn `dfs_finish_order_cycle_detect` missing alg analysis annotation
-src/Chap55/TopoSortStPer.rs:683: error: fn `topological_sort_opt` missing alg analysis annotation
-src/Chap55/TopoSortStPer.rs:706: error: fn `topo_sort` missing alg analysis annotation
+src/Chap55/CycleDetectStEph.rs:283: info: St fn `dfs_check_cycle` sequential as expected
+src/Chap55/CycleDetectStEph.rs:776: info: St fn `has_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:257: info: St fn `has_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:270: info: St fn `dfs_check_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:607: info: St fn `has_cycle` sequential as expected
+src/Chap55/DFSStEph.rs:223: info: St fn `dfs_recursive` sequential as expected
+src/Chap55/DFSStEph.rs:463: info: St fn `dfs` sequential as expected
+src/Chap55/DFSStPer.rs:219: info: St fn `dfs_recursive` sequential as expected
+src/Chap55/DFSStPer.rs:422: info: St fn `dfs` sequential as expected
+src/Chap55/SCCStEph.rs:93: info: St fn `compute_finish_order` sequential as expected
+src/Chap55/SCCStEph.rs:188: info: St fn `transpose_graph` sequential as expected
+src/Chap55/SCCStEph.rs:319: info: St fn `check_wf_adj_list_eph` sequential as expected
+src/Chap55/SCCStEph.rs:373: info: St fn `dfs_reach` sequential as expected
+src/Chap55/SCCStEph.rs:493: info: St fn `scc` sequential as expected
+src/Chap55/SCCStPer.rs:72: info: St fn `scc` sequential as expected
+src/Chap55/SCCStPer.rs:85: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/SCCStPer.rs:179: info: St fn `compute_finish_order` sequential as expected
+src/Chap55/SCCStPer.rs:268: info: St fn `transpose_graph` sequential as expected
+src/Chap55/SCCStPer.rs:395: info: St fn `check_wf_adj_list_per` sequential as expected
+src/Chap55/SCCStPer.rs:451: info: St fn `dfs_reach` sequential as expected
+src/Chap55/SCCStPer.rs:554: info: St fn `scc` sequential as expected
+src/Chap55/TopoSortStEph.rs:413: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/TopoSortStEph.rs:754: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
+src/Chap55/TopoSortStEph.rs:878: info: St fn `topological_sort_opt` sequential as expected
+src/Chap55/TopoSortStEph.rs:902: info: St fn `topo_sort` sequential as expected
+src/Chap55/TopoSortStPer.rs:268: info: St fn `topo_sort` sequential as expected
+src/Chap55/TopoSortStPer.rs:282: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/TopoSortStPer.rs:589: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
+src/Chap55/TopoSortStPer.rs:687: info: St fn `topological_sort_opt` sequential as expected
+src/Chap55/TopoSortStPer.rs:711: info: St fn `topo_sort` sequential as expected
 src/Chap56/AllPairsResultStEphF64.rs:109: error: fn `new` missing alg analysis annotation
 src/Chap56/AllPairsResultStEphF64.rs:168: error: fn `get_distance` missing alg analysis annotation
 src/Chap56/AllPairsResultStEphF64.rs:179: error: fn `set_distance` missing alg analysis annotation
@@ -3210,17 +3210,17 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2267  (fns with any APAS or Code review line)
-  Missing alg analysis:      2817  <- errors
+  Alg analysis annotations:  2308  (fns with any APAS or Code review line)
+  Missing alg analysis:      2776  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
-  St DIFFERS (expected):      278  <- info
+  St DIFFERS (expected):      319  <- info
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2922
+  Errors: 2881
   Warnings: 0
-  Info: 278
+  Info: 319
 
 Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log

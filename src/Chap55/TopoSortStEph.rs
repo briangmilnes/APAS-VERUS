@@ -409,6 +409,7 @@ broadcast use {
 
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
     pub fn dfs_finish_order(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -749,6 +750,7 @@ broadcast use {
 
     /// Recursive DFS with cycle detection via rec_stack.
     /// Returns true if no cycle found, false if cycle detected.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS with ancestor tracking; St sequential.
     fn dfs_finish_order_cycle_detect(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
         visited: &mut ArraySeqStEphS<bool>,
@@ -872,6 +874,7 @@ broadcast use {
     }
 
     /// Returns Some(sequence) if graph is acyclic, None if contains a cycle.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS + cycle check + reverse; St sequential.
     pub fn topological_sort_opt(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (topo_order: Option<AVLTreeSeqStEphS<usize>>)
         requires
             spec_toposortsteph_wf(graph),
@@ -895,6 +898,7 @@ broadcast use {
 
     impl TopoSortStEphTrait for TopoSortStEph {
         /// Returns sequence of vertices in topological order.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS finish order + reverse; St sequential.
         fn topo_sort(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (order: AVLTreeSeqStEphS<usize>)
         {
             let n = graph.length();
