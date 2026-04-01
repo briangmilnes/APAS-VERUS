@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap18/
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/Chap18/ArraySeqMtPer.rs
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -20,27 +20,6 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-⚠ ArraySeq.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1628: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1624 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1626 |         {
-      1627 |             let equal = self.seq == other.seq;
-      1629 |             equal
-      1630 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1469: info: external_accept_hole
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeq.rs:1601: info: external_accept_hole
-   Info: 2 total
-⚠ ArraySeqMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:1760: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1756 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1758 |         {
-      1759 |             let equal = self.seq == other.seq;
-      1761 |             equal
-      1762 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEph.rs:535: info: trivial_spec_wf
-   Info: 1 total
 ⚠ ArraySeqMtPer.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:1633: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1629 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -51,60 +30,6 @@ Table of Contents:
       1635 |         }
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtPer.rs:360: info: trivial_spec_wf
    Info: 1 total
-⚠ ArraySeqStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:1061: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1057 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1059 |         {
-      1060 |             let equal = self.seq == other.seq;
-      1062 |             equal
-      1063 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStEph.rs:360: info: trivial_spec_wf
-   Info: 1 total
-⚠ ArraySeqStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:1023: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1019 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1021 |         {
-      1022 |             let equal = self.seq == other.seq;
-      1024 |             equal
-      1025 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqStPer.rs:350: info: trivial_spec_wf
-   Info: 1 total
-⚠ LinkedListStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:878: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       874 |         fn clone(&self) -> (cloned: Self)
-            ...
-       876 |         {
-       877 |             let cloned = LinkedListStEphS { seq: self.seq.clone() };
-       879 |             cloned
-       880 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:892: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       888 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       890 |         {
-       891 |             let equal = self.seq == other.seq;
-       893 |             equal
-       894 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStEph.rs:297: info: trivial_spec_wf
-   Info: 1 total
-⚠ LinkedListStPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:861: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       857 |         fn clone(&self) -> (cloned: Self)
-            ...
-       859 |         {
-       860 |             let cloned = LinkedListStPerS { seq: self.seq.clone() };
-       862 |             cloned
-       863 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:875: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       871 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       873 |         {
-       874 |             let equal = self.seq == other.seq;
-       876 |             equal
-       877 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/LinkedListStPer.rs:289: info: trivial_spec_wf
-   Info: 1 total
 
 =================================================================
 2. Depends Upon
@@ -114,57 +39,44 @@ Table of Contents:
 2.1. By Module
 =================================================================
 
-ArraySeq  depends upon only clean modules
-ArraySeqMtEph  depends upon only clean modules
 ArraySeqMtPer  depends upon only clean modules
-ArraySeqStEph  depends upon only clean modules
-ArraySeqStPer  depends upon only clean modules
-LinkedListStEph  depends upon only clean modules
-LinkedListStPer  depends upon only clean modules
 
 =================================================================
 2.2. By File
 =================================================================
 
-ArraySeq.rs  depends upon only clean modules
-ArraySeqMtEph.rs  depends upon only clean modules
 ArraySeqMtPer.rs  depends upon only clean modules
-ArraySeqStEph.rs  depends upon only clean modules
-ArraySeqStPer.rs  depends upon only clean modules
-LinkedListStEph.rs  depends upon only clean modules
-LinkedListStPer.rs  depends upon only clean modules
 
 =================================================================
 3. Summary of Holes
 =================================================================
 
 Modules:
-   7 clean (no holes, no errors; 100%)
+   1 clean (no holes, no errors; 100%)
    0 holed (holes or errors, 0%)
-   7 total
+   1 total
 
 Proof Functions:
-   20 clean (100%)
+   2 clean (100%)
    0 holed (0%)
-   20 total
+   2 total
 
 Function Specs:
-   346 exec fns with complete spec (requires+ensures) (66%)
+   53 exec fns with complete spec (requires+ensures) (69%)
    0 exec fns missing spec (0%)
-   171 proof/spec fns clean (33%)
+   23 proof/spec fns clean (30%)
    0 proof/spec fns with holes (0%)
-   517 total fns
+   76 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 9 total
-   9 × assume_eq_clone_workaround
+Warnings: 1 total
+   1 × assume_eq_clone_workaround
 
-Accepted (reviewed): 8 total
-   6 × trivial_spec_wf
-   2 × external_accept_hole
+Accepted (reviewed): 1 total
+   1 × trivial_spec_wf
 
 No proof holes found! All proofs are complete.
 
@@ -172,15 +84,8 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-31 23:03:44 -07:00
-Ended:     2026-03-31 23:03:44 -07:00
-Duration:  146ms
-
-Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
-=======================
-
-Started:   2026-03-31 23:03:44 -07:00
-Ended:     2026-03-31 23:03:44 -07:00
-Duration:  146ms
+Started:   2026-04-01 06:02:11 -07:00
+Ended:     2026-04-01 06:02:11 -07:00
+Duration:  22ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log

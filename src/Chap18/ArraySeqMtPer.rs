@@ -289,11 +289,10 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS (parallel divide-and-conquer via join)
-        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone + Eq + Send + Sync + 'static
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential fold; parallel reduce_inner available via bare impl
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone
             requires
-                obeys_feq_clone::<T>(),
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
@@ -320,12 +319,9 @@ pub mod ArraySeqMtPer {
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — parallel D&C via join; O(lg n) from Vec copy overhead
-        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
-            where T: Clone + Eq + Send + Sync + 'static
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop; parallel map_inner available via bare impl
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
             requires
-                obeys_feq_clone::<T>(),
-                obeys_feq_clone::<U>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
                 mapped.seq@.len() == a.seq@.len(),
@@ -698,20 +694,41 @@ pub mod ArraySeqMtPer {
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone + Eq + Send + Sync + 'static
+        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone
         {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
-            if len == 0 {
+            let mut acc = id;
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    acc == s.take(i as int).fold_left(id, spec_f),
+                decreases len - i,
+            {
                 proof {
-                    let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-                    assert(s =~= Seq::<T>::empty());
-                    reveal_with_fuel(Seq::fold_left, 1);
+                    a.lemma_spec_index(i as int);
+                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
-                id
-            } else {
-                Self::reduce_inner(a, f, Ghost(spec_f), id)
+                acc = f(&acc, &a.seq[i]);
+                proof {
+                    let ghost t = s.take(i as int + 1);
+                    assert(t.len() > 0);
+                    assert(t.drop_last() =~= s.take(i as int));
+                    assert(t.last() == s[i as int]);
+                    reveal(Seq::fold_left);
+                }
+                i += 1;
             }
+            proof {
+                assert(s.take(len as int) =~= s);
+            }
+            acc
         }
 
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtPerS<T>, T))
@@ -769,10 +786,24 @@ pub mod ArraySeqMtPer {
             (scanned_seq, acc)
         }
 
-        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
-            where T: Clone + Eq + Send + Sync + 'static
+        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
         {
-            Self::map_inner(a, f)
+            let len = a.seq.len();
+            let mut seq: Vec<U> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len == a.seq@.len(),
+                    seq@.len() == i as int,
+                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
+                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
+                decreases len - i,
+            {
+                seq.push(f(&a.seq[i]));
+                i += 1;
+            }
+            ArraySeqMtPerS { seq }
         }
 
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtPerS<T>)

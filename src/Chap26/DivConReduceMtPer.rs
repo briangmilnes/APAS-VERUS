@@ -218,60 +218,61 @@ pub mod DivConReduceMtPer {
     }
 
 
-    //		9. external_body bridge fns
-    //
-    // Verus cannot verify Clone/Send/Sync for closure or function-item types.
-    // These bridges call reduce with concrete closures; the ensures spec is
-    // tight (reduce's own postcondition guarantees the fold_left result).
+    //		9. bridge fns (named closures with ensures per standard 8)
 
-    #[verifier::external_body]
     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        requires spec_monoid(spec_max_fn(), 0usize)
         ensures reduced == spec_iterate(
             Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_max_fn(), 0usize)
     {
-        ArraySeqMtPerS::reduce(a,
-            &|x: &usize, y: &usize| if *x >= *y { *x } else { *y },
-            Ghost::assume_new(), 0)
+        let f = |x: &usize, y: &usize| -> (r: usize)
+            ensures r == spec_max_fn()(*x, *y)
+        { if *x >= *y { *x } else { *y } };
+        ArraySeqMtPerS::reduce(a, &f, Ghost(spec_max_fn()), 0)
     }
 
-    #[verifier::external_body]
     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        requires spec_monoid(spec_sum_fn(), 0usize)
         ensures reduced == spec_iterate(
             Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0usize)
     {
-        ArraySeqMtPerS::reduce(a,
-            &|x: &usize, y: &usize| (*x).wrapping_add(*y),
-            Ghost::assume_new(), 0)
+        let f = |x: &usize, y: &usize| -> (r: usize)
+            ensures r == spec_wrapping_add(*x, *y)
+        { (*x).wrapping_add(*y) };
+        ArraySeqMtPerS::reduce(a, &f, Ghost(spec_sum_fn()), 0)
     }
 
-    #[verifier::external_body]
     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        requires spec_monoid(spec_product_fn(), 1usize)
         ensures reduced == spec_iterate(
             Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1usize)
     {
-        ArraySeqMtPerS::reduce(a,
-            &|x: &usize, y: &usize| (*x).wrapping_mul(*y),
-            Ghost::assume_new(), 1)
+        let f = |x: &usize, y: &usize| -> (r: usize)
+            ensures r == spec_wrapping_mul(*x, *y)
+        { (*x).wrapping_mul(*y) };
+        ArraySeqMtPerS::reduce(a, &f, Ghost(spec_product_fn()), 1)
     }
 
-    #[verifier::external_body]
     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+        requires spec_monoid(spec_or_fn(), false)
         ensures reduced == spec_iterate(
             Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false)
     {
-        ArraySeqMtPerS::reduce(a,
-            &|x: &bool, y: &bool| *x || *y,
-            Ghost::assume_new(), false)
+        let f = |x: &bool, y: &bool| -> (r: bool)
+            ensures r == spec_or_fn()(*x, *y)
+        { *x || *y };
+        ArraySeqMtPerS::reduce(a, &f, Ghost(spec_or_fn()), false)
     }
 
-    #[verifier::external_body]
     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+        requires spec_monoid(spec_and_fn(), true)
         ensures reduced == spec_iterate(
             Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true)
     {
-        ArraySeqMtPerS::reduce(a,
-            &|x: &bool, y: &bool| *x && *y,
-            Ghost::assume_new(), true)
+        let f = |x: &bool, y: &bool| -> (r: bool)
+            ensures r == spec_and_fn()(*x, *y)
+        { *x && *y };
+        ArraySeqMtPerS::reduce(a, &f, Ghost(spec_and_fn()), true)
     }
 
     //		9. impls
@@ -283,15 +284,18 @@ pub mod DivConReduceMtPer {
                 return None;
             }
 
-            let max_val = call_reduce_max(a);
-
             proof {
-                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 assert forall|x: usize| #[trigger] spec_max_fn()(0 as usize, x) == x by {}
                 assert forall|x: usize| #[trigger] spec_max_fn()(x, 0 as usize) == x by {}
                 assert forall|x: usize, y: usize, z: usize|
                     #[trigger] spec_max_fn()(spec_max_fn()(x, y), z)
                     == spec_max_fn()(x, spec_max_fn()(y, z)) by {}
+            }
+
+            let max_val = call_reduce_max(a);
+
+            proof {
+                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 lemma_max_fold_left_bound(s, 0);
                 lemma_max_fold_left_achievable(s, 0);
                 assert(max_val == s.fold_left(0 as usize, spec_max_fn()));

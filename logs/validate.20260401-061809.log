@@ -1,0 +1,50 @@
+error: precondition not satisfied
+   --> src/Chap26/DivConReduceMtPer.rs:250:9
+    |
+250 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_product_fn()), 1)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:296:17
+    |
+296 |                 spec_monoid(spec_f, id),
+    |                 ----------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/monoid.rs:25:9
+    |
+ 25 |         associative(f) && spec_left_identity(f, id) && spec_right_identity(f, id)
+    |         ^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:296:17
+    |
+296 |                 spec_monoid(spec_f, id),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_monoid(tmp%, 1) ✘
+|   associative(tmp%) ✘
+|   |   forall |x, y, z|
+|   |       tmp%(x, tmp%(y, z)) == tmp%(tmp%(x, y), z) 
+|   +---
+|   spec_left_identity(tmp%, 1) ✘
+|   |   forall |x|
+|   |       tmp%(1, x) == x 
+|   +---
+|   spec_right_identity(tmp%, 1) ✘
+|   |   forall |x|
+|   |       tmp%(x, 1) == x 
+|   +---
++---
+forall |x, y|
+    ClosureReq(f, (x, y)) ✔
+forall |x, y, ret|
+    ClosureEns(f, (x, y), ret) ==>
+        ret == tmp%(x, y) ✔
+
+verification results:: 1134 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 908MB, peak z3 RSS: 322MB, min free: 22938MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 12s
