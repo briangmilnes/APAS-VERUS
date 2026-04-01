@@ -1,0 +1,88 @@
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:212:28
+    |
+212 |                     assert(idx < it@.0);
+    |                            ^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+idx < it.view().0 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:175:52
+    |
+175 |                     #[trigger] right@.contains_key(verts_view[j]@),
+    |                                                    ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:184:56
+    |
+184 |                         assert(pre_merged.contains_key(verts_view[j]@));
+    |                                                        ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:183:57
+    |
+183 |                         #[trigger] merged@.contains_key(verts_view[j]@) by {
+    |                                                         ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:166:53
+    |
+166 |                     #[trigger] merged@.contains_key(verts_view[j]@),
+    |                                                     ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: automatically chose triggers for this expression:
+   --> src/Chap62/StarPartitionMtEph.rs:208:32
+    |
+208 |                     let pair = choose|pair: (V, bool)| it_seq.contains(pair) && pair.0@ == verts_view[j]@;
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap62/StarPartitionMtEph.rs:208:56
+    |
+208 |                     let pair = choose|pair: (V, bool)| it_seq.contains(pair) && pair.0@ == verts_view[j]@;
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap62/StarPartitionMtEph.rs:208:32
+    |
+208 |                     let pair = choose|pair: (V, bool)| it_seq.contains(pair) && pair.0@ == verts_view[j]@;
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1296 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1882MB, peak z3 RSS: 263MB, min free: 22295MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 15s

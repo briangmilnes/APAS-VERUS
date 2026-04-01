@@ -1,0 +1,24 @@
+error: postcondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:277:13
+    |
+277 | /             forall|s: int| 0 <= s < result@.len() ==>
+278 | |                 #[trigger] spec_valid_th_entry(result@[s], nv as nat, coin_flips@, vertices@, vertex_to_index@),
+    | |_______________________________________________________________________________________________________________^ failed this postcondition
+...
+320 |               return result;
+    |               ------------- at this exit
+
+note: diagnostics via expansion
+
+note: 
+
+forall |s|
+    let tmp%% = 0 in let tmp%% = s in let tmp%% = result.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        spec_valid_th_entry(result.view().index(s), old(nv), old(coin_flips).view(), old(vertices).view(), old(vertex_to_index).view()) 
+
+verification results:: 1297 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 12133MB, peak z3 RSS: 256MB, min free: 12413MB
+Sampled CPU Usage: rust_verify: 256s, z3 children: 192s
