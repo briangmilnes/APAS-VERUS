@@ -1,0 +1,34 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:766:13
+    |
+766 |             assert forall|j: int| start as int <= j < end as int implies
+    |             ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap62/StarPartitionMtEph.rs:631:17
+    |
+631 | /                 forall|j2: int| mid as int <= j2 < j as int ==>
+632 | |                     #[trigger] merged@.contains_key(verts_view[j2]@) &&
+633 | |                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
+    | |_____________________________________________________________^
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:673:21
+    |
+673 |                     exists|j2: int| start as int <= j2 < j as int + 1 && #[trigger] verts_view[j2]@ == v_view by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |j2| let tmp%% = start in let tmp%% = j2 in let tmp%% = j + 1 in tmp%% <= tmp%% && tmp%% < tmp%% && verts_view.index(j2).view() == v_view) 
+
+verification results:: 1332 verified, 1 errors
+error: aborting due to 2 previous errors; 1 warning emitted
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 2158MB, peak z3 RSS: 260MB, min free: 23062MB
+Sampled CPU Usage: rust_verify: 31s, z3 children: 16s

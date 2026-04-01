@@ -1,0 +1,38 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+   --> src/Chap62/StarPartitionMtEph.rs:807:13
+    |
+807 |             assert forall|j: int| start as int <= j < end as int implies
+    |             ^^^^^^
+    |
+    = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:697:21
+    |
+697 | /                     dom_witnesses.contains_key(v_view) &&
+698 | |                     start as int <= dom_witnesses[v_view] < j as int + 1 &&
+699 | |                     verts_view[dom_witnesses[v_view]]@ == v_view by {
+    | |________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap62/StarPartitionMtEph.rs:698:21
+    |
+698 |                     start as int <= dom_witnesses[v_view] < j as int + 1 &&
+    |                     ^^^^^
+
+note: 
+
+dom_witnesses.dom().contains(v_view) ✔
+let tmp%% = start;
+    let tmp%% = dom_witnesses.index(v_view);
+        let tmp%% = j + 1;
+            tmp%% <= tmp%% ✘
+            tmp%% < tmp%% ✔
+verts_view.index(dom_witnesses.index(v_view)).view() == v_view ✔
+
+verification results:: 1332 verified, 1 errors
+error: aborting due to 1 previous error; 1 warning emitted
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1907MB, peak z3 RSS: 214MB, min free: 22242MB
+Sampled CPU Usage: rust_verify: 25s, z3 children: 17s

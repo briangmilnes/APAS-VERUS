@@ -1,0 +1,18 @@
+error: expected `,`
+   --> src/Chap62/StarPartitionMtEph.rs:716:45
+    |
+716 |                         assert(j as int < j as int + 1);
+    |                                             ^^
+
+error[E0432]: unresolved import `crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition`
+  --> src/Chap62/StarContractionMtEph.rs:21:9
+   |
+21 |     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `parallel_star_partition` in `Chap62::StarPartitionMtEph::StarPartitionMtEph`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 212MB, peak z3 RSS: 0MB, min free: 24295MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

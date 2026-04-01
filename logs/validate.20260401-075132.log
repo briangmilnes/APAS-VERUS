@@ -1,0 +1,47 @@
+error: precondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:401:13
+    |
+267 | /             forall|k: int| start as int <= k < end as int ==>
+268 | |                 #[trigger] coin_flips@.contains_key(edges@[k]@.0) &&
+269 | |                 coin_flips@.contains_key(edges@[k]@.1) &&
+270 | |                 vertex_to_index@.contains_key(edges@[k]@.0) &&
+271 | |                 vertex_to_index@.contains_key(edges@[k]@.1),
+    | |___________________________________________________________- failed precondition
+...
+401 |               build_th_edges_mt(e2, cf2, vi2, vt2, nv, mid, end)
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+mid <= end ✔
+end <= e2.view().len() ✔
+valid_key_type_Edge() ✔
+nv == vt2.view().len() ✔
+vt2.view().no_duplicates() ✔
+forall |k|
+    let tmp%% = mid in let tmp%% = k in let tmp%% = end in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        cf2.view().dom().contains(e2.view().index(k).view().0) ✔
+        cf2.view().dom().contains(e2.view().index(k).view().1) ✔
+        vi2.view().dom().contains(e2.view().index(k).view().0) ✔
+        vi2.view().dom().contains(e2.view().index(k).view().1) ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = nv in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        vi2.view().dom().contains(vt2.view().index(j).view()) ✔
+        clip(usize, vi2.view().index(vt2.view().index(j).view())) == j ✔
+forall |v_view|
+    vi2.view().dom().contains(v_view) ==>
+        (exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = nv in tmp%% <= tmp%% && tmp%% < tmp%% && vt2.view().index(j).view() == v_view) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 5548 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 80s
+Sampled Memory Usage: peak rust_verify RSS: 10233MB, peak z3 RSS: 452MB, min free: 13370MB
+Sampled CPU Usage: rust_verify: 213s, z3 children: 137s
