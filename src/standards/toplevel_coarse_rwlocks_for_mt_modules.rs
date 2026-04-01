@@ -37,6 +37,16 @@
 //!      and guarantees it on every acquire_read/acquire_write.
 //! - So spec_x_wf flows from construction + the lock predicate — no accept needed.
 //!
+//! Capacity bounds are exec-time guards, not proof obligations:
+//! - After acquiring the lock, check capacity in exec code: `if inner.size() < usize::MAX - 1`.
+//! - Return `Err(())` if the check fails. Return `Ok(())` after the operation succeeds.
+//! - Do NOT try to prove `inner@.len() + 1 < usize::MAX` from wf or ghost state.
+//!   Another thread may have filled the structure between your last observation and
+//!   this lock acquisition. The capacity may or may not hold — check it, don't prove it.
+//! - This is the same optimistic locking pattern as any other precondition check.
+//!   The `count_down` example below checks `if locked_val.count > 0` — a capacity
+//!   check on `insert` is `if inner.size() < usize::MAX - 1`. Same pattern.
+//!
 //! Why the accepts are necessary:
 //! - The RwLockPredicate is frozen at construction — it constrains shape but can't
 //!   track a changing value.

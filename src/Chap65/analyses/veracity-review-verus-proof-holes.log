@@ -23,14 +23,14 @@ Table of Contents:
 ✓ KruskalStEph.rs
    1 clean proof function
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:459: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:459: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        455 |         fn clone(&self) -> (cloned: Self)
             ...
        457 |         {
        458 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        460 |             cloned
        461 |         }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap65/PrimStEph.rs:218: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:218: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
 ✓ UnionFindStEph.rs
    24 clean proof functions
 
@@ -91,11 +91,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:14:29 -07:00
-Ended:     2026-04-01 07:14:29 -07:00
-Duration:  46ms
+Started:   2026-04-01 07:27:31 -07:00
+Ended:     2026-04-01 07:27:31 -07:00
+Duration:  32ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-Duration:  46ms
-
-Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
+city-review-verus-proof-holes.log

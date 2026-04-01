@@ -45,6 +45,7 @@ is to get code to **verify (prove)** with Verus.
 | 21 | `using_hashmap_standard.rs` | Replacing std::collections::HashMap with verified types |
 | 22 | `capacity_bounds_standard.rs` | Integer max bounds in requires for insert/push/resize |
 | 23 | `mt_type_bounds_standard.rs` | Mt trait aliases (StTInMtT, MtKey, MtReduceFn, MtPred, MtMapFn, etc.) |
+| 24 | `no_unsafe_standard.rs` | No unsafe — no `unsafe impl`, `unsafe fn`, or `unsafe {}` blocks |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring

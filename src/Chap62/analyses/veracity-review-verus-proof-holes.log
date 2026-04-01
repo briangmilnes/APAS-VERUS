@@ -23,7 +23,7 @@ Table of Contents:
 ✓ StarContractionMtEph.rs
 ✓ StarContractionStEph.rs
 ℹ StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap62/StarPartitionMtEph.rs:101: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:101: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
 ✓ StarPartitionStEph.rs
 
@@ -83,9 +83,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:14:29 -07:00
-Ended:     2026-04-01 07:14:29 -07:00
-Duration:  40ms
+Started:   2026-04-01 07:27:31 -07:00
+Ended:     2026-04-01 07:27:31 -07:00
+Duration:  25ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

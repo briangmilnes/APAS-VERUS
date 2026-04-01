@@ -21,7 +21,7 @@ Table of Contents:
 =================================================================
 
 ⚠ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BalancedTreePQ.rs:782: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:782: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        778 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        780 |             {
@@ -29,14 +29,14 @@ Table of Contents:
        783 |                 equal
        784 |             }
 ⚠ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1784: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1784: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1775 |             fn clone(&self) -> (cloned: Self)
             ...
       1782 |                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
       1783 |                 proof {
       1785 |                     lemma_seq_map_cloned_view_eq(
       1786 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/BinaryHeapPQ.rs:1805: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1805: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1801 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1803 |             {
@@ -44,14 +44,14 @@ Table of Contents:
       1806 |                 equal
       1807 |             }
 ⚠ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:97: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:97: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
         86 |             fn clone(&self) -> (cloned: Self)
             ...
         95 |                     leftist_heap_result: self.leftist_heap_result.clone(),
         96 |                 };
         98 |                 cloned
         99 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/HeapsortExample.rs:112: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:112: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        103 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        110 |                     && self.binary_heap_result == other.binary_heap_result
@@ -59,28 +59,28 @@ Table of Contents:
        113 |                 equal
        114 |             }
 ⚠ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1140: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1140: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1127 |             fn clone(&self) -> (cloned: Self)
             ...
       1138 |                             rank: *rank,
       1139 |                         };
       1141 |                         cloned
       1142 |                     }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1160: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1160: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1148 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1158 |                     _ => false,
       1159 |                 };
       1161 |                 equal
       1162 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1172: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1172: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1168 |             fn clone(&self) -> (cloned: Self)
             ...
       1170 |             {
       1171 |                 let cloned = LeftistHeapPQ { root: self.root.clone() };
       1173 |                 cloned
       1174 |             }
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/LeftistHeapPQ.rs:1182: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1182: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1178 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1180 |             {
@@ -88,7 +88,7 @@ Table of Contents:
       1183 |                 equal
       1184 |             }
 ⚠ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/SortedListPQ.rs:1053: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1053: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1048 |             fn clone(&self) -> (cloned: Self)
             ...
       1051 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
@@ -96,14 +96,14 @@ Table of Contents:
       1054 |                     lemma_seq_map_cloned_view_eq(
       1055 |                         self.elements.seq@,
 ⚠ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:659: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:659: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        654 |             fn clone(&self) -> (cloned: Self)
             ...
        657 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
        658 |                 proof {
        660 |                     lemma_seq_map_cloned_view_eq(
        661 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap45/UnsortedListPQ.rs:674: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:674: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        670 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        672 |             {
@@ -171,15 +171,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:14:29 -07:00
-Ended:     2026-04-01 07:14:29 -07:00
-Duration:  143ms
+Started:   2026-04-01 07:27:30 -07:00
+Ended:     2026-04-01 07:27:31 -07:00
+Duration:  81ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-=====================
+===============
 
-Started:   2026-04-01 07:14:29 -07:00
-Ended:     2026-04-01 07:14:29 -07:00
-Duration:  143ms
+Started:   2026-04-01 07:27:30 -07:00
+Ended:     2026-04-01 07:27:31 -07:00
+Duration:  81ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

@@ -24,8 +24,8 @@ Table of Contents:
    3 clean proof functions
 ✓ DivConReduceStPer.rs
 ℹ ETSPMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:648: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap26/ETSPMtEph.rs:648: info: structural_false_positive OPAQUE_EXTERNAL sort_and_split_impl — #[verifier::external_body] [medium]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ✓ ETSPStEph.rs
@@ -103,9 +103,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:14:27 -07:00
-Ended:     2026-04-01 07:14:27 -07:00
-Duration:  70ms
+Started:   2026-04-01 07:27:29 -07:00
+Ended:     2026-04-01 07:27:29 -07:00
+Duration:  49ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-veracity-review-verus-proof-holes.log
+Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
