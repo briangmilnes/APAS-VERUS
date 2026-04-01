@@ -11,9 +11,12 @@ APAS-VERUS formally verifies all algorithms from "A Practical Approach to Data S
 (APAS, by Guy Blelloch) using Verus, a Rust verification framework. The primary objective
 is to get code to **verify (prove)** with Verus.
 
-- **Read the relevant standards before writing or modifying any code.** The standards
-  in `src/standards/` define the project's patterns. If you skip them, you will write
-  code that violates project conventions and has to be reverted.
+- **Read ALL standards before writing or modifying any code.** At the start of every
+  task, read every file in `src/standards/`. They total ~6200 lines (~54K tokens) — under
+  6% of your 1M context. There is no excuse for skipping them. If a prompt says "pay close
+  attention to standard N", that standard is especially critical for your task, but you must
+  still read all of them. Agents that skip standards write code that violates project
+  conventions and has to be reverted — this has happened repeatedly and wastes rounds.
 
 ### Standards Index
 
@@ -41,6 +44,7 @@ is to get code to **verify (prove)** with Verus.
 | 20 | `using_rand_standard.rs` | Using randomness in verified code |
 | 21 | `using_hashmap_standard.rs` | Replacing std::collections::HashMap with verified types |
 | 22 | `capacity_bounds_standard.rs` | Integer max bounds in requires for insert/push/resize |
+| 23 | `mt_type_bounds_standard.rs` | Mt trait aliases (StTInMtT, MtKey, MtReduceFn, MtPred, MtMapFn, etc.) |
 - Run `scripts/validate.sh` after making changes
 - Fix verification errors before moving on
 - Prefer verified code over unverified code, even if it requires restructuring

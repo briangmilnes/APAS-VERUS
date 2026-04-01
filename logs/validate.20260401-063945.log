@@ -1,0 +1,24 @@
+error[E0277]: the trait bound `vstd::prelude::FnSpec<(usize, usize), usize>: vstd::prelude::Integer` is not satisfied
+  --> src/experiments/closure_clone_first_class.rs:71:58
+   |
+71 |         let _r = takes_reduce_like(&f, Ghost(spec_max as spec_fn(usize, usize) -> usize));
+   |                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstd::prelude::Integer` is not implemented for `vstd::prelude::FnSpec<(usize, usize), usize>`
+   |
+note: required by a bound in `vstd::prelude::spec_cast_integer`
+  --> builtin/src/lib.rs:1088:0
+
+error[E0277]: the trait bound `vstd::prelude::FnSpec<(usize, usize), usize>: vstd::prelude::Integer` is not satisfied
+   --> src/experiments/closure_clone_first_class.rs:127:56
+    |
+127 |         let _r = reduce_like(&v, &f, Ghost(spec_max as spec_fn(usize, usize) -> usize), 0usize);
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstd::prelude::Integer` is not implemented for `vstd::prelude::FnSpec<(usize, usize), usize>`
+    |
+note: required by a bound in `vstd::prelude::spec_cast_integer`
+   --> builtin/src/lib.rs:1088:0
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1104MB, peak z3 RSS: 0MB, min free: 22806MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

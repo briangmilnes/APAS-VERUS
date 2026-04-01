@@ -1,0 +1,35 @@
+error: Verus does not recognize this trait bound: <{closure@src/experiments/closure_clone_first_class.rs:33:17: 33:52} as std::clone::Clone>
+  --> src/experiments/closure_clone_first_class.rs:34:18
+   |
+34 |         let _r = takes_cloneable_fn(&f);
+   |                  ^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/experiments/closure_clone_first_class.rs:44:17: 44:52} as std::clone::Clone>
+  --> src/experiments/closure_clone_first_class.rs:45:18
+   |
+45 |         let _r = takes_mt_fn(&f);
+   |                  ^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/experiments/closure_clone_first_class.rs:67:17: 67:52} as std::clone::Clone>
+  --> src/experiments/closure_clone_first_class.rs:71:18
+   |
+71 |         let _r = takes_reduce_like(&f, Ghost(|x: usize, y: usize| -> usize { spec_max(x, y) }));
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/experiments/closure_clone_first_class.rs:78:17: 78:52} as std::clone::Clone>
+  --> src/experiments/closure_clone_first_class.rs:82:18
+   |
+82 |         let f2 = clone_fn2(&f);
+   |                  ^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/experiments/closure_clone_first_class.rs:119:17: 119:52} as std::clone::Clone>
+   --> src/experiments/closure_clone_first_class.rs:127:18
+    |
+127 |         let _r = reduce_like(&v, &f, Ghost(|x: usize, y: usize| -> usize { spec_max(x, y) }), 0usize);
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 2054MB, peak z3 RSS: 0MB, min free: 21995MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 0s

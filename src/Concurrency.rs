@@ -36,11 +36,22 @@ pub mod Concurrency {
     /// Multi-threaded value type with static lifetime.
     pub trait MtVal: StTInMtT + 'static {}
 
-    /// Multi-threaded reducer function type.
+    /// Multi-threaded reducer function type: Fn(&V, &V) -> V + Clone + Send + Sync + 'static.
     pub trait MtReduceFn<V>: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
 
-    /// Multi-threaded predicate function (boolean function).
+    /// Predicate function (sequential): Fn(&T) -> bool + Send + Sync + 'static.
+    /// For D&C filter via join(), use MtPred<T> which adds Clone.
     pub trait Pred<T>: Fn(&T) -> bool + Send + Sync + 'static {}
+
+    /// Multi-threaded predicate: Fn(&T) -> bool + Clone + Send + Sync + 'static.
+    /// Use for D&C filter where the predicate must be cloned into both join arms.
+    pub trait MtPred<T>: Fn(&T) -> bool + Clone + Send + Sync + 'static {}
+
+    /// Multi-threaded map function: Fn(&T) -> U + Clone + Send + Sync + 'static.
+    pub trait MtMapFn<T, U>: Fn(&T) -> U + Clone + Send + Sync + 'static {}
+
+    /// Multi-threaded tabulate function: Fn(usize) -> T + Clone + Send + Sync + 'static.
+    pub trait MtTabulateFn<T>: Fn(usize) -> T + Clone + Send + Sync + 'static {}
 
     // Blanket implementations
     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
@@ -49,6 +60,9 @@ pub mod Concurrency {
     impl<T> MtVal for T where T: StTInMtT + 'static {}
     impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
     impl<F, T> Pred<T> for F where F: Fn(&T) -> bool + Send + Sync + 'static {}
+    impl<F, T> MtPred<T> for F where F: Fn(&T) -> bool + Clone + Send + Sync + 'static {}
+    impl<F, T, U> MtMapFn<T, U> for F where F: Fn(&T) -> U + Clone + Send + Sync + 'static {}
+    impl<F, T> MtTabulateFn<T> for F where F: Fn(usize) -> T + Clone + Send + Sync + 'static {}
 
     } // verus!
 }

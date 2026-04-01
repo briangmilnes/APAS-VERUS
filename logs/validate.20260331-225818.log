@@ -1,0 +1,36 @@
+error: postcondition not satisfied
+   --> src/experiments/bst_plain_mt_pcell.rs:365:32
+    |
+363 |         pub fn mt_insert(&mut self, val: u64)
+    |         ------------------------------------- at the end of the function body
+364 |             requires old(self).wf(),
+365 |             ensures self.wf(), self@ >= old(self)@, self@ <= old(self)@ + 1,
+    |                                ^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+error: postcondition not satisfied
+   --> src/experiments/bst_plain_mt_pcell.rs:365:53
+    |
+363 |         pub fn mt_insert(&mut self, val: u64)
+    |         ------------------------------------- at the end of the function body
+364 |             requires old(self).wf(),
+365 |             ensures self.wf(), self@ >= old(self)@, self@ <= old(self)@ + 1,
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/experiments/bst_plain_mt_pcell.rs:365:32
+    |
+365 |             ensures self.wf(), self@ >= old(self)@, self@ <= old(self)@ + 1,
+    |                                ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.wf() ✔
+self.view() >= old(self).view() ✘
+self.view() <= clip(nat, old(self).view() + 1) ✘
+
+verification results:: 5534 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 129s
+Sampled Memory Usage: peak rust_verify RSS: 13329MB, peak z3 RSS: 586MB, min free: 10872MB
+Sampled CPU Usage: rust_verify: 308s, z3 children: 201s

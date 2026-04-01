@@ -1,8 +1,15 @@
-Logging to: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-search.log
+Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-search.log
 Verus Search
 ============
 
-Pattern: fn push.*Vec\|Vec.*push
+Pattern: axiom_filter
 Searching: /home/milnes/projects/verus/source/vstd
-Files: 104, Functions: 2570, Matches: 0
+Files: 104, Functions: 2570, Matches: 1
+
+[31m/home/milnes/projects/verus/source/vstd/multiset.rs:310: [0m
+/// For a given value `v` and boolean predicate `f`, if `f(v)` is true, then the count of `v` in
+/// `m.filter(f)` is the same as the count of `v` in `m`. Otherwise, the count of `v` in `m.filter(f)` is 0.
+[38;5;22mpub broadcast axiom fn axiom_filter_count<V>(m: Multiset<V>, f: spec_fn(V) -> bool, v: V)[0m
+[38;5;22m    ensures[0m
+[38;5;22m        (#[trigger] m.filter(f).count(v)) == if f(v)[0m
 

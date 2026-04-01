@@ -1,0 +1,48 @@
+error[E0308]: mismatched types
+  --> src/experiments/closure_clone_first_class.rs:71:46
+   |
+71 |         let _r = takes_reduce_like(&f, Ghost(spec_max));
+   |                                        ------^^^^^^^^-
+   |                                        |     |
+   |                                        |     expected `FnSpec<(usize, usize), usize>`, found fn item
+   |                                        arguments to this function are incorrect
+   |
+   = note: expected struct `vstd::prelude::FnSpec<(usize, usize), usize>`
+             found fn item `fn(usize, usize) -> usize {experiments::closure_clone_first_class::closure_clone_first_class::spec_max}`
+help: the return type of this call is `fn(usize, usize) -> usize {experiments::closure_clone_first_class::closure_clone_first_class::spec_max}` due to the type of the argument passed
+  --> src/experiments/closure_clone_first_class.rs:71:40
+   |
+71 |         let _r = takes_reduce_like(&f, Ghost(spec_max));
+   |                                        ^^^^^^--------^
+   |                                              |
+   |                                              this argument influences the return type of `ghost_exec`
+note: function defined here
+  --> builtin/src/lib.rs:607:13
+
+error[E0308]: mismatched types
+   --> src/experiments/closure_clone_first_class.rs:127:44
+    |
+127 |         let _r = reduce_like(&v, &f, Ghost(spec_max), 0usize);
+    |                                      ------^^^^^^^^-
+    |                                      |     |
+    |                                      |     expected `FnSpec<(usize, usize), usize>`, found fn item
+    |                                      arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::prelude::FnSpec<(usize, usize), usize>`
+              found fn item `fn(usize, usize) -> usize {experiments::closure_clone_first_class::closure_clone_first_class::spec_max}`
+help: the return type of this call is `fn(usize, usize) -> usize {experiments::closure_clone_first_class::closure_clone_first_class::spec_max}` due to the type of the argument passed
+   --> src/experiments/closure_clone_first_class.rs:127:38
+    |
+127 |         let _r = reduce_like(&v, &f, Ghost(spec_max), 0usize);
+    |                                      ^^^^^^--------^
+    |                                            |
+    |                                            this argument influences the return type of `ghost_exec`
+note: function defined here
+   --> builtin/src/lib.rs:607:13
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1095MB, peak z3 RSS: 0MB, min free: 23116MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s
