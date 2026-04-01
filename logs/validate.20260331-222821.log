@@ -1,0 +1,45 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1484:17
+     |
+1484 |                   filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1490 | /             if len == 0 {
+1491 | |                 proof {
+1492 | |                     assert(a.seq@ =~= Seq::<T>::empty());
+1493 | |                     broadcast use vstd::multiset::group_multiset_axioms;
+...    |
+1626 | |                 filtered
+1627 | |             }
+     | |_____________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1494:28
+     |
+1494 |                     assert(false); // DEBUG len==0
+     |                            ^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1507:32
+     |
+1507 |                         assert(false); // DEBUG keep
+     |                                ^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1522:32
+     |
+1522 |                         assert(false); // DEBUG !keep
+     |                                ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 1044 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 826MB, peak z3 RSS: 214MB, min free: 23148MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 3s

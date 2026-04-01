@@ -1,0 +1,34 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1472:17
+     |
+1472 | /                 filtered.spec_len() == spec_filter_len(
+1473 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^ failed this postcondition
+...
+1482 | /             if len == 0 {
+1483 | |                 proof {
+1484 | |                     assert(s =~= Seq::<T>::empty());
+1485 | |                     assert(spec_filter_len(s, spec_pred) == 0int);
+...    |
+1647 | |                 filtered
+1648 | |             }
+     | |_____________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1645:28
+     |
+1645 |                     assert(false);
+     |                            ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+verification results:: 1044 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 824MB, peak z3 RSS: 174MB, min free: 23245MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 3s

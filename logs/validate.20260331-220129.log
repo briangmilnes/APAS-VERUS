@@ -1,0 +1,90 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1472:17
+     |
+1472 | /                 filtered.spec_len() == spec_filter_len(
+1473 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^ failed this postcondition
+...
+1489 | /             if len == 0 {
+1490 | |                 proof {
+1491 | |                     assert(s =~= Seq::<T>::empty());
+1492 | |                     broadcast use vstd::multiset::group_multiset_axioms;
+...    |
+1669 | |                 filtered
+1670 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1474:17
+     |
+1474 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+1475 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+     | |__________________________________________________________________________________________________^ failed this postcondition
+...
+1489 | /             if len == 0 {
+1490 | |                 proof {
+1491 | |                     assert(s =~= Seq::<T>::empty());
+1492 | |                     broadcast use vstd::multiset::group_multiset_axioms;
+...    |
+1669 | |                 filtered
+1670 | |             }
+     | |_____________- at the end of the function body
+
+error: unable to prove post-condition of closure
+    --> src/Chap18/ArraySeqMtEph.rs:1577:25
+     |
+1577 |                         r.spec_len() == spec_filter_len(left_s, spec_pred),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1590 |                     r
+     |                     - returning this expression
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1588:32
+     |
+1588 |                         assert(r_s.to_multiset() =~= left_s.to_multiset().filter(spec_pred));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: unable to prove post-condition of closure
+    --> src/Chap18/ArraySeqMtEph.rs:1601:25
+     |
+1601 |                         r.spec_len() == spec_filter_len(right_s, spec_pred),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1614 |                     r
+     |                     - returning this expression
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtEph.rs:1612:32
+     |
+1612 |                         assert(r_s.to_multiset() =~= right_s.to_multiset().filter(spec_pred));
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+r_s.to_multiset() =~= left_s.to_multiset().filter(spec_pred) 
+
+error: postcondition not satisfied
+   --> src/vstdplus/multiset.rs:209:9
+    |
+205 | / pub proof fn lemma_seq_concat_to_multiset_filter<A>(
+206 | |     a: Seq<A>, b: Seq<A>, f: spec_fn(A) -> bool,
+207 | | )
+    | |_- at the end of the function body
+208 |       ensures
+209 | /         (a + b).to_multiset().filter(f)
+210 | |             =~= a.to_multiset().filter(f).add(b.to_multiset().filter(f)),
+    | |________________________________________________________________________^ failed this postcondition
+
+note: 
+
+old(a).add(old(b)).to_multiset().filter(old(f)) =~= old(a).to_multiset().filter(old(f)).add(old(b).to_multiset().filter(old(f))) 
+
+verification results:: 1043 verified, 2 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 831MB, peak z3 RSS: 353MB, min free: 23343MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 8s

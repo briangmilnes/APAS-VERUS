@@ -1,0 +1,58 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1472:17
+     |
+1472 | /                 filtered.spec_len() == spec_filter_len(
+1473 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^ failed this postcondition
+...
+1482 | /             if len == 0 {
+1483 | |                 proof {
+1484 | |                     assert(s =~= Seq::<T>::empty());
+1485 | |                     assert(spec_filter_len(s, spec_pred) == 0int);
+...    |
+1650 | |                 filtered
+1651 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1474:17
+     |
+1474 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+1475 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+     | |__________________________________________________________________________________________________^ failed this postcondition
+...
+1482 | /             if len == 0 {
+1483 | |                 proof {
+1484 | |                     assert(s =~= Seq::<T>::empty());
+1485 | |                     assert(spec_filter_len(s, spec_pred) == 0int);
+...    |
+1650 | |                 filtered
+1651 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtEph.rs:1472:17
+     |
+1472 | /                 filtered.spec_len() == spec_filter_len(
+1473 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^
+1474 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+1475 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+     | |__________________________________________________________________________________________________^
+
+note: 
+
+filtered.spec_arrayseqmteph_wf() ✔
+filtered.spec_len() <= old(a).seq.view().len() ✔
+filtered.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✘
+new(filtered.spec_len(), (|i| filtered.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = filtered.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (filtered.spec_index(i)), true) ✔
+
+verification results:: 1044 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 822MB, peak z3 RSS: 178MB, min free: 23313MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 2s
