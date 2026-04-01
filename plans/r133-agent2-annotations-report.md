@@ -27,17 +27,17 @@ Added `/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(...), Span O(..
 | 15 | 43 | OrderedSetStPer.rs | 40 | 40 | 0 |
 | 16 | 43 | OrderedSetMtEph.rs | 22 | 22 | 0 |
 | 17 | 43 | AugOrderedTableStEph.rs | 32 | 32 | 0 |
-| 18 | 43 | AugOrderedTableStPer.rs | 29 | 0 | 29 |
-| 19 | 43 | AugOrderedTableMtEph.rs | 34 | 0 | 34 |
-| 20 | 50 | MatrixChainStEph.rs | 24 | 0 | 24 |
-| 21 | 50 | MatrixChainStPer.rs | 18 | 0 | 18 |
-| 22 | 50 | MatrixChainMtEph.rs | 26 | 0 | 26 |
-| 23 | 50 | MatrixChainMtPer.rs | 20 | 0 | 20 |
-| 24 | 50 | OptBinSearchTreeStEph.rs | 20 | 0 | 20 |
-| 25 | 50 | OptBinSearchTreeStPer.rs | 14 | 0 | 14 |
-| 26 | 50 | OptBinSearchTreeMtEph.rs | 20 | 0 | 20 |
-| 27 | 50 | OptBinSearchTreeMtPer.rs | 14 | 0 | 14 |
-| **Total** | | | **725** | **506** | **219** |
+| 18 | 43 | AugOrderedTableStPer.rs | 29 | 29 | 0 |
+| 19 | 43 | AugOrderedTableMtEph.rs | 34 | 34 | 0 |
+| 20 | 50 | MatrixChainStEph.rs | 24 | 24 | 0 |
+| 21 | 50 | MatrixChainStPer.rs | 18 | 18 | 0 |
+| 22 | 50 | MatrixChainMtEph.rs | 26 | 26 | 0 |
+| 23 | 50 | MatrixChainMtPer.rs | 20 | 20 | 0 |
+| 24 | 50 | OptBinSearchTreeStEph.rs | 20 | 20 | 0 |
+| 25 | 50 | OptBinSearchTreeStPer.rs | 14 | 14 | 0 |
+| 26 | 50 | OptBinSearchTreeMtEph.rs | 20 | 20 | 0 |
+| 27 | 50 | OptBinSearchTreeMtPer.rs | 14 | 14 | 0 |
+| **Total** | | | **725** | **725** | **0** |
 
 ## Key Complexity Findings
 
@@ -73,3 +73,18 @@ Added `/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(...), Span O(..
 - Mutating operations add O(n) recalculation via `calculate_reduction`
 - `reduce_val`: O(1) — returns cached clone
 - `reduce_range`: O(n log n) — get_key_range + cached clone
+
+### Chap50 MatrixChain
+- `optimal_cost`: O(n^3) — memoized DP, n^2 subproblems each O(n) inner loop
+- `matrix_chain_rec`: O(n^3) — same memoized DP
+- `multiply_cost`: O(1) — three array lookups + two multiplications
+- Constructors: O(1) or O(n)
+- `set_dimension`/`update_dimension`/`clear_memo`: O(n) — clears/rebuilds memo
+- Mt variants: same Work complexity, wrap under RwLock/Arc
+
+### Chap50 OptBinSearchTree
+- `optimal_cost`: O(n^3) — memoized DP, n^2 subproblems each O(n)
+- `obst_rec`: O(n^3) — recursive memoized DP helper
+- Constructors: O(1) or O(n)
+- `set_key_prob`/`update_prob`: O(1) for St, O(n) for Mt (clone under lock)
+- Mt variants: RwLock wrappers, same Work complexity
