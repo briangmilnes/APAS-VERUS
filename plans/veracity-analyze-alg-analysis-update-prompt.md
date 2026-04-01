@@ -2,6 +2,8 @@
 
 ## Context
 
+Get a clean tests/fixtures/APAS-AI
+
 After R125, all alg analysis annotations will be in one of two standard formats:
 
 ```rust
