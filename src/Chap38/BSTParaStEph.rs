@@ -437,13 +437,15 @@ pub mod BSTParaStEph {
                 forall|i: int| #![trigger out@[i]] 0 <= i < old(out)@.len() ==> out@[i] == old(out)@[i],
                 forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
                 forall|v: T::V| self@.contains(v) ==>
-                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v;
+                    exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
+                forall|i: int, j: int| #![trigger out@[i], out@[j]] old(out)@.len() <= i < j < out@.len() ==> out@[i]@ != out@[j]@;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(|t|), Span O(|t|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — agrees with APAS.
         fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
             ensures
                 seq@.len() == self@.len(),
-                forall|v: T::V| self@.contains(v) <==> seq@.contains(v);
+                forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+                seq@.no_duplicates();
     }
 
     // 9. impls
@@ -1392,6 +1394,7 @@ pub mod BSTParaStEph {
                 forall|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() ==> self@.contains(out@[i]@),
                 forall|v: T::V| self@.contains(v) ==>
                     exists|i: int| #![trigger out@[i]] old(out)@.len() <= i < out@.len() && out@[i]@ == v,
+                forall|i: int, j: int| #![trigger out@[i], out@[j]] old(out)@.len() <= i < j < out@.len() ==> out@[i]@ != out@[j]@,
             decreases self@.len(),
         {
             match self.expose() {
@@ -1416,18 +1419,14 @@ pub mod BSTParaStEph {
                         assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
                             self@.contains(out@[i]@) by {
                             if i < g1 as int {
-                                // Element from left subtree, preserved through push and right.
                                 assert(out@[i] == out_2[i]);
                                 assert(out_2[i] == out_1[i]);
                                 assert(left@.contains(out_1[i]@));
                             } else if i == g1 as int {
-                                // The key itself.
                                 assert(out@[i] == out_2[i]);
                                 assert(out_2[g1 as int] == key);
                             } else if i < g2 as int {
-                                // Impossible: g2 == g1 + 1.
                             } else {
-                                // Element from right subtree.
                                 assert(right@.contains(out@[i]@));
                             }
                         };
@@ -1436,7 +1435,6 @@ pub mod BSTParaStEph {
                             exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
                             if left@.contains(v) {
                                 let i_left = choose|i: int| #![trigger out_1[i]] g0 <= i < g1 as int && out_1[i]@ == v;
-                                // Preserved through push and right.
                                 assert(out_2[i_left] == out_1[i_left]);
                                 assert(out@[i_left] == out_2[i_left]);
                             } else if v == key@ {
@@ -1452,6 +1450,43 @@ pub mod BSTParaStEph {
                             assert(out_2[i] == out_1[i]);
                             assert(out_1[i] == out_0[i]);
                         };
+                        // No duplicate views in the new portion.
+                        // Left portion has views in left@, key has view key@, right portion has views in right@.
+                        // These three regions are pairwise disjoint by BST invariant.
+                        assert forall|i: int, j: int| #![trigger out@[i], out@[j]] g0 <= i < j < out@.len()
+                            implies out@[i]@ != out@[j]@ by {
+                            if i < g1 as int && j < g1 as int {
+                                // Both in left: induction gives no dups.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[i] == out_1[i]);
+                                assert(out@[j] == out_2[j]);
+                                assert(out_2[j] == out_1[j]);
+                            } else if i < g1 as int && j == g1 as int {
+                                // i in left, j is key: left@ doesn't contain key@.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[i] == out_1[i]);
+                                assert(left@.contains(out_1[i]@));
+                                assert(out@[j] == out_2[j]);
+                                assert(out_2[g1 as int] == key);
+                                assert(!left@.contains(key@));
+                            } else if i < g1 as int && j >= g2 as int {
+                                // i in left, j in right: disjoint sets.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[i] == out_1[i]);
+                                assert(left@.contains(out_1[i]@));
+                                assert(right@.contains(out@[j]@));
+                                assert(left@.disjoint(right@));
+                            } else if i == g1 as int && j >= g2 as int {
+                                // i is key, j in right: right@ doesn't contain key@.
+                                assert(out@[i] == out_2[i]);
+                                assert(out_2[g1 as int] == key);
+                                assert(right@.contains(out@[j]@));
+                                assert(!right@.contains(key@));
+                            } else if i >= g2 as int && j >= g2 as int {
+                                // Both in right: induction gives no dups.
+                            }
+                            // Remaining cases (i < g1, j in [g1+1..g2)) are impossible since g2 == g1+1.
+                        };
                     }
                 }
             }
@@ -1464,26 +1499,31 @@ pub mod BSTParaStEph {
             self.collect_in_order(&mut out);
             let result = ArraySeqStPerS::from_vec(out);
             proof {
-                // seq@.len() == self@.len() follows from:
-                // collect_in_order: out@.len() == 0 + self@.len()
-                // from_vec: result.spec_len() == out@.len()
-                // And spec_len() == seq@.len() (map preserves length).
-
                 // Containment: self@.contains(v) <==> seq@.contains(v).
-                // Forward: self@.contains(v) ==> ∃i. out@[i]@ == v ==> seq@.contains(v).
                 assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
                     let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
-                    // result.spec_index(i) == out@[i], and result@[i] == out@[i]@.
                     assert(result@[i] == result.spec_index(i)@);
                     assert(result.spec_index(i) == out@[i]);
                 };
-                // Backward: seq@.contains(v) ==> ∃i. out@[i]@ == v ==> self@.contains(v).
                 assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
                     assert(result@[i] == result.spec_index(i)@);
                     assert(result.spec_index(i) == out@[i]);
                     assert(out@[i]@ == v);
                     assert(self@.contains(out@[i]@));
+                };
+                // No duplicates: collect_in_order gives view-level no-dups, lift to result@.
+                assert forall|i: int, j: int| 0 <= i < result@.len() && 0 <= j < result@.len() && i != j
+                    implies result@[i] != result@[j] by {
+                    assert(result@[i] == result.spec_index(i)@);
+                    assert(result.spec_index(i) == out@[i]);
+                    assert(result@[j] == result.spec_index(j)@);
+                    assert(result.spec_index(j) == out@[j]);
+                    if i < j {
+                        assert(out@[i]@ != out@[j]@);
+                    } else {
+                        assert(out@[j]@ != out@[i]@);
+                    }
                 };
             }
             result

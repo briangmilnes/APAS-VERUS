@@ -1,0 +1,18 @@
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2739:25
+     |
+2739 |                         self@.dom().contains(min_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2827:25
+     |
+2827 |                         self@.dom().contains(max_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5470 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 95s
+Sampled Memory Usage: peak rust_verify RSS: 10059MB, peak z3 RSS: 541MB, min free: 16410MB
+Sampled CPU Usage: rust_verify: 259s, z3 children: 170s
