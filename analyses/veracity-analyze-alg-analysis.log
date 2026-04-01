@@ -2026,37 +2026,6 @@ src/Chap43/OrderedSetStPer.rs:814: error: fn `select` missing alg analysis annot
 src/Chap43/OrderedSetStPer.rs:825: error: fn `split_rank_iter` missing alg analysis annotation
 src/Chap43/OrderedSetStPer.rs:900: error: fn `split_rank` missing alg analysis annotation
 src/Chap43/OrderedSetStPer.rs:905: error: fn `from_sorted_elements` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:387: error: fn `size` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:397: error: fn `empty` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:405: error: fn `singleton` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:413: error: fn `find` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:423: error: fn `lookup` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:427: error: fn `is_empty` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:433: error: fn `insert` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:444: error: fn `delete` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:459: error: fn `domain` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:472: error: fn `tabulate` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:477: error: fn `map` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:489: error: fn `filter` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:502: error: fn `intersection` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:519: error: fn `union` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:538: error: fn `difference` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:556: error: fn `restrict` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:569: error: fn `subtract` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:582: error: fn `reduce` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:592: error: fn `collect` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:601: error: fn `first_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:613: error: fn `last_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:625: error: fn `previous_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:637: error: fn `next_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:649: error: fn `split_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:667: error: fn `join_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:671: error: fn `get_key_range` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:685: error: fn `rank_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:697: error: fn `select_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:709: error: fn `split_rank_key` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:882: error: fn `from_st` missing alg analysis annotation
-src/Chap43/OrderedTableMtEph.rs:898: error: fn `from_sorted_entries` missing alg analysis annotation
 src/Chap43/OrderedTableMtPer.rs:82: error: fn `from_st_table` missing alg analysis annotation
 src/Chap43/OrderedTableMtPer.rs:164: error: fn `insert_wf` missing alg analysis annotation
 src/Chap43/OrderedTableMtPer.rs:181: error: fn `delete_wf` missing alg analysis annotation
@@ -3075,8 +3044,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2328  (fns with any APAS or Code review line)
-  Missing alg analysis:      2756  <- errors
+  Alg analysis annotations:  2359  (fns with any APAS or Code review line)
+  Missing alg analysis:      2725  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -3084,7 +3053,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2861
+  Errors: 2830
   Warnings: 0
   Info: 204
 
