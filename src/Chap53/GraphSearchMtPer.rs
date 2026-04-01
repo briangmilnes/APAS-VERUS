@@ -227,8 +227,9 @@ pub mod GraphSearchMtPer {
                 let v = frontier_seq.nth(i);
                 let neighbors = graph(v);
                 proof {
-                    // Graph closure returns well-formed sets.
-                    assume(neighbors.spec_avltreesetmtper_wf());
+                    // Graph closure ensures wf: invariant says graph.ensures((v,), r) ==> r.wf().
+                    // After graph(v), Verus knows graph.ensures((v,), neighbors), triggering the forall.
+                    assert(neighbors.spec_avltreesetmtper_wf());
                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
                     vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
                 }

@@ -20,19 +20,94 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ KruskalStEph.rs
-   1 clean proof function
+❌ KruskalStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:44: error: opaque - #[verifier::opaque]
+        45 |         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/KruskalStEph.rs:53: error: external_body - #[verifier::external_body]
+        54 |         pub fn kruskal_process_edge<V: HashOrd>(
+   Holes: 2 total
+      1 × external_body
+      1 × opaque
+   Proof functions: 1 total (1 clean, 0 holed)
 ⚠ PrimStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:459: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:459: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        455 |         fn clone(&self) -> (cloned: Self)
             ...
        457 |         {
        458 |             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
        460 |             cloned
        461 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap65/PrimStEph.rs:218: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
-✓ UnionFindStEph.rs
-   24 clean proof functions
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/PrimStEph.rs:218: info: structural_false_positive OPAQUE_EXTERNAL prim_mst — #[verifier::external_body] [medium]
+❌ UnionFindStEph.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1780: error: external_body - #[verifier::external_body]
+      1781 |         fn union(&mut self, u: &V, v: &V) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1786: error: assume() [algorithmic] - assume(self.rank@[root_u@] < self.elements@.len());
+      1781 |         fn union(&mut self, u: &V, v: &V) {
+            ...
+      1784 |             if !feq(&root_u, &root_v) {
+      1785 |                 proof {
+      1787 |                     assume(self.rank@[root_v@] < self.elements@.len());
+      1788 |                 }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1787: error: assume() [algorithmic] - assume(self.rank@[root_v@] < self.elements@.len());
+      1781 |         fn union(&mut self, u: &V, v: &V) {
+            ...
+      1785 |                 proof {
+      1786 |                     assume(self.rank@[root_u@] < self.elements@.len());
+      1788 |                 }
+      1789 |                 let _info = union_merge(self, root_u, root_v);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1876: error: assume() [algorithmic] - assume(root_u@ != root_v@);
+      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
+            ...
+      1874 | 
+      1875 |         proof {
+      1877 |             assume(uf.rank@[root_u@] < uf.elements@.len());
+      1878 |             assume(uf.rank@[root_v@] < uf.elements@.len());
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1877: error: assume() [algorithmic] - assume(uf.rank@[root_u@] < uf.elements@.len());
+      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
+            ...
+      1875 |         proof {
+      1876 |             assume(root_u@ != root_v@);
+      1878 |             assume(uf.rank@[root_v@] < uf.elements@.len());
+      1879 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1878: error: assume() [algorithmic] - assume(uf.rank@[root_v@] < uf.elements@.len());
+      1857 |     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
+            ...
+      1876 |             assume(root_u@ != root_v@);
+      1877 |             assume(uf.rank@[root_u@] < uf.elements@.len());
+      1879 |         }
+      1880 |         let _info = union_merge(uf, root_u, root_v);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1904: error: assume() [algorithmic] - assume(root_u@ != root_v@);
+      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
+            ...
+      1902 | 
+      1903 |         proof {
+      1905 |             assume(uf.rank@[root_u@] < uf.elements@.len());
+      1906 |             assume(uf.rank@[root_v@] < uf.elements@.len());
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1905: error: assume() [algorithmic] - assume(uf.rank@[root_u@] < uf.elements@.len());
+      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
+            ...
+      1903 |         proof {
+      1904 |             assume(root_u@ != root_v@);
+      1906 |             assume(uf.rank@[root_v@] < uf.elements@.len());
+      1907 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1906: error: assume() [algorithmic] - assume(uf.rank@[root_v@] < uf.elements@.len());
+      1885 |     fn union_experiment_merge_with_wf<V: StT + Hash>(
+            ...
+      1904 |             assume(root_u@ != root_v@);
+      1905 |             assume(uf.rank@[root_u@] < uf.elements@.len());
+      1907 |         }
+      1908 |         let _info = union_merge(uf, root_u, root_v);
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap65/UnionFindStEph.rs:1058: error: fn_missing_wf_requires - fn union_merge_exec — requires should include uf.spec_unionfindsteph_wf() for input type UnionFindStEph
+      1034 |     proof fn lemma_union_wf_frame<V: StT + Hash>(
+            ...
+      1056 |     /// the quantified wf proof, keeping Z3 under 4 GB.
+      1057 |     #[verifier::rlimit(30)]
+      1059 |         uf: &mut UnionFindStEph<V>,
+      1060 |         root_u: V,
+   Holes: 9 total
+      8 × assume()
+      1 × external_body
+   Proof functions: 22 total (22 clean, 0 holed)
 
 =================================================================
 2. Depends Upon
@@ -59,41 +134,43 @@ UnionFindStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   1 clean (no holes, no errors; 33%)
+   2 holed (holes or errors, 66%)
    3 total
 
 Proof Functions:
-   29 clean (100%)
+   27 clean (100%)
    0 holed (0%)
-   29 total
+   27 total
 
 Function Specs:
-   32 exec fns with complete spec (requires+ensures) (34%)
+   32 exec fns with complete spec (requires+ensures) (35%)
    2 exec fns missing spec (2%)
-   59 proof/spec fns clean (63%)
+   57 proof/spec fns clean (62%)
    0 proof/spec fns with holes (0%)
-   93 total fns
+   91 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 11 (actionable)
+   8 × assume() [algorithmic] (72%)
+   2 × external_body (18%)
+   1 × opaque (9%)
+Real Proof Targets: 11 (all actionable)
 
-Warnings: 1 total
+Warnings: 2 total
+   1 × fn_missing_wf_requires
    1 × assume_eq_clone_workaround
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
 
-No proof holes found! All proofs are complete.
-
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:27:31 -07:00
-Ended:     2026-04-01 07:27:31 -07:00
-Duration:  32ms
+Started:   2026-04-01 07:30:18 -07:00
+Ended:     2026-04-01 07:30:18 -07:00
+Duration:  29ms
 
 Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log
-city-review-verus-proof-holes.log
+Full output: src/Chap65/analyses/veracity-review-verus-proof-holes.log

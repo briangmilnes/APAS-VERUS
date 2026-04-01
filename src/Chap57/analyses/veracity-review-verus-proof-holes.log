@@ -21,19 +21,19 @@ Table of Contents:
 =================================================================
 
 ℹ DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:146: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:148: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:150: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:152: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:155: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:146: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:148: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:150: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:152: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:155: info: external_body_accept_hole
    Info: 5 total
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:116: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:135: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:116: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:135: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ℹ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:112: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:129: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    4 clean proof functions
 ✓ StackStEph.rs
@@ -95,9 +95,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:27:31 -07:00
-Ended:     2026-04-01 07:27:31 -07:00
-Duration:  11ms
+Started:   2026-04-01 07:30:18 -07:00
+Ended:     2026-04-01 07:30:18 -07:00
+Duration:  8ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap57/analyses/veracity-review-verus-proof-holes.log

@@ -21,46 +21,46 @@ Table of Contents:
 =================================================================
 
 ℹ DirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:977: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:986: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:995: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1004: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1013: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1022: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1031: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1040: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1049: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1058: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/DirGraphMtEph.rs:1067: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:977: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:986: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:995: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1004: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1013: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1022: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1031: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1040: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1049: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1058: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/DirGraphMtEph.rs:1067: info: accept()
    Info: 11 total
 ✓ DirGraphStEph.rs
 ℹ LabDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:865: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:874: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabDirGraphMtEph.rs:865: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabDirGraphMtEph.rs:874: info: accept()
    Info: 2 total
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:844: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabDirGraphMtEph.rs:854: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabDirGraphMtEph.rs:844: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabDirGraphMtEph.rs:854: info: structural_false_positive RWLOCK_GHOST add_labeled_arc — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
 ✓ LabDirGraphStEph.rs
 ℹ LabUnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:802: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:811: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:820: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:829: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:838: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:802: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:811: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:820: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:829: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:838: info: accept()
    Info: 5 total
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:846: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
-/home/milnes/projects/APAS-VERUS/src/Chap06/LabUnDirGraphMtEph.rs:856: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:846: info: structural_false_positive RWLOCK_GHOST add_vertex — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/LabUnDirGraphMtEph.rs:856: info: structural_false_positive RWLOCK_GHOST add_labeled_edge — proof { assume(self.ghost_locked_graph@ == locked_val@); } [medium]
    Info: 2 × structural_false_positive
 ✓ LabUnDirGraphStEph.rs
 ℹ UnDirGraphMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:688: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:697: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:706: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:715: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:724: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:733: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap06/UnDirGraphMtEph.rs:742: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:688: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:697: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:706: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:715: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:724: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:733: info: accept()
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap06/UnDirGraphMtEph.rs:742: info: accept()
    Info: 7 total
 ✓ UnDirGraphStEph.rs
 ✓ WeightedDirGraphStEphF64.rs
@@ -170,11 +170,12 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:27:29 -07:00
-Ended:     2026-04-01 07:27:29 -07:00
-Duration:  217ms
+Started:   2026-04-01 07:30:16 -07:00
+Ended:     2026-04-01 07:30:16 -07:00
+Duration:  126ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log
-ion:  217ms
+
+Duration:  126ms
 
 Full output: src/Chap06/analyses/veracity-review-verus-proof-holes.log

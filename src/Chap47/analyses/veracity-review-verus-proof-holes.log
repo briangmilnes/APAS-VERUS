@@ -23,11 +23,11 @@ Table of Contents:
 ✓ ChainedHashTable.rs
    5 clean proof functions
 ℹ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:196: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/DoubleHashFlatHashTableStEph.rs:196: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    5 clean proof functions
 ⚠ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/FlatHashTable.rs:161: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        153 |         fn clone(&self) -> (cloned: Self)
             ...
        159 |                 FlatEntry::Deleted => FlatEntry::Deleted,
@@ -43,28 +43,28 @@ Table of Contents:
 ✓ QuadProbFlatHashTableStEph.rs
    9 clean proof functions
 ⚠ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:852: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:852: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        840 |             fn clone(&self) -> (cloned: Self)
             ...
        850 |                     },
        851 |                 };
        853 |                 cloned
        854 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:869: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:869: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        858 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        867 |                         _ => false,
        868 |                     };
        870 |                 equal
        871 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:886: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:886: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        877 |             fn clone(&self) -> (cloned: Self)
             ...
        884 |                     },
        885 |                 };
        887 |                 cloned
        888 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:900: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap47/StructChainedHashTable.rs:900: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        892 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
        898 |                     _ => false,
@@ -143,9 +143,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:27:31 -07:00
-Ended:     2026-04-01 07:27:31 -07:00
-Duration:  72ms
+Started:   2026-04-01 07:30:17 -07:00
+Ended:     2026-04-01 07:30:17 -07:00
+Duration:  69ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
-Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
