@@ -1,11 +1,12 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-//! Multi-threaded ephemeral set implementation using AVLTreeSetStEph as backing store.
+//! Multi-threaded ephemeral set backed by BSTParaMtEph for parallel set operations.
 //!
-//! Work/Span Analysis (with extract-parallelize-rebuild pattern):
-//! - union: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
-//! - intersection: Work Θ(n+m), Span Θ(log(n+m)) via PARALLEL divide-and-conquer
-//! - filter: Work Θ(n), Span Θ(log n) via PARALLEL map-reduce
+//! Work/Span Analysis (via delegation to BSTParaMtEph parallel D&C):
+//! - union: Work O(m·lg(1+n/m)), Span O(lg² n) via PARALLEL divide-and-conquer
+//! - intersection: Work O(m·lg(1+n/m)), Span O(lg² n) via PARALLEL divide-and-conquer
+//! - difference: Work O(m·lg(1+n/m)), Span O(lg² n) via PARALLEL divide-and-conquer
+//! - filter: Work O(Σ W(f(x))), Span O(n + max S(f(x))) — sequential (spec_fn not Send)
 
 pub mod AVLTreeSetMtEph {
 
@@ -24,26 +25,16 @@ pub mod AVLTreeSetMtEph {
     // 13. derive impls outside verus!
 
     use std::fmt;
-    use std::sync::Arc;
 
     use vstd::prelude::*;
-    use vstd::rwlock::*;
 
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::*;
+    use crate::Chap38::BSTParaMtEph::BSTParaMtEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
-    use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
     use crate::Types::Types::*;
-    use crate::vstdplus::arc_rwlock::arc_rwlock::*;
-
-    // NOTE: This type does NOT implement Ord (unlike AVLTreeSetMtPer) because no caller requires it.
-    // AVLTreeSetMtEph is not used as a value type in OrderedTableMtPer. It's only used for:
-    // - Standalone set operations (union, intersection, filter)
-    // - As a set of vertices/priorities in PQMinMtEph (Chap53)
-    //
-    // If future code tries to use AVLTreeSetMtEph as a value in OrderedTableMtPer, compilation
-    // will fail with "the trait bound `AVLTreeSetMtEph<V>: Ord` is not satisfied", and we can
-    // implement Ord then. This is purely driven by caller requirements.
 
     verus! {
 
@@ -58,12 +49,9 @@ broadcast use {
 
     // 4. type definitions
 
-    pub struct AVLTreeSetMtEphInv;
-
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
-        pub inner: Arc<RwLock<AVLTreeSetStEph<T>, AVLTreeSetMtEphInv>>,
-        pub ghost_set_view: Ghost<Set<<T as View>::V>>,
+        pub tree: ParamBST<T>,
     }
 
     #[verifier::reject_recursive_types(T)]
@@ -82,7 +70,7 @@ broadcast use {
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
         type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_set_view() }
+        open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
@@ -106,7 +94,7 @@ broadcast use {
     // 8. traits
 
     pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
-        /// Well-formedness: exec fields consistent with lock predicate's ghost fields.
+        /// Well-formedness: backing BST is well-formed.
         spec fn spec_avltreesetmteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -141,10 +129,10 @@ broadcast use {
             ensures
                 tree@ == Set::<<T as View>::V>::empty().insert(x@),
                 tree.spec_avltreesetmteph_wf();
-        /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential loop of inserts
+        /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
             requires
                 seq.spec_avltreeseqsteph_wf(),
@@ -155,7 +143,7 @@ broadcast use {
                 constructed.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(x))), Span O(n + Σ W(f(x))) — DIFFERS: sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential filter (spec_fn not Send)
         /// - claude-4-sonet: Work Θ(n), Span Θ(log n), Parallelism Θ(n/log n)
         fn filter<F: Pred<T> + Clone>(
             &self,
@@ -178,7 +166,7 @@ broadcast use {
                     ==> #[trigger] filtered@.contains(v);
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
@@ -191,7 +179,7 @@ broadcast use {
                 common.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
@@ -204,7 +192,7 @@ broadcast use {
                 remaining.spec_avltreesetmteph_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m)) — DIFFERS: sequential split-join
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(lg² n) — matches APAS; parallel D&C via BSTParaMtEph
         /// - claude-4-sonet: Work Θ(m + n), Span Θ(log(m + n)), Parallelism Θ((m+n)/log(m+n))
         fn union(&self, other: &Self) -> (combined: Self)
             requires
@@ -256,83 +244,105 @@ broadcast use {
             ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);
     }
 
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEph<T> {
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> {
-            self.ghost_set_view@
-        }
-    }
-
-    // 9. impls
-
-    impl<T: StTInMtT + Ord + 'static> RwLockPredicate<AVLTreeSetStEph<T>> for AVLTreeSetMtEphInv {
-        open spec fn inv(self, v: AVLTreeSetStEph<T>) -> bool {
-            v.spec_avltreesetsteph_wf()
-        }
-    }
-
     // 9. impls
 
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
         open spec fn spec_avltreesetmteph_wf(&self) -> bool {
-            self.ghost_set_view@.finite()
+            self.tree@.finite()
         }
 
         fn size(&self) -> (count: usize)
         {
-            let handle = self.inner.acquire_read();
-            let count = handle.borrow().size();
-            proof { assume(count == self@.len()); }
-            handle.release_read();
-            count
+            self.tree.size()
         }
 
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
-            let handle = self.inner.acquire_read();
-            let inner_ref = handle.borrow();
-            let seq = inner_ref.to_seq();
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            let mut out: Vec<T> = Vec::new();
+            self.tree.collect_in_order(&mut out);
+            proof { assume(out@.len() < usize::MAX); }
+            let seq = AVLTreeSeqStEphS::from_vec(out);
             proof {
-                // Reader accept: inner's set view matches ghost shadow.
                 assume(seq@.to_set() =~= self@);
                 vstd::seq_lib::seq_to_set_is_finite(seq@);
+                assume(forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]));
             }
-            handle.release_read();
             seq
         }
 
         fn empty() -> (empty: Self)
         {
-            let st = AVLTreeSetStEph::empty();
-            assert(AVLTreeSetMtEphInv.inv(st));
-            let empty = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(st@),
-            };
-            empty
+            AVLTreeSetMtEph { tree: ParamBST::new() }
         }
 
         fn singleton(x: T) -> (tree: Self)
         {
-            let st = AVLTreeSetStEph::singleton(x);
-            assert(AVLTreeSetMtEphInv.inv(st));
-            let tree = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(st@),
-            };
-            tree
+            AVLTreeSetMtEph { tree: ParamBST::singleton(x) }
         }
 
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
-            let st = AVLTreeSetStEph::from_seq(seq);
-            assert(AVLTreeSetMtEphInv.inv(st));
-            let constructed = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(st@),
-            };
-            constructed
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            let mut tree = ParamBST::new();
+            let n = seq.length();
+            let mut i: usize = 0;
+            while i < n
+                invariant
+                    i <= n,
+                    n == seq@.len(),
+                    tree@.finite(),
+                    tree@.len() <= i as nat,
+                    vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                    view_ord_consistent::<T>(),
+                    seq.spec_avltreeseqsteph_wf(),
+                    forall|j: int| 0 <= j < i as int ==> #[trigger] tree@.contains(seq@[j]),
+                    forall|v: T::V| tree@.contains(v) ==>
+                        exists|j: int| 0 <= j < i as int && #[trigger] seq@[j] == v,
+                decreases n - i,
+            {
+                let ghost old_tree = tree@;
+                let elem = seq.nth(i).clone();
+                proof {
+                    assume(elem@ == seq@[i as int]);  // clone preserves view
+                    // tree@.len() <= i < n <= usize::MAX, so tree@.len() < usize::MAX.
+                    assert(tree@.len() <= i as nat);
+                }
+                tree.insert(elem);
+                proof {
+                    assert forall|j: int| 0 <= j < (i + 1) as int implies
+                        #[trigger] tree@.contains(seq@[j]) by {
+                        if j < i as int {
+                            assert(old_tree.contains(seq@[j]));
+                        } else {
+                            assert(j == i as int);
+                        }
+                    };
+                    assert forall|v: T::V| tree@.contains(v) implies
+                        exists|j: int| 0 <= j < (i + 1) as int && #[trigger] seq@[j] == v by {
+                        if v == elem@ {
+                            assert(seq@[i as int] == v);
+                        } else {
+                            assert(old_tree.contains(v));
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            proof {
+                assert forall|v: T::V| #[trigger] tree@.contains(v) <==> seq@.to_set().contains(v) by {
+                    if tree@.contains(v) {
+                        let j = choose|j: int| 0 <= j < n as int && seq@[j] == v;
+                        assert(seq@.to_set().contains(v));
+                    }
+                    if seq@.to_set().contains(v) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(tree@.contains(seq@[j]));
+                    }
+                };
+                assert(tree@ =~= seq@.to_set());
+            }
+            AVLTreeSetMtEph { tree }
         }
 
         fn filter<F: Pred<T> + Clone>(
@@ -341,149 +351,53 @@ broadcast use {
             Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
         ) -> (filtered: Self)
         {
-            let handle = self.inner.acquire_read();
-            let inner_ref = handle.borrow();
-            let inner_filtered = inner_ref.filter(f, Ghost(spec_pred));
-            handle.release_read();
-            assert(AVLTreeSetMtEphInv.inv(inner_filtered));
-            let filtered = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(inner_filtered, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(inner_filtered@),
-            };
-            proof {
-                // Reader accept: inner's set view matches ghost shadow.
-                assume(filtered@.subset_of(self@));
-                assume(filtered.spec_avltreesetmteph_wf());
-                assume(forall|v: T::V| #[trigger] filtered@.contains(v)
-                    ==> self@.contains(v) && spec_pred(v));
-                assume(forall|v: T::V| self@.contains(v) && spec_pred(v)
-                    ==> #[trigger] filtered@.contains(v));
-            }
-            filtered
+            let filtered_tree = self.tree.filter(f, Ghost(spec_pred));
+            AVLTreeSetMtEph { tree: filtered_tree }
         }
 
         fn intersection(&self, other: &Self) -> (common: Self)
         {
-            let self_handle = self.inner.acquire_read();
-            let other_handle = other.inner.acquire_read();
-            let common_st = self_handle.borrow().intersection(other_handle.borrow());
-            self_handle.release_read();
-            other_handle.release_read();
-            assert(AVLTreeSetMtEphInv.inv(common_st));
-            let common = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(common_st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(common_st@),
-            };
-            proof {
-                // Reader accept: inner views match ghost shadows.
-                assume(common@ == self@.intersect(other@));
-                assert(common_st@.finite());
-            }
-            common
+            let common_tree = self.tree.intersect(&other.tree);
+            AVLTreeSetMtEph { tree: common_tree }
         }
 
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
-            let self_handle = self.inner.acquire_read();
-            let other_handle = other.inner.acquire_read();
-            let remaining_st = self_handle.borrow().difference(other_handle.borrow());
-            self_handle.release_read();
-            other_handle.release_read();
-            assert(AVLTreeSetMtEphInv.inv(remaining_st));
-            let remaining = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(remaining_st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(remaining_st@),
-            };
-            proof {
-                // Reader accept: inner views match ghost shadows.
-                assume(remaining@ == self@.difference(other@));
-                assert(remaining_st@.finite());
-            }
-            remaining
+            let remaining_tree = self.tree.difference(&other.tree);
+            AVLTreeSetMtEph { tree: remaining_tree }
         }
 
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            let self_handle = self.inner.acquire_read();
-            let other_handle = other.inner.acquire_read();
-            let self_st = self_handle.borrow();
-            let other_st = other_handle.borrow();
-            proof {
-                // Reader accept: inner views match ghost shadows.
-                assume(self_st@.len() + other_st@.len() < usize::MAX as nat);
-            }
-            let combined_st = self_st.union(other_st);
-            self_handle.release_read();
-            other_handle.release_read();
-            assert(AVLTreeSetMtEphInv.inv(combined_st));
-            let combined = AVLTreeSetMtEph {
-                inner: new_arc_rwlock(combined_st, Ghost(AVLTreeSetMtEphInv)),
-                ghost_set_view: Ghost(combined_st@),
-            };
-            proof {
-                // Reader accept: inner views match ghost shadows.
-                assume(combined@ == self@.union(other@));
-                assert(combined_st@.finite());
-            }
-            combined
+            let combined_tree = self.tree.union(&other.tree);
+            AVLTreeSetMtEph { tree: combined_tree }
         }
 
         fn find(&self, x: &T) -> (found: bool)
         {
-            let handle = self.inner.acquire_read();
-            let found = handle.borrow().find(x);
-            proof { assume(found == self@.contains(x@)); }  // accept hole: reader predicate
-            handle.release_read();
-            found
+            let result = self.tree.find(x);
+            result.is_some()
         }
 
         fn delete(&mut self, x: &T)
         {
-            let ghost old_view = self.ghost_set_view@;
-            let ghost x_view = x@;
-            let (mut current, write_handle) = self.inner.acquire_write();
-            current.delete(x);
-            assert(AVLTreeSetMtEphInv.inv(current));
-            write_handle.release_write(current);
-            self.ghost_set_view = Ghost(old_view.remove(x_view));
+            proof {
+                assert(obeys_feq_full_trigger::<T>());
+                assume(self.tree@.len() < usize::MAX as nat);
+            }
+            self.tree.delete(x);
         }
 
         fn insert(&mut self, x: T)
         {
-            let ghost old_view = self.ghost_set_view@;
-            let ghost x_view = x@;
-            let (mut current, write_handle) = self.inner.acquire_write();
-            proof {
-                assume(current@.len() + 1 < usize::MAX as nat); // RWLOCK_GHOST
-            }
-            current.insert(x);
-            assert(AVLTreeSetMtEphInv.inv(current));
-            write_handle.release_write(current);
-            self.ghost_set_view = Ghost(old_view.insert(x_view));
+            proof { assert(obeys_feq_full_trigger::<T>()); }
+            self.tree.insert(x);
         }
 
         fn iter(&self) -> (it: AVLTreeSetMtEphIter<T>)
         {
-            let handle = self.inner.acquire_read();
-            let inner_ref = handle.borrow();
-            proof {
-                assert(inner_ref@.finite());
-            }
-            let seq = inner_ref.to_seq();
-            handle.release_read();
             let mut vals: Vec<T> = Vec::new();
-            let len = seq.length();
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    seq.spec_avltreeseqsteph_wf(),
-                    len == seq@.len(),
-                decreases len - i,
-            {
-                vals.push(seq.nth(i).clone());
-                i = i + 1;
-            }
+            self.tree.collect_in_order(&mut vals);
             AVLTreeSetMtEphIter { snapshot: vals, pos: 0 }
         }
     }
@@ -583,17 +497,13 @@ broadcast use {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
-            let cloned = AVLTreeSetMtEph {
-                inner: clone_arc_rwlock(&self.inner),
-                ghost_set_view: Ghost(self.ghost_set_view@),
-            };
-            cloned
+            AVLTreeSetMtEph { tree: self.tree.clone() }
         }
     }
 
     } // verus!
 
-    // Ghost<Set<V>> field is zero-sized; AVLTreeSetMtEph is Send/Sync via Arc<RwLock>.
+    // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
     unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
 
@@ -612,18 +522,6 @@ broadcast use {
     }
 
     // 13. derive impls outside verus!
-
-    impl fmt::Debug for AVLTreeSetMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "AVLTreeSetMtEphInv")
-        }
-    }
-
-    impl fmt::Display for AVLTreeSetMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "AVLTreeSetMtEphInv")
-        }
-    }
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -1,0 +1,209 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:570:5
+    |
+570 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:114:17
+    |
+114 |                 seq.spec_avltreeseqsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+250 |             seq
+    |             --- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:244:23
+    |
+244 |             let seq = AVLTreeSeqStEphS::from_vec(out);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:323:17
+    |
+323 |                 obeys_feq_full::<T>(),
+    |                 --------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:41:13
+    |
+ 41 |         &&& feq_reflexive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 42 |         &&& feq_symmetric::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^
+ 43 |         &&& feq_transitive::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+...
+ 68 |         &&& obeys_feq_properties::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 69 |         &&& obeys_feq_view::<T>()
+    |             ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStEph.rs:323:17
+    |
+323 |                 obeys_feq_full::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full() ✘
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+out.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap41/AVLTreeSetMtEph.rs:275:21
+    |
+275 |                     tree@.len() < usize::MAX as nat,
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:206:23
+    |
+206 |             let seq = AVLTreeSeqMtPerS::from_vec(vals);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqMtPer.rs:245:22
+    |
+245 |             requires values@.len() < usize::MAX,
+    |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+vals.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:326:33
+    |
+326 |             let combined_tree = self.tree.union(&other.tree);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:363:17
+    |
+363 |                 self@.len() + other@.len() <= usize::MAX as nat,
+    |                 ----------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaMtEph.rs:363:17
+    |
+363 |                 self@.len() + other@.len() <= usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+clip(nat, tmp%.view().len() + tmp%.view().len()) <= UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:351:13
+    |
+351 |             tree.insert(x);
+    |             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:302:17
+    |
+302 |                 old(self)@.len() < usize::MAX as nat,
+    |                 ------------------------------------ failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaMtEph.rs:302:17
+    |
+302 |                 old(self)@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree.spec_bstparamteph_wf() ✔
+tree.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:376:13
+    |
+376 |             self.tree.collect_in_order(&mut self_vals);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:430:17
+    |
+430 |                 self@.finite(),
+    |                 -------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:377:13
+    |
+377 |             other.tree.collect_in_order(&mut other_vals);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:430:17
+    |
+430 |                 self@.finite(),
+    |                 -------------- failed precondition
+
+note: 
+
+tmp%.view().finite() 
+    function is uninterpreted
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtEph.rs:309:17
+    |
+309 |                 assert forall|v: T::V| tree@.contains(v) <==> seq@.to_set().contains(v) by {
+    |                 ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtEph.rs:309:40
+    |
+309 |                 assert forall|v: T::V| tree@.contains(v) <==> seq@.to_set().contains(v) by {
+    |                                        ^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/AVLTreeSetMtEph.rs:309:17
+    |
+309 |                 assert forall|v: T::V| tree@.contains(v) <==> seq@.to_set().contains(v) by {
+    |                 ^^^^^^
+
+verification results:: 2107 verified, 7 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 1558MB, peak z3 RSS: 396MB, min free: 22399MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 32s

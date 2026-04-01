@@ -43,6 +43,6 @@ note: Verus printed one or more automatically chosen quantifier triggers
 verification results:: 2112 verified, 2 errors
 error: aborting due to 2 previous errors
 
-Elapsed: 16s
-Sampled Memory Usage: peak rust_verify RSS: 3397MB, peak z3 RSS: 487MB, min free: 20484MB
-Sampled CPU Usage: rust_verify: 44s, z3 children: 39s
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 1704MB, peak z3 RSS: 341MB, min free: 22488MB
+Sampled CPU Usage: rust_verify: 25s, z3 children: 31s
