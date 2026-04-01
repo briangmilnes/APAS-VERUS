@@ -1,0 +1,118 @@
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:302:24
+    |
+302 |                 assert(u_heads == coin_flips@[u@]);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:303:24
+    |
+303 |                 assert(v_heads == coin_flips@[v@]);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:322:32
+    |
+322 |                         assert(vertex_to_index@.contains_key(v@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:328:32
+    |
+328 |                         assert(spec_valid_th_entry(result@[0], nv as nat, coin_flips@, vertices@, vertex_to_index@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:345:32
+    |
+345 |                         assert(vertex_to_index@.contains_key(u@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:350:32
+    |
+350 |                         assert(spec_valid_th_entry(result@[0], nv as nat, coin_flips@, vertices@, vertex_to_index@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap62/StarPartitionMtEph.rs:302:24
+    |
+302 |                 assert(u_heads == coin_flips@[u@]);
+    |                        ^^^^^^^    ^^^^^^^^^^^^^^^
+
+note: 
+
+u_heads == coin_flips.view().index(u.view())
+|   u_heads ==>
+|       coin_flips.view().index(u.view()) ✘
+|           function is uninterpreted
+|   coin_flips.view().index(u.view()) ==>
+|       u_heads ✘
++---
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:302:35
+    |
+302 |                 assert(u_heads == coin_flips@[u@]);
+    |                                   ^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:303:35
+    |
+303 |                 assert(v_heads == coin_flips@[v@]);
+    |                                   ^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:342:33
+    |
+342 |                         assert(!coin_flips@[v@]);
+    |                                 ^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:343:33
+    |
+343 |                         assert(!coin_flips@[vertices@[vid as int]@]);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:319:33
+    |
+319 |                         assert(!coin_flips@[u@]);
+    |                                 ^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:320:33
+    |
+320 |                         assert(!coin_flips@[vertices@[uid as int]@]);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+verification results:: 1297 verified, 1 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1884MB, peak z3 RSS: 270MB, min free: 22196MB
+Sampled CPU Usage: rust_verify: 21s, z3 children: 14s

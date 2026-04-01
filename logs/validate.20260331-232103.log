@@ -1,0 +1,133 @@
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:306:32
+    |
+306 |                         assert(!coin_flips@[vertices@[uid as int]@]);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:309:32
+    |
+309 |                         assert(vertex_to_index@[v@] as usize == j2);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:310:32
+    |
+310 |                         assert((vertex_to_index@[v@] as usize) < nv);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:311:32
+    |
+311 |                         assert(spec_valid_th_entry(result@[0], nv as nat, coin_flips@, vertices@, vertex_to_index@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:323:32
+    |
+323 |                         assert(!coin_flips@[vertices@[vid as int]@]);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:326:32
+    |
+326 |                         assert(vertex_to_index@[u@] as usize == j2);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:327:32
+    |
+327 |                         assert((vertex_to_index@[u@] as usize) < nv);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:328:32
+    |
+328 |                         assert(spec_valid_th_entry(result@[0], nv as nat, coin_flips@, vertices@, vertex_to_index@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(coin_flips.view().index(vertices.view().index(uid).view())) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:306:33
+    |
+306 |                         assert(!coin_flips@[vertices@[uid as int]@]);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:308:50
+    |
+308 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == v@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:309:32
+    |
+309 |                         assert(vertex_to_index@[v@] as usize == j2);
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:310:33
+    |
+310 |                         assert((vertex_to_index@[v@] as usize) < nv);
+    |                                 ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:323:33
+    |
+323 |                         assert(!coin_flips@[vertices@[vid as int]@]);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:325:50
+    |
+325 |                         let j2 = choose|j2: int| 0 <= j2 < nv as int && #[trigger] vertices@[j2]@ == u@;
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:326:32
+    |
+326 |                         assert(vertex_to_index@[u@] as usize == j2);
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:327:33
+    |
+327 |                         assert((vertex_to_index@[u@] as usize) < nv);
+    |                                 ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/map.rs:72:12
+    |
+    = note: recommendation not met
+
+verification results:: 1297 verified, 1 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1878MB, peak z3 RSS: 348MB, min free: 22276MB
+Sampled CPU Usage: rust_verify: 21s, z3 children: 13s
