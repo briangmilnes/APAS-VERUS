@@ -83,6 +83,7 @@ is to get code to **verify (prove)** with Verus.
 | TUS | The Usual Suspects (search locations) |
 | PBOGH | Project's current state (not something to hide) |
 | AFK | Away From Keyboard (execute without stopping) |
+| RCP | Write Report; Commit (`git add -A && git commit`); Push (`git push`) |
 
 ---
 
