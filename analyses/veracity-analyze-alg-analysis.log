@@ -1863,38 +1863,6 @@ src/Chap43/AugOrderedTableMtEph.rs:726: error: fn `split_rank_key` missing alg a
 src/Chap43/AugOrderedTableMtEph.rs:752: error: fn `reduce_val` missing alg analysis annotation
 src/Chap43/AugOrderedTableMtEph.rs:759: error: fn `reduce_range` missing alg analysis annotation
 src/Chap43/AugOrderedTableMtEph.rs:767: error: fn `reduce_range_parallel` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:74: error: fn `calculate_reduction` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:481: error: fn `size` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:488: error: fn `empty` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:502: error: fn `singleton` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:516: error: fn `find` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:526: error: fn `lookup` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:536: error: fn `is_empty` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:546: error: fn `insert` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:553: error: fn `delete` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:562: error: fn `domain` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:568: error: fn `tabulate` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:586: error: fn `map` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:601: error: fn `filter` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:616: error: fn `reduce` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:623: error: fn `intersection` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:630: error: fn `union` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:637: error: fn `difference` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:644: error: fn `restrict` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:651: error: fn `subtract` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:658: error: fn `collect` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:665: error: fn `first_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:677: error: fn `last_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:689: error: fn `previous_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:701: error: fn `next_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:713: error: fn `split_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:749: error: fn `join_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:768: error: fn `get_key_range` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:789: error: fn `rank_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:800: error: fn `select_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:812: error: fn `split_rank_key` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:848: error: fn `reduce_val` missing alg analysis annotation
-src/Chap43/AugOrderedTableStEph.rs:859: error: fn `reduce_range` missing alg analysis annotation
 src/Chap43/AugOrderedTableStPer.rs:78: error: fn `calculate_reduction` missing alg analysis annotation
 src/Chap43/AugOrderedTableStPer.rs:490: error: fn `size` missing alg analysis annotation
 src/Chap43/AugOrderedTableStPer.rs:497: error: fn `empty` missing alg analysis annotation
@@ -2918,8 +2886,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2485  (fns with any APAS or Code review line)
-  Missing alg analysis:      2599  <- errors
+  Alg analysis annotations:  2517  (fns with any APAS or Code review line)
+  Missing alg analysis:      2567  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -2927,7 +2895,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2704
+  Errors: 2672
   Warnings: 0
   Info: 204
 

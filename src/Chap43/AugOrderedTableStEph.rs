@@ -71,6 +71,7 @@ broadcast use {
 
     // 7. free functions (calculate_reduction)
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
     pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
         base: &OrderedTableStEph<K, V>,
         reducer: &F,
@@ -478,6 +479,7 @@ broadcast use {
             && obeys_feq_full::<Pair<K, V>>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
@@ -485,6 +487,7 @@ broadcast use {
             self.base_table.size()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty()
         {
@@ -499,6 +502,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree@.dom().finite()
         {
@@ -513,6 +517,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table find
         fn find(&self, k: &K) -> (found: Option<V>)
             ensures
                 match found {
@@ -523,6 +528,7 @@ broadcast use {
             self.base_table.find(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table lookup
         fn lookup(&self, k: &K) -> (value: Option<V>)
             ensures
                 match value {
@@ -533,6 +539,7 @@ broadcast use {
             self.base_table.lookup(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
@@ -543,6 +550,7 @@ broadcast use {
             self.base_table.is_empty()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- base insert O(n) + recalculate O(n)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
         {
             self.base_table.insert(k, v, combine);
@@ -550,6 +558,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- base delete O(n) + recalculate O(n)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             ensures self@.dom().finite()
         {
@@ -559,12 +568,14 @@ broadcast use {
             updated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
             proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base tabulate O(n log n) + recalculate O(n)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
         {
                       assert(obeys_feq_full_trigger::<K>());
@@ -583,6 +594,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base map O(n log n) + recalculate O(n)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
         {
             let new_base = self.base_table.map(f);
@@ -598,6 +610,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base filter O(n log n) + recalculate O(n)
         fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
         {
             let new_base = self.base_table.filter(f, Ghost(spec_pred));
@@ -613,6 +626,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table reduce
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             ensures self@.dom().finite()
         {
@@ -620,6 +634,7 @@ broadcast use {
             self.base_table.reduce(init, f)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base intersection + recalculate O(n)
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
         {
             self.base_table.intersection(&other.base_table, f);
@@ -627,6 +642,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base union + recalculate O(n)
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
         {
             self.base_table.union(&other.base_table, f);
@@ -634,6 +650,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base difference + recalculate O(n)
         fn difference(&mut self, other: &Self)
         {
             self.base_table.difference(&other.base_table);
@@ -641,6 +658,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base restrict + recalculate O(n)
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
         {
             self.base_table.restrict(keys);
@@ -648,6 +666,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- base subtract + recalculate O(n)
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
         {
             self.base_table.subtract(keys);
@@ -655,6 +674,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len()
         {
@@ -662,6 +682,7 @@ broadcast use {
             self.base_table.collect()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table first_key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             ensures
@@ -674,6 +695,7 @@ broadcast use {
             self.base_table.first_key()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table last_key
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             ensures
@@ -686,6 +708,7 @@ broadcast use {
             self.base_table.last_key()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             ensures
@@ -698,6 +721,7 @@ broadcast use {
             self.base_table.previous_key(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             ensures
@@ -710,6 +734,7 @@ broadcast use {
             self.base_table.next_key(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base split_key + two recalculations
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             ensures
                 self@.dom().finite(),
@@ -746,6 +771,7 @@ broadcast use {
             (left, found_value, right)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to base join_key (union)
         fn join_key(&mut self, other: Self)
         {
             let self_size = self.base_table.size();
@@ -765,6 +791,7 @@ broadcast use {
             proof { lemma_aug_view(self); }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base get_key_range + recalculate
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             ensures
                 range@.dom().finite(),
@@ -786,6 +813,7 @@ broadcast use {
             r
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             ensures
@@ -797,6 +825,7 @@ broadcast use {
             self.base_table.rank_key(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             ensures
@@ -809,6 +838,7 @@ broadcast use {
             self.base_table.select_key(i)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base split_rank_key + two recalculations
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             ensures
                 self@.dom().finite(),
@@ -845,6 +875,7 @@ broadcast use {
             (left, right)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- returns cached reduction clone
         fn reduce_val(&self) -> (reduced: V)
             ensures self@.dom().finite()
         {
@@ -856,6 +887,7 @@ broadcast use {
             self.cached_reduction.clone()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- get_key_range + cached clone
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             ensures self@.dom().finite()
         {
