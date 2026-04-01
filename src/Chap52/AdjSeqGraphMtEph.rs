@@ -86,6 +86,7 @@ broadcast use {
             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
 
         /// Work Theta(n), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphmteph_wf(),
@@ -93,6 +94,7 @@ broadcast use {
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_seq(adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
@@ -158,6 +160,7 @@ broadcast use {
             ensures d as nat == self.spec_degree(u as int);
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqMtEphS<usize>)
             requires
                 old(self).spec_adjseqgraphmteph_wf(),
@@ -225,6 +228,7 @@ broadcast use {
             self.adj.spec_index(u).spec_index(j)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(n: usize) -> (empty: Self) {
             let adj = ArraySeqMtEphS::tabulate(
                 &|_i: usize| -> (r: ArraySeqMtEphS<usize>)
@@ -237,14 +241,17 @@ broadcast use {
             AdjSeqGraphMtEph { adj }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_seq(adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>) -> (constructed: Self) {
             AdjSeqGraphMtEph { adj }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> (n: usize) {
             self.adj.length()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn num_edges(&self) -> (m: usize) {
             let n = self.adj.length();
             let mut count: usize = 0;
@@ -270,6 +277,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             let neighbors = self.adj.nth(u);
             let len = neighbors.length();
@@ -295,6 +303,7 @@ broadcast use {
             false
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>) {
             let src = self.adj.nth(u);
             let len = src.length();
@@ -309,10 +318,12 @@ broadcast use {
             )
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn out_degree(&self, u: usize) -> (d: usize) {
             self.adj.nth(u).length()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqMtEphS<usize>) {
             let _ = self.adj.set(v, neighbors);
             assert forall|u: int, j: int|
@@ -326,6 +337,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let ghost old_degree = self.spec_degree(u as int);
             let ghost old_neighbors_view = Seq::new(old_degree, |j: int| self.spec_neighbor(u as int, j));

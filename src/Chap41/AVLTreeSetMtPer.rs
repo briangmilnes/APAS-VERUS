@@ -100,6 +100,7 @@ broadcast use {
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             ensures empty@ == Set::<<T as View>::V>::empty(), empty.spec_avltreesetmtper_wf();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -215,11 +216,13 @@ broadcast use {
             self.tree@.finite()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
             self.tree.size()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
             let mut vals: Vec<T> = Vec::new();
@@ -253,16 +256,19 @@ broadcast use {
             seq
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
             AVLTreeSetMtPer { tree: ParamBST::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
             AVLTreeSetMtPer { tree: ParamBST::singleton(x) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
         {
             proof { assert(obeys_feq_full_trigger::<T>()); }
@@ -341,6 +347,7 @@ broadcast use {
             AVLTreeSetMtPer { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Pred<T> + Clone>(
             &self,
             f: F,
@@ -351,18 +358,21 @@ broadcast use {
             AVLTreeSetMtPer { tree: filtered_tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let common_tree = self.tree.intersect(&other.tree);
             AVLTreeSetMtPer { tree: common_tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let remaining_tree = self.tree.difference(&other.tree);
             AVLTreeSetMtPer { tree: remaining_tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn union(&self, other: &Self) -> (combined: Self)
         {
             proof { assume(self.tree@.len() + other.tree@.len() <= usize::MAX as nat); }
@@ -370,12 +380,14 @@ broadcast use {
             AVLTreeSetMtPer { tree: combined_tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find(&self, x: &T) -> (found: bool)
         {
             let result = self.tree.find(x);
             result.is_some()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
@@ -387,6 +399,7 @@ broadcast use {
             AVLTreeSetMtPer { tree }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert(&self, x: T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();

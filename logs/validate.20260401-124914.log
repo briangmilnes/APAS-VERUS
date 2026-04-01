@@ -1,0 +1,128 @@
+error: unexpected end of input, expected one of: `fn`, `const`, `type`, identifier, `self`, `super`, `crate`, `::`
+   --> src/Chap45/LeftistHeapPQ.rs:203:99
+    |
+203 |           pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized + LeftistHeapNodeSpec<T> {
+    |  ___________________________________________________________________________________________________^
+204 | |             spec fn spec_is_leaf(&self) -> bool;
+205 | |
+206 | |         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+...   |
+265 | |         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+266 | |         }
+    | |_________^
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1251:55
+     |
+1251 |     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapNode<T> {
+     |                                                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1262:49
+     |
+1262 |     impl<T: StT + Ord + TotalOrder> Display for LeftistHeapNode<T> {
+     |                                                 ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1264:62
+     |
+1264 |             fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+     |                                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1279:55
+     |
+1279 |     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapPQ<T> {
+     |                                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1285:49
+     |
+1285 |     impl<T: StT + Ord + TotalOrder> Display for LeftistHeapPQ<T> {
+     |                                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapNode` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1287:62
+     |
+1287 |             fn format_node<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>, f: &mut Formatter<'_>, depth: usize) -> Result {
+     |                                                              ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1309:28
+     |
+1309 |             .collect::<Vec<LeftistHeapPQ<T>>>();
+     |                            ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LeftistHeapPQ` in this scope
+    --> src/Chap45/LeftistHeapPQ.rs:1315:87
+     |
+1315 |     pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {
+     |                                                                                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1254:17
+     |
+1254 |                 LeftistHeapNode::Leaf => write!(f, "Leaf"),
+     |                 ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1255:17
+     |
+1255 |                 LeftistHeapNode::Node { key, left, right, rank } => {
+     |                 ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1266:21
+     |
+1266 |                     LeftistHeapNode::Leaf => Ok(()),
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1267:21
+     |
+1267 |                     LeftistHeapNode::Node { key, left, right, rank } => {
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1289:21
+     |
+1289 |                     LeftistHeapNode::Leaf => Ok(()),
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapNode`
+    --> src/Chap45/LeftistHeapPQ.rs:1290:21
+     |
+1290 |                     LeftistHeapNode::Node { key, left, right, rank } => {
+     |                     ^^^^^^^^^^^^^^^ use of undeclared type `LeftistHeapNode`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1308:24
+     |
+1308 |             .map(|seq| LeftistHeapPQ::from_vec(seq))
+     |                        ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1310:27
+     |
+1310 |         let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);
+     |                           ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+    --> src/Chap45/LeftistHeapPQ.rs:1316:9
+     |
+1316 |         LeftistHeapPQ::from_vec(elements)
+     |         ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error[E0433]: failed to resolve: use of undeclared type `LeftistHeapPQ`
+   --> src/Chap45/HeapsortExample.rs:253:22
+    |
+253 |         let mut pq = LeftistHeapPQ::empty();
+    |                      ^^^^^^^^^^^^^ use of undeclared type `LeftistHeapPQ`
+
+error: aborting due to 19 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 731MB, peak z3 RSS: 0MB, min free: 23286MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

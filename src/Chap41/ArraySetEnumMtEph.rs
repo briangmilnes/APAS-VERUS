@@ -318,6 +318,7 @@ broadcast use {
             self.universe_size
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -354,6 +355,7 @@ broadcast use {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
             ensures count == self@.len(), self@.finite(),
         {
@@ -398,6 +400,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
         {
             proof { lemma_view_finite(self.bits@, self.universe_size); }
@@ -518,6 +521,7 @@ broadcast use {
             seq
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty(u: usize) -> (empty: Self)
             ensures
                 empty@ == Set::<usize>::empty(),
@@ -527,6 +531,7 @@ broadcast use {
             Self::new(u)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -544,6 +549,7 @@ broadcast use {
             s
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
@@ -583,6 +589,7 @@ broadcast use {
             constructed
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             ensures
                 filtered@.subset_of(self@),
@@ -679,6 +686,7 @@ broadcast use {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn intersection(&self, other: &Self) -> (common: Self)
             ensures
                 common@ == self@.intersect(other@),
@@ -729,6 +737,7 @@ broadcast use {
             common
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn difference(&self, other: &Self) -> (remaining: Self)
             ensures
                 remaining@ == self@.difference(other@),
@@ -779,6 +788,7 @@ broadcast use {
             remaining
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn union(&self, other: &Self) -> (combined: Self)
             ensures
                 combined@ == self@.union(other@),
@@ -829,6 +839,7 @@ broadcast use {
             combined
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find(&self, x: usize) -> (found: bool)
             ensures found == self@.contains(x),
         {
@@ -842,6 +853,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete(&mut self, x: usize)
             ensures
                 self@ == old(self)@.remove(x),
@@ -889,6 +901,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, x: usize)
             ensures
                 (x < old(self).spec_universe_size() ==> self@ == old(self)@.insert(x)),

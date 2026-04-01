@@ -83,7 +83,7 @@ pub mod LinkedListStPer {
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost). — matches APAS
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
         s.fold_left(start_x, f)
     }
@@ -297,6 +297,7 @@ pub mod LinkedListStPer {
             self.seq@[i]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -304,14 +305,17 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -339,6 +343,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: LinkedListStPerS<T>) {
             LinkedListStPerS { seq: elts }
         }
@@ -347,16 +352,19 @@ pub mod LinkedListStPer {
     //		9. impl RedefinableTrait for Struct
 
     impl<T> LinkedListStPerRedefinableTrait<T> for LinkedListStPerS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: LinkedListStPerS<T>) {
             LinkedListStPerS { seq: Vec::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: LinkedListStPerS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(usize) -> T>(f: &F, n: usize) -> (tab_seq: LinkedListStPerS<T>)
         {
             let mut seq = Vec::with_capacity(n);
@@ -375,6 +383,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<U: Clone, F: Fn(&T) -> U>(a: &LinkedListStPerS<T>, f: &F) -> (mapped: LinkedListStPerS<U>)
         {
             let len = a.seq.len();
@@ -395,6 +404,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
         fn append(a: &LinkedListStPerS<T>, b: &LinkedListStPerS<T>) -> (appended: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -442,6 +452,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -485,6 +496,7 @@ pub mod LinkedListStPer {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total length), Span O(total length)
         fn flatten(a: &LinkedListStPerS<LinkedListStPerS<T>>) -> (flattened: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -537,6 +549,7 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &LinkedListStPerS<T>, index: usize, item: T) -> (updated: LinkedListStPerS<T>)
             where T: Clone + Eq
         {
@@ -574,14 +587,17 @@ pub mod LinkedListStPer {
             LinkedListStPerS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
@@ -617,6 +633,7 @@ pub mod LinkedListStPer {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -654,6 +671,7 @@ pub mod LinkedListStPer {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &LinkedListStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (LinkedListStPerS<T>, T))
             where T: Clone + Eq
         {
@@ -720,7 +738,7 @@ pub mod LinkedListStPer {
 
         /// Returns an iterator over the list elements.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         pub fn iter(&self) -> (it: LinkedListStPerIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -759,7 +777,7 @@ pub mod LinkedListStPer {
         type Item = &'a T;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
@@ -837,7 +855,7 @@ pub mod LinkedListStPer {
         type Item = &'a T;
         type IntoIter = LinkedListStPerIter<'a, T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn into_iter(self) -> Self::IntoIter { LinkedListStPerIter { inner: self.seq.iter() } }
     }
 
@@ -845,7 +863,7 @@ pub mod LinkedListStPer {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
@@ -854,7 +872,7 @@ pub mod LinkedListStPer {
 
     impl<T: Clone + View> Clone for LinkedListStPerS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -868,7 +886,7 @@ pub mod LinkedListStPer {
 
     impl<T: PartialEq + View> PartialEq for LinkedListStPerS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

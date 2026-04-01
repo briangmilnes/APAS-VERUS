@@ -316,7 +316,7 @@ pub mod ArraySeq {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1). — matches APAS
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -328,7 +328,7 @@ pub mod ArraySeq {
 
         /// - Set the element at `index` to `item` in place.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -502,7 +502,7 @@ pub mod ArraySeq {
         /// - Definition 18.19 (scanI). Inclusive prefix-reduce: scanI[i] = reduce f id a[0..i].
         /// - Our `scan` currently computes inclusive prefixes; this function makes the intent explicit.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(1). — matches APAS
         fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &Self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: Self)
             where T: Clone + Eq
             requires
@@ -517,7 +517,7 @@ pub mod ArraySeq {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(1). — matches APAS
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -530,7 +530,7 @@ pub mod ArraySeq {
 
         /// - Remove the element at `index`, shifting subsequent elements left.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn remove(&mut self, index: usize) -> (element: T)
             requires
                 index < old(self).spec_len(),
@@ -542,7 +542,7 @@ pub mod ArraySeq {
 
         /// - Insert `element` at `index`, shifting subsequent elements right.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn insert(&mut self, index: usize, element: T)
             requires
                 index <= old(self).spec_len(),
@@ -554,13 +554,14 @@ pub mod ArraySeq {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_len() == elts@.len(),
                 forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
 
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find_key<K: View + Eq + PartialEq, V: View>(
             groups: &ArraySeqS<(K, ArraySeqS<V>)>,
             needle: &K,
@@ -619,6 +620,7 @@ pub mod ArraySeq {
             self.seq[i]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -626,6 +628,7 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -635,24 +638,29 @@ pub mod ArraySeq {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: ArraySeqS<T>) {
             ArraySeqS { seq: Vec::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: ArraySeqS<T>) {
             let mut seq = Vec::with_capacity(1);
             seq.push(item);
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq(a: &ArraySeqS<T>, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -680,6 +688,7 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|)
         fn append(a: &ArraySeqS<T>, b: &ArraySeqS<T>) -> (appended: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -727,6 +736,7 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -773,6 +783,7 @@ pub mod ArraySeq {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &ArraySeqS<T>, index: usize, item: T) -> (updated: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -810,14 +821,17 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, start_x: A) -> (accumulated: A) {
             let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
             let len = a.seq.len();
@@ -857,6 +871,7 @@ pub mod ArraySeq {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -898,6 +913,7 @@ pub mod ArraySeq {
             acc
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqS<T>, T))
             where T: Clone + Eq
         {
@@ -960,6 +976,7 @@ pub mod ArraySeq {
             (scanned_seq, acc)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn inject(a: &ArraySeqS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -1036,6 +1053,7 @@ pub mod ArraySeq {
             injected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan_inclusive<F: Fn(&T, &T) -> T>(a: &ArraySeqS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -1088,6 +1106,7 @@ pub mod ArraySeq {
             scanned
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j - i), Span O(j - i)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqS<T>)
             where T: Clone + Eq
         {
@@ -1115,6 +1134,7 @@ pub mod ArraySeq {
             ArraySeqS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn remove(&mut self, index: usize) -> (element: T) {
             let ghost old_seq = self.seq@;
             let element = self.seq.remove(index);
@@ -1124,6 +1144,7 @@ pub mod ArraySeq {
             element
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, index: usize, element: T) {
             let ghost old_seq = self.seq@;
             self.seq.insert(index, element);
@@ -1132,11 +1153,13 @@ pub mod ArraySeq {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqS<T>) {
             ArraySeqS { seq: elts }
         }
 
         /// Linear scan for the first group whose key matches `needle`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find_key<K: View + Eq + PartialEq, V: View>(
             groups: &ArraySeqS<(K, ArraySeqS<V>)>,
             needle: &K,
@@ -1166,6 +1189,7 @@ pub mod ArraySeq {
         /// This is not Rust style iter().collect(), this is a SQL style collect with group_by.
         /// The Verus limitation of "index for &mut not supported" prevents
         /// groups[idx].1.push(v). So we remove the entry, mutate it, and re-insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn collect<K: DeepView<V = K> + View + Clone + Eq + PartialEq, V: DeepView<V = V> + View + Clone + Eq>(
             pairs: &ArraySeqS<(K, V)>,
         ) -> (collected: ArraySeqS<(K, ArraySeqS<V>)>)
@@ -1374,6 +1398,7 @@ pub mod ArraySeq {
     /// Definition 18.19 (iteratePrefixes). Return all intermediate accumulator values
     /// (exclusive prefixes) and the final result.  Module-level because the return type
     /// ArraySeqS<A> differs from Self when A differs from T.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     pub fn iterate_prefixes<T: View, A: View + Clone + Eq, F: Fn(&A, &T) -> A>(
         a: &ArraySeqS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(A, T) -> A>,

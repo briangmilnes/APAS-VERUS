@@ -449,6 +449,7 @@ pub mod ArraySetStEph {
             && obeys_feq_full::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
             proof {
@@ -457,6 +458,7 @@ pub mod ArraySetStEph {
             self.elements.length()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
         {
             let seq = self.elements.clone();
@@ -470,6 +472,7 @@ pub mod ArraySetStEph {
             seq
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
             let empty = ArraySetStEph {
@@ -479,6 +482,7 @@ pub mod ArraySetStEph {
             empty
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
             let ghost x_view = x@;
@@ -503,6 +507,7 @@ pub mod ArraySetStEph {
             ArraySetStEph { elements }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(seq: ArraySeqStEphS<T>) -> (constructed: Self)
         {
                       assert(obeys_feq_full_trigger::<T>());
@@ -566,6 +571,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find(&self, x: &T) -> (found: bool)
         {
             assert(obeys_feq_full_trigger::<T>());
@@ -597,6 +603,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -765,6 +772,7 @@ pub mod ArraySetStEph {
             filtered
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let ghost old_view = self.elements@;
@@ -844,6 +852,7 @@ pub mod ArraySetStEph {
             common
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let ghost old_view = self.elements@;
@@ -924,6 +933,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m)
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let ghost self_view = self.elements@;
@@ -1077,6 +1087,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete(&mut self, x: &T)
         {
             let ghost old_view = self.elements@;
@@ -1152,6 +1163,7 @@ pub mod ArraySetStEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert(&mut self, x: T)
         {
             if !self.find(&x) {

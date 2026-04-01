@@ -185,6 +185,7 @@ broadcast use {
             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             EdgeSetGraphStEph {
                 vertices: AVLTreeSetStEph::empty(),
@@ -192,20 +193,27 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphStEph { vertices: v, edges: e }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> usize { self.vertices.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_edges(&self) -> usize { self.edges.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> &AVLTreeSetStEph<V> { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>> { &self.edges }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures neighbors@ == self.spec_out_neighbors(u@)
         {
@@ -297,6 +305,7 @@ broadcast use {
         /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&mut self, v: V) {
             self.vertices.insert(v);
             proof {
@@ -310,6 +319,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log m), Span O(m log m)
         fn delete_vertex(&mut self, v: &V)
             ensures !self.spec_vertices().contains(v@)
         {
@@ -370,6 +380,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
         fn insert_edge(&mut self, u: V, v: V) {
             let u_cv = u.clone_view();
             let v_cv = v.clone_view();
@@ -390,6 +401,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
         fn delete_edge(&mut self, u: &V, v: &V) {
             self.edges.delete(&Pair(u.clone(), v.clone()));
             proof {

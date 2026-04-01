@@ -208,6 +208,7 @@ broadcast use {
                 forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]);
         /// - APAS Cost Spec 41.4: Work 1, Span 1
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
             ensures
                 empty@ == Set::<<T as View>::V>::empty(),
@@ -324,6 +325,7 @@ broadcast use {
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
         /// Iterative alternative to `find`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find_iter(&self, x: &T) -> (found: bool)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -331,6 +333,7 @@ broadcast use {
                 view_ord_consistent::<T>(),
             ensures found == self@.contains(x@);
         /// Iterative alternative to `insert`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_iter(&mut self, x: T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
@@ -341,6 +344,7 @@ broadcast use {
                 self@ == old(self)@.insert(x@),
                 self.spec_avltreesetsteph_wf();
         /// Iterative alternative to `delete`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete_iter(&mut self, x: &T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
@@ -350,6 +354,7 @@ broadcast use {
                 self@ == old(self)@.remove(x@),
                 self.spec_avltreesetsteph_wf();
         /// Iterative alternative to `filter`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_iter<F: PredSt<T>>(
             &self,
             f: F,
@@ -370,6 +375,7 @@ broadcast use {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
         /// Iterative alternative to `intersection`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn intersection_iter(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -380,6 +386,7 @@ broadcast use {
                 common@ == self@.intersect(other@),
                 common.spec_avltreesetsteph_wf();
         /// Iterative alternative to `union`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn union_iter(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -391,6 +398,7 @@ broadcast use {
                 combined@ == self@.union(other@),
                 combined.spec_avltreesetsteph_wf();
         /// Iterative alternative to `difference`.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn difference_iter(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -408,6 +416,7 @@ broadcast use {
         /// The value-level backing sequence.
         spec fn spec_values_seq(&self) -> Seq<T>;
         /// Insert preserving sortedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert_sorted(&mut self, x: T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
@@ -420,6 +429,7 @@ broadcast use {
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted();
         /// Delete preserving sortedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete_sorted(&mut self, x: &T)
             requires
                 old(self).spec_avltreesetsteph_wf(),
@@ -431,6 +441,7 @@ broadcast use {
                 self.spec_avltreesetsteph_wf(),
                 self.spec_elements_sorted();
         /// Filter preserving sortedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_sorted<F: PredSt<T>>(
             &self,
             f: F,
@@ -453,6 +464,7 @@ broadcast use {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
         /// Intersection preserving sortedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn intersection_sorted(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -465,6 +477,7 @@ broadcast use {
                 common.spec_avltreesetsteph_wf(),
                 common.spec_elements_sorted();
         /// Difference preserving sortedness.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn difference_sorted(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -477,6 +490,7 @@ broadcast use {
                 remaining.spec_avltreesetsteph_wf(),
                 remaining.spec_elements_sorted();
         /// Union preserving sortedness; requires combined capacity bound.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn union_sorted(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_avltreesetsteph_wf(),
@@ -499,11 +513,13 @@ broadcast use {
             && self@.len() < usize::MAX as nat
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
             self.tree.size()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
             let in_ord = self.tree.in_order();
@@ -534,18 +550,21 @@ broadcast use {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStEph { tree: ParamBST::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
             AVLTreeSetStEph { tree: ParamBST::singleton(x) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_seq(seq: AVLTreeSeqStEphS<T>) -> (constructed: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
@@ -612,24 +631,28 @@ broadcast use {
         }
 
         /// Recursive find via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find(&self, x: &T) -> (found: bool)
         {
             self.tree.find(x).is_some()
         }
 
         /// Recursive insert via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert(&mut self, x: T)
         {
             self.tree.insert(x);
         }
 
         /// Recursive delete via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete(&mut self, x: &T)
         {
             self.tree.delete(x);
         }
 
         /// Recursive filter via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -644,6 +667,7 @@ broadcast use {
         }
 
         /// Recursive intersection via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let common_tree = self.tree.intersect(&other.tree);
@@ -655,6 +679,7 @@ broadcast use {
         }
 
         /// Recursive union via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let combined_tree = self.tree.union(&other.tree);
@@ -666,6 +691,7 @@ broadcast use {
         }
 
         /// Recursive difference via BSTParaStEph.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let remaining_tree = self.tree.difference(&other.tree);
@@ -677,24 +703,28 @@ broadcast use {
         }
 
         /// Iterative alternative to `find`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn find_iter(&self, x: &T) -> (found: bool)
         {
             self.find(x)
         }
 
         /// Iterative alternative to `insert`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_iter(&mut self, x: T)
         {
             self.insert(x)
         }
 
         /// Iterative alternative to `delete`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete_iter(&mut self, x: &T)
         {
             self.delete(x)
         }
 
         /// Iterative alternative to `filter`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_iter<F: PredSt<T>>(
             &self,
             f: F,
@@ -705,18 +735,21 @@ broadcast use {
         }
 
         /// Iterative alternative to `intersection`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn intersection_iter(&self, other: &Self) -> (common: Self)
         {
             self.intersection(other)
         }
 
         /// Iterative alternative to `union`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn union_iter(&self, other: &Self) -> (combined: Self)
         {
             self.union(other)
         }
 
         /// Iterative alternative to `difference`. Delegates to recursive default.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn difference_iter(&self, other: &Self) -> (remaining: Self)
         {
             self.difference(other)
@@ -736,16 +769,19 @@ broadcast use {
             Seq::empty()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn insert_sorted(&mut self, x: T)
         {
             self.insert(x);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn delete_sorted(&mut self, x: &T)
         {
             self.delete(x);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_sorted<F: PredSt<T>>(
             &self,
             f: F,
@@ -755,16 +791,19 @@ broadcast use {
             self.filter(f, Ghost(spec_pred))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn intersection_sorted(&self, other: &Self) -> (common: Self)
         {
             self.intersection(other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn difference_sorted(&self, other: &Self) -> (remaining: Self)
         {
             self.difference(other)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m)
         fn union_sorted(&self, other: &Self) -> (combined: Self)
         {
             self.union(other)
@@ -812,6 +851,7 @@ broadcast use {
     impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clone_wf(&self) -> (cloned: Self) {
             let r = AVLTreeSetStEph { tree: self.tree.clone() };
             proof {

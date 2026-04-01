@@ -223,6 +223,7 @@ broadcast use {
             self.matrix.spec_index(u).spec_index(v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn new(n: usize) -> (empty: Self) {
             let false_row = ArraySeqStEphS::tabulate(
                 &|_j: usize| -> (r: bool) ensures !r { false },
@@ -244,13 +245,16 @@ broadcast use {
             AdjMatrixGraphStEph { matrix, n }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self) {
             let n = matrix.length();
             AdjMatrixGraphStEph { matrix, n }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> (n: usize) { self.n }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn num_edges(&self) -> (m: usize) {
             let n = self.n;
             let mut total: usize = 0;
@@ -296,10 +300,12 @@ broadcast use {
             total
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             *self.matrix.nth(u).nth(v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqStEphS<usize>) {
             let n = self.n;
             let row = self.matrix.nth(u);
@@ -358,6 +364,7 @@ broadcast use {
             neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn out_degree(&self, u: usize) -> (d: usize) {
             let n = self.n;
             let row = self.matrix.nth(u);
@@ -386,6 +393,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let n = self.n;
             let new_row = ArraySeqStEphS::tabulate(
@@ -438,6 +446,7 @@ broadcast use {
             self.matrix = matrix;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn complement(&self) -> (complemented: Self) {
             let n = self.n;
             let matrix = ArraySeqStEphS::tabulate(

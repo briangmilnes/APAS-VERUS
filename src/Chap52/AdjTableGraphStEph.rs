@@ -325,6 +325,7 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             let adj: TableStEph<V, AVLTreeSetStEph<V>> = TableStEph::empty();
             proof {
@@ -338,6 +339,7 @@ broadcast use {
             AdjTableGraphStEph { adj }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self) {
             let out = AdjTableGraphStEph { adj: table };
             proof {
@@ -353,8 +355,10 @@ broadcast use {
             out
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> usize { self.adj.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn num_edges(&self) -> (m: usize) {
             proof {
                 reveal(obeys_view_eq);
@@ -397,6 +401,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             ensures verts@ == self.spec_adj().dom()
         {
@@ -463,6 +468,7 @@ broadcast use {
             verts
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool)
             ensures found == (self.spec_adj().dom().contains(u@) && self.spec_adj()[u@].contains(v@))
         {
@@ -475,6 +481,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStEph<V>)
             ensures
                 self.spec_adj().dom().contains(u@) ==> neighbors@ == self.spec_adj()[u@],
@@ -487,6 +494,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn out_degree(&self, u: &V) -> usize {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
@@ -495,6 +503,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&mut self, v: V) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -560,6 +569,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
         fn delete_vertex(&mut self, v: &V) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -718,6 +728,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn insert_edge(&mut self, u: V, v: V) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
@@ -829,6 +840,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn delete_edge(&mut self, u: &V, v: &V) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;

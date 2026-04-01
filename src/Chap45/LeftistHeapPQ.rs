@@ -82,6 +82,7 @@ broadcast use {
 
         /// Exec comparison with spec ensures connecting to TotalOrder::le.
         // veracity: no_requires
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
             ensures le <==> TotalOrder::le(*a, *b)
         {
@@ -202,8 +203,10 @@ broadcast use {
         pub trait LeftistHeapNodeTrait<T: StT + Ord + TotalOrder>: Sized + LeftistHeapNodeSpec<T> {
             spec fn spec_is_leaf(&self) -> bool;
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn rank(&self) -> (rank_val: usize)
                 ensures rank_val as nat == self.spec_rank();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires
                     left.spec_size() + right.spec_size() + 1 <= usize::MAX as nat,
@@ -220,6 +223,7 @@ broadcast use {
                     node@ =~= Multiset::empty().insert(key).add(left@).add(right@),
                     forall|x: T| TotalOrder::le(x, key) ==>
                         #[trigger] node.spec_key_le_root(x);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 requires
                     a.spec_size() + b.spec_size() <= usize::MAX as nat,
@@ -234,21 +238,27 @@ broadcast use {
                     node@ =~= a@.add(b@),
                     forall|x: T| a.spec_key_le_root(x) && b.spec_key_le_root(x) ==>
                         #[trigger] node.spec_key_le_root(x);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn height(&self) -> (h: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
                     self.spec_is_leaf() ==> h == 0,
                     h as nat <= self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_leftist(&self) -> (is_leftist: bool)
                 ensures is_leftist <==> self.spec_is_leftist();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_heap(&self) -> (is_heap: bool)
                 ensures is_heap <==> self.spec_is_heap();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_rank_bounded(&self) -> (bounded: bool)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures bounded <==> self.spec_rank_bounded();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
@@ -261,16 +271,19 @@ broadcast use {
             spec fn spec_seq(&self) -> Seq<T>;
             spec fn spec_sorted(s: Seq<T>) -> bool;
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn empty() -> (pq: Self)
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 0,
                     pq@ =~= Multiset::empty();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn singleton(element: T) -> (pq: Self)
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == 1,
                     pq@ =~= Multiset::empty().insert(element);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn find_min(&self) -> (min_elem: Option<&T>)
                 requires self.spec_leftistheappq_wf(),
                 ensures
@@ -323,11 +336,14 @@ broadcast use {
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == seq@.len();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn size(&self) -> (n: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures n as nat == self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (is_empty: bool)
                 ensures is_empty == (self.spec_size() == 0);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn extract_all_sorted(&self) -> (sorted: Vec<T>)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -335,22 +351,28 @@ broadcast use {
                 ensures
                     sorted@.len() as nat == self.spec_size(),
                     Self::spec_sorted(sorted@);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn height(&self) -> (levels: usize)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures self.spec_size() == 0 ==> levels == 0;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn root_rank(&self) -> (rank_val: usize)
                 ensures self.spec_size() == 0 ==> rank_val == 0;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_valid_leftist_heap(&self) -> (is_valid: bool)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures is_valid <==> self.spec_leftistheappq_wf();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn from_vec(vec: Vec<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == vec@.len();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>)
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures v@.len() as nat == self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn to_sorted_vec(&self) -> (v: Vec<T>)
                 requires
                     self.spec_leftistheappq_wf(),
@@ -360,6 +382,7 @@ broadcast use {
                     Self::spec_sorted(v@);
             spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
                 requires
                     forall|i: int| 0 <= i < heaps@.len() ==>
@@ -368,6 +391,7 @@ broadcast use {
                 ensures
                     pq.spec_leftistheappq_wf(),
                     pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn split(&self, key: &T) -> (parts: (Self, Self))
                 requires self.spec_size() <= usize::MAX as nat,
                 ensures
@@ -465,6 +489,7 @@ broadcast use {
                 matches!(*self, LeftistHeapNode::Leaf)
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn rank(&self) -> (rank_val: usize) {
                 match self {
                     LeftistHeapNode::Leaf => {
@@ -478,6 +503,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn make_node(key: T, left: LeftistHeapNode<T>, right: LeftistHeapNode<T>) -> (node: Self) {
                 let ghost left_ms = left@;
                 let ghost right_ms = right@;
@@ -531,6 +557,7 @@ broadcast use {
             }
 
             /// Core meld operation following right spines (Data Structure 45.3).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
             fn meld_nodes(a: LeftistHeapNode<T>, b: LeftistHeapNode<T>) -> (node: LeftistHeapNode<T>)
                 decreases a.spec_size() + b.spec_size()
             {
@@ -621,6 +648,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn size(&self) -> (n: usize)
                 decreases *self
             {
@@ -635,6 +663,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn height(&self) -> (h: usize)
                 decreases *self
             {
@@ -650,6 +679,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_leftist(&self) -> (is_leftist: bool)
                 decreases *self
             {
@@ -666,6 +696,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_heap(&self) -> (is_heap: bool)
                 decreases *self
             {
@@ -700,6 +731,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_rank_bounded(&self) -> (bounded: bool)
                 decreases *self
             {
@@ -713,6 +745,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>)
                 decreases *self
             {
@@ -766,7 +799,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time Leaf construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time Leaf construction.
             fn empty() -> (pq: Self) {
                 let pq = LeftistHeapPQ { root: LeftistHeapNode::Leaf };
                 assert(pq.root.spec_is_leftist());
@@ -777,7 +810,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time Node construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time Node construction.
             fn singleton(element: T) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::Node {
@@ -802,7 +835,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — root access by heap property.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; root access by heap property.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -832,7 +865,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — singleton then meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS; singleton then meld along right spines.
             fn insert(&self, element: T) -> (pq: Self) {
                 let singleton = Self::singleton(element);
                 let pq = self.meld(&singleton);
@@ -848,7 +881,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — remove root, meld children.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS; remove root, meld children.
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 match &self.root {
                     LeftistHeapNode::Leaf => (self.clone(), None),
@@ -907,7 +940,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log m + log n), Span O(log m + log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m + log n), Span O(log m + log n) — recursive meld along right spines.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m + log n), Span O(log m + log n) — matches APAS; recursive meld along right spines.
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = LeftistHeapPQ {
                     root: LeftistHeapNode::meld_nodes(self.root.clone(), other.root.clone()),
@@ -917,7 +950,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — sequential insert, not reduce-based.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — DIFFERS: sequential insert, not reduce-based.
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let n = seq.length();
                 let mut pq = Self::empty();
@@ -933,10 +966,12 @@ broadcast use {
                 pq
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn size(&self) -> (n: usize) {
                 self.root.size()
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn is_empty(&self) -> (is_empty: bool) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -951,6 +986,7 @@ broadcast use {
             }
 
             #[verifier::exec_allows_no_decreases_clause]
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn extract_all_sorted(&self) -> (sorted: Vec<T>) {
                 let mut result: Vec<T> = Vec::new();
                 let mut current_heap = self.clone();
@@ -1024,6 +1060,7 @@ broadcast use {
                 result
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn height(&self) -> (levels: usize) {
                 match &self.root {
                     LeftistHeapNode::Leaf => 0,
@@ -1031,6 +1068,7 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
             fn root_rank(&self) -> (rank_val: usize) {
                 match &self.root {
                     LeftistHeapNode::Leaf => {
@@ -1044,15 +1082,18 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn is_valid_leftist_heap(&self) -> (is_valid: bool) {
                 self.root.is_leftist() && self.root.is_heap() && self.root.is_rank_bounded()
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn from_vec(vec: Vec<T>) -> (pq: Self) {
                 let seq = ArraySeqStPerS::from_vec(vec);
                 Self::from_seq(&seq)
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
             fn to_vec(&self) -> (v: Vec<T>) {
                 match &self.root {
                     LeftistHeapNode::Leaf => Vec::new(),
@@ -1060,8 +1101,10 @@ broadcast use {
                 }
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn to_sorted_vec(&self) -> (v: Vec<T>) { self.extract_all_sorted() }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
             fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self) {
                 let mut result = Self::empty();
                 let n = heaps.len();
@@ -1079,6 +1122,7 @@ broadcast use {
                 result
             }
 
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
             fn split(&self, key: &T) -> (parts: (Self, Self)) {
                 let all_elements = self.to_vec();
                 let mut less_than = Self::empty();

@@ -109,6 +109,7 @@ broadcast use {
             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
 
         /// Work Theta(n^2), Span Theta(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjmatrixgraphmteph_wf(),
@@ -117,6 +118,7 @@ broadcast use {
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| 0 <= i < matrix.spec_len() ==>
@@ -231,6 +233,7 @@ broadcast use {
             self.matrix.spec_index(u).spec_index(v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn new(n: usize) -> (empty: Self) {
             let false_row = ArraySeqMtEphS::tabulate(
                 &|_j: usize| -> (r: bool) ensures !r { false },
@@ -252,13 +255,16 @@ broadcast use {
             AdjMatrixGraphMtEph { matrix, n }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self) {
             let n = matrix.length();
             AdjMatrixGraphMtEph { matrix, n }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> (n: usize) { self.n }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn num_edges(&self) -> (m: usize) {
             let n = self.n;
             let mut total: usize = 0;
@@ -304,6 +310,7 @@ broadcast use {
             total
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn has_edge(&self, u: usize, v: usize) -> (found: bool) {
             if u >= self.n || v >= self.n {
                 return false;
@@ -311,6 +318,7 @@ broadcast use {
             *self.matrix.nth(u).nth(v)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn out_neighbors(&self, u: usize) -> (neighbors: ArraySeqMtEphS<usize>) {
             let n = self.n;
             let row = self.matrix.nth(u);
@@ -369,6 +377,7 @@ broadcast use {
             neighbors
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn out_degree(&self, u: usize) -> (d: usize) {
             if u >= self.n {
                 return 0;
@@ -400,6 +409,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let n = self.n;
             let new_row = ArraySeqMtEphS::tabulate(
@@ -452,6 +462,7 @@ broadcast use {
             self.matrix = matrix;
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn complement(&self) -> (complemented: Self) {
             let n = self.n;
             let matrix = ArraySeqMtEphS::tabulate(

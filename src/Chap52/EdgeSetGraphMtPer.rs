@@ -75,6 +75,7 @@ pub mod EdgeSetGraphMtPer {
         spec fn spec_out_neighbors(&self, u: <V as View>::V) -> Set<<V as View>::V>;
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
@@ -83,6 +84,7 @@ pub mod EdgeSetGraphMtPer {
                 view_ord_consistent::<Pair<V, V>>(),
             ensures out.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
             requires
                 v.spec_avltreesetmtper_wf(),
@@ -106,9 +108,11 @@ pub mod EdgeSetGraphMtPer {
         fn num_edges(&self) -> usize
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> &AVLTreeSetMtPer<V>
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>>
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
@@ -130,16 +134,19 @@ pub mod EdgeSetGraphMtPer {
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&self, v: V) -> (updated: Self)
             requires
                 self.spec_edgesetgraphmtper_wf(),
                 self.spec_vertices().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphmtper_wf();
         /// Work Theta(|E| log |V| + |E| log |E|), Span Theta(log |E| * log |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log m), Span O(m log m)
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             requires self.spec_edgesetgraphmtper_wf()
             ensures updated.spec_edgesetgraphmtper_wf(), !updated.spec_vertices().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_edgesetgraphmtper_wf(),
@@ -147,6 +154,7 @@ pub mod EdgeSetGraphMtPer {
                 self.spec_edges().len() + 1 < usize::MAX as nat,
             ensures updated.spec_edgesetgraphmtper_wf();
         /// Work Theta(log |E|), Span Theta(log |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             requires self.spec_edgesetgraphmtper_wf()
             ensures updated.spec_edgesetgraphmtper_wf();
@@ -179,6 +187,7 @@ pub mod EdgeSetGraphMtPer {
             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             EdgeSetGraphMtPer {
                 vertices: AVLTreeSetMtPer::empty(),
@@ -186,18 +195,24 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self) {
             EdgeSetGraphMtPer { vertices: v, edges: e }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> usize { self.vertices.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_edges(&self) -> usize { self.edges.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
@@ -266,6 +281,7 @@ pub mod EdgeSetGraphMtPer {
         /// - Claude-Opus-4.6: Work Theta(|E| log |V|), Span Theta(|E| log |V|) — delegates to out_neighbors.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             let new_vertices = self.vertices.insert(v);
             let new_edges = self.edges.clone();
@@ -342,6 +358,7 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + log m), Span O(log n + log m)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             let u_cv = u.clone_view();
             let v_cv = v.clone_view();
@@ -358,6 +375,7 @@ pub mod EdgeSetGraphMtPer {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log m), Span O(log m)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
             let new_vertices = self.vertices.clone();

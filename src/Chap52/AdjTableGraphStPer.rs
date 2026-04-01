@@ -107,12 +107,14 @@ broadcast use {
         spec fn spec_num_edges(&self) -> nat;
 
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
                 view_ord_consistent::<V>(),
             ensures out.spec_adjtablegraphstper_wf();
         /// Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self)
             requires
                 table.spec_tablestper_wf(),
@@ -137,6 +139,7 @@ broadcast use {
             requires self.spec_adjtablegraphstper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(|V|), Span Theta(|V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>)
             requires
                 self.spec_adjtablegraphstper_wf(),
@@ -162,14 +165,17 @@ broadcast use {
         fn out_degree(&self, u: &V) -> usize
             requires self.spec_adjtablegraphstper_wf();
         /// Work Theta(log |V|), Span Theta(log |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&self, v: V) -> (updated: Self)
             requires self.spec_adjtablegraphstper_wf()
             ensures updated.spec_adjtablegraphstper_wf(), updated.spec_adj().dom().contains(v@);
         /// Work Theta((|V| + |E|) log |V|), Span Theta((|V| + |E|) log |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
         fn delete_vertex(&self, v: &V) -> (updated: Self)
             requires self.spec_adjtablegraphstper_wf()
             ensures updated.spec_adjtablegraphstper_wf(), !updated.spec_adj().dom().contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphstper_wf(),
@@ -180,6 +186,7 @@ broadcast use {
                 updated.spec_adj().dom().contains(v@),
                 updated.spec_adj()[u@].contains(v@);
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             requires self.spec_adjtablegraphstper_wf()
             ensures
@@ -219,6 +226,7 @@ broadcast use {
             spec_sum_adj_sizes(self.spec_adj())
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             let adj: TableStPer<V, AVLTreeSetStPer<V>> = TableStPer::empty();
             proof {
@@ -230,6 +238,7 @@ broadcast use {
             AdjTableGraphStPer { adj }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_table(table: TableStPer<V, AVLTreeSetStPer<V>>) -> (out: Self) {
             let out = AdjTableGraphStPer { adj: table };
             proof {
@@ -245,11 +254,13 @@ broadcast use {
             out
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_vertices(&self) -> usize {
             proof { reveal(obeys_view_eq); }
             self.adj.size()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn num_edges(&self) -> (m: usize) {
             proof {
                 reveal(obeys_view_eq);
@@ -290,6 +301,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
         fn vertices(&self) -> (verts: AVLTreeSetStPer<V>) {
             proof {
                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
@@ -370,6 +382,7 @@ broadcast use {
             verts
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn has_edge(&self, u: &V, v: &V) -> (found: bool) {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
@@ -380,6 +393,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetStPer<V>) {
             proof { reveal(obeys_view_eq); }
             match self.adj.find(u) {
@@ -398,6 +412,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn out_degree(&self, u: &V) -> usize {
             proof { reveal(obeys_view_eq); }
             match self.adj.find_ref(u) {
@@ -406,6 +421,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn insert_vertex(&self, v: V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -459,6 +475,7 @@ broadcast use {
             updated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
             let ghost old_adj = self.spec_adj();
@@ -631,6 +648,7 @@ broadcast use {
             updated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
@@ -733,6 +751,7 @@ broadcast use {
             updated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self) {
             proof { reveal(obeys_view_eq); }
             let ghost u_view: <V as View>::V = u@;
