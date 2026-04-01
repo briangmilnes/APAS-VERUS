@@ -1,0 +1,97 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStEph.rs:570:5
+    |
+570 |     pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap42/TableMtEph.rs:733:28
+    |
+733 |             let appended = ArraySeqMtEphS::<Pair<K, V>>::append(&lm, &rm);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:283:17
+    |
+283 |                 obeys_feq_clone::<T>(),
+    |                 ---------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/feq.rs:51:61
+    |
+ 51 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+    |                                                             ^^^^^^^^^^^^^
+ 52 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+ 53 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+    |                                                                      ^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:283:17
+    |
+283 |                 obeys_feq_clone::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone() ✘
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+clip(nat, lm.seq.view().len() + rm.seq.view().len()) <= UnsignedMax.Exec(usize::BITS) ✔
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:715:29
+    |
+715 | ...                   (#[trigger] result.seq@[j]).0@ == lk_raw[j]@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:717:55
+    |
+717 | ...                   f1.ensures((&lk_raw[j],), result.seq@[j].1),
+    |                                                 ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:725:29
+    |
+725 | ...                   (#[trigger] result.seq@[j]).0@ == rk_raw[j]@,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap42/TableMtEph.rs:727:55
+    |
+727 | ...                   f2.ensures((&rk_raw[j],), result.seq@[j].1),
+    |                                                 ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2245 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 2094MB, peak z3 RSS: 409MB, min free: 21818MB
+Sampled CPU Usage: rust_verify: 29s, z3 children: 30s

@@ -63,6 +63,16 @@ pub mod clone_plus {
         f.clone()
     }
 
+    /// Clone a binary predicate with mixed types preserving requires and ensures.
+    #[verifier::external_body]
+    pub fn clone_pred2<T, U, F: Fn(&T, &U) -> bool + Clone>(f: &F) -> (res: F)
+        ensures
+            forall|x: &T, y: &U| f.requires((x, y)) == res.requires((x, y)),
+            forall|x: &T, y: &U, r: bool| f.ensures((x, y), r) == res.ensures((x, y), r),
+    {
+        f.clone()
+    }
+
     } // verus!
 }
 
@@ -80,4 +90,5 @@ pub mod clone_plus {
     pub fn clone_fn2<T, F: Fn(&T, &T) -> T + Clone>(f: &F) -> F { f.clone() }
     pub fn clone_pred<T, F: Fn(&T) -> bool + Clone>(f: &F) -> F { f.clone() }
     pub fn clone_fn_usize<T, F: Fn(usize) -> T + Clone>(f: &F) -> F { f.clone() }
+    pub fn clone_pred2<T, U, F: Fn(&T, &U) -> bool + Clone>(f: &F) -> F { f.clone() }
 }

@@ -1,5 +1,5 @@
 veracity-analyze-alg-analysis
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-analyze-alg-analysis.log
 
 src/Chap02/FibonacciHFScheduler.rs:72: warning: fn `fib_seq` has APAS cost spec but no Code review
 src/Chap02/FibonacciHFScheduler.rs:87: warning: fn `fib_par` has APAS cost spec but no Code review
@@ -392,57 +392,58 @@ src/Chap18/ArraySeqMtEph.rs:321: error: Mt fn `subseq` DIFFERS from APAS — : s
 src/Chap18/ArraySeqMtEph.rs:348: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtEph.rs:354: warning: fn `singleton` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtEph.rs:363: error: Mt fn `append` DIFFERS from APAS — : span O(|a|+|b|) not O(1), sequential loops
-src/Chap18/ArraySeqMtEph.rs:379: error: Mt fn `filter` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
+src/Chap18/ArraySeqMtEph.rs:379: error: Mt fn `filter` DIFFERS from APAS — : sequential; D&C needs multiset distribution lemmas not yet available
 src/Chap18/ArraySeqMtEph.rs:400: error: Mt fn `update` DIFFERS from APAS — : span O(n) not O(1), sequential clone loop
 src/Chap18/ArraySeqMtEph.rs:416: error: Mt fn `inject` DIFFERS from APAS — : span O(n+m) not O(lg degree), sequential loops
 src/Chap18/ArraySeqMtEph.rs:432: error: Mt fn `ninject` DIFFERS from APAS — : delegates to inject, span O(n+m) not O(1)
 src/Chap18/ArraySeqMtEph.rs:446: warning: fn `is_empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtEph.rs:452: warning: fn `is_singleton` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtEph.rs:458: warning: fn `iterate` has APAS cost spec but no Code review
-src/Chap18/ArraySeqMtEph.rs:468: error: Mt fn `reduce` DIFFERS from APAS — : span O(n) not O(lg n), sequential fold
-src/Chap18/ArraySeqMtEph.rs:481: error: Mt fn `scan` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
-src/Chap18/ArraySeqMtEph.rs:498: error: Mt fn `map` DIFFERS from APAS — : span O(n) not O(1), sequential loop
-src/Chap18/ArraySeqMtEph.rs:508: error: Mt fn `tabulate` DIFFERS from APAS — : span O(n) not O(1), sequential loop
-src/Chap18/ArraySeqMtEph.rs:519: error: Mt fn `flatten` DIFFERS from APAS — : span O(Σ|a_i|) not O(lg|a|), sequential nested loops
-src/Chap18/ArraySeqMtEph.rs:541: error: fn `new` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:548: error: fn `set` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:557: error: fn `length` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:561: error: fn `nth` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:565: error: fn `subseq_copy` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:592: error: fn `subseq` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:619: error: fn `from_vec` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:627: error: fn `empty` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:631: error: fn `singleton` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:637: error: fn `append` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:684: error: fn `filter` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:727: error: fn `update` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:764: error: fn `inject` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:836: error: fn `ninject` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:860: error: fn `is_empty` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:864: error: fn `is_singleton` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:868: error: fn `iterate` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:903: error: fn `reduce` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:940: error: fn `scan` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:995: error: fn `map` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:1015: error: fn `tabulate` missing alg analysis annotation
-src/Chap18/ArraySeqMtEph.rs:1033: error: fn `flatten` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:468: warning: fn `reduce` has APAS cost spec but no Code review
+src/Chap18/ArraySeqMtEph.rs:482: error: Mt fn `scan` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
+src/Chap18/ArraySeqMtEph.rs:512: error: Mt fn `tabulate` DIFFERS from APAS — : span O(n) not O(1), sequential loop
+src/Chap18/ArraySeqMtEph.rs:523: error: Mt fn `flatten` DIFFERS from APAS — : span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+src/Chap18/ArraySeqMtEph.rs:545: error: fn `new` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:552: error: fn `set` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:561: error: fn `length` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:565: error: fn `nth` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:569: error: fn `subseq_copy` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:596: error: fn `subseq` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:623: error: fn `from_vec` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:631: error: fn `empty` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:635: error: fn `singleton` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:641: error: fn `append` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:688: error: fn `filter` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:731: error: fn `update` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:768: error: fn `inject` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:840: error: fn `ninject` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:864: error: fn `is_empty` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:868: error: fn `is_singleton` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:872: error: fn `iterate` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:907: error: fn `reduce` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:913: error: fn `scan` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:968: error: fn `map` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:974: error: fn `tabulate` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:992: error: fn `flatten` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:1282: error: fn `reduce_dc` missing alg analysis annotation
+src/Chap18/ArraySeqMtEph.rs:1369: error: fn `map_dc` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:133: warning: fn `length` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtPer.rs:140: warning: fn `nth` has APAS cost spec but no Code review
-src/Chap18/ArraySeqMtPer.rs:161: error: Mt fn `subseq` DIFFERS from APAS — : sequential clone loop, not O(1) slice
+src/Chap18/ArraySeqMtPer.rs:161: error: Mt fn `subseq` DIFFERS from APAS — : Vec-backed, sequential clone loop; O(1) requires tree representation
 src/Chap18/ArraySeqMtPer.rs:188: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtPer.rs:194: warning: fn `singleton` has APAS cost spec but no Code review
-src/Chap18/ArraySeqMtPer.rs:203: error: Mt fn `append` DIFFERS from APAS — : span O(|a|+|b|) not O(1), sequential loops
-src/Chap18/ArraySeqMtPer.rs:219: error: Mt fn `filter` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
-src/Chap18/ArraySeqMtPer.rs:240: error: Mt fn `update` DIFFERS from APAS — : span O(n) not O(1), sequential clone loop
-src/Chap18/ArraySeqMtPer.rs:256: error: Mt fn `inject` DIFFERS from APAS — : span O(n+m) not O(lg degree), sequential loops
+src/Chap18/ArraySeqMtPer.rs:203: error: Mt fn `append` DIFFERS from APAS — : Vec-backed, sequential clone loops; O(1) requires tree representation
+src/Chap18/ArraySeqMtPer.rs:219: error: Mt fn `filter` DIFFERS from APAS — : sequential loop; parallel filter_inner available but multiset proof requires sequential structure
+src/Chap18/ArraySeqMtPer.rs:240: error: Mt fn `update` DIFFERS from APAS — : Vec-backed, sequential clone loop; O(1) requires tree representation
+src/Chap18/ArraySeqMtPer.rs:256: error: Mt fn `inject` DIFFERS from APAS — : sequential apply; parallel inject requires sort-by-position
 src/Chap18/ArraySeqMtPer.rs:271: warning: fn `is_empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtPer.rs:277: warning: fn `is_singleton` has APAS cost spec but no Code review
 src/Chap18/ArraySeqMtPer.rs:283: warning: fn `iterate` has APAS cost spec but no Code review
-src/Chap18/ArraySeqMtPer.rs:293: error: Mt fn `reduce` DIFFERS from APAS — : span O(n) not O(lg n), sequential fold
-src/Chap18/ArraySeqMtPer.rs:306: error: Mt fn `scan` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
-src/Chap18/ArraySeqMtPer.rs:323: error: Mt fn `map` DIFFERS from APAS — : span O(n) not O(1), sequential loop
-src/Chap18/ArraySeqMtPer.rs:333: error: Mt fn `tabulate` DIFFERS from APAS — : span O(n) not O(1), sequential loop
-src/Chap18/ArraySeqMtPer.rs:344: error: Mt fn `flatten` DIFFERS from APAS — : span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+src/Chap18/ArraySeqMtPer.rs:293: error: Mt fn `reduce` DIFFERS from APAS — : sequential fold; parallel reduce_inner available via bare impl
+src/Chap18/ArraySeqMtPer.rs:306: error: Mt fn `scan` DIFFERS from APAS — : sequential loop; parallel scan requires upsweep/downsweep
+src/Chap18/ArraySeqMtPer.rs:323: error: Mt fn `map` DIFFERS from APAS — : sequential loop; parallel map_inner available via bare impl
+src/Chap18/ArraySeqMtPer.rs:333: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop; parallel tabulate_inner available via bare impl
+src/Chap18/ArraySeqMtPer.rs:344: error: Mt fn `flatten` DIFFERS from APAS — : sequential nested loops; D&C flatten requires outer array cloning proof
 src/Chap18/ArraySeqMtPer.rs:366: error: fn `new` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:373: error: fn `length` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:377: error: fn `nth` missing alg analysis annotation
@@ -453,16 +454,20 @@ src/Chap18/ArraySeqMtPer.rs:443: error: fn `empty` missing alg analysis annotati
 src/Chap18/ArraySeqMtPer.rs:447: error: fn `singleton` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:453: error: fn `append` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:500: error: fn `filter` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:543: error: fn `update` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:580: error: fn `inject` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:652: error: fn `is_empty` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:656: error: fn `is_singleton` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:660: error: fn `iterate` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:695: error: fn `reduce` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:732: error: fn `scan` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:787: error: fn `map` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:807: error: fn `tabulate` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:825: error: fn `flatten` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:545: error: fn `update` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:582: error: fn `inject` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:654: error: fn `is_empty` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:658: error: fn `is_singleton` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:662: error: fn `iterate` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:697: error: fn `reduce` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:734: error: fn `scan` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:789: error: fn `map` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:809: error: fn `tabulate` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:827: error: fn `flatten` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:1148: error: fn `map_inner` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:1248: error: fn `filter_inner` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:1347: error: fn `reduce_inner` missing alg analysis annotation
+src/Chap18/ArraySeqMtPer.rs:1430: error: fn `tabulate_inner` missing alg analysis annotation
 src/Chap18/ArraySeqStEph.rs:137: warning: fn `length` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStEph.rs:144: warning: fn `nth` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStEph.rs:165: info: St fn `subseq` sequential as expected
@@ -606,36 +611,38 @@ src/Chap19/ArraySeqMtEph.rs:345: error: Mt fn `ninject` DIFFERS from APAS — : 
 src/Chap19/ArraySeqMtEph.rs:359: warning: fn `is_empty` has APAS cost spec but no Code review
 src/Chap19/ArraySeqMtEph.rs:365: warning: fn `is_singleton` has APAS cost spec but no Code review
 src/Chap19/ArraySeqMtEph.rs:381: warning: fn `iterate` has APAS cost spec but no Code review
-src/Chap19/ArraySeqMtEph.rs:405: error: Mt fn `reduce` DIFFERS from APAS — : delegates to reduce_iter (sequential), span = work
+src/Chap19/ArraySeqMtEph.rs:405: warning: fn `reduce` has APAS cost spec but no Code review
 src/Chap19/ArraySeqMtEph.rs:418: error: Mt fn `scan` DIFFERS from APAS — : sequential loop, span = work
-src/Chap19/ArraySeqMtEph.rs:433: error: Mt fn `map` DIFFERS from APAS — : sequential tabulate, span = work
-src/Chap19/ArraySeqMtEph.rs:443: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop, span = work
-src/Chap19/ArraySeqMtEph.rs:455: error: Mt fn `flatten` DIFFERS from APAS — : nested sequential loops, span = work
-src/Chap19/ArraySeqMtEph.rs:491: error: fn `new` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:499: error: fn `set` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:508: error: fn `length` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:512: error: fn `nth` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:516: error: fn `subseq_copy` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:543: error: fn `subseq` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:570: error: fn `from_vec` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:578: error: fn `empty` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:593: error: fn `singleton` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:614: error: fn `append` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:650: error: fn `filter` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:713: error: fn `update` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:721: error: fn `inject` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:797: error: fn `ninject` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:819: error: fn `is_empty` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:824: error: fn `is_singleton` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:829: error: fn `iterate_iter` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:863: error: fn `iterate` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:870: error: fn `reduce_iter` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:906: error: fn `reduce` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:913: error: fn `scan` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:954: error: fn `map` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:972: error: fn `tabulate` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:991: error: fn `flatten` missing alg analysis annotation
-src/Chap19/ArraySeqMtEph.rs:1044: error: fn `deflate` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:433: warning: fn `map` has APAS cost spec but no Code review
+src/Chap19/ArraySeqMtEph.rs:445: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop, span = work
+src/Chap19/ArraySeqMtEph.rs:457: error: Mt fn `flatten` DIFFERS from APAS — : nested sequential loops, span = work
+src/Chap19/ArraySeqMtEph.rs:493: error: fn `new` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:501: error: fn `set` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:510: error: fn `length` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:514: error: fn `nth` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:518: error: fn `subseq_copy` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:545: error: fn `subseq` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:572: error: fn `from_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:580: error: fn `empty` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:595: error: fn `singleton` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:616: error: fn `append` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:653: error: fn `filter` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:718: error: fn `update` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:726: error: fn `inject` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:802: error: fn `ninject` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:824: error: fn `is_empty` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:829: error: fn `is_singleton` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:834: error: fn `iterate_iter` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:868: error: fn `iterate` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:875: error: fn `reduce_iter` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:910: error: fn `reduce` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:931: error: fn `scan` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:972: error: fn `map` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:999: error: fn `tabulate` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:1018: error: fn `flatten` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:1071: error: fn `deflate` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:1361: error: fn `map_dc` missing alg analysis annotation
+src/Chap19/ArraySeqMtEph.rs:1458: error: fn `concat_seqs` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:87: warning: fn `length` has APAS cost spec but no Code review
 src/Chap19/ArraySeqMtEphSlice.rs:91: error: fn `nth_cloned` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:99: error: fn `slice` missing alg analysis annotation
@@ -3955,21 +3962,21 @@ src/Chap66/BoruvkaStEph.rs:505: warning: fn `boruvka_mst_with_seed` has APAS cos
 Summary
 =============================================================
 
-  Total exec fns scanned:    5060
+  Total exec fns scanned:    5068
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
   Alg analysis annotations:  1997  (fns with any APAS or Code review line)
-  Missing alg analysis:      3063  <- errors
+  Missing alg analysis:      3071  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       71  <- errors
+  Mt DIFFERS (blockers):       67  <- errors
   St DIFFERS (expected):      133  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
-  APAS without Code review:   682  <- warnings
+  APAS without Code review:   685  <- warnings
 
-  Errors: 3134
-  Warnings: 682
+  Errors: 3138
+  Warnings: 685
   Info: 133
 
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent3/analyses/veracity-analyze-alg-analysis.log

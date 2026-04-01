@@ -1,0 +1,402 @@
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:581:30
+     |
+ 581 |                 by { entries.lemma_spec_index(i); left.lemma_spec_index(i); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:581:56
+     |
+ 581 |                 by { entries.lemma_spec_index(i); left.lemma_spec_index(i); }
+     |                                                        ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:584:30
+     |
+ 584 |                 by { entries.lemma_spec_index(mid as int + j); right.lemma_spec_index(j); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:584:70
+     |
+ 584 |                 by { entries.lemma_spec_index(mid as int + j); right.lemma_spec_index(j); }
+     |                                                                      ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:621:30
+     |
+ 621 |                     appended.lemma_spec_index(i);
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:623:28
+     |
+ 623 |                         lm.lemma_spec_index(i);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:627:28
+     |
+ 627 |                         rm.lemma_spec_index(j);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:634:30
+     |
+ 634 |                     appended.lemma_spec_index(i);
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:636:28
+     |
+ 636 |                         lm.lemma_spec_index(i);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:639:28
+     |
+ 639 |                         rm.lemma_spec_index(j);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:689:30
+     |
+ 689 |                 by { key_seq.lemma_spec_index(i); left_keys.lemma_spec_index(i); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:1023:25
+     |
+1023 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:689:61
+     |
+ 689 |                 by { key_seq.lemma_spec_index(i); left_keys.lemma_spec_index(i); }
+     |                                                             ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:1023:25
+     |
+1023 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:692:30
+     |
+ 692 |                 by { key_seq.lemma_spec_index(mid as int + j); right_keys.lemma_spec_index(j); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:1023:25
+     |
+1023 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:692:75
+     |
+ 692 |                 by { key_seq.lemma_spec_index(mid as int + j); right_keys.lemma_spec_index(j); }
+     |                                                                           ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:1023:25
+     |
+1023 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:725:30
+     |
+ 725 |                     appended.lemma_spec_index(j);
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:727:28
+     |
+ 727 |                         lm.lemma_spec_index(j);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:730:28
+     |
+ 730 |                         rm.lemma_spec_index(jj);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:737:30
+     |
+ 737 |                     appended.lemma_spec_index(j);
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:739:28
+     |
+ 739 |                         lm.lemma_spec_index(j);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:743:28
+     |
+ 743 |                         rm.lemma_spec_index(jj);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:813:30
+     |
+ 813 |                 by { entries.lemma_spec_index(i); left.lemma_spec_index(i); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:813:56
+     |
+ 813 |                 by { entries.lemma_spec_index(i); left.lemma_spec_index(i); }
+     |                                                        ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:816:30
+     |
+ 816 |                 by { entries.lemma_spec_index(mid as int + j); right.lemma_spec_index(j); }
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:816:70
+     |
+ 816 |                 by { entries.lemma_spec_index(mid as int + j); right.lemma_spec_index(j); }
+     |                                                                      ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:869:30
+     |
+ 869 |                     appended.lemma_spec_index(j);
+     |                              ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:871:28
+     |
+ 871 |                         lf.lemma_spec_index(j);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:880:28
+     |
+ 880 |                         rf.lemma_spec_index(jj);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:902:28
+     |
+ 902 |                         lf.lemma_spec_index(jl);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:903:34
+     |
+ 903 |                         appended.lemma_spec_index(jl);
+     |                                  ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:911:28
+     |
+ 911 |                         rf.lemma_spec_index(jr);
+     |                            ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:913:34
+     |
+ 913 |                         appended.lemma_spec_index(j_out);
+     |                                  ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:1233:25
+     |
+1233 |                     seq.lemma_spec_index(j);
+     |                         ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:1271:25
+     |
+1271 |                     seq.lemma_spec_index(j);
+     |                         ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:1272:29
+     |
+1272 |                     key_seq.lemma_spec_index(j);
+     |                             ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:1023:25
+     |
+1023 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:1293:34
+     |
+1293 |                     self.entries.lemma_spec_index(i);
+     |                                  ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error[E0624]: method `lemma_spec_index` is private
+    --> src/Chap42/TableMtEph.rs:1315:34
+     |
+1315 |                     self.entries.lemma_spec_index(j);
+     |                                  ^^^^^^^^^^^^^^^^ private method
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:1123:25
+     |
+1123 |         broadcast proof fn lemma_spec_index(&self, i: int)
+     |                         ---------------------------------- private method defined here
+
+error: aborting due to 36 previous errors
+
+For more information about this error, try `rustc --explain E0624`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 466MB, peak z3 RSS: 0MB, min free: 23685MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

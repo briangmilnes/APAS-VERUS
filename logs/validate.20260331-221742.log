@@ -1,0 +1,96 @@
+error[E0277]: `<K as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap42/TableMtEph.rs:815:17
+    |
+814 |               let (lf, rf) = join(
+    |                              ---- required by a bound introduced by this call
+815 |                   move || -> (result: ArraySeqMtEphS<Pair<K, V>>)
+    |                   ^---------------------------------------------
+    |                   |
+    |  _________________within this `{closure@src/Chap42/TableMtEph.rs:815:17: 815:63}`
+    | |
+816 | |                     ensures
+817 | |                         result.seq@.len() <= l_len@,
+818 | |                         forall|j: int| 0 <= j < result.seq@.len() ==>
+...   |
+829 | |                     filter_table_dc(&left, &f1, Ghost(spec_pred))
+830 | |                 },
+    | |_________________^ `<K as vstd::string::View>::V` cannot be sent between threads safely
+    |
+    = help: within `{closure@src/Chap42/TableMtEph.rs:815:17: 815:63}`, the trait `std::marker::Send` is not implemented for `<K as vstd::string::View>::V`
+    = note: required because it appears within the type `(<K as vstd::string::View>::V, <V as vstd::string::View>::V)`
+    = note: required because it appears within the type `((<K as vstd::string::View>::V, <V as vstd::string::View>::V), bool)`
+note: required because it appears within the type `PhantomData<((<K as View>::V, <V as View>::V), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<K as vstd::string::View>::V, <V as vstd::string::View>::V), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it's used within this closure
+   --> src/Chap42/TableMtEph.rs:815:17
+    |
+815 |                 move || -> (result: ArraySeqMtEphS<Pair<K, V>>)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+   --> src/Chap02/HFSchedulerMtEph.rs:107:29
+    |
+105 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+    |            ---- required by a bound in this function
+106 |     where
+107 |         FA: FnOnce() -> A + Send + 'static,
+    |                             ^^^^ required by this bound in `join`
+    = note: the full name for the type has been written to 'lib.long-type-17029538651511987486.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting the associated type
+    |
+748 |     ) -> (filtered: ArraySeqMtEphS<Pair<K, V>> where <K as vstd::string::View>::V: std::marker::Send)
+    |                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: `<V as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap42/TableMtEph.rs:815:17
+    |
+814 |               let (lf, rf) = join(
+    |                              ---- required by a bound introduced by this call
+815 |                   move || -> (result: ArraySeqMtEphS<Pair<K, V>>)
+    |                   ^---------------------------------------------
+    |                   |
+    |  _________________within this `{closure@src/Chap42/TableMtEph.rs:815:17: 815:63}`
+    | |
+816 | |                     ensures
+817 | |                         result.seq@.len() <= l_len@,
+818 | |                         forall|j: int| 0 <= j < result.seq@.len() ==>
+...   |
+829 | |                     filter_table_dc(&left, &f1, Ghost(spec_pred))
+830 | |                 },
+    | |_________________^ `<V as vstd::string::View>::V` cannot be sent between threads safely
+    |
+    = help: within `{closure@src/Chap42/TableMtEph.rs:815:17: 815:63}`, the trait `std::marker::Send` is not implemented for `<V as vstd::string::View>::V`
+    = note: required because it appears within the type `(<K as vstd::string::View>::V, <V as vstd::string::View>::V)`
+    = note: required because it appears within the type `((<K as vstd::string::View>::V, <V as vstd::string::View>::V), bool)`
+note: required because it appears within the type `PhantomData<((<K as View>::V, <V as View>::V), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<K as vstd::string::View>::V, <V as vstd::string::View>::V), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it's used within this closure
+   --> src/Chap42/TableMtEph.rs:815:17
+    |
+815 |                 move || -> (result: ArraySeqMtEphS<Pair<K, V>>)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+   --> src/Chap02/HFSchedulerMtEph.rs:107:29
+    |
+105 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+    |            ---- required by a bound in this function
+106 |     where
+107 |         FA: FnOnce() -> A + Send + 'static,
+    |                             ^^^^ required by this bound in `join`
+    = note: the full name for the type has been written to 'lib.long-type-17029538651511987486.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting the associated type
+    |
+748 |     ) -> (filtered: ArraySeqMtEphS<Pair<K, V>> where <V as vstd::string::View>::V: std::marker::Send)
+    |                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 466MB, peak z3 RSS: 0MB, min free: 23677MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
