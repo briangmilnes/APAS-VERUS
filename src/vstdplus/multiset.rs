@@ -175,6 +175,44 @@ pub proof fn lemma_flatten_01_multiset_eq_filter<T>(
     }
 }
 
+/// spec_filter_len distributes over concatenation.
+pub proof fn lemma_spec_filter_len_concat<T>(a: Seq<T>, b: Seq<T>, pred: spec_fn(T) -> bool)
+    ensures spec_filter_len(a + b, pred) == spec_filter_len(a, pred) + spec_filter_len(b, pred),
+    decreases b.len(),
+{
+    if b.len() == 0 {
+        assert(a + b =~= a);
+    } else {
+        let ab = a + b;
+        assert(ab.drop_last() =~= a + b.drop_last());
+        assert(ab.last() == b.last());
+        lemma_spec_filter_len_concat(a, b.drop_last(), pred);
+    }
+}
+
+/// Multiset filter distributes over add.
+pub proof fn lemma_multiset_filter_distributes_over_add<A>(
+    m1: Multiset<A>, m2: Multiset<A>, f: spec_fn(A) -> bool,
+)
+    ensures m1.add(m2).filter(f) =~= m1.filter(f).add(m2.filter(f)),
+{
+    broadcast use vstd::multiset::group_multiset_axioms;
+    assert forall|v: A| #[trigger] m1.add(m2).filter(f).count(v)
+        == m1.filter(f).add(m2.filter(f)).count(v) by {};
+}
+
+/// (a + b).to_multiset().filter(f) =~= a.to_multiset().filter(f).add(b.to_multiset().filter(f)).
+pub proof fn lemma_seq_concat_to_multiset_filter<A>(
+    a: Seq<A>, b: Seq<A>, f: spec_fn(A) -> bool,
+)
+    ensures
+        (a + b).to_multiset().filter(f)
+            =~= a.to_multiset().filter(f).add(b.to_multiset().filter(f)),
+{
+    vstd::seq_lib::lemma_multiset_commutative(a, b);
+    lemma_multiset_filter_distributes_over_add(a.to_multiset(), b.to_multiset(), f);
+}
+
 } // verus!
 
 } // mod multiset

@@ -1,0 +1,47 @@
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap18/ArraySeqMtEph.rs:1485:29
+     |
+1485 |                         =~= Multiset::<T>::empty()) by {
+     |                             ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  25 +     use vstd::multiset::Multiset;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap18/ArraySeqMtEph.rs:1488:72
+     |
+1488 | ...                   assert(Seq::<T>::empty().to_multiset() =~= Multiset::<T>::empty());
+     |                                                                  ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  25 +     use vstd::multiset::Multiset;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap18/ArraySeqMtEph.rs:1518:70
+     |
+1518 |                         assert(s.to_multiset().filter(spec_pred) =~= Multiset::<T>::empty());
+     |                                                                      ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  25 +     use vstd::multiset::Multiset;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+    --> src/Chap18/ArraySeqMtEph.rs:1519:68
+     |
+1519 |                         assert(Seq::<T>::empty().to_multiset() =~= Multiset::<T>::empty());
+     |                                                                    ^^^^^^^^ use of undeclared type `Multiset`
+     |
+help: consider importing this struct
+     |
+  25 +     use vstd::multiset::Multiset;
+     |
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0433`.

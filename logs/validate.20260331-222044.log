@@ -1,0 +1,78 @@
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1473:17
+     |
+1473 |                   filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1479 | /             if len == 0 {
+1480 | |                 proof {
+1481 | |                     assert(a.seq@ =~= Seq::<T>::empty());
+1482 | |                     broadcast use vstd::multiset::group_multiset_axioms;
+...    |
+1610 | |                 filtered
+1611 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtEph.rs:1473:17
+     |
+1473 |                 filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+filtered.spec_arrayseqmteph_wf() ✔
+filtered.spec_len() <= old(a).seq.view().len() ✔
+filtered.spec_len() == spec_filter_len(old(a).seq.view(), old(spec_pred)) ✔
+filtered.seq.view().to_multiset() =~= old(a).seq.view().to_multiset().filter(old(spec_pred)) ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = filtered.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (filtered.spec_index(i)), true) ✔
+
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqMtEph.rs:390:17
+    |
+390 | /                 filtered.spec_len() == spec_filter_len(
+391 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+    | |__________________________________________________________________________^ failed this postcondition
+...
+692 |               Self::filter_dc(a, pred, Ghost(spec_pred))
+    |               ------------------------------------------ at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqMtEph.rs:393:17
+    |
+393 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+394 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^ failed this postcondition
+...
+692 |               Self::filter_dc(a, pred, Ghost(spec_pred))
+    |               ------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqMtEph.rs:390:17
+    |
+390 | /                 filtered.spec_len() == spec_filter_len(
+391 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+    | |__________________________________________________________________________^
+392 |                   // The result multiset equals the input multiset filtered by the spec predicate.
+393 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+394 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^
+
+note: 
+
+%return.spec_arrayseqmteph_wf() ✔
+%return.spec_len() <= old(a).seq.view().len() ✔
+%return.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✘
+new(%return.spec_len(), (|i| %return.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (%return.spec_index(i)), true) ✔
+
+verification results:: 1043 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 834MB, peak z3 RSS: 210MB, min free: 23195MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 2s

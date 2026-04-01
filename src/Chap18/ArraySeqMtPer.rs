@@ -38,6 +38,7 @@ pub mod ArraySeqMtPer {
 
     #[cfg(verus_keep_ghost)]
     use {
+        vstd::multiset::Multiset,
         vstd::std_specs::vec::*,
         vstd::std_specs::clone::*,
     };
@@ -213,11 +214,11 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel filter_inner available but multiset proof requires sequential structure
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C with multiset distribution lemma
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
-            where T: Clone + Eq
+        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
+            where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
@@ -497,47 +498,19 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtPerS<T>)
-            where T: Clone + Eq
+        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtPerS<T>)
+            where T: Clone + Eq + Send + Sync + 'static
         {
-            // Sequential implementation: multiset proof requires loop invariant structure.
-            // Parallel filter available via filter_inner (without multiset ensures).
-            let len = a.seq.len();
-            let mut seq: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    seq@.len() <= i,
-                    obeys_feq_clone::<T>(),
-                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[j],)),
-                    forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
-                    forall|j: int| #![trigger seq@[j]] 0 <= j < seq@.len() ==> pred.ensures((&seq@[j],), true),
-                    seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
-                    seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
-                decreases len - i,
-            {
-                proof {
-                    broadcast use vstd::seq_lib::group_to_multiset_ensures;
-                    a.lemma_spec_index(i as int);
-                }
-                assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
-                assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
-                if pred(&a.seq[i]) {
-                    let elem = a.seq[i].clone();
-                    proof {
-                        axiom_cloned_implies_eq_owned(a.seq[i as int], elem);
-                    }
-                    seq.push(elem);
-                }
-                i += 1;
-            }
-            let filtered = ArraySeqMtPerS { seq };
+            let filtered = Self::filter_dc(a, pred, Ghost(spec_pred));
             proof {
-                assert(a.seq@.subrange(0, a.seq@.len() as int) =~= a.seq@);
-                assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
-                assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
+                // Bridge filter_dc ensures (a.seq@) to trait ensures (Seq::new(...)).
+                let ghost s = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
+                assert(s =~= a.seq@);
+                let ghost fs = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
+                assert(fs =~= filtered.seq@) by {
+                    assert forall|i: int| 0 <= i < fs.len() implies #[trigger] fs[i] == filtered.seq@[i]
+                    by { filtered.lemma_spec_index(i); }
+                }
             }
             filtered
         }
@@ -951,6 +924,184 @@ pub mod ArraySeqMtPer {
 
                 let (left, right) = join(fa, fb);
                 ArraySeqMtPerS::<U>::append(&left, &right)
+            }
+        }
+
+        /// Parallel divide-and-conquer filter. Called by trait method filter.
+        fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtPerS<T>,
+            pred: &F,
+            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
+        ) -> (filtered: ArraySeqMtPerS<T>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
+            ensures
+                filtered.spec_arrayseqmtper_wf(),
+                filtered.spec_len() <= a.seq@.len(),
+                filtered.spec_len() == spec_filter_len(a.seq@, spec_pred),
+                filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()
+                    ==> pred.ensures((&filtered.spec_index(i),), true),
+            decreases a.seq@.len()
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                let filtered = ArraySeqMtPerS::<T> { seq: Vec::new() };
+                proof {
+                    assert(a.seq@ =~= Seq::<T>::empty());
+                    broadcast use vstd::multiset::group_multiset_axioms;
+                    assert forall|v: T| #[trigger] a.seq@.to_multiset().filter(spec_pred).count(v) == 0nat by {}
+                    assert(a.seq@.to_multiset().filter(spec_pred) =~= Multiset::<T>::empty());
+                    assert(filtered.seq@.to_multiset() =~= Multiset::<T>::empty());
+                    assert(filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred));
+                }
+                filtered
+            } else if len == 1 {
+                let keep = pred(&a.seq[0]);
+                if keep {
+                    let elem = a.seq[0].clone();
+                    proof {
+                        axiom_cloned_implies_eq_owned(a.seq[0 as int], elem);
+                        broadcast use vstd::seq_lib::group_to_multiset_ensures;
+                        broadcast use vstd::multiset::group_multiset_axioms;
+                        reveal_with_fuel(spec_filter_len, 2);
+                        assert(a.seq@.drop_last() =~= Seq::<T>::empty());
+                    }
+                    let mut seq = Vec::with_capacity(1);
+                    seq.push(elem);
+                    let filtered = ArraySeqMtPerS { seq };
+                    proof {
+                        broadcast use vstd::multiset::group_multiset_axioms;
+                        assert(filtered.seq@ =~= seq![elem]);
+                        assert(filtered.seq@ =~= a.seq@);
+                        assert forall|v: T| #[trigger] filtered.seq@.to_multiset().count(v)
+                            == a.seq@.to_multiset().filter(spec_pred).count(v) by {}
+                    }
+                    filtered
+                } else {
+                    let filtered = ArraySeqMtPerS::<T> { seq: Vec::new() };
+                    proof {
+                        broadcast use vstd::seq_lib::group_to_multiset_ensures;
+                        broadcast use vstd::multiset::group_multiset_axioms;
+                        assert(!spec_pred(a.seq@[0 as int]));
+                        reveal_with_fuel(spec_filter_len, 2);
+                        assert(a.seq@.drop_last() =~= Seq::<T>::empty());
+                        assert forall|v: T| #[trigger] a.seq@.to_multiset().filter(spec_pred).count(v) == 0nat by {}
+                        assert(a.seq@.to_multiset().filter(spec_pred) =~= Multiset::<T>::empty());
+                        assert(filtered.seq@.to_multiset() =~= Multiset::<T>::empty());
+                    }
+                    filtered
+                }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let p1 = clone_pred(pred);
+                let p2 = clone_pred(pred);
+
+                let ghost left_view = left_seq.seq@;
+                let ghost right_view = right_seq.seq@;
+
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies
+                        #[trigger] p1.requires((&left_seq.seq@[i],))
+                    by {
+                        a.lemma_spec_index(i);
+                        left_seq.lemma_spec_index(i);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies
+                        #[trigger] p2.requires((&right_seq.seq@[i],))
+                    by {
+                        a.lemma_spec_index(mid as int + i);
+                        right_seq.lemma_spec_index(i);
+                    }
+                    assert(left_view =~= a.seq@.subrange(0, mid as int)) by {
+                        assert forall|i: int| 0 <= i < left_view.len() implies
+                            #[trigger] left_view[i] == a.seq@.subrange(0, mid as int)[i]
+                        by { left_seq.lemma_spec_index(i); a.lemma_spec_index(i); }
+                    }
+                    assert(right_view =~= a.seq@.subrange(mid as int, len as int)) by {
+                        assert forall|i: int| 0 <= i < right_view.len() implies
+                            #[trigger] right_view[i] == a.seq@.subrange(mid as int, len as int)[i]
+                        by { right_seq.lemma_spec_index(i); a.lemma_spec_index(mid as int + i); }
+                    }
+                    assert(a.seq@ =~= left_view + right_view);
+                }
+
+                let fa = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] p1.requires((&left_seq.seq@[i],)),
+                        forall|v: T, keep: bool| p1.ensures((&v,), keep) ==> spec_pred(v) == keep,
+                    ensures
+                        r.spec_arrayseqmtper_wf(),
+                        r.spec_len() <= left_view.len(),
+                        r.spec_len() == spec_filter_len(left_view, spec_pred),
+                        r.seq@.to_multiset() =~= left_view.to_multiset().filter(spec_pred),
+                        forall|i: int| #![trigger r.spec_index(i)] 0 <= i < r.spec_len()
+                            ==> p1.ensures((&r.spec_index(i),), true),
+                {
+                    Self::filter_dc(&left_seq, &p1, Ghost(spec_pred))
+                };
+
+                let fb = move || -> (r: ArraySeqMtPerS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] p2.requires((&right_seq.seq@[i],)),
+                        forall|v: T, keep: bool| p2.ensures((&v,), keep) ==> spec_pred(v) == keep,
+                    ensures
+                        r.spec_arrayseqmtper_wf(),
+                        r.spec_len() <= right_view.len(),
+                        r.spec_len() == spec_filter_len(right_view, spec_pred),
+                        r.seq@.to_multiset() =~= right_view.to_multiset().filter(spec_pred),
+                        forall|i: int| #![trigger r.spec_index(i)] 0 <= i < r.spec_len()
+                            ==> p2.ensures((&r.spec_index(i),), true),
+                {
+                    Self::filter_dc(&right_seq, &p2, Ghost(spec_pred))
+                };
+
+                let (left, right) = join(fa, fb);
+                let filtered = Self::append(&left, &right);
+                proof {
+                    lemma_spec_filter_len_concat(left_view, right_view, spec_pred);
+                    lemma_seq_concat_to_multiset_filter(left_view, right_view, spec_pred);
+
+                    assert(filtered.seq@ =~= left.seq@ + right.seq@) by {
+                        assert forall|i: int| 0 <= i < filtered.seq@.len() implies
+                            #[trigger] filtered.seq@[i] == (left.seq@ + right.seq@)[i]
+                        by {
+                            filtered.lemma_spec_index(i);
+                            if i < left.seq@.len() as int {
+                                left.lemma_spec_index(i);
+                            } else {
+                                right.lemma_spec_index(i - left.seq@.len() as int);
+                            }
+                        }
+                    }
+
+                    vstd::seq_lib::lemma_multiset_commutative(left.seq@, right.seq@);
+                    assert(filtered.seq@.to_multiset()
+                        =~= left.seq@.to_multiset().add(right.seq@.to_multiset()));
+                    assert(left.seq@.to_multiset().add(right.seq@.to_multiset())
+                        =~= left_view.to_multiset().filter(spec_pred).add(right_view.to_multiset().filter(spec_pred)));
+                    assert(filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred));
+
+                    assert forall|i: int| #![trigger filtered.spec_index(i)]
+                        0 <= i < filtered.spec_len() implies
+                        pred.ensures((&filtered.spec_index(i),), true)
+                    by {
+                        filtered.lemma_spec_index(i);
+                        if i < left.spec_len() as int {
+                            left.lemma_spec_index(i);
+                        } else {
+                            right.lemma_spec_index(i - left.spec_len() as int);
+                        }
+                    }
+                }
+                filtered
             }
         }
 
