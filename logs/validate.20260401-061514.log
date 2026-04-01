@@ -1,0 +1,35 @@
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:227:17: 227:52} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:230:9
+    |
+230 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_max_fn()), 0)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:237:17: 237:52} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:240:9
+    |
+240 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_sum_fn()), 0)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:247:17: 247:52} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:250:9
+    |
+250 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_product_fn()), 1)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:257:17: 257:49} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:260:9
+    |
+260 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_or_fn()), false)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:267:17: 267:49} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:270:9
+    |
+270 |         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_and_fn()), true)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 368MB, peak z3 RSS: 0MB, min free: 23874MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

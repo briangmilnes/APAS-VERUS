@@ -1,0 +1,35 @@
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {Chap26::DivConReduceMtPer::DivConReduceMtPer::exec_max} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:268:27
+    |
+268 |             let max_val = ArraySeqMtPerS::reduce(a, &exec_max, Ghost(spec_max_fn()), 0);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {Chap26::DivConReduceMtPer::DivConReduceMtPer::exec_add} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:286:13
+    |
+286 |             ArraySeqMtPerS::reduce(a, &exec_add, Ghost(spec_sum_fn()), 0)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a usize, &'b usize) -> usize {Chap26::DivConReduceMtPer::DivConReduceMtPer::exec_mul} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:290:13
+    |
+290 |             ArraySeqMtPerS::reduce(a, &exec_mul, Ghost(spec_product_fn()), 1)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a bool, &'b bool) -> bool {Chap26::DivConReduceMtPer::DivConReduceMtPer::exec_or} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:294:13
+    |
+294 |             ArraySeqMtPerS::reduce(a, &exec_or, Ghost(spec_or_fn()), false)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Verus does not recognize this trait bound: <for<'a, 'b> fn(&'a bool, &'b bool) -> bool {Chap26::DivConReduceMtPer::DivConReduceMtPer::exec_and} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:298:13
+    |
+298 |             ArraySeqMtPerS::reduce(a, &exec_and, Ghost(spec_and_fn()), true)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 5 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 313MB, peak z3 RSS: 0MB, min free: 22937MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
