@@ -106,7 +106,80 @@ M1's lock already gives exclusive access to M2.
 This is composition: M1 provides the lock boundary. M2 provides the parallel
 algorithms via its unlocked trait. No nested locks. No unsafe.
 
-## 4. Slice-Backed Sequences: O(1) Split
+## 4. How Rust and Verus Enable This
+
+### 4.1. What Rust gives us
+
+Rust's ownership and borrowing system is the foundation. When `RwLock::acquire_write`
+returns the inner value by move, Rust's type system guarantees:
+
+- **Exclusive ownership**: no other thread has a reference to the data. The compiler
+  enforces this statically — there's no runtime check, no flag, no possibility of a
+  data race. The write guard proves exclusivity.
+
+- **Move semantics**: destructuring a struct into its fields transfers ownership of
+  each field. `let FooInterior { sequences, sets, token } = interior;` gives you
+  three independent owned values. Each can be passed to a different join arm.
+
+- **Send + 'static for join**: `join()` requires its closures to be `Send + 'static`.
+  Owned values that are `Send` can move into join closures. `Arc<Vec<T>>` is `Send`
+  when `T: Send`. `Box<Tree<T>>` is `Send` when `T: Send`. The slice-backed
+  `ArraySeqMtEphSliceS<T>` is `Send` because it holds `Arc<Vec<T>>`.
+
+- **No aliasing during mutation**: after splitting into two owned slices, each arm
+  owns its slice exclusively. Even though both slices may share the same backing
+  `Arc<Vec<T>>` (for reads), Rust prevents either arm from mutating through the
+  shared Arc. New output must be allocated — the type system forces this.
+
+- **Lifetime erasure in closures**: `move` closures own their captured data. The
+  data's lifetime is the closure's lifetime, which is `'static` for `join()`. No
+  dangling references, no use-after-free, enforced at compile time.
+
+The locked/unlocked trait split maps directly onto Rust's borrow checker: the locked
+trait takes `&self` / `&mut self` (borrows), while the unlocked trait takes `self` /
+`&self` (owned or borrowed, no lock). The compiler ensures you can't call the unlocked
+trait without owning the data — which means you either acquired the lock or you're
+inside another module that acquired its lock.
+
+### 4.2. What Verus verification adds on top
+
+Rust guarantees memory safety and data-race freedom. Verus adds functional correctness:
+
+- **RwLockPredicate**: the lock invariant is a spec-level predicate over the locked
+  data. On every `acquire_read` / `acquire_write`, Verus proves the predicate holds.
+  On every `release_write`, Verus checks the predicate still holds for the new data.
+  This is a machine-checked proof, not a runtime assertion.
+
+- **TSM (tokenized state machine)**: ghost tokens inside the lock track abstract
+  state. The predicate ties `token.value() == concrete_data.abstract_view()`. After
+  acquire, this equality is proved — not assumed. Every operation that modifies the
+  data must step the token, and the predicate re-checks on release. The proof chain
+  is: `predicate → token == data → operation preserves relation → new predicate`. No
+  assumes anywhere.
+
+- **Closure specs**: Verus closures carry `requires` and `ensures`. When a map closure
+  goes into a `join()` arm, its ensures travel with it. The proof that the output
+  sequence has the right values chains through: `closure.ensures(input[i], output[i])`
+  for each element. `join()` preserves the ensures of both arms.
+
+- **Ghost erasure**: tracked tokens, Ghost values, and spec functions are erased at
+  compile time. The TSM token, the predicate check, the closure specs — none of these
+  exist at runtime. The generated machine code is the same as unverified Rust. The
+  proof is static, not dynamic.
+
+- **Quantifier-based invariants**: loop invariants and function ensures use `forall`
+  and `exists` quantifiers with explicit triggers. When two join arms each prove a
+  quantified property over their half, the combined property over the full range
+  follows by disjunction on the index. Verus + Z3 handle this automatically when
+  triggers are set correctly.
+
+Together: Rust guarantees that the parallel operations can't corrupt memory or race.
+Verus guarantees that the parallel operations compute the right answer. The coarse lock
+ensures thread safety. The TSM ensures proof integrity. The fork-join ensures parallel
+performance. All three layers compose because Rust's ownership model and Verus's proof
+model agree on who owns what and when.
+
+## 5. Slice-Backed Sequences: O(1) Split
 
 `ArraySeqMtEphSliceS` (Chap19) stores `Arc<Vec<T>>` with offset+length window.
 `slice()` and `subseq_copy()` are O(1) — Arc::clone + adjust window. Both halves
