@@ -204,7 +204,7 @@ pub mod VertexMatchingMtEph {
     /// Edge is selected if its coin is heads and all adjacent edges have tails
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — checks only incident edges
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(degree(u) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(degree(u) + degree(v)), Span O(degree(u) + degree(v)) — matches APAS
     /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — iterates all edges, not just incident ones
     fn should_select_edge<V: StT + MtT + Hash + 'static>(
         graph: &UnDirGraphMtEph<V>,

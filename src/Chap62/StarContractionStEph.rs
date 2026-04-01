@@ -318,7 +318,7 @@ pub mod StarContractionStEph {
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O((n + m) lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — matches APAS; delegates to star_contract
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — agrees with APAS.
     pub fn contract_to_vertices<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (vertices: SetStEph<V>)
         requires

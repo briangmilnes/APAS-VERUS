@@ -69,7 +69,7 @@ pub mod ConnectivityStEph {
     /// Delegates to count_components_hof which implements the same algorithm via star_contract.
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — matches APAS; delegates to star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
@@ -93,7 +93,7 @@ pub mod ConnectivityStEph {
     /// Delegates to connected_components_hof which implements the same algorithm via star_contract.
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — matches APAS; delegates to star contraction
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
@@ -167,7 +167,7 @@ pub mod ConnectivityStEph {
     /// Expresses countComponents in terms of starContract (Algorithm 62.5).
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O((n+m) lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — matches APAS; delegates to star_contract
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: usize)
         requires
@@ -190,7 +190,7 @@ pub mod ConnectivityStEph {
     /// Expresses connectedComponents in terms of starContract (Algorithm 62.5).
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O((n+m) lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — matches APAS; delegates to star_contract
     /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
