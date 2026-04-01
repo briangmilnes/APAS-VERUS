@@ -21,13 +21,13 @@ Table of Contents:
 =================================================================
 
 ❌ GraphSearchMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:179: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
-       127 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap53/GraphSearchMtPer.rs:231: error: assume() [rwlock:predicate] - assume(neighbors.spec_avltreesetmtper_wf());
+       157 |     fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
             ...
-       177 |                 proof {
-       178 |                     // Graph closure returns well-formed sets.
-       180 |                 }
-       181 |                 new_neighbors = new_neighbors.union(&neighbors);
+       229 |                 proof {
+       230 |                     // Graph closure returns well-formed sets.
+       232 |                     vstd::set_lib::lemma_len_subset(new_neighbors@, vertex_universe);
+       233 |                     vstd::set_lib::lemma_len_subset(neighbors@, vertex_universe);
    Holes: 1 total
       1 × assume()
 ✓ GraphSearchStEph.rs
@@ -89,9 +89,13 @@ Real Proof Targets: 0 (1 total - 1 rwlock)
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 20:22:20 -07:00
-Ended:     2026-03-30 20:22:21 -07:00
-Duration:  28ms
+Started:   2026-03-31 23:03:47 -07:00
+Ended:     2026-03-31 23:03:47 -07:00
+Duration:  72ms
 
 Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log
-proof-holes.log
+d:   2026-03-31 23:03:47 -07:00
+Ended:     2026-03-31 23:03:47 -07:00
+Duration:  72ms
+
+Full output: src/Chap53/analyses/veracity-review-verus-proof-holes.log

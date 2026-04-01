@@ -20,8 +20,56 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ DivConReduceMtPer.rs
-   3 clean proof functions
+❌ DivConReduceMtPer.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:227: error: external_body - #[verifier::external_body]
+       228 |     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:234: error: assume_new() - Ghost::assume_new(), 0)
+       228 |     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+            ...
+       232 |         ArraySeqMtPerS::reduce(a,
+       233 |             &|x: &usize, y: &usize| if *x >= *y { *x } else { *y },
+       235 |     }
+       236 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:237: error: external_body - #[verifier::external_body]
+       238 |     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:244: error: assume_new() - Ghost::assume_new(), 0)
+       238 |     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+            ...
+       242 |         ArraySeqMtPerS::reduce(a,
+       243 |             &|x: &usize, y: &usize| (*x).wrapping_add(*y),
+       245 |     }
+       246 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:247: error: external_body - #[verifier::external_body]
+       248 |     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:254: error: assume_new() - Ghost::assume_new(), 1)
+       248 |     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+            ...
+       252 |         ArraySeqMtPerS::reduce(a,
+       253 |             &|x: &usize, y: &usize| (*x).wrapping_mul(*y),
+       255 |     }
+       256 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:257: error: external_body - #[verifier::external_body]
+       258 |     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:264: error: assume_new() - Ghost::assume_new(), false)
+       258 |     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+            ...
+       262 |         ArraySeqMtPerS::reduce(a,
+       263 |             &|x: &bool, y: &bool| *x || *y,
+       265 |     }
+       266 | 
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:267: error: external_body - #[verifier::external_body]
+       268 |     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap26/DivConReduceMtPer.rs:274: error: assume_new() - Ghost::assume_new(), true)
+       268 |     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+            ...
+       272 |         ArraySeqMtPerS::reduce(a,
+       273 |             &|x: &bool, y: &bool| *x && *y,
+       275 |     }
+       276 | 
+   Holes: 10 total
+      5 × Tracked::assume_new()
+      5 × external_body
+   Proof functions: 3 total (3 clean, 0 holed)
 ✓ DivConReduceStPer.rs
 ℹ ETSPMtEph.rs
 /home/milnes/projects/APAS-VERUS-agent1/src/Chap26/ETSPMtEph.rs:194: info: structural_false_positive OPAQUE_EXTERNAL lemma_combined_cycle — #[verifier::external_body] [medium]
@@ -74,8 +122,8 @@ ScanDCStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   8 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   7 clean (no holes, no errors; 87%)
+   1 holed (holes or errors, 12%)
    8 total
 
 Proof Functions:
@@ -84,28 +132,28 @@ Proof Functions:
    18 total
 
 Function Specs:
-   56 exec fns with complete spec (requires+ensures) (47%)
+   61 exec fns with complete spec (requires+ensures) (49%)
    1 exec fns missing spec (0%)
-   62 proof/spec fns clean (52%)
+   62 proof/spec fns clean (50%)
    0 proof/spec fns with holes (0%)
-   119 total fns
+   124 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 10 (actionable)
+   5 × Tracked::assume_new() (50%)
+   5 × external_body (50%)
+Real Proof Targets: 10 (all actionable)
 
 Structural (info only): 2
    2 × OPAQUE_EXTERNAL
-
-No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-03-30 20:22:19 -07:00
-Ended:     2026-03-30 20:22:19 -07:00
-Duration:  31ms
+Started:   2026-03-31 23:03:44 -07:00
+Ended:     2026-03-31 23:03:44 -07:00
+Duration:  84ms
 
 Full output: src/Chap26/analyses/veracity-review-verus-proof-holes.log
-alyses/veracity-review-verus-proof-holes.log
+view-verus-proof-holes.log

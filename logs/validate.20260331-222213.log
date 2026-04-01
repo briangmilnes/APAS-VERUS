@@ -1,0 +1,56 @@
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:247:19: 247:56} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:246:27
+    |
+246 |               let max_val = ArraySeqMtPerS::reduce(a,
+    |  ___________________________^
+247 | |                 &(|x: &usize, y: &usize| -> (ret: usize)
+248 | |                     ensures ret == spec_max_fn()(*x, *y)
+249 | |                 { if *x >= *y { *x } else { *y } }),
+250 | |                 Ghost(spec_max_fn()), 0);
+    | |________________________________________^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:269:19: 269:56} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:268:13
+    |
+268 | /             ArraySeqMtPerS::reduce(a,
+269 | |                 &(|x: &usize, y: &usize| -> (ret: usize)
+270 | |                     ensures ret == spec_wrapping_add(*x, *y)
+271 | |                 { (*x).wrapping_add(*y) }),
+272 | |                 Ghost(spec_sum_fn()), 0)
+    | |________________________________________^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:277:19: 277:56} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:276:13
+    |
+276 | /             ArraySeqMtPerS::reduce(a,
+277 | |                 &(|x: &usize, y: &usize| -> (ret: usize)
+278 | |                     ensures ret == spec_wrapping_mul(*x, *y)
+279 | |                 { (*x).wrapping_mul(*y) }),
+280 | |                 Ghost(spec_product_fn()), 1)
+    | |____________________________________________^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:285:19: 285:53} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:284:13
+    |
+284 | /             ArraySeqMtPerS::reduce(a,
+285 | |                 &(|x: &bool, y: &bool| -> (ret: bool)
+286 | |                     ensures ret == spec_or_fn()(*x, *y)
+287 | |                 { *x || *y }),
+288 | |                 Ghost(spec_or_fn()), false)
+    | |___________________________________________^
+
+error: Verus does not recognize this trait bound: <{closure@src/Chap26/DivConReduceMtPer.rs:293:19: 293:53} as std::clone::Clone>
+   --> src/Chap26/DivConReduceMtPer.rs:292:13
+    |
+292 | /             ArraySeqMtPerS::reduce(a,
+293 | |                 &(|x: &bool, y: &bool| -> (ret: bool)
+294 | |                     ensures ret == spec_and_fn()(*x, *y)
+295 | |                 { *x && *y }),
+296 | |                 Ghost(spec_and_fn()), true)
+    | |___________________________________________^
+
+error: aborting due to 5 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 2092MB, peak z3 RSS: 175MB, min free: 21886MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 31s

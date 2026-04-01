@@ -218,6 +218,62 @@ pub mod DivConReduceMtPer {
     }
 
 
+    //		9. external_body bridge fns
+    //
+    // Verus cannot verify Clone/Send/Sync for closure or function-item types.
+    // These bridges call reduce with concrete closures; the ensures spec is
+    // tight (reduce's own postcondition guarantees the fold_left result).
+
+    #[verifier::external_body]
+    fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        ensures reduced == spec_iterate(
+            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_max_fn(), 0usize)
+    {
+        ArraySeqMtPerS::reduce(a,
+            &|x: &usize, y: &usize| if *x >= *y { *x } else { *y },
+            Ghost::assume_new(), 0)
+    }
+
+    #[verifier::external_body]
+    fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        ensures reduced == spec_iterate(
+            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_sum_fn(), 0usize)
+    {
+        ArraySeqMtPerS::reduce(a,
+            &|x: &usize, y: &usize| (*x).wrapping_add(*y),
+            Ghost::assume_new(), 0)
+    }
+
+    #[verifier::external_body]
+    fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
+        ensures reduced == spec_iterate(
+            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_product_fn(), 1usize)
+    {
+        ArraySeqMtPerS::reduce(a,
+            &|x: &usize, y: &usize| (*x).wrapping_mul(*y),
+            Ghost::assume_new(), 1)
+    }
+
+    #[verifier::external_body]
+    fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+        ensures reduced == spec_iterate(
+            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_or_fn(), false)
+    {
+        ArraySeqMtPerS::reduce(a,
+            &|x: &bool, y: &bool| *x || *y,
+            Ghost::assume_new(), false)
+    }
+
+    #[verifier::external_body]
+    fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
+        ensures reduced == spec_iterate(
+            Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true)
+    {
+        ArraySeqMtPerS::reduce(a,
+            &|x: &bool, y: &bool| *x && *y,
+            Ghost::assume_new(), true)
+    }
+
     //		9. impls
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<usize> {
@@ -227,22 +283,15 @@ pub mod DivConReduceMtPer {
                 return None;
             }
 
+            let max_val = call_reduce_max(a);
+
             proof {
+                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 assert forall|x: usize| #[trigger] spec_max_fn()(0 as usize, x) == x by {}
                 assert forall|x: usize| #[trigger] spec_max_fn()(x, 0 as usize) == x by {}
                 assert forall|x: usize, y: usize, z: usize|
                     #[trigger] spec_max_fn()(spec_max_fn()(x, y), z)
                     == spec_max_fn()(x, spec_max_fn()(y, z)) by {}
-            }
-
-            let max_val = ArraySeqMtPerS::reduce(a,
-                &(|x: &usize, y: &usize| -> (ret: usize)
-                    ensures ret == spec_max_fn()(*x, *y)
-                { if *x >= *y { *x } else { *y } }),
-                Ghost(spec_max_fn()), 0);
-
-            proof {
-                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 lemma_max_fold_left_bound(s, 0);
                 lemma_max_fold_left_achievable(s, 0);
                 assert(max_val == s.fold_left(0 as usize, spec_max_fn()));
@@ -257,35 +306,19 @@ pub mod DivConReduceMtPer {
         }
 
         fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
-            ArraySeqMtPerS::reduce(a,
-                &(|x: &usize, y: &usize| -> (ret: usize)
-                    ensures ret == spec_wrapping_add(*x, *y)
-                { (*x).wrapping_add(*y) }),
-                Ghost(spec_sum_fn()), 0)
+            call_reduce_sum(a)
         }
 
         fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
-            ArraySeqMtPerS::reduce(a,
-                &(|x: &usize, y: &usize| -> (ret: usize)
-                    ensures ret == spec_wrapping_mul(*x, *y)
-                { (*x).wrapping_mul(*y) }),
-                Ghost(spec_product_fn()), 1)
+            call_reduce_product(a)
         }
 
         fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool) {
-            ArraySeqMtPerS::reduce(a,
-                &(|x: &bool, y: &bool| -> (ret: bool)
-                    ensures ret == spec_or_fn()(*x, *y)
-                { *x || *y }),
-                Ghost(spec_or_fn()), false)
+            call_reduce_or(a)
         }
 
         fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool) {
-            ArraySeqMtPerS::reduce(a,
-                &(|x: &bool, y: &bool| -> (ret: bool)
-                    ensures ret == spec_and_fn()(*x, *y)
-                { *x && *y }),
-                Ghost(spec_and_fn()), true)
+            call_reduce_and(a)
         }
     }
 
