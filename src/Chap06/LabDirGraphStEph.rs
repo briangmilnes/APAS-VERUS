@@ -68,7 +68,7 @@ verus! {
         }
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn empty() -> (g: Self)
             requires valid_key_type_LabEdge::<V, L>()
             ensures
@@ -78,7 +78,7 @@ verus! {
                 g@.A =~= Set::<(<V as View>::V, <V as View>::V, <L as View>::V)>::empty();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|V| + |A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|), Parallelism O(1) - sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |A|), Span O(|V| + |A|) — DIFFERS: St sequential, APAS Span O(1)
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: Self)
             requires
                 forall |u: V::V, w: V::V, l: L::V|
@@ -91,29 +91,29 @@ verus! {
                 g@.A =~= labeled_arcs@;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn vertices(&self) -> (v: &SetStEph<V>)
             ensures v@ == self@.V;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>)
             ensures a@ =~= self@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential map
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — DIFFERS: St sequential, APAS Span O(1)
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>)
             requires valid_key_type_LabEdge::<V, L>(), valid_key_type_Edge::<V>()
             ensures arcs@.finite(), arcs@ == self.spec_arcs();
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn add_vertex(&mut self, v: V)
             requires valid_key_type_LabEdge::<V, L>()
             ensures self@.V == old(self)@.V.insert(v@), self@.A == old(self)@.A;
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1), Parallelism O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         fn add_labeled_arc(&mut self, from: V, to: V, label: L)
             requires valid_key_type_LabEdge::<V, L>()
             ensures 
@@ -121,7 +121,7 @@ verus! {
                 self@.A == old(self)@.A.insert((from@, to@, label@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — DIFFERS: St sequential, APAS Span O(1)
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures 
@@ -129,21 +129,21 @@ verus! {
                 label.is_some() ==> self@.A.contains((from@, to@, label.unwrap()@));
 
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential search
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — DIFFERS: St sequential, APAS Span O(1)
         fn has_arc(&self, from: &V, to: &V) -> (b: bool)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures b == (exists |l: L::V| #![trigger self@.A.contains((from@, to@, l))] self@.A.contains((from@, to@, l)));
 
         /// out-neighbors
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — DIFFERS: St sequential, APAS Span O(1)
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_plus@.finite(), n_plus@ == self.spec_n_plus(v@);
 
         /// in-neighbors
         /// - Alg Analysis: APAS (Ch06 Def 6.17): Work O(|A|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|), Parallelism O(1) - sequential filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) — DIFFERS: St sequential, APAS Span O(1)
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>)
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);

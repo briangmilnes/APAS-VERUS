@@ -129,7 +129,7 @@ pub mod BoruvkaMtEph {
         /// Parallel Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential loops despite Mt naming, no join/spawn
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — DIFFERS: sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
         fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices_vec: Vec<V>,
             edges_vec: Vec<LabeledEdge<V>>,
@@ -148,7 +148,7 @@ pub mod BoruvkaMtEph {
         /// Parallel Borůvka's MST with random seed.
         /// APAS: Work O(m log n), Span O(log² n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential loops despite Mt naming, no join/spawn
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — DIFFERS: sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
         fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -751,7 +751,7 @@ pub mod BoruvkaMtEph {
     /// All per-round operations parallelized via ParaPair!.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential loops despite Mt naming, no join/spawn
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — DIFFERS: sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
     #[verifier::exec_allows_no_decreases_clause]
     pub fn boruvka_mst_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
@@ -983,7 +983,7 @@ pub mod BoruvkaMtEph {
     /// Wrapper that converts sets to vecs and delegates to `boruvka_mst_mt`.
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential loops despite Mt naming, no join/spawn
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^2 n) — DIFFERS: sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
     pub fn boruvka_mst_mt_with_seed<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: &SetStEph<V>,
         edges: &SetStEph<LabeledEdge<V>>,

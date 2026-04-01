@@ -108,7 +108,7 @@ pub mod OrderStatSelectMtPer {
     pub trait OrderStatSelectMtPerTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — DIFFERS: partition uses sequential loops inside join()
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — DIFFERS: parallel recursion via join(), but sequential O(n) filter loops dominate span
         fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)
             requires a.spec_len() <= usize::MAX,
             ensures
