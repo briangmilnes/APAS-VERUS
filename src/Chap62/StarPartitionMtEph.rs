@@ -995,6 +995,19 @@ pub mod StarPartitionMtEph {
         // Loop 4: parallel initialize p_vec = vertices_vec (Work O(n), Span O(lg n)).
         let mut p_vec = build_p_vec_mt(vertices_arc.clone(), 0, nv);
 
+        // Bridge: establish Loop 5 initial invariant — all p_vec entries are in vertex_to_index.
+        // build_p_vec_mt ensures p_vec@[j]@ == vertices_vec@[j]@, and Loop 1 proved
+        // vertex_to_index maps every vertices_vec entry to its index.
+        proof {
+            assert forall|j2: int| 0 <= j2 < nv as int implies
+                vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
+                (vertex_to_index@[p_vec@[j2]@] as usize) < nv by {
+                assert(p_vec@[j2]@ == vertices_vec@[j2]@);
+                assert(vertex_to_index@.contains_key(vertices_vec@[j2]@));
+                assert(vertex_to_index@[vertices_vec@[j2]@] as usize == j2);
+            };
+        }
+
         // Loop 5: apply th_edges to p_vec.
         // Key invariant: heads vertices always keep p_vec[j] == vertices_vec[j].
         let nth = th_edges.len();

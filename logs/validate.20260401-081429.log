@@ -1,0 +1,24 @@
+error: invariant not satisfied before loop
+    --> src/Chap62/StarPartitionMtEph.rs:1027:17
+     |
+1027 | /                 forall|j2: int| 0 <= j2 < nv as int ==>
+1028 | |                     vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
+1029 | |                     (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
+     | |_________________________________________________________________^
+
+note: recommendation not met
+    --> src/Chap62/StarPartitionMtEph.rs:1115:53
+     |
+1115 |                     assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
+     |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 1338 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1928MB, peak z3 RSS: 311MB, min free: 19980MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 16s

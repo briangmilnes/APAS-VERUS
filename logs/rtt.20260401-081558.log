@@ -1,0 +1,120 @@
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/bst_plain_mt_pcell.rs:149:19
+    |
+149 |         pub cell: PCell<SetInner>,
+    |                   ^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/bst_plain_mt_pcell.rs:322:19
+    |
+322 |         pub cell: PCell<SetInner>,
+    |                   ^^^^^
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/bst_plain_mt_pcell.rs:163:41
+    |
+163 |             let (cell, Tracked(perm)) = PCell::new(SetInner::empty());
+    |                                         ^^^^^
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/bst_plain_mt_pcell.rs:341:41
+    |
+341 |             let (cell, Tracked(perm)) = PCell::new(SetInner::empty());
+    |                                         ^^^^^
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/rwlock_no_ghost_field.rs:111:19
+    |
+111 |         pub cell: PCell<u64>,
+    |                   ^^^^^
+
+warning: use of deprecated struct `vstd::cell::PCell`: use `vstd::cell::pcell::PCell` or `vstd::cell::pcell_maybe_uninit::PCell` instead
+   --> src/experiments/rwlock_no_ghost_field.rs:152:41
+    |
+152 |             let (cell, Tracked(perm)) = PCell::empty();
+    |                                         ^^^^^
+
+warning: variable does not need to be mutable
+   --> src/experiments/bst_plain_mt_pcell.rs:379:18
+    |
+379 |             let (mut interior, write_handle) = self.lock.acquire_write();
+    |                  ----^^^^^^^^
+    |                  |
+    |                  help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> src/experiments/bst_plain_mt_pcell.rs:410:18
+    |
+410 |             let (mut interior, write_handle) = self.lock.acquire_write();
+    |                  ----^^^^^^^^
+    |                  |
+    |                  help: remove this `mut`
+
+warning: `apas-verus` (lib) generated 8 warnings (run `cargo fix --lib -p apas-verus` to apply 2 suggestions)
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent2)
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error[E0425]: cannot find function `test1_named_fn_clone` in this scope
+   --> src/experiments/named_fn_clone_bounds.rs:144:9
+    |
+125 |     fn test6_named_fn_join()
+    |     ------------------------ similarly named function `test6_named_fn_join` defined here
+...
+144 |         test1_named_fn_clone();
+    |         ^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+144 -         test1_named_fn_clone();
+144 +         test6_named_fn_join();
+    |
+
+error[E0425]: cannot find function `test2_named_fn_mt_bounds` in this scope
+   --> src/experiments/named_fn_clone_bounds.rs:145:9
+    |
+100 |     fn test4_named_fn_two_arms() {
+    |     ---------------------------- similarly named function `test4_named_fn_two_arms` defined here
+...
+145 |         test2_named_fn_mt_bounds();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+145 -         test2_named_fn_mt_bounds();
+145 +         test4_named_fn_two_arms();
+    |
+
+error[E0425]: cannot find function `test5_named_fn_clone_fn2` in this scope
+   --> src/experiments/named_fn_clone_bounds.rs:148:9
+    |
+125 |     fn test6_named_fn_join()
+    |     ------------------------ similarly named function `test6_named_fn_join` defined here
+...
+148 |         test5_named_fn_clone_fn2();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+148 -         test5_named_fn_clone_fn2();
+148 +         test6_named_fn_join();
+    |
+
+For more information about this error, try `rustc --explain E0425`.
+warning: `apas-verus` (lib test) generated 8 warnings (8 duplicates)
+error: could not compile `apas-verus` (lib test) due to 3 previous errors; 8 warnings emitted
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 11s
