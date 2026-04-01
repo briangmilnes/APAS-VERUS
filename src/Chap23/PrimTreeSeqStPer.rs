@@ -362,11 +362,13 @@ pub mod PrimTreeSeqStPer {
             self.seq@.len() <= usize::MAX as int
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty Vec allocation.
         fn empty() -> (empty_seq: Self)
         {
             PrimTreeSeqStS { seq: Vec::new() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element Vec.
         fn singleton(value: T) -> (single: Self)
         {
             let mut v = Vec::new();
@@ -374,21 +376,25 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq: v }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
         fn from_vec(vec: Vec<T>) -> (seq: Self)
         {
             proof { axiom_spec_len(&vec); }
             PrimTreeSeqStS { seq: vec }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Vec len.
         fn length(&self) -> (len: usize)
         {
             self.seq.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones all elements into left/right halves; St sequential.
         fn expose(&self) -> (tree: PrimTreeSeqStTree<T>)
             where T: Clone + Eq
         {
@@ -454,6 +460,7 @@ pub mod PrimTreeSeqStPer {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — Vec append of two halves; St sequential.
         fn join(tree: PrimTreeSeqStTree<T>) -> (joined: PrimTreeSeqStS<T>)
             ensures
                 tree@ is Zero ==> joined@ =~= Seq::<T>::empty(),
@@ -473,6 +480,7 @@ pub mod PrimTreeSeqStPer {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — clones + concatenates two sequences; St sequential.
         fn append(a: &Self, b: &Self) -> (appended: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
@@ -520,6 +528,7 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — clones k = length elements; St sequential.
         fn subseq(&self, start: usize, length: usize) -> (subseq: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
@@ -547,6 +556,7 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones all n elements, replacing one; St sequential.
         fn update(a: &Self, index: usize, item: T) -> (updated: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
@@ -584,6 +594,7 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(n * W(f)) — applies f to each of n elements; St sequential.
         fn map<U: Clone, F: Fn(&T) -> U>(a: &PrimTreeSeqStS<T>, f: &F) -> (mapped: PrimTreeSeqStS<U>)
         {
             let len = a.seq.len();
@@ -609,6 +620,7 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(n * W(f)) — calls f for each index 0..n; St sequential.
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: PrimTreeSeqStS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -627,6 +639,7 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass filter over n elements; St sequential.
         fn filter<F: Fn(&T) -> bool>(a: &PrimTreeSeqStS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
@@ -684,6 +697,7 @@ pub mod PrimTreeSeqStPer {
             self.subseq(n, remaining)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(N), Span O(N) — nested loop over total N elements across all inner seqs; St sequential.
         fn flatten(a: &PrimTreeSeqStS<PrimTreeSeqStS<T>>) -> (flattened: PrimTreeSeqStS<T>)
             where T: Clone + Eq
         {
@@ -736,8 +750,10 @@ pub mod PrimTreeSeqStPer {
             PrimTreeSeqStS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns slice reference.
         fn as_slice(&self) -> (slice: &[T]) { &self.seq }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership.
         fn into_vec(self) -> (vec: Vec<T>) { self.seq }
     }
 

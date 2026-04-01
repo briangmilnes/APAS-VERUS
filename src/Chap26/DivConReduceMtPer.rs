@@ -221,6 +221,7 @@ pub mod DivConReduceMtPer {
 
     //		9. bridge fns (named closures with ensures per standard 8)
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
     fn call_reduce_max(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_max_fn(), 0usize)
         ensures reduced == spec_iterate(
@@ -232,6 +233,7 @@ pub mod DivConReduceMtPer {
         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_max_fn()), 0)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
     fn call_reduce_sum(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_sum_fn(), 0usize)
         ensures reduced == spec_iterate(
@@ -243,6 +245,7 @@ pub mod DivConReduceMtPer {
         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_sum_fn()), 0)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
     fn call_reduce_product(a: &ArraySeqMtPerS<usize>) -> (reduced: usize)
         requires spec_monoid(spec_product_fn(), 1usize)
         ensures reduced == spec_iterate(
@@ -254,6 +257,7 @@ pub mod DivConReduceMtPer {
         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_product_fn()), 1)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
     fn call_reduce_or(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
         requires spec_monoid(spec_or_fn(), false)
         ensures reduced == spec_iterate(
@@ -265,6 +269,7 @@ pub mod DivConReduceMtPer {
         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_or_fn()), false)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to parallel reduce; Mt parallel.
     fn call_reduce_and(a: &ArraySeqMtPerS<bool>) -> (reduced: bool)
         requires spec_monoid(spec_and_fn(), true)
         ensures reduced == spec_iterate(
@@ -279,6 +284,7 @@ pub mod DivConReduceMtPer {
     //		9. impls
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<usize> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C reduce via call_reduce_max; Mt parallel.
         fn max_element_parallel(a: &ArraySeqMtPerS<usize>) -> (max: Option<usize>) {
             let len = a.length();
             if len == 0 {
@@ -310,18 +316,22 @@ pub mod DivConReduceMtPer {
             Some(max_val)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_sum; Mt parallel.
         fn sum_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             call_reduce_sum(a)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_product; Mt parallel.
         fn product_parallel(a: &ArraySeqMtPerS<usize>) -> (total: usize) {
             call_reduce_product(a)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_or; Mt parallel.
         fn any_parallel(a: &ArraySeqMtPerS<bool>) -> (found: bool) {
             call_reduce_or(a)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — delegates to call_reduce_and; Mt parallel.
         fn all_parallel(a: &ArraySeqMtPerS<bool>) -> (all_true: bool) {
             call_reduce_and(a)
         }

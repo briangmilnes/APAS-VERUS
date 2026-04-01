@@ -290,6 +290,7 @@ pub mod ScanContractMtEph {
     //		9. impls
 
     impl<T: StTInMtT + Clone + 'static> ScanContractMtEphTrait<T> for ArraySeqMtEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg^2 n) — recursive contract/expand; Mt parallel contract via join + parallel expand via tabulate.
         fn scan_contract_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: Arc<F>,
@@ -369,6 +370,7 @@ pub mod ScanContractMtEph {
             scanned
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel expand via tabulate over n elements.
         fn expand_scan_parallel<F: Fn(&T, &T) -> T + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             b: &ArraySeqMtEphS<T>,

@@ -78,6 +78,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
     }
 
     impl MaxContigSubSumReducedMcsseTrait for ArraySeqStEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass reduction using MCSSE 4-tuple; St sequential.
         fn max_contig_sub_sum_reduced_mcsse(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>) {
             let n = a.length();
             if n == 0 {

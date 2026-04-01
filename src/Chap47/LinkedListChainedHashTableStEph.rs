@@ -41,6 +41,7 @@ pub mod LinkedListChainedHashTableStEph {
         proof fn _linked_list_chained_hash_table_verified() {}
 
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all list elements.
         fn clone_linked_list_entry<Key: Eq + Clone, Value: Eq + Clone>(
             entry: &LinkedListStEphS<(Key, Value)>,
         ) -> (cloned: LinkedListStEphS<(Key, Value)>)
@@ -146,6 +147,7 @@ pub mod LinkedListChainedHashTableStEph {
             }
 
             /// Element-wise clone avoiding Verus tuple-Clone limitation.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all chain elements.
             fn clone_entry(&self) -> (cloned: Self) {
                 let mut new_seq: Vec<(Key, Value)> = Vec::new();
                 let mut i: usize = 0;

@@ -41,6 +41,7 @@ pub mod VecChainedHashTableStEph {
         proof fn _vec_chained_hash_table_verified() {}
 
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all pairs.
         fn clone_vec_pairs<Key: Eq + Clone, Value: Eq + Clone>(pairs: &Vec<(Key, Value)>) -> (cloned: Vec<(Key, Value)>)
             requires
                 obeys_feq_clone::<Key>(),
@@ -146,6 +147,7 @@ pub mod VecChainedHashTableStEph {
             }
 
             /// Element-wise clone avoiding Verus tuple-Clone limitation.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all pairs.
             fn clone_entry(&self) -> (cloned: Self) {
                 let mut new_vec: Vec<(Key, Value)> = Vec::new();
                 let mut i: usize = 0;

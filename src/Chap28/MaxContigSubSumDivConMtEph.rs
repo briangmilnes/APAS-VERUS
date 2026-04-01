@@ -161,6 +161,7 @@ pub mod MaxContigSubSumDivConMtEph {
     }
 
     impl MaxContigSubSumDivConMtTrait for ArraySeqMtEphS<i32> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n) — D&C with parallel halves via join + O(n) merge; Mt parallel.
         fn max_contig_sub_sum_divcon_mt(a: &ArraySeqMtEphS<i32>) -> (mcss: Option<i32>)
             decreases a.seq@.len(),
         {

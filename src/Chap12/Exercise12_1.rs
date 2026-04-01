@@ -58,6 +58,7 @@ verus! {
     impl SpinLockTrait for SpinLock {
         uninterp spec fn spec_locked(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two atomic stores.
         #[verifier::external_body] // accept hole
         fn new() -> (lock: Self) {
             SpinLock {
@@ -66,6 +67,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) amortized, Span O(1) amortized — spin-wait on ticket; O(contention) worst case.
         #[verifier::external_body] // accept hole
         fn lock(&self) {
             let my_ticket = self.ticket.fetch_add(1, Ordering::Relaxed);
@@ -74,11 +76,13 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single atomic increment.
         #[verifier::external_body] // accept hole
         fn unlock(&self) {
             self.turn.fetch_add(1, Ordering::Release);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1) + Work(action), Span O(1) + Span(action) — lock + action + unlock.
         #[verifier::external_body] // accept hole
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T {
             self.lock();

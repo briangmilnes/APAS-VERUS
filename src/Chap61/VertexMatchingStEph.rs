@@ -36,11 +36,13 @@ pub mod VertexMatchingStEph {
 
         /// Greedy vertex matching algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) — single pass over edges; St sequential.
         fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingsteph_wf(graph);
 
         /// Sequential version of parallel matching.
         /// APAS: Work O(|E|), Span O(|E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|^2), Span O(|E|^2) — coin flip + per-edge scan of all edges; St sequential.
         fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingsteph_wf(graph);
     }

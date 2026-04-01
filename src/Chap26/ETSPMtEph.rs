@@ -522,6 +522,7 @@ pub mod ETSPMtEph {
     }
 
     impl ETSPMtTrait for Vec<Point> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2 log n), Span O(n log^2 n) — recursive D&C with parallel swap search; Mt parallel.
         fn etsp_parallel(points: &Vec<Point>) -> (tour: Vec<Edge>) {
             etsp_parallel_inner(points)
         }
@@ -624,9 +625,11 @@ pub mod ETSPMtEph {
     use std::sync::Arc;
 
     pub trait ETSPPointTrait {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
         fn distance(&self, other: &Point) -> (d: f64);
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 arithmetic: dx^2 + dy^2 + sqrt.
     // veracity: no_requires
     fn point_distance(a: &Point, b: &Point) -> (d: f64)
         ensures d == spec_point_distance(*a, *b),
@@ -640,12 +643,14 @@ pub mod ETSPMtEph {
     }
 
     impl ETSPPointTrait for Point {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
         fn distance(&self, other: &Point) -> (d: f64) {
             point_distance(self, other)
         }
     }
 
     /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — sort + split.
     #[verifier::external_body]
     pub fn sort_and_split_impl(points: &Vec<Point>) -> (Vec<Point>, Vec<Point>) {
         let n = points.len();
@@ -673,6 +678,7 @@ pub mod ETSPMtEph {
     /// Parallel find-best-swap: recursively splits the outer loop over left_tour
     /// and runs both halves in parallel via HFScheduler join().
     /// Work Θ(n·m), Span Θ(m·lg n) where n = left_tour.len(), m = right_tour.len().
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(m * lg n) — parallel D&C over left_tour.
     pub fn find_best_swap_impl(left_tour: &Vec<Edge>, right_tour: &Vec<Edge>) -> (best_swap: (usize, usize))
         requires
             left_tour@.len() >= 1,
@@ -689,6 +695,7 @@ pub mod ETSPMtEph {
         (li, ri)
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(m * lg n) — recursive D&C with parallel halves via join; Mt parallel.
     fn find_best_swap_par(
         left_tour: Arc<Vec<Edge>>, right_tour: Arc<Vec<Edge>>, lo: usize, hi: usize,
     ) -> (best_swap: (usize, usize, f64))

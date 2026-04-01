@@ -852,6 +852,7 @@ pub mod UnionFindStEph {
     }
 
     /// Chase parent pointers to the root (no mutation).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(depth), Span O(depth) — follows parent chain to root; depth bounded by O(lg n) with union-by-rank.
     #[verifier::rlimit(30)]
     fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
         requires
@@ -1055,6 +1056,7 @@ pub mod UnionFindStEph {
     /// Execute the mutations for union merge. No wf sub-predicates in scope —
     /// only structural requires/ensures. This isolates HashMap/Map axioms from
     /// the quantified wf proof, keeping Z3 under 4 GB.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two HashMap updates (parent + rank).
     #[verifier::rlimit(30)]
     fn union_merge_exec<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
@@ -1536,6 +1538,7 @@ pub mod UnionFindStEph {
     /// Returns Ghost info for caller to derive structural ensures.
     /// Exec does mutations via union_merge_exec; proof delegates to
     /// lemma_union_merge_wf to keep &mut encoding out of the proof context.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — updates roots map for all elements in merged component.
     #[verifier::rlimit(30)]
     fn union_merge<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
@@ -1660,6 +1663,7 @@ pub mod UnionFindStEph {
 
         /// Create a new empty Union-Find structure.
         /// APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty HashMap allocation.
         fn new() -> (uf: Self)
             requires
                 obeys_key_model::<V>(),
@@ -1674,6 +1678,7 @@ pub mod UnionFindStEph {
 
         /// Insert a new element as a singleton set.
         /// APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three HashMap inserts + Vec push.
         fn insert(&mut self, v: V)
             requires
                 old(self).spec_unionfindsteph_wf(),
@@ -1689,6 +1694,7 @@ pub mod UnionFindStEph {
 
         /// Find the root representative with path compression.
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized (inverse Ackermann)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — path compression via find_root_loop + parent updates.
         fn find(&mut self, v: &V) -> (root: V)
             requires
                 old(self).spec_unionfindsteph_wf(),
@@ -1703,6 +1709,7 @@ pub mod UnionFindStEph {
 
         /// Union two sets by rank.
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — two finds O(alpha(n)) + union_merge updates roots for all elements.
         fn union(&mut self, u: &V, v: &V)
             requires
                 old(self).spec_unionfindsteph_wf(),
@@ -1718,6 +1725,7 @@ pub mod UnionFindStEph {
 
         /// Check if two elements are in the same set.
         /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — two find_root_loop calls + comparison.
         fn equals(&mut self, u: &V, v: &V) -> (same: bool)
             requires
                 old(self).spec_unionfindsteph_wf(),
@@ -1731,6 +1739,7 @@ pub mod UnionFindStEph {
 
         /// Count distinct sets.
         /// APAS: Work O(n alpha(n)), Span O(n alpha(n))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — find root for each element + set insertion; St sequential.
         fn num_sets(&mut self) -> (count: usize)
             requires
                 old(self).spec_unionfindsteph_wf(),
@@ -1879,6 +1888,7 @@ pub mod UnionFindStEph {
 
     // R115 EXPERIMENT: isolate the merge-branch proof to find the matching loop source.
     // Test 1: just find + feq (no merge). Does spec_elements_distinct fire?
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — two find_root_loop calls + feq; experimental.
     #[verifier::rlimit(30)]
     fn union_experiment_find_only<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
@@ -1901,6 +1911,7 @@ pub mod UnionFindStEph {
     }
 
     // Test 2: merge but NO wf in ensures. Is the loop from the ensures goal?
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — two finds + conditional union_merge; experimental.
     #[verifier::rlimit(30)]
     fn union_experiment_merge_no_wf_ensures<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,
@@ -1928,6 +1939,7 @@ pub mod UnionFindStEph {
     }
 
     // Test 3: merge WITH wf in ensures. Is wf the trigger?
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — two finds + conditional union_merge + wf proof; experimental.
     #[verifier::rlimit(30)]
     fn union_experiment_merge_with_wf<V: StT + Hash>(
         uf: &mut UnionFindStEph<V>,

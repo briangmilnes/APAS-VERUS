@@ -140,6 +140,7 @@ pub mod MergeSortStPer {
     //		9. impls
 
     impl MergeSortStTrait for ArraySeqStPerS<usize> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — two-finger merge; St sequential.
         fn merge(left: &ArraySeqStPerS<usize>, right: &ArraySeqStPerS<usize>) -> (merged: ArraySeqStPerS<usize>) {
             let n_left = left.length();
             let n_right = right.length();
@@ -206,6 +207,7 @@ pub mod MergeSortStPer {
             merged_result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — recursive D&C with O(n) merge; St sequential.
         fn merge_sort(a: &ArraySeqStPerS<usize>) -> (sorted: ArraySeqStPerS<usize>)
             decreases a.spec_len(),
         {

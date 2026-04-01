@@ -391,6 +391,7 @@ pub mod OrderStatSelectMtPer {
     }
 
     impl<T: TotalOrder + Copy + Send + Sync + Eq + 'static> OrderStatSelectMtPerTrait<T> for ArraySeqMtPerS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n^(3/4)) expected — delegates to select_inner; Mt parallel partition via join.
         fn select(a: &ArraySeqMtPerS<T>, k: usize) -> (found: Option<T>)
         {
             let n = a.length();

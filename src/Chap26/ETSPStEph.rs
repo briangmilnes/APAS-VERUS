@@ -514,6 +514,7 @@ pub mod ETSPStEph {
     }
 
     impl ETSPStTrait for Vec<Point> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2 log n), Span O(n^2 log n) — recursive D&C with O(n*m) swap search; St sequential.
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>) {
             etsp_inner(points)
         }

@@ -338,16 +338,19 @@ pub mod BalBinTreeStEph {
             self is Leaf
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant construction.
         fn leaf() -> (l: Self)
         {
             BalBinTree::Leaf
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Box allocation.
         fn node(left: Self, value: T, right: Self) -> (n: Self)
         {
             BalBinTree::Node(Box::new(BalBinNode { left, value, right }))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — pattern match.
         fn is_leaf(&self) -> (b: bool)
         {
             match self {
@@ -356,6 +359,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive traversal of all n nodes; St sequential.
         fn size(&self) -> (count: usize)
             decreases self.spec_size(),
         {
@@ -369,6 +373,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive traversal of all n nodes; St sequential.
         fn height(&self) -> (h: usize)
             decreases self.spec_height(),
         {
@@ -382,6 +387,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive in-order traversal + append; St sequential.
         fn in_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),
@@ -399,6 +405,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive pre-order traversal + append; St sequential.
         fn pre_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),
@@ -418,6 +425,7 @@ pub mod BalBinTreeStEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive post-order traversal + append; St sequential.
         fn post_order(&self) -> (traversal: Vec<T>)
             where T: Clone + Eq
             decreases self.spec_size(),

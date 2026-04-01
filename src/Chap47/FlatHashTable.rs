@@ -143,6 +143,7 @@ pub mod FlatHashTable {
         }
 
         /// Delegates to FlatEntry's Clone impl.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clones a single flat entry.
         fn clone_entry(&self) -> (cloned: Self) {
             self.clone()
         }

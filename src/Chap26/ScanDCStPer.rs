@@ -132,6 +132,7 @@ pub mod ScanDCStPer {
     //		9. impls
 
     impl ScanDCStTrait for ArraySeqStPerS<usize> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive D&C scan halving n; St sequential.
         fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))
             decreases a.spec_len(),
         {
@@ -319,6 +320,7 @@ pub mod ScanDCStPer {
             (result_prefixes, total)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — delegates to scan_dc with addition; St sequential.
         fn prefix_sums_dc(a: &ArraySeqStPerS<usize>) -> (sums: (ArraySeqStPerS<usize>, usize)) {
             Self::scan_dc(a,
                 &(|x: &usize, y: &usize| -> (ret: usize)

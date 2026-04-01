@@ -1,5 +1,5 @@
 veracity-analyze-alg-analysis
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log
 
 src/Chap05/KleeneStPer.rs:236: error: fn `new` missing alg analysis annotation
 src/Chap05/KleeneStPer.rs:240: error: fn `mem_star` missing alg analysis annotation
@@ -301,33 +301,6 @@ src/Chap06/WeightedDirGraphStEphU8.rs:347: error: fn `edges_above_weight` missin
 src/Chap06/WeightedDirGraphStEphU8.rs:393: error: fn `edges_below_weight` missing alg analysis annotation
 src/Chap06/WeightedDirGraphStEphUsize.rs:347: error: fn `edges_above_weight` missing alg analysis annotation
 src/Chap06/WeightedDirGraphStEphUsize.rs:393: error: fn `edges_below_weight` missing alg analysis annotation
-src/Chap12/Exercise12_1.rs:62: error: fn `new` missing alg analysis annotation
-src/Chap12/Exercise12_1.rs:70: error: fn `lock` missing alg analysis annotation
-src/Chap12/Exercise12_1.rs:78: error: fn `unlock` missing alg analysis annotation
-src/Chap12/Exercise12_1.rs:83: error: fn `with_lock` missing alg analysis annotation
-src/Chap12/Exercise12_2.rs:31: error: fn `fetch_add_cas` missing alg analysis annotation
-src/Chap12/Exercise12_5.rs:98: error: fn `new` missing alg analysis annotation
-src/Chap12/Exercise12_5.rs:105: error: fn `push` missing alg analysis annotation
-src/Chap12/Exercise12_5.rs:119: error: fn `pop` missing alg analysis annotation
-src/Chap12/Exercise12_5.rs:134: error: fn `is_empty` missing alg analysis annotation
-src/Chap12/Exercise12_5.rs:139: error: fn `drain` missing alg analysis annotation
-src/Chap17/MathSeq.rs:298: error: fn `new` missing alg analysis annotation
-src/Chap17/MathSeq.rs:304: error: fn `set` missing alg analysis annotation
-src/Chap17/MathSeq.rs:314: error: fn `length` missing alg analysis annotation
-src/Chap17/MathSeq.rs:319: error: fn `nth` missing alg analysis annotation
-src/Chap17/MathSeq.rs:324: error: fn `empty` missing alg analysis annotation
-src/Chap17/MathSeq.rs:329: error: fn `singleton` missing alg analysis annotation
-src/Chap17/MathSeq.rs:334: error: fn `add_last` missing alg analysis annotation
-src/Chap17/MathSeq.rs:339: error: fn `delete_last` missing alg analysis annotation
-src/Chap17/MathSeq.rs:344: error: fn `is_empty` missing alg analysis annotation
-src/Chap17/MathSeq.rs:349: error: fn `is_singleton` missing alg analysis annotation
-src/Chap17/MathSeq.rs:354: error: fn `from_vec` missing alg analysis annotation
-src/Chap17/MathSeq.rs:359: error: fn `with_len` missing alg analysis annotation
-src/Chap17/MathSeq.rs:364: error: fn `subseq` missing alg analysis annotation
-src/Chap17/MathSeq.rs:373: error: fn `subseq_copy` missing alg analysis annotation
-src/Chap17/MathSeq.rs:382: error: fn `domain` missing alg analysis annotation
-src/Chap17/MathSeq.rs:400: error: fn `range` missing alg analysis annotation
-src/Chap17/MathSeq.rs:483: error: fn `multiset_range` missing alg analysis annotation
 src/Chap18/ArraySeq.rs:564: error: fn `find_key` missing alg analysis annotation
 src/Chap18/ArraySeq.rs:622: error: fn `new` missing alg analysis annotation
 src/Chap18/ArraySeq.rs:629: error: fn `set` missing alg analysis annotation
@@ -665,111 +638,69 @@ src/Chap19/ArraySeqStPer.rs:925: error: fn `map` missing alg analysis annotation
 src/Chap19/ArraySeqStPer.rs:943: error: fn `tabulate` missing alg analysis annotation
 src/Chap19/ArraySeqStPer.rs:962: error: fn `flatten` missing alg analysis annotation
 src/Chap19/ArraySeqStPer.rs:1015: error: fn `deflate` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:341: error: fn `leaf` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:346: error: fn `node` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:351: error: fn `is_leaf` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:359: error: fn `size` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:372: error: fn `height` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:385: error: fn `in_order` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:402: error: fn `pre_order` missing alg analysis annotation
-src/Chap23/BalBinTreeStEph.rs:421: error: fn `post_order` missing alg analysis annotation
+src/Chap23/BalBinTreeStEph.rs:363: info: St fn `size` sequential as expected
+src/Chap23/BalBinTreeStEph.rs:377: info: St fn `height` sequential as expected
+src/Chap23/BalBinTreeStEph.rs:391: info: St fn `in_order` sequential as expected
+src/Chap23/BalBinTreeStEph.rs:409: info: St fn `pre_order` sequential as expected
+src/Chap23/BalBinTreeStEph.rs:429: info: St fn `post_order` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:167: info: St fn `nth` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:175: info: St fn `expose` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:198: info: St fn `join` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:208: info: St fn `append` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:224: info: St fn `subseq` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:240: info: St fn `update` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:365: error: fn `empty` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:370: error: fn `singleton` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:377: error: fn `from_vec` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:383: error: fn `length` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:388: error: fn `nth` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:392: error: fn `expose` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:457: error: fn `join` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:476: error: fn `append` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:523: error: fn `subseq` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:550: error: fn `update` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:587: error: fn `map` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:612: error: fn `tabulate` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:630: error: fn `filter` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:687: error: fn `flatten` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:739: error: fn `as_slice` missing alg analysis annotation
-src/Chap23/PrimTreeSeqStPer.rs:741: error: fn `into_vec` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:224: error: fn `call_reduce_max` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:235: error: fn `call_reduce_sum` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:246: error: fn `call_reduce_product` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:257: error: fn `call_reduce_or` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:268: error: fn `call_reduce_and` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:282: error: fn `max_element_parallel` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:313: error: fn `sum_parallel` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:317: error: fn `product_parallel` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:321: error: fn `any_parallel` missing alg analysis annotation
-src/Chap26/DivConReduceMtPer.rs:325: error: fn `all_parallel` missing alg analysis annotation
+src/Chap23/PrimTreeSeqStPer.rs:398: info: St fn `expose` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:464: info: St fn `join` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:484: info: St fn `append` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:532: info: St fn `subseq` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:560: info: St fn `update` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:598: info: St fn `map` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:624: info: St fn `tabulate` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:643: info: St fn `filter` sequential as expected
+src/Chap23/PrimTreeSeqStPer.rs:701: info: St fn `flatten` sequential as expected
 src/Chap26/DivConReduceStPer.rs:64: info: St fn `max_element` sequential as expected
 src/Chap26/DivConReduceStPer.rs:80: info: St fn `sum` sequential as expected
 src/Chap26/DivConReduceStPer.rs:92: info: St fn `product` sequential as expected
 src/Chap26/DivConReduceStPer.rs:104: info: St fn `any` sequential as expected
 src/Chap26/DivConReduceStPer.rs:116: info: St fn `all` sequential as expected
-src/Chap26/DivConReduceStPer.rs:128: error: fn `max_element` missing alg analysis annotation
-src/Chap26/DivConReduceStPer.rs:156: error: fn `sum` missing alg analysis annotation
-src/Chap26/DivConReduceStPer.rs:164: error: fn `product` missing alg analysis annotation
-src/Chap26/DivConReduceStPer.rs:172: error: fn `any` missing alg analysis annotation
-src/Chap26/DivConReduceStPer.rs:180: error: fn `all` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:525: error: fn `etsp_parallel` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:627: error: fn `distance` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:631: error: fn `point_distance` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:643: error: fn `distance` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:650: error: fn `sort_and_split_impl` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:676: error: fn `find_best_swap_impl` missing alg analysis annotation
-src/Chap26/ETSPMtEph.rs:692: error: fn `find_best_swap_par` missing alg analysis annotation
+src/Chap26/DivConReduceStPer.rs:129: info: St fn `max_element` sequential as expected
+src/Chap26/DivConReduceStPer.rs:158: info: St fn `sum` sequential as expected
+src/Chap26/DivConReduceStPer.rs:167: info: St fn `product` sequential as expected
+src/Chap26/DivConReduceStPer.rs:176: info: St fn `any` sequential as expected
+src/Chap26/DivConReduceStPer.rs:185: info: St fn `all` sequential as expected
 src/Chap26/ETSPStEph.rs:323: info: St fn `etsp` sequential as expected
-src/Chap26/ETSPStEph.rs:517: error: fn `etsp` missing alg analysis annotation
-src/Chap26/MergeSortMtPer.rs:570: error: fn `merge_parallel` missing alg analysis annotation
-src/Chap26/MergeSortMtPer.rs:575: error: fn `merge_sort_parallel` missing alg analysis annotation
+src/Chap26/ETSPStEph.rs:518: info: St fn `etsp` sequential as expected
 src/Chap26/MergeSortStPer.rs:131: info: St fn `merge_sort` sequential as expected
-src/Chap26/MergeSortStPer.rs:143: error: fn `merge` missing alg analysis annotation
-src/Chap26/MergeSortStPer.rs:209: error: fn `merge_sort` missing alg analysis annotation
-src/Chap26/ScanDCMtPer.rs:329: error: fn `prefix_sums_dc_parallel` missing alg analysis annotation
+src/Chap26/MergeSortStPer.rs:144: info: St fn `merge` sequential as expected
+src/Chap26/MergeSortStPer.rs:211: info: St fn `merge_sort` sequential as expected
 src/Chap26/ScanDCStPer.rs:104: info: St fn `scan_dc` sequential as expected
-src/Chap26/ScanDCStPer.rs:135: error: fn `scan_dc` missing alg analysis annotation
-src/Chap26/ScanDCStPer.rs:322: error: fn `prefix_sums_dc` missing alg analysis annotation
-src/Chap27/ReduceContractMtEph.rs:341: error: fn `reduce_contract_parallel` missing alg analysis annotation
+src/Chap26/ScanDCStPer.rs:136: info: St fn `scan_dc` sequential as expected
+src/Chap26/ScanDCStPer.rs:324: info: St fn `prefix_sums_dc` sequential as expected
 src/Chap27/ReduceContractStEph.rs:169: info: St fn `reduce_contract` sequential as expected
-src/Chap27/ReduceContractStEph.rs:187: error: fn `reduce_contract` missing alg analysis annotation
-src/Chap27/ScanContractMtEph.rs:293: error: fn `scan_contract_parallel` missing alg analysis annotation
-src/Chap27/ScanContractMtEph.rs:372: error: fn `expand_scan_parallel` missing alg analysis annotation
+src/Chap27/ReduceContractStEph.rs:188: info: St fn `reduce_contract` sequential as expected
 src/Chap27/ScanContractStEph.rs:229: info: St fn `scan_contract` sequential as expected
-src/Chap27/ScanContractStEph.rs:286: error: fn `scan_contract` missing alg analysis annotation
-src/Chap27/ScanContractStEph.rs:393: error: fn `expand_scan` missing alg analysis annotation
+src/Chap27/ScanContractStEph.rs:287: info: St fn `scan_contract` sequential as expected
+src/Chap27/ScanContractStEph.rs:395: info: St fn `expand_scan` sequential as expected
 src/Chap28/MaxContigSubSumBruteStEph.rs:53: info: St fn `max_contig_sub_sum_brute` sequential as expected
-src/Chap28/MaxContigSubSumBruteStEph.rs:83: error: fn `max_contig_sub_sum_brute` missing alg analysis annotation
-src/Chap28/MaxContigSubSumDivConMtEph.rs:164: error: fn `max_contig_sub_sum_divcon_mt` missing alg analysis annotation
-src/Chap28/MaxContigSubSumDivConOptMtEph.rs:161: error: fn `max_contig_sub_sum_divcon_opt_mt` missing alg analysis annotation
+src/Chap28/MaxContigSubSumBruteStEph.rs:84: info: St fn `max_contig_sub_sum_brute` sequential as expected
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:263: info: St fn `max_contig_sub_sum_divcon_opt` sequential as expected
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:294: info: St fn `max_contig_sub_sum_aux` sequential as expected
-src/Chap28/MaxContigSubSumDivConOptStEph.rs:385: error: fn `max_contig_sub_sum_divcon_opt` missing alg analysis annotation
+src/Chap28/MaxContigSubSumDivConOptStEph.rs:386: info: St fn `max_contig_sub_sum_divcon_opt` sequential as expected
 src/Chap28/MaxContigSubSumDivConStEph.rs:154: info: St fn `max_contig_sub_sum_divcon` sequential as expected
-src/Chap28/MaxContigSubSumDivConStEph.rs:303: error: fn `max_contig_sub_sum_divcon` missing alg analysis annotation
-src/Chap28/MaxContigSubSumIterStEph.rs:159: error: fn `max_contig_sub_sum_iter` missing alg analysis annotation
-src/Chap28/MaxContigSubSumOptMtEph.rs:34: error: fn `max_contig_sub_sum_opt_mt` missing alg analysis annotation
-src/Chap28/MaxContigSubSumOptStEph.rs:92: error: fn `max_contig_sub_sum_opt` missing alg analysis annotation
-src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:81: error: fn `max_contig_sub_sum_reduced_mcsse` missing alg analysis annotation
+src/Chap28/MaxContigSubSumDivConStEph.rs:304: info: St fn `max_contig_sub_sum_divcon` sequential as expected
+src/Chap28/MaxContigSubSumIterStEph.rs:160: info: St fn `max_contig_sub_sum_iter` sequential as expected
+src/Chap28/MaxContigSubSumOptStEph.rs:93: info: St fn `max_contig_sub_sum_opt` sequential as expected
+src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:82: info: St fn `max_contig_sub_sum_reduced_mcsse` sequential as expected
 src/Chap28/MaxContigSubSumReducedStEph.rs:49: info: St fn `max_contig_sub_sum_reduced` sequential as expected
-src/Chap28/MaxContigSubSumReducedStEph.rs:78: error: fn `max_contig_sub_sum_reduced` missing alg analysis annotation
-src/Chap30/Probability.rs:50: error: fn `new` missing alg analysis annotation
-src/Chap30/Probability.rs:51: error: fn `value` missing alg analysis annotation
-src/Chap30/Probability.rs:53: error: fn `infinity` missing alg analysis annotation
-src/Chap30/Probability.rs:54: error: fn `zero` missing alg analysis annotation
+src/Chap28/MaxContigSubSumReducedStEph.rs:79: info: St fn `max_contig_sub_sum_reduced` sequential as expected
 src/Chap35/OrderStatSelectMtEph.rs:113: error: Mt fn `select` DIFFERS from APAS — : parallel recursion via join(), but sequential O(n) filter loops dominate span
-src/Chap35/OrderStatSelectMtEph.rs:394: error: fn `select` missing alg analysis annotation
 src/Chap35/OrderStatSelectMtPer.rs:113: error: Mt fn `select` DIFFERS from APAS — : parallel recursion via join(), but sequential O(n) filter loops dominate span
-src/Chap35/OrderStatSelectMtPer.rs:394: error: fn `select` missing alg analysis annotation
 src/Chap35/OrderStatSelectStEph.rs:91: info: St fn `select` sequential as expected
-src/Chap35/OrderStatSelectStEph.rs:102: error: fn `select` missing alg analysis annotation
-src/Chap35/OrderStatSelectStEph.rs:116: info: St fn `select_inner` sequential as expected
+src/Chap35/OrderStatSelectStEph.rs:103: info: St fn `select` sequential as expected
+src/Chap35/OrderStatSelectStEph.rs:117: info: St fn `select_inner` sequential as expected
 src/Chap35/OrderStatSelectStPer.rs:90: info: St fn `select` sequential as expected
-src/Chap35/OrderStatSelectStPer.rs:101: error: fn `select` missing alg analysis annotation
-src/Chap35/OrderStatSelectStPer.rs:115: info: St fn `select_inner` sequential as expected
+src/Chap35/OrderStatSelectStPer.rs:102: info: St fn `select` sequential as expected
+src/Chap35/OrderStatSelectStPer.rs:116: info: St fn `select_inner` sequential as expected
 src/Chap36/QuickSortMtEph.rs:186: error: Mt fn `quick_sort_first` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
 src/Chap36/QuickSortMtEph.rs:196: error: Mt fn `quick_sort_median3` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
 src/Chap36/QuickSortMtEph.rs:206: error: Mt fn `quick_sort_random` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
@@ -2399,22 +2330,6 @@ src/Chap43/OrderedTableStPer.rs:3324: error: fn `find_iter` missing alg analysis
 src/Chap43/OrderedTableStPer.rs:3328: error: fn `insert_iter` missing alg analysis annotation
 src/Chap43/OrderedTableStPer.rs:3332: error: fn `delete_iter` missing alg analysis annotation
 src/Chap43/OrderedTableStPer.rs:3496: error: fn `from_sorted_entries` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:181: error: fn `make_index` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:344: error: fn `find` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:354: error: fn `query_and` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:359: error: fn `query_or` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:364: error: fn `query_and_not` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:369: error: fn `size` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:374: error: fn `to_seq` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:394: error: fn `empty` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:400: error: fn `get_all_words` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:419: error: fn `word_count` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:514: error: fn `new` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:518: error: fn `find` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:522: error: fn `and` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:526: error: fn `or` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:530: error: fn `and_not` missing alg analysis annotation
-src/Chap44/DocumentIndex.rs:535: error: fn `complex_query` missing alg analysis annotation
 src/Chap45/BalancedTreePQ.rs:64: error: fn `empty` missing alg analysis annotation
 src/Chap45/BalancedTreePQ.rs:67: error: fn `singleton` missing alg analysis annotation
 src/Chap45/BalancedTreePQ.rs:70: error: fn `find_min` missing alg analysis annotation
@@ -2573,28 +2488,15 @@ src/Chap47/DoubleHashFlatHashTableStEph.rs:244: error: St fn `insert` Code revie
 src/Chap47/DoubleHashFlatHashTableStEph.rs:525: error: St fn `lookup` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
 src/Chap47/DoubleHashFlatHashTableStEph.rs:652: error: St fn `delete` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
 src/Chap47/DoubleHashFlatHashTableStEph.rs:983: error: St fn `find_slot` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
-src/Chap47/FlatHashTable.rs:146: error: fn `clone_entry` missing alg analysis annotation
 src/Chap47/LinProbFlatHashTableStEph.rs:198: error: St fn `insert` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
 src/Chap47/LinProbFlatHashTableStEph.rs:477: error: St fn `lookup` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
 src/Chap47/LinProbFlatHashTableStEph.rs:583: error: St fn `delete` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
 src/Chap47/LinProbFlatHashTableStEph.rs:897: error: St fn `find_slot` Code review claims parallel span — Work O(1/(1−α)) expected but Span O(1/(1−α)) (St files are sequential)
-src/Chap47/LinkedListChainedHashTableStEph.rs:44: error: fn `clone_linked_list_entry` missing alg analysis annotation
-src/Chap47/LinkedListChainedHashTableStEph.rs:149: error: fn `clone_entry` missing alg analysis annotation
-src/Chap47/LinkedListChainedHashTableStEph.rs:170: error: St fn `insert` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
-src/Chap47/LinkedListChainedHashTableStEph.rs:325: error: St fn `delete` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
-src/Chap47/ParaHashTableStEph.rs:127: error: fn `clone_elem` missing alg analysis annotation
-src/Chap47/ParaHashTableStEph.rs:354: error: fn `call_hash_fn` missing alg analysis annotation
-src/Chap47/ParaHashTableStEph.rs:389: error: fn `clone_entry` missing alg analysis annotation
-src/Chap47/StructChainedHashTable.rs:126: error: fn `chain_insert` missing alg analysis annotation
-src/Chap47/StructChainedHashTable.rs:180: error: fn `chain_lookup` missing alg analysis annotation
-src/Chap47/StructChainedHashTable.rs:222: error: fn `chain_delete` missing alg analysis annotation
-src/Chap47/StructChainedHashTable.rs:274: error: fn `new` missing alg analysis annotation
-src/Chap47/StructChainedHashTable.rs:305: error: fn `clone_entry` missing alg analysis annotation
-src/Chap47/VecChainedHashTableStEph.rs:44: error: fn `clone_vec_pairs` missing alg analysis annotation
-src/Chap47/VecChainedHashTableStEph.rs:85: error: St fn `insert` Code review claims parallel span — Work O(n) worst case but Span O(n) (St files are sequential)
-src/Chap47/VecChainedHashTableStEph.rs:149: error: fn `clone_entry` missing alg analysis annotation
-src/Chap47/VecChainedHashTableStEph.rs:172: error: St fn `insert` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
-src/Chap47/VecChainedHashTableStEph.rs:327: error: St fn `delete` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
+src/Chap47/LinkedListChainedHashTableStEph.rs:172: error: St fn `insert` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
+src/Chap47/LinkedListChainedHashTableStEph.rs:327: error: St fn `delete` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
+src/Chap47/VecChainedHashTableStEph.rs:86: error: St fn `insert` Code review claims parallel span — Work O(n) worst case but Span O(n) (St files are sequential)
+src/Chap47/VecChainedHashTableStEph.rs:174: error: St fn `insert` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
+src/Chap47/VecChainedHashTableStEph.rs:329: error: St fn `delete` Code review claims parallel span — Work O(n) worst but Span O(n) (St files are sequential)
 src/Chap49/MinEditDistMtEph.rs:118: error: Mt fn `min_edit_distance` DIFFERS from APAS — : sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
 src/Chap49/MinEditDistMtEph.rs:180: error: fn `new_arc_memo` missing alg analysis annotation
 src/Chap49/MinEditDistMtEph.rs:190: error: fn `clone_arc_memo` missing alg analysis annotation
@@ -3299,90 +3201,45 @@ src/Chap56/SSSPResultStPerI64.rs:173: error: fn `get_predecessor` missing alg an
 src/Chap56/SSSPResultStPerI64.rs:182: error: fn `set_predecessor` missing alg analysis annotation
 src/Chap56/SSSPResultStPerI64.rs:194: error: fn `is_reachable` missing alg analysis annotation
 src/Chap56/SSSPResultStPerI64.rs:199: error: fn `extract_path` missing alg analysis annotation
-src/Chap57/StackStEph.rs:108: error: fn `new` missing alg analysis annotation
-src/Chap57/StackStEph.rs:112: error: fn `push` missing alg analysis annotation
-src/Chap57/StackStEph.rs:116: error: fn `pop` missing alg analysis annotation
-src/Chap57/StackStEph.rs:123: error: fn `peek` missing alg analysis annotation
-src/Chap57/StackStEph.rs:129: error: fn `is_empty` missing alg analysis annotation
-src/Chap57/StackStEph.rs:133: error: fn `size` missing alg analysis annotation
-src/Chap61/EdgeContractionMtEph.rs:41: error: fn `edge_contract_mt` missing alg analysis annotation
-src/Chap61/EdgeContractionMtEph.rs:49: error: fn `contract_round_mt` missing alg analysis annotation
 src/Chap61/EdgeContractionStEph.rs:42: info: St fn `edge_contract` sequential as expected
-src/Chap61/EdgeContractionStEph.rs:50: error: fn `contract_round` missing alg analysis annotation
-src/Chap61/EdgeContractionStEph.rs:64: info: St fn `edge_contract` sequential as expected
-src/Chap61/VertexMatchingMtEph.rs:41: error: fn `parallel_matching_mt` missing alg analysis annotation
-src/Chap61/VertexMatchingStEph.rs:39: error: fn `greedy_matching` missing alg analysis annotation
-src/Chap61/VertexMatchingStEph.rs:44: error: fn `parallel_matching_st` missing alg analysis annotation
-src/Chap62/StarContractionMtEph.rs:46: error: fn `star_contract_mt` missing alg analysis annotation
-src/Chap62/StarContractionMtEph.rs:68: error: fn `contract_to_vertices_mt` missing alg analysis annotation
-src/Chap62/StarContractionMtEph.rs:95: error: fn `star_contract_mt_fuel` missing alg analysis annotation
+src/Chap61/EdgeContractionStEph.rs:51: info: St fn `contract_round` sequential as expected
+src/Chap61/EdgeContractionStEph.rs:65: info: St fn `edge_contract` sequential as expected
+src/Chap61/VertexMatchingStEph.rs:40: info: St fn `greedy_matching` sequential as expected
+src/Chap61/VertexMatchingStEph.rs:46: info: St fn `parallel_matching_st` sequential as expected
 src/Chap62/StarContractionStEph.rs:47: info: St fn `star_contract` sequential as expected
-src/Chap62/StarContractionStEph.rs:69: error: fn `contract_to_vertices` missing alg analysis annotation
-src/Chap62/StarContractionStEph.rs:78: error: fn `star_contract_fuel` missing alg analysis annotation
-src/Chap62/StarContractionStEph.rs:164: info: St fn `star_contract` sequential as expected
+src/Chap62/StarContractionStEph.rs:70: info: St fn `contract_to_vertices` sequential as expected
+src/Chap62/StarContractionStEph.rs:80: info: St fn `star_contract_fuel` sequential as expected
+src/Chap62/StarContractionStEph.rs:166: info: St fn `star_contract` sequential as expected
 src/Chap62/StarPartitionMtEph.rs:55: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
-src/Chap62/StarPartitionMtEph.rs:103: error: fn `hash_coin` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:115: error: fn `hash_coin_flips_mt` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:252: error: fn `build_th_edges_mt` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:435: error: fn `build_p_vec_mt` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:538: error: fn `build_partition_map_mt` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:741: error: fn `build_centers_mt` missing alg analysis annotation
-src/Chap62/StarPartitionMtEph.rs:839: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
-src/Chap62/StarPartitionStEph.rs:42: error: fn `sequential_star_partition` missing alg analysis annotation
-src/Chap63/ConnectivityMtEph.rs:46: error: fn `count_components_mt` missing alg analysis annotation
-src/Chap63/ConnectivityMtEph.rs:51: error: fn `connected_components_mt` missing alg analysis annotation
-src/Chap63/ConnectivityMtEph.rs:59: error: fn `count_components_hof` missing alg analysis annotation
-src/Chap63/ConnectivityMtEph.rs:64: error: fn `connected_components_hof` missing alg analysis annotation
-src/Chap63/ConnectivityStEph.rs:46: error: fn `count_components` missing alg analysis annotation
-src/Chap63/ConnectivityStEph.rs:51: error: fn `connected_components` missing alg analysis annotation
-src/Chap63/ConnectivityStEph.rs:56: error: fn `count_components_hof` missing alg analysis annotation
-src/Chap63/ConnectivityStEph.rs:61: error: fn `connected_components_hof` missing alg analysis annotation
-src/Chap64/SpanTreeMtEph.rs:43: error: fn `spanning_tree_star_contraction_mt` missing alg analysis annotation
-src/Chap64/SpanTreeMtEph.rs:50: error: fn `verify_spanning_tree` missing alg analysis annotation
-src/Chap64/SpanTreeStEph.rs:42: error: fn `spanning_tree_star_contraction` missing alg analysis annotation
-src/Chap64/SpanTreeStEph.rs:47: error: fn `verify_spanning_tree` missing alg analysis annotation
-src/Chap64/TSPApproxStEph.rs:46: error: fn `euler_tour` missing alg analysis annotation
-src/Chap64/TSPApproxStEph.rs:58: error: fn `shortcut_tour` missing alg analysis annotation
-src/Chap64/TSPApproxStEph.rs:62: error: fn `tour_weight` missing alg analysis annotation
-src/Chap64/TSPApproxStEph.rs:72: error: fn `approx_metric_tsp` missing alg analysis annotation
-src/Chap64/TSPApproxStEph.rs:86: error: fn `vec_contains_pair` missing alg analysis annotation
-src/Chap65/KruskalStEph.rs:50: error: fn `kruskal_process_edge` missing alg analysis annotation
-src/Chap65/PrimStEph.rs:176: error: fn `prim_mst` missing alg analysis annotation
-src/Chap65/PrimStEph.rs:185: error: fn `mst_weight` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:856: error: fn `find_root_loop` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1059: error: fn `union_merge_exec` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1540: error: fn `union_merge` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1663: error: fn `new` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1677: error: fn `insert` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1692: error: fn `find` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1706: error: fn `union` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1721: error: fn `equals` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1734: error: fn `num_sets` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1883: error: fn `union_experiment_find_only` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1905: error: fn `union_experiment_merge_no_wf_ensures` missing alg analysis annotation
-src/Chap65/UnionFindStEph.rs:1932: error: fn `union_experiment_merge_with_wf` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:103: error: fn `vertex_bridges_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:118: error: fn `bridge_star_partition_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:134: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:153: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:170: error: fn `mst_weight` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:184: error: fn `hash_coin` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:197: error: fn `hash_coin_flips_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:268: error: fn `compute_remaining_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:335: error: fn `collect_mst_labels_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:402: error: fn `build_partition_map_mt` missing alg analysis annotation
-src/Chap66/BoruvkaMtEph.rs:757: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:988: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaStEph.rs:108: error: fn `coin_flip` missing alg analysis annotation
-src/Chap66/BoruvkaStEph.rs:126: error: fn `vertex_bridges` missing alg analysis annotation
-src/Chap66/BoruvkaStEph.rs:137: error: fn `bridge_star_partition` missing alg analysis annotation
-src/Chap66/BoruvkaStEph.rs:153: info: St fn `boruvka_mst` sequential as expected
-src/Chap66/BoruvkaStEph.rs:177: info: St fn `boruvka_mst_with_seed` sequential as expected
-src/Chap66/BoruvkaStEph.rs:195: error: fn `mst_weight` missing alg analysis annotation
-src/Chap66/BoruvkaStEph.rs:221: error: St fn `vertex_bridges` Code review claims parallel span — Work O(m) but Span O(log m) (St files are sequential)
-src/Chap66/BoruvkaStEph.rs:287: error: St fn `bridge_star_partition` Code review claims parallel span — Work O(n) but Span O(log n) (St files are sequential)
-src/Chap66/BoruvkaStEph.rs:390: error: St fn `boruvka_mst` Code review claims parallel span — Work O(m log n) but Span O(log^2 n) (St files are sequential)
-src/Chap66/BoruvkaStEph.rs:506: error: St fn `boruvka_mst_with_seed` Code review claims parallel span — Work O(m log n) but Span O(log^2 n) (St files are sequential)
+src/Chap62/StarPartitionMtEph.rs:845: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+src/Chap62/StarPartitionStEph.rs:43: info: St fn `sequential_star_partition` sequential as expected
+src/Chap63/ConnectivityStEph.rs:47: info: St fn `count_components` sequential as expected
+src/Chap63/ConnectivityStEph.rs:53: info: St fn `connected_components` sequential as expected
+src/Chap63/ConnectivityStEph.rs:59: info: St fn `count_components_hof` sequential as expected
+src/Chap63/ConnectivityStEph.rs:65: info: St fn `connected_components_hof` sequential as expected
+src/Chap64/SpanTreeStEph.rs:43: info: St fn `spanning_tree_star_contraction` sequential as expected
+src/Chap64/SpanTreeStEph.rs:49: info: St fn `verify_spanning_tree` sequential as expected
+src/Chap64/TSPApproxStEph.rs:47: info: St fn `euler_tour` sequential as expected
+src/Chap64/TSPApproxStEph.rs:60: info: St fn `shortcut_tour` sequential as expected
+src/Chap64/TSPApproxStEph.rs:65: info: St fn `tour_weight` sequential as expected
+src/Chap64/TSPApproxStEph.rs:76: info: St fn `approx_metric_tsp` sequential as expected
+src/Chap64/TSPApproxStEph.rs:91: info: St fn `vec_contains_pair` sequential as expected
+src/Chap65/PrimStEph.rs:177: info: St fn `prim_mst` sequential as expected
+src/Chap65/PrimStEph.rs:187: info: St fn `mst_weight` sequential as expected
+src/Chap65/UnionFindStEph.rs:1743: info: St fn `num_sets` sequential as expected
+src/Chap66/BoruvkaMtEph.rs:136: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:155: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:765: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:996: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaStEph.rs:128: info: St fn `vertex_bridges` sequential as expected
+src/Chap66/BoruvkaStEph.rs:140: info: St fn `bridge_star_partition` sequential as expected
+src/Chap66/BoruvkaStEph.rs:156: info: St fn `boruvka_mst` sequential as expected
+src/Chap66/BoruvkaStEph.rs:180: info: St fn `boruvka_mst_with_seed` sequential as expected
+src/Chap66/BoruvkaStEph.rs:199: info: St fn `mst_weight` sequential as expected
+src/Chap66/BoruvkaStEph.rs:225: error: St fn `vertex_bridges` Code review claims parallel span — Work O(m) but Span O(log m) (St files are sequential)
+src/Chap66/BoruvkaStEph.rs:291: error: St fn `bridge_star_partition` Code review claims parallel span — Work O(n) but Span O(log n) (St files are sequential)
+src/Chap66/BoruvkaStEph.rs:394: error: St fn `boruvka_mst` Code review claims parallel span — Work O(m log n) but Span O(log^2 n) (St files are sequential)
+src/Chap66/BoruvkaStEph.rs:510: error: St fn `boruvka_mst_with_seed` Code review claims parallel span — Work O(m log n) but Span O(log^2 n) (St files are sequential)
 
 =============================================================
 Summary
@@ -3392,17 +3249,17 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2011  (fns with any APAS or Code review line)
-  Missing alg analysis:      3073  <- errors
+  Alg analysis annotations:  2213  (fns with any APAS or Code review line)
+  Missing alg analysis:      2871  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
-  St DIFFERS (expected):      204  <- info
+  St DIFFERS (expected):      263  <- info
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 3178
+  Errors: 2976
   Warnings: 0
-  Info: 204
+  Info: 263
 
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent4/analyses/veracity-analyze-alg-analysis.log

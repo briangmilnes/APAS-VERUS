@@ -38,6 +38,7 @@ pub mod VertexMatchingMtEph {
 
         /// Parallel vertex matching using randomized symmetry breaking.
         /// APAS: Work O(|E|), Span O(lg |V|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(lg |V|) — parallel coin flip + parallel edge selection.
         fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingmteph_wf(graph);
     }

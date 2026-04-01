@@ -283,6 +283,7 @@ pub mod ScanContractStEph {
     //		9. impls
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contract/expand; St sequential.
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,
@@ -390,6 +391,7 @@ pub mod ScanContractStEph {
             scanned
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single loop over n/2 pairs; St sequential.
         fn expand_scan<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             b: &ArraySeqStEphS<T>,

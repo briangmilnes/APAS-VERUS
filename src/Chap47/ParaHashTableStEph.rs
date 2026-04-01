@@ -124,6 +124,7 @@ pub mod ParaHashTableStEph {
     // 7. proof fns
 
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single element clone.
     pub fn clone_elem<T: Eq + Clone>(x: &T) -> (c: T)
         requires obeys_feq_clone::<T>(),
         ensures c == *x,
@@ -351,6 +352,7 @@ pub mod ParaHashTableStEph {
 
     /// Calls the hash function and returns a bucket index.
     /// Closure specs bridge the exec hash_fn to the ghost spec_hash via spec_hash_fn_valid.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash function call.
     pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
         requires
             table_size > 0,
@@ -386,6 +388,7 @@ pub mod ParaHashTableStEph {
         fn delete(&mut self, key: &Key) -> (deleted: bool)
             ensures !deleted ==> self.spec_entry_to_map() == old(self).spec_entry_to_map();
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies all chain entries.
         fn clone_entry(&self) -> (cloned: Self);
     }
 
