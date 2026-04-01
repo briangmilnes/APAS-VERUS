@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Order Statistics - Parallel Ephemeral (Chapter 35, Algorithm 35.2).
 //! Randomized contraction-based selection for finding kth order statistic.
 //! Verusified: select and select_inner are proven; rand is external_body in vstdplus.

@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Checked natural (unsigned) integer types that track overflow.
 //! Stronger guarantees than signed: if final sum fits, all partial sums fit.
 

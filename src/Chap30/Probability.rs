@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 30: Probability wrapper type.
 //!
 //! Uses f64 for probability values. Impls use external_body for f64 operations.

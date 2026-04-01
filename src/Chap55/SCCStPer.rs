@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Strongly Connected Components - Sequential Persistent (Chapter 55, Algorithm 55.18).
 //! Finds all strongly connected components using transpose and DFS.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).

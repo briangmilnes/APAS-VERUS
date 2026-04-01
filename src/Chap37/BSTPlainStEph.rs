@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Ephemeral binary search tree built on `BBTEph` primitives.
 //! Verusified: functional-style BST with recursive containment specs.
 

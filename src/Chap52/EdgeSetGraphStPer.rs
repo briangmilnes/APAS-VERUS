@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 52: Edge Set Graph representation (persistent, single-threaded).
 //! G = (V, E) where V is a set of vertices and E ⊆ V × V is a set of edges.

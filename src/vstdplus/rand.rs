@@ -1,4 +1,5 @@
 //! Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Verified wrapper around rand crate primitives.
 //! The external_body trust boundary: rand returns a value in the requested range.
 

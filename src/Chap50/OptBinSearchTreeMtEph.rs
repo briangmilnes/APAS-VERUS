@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 50: Optimal Binary Search Tree - ephemeral, multi-threaded.
 //!
 //! Memoized top-down DP with parallel min reduction.

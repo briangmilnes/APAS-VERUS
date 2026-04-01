@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Parametric multi-threaded BST built around a joinMid interface.
 //! Coarse lock (vstd RwLock) for thread-safe access.
 

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 21 — Exercise 21.6: Cost analysis of all contiguous subsequences.
 
 pub mod Exercise21_6 {

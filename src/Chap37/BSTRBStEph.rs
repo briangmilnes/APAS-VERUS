@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Ephemeral Red-Black balanced binary search tree.
 //! Verusified: functional-style RB with BST ordering invariant + rotation proofs.
 //! Color invariant requires extending BalBinTree with a color field (future work).

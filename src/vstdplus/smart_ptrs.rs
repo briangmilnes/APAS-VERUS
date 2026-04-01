@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! smart_ptrs — Specs for smart pointer operations not yet covered by vstd.
 //! Extends `vstd::std_specs::smart_ptrs` with Arc::clone and Arc-deref helpers.
 

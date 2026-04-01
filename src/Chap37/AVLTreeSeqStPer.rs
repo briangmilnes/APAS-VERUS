@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! StPer (immutable, structurally shared) AVL tree sequence using Arc path-copying.
 
 // Table of Contents

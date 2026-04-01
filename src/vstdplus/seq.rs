@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Sequence utilities for Verus
 //! Includes conversion functions and fold helpers
 

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 59: Johnson's Algorithm - Multi-threaded Ephemeral Integer Weights
 //!
 //! Implements Algorithm 59.1 from the textbook with parallelism in Phase 3.

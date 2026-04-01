@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 52: Edge Set Graph representation (persistent, multi-threaded with TRUE parallelism).
 //! G = (V, A:) where V is a set of vertices and A: ⊆ V × V is a set of directed arcs.

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Cycle Detection - Sequential Persistent (Chapter 55, Algorithm 55.10).
 //! Detects cycles in directed graphs using ancestor tracking.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).

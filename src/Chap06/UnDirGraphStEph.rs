@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges.
 

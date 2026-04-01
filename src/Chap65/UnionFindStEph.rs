@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 65: Union-Find Data Structure (Sequential Ephemeral)
 //!
 //! Implements Union-Find (Disjoint Set Union) with union by rank.

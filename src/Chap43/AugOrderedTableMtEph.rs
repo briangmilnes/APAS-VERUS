@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Multi-threaded ephemeral reducer-augmented ordered table implementation.
 //!
 //! reduce_range_parallel() uses verified ParaPair! with named closures for range reductions.

@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 42 single-threaded persistent table implementation using ArraySeq as backing store.
 

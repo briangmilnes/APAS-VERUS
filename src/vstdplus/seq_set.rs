@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Lemmas about the relationship between Seq operations (take, skip, push) and to_set()
 // Note: These are regular proof functions, not broadcast.
 // Broadcast versions caused massive performance issues (30M+ rlimit).

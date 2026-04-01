@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Divide-and-conquer Euclidean Traveling Salesperson heuristic (Chapter 26, Section 4).
 //! Verusified: structural properties (no fabrication) verified; f64 arithmetic external.

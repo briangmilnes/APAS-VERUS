@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 21 — Exercise 21.8 / Algorithm 21.4: Brute Force Primality Test (isPrime).
 //! - Uses tabulate + filter per the textbook.
 //! - Fully verified: no proof holes.

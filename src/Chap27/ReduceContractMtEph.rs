@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Parallel reduce using contraction technique (Chapter 27, Algorithm 27.2).
 //! Uses the help-first scheduler for fork-join parallelism.

@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 52: Adjacency Table Graph representation (persistent, single-threaded).
 //! G = (V × V set) table - maps vertices to sets of their out-neighbors.

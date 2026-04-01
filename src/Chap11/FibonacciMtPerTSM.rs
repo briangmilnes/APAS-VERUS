@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 11 — Parallel Fibonacci with TSM (Tokenized State Machine).
 //!
 //! Full recursive parallelism with TSM tracking fork-join at each level.

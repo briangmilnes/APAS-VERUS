@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Intentional proof holes — per veracity/docs/Accepted.md
 //!
 //! Veracity will info this as a proof hole but not error or warn.

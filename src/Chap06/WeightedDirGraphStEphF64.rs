@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 6 Weighted Directed Graph (ephemeral) with f64 weights - Single-threaded version.
 //! Uses WrappedF64 for Verus-compatible float weights.
 

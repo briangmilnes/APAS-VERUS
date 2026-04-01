@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Seq-level recursive filter-length spec and lemmas.
 //!
 //! Pattern adapted from human-eval-verus (human_eval_146.rs).

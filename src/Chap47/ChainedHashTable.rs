@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chained Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses separate chaining for collision resolution.
 

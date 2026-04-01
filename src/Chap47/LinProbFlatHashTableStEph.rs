@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Linear Probing Flat Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses linear probing for open addressing collision resolution.
 

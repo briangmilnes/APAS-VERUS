@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 
 //! HashSetWithViewPlus - wrapper around std::collections::HashSet
 //! Provides View that gives Set<Key::V> and iter() method.

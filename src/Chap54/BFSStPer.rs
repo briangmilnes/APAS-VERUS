@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Breadth-First Search - Sequential Persistent (Chapter 54, Algorithms 54.5 and 54.6).
 //! Queue-based BFS for distances (54.5) and shortest-path tree (54.6).
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).

@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 12 — Exercise 12.2: implement fetch-and-add using compare-and-swap.
 //!
 //! The missing requires/ensures on fetch_add_cas is permanent. vstd's

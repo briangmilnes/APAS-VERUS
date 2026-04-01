@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Divide-and-conquer scan - sequential implementation (Chapter 26, Section 3).
 //! Verusified.

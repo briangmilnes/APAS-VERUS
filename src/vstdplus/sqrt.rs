@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Verus specifications for Rust's integer `isqrt()` method (stabilized in Rust 1.80).
 //! - ensures root * root <= n
 //! - ensures (root + 1) * (root + 1) > n

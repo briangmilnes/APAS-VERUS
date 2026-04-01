@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Multi-threaded persistent ordered table using coarse RwLock over OrderedTableStPer.
 
 pub mod OrderedTableMtPer {

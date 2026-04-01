@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 53: Generic Graph Search (persistent, single-threaded).
 //!
 //! Implements Algorithm 53.4 - Generic Graph Search with pluggable frontier selection.

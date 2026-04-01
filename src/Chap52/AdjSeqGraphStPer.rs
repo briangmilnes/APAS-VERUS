@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 52: Adjacency Sequence Graph (persistent, single-threaded).
 //! G = (int seq) seq - for enumerable vertex sets V = {0, 1, ..., n-1}.
 

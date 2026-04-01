@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
 //! Uses HFSchedulerMtEph for bounded parallel cartesian_product.

@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Floating-point total order axioms for finite (non-NaN, non-infinite) values.
 //!
 //! Verus deliberately omits axioms about floating point from vstd because the desired

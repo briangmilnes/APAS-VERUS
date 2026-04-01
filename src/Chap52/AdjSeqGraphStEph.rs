@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 52: Adjacency Sequence Graph (ephemeral, single-threaded).
 
 pub mod AdjSeqGraphStEph {

@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 19 parametric sequence implementation for array-backed sequences (multi-threaded ephemeral). Verusified.
 //! Functions are implemented in terms of primitives: nth, length, subseq, tabulate, flatten.

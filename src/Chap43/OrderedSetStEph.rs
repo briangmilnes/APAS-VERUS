@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Single-threaded ephemeral ordered set implementation extending AVLTreeSetStEph.
 //!
 //! R67: Rewritten from AVLTreeSeqStEph-backed to ParamBST-backed. All ordered operations

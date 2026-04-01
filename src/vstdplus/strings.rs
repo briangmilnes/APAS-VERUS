@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Verified wraps for Rust char and String methods not yet in vstd.
 //! Each function wraps exactly one Rust method with an external_body bridge.

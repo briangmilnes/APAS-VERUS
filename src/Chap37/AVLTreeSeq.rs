@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Implicit-order AVL tree providing O(lg(n)) nth and set by maintaining subtree sizes.
 //!

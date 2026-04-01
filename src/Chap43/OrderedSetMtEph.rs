@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Multi-threaded ephemeral ordered set using coarse RwLock over OrderedSetStEph.
 
 pub mod OrderedSetMtEph {

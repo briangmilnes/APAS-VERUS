@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 6 Weighted Directed Graph (ephemeral) with u8 weights - Single-threaded version.
 //! Uses CheckedU8 for overflow-safe weight summation.
 

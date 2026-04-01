@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! feq - Full Equality specification extending Eq
 //!
 //! Uses external_trait_specification/external_trait_extension pattern like vstd/std_specs/cmp.rs

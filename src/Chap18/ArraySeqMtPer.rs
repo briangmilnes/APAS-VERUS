@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 18 algorithms for ArraySeqMtPer multithreaded persistent. Verusified.
 //! Uses global work-stealing pool for parallel operations (map_par, reduce_par).

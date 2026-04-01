@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 65: Kruskal's MST Algorithm (Sequential Ephemeral)
 //!
 //! Implements Algorithm 65.2: Kruskal's algorithm for computing Minimum Spanning Trees.

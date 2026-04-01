@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Single-threaded persistent ordered set implementation extending AVLTreeSetStPer.
 //!
 //! R82: Rewritten from AVLTreeSeqStPer-backed to ParamBST-backed. All ordered operations

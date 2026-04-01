@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 62: Star Partition - Sequential Ephemeral Implementation
 //!
 //! Implements sequential star partition using greedy vertex selection.

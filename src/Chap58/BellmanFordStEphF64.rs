@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //!
 //! Bellman-Ford's Algorithm - Single Source Shortest Path with arbitrary edge weights (float)
 //! Implements Algorithm 58.2 from the textbook.

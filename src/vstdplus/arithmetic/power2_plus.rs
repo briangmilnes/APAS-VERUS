@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes
+//! REVIEWED: NO
 //! Extensions to vstd::arithmetic::power2 for powers of 2.
 
 #[cfg(verus_keep_ghost)]

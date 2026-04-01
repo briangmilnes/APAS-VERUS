@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 19 slice-backed array sequence (multi-threaded ephemeral).
 //! O(1) slicing via shared `Arc<Vec<T>>` backing with offset/length window.

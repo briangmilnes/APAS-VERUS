@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Quadratic Probing Flat Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses triangular-number probing for open addressing collision resolution.
 //! Probe sequence: h_i(k) = (h(k) + i*(i+1)/2) mod m, where m = 2^k.

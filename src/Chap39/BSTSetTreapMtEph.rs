@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Set interface as a thin shim over BSTParaTreapMtEph.
 //! All set algebra delegates to ParamTreap's split/join-based parallel algorithms.
 

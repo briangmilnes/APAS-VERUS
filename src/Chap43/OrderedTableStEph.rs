@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Single-threaded ephemeral ordered table backed by ParamBST<Pair<K,V>>.
 
 pub mod OrderedTableStEph {

@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Checked signed integer types that track overflow and underflow.
 //! Weaker guarantees than unsigned: both overflow and underflow possible.
 

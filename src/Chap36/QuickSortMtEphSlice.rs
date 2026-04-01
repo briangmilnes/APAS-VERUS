@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 36 (Multi-threaded Slice): Quicksort over `ArraySeqMtEphSlice`.
 //! Three self-recursive trait methods: quick_sort_first, quick_sort_median3, quick_sort_random.
 //! Each applies its pivot strategy at every recursive level.

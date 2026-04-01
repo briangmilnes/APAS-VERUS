@@ -1,4 +1,5 @@
 // Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Chapter 52: Adjacency Table Graph representation (persistent, multi-threaded with TRUE parallelism).
 //! G = (V, A:) where the graph is represented as a table mapping vertices to their out-neighbor sets.

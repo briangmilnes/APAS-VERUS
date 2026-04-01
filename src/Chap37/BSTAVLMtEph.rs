@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 
 //! Ephemeral AVL-balanced binary search tree with coarse RwLock for multi-threaded access.
 //! Layer 1 (verified algorithms on BalBinTree) in sections 7/9.

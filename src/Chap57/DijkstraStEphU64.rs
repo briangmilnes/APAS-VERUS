@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //!
 //! Dijkstra's Algorithm - Single Source Shortest Path (SSSP+) for non-negative integer edge weights
 //!

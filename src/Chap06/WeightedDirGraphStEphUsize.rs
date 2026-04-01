@@ -1,4 +1,5 @@
 //  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 6 Weighted Directed Graph (ephemeral) with usize weights - Single-threaded version.
 //! Uses CheckedUsize for overflow-safe weight summation.
 

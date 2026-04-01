@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 
 //! HashMapWithViewPlus - wrapper around std::collections::HashMap.
 //! Provides Clone, PartialEq, Eq, and iter() with Verus specs.

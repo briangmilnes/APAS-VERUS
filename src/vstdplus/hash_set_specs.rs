@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! Specifications for std::collections::HashSet methods not covered by vstd
 
 pub mod hash_set_specs {

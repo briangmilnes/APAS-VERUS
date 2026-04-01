@@ -1,4 +1,5 @@
 // Copyright (c) 2025 Brian G. Milnes
+//! REVIEWED: NO
 //! monoid — Spec functions for monoid structure (associative + two-sided identity).
 //! Extends `vstd::relations::associative` with identity laws.
 

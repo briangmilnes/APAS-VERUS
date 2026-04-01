@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 21 — Exercise 21.9: Composite generation proof.
 //! Proves that it suffices to consider multiples of numbers up to sqrt(n).
 

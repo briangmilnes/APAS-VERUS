@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Breadth-First Search - Parallel Ephemeral (Chapter 54, Algorithms 54.5 and 54.6).
 //! Layer-by-layer parallel BFS using HF Scheduler join() for fork-join frontier processing.
 //! Algorithm 54.5: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.

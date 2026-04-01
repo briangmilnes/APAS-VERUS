@@ -1,4 +1,5 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! REVIEWED: NO
 //! Chapter 21 — Algorithm 21.6: Prime Sieve using ArraySeqPer and ninject.
 //! Verusified.
 
