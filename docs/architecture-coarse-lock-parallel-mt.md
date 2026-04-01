@@ -1,3 +1,10 @@
+<style>
+body { max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 1em !important; }
+.markdown-body { max-width: 100% !important; width: 100% !important; }
+.container, .container-lg, .container-xl, main, article { max-width: 100% !important; width: 100% !important; }
+table { width: 100% !important; table-layout: fixed; }
+</style>
+
 # Architecture: Coarse Lock + TSM + Parallel Inside
 
 ## Status: Design (2026-04-01)
