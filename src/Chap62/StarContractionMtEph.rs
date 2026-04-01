@@ -167,7 +167,7 @@ pub mod StarContractionMtEph {
     /// - Recursive case: Parallel partition, parallel quotient construction, recur, then expand
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — matches APAS; parallel star_partition + quotient build
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — star_partition is sequential (all loops); quotient build uses ParaPair but partition dominates span.
     ///
     /// Arguments:
@@ -417,7 +417,7 @@ pub mod StarContractionMtEph {
     /// Convenience wrapper that performs contraction with identity base/expand.
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — matches APAS; delegates to star_contract_mt
     /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,

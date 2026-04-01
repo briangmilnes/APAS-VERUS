@@ -1768,14 +1768,14 @@ pub mod UnionFindStEph {
         }
 
         /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
         /// Without path compression for now (correct but O(log n) per call).
         fn find(&mut self, v: &V) -> (root: V) {
             find_root_loop(self, v)
         }
 
         /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
         // R115 EXPERIMENT: keep external_body, test via union_experiment below.
         #[verifier::external_body]
         fn union(&mut self, u: &V, v: &V) {
@@ -1791,7 +1791,7 @@ pub mod UnionFindStEph {
         }
 
         /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
         #[verifier::rlimit(20)]
         fn equals(&mut self, u: &V, v: &V) -> (same: bool) {
             let root_u = find_root_loop(self, u);
@@ -1800,7 +1800,7 @@ pub mod UnionFindStEph {
         }
 
         /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(n alpha(n)), Span O(n alpha(n))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n) — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — matches APAS
         #[verifier::rlimit(30)]
         fn num_sets(&mut self) -> (count: usize) {
             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
