@@ -1,0 +1,6 @@
+note: --profile reports prover performance data only when rlimts are exceeded, use --profile-all to always report profiler results
+
+verification results:: 886 verified, 0 errors
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 699MB, peak z3 RSS: 142MB, min free: 26143MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 11s

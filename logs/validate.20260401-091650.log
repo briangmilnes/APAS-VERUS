@@ -1,0 +1,11 @@
+error: reveal_with_fuel statements require a spec function with a decreases clause
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:168:17
+    |
+168 |                 reveal_with_fuel(spec_prefix_sum, 2);
+    |                 ^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 407MB, peak z3 RSS: 0MB, min free: 26708MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

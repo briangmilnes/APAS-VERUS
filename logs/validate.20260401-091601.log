@@ -1,0 +1,12 @@
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap28/MaxContigSubSumOptStEph.rs:169:13
+    |
+169 |             while idx <= n
+    |             ^^^^^^^^^^^^^^
+
+verification results:: 885 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 701MB, peak z3 RSS: 107MB, min free: 26015MB
+Sampled CPU Usage: rust_verify: 7s, z3 children: 6s
