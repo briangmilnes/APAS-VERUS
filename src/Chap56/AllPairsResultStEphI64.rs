@@ -195,7 +195,6 @@ pub mod AllPairsResultStEphI64 {
 
         open spec fn spec_predecessor_at(&self, u: int, v: int) -> usize { self.predecessors.spec_index(u).spec_index(v) }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — allocates n×n distance + predecessor matrices.
         fn new(n: usize) -> (empty: Self)
             ensures
@@ -264,10 +263,9 @@ pub mod AllPairsResultStEphI64 {
                 predecessors: ArraySeqStEphS { seq: pred_rows },
                 n,
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
         }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
         {
             if u >= self.distances.length() {
@@ -276,59 +274,54 @@ pub mod AllPairsResultStEphI64 {
             let row = self.distances.nth(u);
             if v >= row.length() {
                 return UNREACHABLE;
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             }
             *row.nth(v)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index write.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_distance(&mut self, u: usize, v: usize, dist: i64)
         {
             if u < self.distances.seq.len() {
                 let mut row = self.distances.seq[u].clone();
                 if v < row.seq.len() {
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
                     row.seq.set(v, dist);
                     self.distances.seq.set(u, row);
                 }
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
         {
             if u >= self.predecessors.length() {
                 return None;
             }
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
             let row = self.predecessors.nth(u);
             if v >= row.length() {
                 return None;
             }
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index write.
             let pred = *row.nth(v);
             if pred == NO_PREDECESSOR { None } else { Some(pred) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
         {
             if u < self.predecessors.seq.len() {
                 let mut row = self.predecessors.seq[u].clone();
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear operation.
                 if v < row.seq.len() {
                     row.seq.set(v, pred);
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — 2D array index read.
                     self.predecessors.seq.set(u, row);
                 }
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain; St sequential.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool) {
             self.get_distance(u, v) != UNREACHABLE
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — follows predecessor chain then reverses; St sequential.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>) {
             if u >= self.predecessors.length() || v >= self.predecessors.length() {
                 return None;

@@ -285,18 +285,18 @@ pub mod TopDownDPStEph {
             self.memo_table.insert(Pair(i, j), value);
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clears memo table.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clears memo table where n is entries.
         fn clear_memo(&mut self) {
             self.memo_table.clear();
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write + memo clear.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
         fn set_s(&mut self, s: ArraySeqStEphS<char>) {
             self.seq_s = s;
             self.memo_table.clear();
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field write + memo clear.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — field write + memo clear where n is memo entries.
         fn set_t(&mut self, t: ArraySeqStEphS<char>) {
             self.seq_t = t;
             self.memo_table.clear();

@@ -186,7 +186,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — sequential vec::from_elem.
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -224,7 +224,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — sequential clone loop.
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -252,7 +252,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wraps Vec in struct, no copy.
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
@@ -292,7 +292,7 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C with multiset distribution lemma
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C via filter_dc + join, but append is sequential
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -431,7 +431,7 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(1 + max S(f(x))) — matches APAS: D&C fork-join via map_dc
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(n + max S(f(x))) — D&C via map_dc + join, concat_seqs is sequential O(n)
         fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -492,7 +492,7 @@ pub mod ArraySeqMtEph {
             self.seq[i]
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — allocates and initializes array.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn new(length: usize, init_value: T) -> (new_seq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -500,8 +500,8 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         // Ephemeral: in-place mutation of a single element.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -509,19 +509,19 @@ pub mod ArraySeqMtEph {
             } else {
                 Err("Index out of bounds")
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index.
             self.seq.len()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — copies k elements from slice.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -544,12 +544,12 @@ pub mod ArraySeqMtEph {
                     assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — slice reference, no copy.
                 i += 1;
             }
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length)
         fn subseq(a: &ArraySeqMtEphS<T>, start: usize, length: usize) -> (subseq: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -571,15 +571,14 @@ pub mod ArraySeqMtEph {
                     let ghost last = seq@[seq@.len() - 1 as int];
                     assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — moves ownership, no copy.
                 }
                 i += 1;
             }
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtEphS<T>) {
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
             ArraySeqMtEphS { seq: elts }
         }
 
@@ -587,6 +586,7 @@ pub mod ArraySeqMtEph {
         // The closure is never called (length 0) but must return T.
         // Rust has no value of unbounded generic T, so the body is an
         // unreachable loop; `requires false` makes this dead code.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty_seq: ArraySeqMtEphS<T>) {
             Self::tabulate(
                 &(|_i: usize| -> (r: T)
@@ -594,7 +594,6 @@ pub mod ArraySeqMtEph {
                 {
                     loop
                         invariant false
-                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single-element collection.
                         decreases 0usize
                     {}
                 }),
@@ -603,6 +602,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.2: singleton x = tabulate (lambda i.x) 1.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (singleton: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -615,7 +615,6 @@ pub mod ArraySeqMtEph {
                     proof {
                         assert(cloned(item, r));
                         axiom_cloned_implies_eq_owned(item, r);
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — copies and concatenates.
                     }
                     r
                 }),
@@ -625,6 +624,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.4: append a b = tabulate (select(a,b)) (|a|+|b|)
         // where select(a,b) i = if i < |a| then a[i] else b[i-|a|].
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|+|b|), Span O(|a|+|b|)
         fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -651,7 +651,6 @@ pub mod ArraySeqMtEph {
                         let r = b.seq[i - a_len].clone();
                         proof {
                             assert(cloned(b.seq@[(i - a_len) as int], r));
-                            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel filter via D&C; Mt parallel.
                             axiom_cloned_implies_eq_owned(b.seq@[(i - a_len) as int], r);
                         }
                         r
@@ -662,6 +661,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.5: parallel D&C filter via filter_dc.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq + Send + Sync + 'static
         {
@@ -669,7 +669,6 @@ pub mod ArraySeqMtEph {
             proof {
                 let ghost s = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
                 assert(s =~= a.seq@);
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies array with one element replaced.
                 let ghost fs = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
                 assert(fs =~= filtered.seq@) by {
                     assert forall|i: int| 0 <= i < fs.len() implies #[trigger] fs[i] == filtered.seq@[i]
@@ -677,11 +676,11 @@ pub mod ArraySeqMtEph {
                 }
             }
             filtered
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass transforming elements.
         }
 
         // Algorithm 19.6 (ephemeral): update via clone + set.
         // Clone the source (O(n)), then set at index (O(1)).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -690,6 +689,7 @@ pub mod ArraySeqMtEph {
             ArraySeqMtEphS { seq }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
         fn inject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -753,7 +753,6 @@ pub mod ArraySeqMtEph {
                 assert(u.subrange(0, ulen as int) =~= u);
                 assert(result_vec@ =~= spec_inject(s, u));
                 assert(s =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass transforming elements.
                 assert(result_vec@ =~= spec_inject(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), updates@));
             }
             let injected = ArraySeqMtEphS { seq: result_vec };
@@ -767,6 +766,7 @@ pub mod ArraySeqMtEph {
 
         // Definition 18.17 (ninject): delegates to inject. inject is a valid ninject because
         // every element of spec_inject(s, u) is either the original or came from some update.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
         fn ninject(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -775,33 +775,33 @@ pub mod ArraySeqMtEph {
                 let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
                 let r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
                 let u = updates@;
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
                 assert(r =~= spec_inject(s, u));
                 lemma_spec_inject_len(s, u);
                 assert forall|i: int| 0 <= i < s.len() implies {
                     r[i] == s[i]
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
                     || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
                         && u[j].0 == i as usize && r[i] == u[j].1
                 } by {
                     lemma_spec_inject_element(s, u, i);
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass applying f n times.
                 }
             }
             injected
         }
 
         // Algorithm 19.7: isEmpty a = (|a| = 0).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (empty: bool) {
             self.seq.len() == 0
         }
 
         // Algorithm 19.7: isSingleton a = (|a| = 1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_singleton(&self) -> (single: bool) {
             self.seq.len() == 1
         }
 
         // Algorithm 19.8: iterate f x a (iterative form).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate_iter<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A) {
             let len = a.seq.len();
             let mut acc = seed;
@@ -819,14 +819,12 @@ pub mod ArraySeqMtEph {
                     assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass applying f n times.
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
                     assert(t.len() > 0);
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     assert(t.last() == a.seq@[i as int]);
                     reveal(Seq::fold_left);
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass over n elements.
                 }
                 i += 1;
             }
@@ -838,6 +836,7 @@ pub mod ArraySeqMtEph {
 
         // Algorithm 19.8: iterate f x a = if |a|=0 then x else iterate f (f(x,a[0])) a[1..|a|-1].
         // Delegates to iterate_iter which has the full proof.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (accumulated: A)
             where T: Clone + Eq
         {
@@ -845,6 +844,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.9: reduce f id a (iterative form for single-threaded).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn reduce_iter<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
         {
@@ -861,7 +861,6 @@ pub mod ArraySeqMtEph {
                 decreases len - i,
             {
                 proof {
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass over n elements.
                     assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
@@ -881,8 +880,8 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.9: reduce via D&C fork-join (delegates to reduce_par).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n)
         fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass producing prefix results.
             where T: Clone + Eq + Send + Sync + 'static
         {
             let len = a.seq.len();
@@ -903,6 +902,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
             where T: Clone
         {
@@ -923,7 +923,6 @@ pub mod ArraySeqMtEph {
                         seq@[k] == a.seq@.take(k + 1).fold_left(id, spec_f),
                 decreases len - i,
             {
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel map via D&C; Mt parallel.
                 proof {
                     assert(a.seq@.take(i as int + 1) =~= a.seq@.take(i as int).push(a.seq@[i as int]));
                 }
@@ -945,12 +944,12 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.3: map via D&C fork-join (delegates to map_dc).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
         {
             let a_owned = a.subseq_copy(0, a.seq.len());
             let f_owned = clone_fn(f);
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel tabulate via D&C; Mt parallel.
             let ghost a_owned_view = a_owned.seq@;
             proof {
                 // Prove element equality before a_owned is consumed
@@ -969,11 +968,11 @@ pub mod ArraySeqMtEph {
                 // clone_fn ensures f_owned.ensures == f.ensures
                 // a_owned_view[i] == a.seq@[i] (proved above)
             }
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(N), Span O(N) — concatenates all inner sequences.
             result
         }
 
         // Primitive: tabulate.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
         {
             let mut seq = Vec::with_capacity(length);
@@ -993,6 +992,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Primitive: flatten.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(total elements), Span O(total elements)
         fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -1022,7 +1022,6 @@ pub mod ArraySeqMtEph {
                     decreases inner_len - j,
                 {
                     seq.push(inner.seq[j].clone());
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single pass transforming elements.
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
                         assert(cloned(inner.seq[j as int], last));
@@ -1047,6 +1046,7 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.5: deflate f x = if (f x) then ⟨x⟩ else ⟨⟩.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn deflate<F: Fn(&T) -> bool>(pred: &F, x: &T) -> (deflated: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
@@ -1116,7 +1116,7 @@ pub mod ArraySeqMtEph {
 
         /// Parallel map via D&C fork-join.
         /// - Alg Analysis: APAS (Ch19 Alg 19.3): parallel variant — map
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg |a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — D&C + join, but append is sequential O(n).
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1143,7 +1143,6 @@ pub mod ArraySeqMtEph {
                 let right_seq = a.subseq_copy(mid, len - mid);
                 let f1 = clone_fn(&f);
                 let f2 = f;
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel filter via D&C; Mt parallel.
                 proof {
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
                         a.lemma_spec_index(0 + i);
@@ -1169,6 +1168,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// Parallel divide-and-conquer filter. Called by trait method filter.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn filter_dc<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: &F,
@@ -1348,7 +1348,7 @@ pub mod ArraySeqMtEph {
 
         /// Parallel filter via D&C fork-join.
         /// - Alg Analysis: APAS (Ch19 Alg 19.5): parallel variant — filter
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(lg² |a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — D&C + join, but append is sequential O(n).
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1495,7 +1495,6 @@ pub mod ArraySeqMtEph {
                 };
 
                 let fb = move || -> (r: T)
-                    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel map via D&C; Mt parallel.
                     requires
                         right_seq.seq@.len() > 0,
                         obeys_feq_clone::<T>(),
@@ -1522,6 +1521,7 @@ pub mod ArraySeqMtEph {
 
         /// Parallel D&C map with full element-level ensures.
         /// Takes owned data so join closures satisfy 'static.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: ArraySeqMtEphS<T>,
             f: F,
@@ -1592,7 +1592,6 @@ pub mod ArraySeqMtEph {
                     requires
                         right_seq.seq@.len() <= usize::MAX as int,
                         obeys_feq_clone::<T>(),
-                        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — copies and concatenates.
                         forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)),
                     ensures
                         r.seq@.len() == right_len,
@@ -1620,6 +1619,7 @@ pub mod ArraySeqMtEph {
 
         /// Sequential concatenation of two owned sequences. Moves elements from b
         /// into a's Vec via into_iter, avoiding Clone/Eq requirements.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|b|), Span O(|b|)
         fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>)
             requires
                 a.seq@.len() + b.seq@.len() <= usize::MAX,

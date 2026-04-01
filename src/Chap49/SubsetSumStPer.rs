@@ -85,7 +85,7 @@ pub mod SubsetSumStPer {
 
         /// Create from multiset.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
 
@@ -112,7 +112,7 @@ pub mod SubsetSumStPer {
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(k×|S|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStPerS<T>,
         i: usize,
@@ -161,17 +161,17 @@ pub mod SubsetSumStPer {
                 memo: HashMapWithViewPlus::new(),
             }
         }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
                 memo: HashMapWithViewPlus::new(),
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — clones + memoized recursive DP; St sequential.
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy,
@@ -187,13 +187,13 @@ pub mod SubsetSumStPer {
             };
 
             let n = solver.multiset.length();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             subset_sum_rec(&mut solver, n, target)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn multiset(&self) -> (ms: &ArraySeqStPerS<T>) { &self.multiset }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

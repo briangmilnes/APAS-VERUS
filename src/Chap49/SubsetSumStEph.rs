@@ -105,7 +105,7 @@ pub mod SubsetSumStEph {
 
         /// Set element at index (ephemeral mutation).
         /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- array set plus memo clear. — matches APAS
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- array set O(1) plus memo clear O(n).
         fn set(&mut self, index: usize, value: T)
             requires index < old(self).spec_multiset_len(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
@@ -126,7 +126,7 @@ pub mod SubsetSumStEph {
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) -- agrees with APAS. — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStEphS<T>,
         i: usize,
@@ -175,17 +175,17 @@ pub mod SubsetSumStEph {
                 memo: HashMapWithViewPlus::new(),
             }
         }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_multiset(multiset: ArraySeqStEphS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
                 memo: HashMapWithViewPlus::new(),
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — memoized recursive DP; St sequential.
         fn subset_sum(&mut self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy,
@@ -197,22 +197,22 @@ pub mod SubsetSumStEph {
             self.memo.clear();
 
             let n = self.multiset.length();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             subset_sum_rec(self, n, target)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — array index write.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn multiset(&self) -> (ms: &ArraySeqStEphS<T>) { &self.multiset }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — array set O(1) plus memo clear O(n).
         fn set(&mut self, index: usize, value: T) {
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             let _ = self.multiset.set(index, value);
             self.memo.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clear hash map.
         fn clear_memo(&mut self) { self.memo.clear(); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

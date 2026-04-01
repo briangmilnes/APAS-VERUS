@@ -95,7 +95,7 @@ pub mod MinEditDistStPer {
 
         /// Create from source and target sequences.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_source_len() == source.spec_len(),
@@ -129,7 +129,7 @@ pub mod MinEditDistStPer {
 
     /// Recursive memoized minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|) — matches APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|×|T|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStPerS<T>,
         i: usize,
@@ -194,8 +194,8 @@ pub mod MinEditDistStPer {
                 memo: HashMapWithViewPlus::new(),
             }
         }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -203,9 +203,9 @@ pub mod MinEditDistStPer {
                 target,
                 memo: HashMapWithViewPlus::new(),
             }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — DP table fill; St sequential.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — clones + memoized recursive DP; St sequential.
         fn min_edit_distance(&self) -> (dist: usize) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let mut solver = MinEditDistStPerS {
@@ -217,16 +217,16 @@ pub mod MinEditDistStPer {
             let source_len = solver.source.length();
             let target_len = solver.target.length();
 
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             min_edit_distance_rec(&mut solver, source_len, target_len)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn source(&self) -> (s: &ArraySeqStPerS<T>) { &self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn target(&self) -> (t: &ArraySeqStPerS<T>) { &self.target }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

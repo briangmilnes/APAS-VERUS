@@ -101,7 +101,7 @@ pub mod SubsetSumMtPer {
 
         /// Create from multiset.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> (subset_sum: Self)
             ensures
                 subset_sum.spec_subsetsummtper_wf(),
@@ -109,7 +109,7 @@ pub mod SubsetSumMtPer {
 
         /// Solve subset sum for the given target.
         /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — DIFFERS: sequential DP table fill, APAS Span O(|S|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(|S|) — parallel recursive memoized with join; matches APAS
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static
@@ -140,8 +140,8 @@ pub mod SubsetSumMtPer {
         new_arc_rwlock(val, Ghost(SubsetSumMtPerMemoInv))
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     /// Clone Arc memo (reference count increment).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn clone_arc_memo<T: MtVal>(
         s: &SubsetSumMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtPerMemoInv>>)
@@ -230,9 +230,9 @@ pub mod SubsetSumMtPer {
 
         open spec fn spec_subsetsummtper_wf(&self) -> bool {
             self.memo.pred() == SubsetSumMtPerMemoInv
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -241,19 +241,19 @@ pub mod SubsetSumMtPer {
             Self {
                 multiset: ArraySeqMtPerS::new(0, T::default()),
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_multiset(multiset: ArraySeqMtPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, i32>(); }
             Self {
                 multiset,
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — DP with parallel diagonal wavefront; Mt parallel.
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) — clones + memoized recursive DP with parallel join; Mt parallel.
         fn subset_sum(&self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy + Send + Sync + 'static,
@@ -268,15 +268,15 @@ pub mod SubsetSumMtPer {
                 memo.clear();
                 write_handle.release_write(memo);
             }
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
 
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             let n = self.multiset.length();
             subset_sum_rec(&self.multiset, &self.memo, n, target)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn multiset(&self) -> (ms: &ArraySeqMtPerS<T>) { &self.multiset }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
         fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();

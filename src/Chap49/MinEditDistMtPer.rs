@@ -104,7 +104,7 @@ pub mod MinEditDistMtPer {
 
         /// Create from source and target sequences.
         /// - Alg Analysis: APAS (Ch49 ref): not specified
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> (edit_dist: Self)
             ensures
                 edit_dist.spec_mineditdistmtper_wf(),
@@ -113,7 +113,7 @@ pub mod MinEditDistMtPer {
 
         /// Compute minimum edit distance.
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
         fn min_edit_distance(&self) -> (dist: usize)
         where
             T: Send + Sync + 'static
@@ -152,8 +152,8 @@ pub mod MinEditDistMtPer {
         new_arc_rwlock(val, Ghost(MinEditDistMtPerMemoInv))
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     /// Clone Arc memo (reference count increment).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
     fn clone_arc_memo<T: MtVal>(
         s: &MinEditDistMtPerS<T>,
     ) -> (cloned: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>)
@@ -264,9 +264,9 @@ pub mod MinEditDistMtPer {
 
         open spec fn spec_mineditdistmtper_wf(&self) -> bool {
             self.memo.pred() == MinEditDistMtPerMemoInv
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new() -> Self
         where
             T: Default,
@@ -276,20 +276,20 @@ pub mod MinEditDistMtPer {
                 source: ArraySeqMtPerS::new(0, T::default()),
                 target: ArraySeqMtPerS::new(0, T::default()),
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction from components.
         fn from_sequences(source: ArraySeqMtPerS<T>, target: ArraySeqMtPerS<T>) -> Self {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
                 source,
                 target,
-                /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — DP with parallel diagonal wavefront; Mt parallel.
                 memo: new_arc_memo(HashMapWithViewPlus::new()),
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — clones + memoized recursive DP with parallel join; Mt parallel.
         fn min_edit_distance(&self) -> (dist: usize)
         where
             T: Send + Sync + 'static,
@@ -302,18 +302,18 @@ pub mod MinEditDistMtPer {
             }
 
             let source_len = self.source.length();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
             let target_len = self.target.length();
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
 
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns cached size.
             min_edit_distance_rec(&self.source, &self.target, &self.memo, source_len, target_len)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn source(&self) -> (s: &ArraySeqMtPerS<T>) { &self.source }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — field access.
         fn target(&self) -> (t: &ArraySeqMtPerS<T>) { &self.target }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock plus return cached size.
         fn memo_size(&self) -> (count: usize) {
             let handle = self.memo.acquire_read();
             let size = handle.borrow().len();
