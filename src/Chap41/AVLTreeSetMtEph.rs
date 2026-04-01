@@ -33,7 +33,8 @@ pub mod AVLTreeSetMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
-    use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
+    use crate::vstdplus::feq::feq::{obeys_feq_full_trigger, lemma_cloned_view_eq};
+    use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Types::Types::*;
 
     verus! {
@@ -261,12 +262,32 @@ broadcast use {
             proof { assert(obeys_feq_full_trigger::<T>()); }
             let mut out: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut out);
+            let ghost out_seq = out@;
             proof { assume(out@.len() < usize::MAX); }
             let seq = AVLTreeSeqStEphS::from_vec(out);
             proof {
-                assume(seq@.to_set() =~= self@);
+                // from_vec: seq@ =~= out_seq.map_values(|t: T| t@), so seq@[i] == out_seq[i]@.
+                // collect_in_order (empty start): out_seq[i]@ in self.tree@ for all i,
+                // and every v in self.tree@ has a witness j with out_seq[j]@ == v.
+                assert forall|i: int| 0 <= i < seq@.len() implies
+                    #[trigger] self@.contains(seq@[i])
+                by {
+                    assert(seq@[i] == out_seq[i]@);
+                };
+                assert forall|v: T::V|
+                    #[trigger] seq@.to_set().contains(v) <==> self@.contains(v)
+                by {
+                    if seq@.to_set().contains(v) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(seq@[j] == out_seq[j]@);
+                    }
+                    if self@.contains(v) {
+                        let j = choose|j: int| 0 <= j < out_seq.len() && #[trigger] out_seq[j]@ == v;
+                        assert(seq@[j] == out_seq[j]@);
+                    }
+                };
+                assert(seq@.to_set() =~= self@);
                 vstd::seq_lib::seq_to_set_is_finite(seq@);
-                assume(forall|i: int| 0 <= i < seq@.len() ==> #[trigger] self@.contains(seq@[i]));
             }
             seq
         }
@@ -302,9 +323,10 @@ broadcast use {
                 decreases n - i,
             {
                 let ghost old_tree = tree@;
-                let elem = seq.nth(i).clone();
+                let elem_ref = seq.nth(i);
+                let elem = elem_ref.clone_plus();
                 proof {
-                    assume(elem@ == seq@[i as int]);  // clone preserves view
+                    lemma_cloned_view_eq::<T>(*elem_ref, elem);
                     // tree@.len() <= i < n <= usize::MAX, so tree@.len() < usize::MAX.
                     assert(tree@.len() <= i as nat);
                 }

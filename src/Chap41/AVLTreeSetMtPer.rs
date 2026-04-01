@@ -223,12 +223,31 @@ broadcast use {
         {
             let mut vals: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut vals);
+            let ghost vals_seq = vals@;
             proof { assume(vals@.len() < usize::MAX); }
             let seq = AVLTreeSeqMtPerS::from_vec(vals);
             proof {
-                assume(seq@.to_set() =~= self@);
-                assume(forall|i: int| 0 <= i < seq@.len()
-                    ==> #[trigger] self@.contains(seq@[i]));
+                // from_vec: seq@ =~= vals_seq.map_values(|t: T| t@), so seq@[i] == vals_seq[i]@.
+                // collect_in_order (empty start): vals_seq[i]@ in self.tree@ for all i,
+                // and every v in self.tree@ has a witness j with vals_seq[j]@ == v.
+                assert forall|i: int| 0 <= i < seq@.len() implies
+                    #[trigger] self@.contains(seq@[i])
+                by {
+                    assert(seq@[i] == vals_seq[i]@);
+                };
+                assert forall|v: T::V|
+                    #[trigger] seq@.to_set().contains(v) <==> self@.contains(v)
+                by {
+                    if seq@.to_set().contains(v) {
+                        let j = choose|j: int| 0 <= j < seq@.len() && seq@[j] == v;
+                        assert(seq@[j] == vals_seq[j]@);
+                    }
+                    if self@.contains(v) {
+                        let j = choose|j: int| 0 <= j < vals_seq.len() && #[trigger] vals_seq[j]@ == v;
+                        assert(seq@[j] == vals_seq[j]@);
+                    }
+                };
+                assert(seq@.to_set() =~= self@);
             }
             seq
         }
@@ -406,7 +425,13 @@ broadcast use {
             other.tree.collect_in_order(&mut other_vals);
             let n = self_vals.len();
             if n != other_vals.len() {
-                proof { assume(false == (self@ == other@)); }
+                proof {
+                    // self_vals.len() == self.tree@.len(), other_vals.len() == other.tree@.len().
+                    // If self@ == other@, then self@.len() == other@.len(), contradiction.
+                    if self@ == other@ {
+                        assert(self@.len() == other@.len());
+                    }
+                }
                 return false;
             }
             let mut i: usize = 0;
