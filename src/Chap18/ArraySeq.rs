@@ -1153,7 +1153,7 @@ pub mod ArraySeq {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqS<T>) {
             ArraySeqS { seq: elts }
         }

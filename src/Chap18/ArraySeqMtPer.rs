@@ -378,7 +378,7 @@ pub mod ArraySeqMtPer {
             self.seq.len()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
@@ -439,7 +439,7 @@ pub mod ArraySeqMtPer {
             ArraySeqMtPerS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: ArraySeqMtPerS<T>) {
             ArraySeqMtPerS { seq: elts }
         }
@@ -1613,7 +1613,7 @@ pub mod ArraySeqMtPer {
         }
 
         /// Parallel tabulate inner recursive helper with decreases.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         pub fn tabulate_inner<F: Fn(usize) -> T + Clone + Send + Sync + 'static>(
             f: &F,
             offset: usize,

@@ -461,7 +461,7 @@ pub mod BSTSizeStEph {
                 link.is_none() ==> maximum.is_none(),
                 link.is_some() ==> maximum.is_some(),
             decreases *link;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<T>) -> (h: usize)
             requires
                 Lnk::spec_size_link(link) < usize::MAX as nat,
@@ -657,7 +657,7 @@ pub mod BSTSizeStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool) { self.size() == 0 }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
@@ -701,7 +701,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, O(n^2) worst, Span O(n log n) expected
         fn split_rank(&self, rank: usize) -> (BSTSizeStEph<T>, BSTSizeStEph<T>) {
             if rank == 0 {
                 (Self::new(), self.clone())
@@ -1326,7 +1326,7 @@ pub mod BSTSizeStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<T>) -> (h: usize)
             decreases *link,
         {

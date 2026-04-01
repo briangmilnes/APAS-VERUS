@@ -313,7 +313,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>) {
             if index < self.seq.len() {
                 self.seq.set(index, item);
@@ -323,12 +323,12 @@ pub mod LinkedListStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             self.seq.len()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn nth(&self, index: usize) -> (nth_elem: &T) {
             &self.seq[index]
         }
@@ -361,7 +361,7 @@ pub mod LinkedListStEph {
             LinkedListStEphS { seq }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vec(elts: Vec<T>) -> (seq: LinkedListStEphS<T>) {
             LinkedListStEphS { seq: elts }
         }

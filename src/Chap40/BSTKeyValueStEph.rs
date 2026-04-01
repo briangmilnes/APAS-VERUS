@@ -475,7 +475,7 @@ pub mod BSTKeyValueStEph {
 
         // Internal associated functions.
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<K, V>) -> (height: usize)
             requires Lnk::spec_height_link(link) < usize::MAX as nat,
             ensures height == Lnk::spec_height_link(link),
@@ -747,13 +747,13 @@ pub mod BSTKeyValueStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self) { BSTKeyValueStEph { root: None, size: 0 } }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize) { self.size }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool) { self.size == 0 }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
@@ -805,7 +805,7 @@ pub mod BSTKeyValueStEph {
 
         // Internal associated functions.
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<K, V>) -> (height: usize)
             decreases *link,
         {

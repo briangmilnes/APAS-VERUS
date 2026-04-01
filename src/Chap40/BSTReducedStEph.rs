@@ -528,7 +528,7 @@ pub mod BSTReducedStEph {
             requires Lnk::spec_link_size_wf(link),
             ensures out.len() == old(out).len() + Lnk::spec_size_link(link),
             decreases *link;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<K, V, R>) -> (height: usize)
             requires Lnk::spec_height_link(link) < usize::MAX as nat,
             ensures height == Lnk::spec_height_link(link),
@@ -778,7 +778,7 @@ pub mod BSTReducedStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool) { self.size() == 0 }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height(&self) -> (height: usize) { Self::height_link(&self.root) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
@@ -1572,7 +1572,7 @@ pub mod BSTReducedStEph {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst, Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn height_link(link: &Link<K, V, R>) -> (height: usize)
             decreases *link,
         {
