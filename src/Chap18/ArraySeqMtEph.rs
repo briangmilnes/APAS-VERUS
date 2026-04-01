@@ -373,7 +373,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential; D&C needs multiset distribution lemmas not yet available
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -464,10 +464,11 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential fold
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS (parallel divide-and-conquer via join)
+        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
             requires
+                obeys_feq_clone::<T>(),
                 spec_monoid(spec_f, id),
                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
@@ -494,9 +495,12 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential loop
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — parallel D&C via join; O(lg n) from Vec copy overhead
+        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
             requires
+                obeys_feq_clone::<T>(),
+                obeys_feq_clone::<U>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
                 mapped.seq@.len() == a.seq@.len(),
@@ -900,41 +904,10 @@ pub mod ArraySeqMtEph {
             acc
         }
 
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone
+        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
         {
-            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
-            let len = a.seq.len();
-            let mut acc = id;
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                    forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
-                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
-                    acc == s.take(i as int).fold_left(id, spec_f),
-                decreases len - i,
-            {
-                proof {
-                    a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
-                }
-                acc = f(&acc, &a.seq[i]);
-                proof {
-                    let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
-                    assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
-                    reveal(Seq::fold_left);
-                }
-                i += 1;
-            }
-            proof {
-                assert(s.take(len as int) =~= s);
-            }
-            acc
+            Self::reduce_dc(a, f, Ghost(spec_f), id)
         }
 
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
@@ -992,24 +965,10 @@ pub mod ArraySeqMtEph {
             (scanned_seq, acc)
         }
 
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
         {
-            let len = a.seq.len();
-            let mut seq: Vec<U> = Vec::with_capacity(len);
-            let mut i: usize = 0;
-            while i < len
-                invariant
-                    i <= len,
-                    len == a.seq@.len(),
-                    seq@.len() == i as int,
-                    forall|j: int| 0 <= j < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[j],)),
-                    forall|j: int| #![trigger seq@[j]] 0 <= j < i ==> f.ensures((&a.seq@[j],), seq@[j]),
-                decreases len - i,
-            {
-                seq.push(f(&a.seq[i]));
-                i += 1;
-            }
-            ArraySeqMtEphS { seq }
+            Self::map_dc(a, f)
         }
 
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
@@ -1316,6 +1275,219 @@ pub mod ArraySeqMtEph {
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
                 }
                 combined
+            }
+        }
+
+        /// Parallel divide-and-conquer reduce. Called by trait method reduce.
+        fn reduce_dc<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtEphS<T>,
+            f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,
+            id: T,
+        ) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),
+            decreases a.seq@.len()
+        {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let len = a.seq.len();
+            if len == 0 {
+                proof {
+                    assert(s =~= Seq::<T>::empty());
+                    reveal_with_fuel(Seq::fold_left, 1);
+                }
+                id
+            } else if len == 1 {
+                let element = a.seq[0].clone();
+                proof {
+                    axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
+                    a.lemma_spec_index(0);
+                    assert(s =~= seq![a.spec_index(0)]);
+                    reveal_with_fuel(Seq::fold_left, 2);
+                    assert(spec_f(id, s[0]) == s[0]);
+                }
+                element
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let f1 = clone_fn2(f);
+                let f2 = clone_fn2(f);
+                let id1 = id.clone();
+                proof { axiom_cloned_implies_eq_owned(id, id1); }
+                let id2 = id.clone();
+                proof { axiom_cloned_implies_eq_owned(id, id2); }
+
+                let ghost left_s = Seq::new(left_seq.spec_len(), |i: int| left_seq.spec_index(i));
+                let ghost right_s = Seq::new(right_seq.spec_len(), |i: int| right_seq.spec_index(i));
+
+                let fa = move || -> (r: T)
+                    requires
+                        left_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(left_s, spec_f, id),
+                {
+                    Self::reduce_dc(&left_seq, &f1, Ghost(spec_f), id1)
+                };
+
+                let fb = move || -> (r: T)
+                    requires
+                        right_seq.seq@.len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures
+                        r == spec_iterate(right_s, spec_f, id),
+                {
+                    Self::reduce_dc(&right_seq, &f2, Ghost(spec_f), id2)
+                };
+
+                let (left, right) = join(fa, fb);
+                let combined = f(&left, &right);
+                proof {
+                    assert(left_s =~= s.subrange(0, mid as int));
+                    assert(right_s =~= s.subrange(mid as int, len as int));
+                    s.lemma_fold_left_split(id, spec_f, mid as int);
+                    Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
+                }
+                combined
+            }
+        }
+
+        /// Parallel divide-and-conquer map. Called by trait method map.
+        fn map_dc<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(
+            a: &ArraySeqMtEphS<T>,
+            f: &F,
+        ) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                obeys_feq_clone::<U>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
+            decreases a.seq@.len()
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                ArraySeqMtEphS { seq: Vec::new() }
+            } else if len == 1 {
+                let mut seq = Vec::with_capacity(1);
+                seq.push(f(&a.seq[0]));
+                ArraySeqMtEphS { seq }
+            } else {
+                let mid = len / 2;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let f1 = clone_fn(f);
+                let f2 = clone_fn(f);
+
+                let ghost a_view = a.seq@;
+                let ghost left_view = left_seq.seq@;
+                let ghost right_view = right_seq.seq@;
+                let left_ghost_len = Ghost(mid as nat);
+                let right_ghost_len = Ghost((len - mid) as nat);
+
+                proof {
+                    // Pre-establish ghost connections before left_seq/right_seq are moved.
+                    assert forall|i: int| 0 <= i < left_view.len() implies
+                        #[trigger] left_view[i] == a_view[i]
+                    by {
+                        a.lemma_spec_index(i);
+                        left_seq.lemma_spec_index(i);
+                    }
+                    assert forall|j: int| 0 <= j < right_view.len() implies
+                        #[trigger] right_view[j] == a_view[mid as int + j]
+                    by {
+                        a.lemma_spec_index(mid as int + j);
+                        right_seq.lemma_spec_index(j);
+                    }
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies
+                        #[trigger] f1.requires((&left_seq.seq@[i],))
+                    by {
+                        a.lemma_spec_index(i);
+                        left_seq.lemma_spec_index(i);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies
+                        #[trigger] f2.requires((&right_seq.seq@[i],))
+                    by {
+                        a.lemma_spec_index(mid as int + i);
+                        right_seq.lemma_spec_index(i);
+                    }
+                }
+
+                let (left, right) = join(
+                    move || -> (r: ArraySeqMtEphS<U>)
+                        ensures
+                            r.seq@.len() == left_ghost_len@,
+                            forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_ghost_len@ as int ==>
+                                f1.ensures((&left_view[i],), r.seq@[i]),
+                    {
+                        let r = Self::map_dc(&left_seq, &f1);
+                        proof {
+                            assert forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_ghost_len@ as int implies
+                                f1.ensures((&left_view[i],), r.seq@[i])
+                            by {
+                                assert(left_view[i] == left_seq.seq@[i]);
+                            }
+                        }
+                        r
+                    },
+                    move || -> (r: ArraySeqMtEphS<U>)
+                        ensures
+                            r.seq@.len() == right_ghost_len@,
+                            forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_ghost_len@ as int ==>
+                                f2.ensures((&right_view[i],), r.seq@[i]),
+                    {
+                        let r = Self::map_dc(&right_seq, &f2);
+                        proof {
+                            assert forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_ghost_len@ as int implies
+                                f2.ensures((&right_view[i],), r.seq@[i])
+                            by {
+                                assert(right_view[i] == right_seq.seq@[i]);
+                            }
+                        }
+                        r
+                    },
+                );
+
+                let mapped = <ArraySeqMtEphS<U> as ArraySeqMtEphRedefinableTrait<U>>::append(&left, &right);
+                proof {
+                    // left_view[i] == a_view[i] was established before the join.
+                    // right_view[j] == a_view[mid + j] was established before the join.
+                    // f1/f2 ensures match f ensures from clone_fn.
+                    assert forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() implies
+                        f.ensures((&a.seq@[i],), mapped.seq@[i])
+                    by {
+                        mapped.lemma_spec_index(i);
+                        if i < mid as int {
+                            left.lemma_spec_index(i);
+                            assert(mapped.spec_index(i) == left.seq@[i]);
+                            assert(f1.ensures((&left_view[i],), left.seq@[i]));
+                            assert(left_view[i] == a_view[i]);
+                            a.lemma_spec_index(i);
+                        } else {
+                            let j = i - mid as int;
+                            right.lemma_spec_index(j);
+                            assert(right_view[j] == a_view[mid as int + j]);
+                            a.lemma_spec_index(i);
+                            assert(f2.ensures((&right_view[j],), right.seq@[j]));
+                        }
+                    }
+                }
+                mapped
             }
         }
 
