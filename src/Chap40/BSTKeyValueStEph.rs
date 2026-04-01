@@ -412,7 +412,7 @@ pub mod BSTKeyValueStEph {
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_bstkeyvaluesteph_wf();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — filter + rebuild
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; filter + rebuild
         fn delete(&mut self, key: &K)
             requires old(self).spec_bstkeyvaluesteph_wf(),
             ensures

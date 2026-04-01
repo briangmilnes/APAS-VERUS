@@ -82,7 +82,7 @@ pub mod LinkedListStEph {
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost). — matches APAS
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
         s.fold_left(start_x, f)
     }
@@ -756,7 +756,7 @@ pub mod LinkedListStEph {
 
         /// Returns an iterator over the list elements.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         pub fn iter(&self) -> (it: LinkedListStEphIter<'_, T>)
             ensures
                 it@.0 == 0,
@@ -795,7 +795,7 @@ pub mod LinkedListStEph {
         type Item = &'a T;
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         // Relies on vstd's assume_specification for slice::Iter::next.
         fn next(&mut self) -> (next: Option<&'a T>)
             ensures ({
@@ -873,7 +873,7 @@ pub mod LinkedListStEph {
         type Item = &'a T;
         type IntoIter = LinkedListStEphIter<'a, T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn into_iter(self) -> Self::IntoIter { LinkedListStEphIter { inner: self.seq.iter() } }
     }
 
@@ -881,7 +881,7 @@ pub mod LinkedListStEph {
         type Item = T;
         type IntoIter = IntoIter<T>;
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
@@ -890,7 +890,7 @@ pub mod LinkedListStEph {
 
     impl<T: Clone + View> Clone for LinkedListStEphS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -904,7 +904,7 @@ pub mod LinkedListStEph {
 
     impl<T: PartialEq + View> PartialEq for LinkedListStEphS<T> {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|self|), Span O(1). — matches APAS
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {

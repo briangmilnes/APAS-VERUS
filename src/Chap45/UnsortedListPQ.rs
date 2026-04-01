@@ -207,7 +207,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time empty construction.
             fn empty() -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::empty(),
@@ -221,7 +221,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time singleton construction.
             fn singleton(element: T) -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::singleton(element),
@@ -233,7 +233,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan over unsorted list.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; linear scan over unsorted list.
             fn find_min(&self) -> (min_elem: Option<&T>) {
                 if self.elements.length() == 0 {
                     return None;
@@ -277,7 +277,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — append copies persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: append copies persistent array.
             fn insert(&self, element: T) -> (pq: Self) {
                 let single_seq = ArraySeqStPerS::singleton(element);
                 let pq = UnsortedListPQ {
@@ -306,7 +306,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan for min, then rebuild without it.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; linear scan for min, then rebuild without it.
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -444,7 +444,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m+n), Span O(m+n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — concatenates two persistent arrays.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — matches APAS; concatenates two persistent arrays.
             fn meld(&self, other: &Self) -> (pq: Self) {
                 let pq = UnsortedListPQ {
                     elements: ArraySeqStPerS::append(&self.elements, &other.elements),
@@ -472,7 +472,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS; clones persistent array.
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let pq = UnsortedListPQ { elements: seq.clone() };
                 proof {

@@ -244,7 +244,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time empty construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time empty construction.
             fn empty() -> Self {
                               assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
@@ -253,7 +253,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time singleton construction.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time singleton construction.
             fn singleton(element: T) -> Self {
                               assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
@@ -262,7 +262,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — indexed access to first element of sorted seq.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: indexed access to first element of sorted seq.
             fn find_min(&self) -> Option<&T> {
                 if self.elements.length() == 0 {
                     None
@@ -272,7 +272,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — values_in_order + Vec::insert at sorted position.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: values_in_order + Vec::insert at sorted position.
             fn insert(&self, element: T) -> Self {
                 let mut vals: Vec<T> = self.elements.values_in_order();
                 let ghost old_vals = vals@;
@@ -335,7 +335,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone elements 1..n, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: clone elements 1..n, rebuild via from_vec.
             fn delete_min(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -356,7 +356,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(m log(1+n/m)), Span O(m log(1+n/m)).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — merge two sorted sequences, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — DIFFERS: merge two sorted sequences, rebuild via from_vec.
             fn meld(&self, other: &Self) -> Self {
                 let n1 = self.elements.length();
                 let n2 = other.elements.length();
@@ -423,7 +423,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — n calls to insert, each O(n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: n calls to insert, each O(n).
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
                               assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
@@ -470,7 +470,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone elements 0..n-1, rebuild via from_vec.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: clone elements 0..n-1, rebuild via from_vec.
             fn delete_max(&self) -> (Self, Option<T>) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);

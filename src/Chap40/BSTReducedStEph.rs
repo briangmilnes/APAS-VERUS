@@ -311,7 +311,7 @@ pub mod BSTReducedStEph {
                 self.spec_size() <= old(self).spec_size() + 1,
                 self.spec_size() >= old(self).spec_size();
         /// - Alg Analysis: APAS (Ch40 ref): Work O(log n) expected, Span O(log n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — rotation-based
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, Span O(log n) expected — matches APAS; rotation-based
         fn delete(&mut self, key: &K)
             requires
                 old(self).spec_bstreducedsteph_wf(),

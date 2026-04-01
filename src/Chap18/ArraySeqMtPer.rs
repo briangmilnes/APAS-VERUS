@@ -118,7 +118,7 @@ pub mod ArraySeqMtPer {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -145,7 +145,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -173,7 +173,7 @@ pub mod ArraySeqMtPer {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmtper_wf(),
@@ -215,7 +215,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C with multiset distribution lemma
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — DIFFERS: parallel D&C with multiset distribution lemma
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -291,7 +291,7 @@ pub mod ArraySeqMtPer {
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential fold; parallel reduce_inner available via bare impl
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential fold; parallel reduce_inner available via bare impl
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -321,7 +321,7 @@ pub mod ArraySeqMtPer {
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential loop; parallel map_inner available via bare impl
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential loop; parallel map_inner available via bare impl
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtPerS<T>, f: &F) -> (mapped: ArraySeqMtPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -892,7 +892,7 @@ pub mod ArraySeqMtPer {
 
         /// - Parallel map. Transform each element via `f` using fork-join.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             f: F,
@@ -1129,7 +1129,7 @@ pub mod ArraySeqMtPer {
 
         /// - Parallel filter. Keep elements satisfying `pred` using fork-join.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             pred: F,
@@ -1226,7 +1226,7 @@ pub mod ArraySeqMtPer {
 
         /// - Parallel reduce. Combine elements using associative `f` and identity `id` via fork-join.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtPerS<T>,
             f: F,

@@ -194,7 +194,7 @@ pub mod ArraySeqMtEph {
 
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
     /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|). — matches APAS
     fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
         lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
         updates: Vec<(usize, T)>,
@@ -268,7 +268,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create a new sequence of length `length` with each element initialized to `init_value`.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
         fn new(length: usize, init_value: T) -> (new_seq: Self)
             where T: Clone + Eq
             requires
@@ -281,7 +281,7 @@ pub mod ArraySeqMtEph {
 
         /// - Set the element at `index` to `item` in place.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
         fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
             requires index < old(self).spec_len()
             ensures
@@ -305,7 +305,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -333,7 +333,7 @@ pub mod ArraySeqMtEph {
 
         /// - Create sequence from Vec.
         /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
         fn from_vec(elts: Vec<T>) -> (seq: Self)
             ensures
                 seq.spec_arrayseqmteph_wf(),
@@ -375,7 +375,7 @@ pub mod ArraySeqMtEph {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C with multiset distribution lemma
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — DIFFERS: parallel D&C with multiset distribution lemma
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -497,7 +497,7 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — parallel D&C via join; O(lg n) from Vec copy overhead
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — DIFFERS: parallel D&C via join; O(lg n) from Vec copy overhead
         fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
             where T: Clone + Eq + Send + Sync + 'static
             requires
@@ -1059,7 +1059,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn map_par<U: Clone + Eq + View + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1111,7 +1111,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn filter_par<F: Fn(&T) -> bool + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             pred: F,
@@ -1193,7 +1193,7 @@ pub mod ArraySeqMtEph {
         }
 
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(log|a|). — matches APAS
         pub fn reduce_par<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(
             a: &ArraySeqMtEphS<T>,
             f: F,
@@ -1698,7 +1698,7 @@ pub mod ArraySeqMtEph {
         /// Whichever thread acquires last overwrites the other's conflicting writes.
         /// That scheduling race is the source of nondeterminism.
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |updates|), Span O(|updates|) — lock serializes the writers.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |updates|), Span O(|updates|) — matches APAS; lock serializes the writers.
         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
             where T: Clone + Send + Sync + Eq + 'static
             requires
