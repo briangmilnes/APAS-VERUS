@@ -1946,46 +1946,6 @@ src/Chap43/OrderedSetMtEph.rs:544: error: fn `get_range` missing alg analysis an
 src/Chap43/OrderedSetMtEph.rs:555: error: fn `rank` missing alg analysis annotation
 src/Chap43/OrderedSetMtEph.rs:567: error: fn `select` missing alg analysis annotation
 src/Chap43/OrderedSetMtEph.rs:580: error: fn `split_rank` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:112: error: fn `tree_max_key` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:167: error: fn `tree_select` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:420: error: fn `first_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:428: error: fn `last_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:436: error: fn `previous_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:445: error: fn `next_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:454: error: fn `split_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:470: error: fn `get_range_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:478: error: fn `rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:483: error: fn `split_rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:508: error: fn `size` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:511: error: fn `empty` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:517: error: fn `singleton` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:523: error: fn `find` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:526: error: fn `insert` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:531: error: fn `delete` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:536: error: fn `filter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:545: error: fn `intersection` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:550: error: fn `union` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:555: error: fn `difference` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:560: error: fn `to_seq` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:595: error: fn `from_seq` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:622: error: fn `first_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:627: error: fn `first` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:631: error: fn `last_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:636: error: fn `last` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:640: error: fn `previous_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:668: error: fn `previous` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:672: error: fn `next_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:704: error: fn `split_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:733: error: fn `split` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:737: error: fn `join` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:741: error: fn `get_range_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:792: error: fn `get_range` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:796: error: fn `rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:810: error: fn `rank` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:814: error: fn `select` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:825: error: fn `split_rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:900: error: fn `split_rank` missing alg analysis annotation
-src/Chap43/OrderedSetStPer.rs:905: error: fn `from_sorted_elements` missing alg analysis annotation
 src/Chap43/OrderedTableStPer.rs:728: error: St fn `get_key_range` Code review claims parallel span — Work O(log n + m) but Span O(log n) (St files are sequential)
 src/Chap44/DocumentIndex.rs:181: error: fn `make_index` missing alg analysis annotation
 src/Chap44/DocumentIndex.rs:344: error: fn `find` missing alg analysis annotation
@@ -2980,8 +2940,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2423  (fns with any APAS or Code review line)
-  Missing alg analysis:      2661  <- errors
+  Alg analysis annotations:  2463  (fns with any APAS or Code review line)
+  Missing alg analysis:      2621  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -2989,7 +2949,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2766
+  Errors: 2726
   Warnings: 0
   Info: 204
 
