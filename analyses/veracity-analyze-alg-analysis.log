@@ -1946,46 +1946,6 @@ src/Chap43/OrderedSetMtEph.rs:544: error: fn `get_range` missing alg analysis an
 src/Chap43/OrderedSetMtEph.rs:555: error: fn `rank` missing alg analysis annotation
 src/Chap43/OrderedSetMtEph.rs:567: error: fn `select` missing alg analysis annotation
 src/Chap43/OrderedSetMtEph.rs:580: error: fn `split_rank` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:109: error: fn `tree_max_key` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:172: error: fn `tree_select` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:447: error: fn `first_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:456: error: fn `last_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:465: error: fn `previous_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:475: error: fn `next_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:485: error: fn `split_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:503: error: fn `get_range_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:512: error: fn `rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:518: error: fn `split_rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:544: error: fn `size` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:547: error: fn `empty` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:553: error: fn `singleton` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:559: error: fn `find` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:562: error: fn `insert` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:567: error: fn `delete` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:572: error: fn `filter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:582: error: fn `intersection` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:588: error: fn `union` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:594: error: fn `difference` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:600: error: fn `to_seq` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:642: error: fn `from_seq` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:667: error: fn `first_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:673: error: fn `first` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:677: error: fn `last_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:683: error: fn `last` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:687: error: fn `previous_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:725: error: fn `previous` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:729: error: fn `next_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:766: error: fn `split_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:799: error: fn `split` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:803: error: fn `join` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:807: error: fn `get_range_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:860: error: fn `get_range` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:864: error: fn `rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:878: error: fn `rank` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:882: error: fn `select` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:893: error: fn `split_rank_iter` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:943: error: fn `split_rank` missing alg analysis annotation
-src/Chap43/OrderedSetStEph.rs:1083: error: fn `from_sorted_elements` missing alg analysis annotation
 src/Chap43/OrderedSetStPer.rs:112: error: fn `tree_max_key` missing alg analysis annotation
 src/Chap43/OrderedSetStPer.rs:167: error: fn `tree_select` missing alg analysis annotation
 src/Chap43/OrderedSetStPer.rs:420: error: fn `first_iter` missing alg analysis annotation
@@ -3020,8 +2980,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2383  (fns with any APAS or Code review line)
-  Missing alg analysis:      2701  <- errors
+  Alg analysis annotations:  2423  (fns with any APAS or Code review line)
+  Missing alg analysis:      2661  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -3029,7 +2989,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2806
+  Errors: 2766
   Warnings: 0
   Info: 204
 
