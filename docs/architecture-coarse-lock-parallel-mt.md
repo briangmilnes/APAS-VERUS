@@ -115,27 +115,98 @@ into `join()` closures.
 
 This makes splitting data for fork-join free.
 
-## 5. Pre-Allocated Output: O(1) Rejoin
+## 5. Slice Mutation and Rejoining
 
-For operations producing new sequences (map, filter, tabulate), pre-allocate the
-output Vec before forking:
+### 5.1. The problem: Arc sharing prevents mutation
 
-1. Allocate output Vec of size n: O(n) work, O(1) span
-2. Split input via O(1) slice
-3. `join(write_left_half, write_right_half)` — both arms write to disjoint
-   regions of the same pre-allocated output
-4. No rejoin needed — output is already contiguous
+After `slice()`, two slices share the same `Arc<Vec<T>>`. The Arc refcount is > 1.
+Rust prevents mutation through a shared Arc — you'd need `Arc::make_mut` (which
+clones the backing Vec if refcount > 1, O(n)) or unsafe interior mutability.
 
-For merging adjacent slices from the same backing `Arc<Vec<T>>`:
-- Condition: `left.data == right.data && left.start + left.len == right.start`
-- Merge: `{ data: left.data, start: left.start, len: left.len + right.len }` — O(1)
+This means: **you cannot mutate the input slices in place after splitting.** All
+operations that produce modified output must create new data.
 
-This eliminates the Vec concat bottleneck that limits current D&C operations.
+### 5.2. Operation categories by output structure
 
-The Rust/Verus challenge: parallel writes to disjoint regions of the same Vec
-requires either PCell-per-element with PointsTo tokens, or Verus's new-mut-ref
-support for mutable references to disjoint sub-places. The FIFO example in
-Verus demonstrates disjoint concurrent writes via PCell + PointsTo.
+**Category A — Scalar output (reduce, scan final value, size, find):**
+Both join arms read from input slices (shared, immutable). Results are scalars.
+No merge needed. O(1) combine.
+
+**Category B — Same-size output (map, tabulate):**
+Each arm produces a new sequence of known size (same as input for map, specified
+for tabulate). Total output size is known before forking.
+
+**Category C — Variable-size output (filter, flatten):**
+Each arm produces a subset of unknown size. Total output size not known until
+both arms complete.
+
+### 5.3. Strategies for rejoining
+
+**Strategy 1: Pre-allocated shared output (Categories B, C with max bound)**
+
+Allocate one output `Vec<T>` of the known (or max possible) size before forking.
+Each join arm writes to its disjoint region: left writes `[0..mid]`, right writes
+`[mid..n]`. After join, the output is already contiguous in a single Vec.
+
+For map: output size = input size. Pre-allocate exactly.
+For tabulate: output size = length parameter. Pre-allocate exactly.
+For filter: output size ≤ input size. Pre-allocate input size, track actual count.
+
+Cost: O(n) work for allocation (O(1) span), O(1) rejoin.
+
+Rust/Verus challenge: two join arms writing to the same Vec requires disjoint
+mutable access. Options:
+- **PCell per element**: each slot is `PCell<T>`, each arm gets `PointsTo` tokens
+  for its region. Verus's FIFO example does this with `storage_map` sharding.
+- **new-mut-ref**: Verus's upcoming disjoint mutable borrow support. `&mut [0..mid]`
+  and `&mut [mid..n]` coexist in separate join arms.
+- **Unsafe slice::split_at_mut**: works in Rust, but we don't use unsafe.
+
+**Strategy 2: Two independent outputs + adjacent merge (all categories)**
+
+Each join arm creates its own `Vec<T>` independently. After join, merge into a
+single slice-backed sequence.
+
+If both output Vecs can be placed in a single backing allocation (i.e., we
+allocate one large Vec, let left fill the first half and right fill the second
+half), the result is one `ArraySeqMtEphSliceS` with the full window. But this
+is really Strategy 1 with extra steps.
+
+More practically: each arm returns its own `ArraySeqMtEphSliceS` (separate
+Arc backing). To merge, we must copy both into a new Vec — O(n) concat.
+
+**Adjacent merge** (O(1)) is only possible when both slices share the same
+`Arc<Vec<T>>` backing AND are contiguous (`left.start + left.len == right.start`).
+This happens when:
+- Both arms read from (not write to) the original input — the input slices are
+  already adjacent in the same backing
+- Or both arms write to a pre-allocated shared output (Strategy 1)
+
+It does NOT happen when each arm independently allocates its own output Vec.
+
+**Strategy 3: Return slice pairs (defer merge)**
+
+Don't merge at all. Return a pair of slices (or a small tree of slices) and let
+the consumer iterate over them logically. This is the rope/segmented approach.
+We don't have this data structure yet, but it would give O(1) "merge" for all
+categories by deferring the contiguous-memory requirement.
+
+### 5.4. Summary: what works today
+
+| Strategy | Cost | Works in current Verus? | Categories |
+|----------|------|------------------------|------------|
+| Pre-allocated + PCell per element | O(1) rejoin | Yes (FIFO pattern) | B, C |
+| Pre-allocated + new-mut-ref | O(1) rejoin | Not yet (experimental) | B, C |
+| Independent Vecs + O(n) concat | O(n) rejoin | Yes (current D&C) | B, C |
+| Adjacent merge of read-only slices | O(1) rejoin | Yes (already works) | A input |
+| Rope/segmented (deferred merge) | O(1) rejoin | Not implemented | All |
+
+For the near term, the PCell-per-element approach (Strategy 1) is the path to
+O(1) rejoin for map and tabulate. It requires a TSM with `storage_map` sharding
+to manage the per-element PointsTo tokens, similar to the FIFO queue example.
+
+For filter (variable-size), Strategy 1 with a max-bound pre-allocation works but
+wastes space. Strategy 2 (independent Vecs + concat) is simpler and only O(n).
 
 ## 6. The Three Layers
 
