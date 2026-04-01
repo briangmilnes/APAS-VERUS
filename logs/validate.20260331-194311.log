@@ -1,0 +1,46 @@
+error[E0061]: this method takes 0 arguments but 1 argument was supplied
+   --> src/experiments/bst_plain_mt_tsm.rs:275:40
+    |
+275 |                     self.inst.borrow().tr_noop(
+    |                                        ^^^^^^^
+276 |                         &mut *interior.ghost_count.borrow_mut(),
+    |                         --------------------------------------- unexpected argument of type `&mut experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |
+note: method defined here
+   --> src/experiments/bst_plain_mt_tsm.rs:42:17
+    |
+ 42 |                 tr_noop() {
+    |                 ^^^^^^^
+help: remove the extra argument
+    |
+276 -                         &mut *interior.ghost_count.borrow_mut(),
+277 -                     );
+276 +                         );
+    |
+
+error[E0061]: this method takes 0 arguments but 1 argument was supplied
+   --> src/experiments/bst_plain_mt_tsm.rs:298:40
+    |
+298 |                     self.inst.borrow().tr_noop(
+    |                                        ^^^^^^^
+299 |                         &mut *interior.ghost_count.borrow_mut(),
+    |                         --------------------------------------- unexpected argument of type `&mut experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |
+note: method defined here
+   --> src/experiments/bst_plain_mt_tsm.rs:42:17
+    |
+ 42 |                 tr_noop() {
+    |                 ^^^^^^^
+help: remove the extra argument
+    |
+299 -                         &mut *interior.ghost_count.borrow_mut(),
+300 -                     );
+299 +                         );
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0061`.
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 1102MB, peak z3 RSS: 0MB, min free: 23472MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 0s

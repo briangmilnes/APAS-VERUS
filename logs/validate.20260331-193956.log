@@ -1,0 +1,139 @@
+error: postcondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:140:17
+    |
+140 |                   self.elements@.contains(val),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+144 | /             if self.contains(&val) {
+145 | |                 false
+146 | |             } else {
+147 | |                 self.elements.push(val);
+148 | |                 true
+149 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/experiments/bst_plain_mt_tsm.rs:140:17
+    |
+140 |                 self.elements@.contains(val),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inserted == !(old(self).elements.view().contains(old(val))) ✔
+self.elements.view().contains(old(val)) ✘
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = self.elements.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && self.elements.view().index(i) == old(val)) 
++---
+inserted ==>
+    self.elements.view().len() == clip(nat, old(self).elements.view().len() + 1) ✔
+!inserted ==>
+    self.elements.view().len() == old(self).elements.view().len() ✔
+
+error: postcondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:155:17
+    |
+155 |                 !self.elements@.contains(*val),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+169 |                     return true;
+    |                     ----------- at this exit
+
+note: diagnostics via expansion
+   --> src/experiments/bst_plain_mt_tsm.rs:155:18
+    |
+155 |                 !self.elements@.contains(*val),
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+deleted == old(self).elements.view().contains(old(val)) ✔
+!(self.elements.view().contains(old(val))) ✘
+|   forall |i|
+|       let tmp%% = 0 in let tmp%% = i in let tmp%% = self.elements.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|           !(self.elements.view().index(i) == old(val)) 
++---
+deleted ==>
+    self.elements.view().len() == old(self).elements.view().len() - 1 ✔
+!deleted ==>
+    self.elements.view().len() == old(self).elements.view().len() ✔
+
+error: precondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:307:17
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+...   |
+ 85 | |     );
+    | |_____- failed precondition
+...
+307 | /                 self.inst.borrow().tr_insert(
+308 | |                     val,
+309 | |                     !inserted,
+310 | |                     &mut *interior.ghost_contents.borrow_mut(),
+311 | |                     &mut *interior.ghost_count.borrow_mut(),
+312 | |                 );
+    | |_________________^
+
+error: precondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:315:13
+    |
+315 |             write_handle.release_write(interior);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/rwlock.rs:405:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+write_handle.rwlock().inv(interior)
+|   write_handle.rwlock().pred().inv(interior) 
+|       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:327:17
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+...   |
+ 85 | |     );
+    | |_____- failed precondition
+...
+327 | /                 self.inst.borrow().tr_delete(
+328 | |                     *val,
+329 | |                     deleted,
+330 | |                     &mut *interior.ghost_contents.borrow_mut(),
+331 | |                     &mut *interior.ghost_count.borrow_mut(),
+332 | |                 );
+    | |_________________^
+
+error: precondition not satisfied
+   --> src/experiments/bst_plain_mt_tsm.rs:335:13
+    |
+335 |             write_handle.release_write(interior);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/rwlock.rs:405:12
+    |
+    = note: failed precondition
+
+note: 
+
+write_handle.rwlock().inv(interior)
+|   write_handle.rwlock().pred().inv(interior) 
+|       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+verification results:: 5494 verified, 4 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 120s
+Sampled Memory Usage: peak rust_verify RSS: 21358MB, peak z3 RSS: 1129MB, min free: 2722MB
+Sampled CPU Usage: rust_verify: 593s, z3 children: 440s

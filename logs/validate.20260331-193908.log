@@ -1,0 +1,36 @@
+error[E0425]: cannot find function `lemma_len_insert` in module `vstd::set_lib`
+  --> src/experiments/bst_plain_mt_tsm.rs:77:36
+   |
+77 |                     vstd::set_lib::lemma_len_insert(pre.contents, elem);
+   |                                    ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/set_lib.rs:1100:0
+   |
+   = note: similarly named function `lemma_len_intersect` defined here
+help: a function with a similar name exists
+   |
+77 -                     vstd::set_lib::lemma_len_insert(pre.contents, elem);
+77 +                     vstd::set_lib::lemma_len_intersect(pre.contents, elem);
+   |
+
+error[E0425]: cannot find function `lemma_len_remove` in module `vstd::set_lib`
+  --> src/experiments/bst_plain_mt_tsm.rs:84:36
+   |
+84 |                     vstd::set_lib::lemma_len_remove(pre.contents, elem);
+   |                                    ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/set_lib.rs:1052:0
+   |
+   = note: similarly named function `lemma_len_union` defined here
+help: a function with a similar name exists
+   |
+84 -                     vstd::set_lib::lemma_len_remove(pre.contents, elem);
+84 +                     vstd::set_lib::lemma_len_union(pre.contents, elem);
+   |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 560MB, peak z3 RSS: 0MB, min free: 24024MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

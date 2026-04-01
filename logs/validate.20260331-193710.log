@@ -1,0 +1,157 @@
+error[E0599]: no method named `insert_len` found for struct `vstd::set::Set<A>` in the current scope
+  --> src/experiments/bst_plain_mt_tsm.rs:89:34
+   |
+89 |                     pre.contents.insert_len(elem);
+   |                                  ^^^^^^^^^^
+   |
+help: there is a method `insert` with a similar name
+   |
+89 -                     pre.contents.insert_len(elem);
+89 +                     pre.contents.insert(elem);
+   |
+
+error[E0599]: no method named `remove_len` found for struct `vstd::set::Set<A>` in the current scope
+  --> src/experiments/bst_plain_mt_tsm.rs:99:34
+   |
+99 |                     pre.contents.remove_len(elem);
+   |                                  ^^^^^^^^^^
+   |
+help: there is a method `remove` with a similar name
+   |
+99 -                     pre.contents.remove_len(elem);
+99 +                     pre.contents.remove(elem);
+   |
+
+error[E0599]: no method named `view` found for struct `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents` in the current scope
+   --> src/experiments/bst_plain_mt_tsm.rs:277:37
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+ 35 | |                 pub contents: Set<u64>,
+    | |____________________________- method `view` not found for this struct
+...
+277 |               interior.ghost_contents@@.value() == interior.inner.spec_contents()
+    |               ----------------------- ^ method not found in `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents`
+    |               |
+    |               method `view` is available on `vstd::prelude::Tracked<experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: no method named `view` found for struct `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents` in the current scope
+   --> src/experiments/bst_plain_mt_tsm.rs:278:40
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+ 35 | |                 pub contents: Set<u64>,
+    | |____________________________- method `view` not found for this struct
+...
+278 |               && interior.ghost_contents@@.instance_id() == self.instance.id()
+    |                  ----------------------- ^ method not found in `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents`
+    |                  |
+    |                  method `view` is available on `vstd::prelude::Tracked<experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::contents>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: no method named `view` found for struct `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count` in the current scope
+   --> src/experiments/bst_plain_mt_tsm.rs:280:37
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+...   |
+ 37 | |                 #[sharding(variable)]
+ 38 | |                 pub count: nat,
+    | |_________________________- method `view` not found for this struct
+...
+280 |               && interior.ghost_count@@.value() == interior.inner.elements@.len()
+    |                  -------------------- ^ method not found in `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |                  |
+    |                  method `view` is available on `vstd::prelude::Tracked<experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: no method named `view` found for struct `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count` in the current scope
+   --> src/experiments/bst_plain_mt_tsm.rs:281:37
+    |
+ 31 | /     tokenized_state_machine!(
+ 32 | |         SetSM {
+ 33 | |             fields {
+ 34 | |                 #[sharding(variable)]
+...   |
+ 37 | |                 #[sharding(variable)]
+ 38 | |                 pub count: nat,
+    | |_________________________- method `view` not found for this struct
+...
+281 |               && interior.ghost_count@@.instance_id() == self.instance.id()
+    |                  -------------------- ^ method not found in `experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |                  |
+    |                  method `view` is available on `vstd::prelude::Tracked<experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count>`
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0061]: this method takes 2 arguments but 3 arguments were supplied
+   --> src/experiments/bst_plain_mt_tsm.rs:335:40
+    |
+335 |                     self.inst.borrow().tr_insert_dup(
+    |                                        ^^^^^^^^^^^^^
+...
+338 |                         &mut *interior.ghost_count.borrow_mut(),
+    |                         --------------------------------------- unexpected argument #3 of type `&mut experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |
+note: method defined here
+   --> src/experiments/bst_plain_mt_tsm.rs:57:17
+    |
+ 57 |                 tr_insert_dup(elem: u64) {
+    |                 ^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+337 -                         &mut *interior.ghost_contents.borrow_mut(),
+338 -                         &mut *interior.ghost_count.borrow_mut(),
+337 +                         &mut *interior.ghost_contents.borrow_mut(),
+    |
+
+error[E0061]: this method takes 2 arguments but 3 arguments were supplied
+   --> src/experiments/bst_plain_mt_tsm.rs:362:40
+    |
+362 |                     self.inst.borrow().tr_delete_missing(
+    |                                        ^^^^^^^^^^^^^^^^^
+...
+365 |                         &mut *interior.ghost_count.borrow_mut(),
+    |                         --------------------------------------- unexpected argument #3 of type `&mut experiments::bst_plain_mt_tsm::bst_plain_mt_tsm::SetSM::count`
+    |
+note: method defined here
+   --> src/experiments/bst_plain_mt_tsm.rs:72:17
+    |
+ 72 |                 tr_delete_missing(elem: u64) {
+    |                 ^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+    |
+364 -                         &mut *interior.ghost_contents.borrow_mut(),
+365 -                         &mut *interior.ghost_count.borrow_mut(),
+364 +                         &mut *interior.ghost_contents.borrow_mut(),
+    |
+
+error: aborting due to 8 previous errors
+
+Some errors have detailed explanations: E0061, E0599.
+For more information about an error, try `rustc --explain E0061`.
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 1107MB, peak z3 RSS: 0MB, min free: 23627MB
+Sampled CPU Usage: rust_verify: 17s, z3 children: 0s

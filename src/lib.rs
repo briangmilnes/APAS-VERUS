@@ -89,6 +89,7 @@ pub mod experiments {
     pub mod locked_wrapper_generic;                        // TESTING: generic LockedWrapper<T>, 1 assume for all Mt
 //    pub mod pcell_rwlock_zero_assume;                      // TESTING: PCell+RwLock<PointsTo>, broken Arc type mismatch
     pub mod state_machine_set_mt;                          // TESTING: tokenized_state_machine for Mt set, zero assumes
+    pub mod bst_plain_mt_tsm;                              // TESTING: TSM scaled to 10 ops, zero assumes
     pub mod rwlock_no_ghost_field;                         // TESTING: PCell+PointsTo eliminates assumes
 //    pub mod rwlock_tsm;                                   // SUCCEEDS: RwLock TSM pattern
 //    pub mod rwlock_tsm_increment;                         // SUCCEEDS: coarse-grained lock caller sees specs via ghost TSM token

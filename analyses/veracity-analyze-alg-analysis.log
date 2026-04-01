@@ -1,5 +1,5 @@
 veracity-analyze-alg-analysis
-Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
 
 src/Chap02/FibonacciHFScheduler.rs:72: warning: fn `fib_seq` has APAS cost spec but no Code review
 src/Chap02/FibonacciHFScheduler.rs:87: warning: fn `fib_par` has APAS cost spec but no Code review
@@ -4001,4 +4001,4 @@ Summary
   Warnings: 646
   Info: 133
 
-Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
