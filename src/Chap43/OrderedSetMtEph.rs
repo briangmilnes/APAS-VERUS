@@ -75,6 +75,7 @@ pub mod OrderedSetMtEph {
     }
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
         ensures s@ == inner@, s.spec_orderedsetmteph_wf()
@@ -295,6 +296,7 @@ pub mod OrderedSetMtEph {
             && obeys_feq_full::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn size(&self) -> (count: usize) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -305,6 +307,7 @@ pub mod OrderedSetMtEph {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self) {
                       assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::empty();
@@ -315,6 +318,7 @@ pub mod OrderedSetMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self) {
                       assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::singleton(x);
@@ -325,6 +329,7 @@ pub mod OrderedSetMtEph {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST search
         fn find(&self, x: &T) -> (found: bool) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -335,6 +340,7 @@ pub mod OrderedSetMtEph {
             found
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap insert
         fn insert(&mut self, x: T) {
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
@@ -346,6 +352,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.insert(x_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap delete
         fn delete(&mut self, x: &T) {
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
@@ -356,6 +363,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.remove(x_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST filter
         fn filter<F: Pred<T>>(
             &mut self,
             f: F,
@@ -368,6 +376,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST intersection
         fn intersection(&mut self, other: &Self) {
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
@@ -381,6 +390,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.intersect(other_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
         fn union(&mut self, other: &Self) {
             proof { use_type_invariant(&*self); use_type_invariant(other); }
             let ghost old_view = self.ghost_locked_set@;
@@ -395,6 +405,7 @@ pub mod OrderedSetMtEph {
             self.ghost_locked_set = Ghost(old_view.union(other_view));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST difference
         fn difference(&mut self, other: &Self) {
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
@@ -409,6 +420,7 @@ pub mod OrderedSetMtEph {
         }
 
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -443,6 +455,7 @@ pub mod OrderedSetMtEph {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n treap inserts
         fn from_seq(seq: ArraySeqStPerS<T>) -> (constructed: Self) {
             let len = seq.length();
             let mut inner = OrderedSetStEph::empty();
@@ -464,6 +477,7 @@ pub mod OrderedSetMtEph {
             from_st(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST min_key
         fn first(&self) -> (first: Option<T>)
 
         {
@@ -476,6 +490,7 @@ pub mod OrderedSetMtEph {
             first
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST max_key
         fn last(&self) -> (last: Option<T>)
 
         {
@@ -488,6 +503,7 @@ pub mod OrderedSetMtEph {
             last
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + max_key
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
 
         {
@@ -512,6 +528,7 @@ pub mod OrderedSetMtEph {
             successor
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split
         fn split(&mut self, k: &T) -> (split: (Self, bool, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
@@ -527,6 +544,7 @@ pub mod OrderedSetMtEph {
             (from_st(left), found, from_st(right))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
         fn join(&mut self, other: Self) {
             // Use acquire_write on other to get inv-guaranteed wf (no clone needed).
             let (other_inner, other_write) = other.locked_set.acquire_write();
@@ -541,6 +559,7 @@ pub mod OrderedSetMtEph {
             write_handle.release_write(locked_val);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST splits
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
@@ -552,6 +571,7 @@ pub mod OrderedSetMtEph {
             from_st(range)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + size
         fn rank(&self, k: &T) -> (rank: usize)
 
         {
@@ -564,6 +584,7 @@ pub mod OrderedSetMtEph {
             rank
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, augmented BST
         fn select(&self, i: usize) -> (selected: Option<T>)
 
         {
@@ -577,6 +598,7 @@ pub mod OrderedSetMtEph {
             selected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, select + BST split
         fn split_rank(&mut self, i: usize) -> (split: (Self, Self)) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST

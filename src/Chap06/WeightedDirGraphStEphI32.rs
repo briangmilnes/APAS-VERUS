@@ -343,6 +343,7 @@ proof { assert(wa_seq.take(it@.0 as int).drop_last() =~= wa_seq.take((it@.0 - 1)
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_above_weight(&self, threshold: i32) -> (edges_above: SetStEph<WeightedEdge<V, i32>>) {
             let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();
@@ -389,6 +390,7 @@ assert forall |t: (V::V, V::V, i32)| #[trigger] wa_view.contains(t) && t.2 > thr
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential filter
         fn edges_below_weight(&self, threshold: i32) -> (edges_below: SetStEph<WeightedEdge<V, i32>>) {
             let mut edges: SetStEph<WeightedEdge<V, i32>> = SetStEph::empty();
             let mut it = self.labeled_arcs().iter();

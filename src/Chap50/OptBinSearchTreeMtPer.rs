@@ -92,24 +92,31 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTMtPerTrait<T: MtVal>: Sized + View<V = OBSTMtPerV<T>> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures empty@.keys.len() == 0;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures constructed@.keys.len() == keys@.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures constructed@.keys =~= key_probs@;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>)
             ensures keys@ =~= self@.keys;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
 
@@ -189,6 +196,7 @@ broadcast use {
     }
 
     impl<T: MtVal> OBSTMtPerTrait<T> for OBSTMtPerS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, wrap in Arc + Arc<RwLock>
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -197,6 +205,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — iterate keys/probs to build KeyProb vec
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let mut key_probs: Vec<KeyProb<T>> = Vec::new();
             let mut idx: usize = 0;
@@ -217,6 +226,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — wrap existing vec in Arc
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -225,6 +235,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clears memo then calls obst_rec which fills O(n^2) subproblems each scanning O(n) splits
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static {
             let keys_ref = arc_deref(&self.keys);
             if keys_ref.len() == 0 { return Probability::zero(); }
@@ -238,13 +249,16 @@ broadcast use {
             obst_rec(self, 0, n)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>) { &self.keys }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — deref Arc, return Vec len
         fn num_keys(&self) -> (count: usize) {
             let keys = arc_deref(&self.keys);
             keys.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read lock, return hash map len
         fn memo_size(&self) -> (count: usize) {
             let rwlock = arc_deref(&self.memo);
             let handle = rwlock.acquire_read();

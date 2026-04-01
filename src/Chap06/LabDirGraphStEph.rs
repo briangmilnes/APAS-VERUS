@@ -156,22 +156,27 @@ verus! {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: LabDirGraphStEph<V, L>)
             ensures g.spec_labdirgraphsteph_wf()
         {
             LabDirGraphStEph { vertices: SetStEph::empty(), labeled_arcs: SetStEph::empty() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_labeled_arcs(vertices: SetStEph<V>, labeled_arcs: SetStEph<LabEdge<V, L>>) -> (g: LabDirGraphStEph<V, L>)
             ensures g.spec_labdirgraphsteph_wf()
         {
             LabDirGraphStEph { vertices, labeled_arcs }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_arcs(&self) -> (a: &SetStEph<LabEdge<V, L>>) { &self.labeled_arcs }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn arcs(&self) -> (arcs: SetStEph<Edge<V>>) {
             let mut arcs: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
@@ -216,14 +221,17 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_arc(&mut self, from: V, to: V, label: L) {
             let _ = self.vertices.insert(from.clone_plus());
             let _ = self.vertices.insert(to.clone_plus());
             let _ = self.labeled_arcs.insert(LabEdge(from, to, label));
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn get_arc_label(&self, from: &V, to: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -265,6 +273,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn has_arc(&self, from: &V, to: &V) -> (b: bool) {
             let mut it = self.labeled_arcs.iter();
             let ghost la_seq = it@.1;
@@ -314,6 +323,7 @@ verus! {
         }
 
         /// out-neighbors
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn n_plus(&self, v: &V) -> (n_plus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();
@@ -362,6 +372,7 @@ verus! {
         }
 
         /// in-neighbors
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|A|), Span O(|A|) -- sequential scan of labeled arcs
         fn n_minus(&self, v: &V) -> (n_minus: SetStEph<V>) {
             let mut neighbors: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_arcs.iter();

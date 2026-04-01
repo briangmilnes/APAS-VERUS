@@ -384,6 +384,7 @@ broadcast use {
             && obeys_feq_full::<Pair<K, V>>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper, delegates to StEph
         fn size(&self) -> (count: usize) {
 
             let read_handle = self.locked_table.acquire_read();
@@ -394,6 +395,7 @@ broadcast use {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self) {
                       assert(obeys_feq_full_trigger::<K>());
            assert(obeys_feq_full_trigger::<V>());
@@ -402,6 +404,7 @@ broadcast use {
             from_st(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (tree: Self) {
                       assert(obeys_feq_full_trigger::<K>());
            assert(obeys_feq_full_trigger::<V>());
@@ -410,6 +413,7 @@ broadcast use {
             from_st(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph find
         fn find(&self, k: &K) -> (found: Option<V>) {
 
             let read_handle = self.locked_table.acquire_read();
@@ -420,16 +424,19 @@ broadcast use {
             found
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty()
         {
             self.size() == 0
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph insert
         fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, k: K, v: V, combine: F) {
             let ghost old_view = self.ghost_locked_table@;
             let (mut locked_val, write_handle) = self.locked_table.acquire_write();
@@ -441,6 +448,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph delete
         fn delete(&mut self, k: &K) -> (updated: Option<V>) {
             proof {
 
@@ -456,6 +464,7 @@ broadcast use {
             updated
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph domain
         fn domain(&self) -> (domain: ArraySetStEph<K>) {
             proof {
                 assume(self@.dom().finite());
@@ -469,11 +478,13 @@ broadcast use {
             domain
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to StEph tabulate
         fn tabulate<F: Fn(&K) -> V + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self) {
             let inner = OrderedTableStEph::tabulate(f, keys);
             from_st(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph map
         fn map<F: Fn(&K, &V) -> V + Send + Sync + 'static>(&self, f: F) -> (mapped: Self) {
             proof {
 
@@ -486,6 +497,7 @@ broadcast use {
             from_st(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph filter
         fn filter<F: Fn(&K, &V) -> bool + Send + Sync + 'static>(
             &self,
             f: F,
@@ -499,6 +511,7 @@ broadcast use {
             from_st(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph intersection
         fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
             proof {
 
@@ -516,6 +529,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph union
         fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, f: F) {
             proof {
 
@@ -535,6 +549,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph difference
         fn difference(&mut self, other: &Self) {
             proof {
 
@@ -553,6 +568,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph restrict
         fn restrict(&mut self, keys: &ArraySetStEph<K>) {
             proof {
 
@@ -566,6 +582,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StEph subtract
         fn subtract(&mut self, keys: &ArraySetStEph<K>) {
             proof {
 
@@ -579,6 +596,7 @@ broadcast use {
             self.ghost_locked_table = Ghost(new_view);
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph reduce
         fn reduce<R: StTInMtT + 'static, F: Fn(R, &K, &V) -> R + Send + Sync + 'static>(&self, init: R, f: F) -> (reduced: R) {
             proof { assume(self@.dom().finite()); }
             let read_handle = self.locked_table.acquire_read();
@@ -589,6 +607,7 @@ broadcast use {
             reduced
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph collect
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>) {
             proof { assume(self@.dom().finite()); }
             let read_handle = self.locked_table.acquire_read();
@@ -598,6 +617,7 @@ broadcast use {
             collected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph first_key
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
         {
@@ -610,6 +630,7 @@ broadcast use {
             first
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph last_key
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
         {
@@ -622,6 +643,7 @@ broadcast use {
             last
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
@@ -634,6 +656,7 @@ broadcast use {
             predecessor
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
@@ -646,6 +669,7 @@ broadcast use {
             successor
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph split_key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
         {
@@ -664,10 +688,12 @@ broadcast use {
             (from_st(left_inner), found_value, from_st(right_inner))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to union
         fn join_key(&mut self, other: Self) {
             self.union(&other, |v1: &V, _v2: &V| v1.clone());
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
 
                       assert(obeys_feq_full_trigger::<K>());
@@ -682,6 +708,7 @@ broadcast use {
             from_st(st_range)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
@@ -694,6 +721,7 @@ broadcast use {
             rank
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
@@ -706,6 +734,7 @@ broadcast use {
             selected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StEph split_rank_key
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -879,6 +908,7 @@ broadcast use {
     // 11. top level coarse locking
 
     /// Construct Mt wrapper from an St table.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
     fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
         requires inner@.dom().finite()
         ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
@@ -895,6 +925,7 @@ broadcast use {
     }
 
     /// Build an MtEph table from entries (used by macro and tests).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to StEph from_sorted_entries
     pub fn from_sorted_entries<K: MtKey, V: MtVal + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (constructed: OrderedTableMtEph<K, V>)

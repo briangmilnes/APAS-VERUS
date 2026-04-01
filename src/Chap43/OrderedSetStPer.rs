@@ -109,6 +109,7 @@ broadcast use {
     }
 
     /// Maximum key in a ParamBST via right-spine walk.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
     fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
         requires
             tree@.finite(),
@@ -164,6 +165,7 @@ broadcast use {
     }
 
     /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
     fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
         requires
             tree@.finite(),
@@ -417,6 +419,7 @@ broadcast use {
                 forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
 
         // Iterative alternatives (delegate to defaults for BST-backed version).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST min_key
         fn first_iter(&self) -> (first: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -425,6 +428,7 @@ broadcast use {
                 first matches Some(v) ==> self@.contains(v@),
                 first matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST max_key
         fn last_iter(&self) -> (last: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -433,6 +437,7 @@ broadcast use {
                 last matches Some(v) ==> self@.contains(v@),
                 last matches Some(v) ==> forall|t: T| #[trigger] self@.contains(t@) ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + max_key
         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -442,6 +447,7 @@ broadcast use {
                 predecessor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Less ==>
                     t.cmp_spec(&v) == Less || v@ == t@;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + min_key
         fn next_iter(&self, k: &T) -> (successor: Option<T>)
             requires self.spec_orderedsetstper_wf(),
             ensures
@@ -451,6 +457,7 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: T|
                     #[trigger] self@.contains(t@) && t.cmp_spec(k) == Greater ==>
                     v.cmp_spec(&t) == Less || v@ == t@;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split
         fn split_iter(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
             requires
@@ -467,6 +474,7 @@ broadcast use {
                 !split.0@.contains(k@),
                 !split.2@.contains(k@),
                 forall|x| #[trigger] self@.contains(x) ==> split.0@.contains(x) || split.2@.contains(x) || x == k@;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- two BST splits + conditional inserts
         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
             requires
                 self.spec_orderedsetstper_wf(),
@@ -475,11 +483,13 @@ broadcast use {
                 self@.finite(),
                 range@.finite(),
                 range@.subset_of(self@);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + size
         fn rank_iter(&self, k: &T) -> (rank: usize)
             requires self.spec_orderedsetstper_wf(),
             ensures
                 self@.finite(),
                 rank <= self@.len();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- tree_select + BST split
         fn split_rank_iter(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -505,34 +515,41 @@ broadcast use {
             && view_ord_consistent::<T>()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         { self.base_set.size() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST search
         fn find(&self, x: &T) -> (found: bool)
         { self.base_set.find(x) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- treap split + join
         fn insert(&self, x: T) -> (updated: Self)
         {
             OrderedSetStPer { base_set: self.base_set.insert(x) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- treap split + join
         fn delete(&self, x: &T) -> (updated: Self)
         {
             OrderedSetStPer { base_set: self.base_set.delete(x) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- recursive BST filter + join
         fn filter<F: PredSt<T>>(
             &self,
             f: F,
@@ -542,21 +559,25 @@ broadcast use {
             OrderedSetStPer { base_set: self.base_set.filter(f, Ghost(spec_pred)) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based intersection
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             OrderedSetStPer { base_set: self.base_set.intersection(&other.base_set) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based union
         fn union(&self, other: &Self) -> (combined: Self)
         {
             OrderedSetStPer { base_set: self.base_set.union(&other.base_set) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- BST split-based difference
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             OrderedSetStPer { base_set: self.base_set.difference(&other.base_set) }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn to_seq(&self) -> (seq: AVLTreeSeqStPerS<T>)
         {
             let mut elements: Vec<T> = Vec::new();
@@ -592,6 +613,7 @@ broadcast use {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n treap inserts
         fn from_seq(seq: AVLTreeSeqStPerS<T>) -> (constructed: Self)
         {
             assert(obeys_feq_full_trigger::<T>());
@@ -619,24 +641,29 @@ broadcast use {
         }
 
         /// First element (minimum) via BST min_key.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST min_key traversal
         fn first_iter(&self) -> (first: Option<T>)
         {
             self.base_set.tree.min_key()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to first_iter
         fn first(&self) -> (first: Option<T>)
         { self.first_iter() }
 
         /// Last element (maximum) via tree_max_key.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST max_key traversal
         fn last_iter(&self) -> (last: Option<T>)
         {
             tree_max_key(&self.base_set.tree)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to last_iter
         fn last(&self) -> (last: Option<T>)
         { self.last_iter() }
 
         /// Predecessor via split + max_key on left subtree.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + max_key
         fn previous_iter(&self, k: &T) -> (predecessor: Option<T>)
         {
             let (left, _found, _right) = self.base_set.tree.split(k);
@@ -665,10 +692,12 @@ broadcast use {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to previous_iter
         fn previous(&self, k: &T) -> (predecessor: Option<T>)
         { self.previous_iter(k) }
 
         /// Successor via split + min_key on right subtree.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + min_key
         fn next_iter(&self, k: &T) -> (successor: Option<T>)
         {
             let (_left, _found, right) = self.base_set.tree.split(k);
@@ -697,10 +726,12 @@ broadcast use {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to next_iter
         fn next(&self, k: &T) -> (successor: Option<T>)
         { self.next_iter(k) }
 
         /// Split via BST split.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split
         fn split_iter(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         {
@@ -730,14 +761,17 @@ broadcast use {
             (left, found, right)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to split_iter
         fn split(&self, k: &T) -> (split: (Self, bool, Self))
             where Self: Sized
         { self.split_iter(k) }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to union
         fn join(left: &Self, right: &Self) -> (joined: Self)
         { left.union(right) }
 
         /// Range query via two splits.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- two BST splits + conditional inserts
         fn get_range_iter(&self, k1: &T, k2: &T) -> (range: Self)
         {
             let (_lt_k1, found_k1, right1) = self.base_set.tree.split(k1);
@@ -789,10 +823,12 @@ broadcast use {
             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: result_tree } }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to get_range_iter
         fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
         { self.get_range_iter(k1, k2) }
 
         /// Rank via split + size.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST split + size
         fn rank_iter(&self, k: &T) -> (rank: usize)
         {
             let (left, _found, _right) = self.base_set.tree.split(k);
@@ -807,10 +843,12 @@ broadcast use {
             left.size()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to rank_iter
         fn rank(&self, k: &T) -> (rank: usize)
         { self.rank_iter(k) }
 
         /// Select the i-th element using tree_select.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal
         fn select(&self, i: usize) -> (selected: Option<T>)
         {
             let sz = self.size();
@@ -822,6 +860,7 @@ broadcast use {
         }
 
         /// Split by rank: first i elements go left, rest go right.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- tree_select + BST split + insert
         fn split_rank_iter(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         {
@@ -897,11 +936,13 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- delegates to split_rank_iter
         fn split_rank(&self, i: usize) -> (split: (Self, Self))
             where Self: Sized
         { self.split_rank_iter(i) }
     }
 
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- from_vec + n treap inserts
     pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
         requires
             elements@.len() < usize::MAX,

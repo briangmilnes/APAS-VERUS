@@ -149,22 +149,27 @@ verus! {
             spec_labgraphview_wf(self@)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (g: LabUnDirGraphStEph<V, L>)
             ensures g.spec_labundirgraphsteph_wf()
         {
             LabUnDirGraphStEph { vertices: SetStEph::empty(), labeled_edges: SetStEph::empty() }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_vertices_and_labeled_edges(vertices: SetStEph<V>, labeled_edges: SetStEph<LabEdge<V, L>>) -> (g: LabUnDirGraphStEph<V, L>)
             ensures g.spec_labundirgraphsteph_wf()
         {
             LabUnDirGraphStEph { vertices, labeled_edges }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn vertices(&self) -> (v: &SetStEph<V>) { &self.vertices }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn labeled_edges(&self) -> (e: &SetStEph<LabEdge<V, L>>) { &self.labeled_edges }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn edges(&self) -> (edges: SetStEph<Edge<V>>) {
             let mut edges: SetStEph<Edge<V>> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();
@@ -210,8 +215,10 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_vertex(&mut self, v: V) { let _ = self.vertices.insert(v); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) {
             let _ = self.vertices.insert(v1.clone_plus());
             let _ = self.vertices.insert(v2.clone_plus());
@@ -222,6 +229,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn get_edge_label(&self, v1: &V, v2: &V) -> (label: Option<&L>) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
@@ -271,6 +279,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn has_edge(&self, v1: &V, v2: &V) -> (b: bool) {
             let mut it = self.labeled_edges.iter();
             let ghost le_seq = it@.1;
@@ -321,6 +330,7 @@ verus! {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|) -- sequential scan of labeled edges
         fn ng(&self, v: &V) -> (ng: SetStEph<V>) {
             let mut ng: SetStEph<V> = SetStEph::empty();
             let mut it = self.labeled_edges.iter();

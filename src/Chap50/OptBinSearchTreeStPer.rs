@@ -96,30 +96,37 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTStPerTrait<T: StT>: Sized + View<V = OBSTStPerV<T>> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures
                 empty@.keys.len() == 0,
                 empty@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures
                 constructed@.keys.len() == keys@.len(),
                 constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures
                 constructed@.keys =~= key_probs@,
                 constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&self) -> (cost: Probability);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>)
             ensures keys@ =~= self@.keys;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize)
             ensures count == self@.memo.len();
     }
@@ -196,6 +203,7 @@ broadcast use {
     }
 
     impl<T: StT> OBSTStPerTrait<T> for OBSTStPerS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -204,6 +212,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let n = keys.len();
             let mut key_probs: Vec<KeyProb<T>> = Vec::new();
@@ -226,6 +235,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -234,6 +244,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&self) -> (cost: Probability) {
             if self.keys.len() == 0 {
                 return Probability::zero();
@@ -246,10 +257,13 @@ broadcast use {
             obst_rec_st_per(&mut solver, 0, n)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>) { &self.keys }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize) { self.keys.len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

@@ -79,6 +79,7 @@ pub mod OrderedTableMtPer {
     // 6. spec fns
 
     /// Construct Mt wrapper from an St table.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
     fn from_st_table<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>(
         inner: OrderedTableStPer<K, V>,
     ) -> (s: OrderedTableMtPer<K, V>)
@@ -161,6 +162,7 @@ pub mod OrderedTableMtPer {
                 updated.spec_orderedtablemtper_wf();
 
         /// Like insert, but additionally ensures the inserted value mapping.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to StPer insert_wf
         fn insert_wf(&self, k: K, v: V) -> (updated: Self)
             requires self@.dom().len() + 1 < usize::MAX as nat,
             ensures
@@ -178,6 +180,7 @@ pub mod OrderedTableMtPer {
                 updated.spec_orderedtablemtper_wf();
 
         /// Like delete, but additionally ensures value preservation for remaining keys.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to StPer delete_wf
         fn delete_wf(&self, k: &K) -> (updated: Self)
             ensures
                 updated@ == self@.remove(k@),
@@ -320,6 +323,7 @@ pub mod OrderedTableMtPer {
             self@.dom().finite()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn size(&self) -> (count: usize) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -335,16 +339,19 @@ pub mod OrderedTableMtPer {
             count
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self) {
             let inner = OrderedTableStPer::empty();
             from_st_table(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(k: K, v: V) -> (tree: Self) {
             let inner = OrderedTableStPer::singleton(k, v);
             from_st_table(inner)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer find
         fn find(&self, k: &K) -> (found: Option<V>) {
             proof {
                 use_type_invariant(self);
@@ -358,6 +365,7 @@ pub mod OrderedTableMtPer {
             found
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer insert
         fn insert(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -371,6 +379,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer insert_wf
         fn insert_wf(&self, k: K, v: V) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -384,6 +393,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer delete
         fn delete(&self, k: &K) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -397,6 +407,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer delete_wf
         fn delete_wf(&self, k: &K) -> (updated: Self) {
             proof {
                 use_type_invariant(self);
@@ -410,6 +421,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- collect O(n) + n OrderedSet inserts O(log n) each
         fn domain(&self) -> (domain: OrderedSetMtEph<K>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -446,6 +458,7 @@ pub mod OrderedTableMtPer {
             result
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer map
         fn map<G: Fn(&V) -> V + Send + Sync + 'static>(
             &self, f: G, Ghost(f_spec): Ghost<spec_fn(V::V) -> V::V>,
         ) -> (mapped: Self) {
@@ -481,6 +494,7 @@ pub mod OrderedTableMtPer {
             from_st_table(st_result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) -- collect O(n) + n StPer inserts each O(n)
         fn filter<F: Pred<Pair<K, V>>>(&self, f: F) -> (filtered: Self) {
             proof {
                 assert(obeys_view_eq_trigger::<K>());
@@ -522,6 +536,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer first_key
         fn first_key(&self) -> (first: Option<K>)
         {
             proof { use_type_invariant(self); }
@@ -533,6 +548,7 @@ pub mod OrderedTableMtPer {
             first
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer last_key
         fn last_key(&self) -> (last: Option<K>)
         {
             proof { use_type_invariant(self); }
@@ -544,6 +560,7 @@ pub mod OrderedTableMtPer {
             last
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
         {
             proof { use_type_invariant(self); }
@@ -555,6 +572,7 @@ pub mod OrderedTableMtPer {
             predecessor
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
         {
             proof { use_type_invariant(self); }
@@ -566,6 +584,7 @@ pub mod OrderedTableMtPer {
             successor
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_key
         fn split_key(&self, k: &K) -> (split: (Self, Option<V>, Self)) {
             proof { assert(obeys_view_eq_trigger::<K>()); }
             let read_handle = self.locked_table.acquire_read();
@@ -576,6 +595,7 @@ pub mod OrderedTableMtPer {
             (from_st_table(left), val, from_st_table(right))
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- RwLock wrapper, delegates to StPer join_key (union)
         fn join_key(&self, other: &Self) -> (joined: Self) {
             proof {
                 assert(obeys_view_eq_trigger::<K>());
@@ -597,6 +617,7 @@ pub mod OrderedTableMtPer {
             from_st_table(result)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer get_key_range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self) {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -608,6 +629,7 @@ pub mod OrderedTableMtPer {
             from_st_table(range)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
         {
             proof {
@@ -622,6 +644,7 @@ pub mod OrderedTableMtPer {
             rank
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
         {
             proof {
@@ -636,6 +659,7 @@ pub mod OrderedTableMtPer {
             selected
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, delegates to StPer split_rank_key
         fn split_rank_key(&self, i: usize) -> (split: (Self, Self)) {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();

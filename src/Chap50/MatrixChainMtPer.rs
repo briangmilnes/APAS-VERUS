@@ -142,15 +142,19 @@ broadcast use {
     pub trait MatrixChainMtPerTrait: Sized + View<V = MatrixChainMtPerV> {
         spec fn spec_matrixchainmtper_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc and Arc<RwLock>
         fn new() -> (mc: Self)
             ensures mc@.dimensions.len() == 0, mc.spec_matrixchainmtper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc, n = dimensions.len()
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures mc@.dimensions =~= dimensions@, mc.spec_matrixchainmtper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures mc@.dimensions.len() == dim_pairs@.len(), mc.spec_matrixchainmtper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
         fn optimal_cost(&self) -> (cost: usize)
             requires
                 self.spec_matrixchainmtper_wf(),
@@ -161,14 +165,18 @@ broadcast use {
                 cost as nat == if self@.dimensions.len() <= 1 { 0 }
                     else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
         fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>)
             ensures dims@ =~= self@.dimensions;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length through Arc deref
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
         fn memo_size(&self) -> (n: usize);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
             requires
                 i < self@.dimensions.len(),
@@ -179,6 +187,7 @@ broadcast use {
             ensures
                 cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
             requires
                 self.spec_matrixchainmtper_wf(),
@@ -190,6 +199,7 @@ broadcast use {
                 cost as nat == spec_chain_cost(self@.dimensions, i as int, j as int, i as int),
             decreases j - i;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize)
             requires costs@.len() > 0,
             ensures
@@ -204,6 +214,7 @@ broadcast use {
             self.memo.pred().dims =~= self@.dimensions
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Arc and Arc<RwLock>
         fn new() -> (mc: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -212,6 +223,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — wrap dimensions in Arc, n = dimensions.len()
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self) {
             let ghost gd = dimensions@;
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -221,6 +233,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — convert pairs to MatrixDim vec, n = dim_pairs.len()
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self) {
             let mut dimensions: Vec<MatrixDim> = Vec::new();
             let mut idx: usize = 0;
@@ -244,6 +257,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three array lookups and two multiplications via Arc deref
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize) {
             let dims = arc_deref(&self.dimensions);
             let left_rows = dims[i].rows;
@@ -253,6 +267,7 @@ broadcast use {
             intermediate * right_cols
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential linear scan for minimum
         fn parallel_min_reduction(&self, costs: Vec<usize>) -> (min: usize) {
             let mut best: usize = costs[0];
             let mut idx: usize = 1;
@@ -272,6 +287,7 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — memoized DP, n^2 subproblems each O(n) split scan
         fn matrix_chain_rec(&self, i: usize, j: usize) -> (cost: usize)
             decreases j - i,
         {
@@ -364,6 +380,7 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clear memo then run memoized DP
         fn optimal_cost(&self) -> (cost: usize) {
             let dims = arc_deref(&self.dimensions);
             if dims.len() <= 1 {
@@ -381,13 +398,16 @@ broadcast use {
             self.matrix_chain_rec(0, n - 1)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
         fn dimensions(&self) -> (dims: &Arc<Vec<MatrixDim>>) { &self.dimensions }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read Vec length through Arc deref
         fn num_matrices(&self) -> (n: usize) {
             let dims = arc_deref(&self.dimensions);
             dims.len()
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — read memo length under read lock
         fn memo_size(&self) -> (n: usize) {
             let rwlock = arc_deref(&self.memo);
             let handle = rwlock.acquire_read();
