@@ -1924,28 +1924,6 @@ src/Chap43/AugOrderedTableStPer.rs:867: error: fn `select_key` missing alg analy
 src/Chap43/AugOrderedTableStPer.rs:879: error: fn `split_rank_key` missing alg analysis annotation
 src/Chap43/AugOrderedTableStPer.rs:916: error: fn `reduce_val` missing alg analysis annotation
 src/Chap43/AugOrderedTableStPer.rs:927: error: fn `reduce_range` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:78: error: fn `from_st` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:298: error: fn `size` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:308: error: fn `empty` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:318: error: fn `singleton` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:328: error: fn `find` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:338: error: fn `insert` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:349: error: fn `delete` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:359: error: fn `filter` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:371: error: fn `intersection` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:384: error: fn `union` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:398: error: fn `difference` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:412: error: fn `to_seq` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:446: error: fn `from_seq` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:467: error: fn `first` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:479: error: fn `last` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:491: error: fn `previous` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:515: error: fn `split` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:530: error: fn `join` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:544: error: fn `get_range` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:555: error: fn `rank` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:567: error: fn `select` missing alg analysis annotation
-src/Chap43/OrderedSetMtEph.rs:580: error: fn `split_rank` missing alg analysis annotation
 src/Chap43/OrderedTableStPer.rs:728: error: St fn `get_key_range` Code review claims parallel span — Work O(log n + m) but Span O(log n) (St files are sequential)
 src/Chap44/DocumentIndex.rs:181: error: fn `make_index` missing alg analysis annotation
 src/Chap44/DocumentIndex.rs:344: error: fn `find` missing alg analysis annotation
@@ -2940,8 +2918,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2463  (fns with any APAS or Code review line)
-  Missing alg analysis:      2621  <- errors
+  Alg analysis annotations:  2485  (fns with any APAS or Code review line)
+  Missing alg analysis:      2599  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -2949,7 +2927,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2726
+  Errors: 2704
   Warnings: 0
   Info: 204
 
