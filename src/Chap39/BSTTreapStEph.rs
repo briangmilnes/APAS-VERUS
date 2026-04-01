@@ -516,7 +516,7 @@ pub mod BSTTreapStEph {
                 self.spec_bsttreapsteph_wf(),
             ensures h as nat == self.spec_height();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn insert(&mut self, value: T, priority: u64)
             requires
                 old(self).spec_size() + 1 <= usize::MAX as nat,
@@ -530,7 +530,7 @@ pub mod BSTTreapStEph {
                 forall|k: T| old(self).spec_contains(k) ==> self.spec_contains(k),
                 old(self).spec_bst() ==> self.spec_bst();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn delete(&mut self, target: &T)
             requires
                 old(self).spec_bsttreapsteph_wf(),
@@ -541,7 +541,7 @@ pub mod BSTTreapStEph {
                 forall|k: T| self.spec_contains(k) ==> old(self).spec_contains(k),
                 old(self).spec_bst() ==> self.spec_bst();
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn find(&self, target: &T)     -> (found: Option<&T>)
             requires
                 self.spec_bsttreapsteph_wf(),
@@ -551,7 +551,7 @@ pub mod BSTTreapStEph {
                 found.is_some() <==> self.spec_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn contains(&self, target: &T) -> (found: bool)
             requires
                 self.spec_bsttreapsteph_wf(),
@@ -559,7 +559,7 @@ pub mod BSTTreapStEph {
                 T::obeys_partial_cmp_spec(),
             ensures found == self.spec_contains(*target);
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn minimum(&self)              -> (min_val: Option<&T>)
             ensures match (min_val, self.spec_min()) {
                 (Some(rv), Some(sv)) => *rv == sv,
@@ -567,7 +567,7 @@ pub mod BSTTreapStEph {
                 _ => false,
             };
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg n) expected, Span O(lg n) expected
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case — DIFFERS: St sequential, APAS parallel
         fn maximum(&self)              -> (max_val: Option<&T>)
             ensures match (max_val, self.spec_max()) {
                 (Some(rv), Some(sv)) => *rv == sv,

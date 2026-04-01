@@ -1,5 +1,5 @@
 veracity-analyze-alg-analysis
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-analyze-alg-analysis.log
 
 src/Chap02/FibonacciHFScheduler.rs:72: warning: fn `fib_seq` has APAS cost spec but no Code review
 src/Chap02/FibonacciHFScheduler.rs:87: warning: fn `fib_par` has APAS cost spec but no Code review
@@ -8,12 +8,12 @@ src/Chap05/KleeneStPer.rs:235: error: fn `new` missing alg analysis annotation
 src/Chap05/KleeneStPer.rs:239: error: fn `mem_star` missing alg analysis annotation
 src/Chap05/KleeneStPer.rs:266: error: fn `mem_plus` missing alg analysis annotation
 src/Chap05/KleeneStPer.rs:277: error: fn `alphabet` missing alg analysis annotation
-src/Chap05/MappingStEph.rs:136: error: St fn `is_functional_vec` Code review claims parallel span — Work O(|v|) but Span O(1) (St files are sequential)
-src/Chap05/MappingStEph.rs:142: error: St fn `is_functional_vec_at` Code review claims parallel span — Work O(|v|) but Span O(1) (St files are sequential)
-src/Chap05/MappingStEph.rs:148: error: St fn `is_functional_SetStEph_at` Code review claims parallel span — Work O(|s|) but Span O(1) (St files are sequential)
-src/Chap05/MappingStEph.rs:174: error: St fn `from_vec` Code review claims parallel span — Work O(|v|) but Span O(1) (St files are sequential)
-src/Chap05/MappingStEph.rs:183: error: St fn `from_relation` Code review claims parallel span — Work O(|r|) but Span O(1) (St files are sequential)
-src/Chap05/MappingStEph.rs:198: error: St fn `domain` Code review claims parallel span — Work O(|m|) but Span O(1) (St files are sequential)
+src/Chap05/MappingStEph.rs:136: warning: fn `is_functional_vec` has APAS cost spec but no Code review
+src/Chap05/MappingStEph.rs:142: warning: fn `is_functional_vec_at` has APAS cost spec but no Code review
+src/Chap05/MappingStEph.rs:148: warning: fn `is_functional_SetStEph_at` has APAS cost spec but no Code review
+src/Chap05/MappingStEph.rs:174: warning: fn `from_vec` has APAS cost spec but no Code review
+src/Chap05/MappingStEph.rs:183: warning: fn `from_relation` has APAS cost spec but no Code review
+src/Chap05/MappingStEph.rs:198: warning: fn `domain` has APAS cost spec but no Code review
 src/Chap05/MappingStEph.rs:254: error: fn `is_functional_vec_at` missing alg analysis annotation
 src/Chap05/MappingStEph.rs:270: error: fn `is_functional_vec` missing alg analysis annotation
 src/Chap05/MappingStEph.rs:295: error: fn `is_functional_SetStEph_at` missing alg analysis annotation
@@ -26,10 +26,10 @@ src/Chap05/MappingStEph.rs:425: error: fn `size` missing alg analysis annotation
 src/Chap05/MappingStEph.rs:443: error: fn `mem` missing alg analysis annotation
 src/Chap05/MappingStEph.rs:444: error: fn `domain` missing alg analysis annotation
 src/Chap05/MappingStEph.rs:446: error: fn `range` missing alg analysis annotation
-src/Chap05/RelationStEph.rs:108: error: St fn `from_set` Code review claims parallel span — Work O(|pairs|) but Span O(1) (St files are sequential)
-src/Chap05/RelationStEph.rs:114: error: St fn `from_vec` Code review claims parallel span — Work O(|pairs|) but Span O(1) (St files are sequential)
-src/Chap05/RelationStEph.rs:126: error: St fn `domain` Code review claims parallel span — Work O(|R|) but Span O(1) (St files are sequential)
-src/Chap05/RelationStEph.rs:132: error: St fn `range` Code review claims parallel span — Work O(|R|) but Span O(1) (St files are sequential)
+src/Chap05/RelationStEph.rs:108: warning: fn `from_set` has APAS cost spec but no Code review
+src/Chap05/RelationStEph.rs:114: warning: fn `from_vec` has APAS cost spec but no Code review
+src/Chap05/RelationStEph.rs:126: warning: fn `domain` has APAS cost spec but no Code review
+src/Chap05/RelationStEph.rs:132: warning: fn `range` has APAS cost spec but no Code review
 src/Chap05/RelationStEph.rs:174: error: fn `empty` missing alg analysis annotation
 src/Chap05/RelationStEph.rs:176: error: fn `from_set` missing alg analysis annotation
 src/Chap05/RelationStEph.rs:178: error: fn `from_vec` missing alg analysis annotation
@@ -65,12 +65,12 @@ src/Chap05/SetMtEph.rs:1113: error: fn `size` missing alg analysis annotation
 src/Chap05/SetMtEph.rs:1122: error: fn `mem` missing alg analysis annotation
 src/Chap05/SetMtEph.rs:1131: error: fn `insert` missing alg analysis annotation
 src/Chap05/SetMtEph.rs:1141: error: fn `choose` missing alg analysis annotation
-src/Chap05/SetStEph.rs:123: error: St fn `from_vec` Code review claims parallel span — Work O(|v|) but Span O(1) (St files are sequential)
-src/Chap05/SetStEph.rs:181: error: St fn `union` Code review claims parallel span — Work O(|a| + |b|) but Span O(1) (St files are sequential)
-src/Chap05/SetStEph.rs:190: error: St fn `disjoint_union` Code review claims parallel span — Work O(|a| + |b|) but Span O(1) (St files are sequential)
-src/Chap05/SetStEph.rs:202: error: St fn `intersection` Code review claims parallel span — Work O(|a| + |b|) but Span O(1) (St files are sequential)
-src/Chap05/SetStEph.rs:221: error: St fn `cartesian_product` Code review claims parallel span — Work O(|a| × |b|) but Span O(1) (St files are sequential)
-src/Chap05/SetStEph.rs:256: error: St fn `partition` Code review claims parallel span — Work O(|a| × |parts|) but Span O(1) (St files are sequential)
+src/Chap05/SetStEph.rs:123: warning: fn `from_vec` has APAS cost spec but no Code review
+src/Chap05/SetStEph.rs:181: warning: fn `union` has APAS cost spec but no Code review
+src/Chap05/SetStEph.rs:190: warning: fn `disjoint_union` has APAS cost spec but no Code review
+src/Chap05/SetStEph.rs:202: warning: fn `intersection` has APAS cost spec but no Code review
+src/Chap05/SetStEph.rs:221: warning: fn `cartesian_product` has APAS cost spec but no Code review
+src/Chap05/SetStEph.rs:256: warning: fn `partition` has APAS cost spec but no Code review
 src/Chap05/SetStEph.rs:315: error: fn `from_vec` missing alg analysis annotation
 src/Chap05/SetStEph.rs:347: error: fn `to_seq` missing alg analysis annotation
 src/Chap05/SetStEph.rs:365: error: fn `empty` missing alg analysis annotation
@@ -463,13 +463,10 @@ src/Chap18/ArraySeqMtPer.rs:732: error: fn `scan` missing alg analysis annotatio
 src/Chap18/ArraySeqMtPer.rs:787: error: fn `map` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:807: error: fn `tabulate` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:825: error: fn `flatten` missing alg analysis annotation
-src/Chap18/ArraySeqStEph.rs:114: error: St fn `new` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStEph.rs:127: error: St fn `set` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStEph.rs:137: warning: fn `length` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStEph.rs:144: warning: fn `nth` has APAS cost spec but no Code review
-src/Chap18/ArraySeqStEph.rs:151: error: St fn `subseq_copy` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStEph.rs:165: info: St fn `subseq` sequential as expected
-src/Chap18/ArraySeqStEph.rs:179: error: St fn `from_vec` Code review claims parallel span — Work O(n) worst case, O(1) best case but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStEph.rs:192: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStEph.rs:198: warning: fn `singleton` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStEph.rs:207: info: St fn `append` sequential as expected
@@ -505,12 +502,9 @@ src/Chap18/ArraySeqStEph.rs:745: error: fn `scan` missing alg analysis annotatio
 src/Chap18/ArraySeqStEph.rs:800: error: fn `map` missing alg analysis annotation
 src/Chap18/ArraySeqStEph.rs:820: error: fn `tabulate` missing alg analysis annotation
 src/Chap18/ArraySeqStEph.rs:838: error: fn `flatten` missing alg analysis annotation
-src/Chap18/ArraySeqStPer.rs:114: error: St fn `new` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStPer.rs:127: warning: fn `length` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStPer.rs:134: warning: fn `nth` has APAS cost spec but no Code review
-src/Chap18/ArraySeqStPer.rs:141: error: St fn `subseq_copy` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStPer.rs:155: info: St fn `subseq` sequential as expected
-src/Chap18/ArraySeqStPer.rs:169: error: St fn `from_vec` Code review claims parallel span — Work O(n) worst case, O(1) best case but Span O(1). (St files are sequential)
 src/Chap18/ArraySeqStPer.rs:182: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStPer.rs:188: warning: fn `singleton` has APAS cost spec but no Code review
 src/Chap18/ArraySeqStPer.rs:197: info: St fn `append` sequential as expected
@@ -545,23 +539,18 @@ src/Chap18/ArraySeqStPer.rs:726: error: fn `scan` missing alg analysis annotatio
 src/Chap18/ArraySeqStPer.rs:781: error: fn `map` missing alg analysis annotation
 src/Chap18/ArraySeqStPer.rs:801: error: fn `tabulate` missing alg analysis annotation
 src/Chap18/ArraySeqStPer.rs:819: error: fn `flatten` missing alg analysis annotation
-src/Chap18/LinkedListStEph.rs:101: error: St fn `new` Code review claims parallel span — Work O(n) but Span O(1). (St files are sequential)
-src/Chap18/LinkedListStEph.rs:113: error: St fn `set` Code review claims parallel span — Work O(index) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:122: error: St fn `length` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:128: info: St fn `nth` sequential as expected
 src/Chap18/LinkedListStEph.rs:134: info: St fn `subseq_copy` sequential as expected
-src/Chap18/LinkedListStEph.rs:147: error: St fn `from_vec` Code review claims parallel span — Work O(n) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:159: error: St fn `empty` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:164: error: St fn `singleton` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:172: warning: fn `tabulate` has APAS cost spec but no Code review
 src/Chap18/LinkedListStEph.rs:182: warning: fn `map` has APAS cost spec but no Code review
 src/Chap18/LinkedListStEph.rs:191: info: St fn `append` sequential as expected
 src/Chap18/LinkedListStEph.rs:206: warning: fn `filter` has APAS cost spec but no Code review
-src/Chap18/LinkedListStEph.rs:225: error: St fn `flatten` Code review claims parallel span — Work O(Σ|a_i|) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:234: info: St fn `update` sequential as expected
 src/Chap18/LinkedListStEph.rs:247: error: St fn `is_empty` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:252: error: St fn `is_singleton` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
-src/Chap18/LinkedListStEph.rs:257: error: St fn `iterate` Code review claims parallel span — Work O(|a|) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStEph.rs:266: warning: fn `reduce` has APAS cost spec but no Code review
 src/Chap18/LinkedListStEph.rs:278: warning: fn `scan` has APAS cost spec but no Code review
 src/Chap18/LinkedListStEph.rs:307: error: fn `new` missing alg analysis annotation
@@ -583,22 +572,18 @@ src/Chap18/LinkedListStEph.rs:597: error: fn `is_singleton` missing alg analysis
 src/Chap18/LinkedListStEph.rs:601: error: fn `iterate` missing alg analysis annotation
 src/Chap18/LinkedListStEph.rs:636: error: fn `reduce` missing alg analysis annotation
 src/Chap18/LinkedListStEph.rs:673: error: fn `scan` missing alg analysis annotation
-src/Chap18/LinkedListStPer.rs:102: error: St fn `new` Code review claims parallel span — Work O(n) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:114: error: St fn `length` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:120: info: St fn `nth` sequential as expected
 src/Chap18/LinkedListStPer.rs:126: info: St fn `subseq_copy` sequential as expected
-src/Chap18/LinkedListStPer.rs:139: error: St fn `from_vec` Code review claims parallel span — Work O(n) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:151: error: St fn `empty` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:156: error: St fn `singleton` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:164: warning: fn `tabulate` has APAS cost spec but no Code review
 src/Chap18/LinkedListStPer.rs:174: warning: fn `map` has APAS cost spec but no Code review
 src/Chap18/LinkedListStPer.rs:183: info: St fn `append` sequential as expected
 src/Chap18/LinkedListStPer.rs:198: warning: fn `filter` has APAS cost spec but no Code review
-src/Chap18/LinkedListStPer.rs:217: error: St fn `flatten` Code review claims parallel span — Work O(Σ|a_i|) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:226: info: St fn `update` sequential as expected
 src/Chap18/LinkedListStPer.rs:239: error: St fn `is_empty` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:244: error: St fn `is_singleton` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
-src/Chap18/LinkedListStPer.rs:249: error: St fn `iterate` Code review claims parallel span — Work O(|a|) but Span O(1). (St files are sequential)
 src/Chap18/LinkedListStPer.rs:258: warning: fn `reduce` has APAS cost spec but no Code review
 src/Chap18/LinkedListStPer.rs:270: warning: fn `scan` has APAS cost spec but no Code review
 src/Chap18/LinkedListStPer.rs:299: error: fn `new` missing alg analysis annotation
@@ -680,13 +665,10 @@ src/Chap19/ArraySeqMtEphSlice.rs:224: error: fn `empty` missing alg analysis ann
 src/Chap19/ArraySeqMtEphSlice.rs:232: error: fn `singleton` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:242: error: fn `new` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:264: error: fn `to_vec` missing alg analysis annotation
-src/Chap19/ArraySeqStEph.rs:176: error: St fn `new` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStEph.rs:189: error: St fn `set` Code review claims parallel span — Work O(1) but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStEph.rs:200: warning: fn `length` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStEph.rs:207: warning: fn `nth` has APAS cost spec but no Code review
-src/Chap19/ArraySeqStEph.rs:214: error: St fn `subseq_copy` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStEph.rs:228: info: St fn `subseq` sequential as expected
-src/Chap19/ArraySeqStEph.rs:242: error: St fn `from_vec` Code review claims parallel span — Work O(n) worst case, O(1) best case but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStEph.rs:251: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStEph.rs:257: warning: fn `singleton` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStEph.rs:268: info: St fn `append` sequential as expected
@@ -728,12 +710,9 @@ src/Chap19/ArraySeqStEph.rs:916: error: fn `map` missing alg analysis annotation
 src/Chap19/ArraySeqStEph.rs:934: error: fn `tabulate` missing alg analysis annotation
 src/Chap19/ArraySeqStEph.rs:953: error: fn `flatten` missing alg analysis annotation
 src/Chap19/ArraySeqStEph.rs:1006: error: fn `deflate` missing alg analysis annotation
-src/Chap19/ArraySeqStPer.rs:173: error: St fn `new` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStPer.rs:186: warning: fn `length` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStPer.rs:193: warning: fn `nth` has APAS cost spec but no Code review
-src/Chap19/ArraySeqStPer.rs:200: error: St fn `subseq_copy` Code review claims parallel span — Work O(length) but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStPer.rs:214: info: St fn `subseq` sequential as expected
-src/Chap19/ArraySeqStPer.rs:228: error: St fn `from_vec` Code review claims parallel span — Work O(n) worst case, O(1) best case but Span O(1). (St files are sequential)
 src/Chap19/ArraySeqStPer.rs:237: warning: fn `empty` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStPer.rs:243: warning: fn `singleton` has APAS cost spec but no Code review
 src/Chap19/ArraySeqStPer.rs:254: info: St fn `append` sequential as expected
@@ -864,7 +843,7 @@ src/Chap28/MaxContigSubSumBruteStEph.rs:82: error: fn `max_contig_sub_sum_brute`
 src/Chap28/MaxContigSubSumDivConMtEph.rs:163: error: fn `max_contig_sub_sum_divcon_mt` missing alg analysis annotation
 src/Chap28/MaxContigSubSumDivConOptMtEph.rs:160: error: fn `max_contig_sub_sum_divcon_opt_mt` missing alg analysis annotation
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:262: info: St fn `max_contig_sub_sum_divcon_opt` sequential as expected
-src/Chap28/MaxContigSubSumDivConOptStEph.rs:293: error: St fn `max_contig_sub_sum_aux` Code review claims parallel span — Work O(n log n) but Span O(n) (St files are sequential)
+src/Chap28/MaxContigSubSumDivConOptStEph.rs:293: warning: fn `max_contig_sub_sum_aux` has APAS cost spec but no Code review
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:384: error: fn `max_contig_sub_sum_divcon_opt` missing alg analysis annotation
 src/Chap28/MaxContigSubSumDivConStEph.rs:153: info: St fn `max_contig_sub_sum_divcon` sequential as expected
 src/Chap28/MaxContigSubSumDivConStEph.rs:302: error: fn `max_contig_sub_sum_divcon` missing alg analysis annotation
@@ -1813,12 +1792,12 @@ src/Chap39/BSTTreapMtEph.rs:1427: error: fn `pre_order` missing alg analysis ann
 src/Chap39/BSTTreapStEph.rs:145: error: fn `clone_elem_st` missing alg analysis annotation
 src/Chap39/BSTTreapStEph.rs:154: error: fn `clone_with_view` missing alg analysis annotation
 src/Chap39/BSTTreapStEph.rs:403: error: fn `priority_for_st` missing alg analysis annotation
-src/Chap39/BSTTreapStEph.rs:520: error: St fn `insert` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
-src/Chap39/BSTTreapStEph.rs:534: error: St fn `delete` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
-src/Chap39/BSTTreapStEph.rs:545: error: St fn `find` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
-src/Chap39/BSTTreapStEph.rs:555: error: St fn `contains` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
-src/Chap39/BSTTreapStEph.rs:563: error: St fn `minimum` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
-src/Chap39/BSTTreapStEph.rs:571: error: St fn `maximum` Code review claims parallel span — Work O(log n) expected, O(n) worst case; Span O(log n) expected but Span O(log n) expected (St files are sequential)
+src/Chap39/BSTTreapStEph.rs:520: warning: fn `insert` has APAS cost spec but no Code review
+src/Chap39/BSTTreapStEph.rs:534: warning: fn `delete` has APAS cost spec but no Code review
+src/Chap39/BSTTreapStEph.rs:545: warning: fn `find` has APAS cost spec but no Code review
+src/Chap39/BSTTreapStEph.rs:555: warning: fn `contains` has APAS cost spec but no Code review
+src/Chap39/BSTTreapStEph.rs:563: warning: fn `minimum` has APAS cost spec but no Code review
+src/Chap39/BSTTreapStEph.rs:571: warning: fn `maximum` has APAS cost spec but no Code review
 src/Chap39/BSTTreapStEph.rs:588: warning: fn `new_node` has APAS cost spec but no Code review
 src/Chap39/BSTTreapStEph.rs:595: warning: fn `size_link` has APAS cost spec but no Code review
 src/Chap39/BSTTreapStEph.rs:600: warning: fn `update_size` has APAS cost spec but no Code review
@@ -4015,11 +3994,11 @@ Summary
 
   Mt DIFFERS (blockers):       75  <- errors
   St DIFFERS (expected):      133  <- info
-  St parallel Code review:    111  <- errors (agent claimed parallel on St file)
-  APAS without Code review:   623  <- warnings
+  St parallel Code review:     67  <- errors (agent claimed parallel on St file)
+  APAS without Code review:   646  <- warnings
 
-  Errors: 3243
-  Warnings: 623
+  Errors: 3199
+  Warnings: 646
   Info: 133
 
-Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+Full output: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-analyze-alg-analysis.log
