@@ -96,47 +96,57 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTStEphTrait<T: StT>: Sized + View<V = OBSTStEphV<T>> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
             ensures
                 empty@.keys.len() == 0,
                 empty@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
             ensures
                 constructed@.keys.len() == keys@.len(),
                 constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures
                 constructed@.keys =~= key_probs@,
                 constructed@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&mut self) -> (cost: Probability);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>)
             ensures keys@ =~= self@.keys;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>)
             requires index < old(self)@.keys.len(),
             ensures
                 self@.keys =~= old(self)@.keys.update(index as int, key_prob),
                 self@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_prob(&mut self, index: usize, prob: Probability)
             requires index < old(self)@.keys.len(),
             ensures
                 self@.keys.len() == old(self)@.keys.len(),
                 self@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize)
             ensures count == self@.keys.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn clear_memo(&mut self)
             ensures
                 self@.keys =~= old(self)@.keys,
                 self@.memo =~= Map::<(usize, usize), Probability>::empty();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize)
             ensures count == self@.memo.len();
     }
@@ -213,6 +223,7 @@ broadcast use {
     }
 
     impl<T: StT> OBSTStEphTrait<T> for OBSTStEphS<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -221,6 +232,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self) {
             let n = keys.len();
             let mut key_probs: Vec<KeyProb<T>> = Vec::new();
@@ -243,6 +255,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             Self {
@@ -251,6 +264,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&mut self) -> (cost: Probability) {
             if self.keys.len() == 0 {
                 return Probability::zero();
@@ -262,23 +276,29 @@ broadcast use {
             obst_rec_st_eph(self, 0, n)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Vec<KeyProb<T>>) { &self.keys }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn set_key_prob(&mut self, index: usize, key_prob: KeyProb<T>) {
             self.keys.set(index, key_prob);
             self.memo.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn update_prob(&mut self, index: usize, prob: Probability) {
             let key = self.keys[index].key.clone();
             self.keys.set(index, KeyProb { key, prob });
             self.memo.clear();
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_keys(&self) -> (count: usize) { self.keys.len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn clear_memo(&mut self) { self.memo.clear(); }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 

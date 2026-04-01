@@ -2100,166 +2100,10 @@ src/Chap49/SubsetSumStPer.rs:164: error: fn `from_multiset` missing alg analysis
 src/Chap49/SubsetSumStPer.rs:172: error: fn `subset_sum` missing alg analysis annotation
 src/Chap49/SubsetSumStPer.rs:190: error: fn `multiset` missing alg analysis annotation
 src/Chap49/SubsetSumStPer.rs:192: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:153: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:156: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:159: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:162: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:174: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:178: error: fn `set_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:184: error: fn `update_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:191: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:195: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:199: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:201: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:212: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:223: error: fn `parallel_min_reduction` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:238: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:247: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:258: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:282: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:298: error: fn `parallel_min_reduction` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:317: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:409: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:425: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:435: error: fn `set_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:451: error: fn `update_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:468: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:478: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/MatrixChainMtEph.rs:486: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:145: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:148: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:151: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:154: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:164: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:167: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:170: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:172: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:182: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:193: error: fn `parallel_min_reduction` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:207: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:215: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:224: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:247: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:256: error: fn `parallel_min_reduction` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:275: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:367: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:384: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:386: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainMtPer.rs:391: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:138: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:144: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:150: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:156: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:166: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:169: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:172: error: fn `set_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:179: error: fn `update_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:187: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:193: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:196: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:206: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:229: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:242: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:255: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:282: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:291: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:340: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:351: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:355: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:359: error: fn `set_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:364: error: fn `update_dimension` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:369: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/MatrixChainStEph.rs:371: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:138: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:144: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:150: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:156: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:165: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:168: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:171: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:174: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:184: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:207: error: fn `new` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:220: error: fn `from_dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:233: error: fn `from_dim_pairs` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:260: error: fn `multiply_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:269: error: fn `matrix_chain_rec` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:318: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:329: error: fn `dimensions` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:333: error: fn `num_matrices` missing alg analysis annotation
-src/Chap50/MatrixChainStPer.rs:337: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:105: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:108: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:112: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:115: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:118: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:122: error: fn `set_key_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:128: error: fn `update_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:134: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:138: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:142: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:149: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
-src/Chap50/OptBinSearchTreeMtEph.rs:231: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:240: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:262: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:273: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:290: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:300: error: fn `set_key_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:319: error: fn `update_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:338: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:347: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtEph.rs:355: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:95: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:98: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:102: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:105: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:107: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:110: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:113: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:120: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
-src/Chap50/OptBinSearchTreeMtPer.rs:192: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:200: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:220: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:228: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:241: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:243: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeMtPer.rs:248: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:99: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:104: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:110: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:115: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:117: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:120: error: fn `set_key_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:126: error: fn `update_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:132: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:135: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:140: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:148: info: St fn `obst_rec_st_eph` sequential as expected
-src/Chap50/OptBinSearchTreeStEph.rs:216: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:224: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:246: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:254: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:265: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:267: error: fn `set_key_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:272: error: fn `update_prob` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:278: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:280: error: fn `clear_memo` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStEph.rs:282: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:99: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:104: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:110: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:115: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:117: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:120: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:123: error: fn `memo_size` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:131: info: St fn `obst_rec_st_per` sequential as expected
-src/Chap50/OptBinSearchTreeStPer.rs:199: error: fn `new` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:207: error: fn `from_keys_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:229: error: fn `from_key_probs` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:237: error: fn `optimal_cost` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:249: error: fn `keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:251: error: fn `num_keys` missing alg analysis annotation
-src/Chap50/OptBinSearchTreeStPer.rs:253: error: fn `memo_size` missing alg analysis annotation
+src/Chap50/OptBinSearchTreeMtEph.rs:159: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
+src/Chap50/OptBinSearchTreeMtPer.rs:127: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
+src/Chap50/OptBinSearchTreeStEph.rs:158: info: St fn `obst_rec_st_eph` sequential as expected
+src/Chap50/OptBinSearchTreeStPer.rs:138: info: St fn `obst_rec_st_per` sequential as expected
 src/Chap51/BottomUpDPMtEph.rs:199: error: fn `new` missing alg analysis annotation
 src/Chap51/BottomUpDPMtEph.rs:203: error: fn `s_length` missing alg analysis annotation
 src/Chap51/BottomUpDPMtEph.rs:204: error: fn `t_length` missing alg analysis annotation
@@ -2823,8 +2667,8 @@ Summary
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  2580  (fns with any APAS or Code review line)
-  Missing alg analysis:      2504  <- errors
+  Alg analysis annotations:  2736  (fns with any APAS or Code review line)
+  Missing alg analysis:      2348  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
   Mt DIFFERS (blockers):       75  <- errors
@@ -2832,7 +2676,7 @@ Summary
   St parallel Code review:     30  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 2609
+  Errors: 2453
   Warnings: 0
   Info: 204
 

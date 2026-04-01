@@ -135,24 +135,28 @@ broadcast use {
     pub trait MatrixChainStPerTrait: Sized + View<V = MatrixChainStPerV> {
         spec fn spec_matrixchainstper_wf(&self) -> bool;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
                 mc.spec_matrixchainstper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
                 mc.spec_matrixchainstper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
                 mc@.memo =~= Map::<(usize, usize), usize>::empty(),
                 mc.spec_matrixchainstper_wf();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&self) -> (cost: usize)
             requires
                 spec_dims_bounded(self@.dimensions),
@@ -162,15 +166,19 @@ broadcast use {
                 cost as nat == if self@.dimensions.len() <= 1 { 0 }
                     else { spec_chain_cost(self@.dimensions, 0, (self@.dimensions.len() - 1) as int, 0) };
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn dimensions(&self) -> (dims: &Vec<MatrixDim>)
             ensures dims@ =~= self@.dimensions;
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len();
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
             requires
                 i < self@.dimensions.len(),
@@ -181,6 +189,7 @@ broadcast use {
             ensures
                 cost as nat == spec_multiply_cost(self@.dimensions, i as int, k as int, j as int);
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)
             requires
                 i <= j,
@@ -204,6 +213,7 @@ broadcast use {
             spec_memo_correct(self@.dimensions, self@.memo)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (mc: Self)
             ensures
                 mc@.dimensions.len() == 0,
@@ -217,6 +227,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_dimensions(dimensions: Vec<MatrixDim>) -> (mc: Self)
             ensures
                 mc@.dimensions =~= dimensions@,
@@ -230,6 +241,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_dim_pairs(dim_pairs: Vec<Pair<usize, usize>>) -> (mc: Self)
             ensures
                 mc@.dimensions.len() == dim_pairs@.len(),
@@ -257,6 +269,7 @@ broadcast use {
             }
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiply_cost(&self, i: usize, k: usize, j: usize) -> (cost: usize)
         {
             let left_rows = self.dimensions[i].rows;
@@ -266,6 +279,7 @@ broadcast use {
             intermediate * right_cols
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn matrix_chain_rec(&mut self, i: usize, j: usize) -> (cost: usize)
             decreases j - i,
         {
@@ -315,6 +329,7 @@ broadcast use {
             best
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
         fn optimal_cost(&self) -> (cost: usize)
         {
             if self.dimensions.len() <= 1 {
@@ -326,14 +341,17 @@ broadcast use {
             solver.matrix_chain_rec(0, n - 1)
         }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn dimensions(&self) -> (dims: &Vec<MatrixDim>)
             ensures dims@ =~= self@.dimensions,
         { &self.dimensions }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn num_matrices(&self) -> (n: usize)
             ensures n == self@.dimensions.len(),
         { self.dimensions.len() }
 
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (n: usize)
             ensures n == self@.memo.len(),
         { self.memo.len() }
