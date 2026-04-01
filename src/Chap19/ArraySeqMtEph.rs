@@ -401,9 +401,9 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) — DIFFERS: delegates to reduce_iter (sequential), span = work
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone + Eq
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(lg |a| * max S(f)) — matches APAS: D&C fork-join via reduce_par
+        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
                 spec_monoid(spec_f, id),
@@ -429,9 +429,11 @@ pub mod ArraySeqMtEph {
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(Sigma S(f(x))) — DIFFERS: sequential tabulate, span = work
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(1 + max S(f(x))) — matches APAS: D&C fork-join via map_dc
+        fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
             requires
+                obeys_feq_clone::<T>(),
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
             ensures
                 mapped.seq@.len() == a.seq@.len(),
@@ -647,23 +649,26 @@ pub mod ArraySeqMtEph {
         }
 
         // Algorithm 19.5: filter f a = let b = map (deflate f) a in flatten b end.
+        // Uses sequential tabulate (not parallel map) to avoid closure Clone requirements.
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: ArraySeqMtEphS<T>)
             where T: Clone + Eq
         {
-            let deflated = Self::map(
-                    a,
-                    &(|x: &T| -> (d: ArraySeqMtEphS<T>)
-                        requires
-                            obeys_feq_clone::<T>(),
-                            pred.requires((x,)),
-                        ensures
-                            d.seq@.len() <= 1,
-                            d.seq@.len() == 1 ==> pred.ensures((x,), true) && d.seq@[0] == *x,
-                            d.seq@.len() == 0 ==> pred.ensures((x,), false),
-                    {
-                        Self::deflate(pred, x)
-                    }),
-                );
+            let n = a.seq.len();
+            let deflated = <ArraySeqMtEphS<ArraySeqMtEphS<T>> as ArraySeqMtEphTrait<ArraySeqMtEphS<T>>>::tabulate(
+                &(|i: usize| -> (d: ArraySeqMtEphS<T>)
+                    requires
+                        obeys_feq_clone::<T>(),
+                        (i as int) < a.seq@.len(),
+                        pred.requires((&a.seq@[i as int],)),
+                    ensures
+                        d.seq@.len() <= 1,
+                        d.seq@.len() == 1 ==> pred.ensures((&a.seq@[i as int],), true) && d.seq@[0] == a.seq@[i as int],
+                        d.seq@.len() == 0 ==> pred.ensures((&a.seq@[i as int],), false),
+                {
+                    Self::deflate(pred, &a.seq[i])
+                }),
+                n,
+            );
             let filtered = Self::flatten(&deflated);
             proof {
                 let ghost ss = deflated.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@);
@@ -901,12 +906,25 @@ pub mod ArraySeqMtEph {
             acc
         }
 
-        // Algorithm 19.9: reduce f id a = if |a|=0 then id; |a|=1 then a[0]; else f(reduce f id b, reduce f id c).
-        // Delegates to reduce_iter which has the full proof.
-        fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone + Eq
+        // Algorithm 19.9: reduce via D&C fork-join (delegates to reduce_par).
+        fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
         {
-            Self::reduce_iter(a, f, Ghost(spec_f), id)
+            let len = a.seq.len();
+            if len == 0 {
+                proof {
+                    assert(a.seq@ =~= Seq::<T>::empty());
+                    reveal(Seq::fold_left);
+                }
+                id
+            } else {
+                let f_owned = clone_fn2(f);
+                let result = Self::reduce_par(a, f_owned, Ghost(spec_f), id);
+                proof {
+                    assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= a.seq@);
+                }
+                result
+            }
         }
 
         // Algorithm 19.10: scan f id a (iterative form for single-threaded).
@@ -950,22 +968,31 @@ pub mod ArraySeqMtEph {
             (ArraySeqMtEphS { seq }, acc)
         }
 
-        // Algorithm 19.3: map f a = tabulate (lambda i.f(a[i])) |a|.
-        fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+        // Algorithm 19.3: map via D&C fork-join (delegates to map_dc).
+        fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
         {
-            let n = a.seq.len();
-            <ArraySeqMtEphS<U> as ArraySeqMtEphTrait<U>>::tabulate(
-                &(|i: usize| -> (r: U)
-                    requires
-                        (i as int) < a.seq@.len(),
-                        f.requires((&a.seq@[i as int],)),
-                    ensures
-                        f.ensures((&a.seq@[i as int],), r),
-                {
-                    f(&a.seq[i])
-                }),
-                n,
-            )
+            let a_owned = a.subseq_copy(0, a.seq.len());
+            let f_owned = clone_fn(f);
+            let ghost a_owned_view = a_owned.seq@;
+            proof {
+                // Prove element equality before a_owned is consumed
+                assert forall|i: int| 0 <= i < a_owned_view.len() implies #[trigger] a_owned_view[i] == a.seq@[i] by {
+                    a.lemma_spec_index(i);
+                    a_owned.lemma_spec_index(i);
+                }
+                assert forall|i: int| 0 <= i < a_owned.seq@.len() implies #[trigger] f_owned.requires((&a_owned.seq@[i],)) by {
+                    a.lemma_spec_index(i);
+                    a_owned.lemma_spec_index(i);
+                }
+            }
+            let result = Self::map_dc(a_owned, f_owned);
+            proof {
+                // map_dc ensures f_owned.ensures on a_owned_view elements
+                // clone_fn ensures f_owned.ensures == f.ensures
+                // a_owned_view[i] == a.seq@[i] (proved above)
+            }
+            result
         }
 
         // Primitive: tabulate.
@@ -1327,6 +1354,139 @@ pub mod ArraySeqMtEph {
                 }
                 combined
             }
+        }
+
+        /// Parallel D&C map with full element-level ensures.
+        /// Takes owned data so join closures satisfy 'static.
+        fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+            a: ArraySeqMtEphS<T>,
+            f: F,
+        ) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Send + Sync + Eq + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                a.seq@.len() <= usize::MAX as int,
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]),
+            decreases a.seq@.len()
+        {
+            let len = a.seq.len();
+            if len == 0 {
+                ArraySeqMtEphS { seq: Vec::new() }
+            } else if len == 1 {
+                let mut seq = Vec::with_capacity(1);
+                seq.push(f(&a.seq[0]));
+                ArraySeqMtEphS { seq }
+            } else {
+                let mid = len / 2;
+                let ghost a_view = a.seq@;
+                let left_seq = a.subseq_copy(0, mid);
+                let right_seq = a.subseq_copy(mid, len - mid);
+                let f1 = clone_fn(&f);
+                let f2 = clone_fn(&f);
+                proof {
+                    assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
+                        a.lemma_spec_index(0 + i);
+                        left_seq.lemma_spec_index(i);
+                    }
+                    assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
+                        a.lemma_spec_index(mid as int + i);
+                        right_seq.lemma_spec_index(i);
+                    }
+                }
+                let ghost left_view = left_seq.seq@;
+                let ghost right_view = right_seq.seq@;
+                let ghost left_len = left_seq.seq@.len();
+                let ghost right_len = right_seq.seq@.len();
+                proof {
+                    // Establish element equalities before join closures consume the sequences
+                    assert forall|i: int| 0 <= i < left_view.len() implies left_view[i] == a_view[i] by {
+                        a.lemma_spec_index(i);
+                        left_seq.lemma_spec_index(i);
+                    }
+                    assert forall|j: int| 0 <= j < right_view.len() implies right_view[j] == a_view[mid as int + j] by {
+                        a.lemma_spec_index(mid as int + j);
+                        right_seq.lemma_spec_index(j);
+                    }
+                }
+
+                let fa = move || -> (r: ArraySeqMtEphS<U>)
+                    requires
+                        left_seq.seq@.len() <= usize::MAX as int,
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < left_seq.seq@.len() ==> #[trigger] f1.requires((&left_seq.seq@[i],)),
+                    ensures
+                        r.seq@.len() == left_len,
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+                {
+                    Self::map_dc(left_seq, f1)
+                };
+
+                let fb = move || -> (r: ArraySeqMtEphS<U>)
+                    requires
+                        right_seq.seq@.len() <= usize::MAX as int,
+                        obeys_feq_clone::<T>(),
+                        forall|i: int| 0 <= i < right_seq.seq@.len() ==> #[trigger] f2.requires((&right_seq.seq@[i],)),
+                    ensures
+                        r.seq@.len() == right_len,
+                        forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+                {
+                    Self::map_dc(right_seq, f2)
+                };
+
+                let (left, right) = join(fa, fb);
+                let result = ArraySeqMtEphS::<U>::concat_seqs(left, right);
+                proof {
+                    assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+                        if i < mid as int {
+                            assert(result.seq@[i] == left.seq@[i]);
+                        } else {
+                            let j = i - mid as int;
+                            assert(result.seq@[i] == right.seq@[j]);
+                            assert(right_view[j] == a_view[mid as int + j]);
+                        }
+                    }
+                }
+                result
+            }
+        }
+
+        /// Sequential concatenation of two owned sequences. Moves elements from b
+        /// into a's Vec via into_iter, avoiding Clone/Eq requirements.
+        fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>)
+            requires
+                a.seq@.len() + b.seq@.len() <= usize::MAX,
+            ensures
+                result.seq@.len() == a.seq@.len() + b.seq@.len(),
+                forall|i: int| #![trigger result.seq@[i]] 0 <= i < a.seq@.len() ==> result.seq@[i] == a.seq@[i],
+                forall|i: int| 0 <= i < b.seq@.len() ==> result.seq@[a.seq@.len() + i] == b.seq@[i],
+        {
+            let ghost a_view = a.seq@;
+            let ghost b_view = b.seq@;
+            let ghost a_len = a_view.len();
+            let b_len = b.seq.len();
+            let mut vec = a.seq;
+            let mut iter = b.seq.into_iter();
+            let mut j: usize = 0;
+            while j < b_len
+                invariant
+                    j <= b_len,
+                    b_len == b_view.len(),
+                    vec@.len() == a_len + j,
+                    iter@.0 == j as int,
+                    iter@.1 == b_view,
+                    forall|k: int| #![trigger vec@[k]] 0 <= k < a_len ==> vec@[k] == a_view[k],
+                    forall|k: int| 0 <= k < j ==> vec@[a_len + k] == b_view[k],
+                decreases b_len - j,
+            {
+                if let Some(e) = iter.next() {
+                    vec.push(e);
+                }
+                j += 1;
+            }
+            ArraySeqMtEphS { seq: vec }
         }
     }
 

@@ -1,0 +1,174 @@
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1548:21
+     |
+1548 |               ensures s.to_multiset().filter(pred) =~= s.subrange(0, mid).to_multiset().filter(pred).add(s.subrange(mid, s.len() as int).to_multiset().filter(pred))
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1551 | /             if s.len() == 0 {
+1552 | |                 assert(s.subrange(0, mid) =~= Seq::<T>::empty());
+1553 | |                 assert(s.subrange(mid, s.len() as int) =~= Seq::<T>::empty());
+1554 | |             } else if mid == s.len() {
+...    |
+1565 | |                 Self::lemma_multiset_filter_split(s.drop_last(), pred, mid);
+1566 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+old(s).to_multiset().filter(old(pred)) =~= old(s).subrange(0, old(mid)).to_multiset().filter(old(pred)).add(old(s).subrange(old(mid), old(s).len()).to_multiset().filter(old(pred))) 
+
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1408:17
+     |
+1408 |                   filtered.seq@.len() == spec_filter_len(a.seq@, spec_pred),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1414 | /             if len == 0 {
+1415 | |                 proof {
+1416 | |                     reveal(spec_filter_len);
+1417 | |                     assert(a.seq@ =~= Seq::<T>::empty());
+...    |
+1517 | |                 result
+1518 | |             }
+     | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEph.rs:1409:17
+     |
+1409 |                   filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1414 | /             if len == 0 {
+1415 | |                 proof {
+1416 | |                     reveal(spec_filter_len);
+1417 | |                     assert(a.seq@ =~= Seq::<T>::empty());
+...    |
+1517 | |                 result
+1518 | |             }
+     | |_____________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1455:32
+     |
+1455 |                         assert(left_seq.seq@[i] == a_view[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1458:32
+     |
+1458 |                         assert(right_seq.seq@[i] == a_view[mid as int + i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1510:28
+     |
+1510 |                     assert(left_view =~= a_view.subrange(0, mid as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1511:28
+     |
+1511 |                     assert(right_view =~= a_view.subrange(mid as int, len as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+left_seq.seq.view().index(i) == a_view.index(i) 
+
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqMtEph.rs:307:17
+    |
+307 | ...       forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+670 | ...   result
+    |       ------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEph.rs:659:28
+    |
+659 |                     assert(a_owned.seq@[i] == a.seq@[i]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEph.rs:666:24
+    |
+666 |                 assert(a_owned.seq@ =~= a.seq@);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+a_owned.seq.view().index(i) == a.seq.view().index(i) 
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1341:32
+     |
+1341 |                         assert(left_seq.seq@[i] == a_view[i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1344:32
+     |
+1344 |                         assert(right_seq.seq@[i] == a_view[mid as int + i]);
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1379:73
+     |
+1379 |                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+     |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1385:36
+     |
+1385 | ...                   assert(right_view[j] == a_view[mid as int + j]);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+left_seq.seq.view().index(i) == a_view.index(i) 
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1359:113
+     |
+1359 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+     |                                                                                                                 ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1371:115
+     |
+1371 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+     |                                                                                                                   ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEph.rs:936:28
+    |
+936 |                     assert(a_owned.seq@[i] == a.seq@[i]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEph.rs:942:28
+    |
+942 |                     assert(a_owned.seq@[i] == a.seq@[i]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+a_owned.seq.view().index(i) == a.seq.view().index(i) 
+
+verification results:: 845 verified, 5 errors
+error: aborting due to 16 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 453MB, peak z3 RSS: 0MB, min free: 23950MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

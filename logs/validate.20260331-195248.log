@@ -1,0 +1,198 @@
+error[E0277]: `T` cannot be sent between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:656:21
+    |
+655 |             let deflated = Self::map(
+    |                            --------- required by a bound introduced by this call
+656 |                     a,
+    |                     ^ `T` cannot be sent between threads safely
+    |
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::map`
+   --> src/Chap19/ArraySeqMtEph.rs:434:35
+    |
+433 | ...   fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ma...
+    |          --- required by a bound in this associated function
+434 | ...       where T: Clone + Eq + Send + Sync + 'static
+    |                                 ^^^^ required by this bound in `ArraySeqMtEphTrait::map`
+help: consider restricting type parameter `T` with trait `Send`
+    |
+482 |     impl<T: std::marker::Send> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0277]: `T` cannot be shared between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:656:21
+    |
+655 |             let deflated = Self::map(
+    |                            --------- required by a bound introduced by this call
+656 |                     a,
+    |                     ^ `T` cannot be shared between threads safely
+    |
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::map`
+   --> src/Chap19/ArraySeqMtEph.rs:434:42
+    |
+433 | ...   fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ma...
+    |          --- required by a bound in this associated function
+434 | ...       where T: Clone + Eq + Send + Sync + 'static
+    |                                        ^^^^ required by this bound in `ArraySeqMtEphTrait::map`
+help: consider restricting type parameter `T` with trait `Sync`
+    |
+482 |     impl<T: std::marker::Sync> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0277]: `T` cannot be sent between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:655:28
+    |
+655 |               let deflated = Self::map(
+    |  ____________________________^
+656 | |                     a,
+657 | |                     &(|x: &T| -> (d: ArraySeqMtEphS<T>)
+658 | |                         requires
+...   |
+667 | |                     }),
+668 | |                 );
+    | |_________________^ `T` cannot be sent between threads safely
+    |
+note: required because it appears within the type `std::marker::PhantomData<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `alloc::raw_vec::RawVec<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/raw_vec/mod.rs:73:18
+note: required because it appears within the type `std::vec::Vec<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/vec/mod.rs:440:11
+note: required because it appears within the type `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>`
+   --> src/Chap19/ArraySeqMtEph.rs:68:16
+    |
+ 68 |     pub struct ArraySeqMtEphS<T> {
+    |                ^^^^^^^^^^^^^^
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::map`
+   --> src/Chap19/ArraySeqMtEph.rs:433:27
+    |
+433 | ...   fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ma...
+    |                         ^^^^ required by this bound in `ArraySeqMtEphTrait::map`
+help: consider restricting type parameter `T` with trait `Send`
+    |
+482 |     impl<T: std::marker::Send> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0277]: `T` cannot be shared between threads safely
+   --> src/Chap19/ArraySeqMtEph.rs:655:28
+    |
+655 |               let deflated = Self::map(
+    |  ____________________________^
+656 | |                     a,
+657 | |                     &(|x: &T| -> (d: ArraySeqMtEphS<T>)
+658 | |                         requires
+...   |
+667 | |                     }),
+668 | |                 );
+    | |_________________^ `T` cannot be shared between threads safely
+    |
+note: required because it appears within the type `std::marker::PhantomData<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `alloc::raw_vec::RawVec<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/raw_vec/mod.rs:73:18
+note: required because it appears within the type `std::vec::Vec<T>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/alloc/src/vec/mod.rs:440:11
+note: required because it appears within the type `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>`
+   --> src/Chap19/ArraySeqMtEph.rs:68:16
+    |
+ 68 |     pub struct ArraySeqMtEphS<T> {
+    |                ^^^^^^^^^^^^^^
+note: required by a bound in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait::map`
+   --> src/Chap19/ArraySeqMtEph.rs:433:34
+    |
+433 | ...   fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (ma...
+    |                                ^^^^ required by this bound in `ArraySeqMtEphTrait::map`
+help: consider restricting type parameter `T` with trait `Sync`
+    |
+482 |     impl<T: std::marker::Sync> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |           +++++++++++++++++++
+
+error[E0308]: arguments to this function are incorrect
+    --> src/Chap19/ArraySeqMtEph.rs:1417:30
+     |
+1112 |     impl<T> ArraySeqMtEphS<T> {
+     |          -
+     |          |
+     |          expected type parameter
+     |          expected type parameter
+...
+1351 |         fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+     |                   -
+     |                   |
+     |                   found type parameter
+     |                   found type parameter
+...
+1417 |                 let result = Self::concat_seqs(left, right);
+     |                              ^^^^^^^^^^^^^^^^^
+     |
+note: expected `ArraySeqMtEphS<T>`, found `ArraySeqMtEphS<U>`
+    --> src/Chap19/ArraySeqMtEph.rs:1417:48
+     |
+1417 |                 let result = Self::concat_seqs(left, right);
+     |                                                ^^^^
+     = note: expected struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>`
+                found struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<U>`
+     = note: a type parameter was expected, but a different one was found; you might be missing a type parameter or trait bound
+     = note: for more information, visit https://doc.rust-lang.org/book/ch10-02-traits.html#traits-as-parameters
+note: expected `ArraySeqMtEphS<T>`, found `ArraySeqMtEphS<U>`
+    --> src/Chap19/ArraySeqMtEph.rs:1417:54
+     |
+1417 |                 let result = Self::concat_seqs(left, right);
+     |                                                      ^^^^^
+     = note: expected struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>`
+                found struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<U>`
+     = note: a type parameter was expected, but a different one was found; you might be missing a type parameter or trait bound
+     = note: for more information, visit https://doc.rust-lang.org/book/ch10-02-traits.html#traits-as-parameters
+note: associated function defined here
+    --> src/Chap19/ArraySeqMtEph.rs:1435:12
+     |
+1435 |         fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>)
+     |            ^^^^^^^^^^^ --------------------  --------------------
+
+error[E0308]: mismatched types
+    --> src/Chap19/ArraySeqMtEph.rs:1419:98
+     |
+1112 |     impl<T> ArraySeqMtEphS<T> {
+     |          - found type parameter
+...
+1351 |         fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+     |                   - expected type parameter
+...
+1419 |                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+     |                                                                           -------                ^^^^^^^^^^^^^^^^^^^^^^^^^ expected type parameter `U`, found type parameter `T`
+     |                                                                           |
+     |                                                                           arguments to this method are incorrect
+     |
+     = note: expected type parameter `U`
+                found type parameter `T`
+     = note: a type parameter was expected, but a different one was found; you might be missing a type parameter or trait bound
+     = note: for more information, visit https://doc.rust-lang.org/book/ch10-02-traits.html#traits-as-parameters
+note: method defined here
+    --> vstd/pervasive.rs:96:12
+
+error[E0308]: mismatched types
+    --> src/Chap19/ArraySeqMtEph.rs:1429:17
+     |
+1112 |     impl<T> ArraySeqMtEphS<T> {
+     |          - found type parameter
+...
+1351 |         fn map_dc<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(
+     |                   - expected type parameter
+...
+1354 |         ) -> (mapped: ArraySeqMtEphS<U>)
+     |                       ----------------- expected `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<U>` because of return type
+...
+1429 |                 result
+     |                 ^^^^^^ expected `ArraySeqMtEphS<U>`, found `ArraySeqMtEphS<T>`
+     |
+     = note: expected struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<U>`
+                found struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>`
+     = note: a type parameter was expected, but a different one was found; you might be missing a type parameter or trait bound
+     = note: for more information, visit https://doc.rust-lang.org/book/ch10-02-traits.html#traits-as-parameters
+
+error: aborting due to 7 previous errors
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24325MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

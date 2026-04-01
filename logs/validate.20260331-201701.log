@@ -70,5 +70,5 @@ verification results:: 846 verified, 1 errors
 error: aborting due to 2 previous errors
 
 Elapsed: 4s
-Sampled Memory Usage: peak rust_verify RSS: 1457MB, peak z3 RSS: 186MB, min free: 22646MB
-Sampled CPU Usage: rust_verify: 11s, z3 children: 6s
+Sampled Memory Usage: peak rust_verify RSS: 473MB, peak z3 RSS: 0MB, min free: 23827MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

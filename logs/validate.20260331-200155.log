@@ -1,0 +1,18 @@
+error[E0599]: no method named `lemma_multiset_has_no_duplicates_to_multiset` found for struct `vstd::seq::Seq<A>` in the current scope
+    --> src/Chap19/ArraySeqMtEph.rs:1564:19
+     |
+1564 |                 s.lemma_multiset_has_no_duplicates_to_multiset();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+help: there is a method `lemma_multiset_has_no_duplicates` with a similar name
+     |
+1564 -                 s.lemma_multiset_has_no_duplicates_to_multiset();
+1564 +                 s.lemma_multiset_has_no_duplicates();
+     |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24332MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
