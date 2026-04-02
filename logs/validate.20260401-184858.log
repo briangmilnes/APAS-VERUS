@@ -1,0 +1,29 @@
+error: found a cyclic self-reference in a definition, which may result in nontermination
+   --> src/Chap19/ArraySeqMtEphSlice.rs:200:9
+    |
+ 79 | /      pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
+ 80 | |          spec fn spec_arrayseqmtephslice_wf(&self) -> bool;
+ 81 | |
+ 82 | |          spec fn spec_len(&self) -> nat;
+...   |
+200 | |/         fn map<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+201 | ||             &self, f: &F,
+202 | ||         ) -> (mapped: ArraySeqMtEphSliceS<U>)
+203 | ||             where T: Send + Sync + 'static
+...   ||
+209 | ||             ensures
+210 | ||                 mapped.spec_len() == self.spec_len();
+    | ||_____________________________________________________^ may be part of cycle (node 1 of 3 in cycle): function definition, whose body may have dependencies
+...   |
+224 | |                  filtered.spec_len() <= self.spec_len();
+225 | |      }
+    | |______- may be part of cycle (node 3 of 3 in cycle): declaration of trait
+...
+235 |            open spec fn spec_len(&self) -> nat {
+    |                      ------------------------- may be part of cycle (node 2 of 3 in cycle): function definition, whose body may have dependencies
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 991MB, peak z3 RSS: 0MB, min free: 24653MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 0s

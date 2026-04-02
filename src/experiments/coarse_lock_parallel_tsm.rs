@@ -7,14 +7,14 @@
 //! - Layer 2: TSM token inside the lock; predicate ties token to data. Zero assumes.
 //! - Layer 3: After acquire, call the Mt type's OWN parallel operations on owned data.
 //!
-//! Uses ArraySeqMtEphS<u64> as the inner Mt type. After acquiring the lock, the
-//! experiment calls ArraySeqMtEphTrait::reduce and ArraySeqMtEphTrait::map directly —
-//! the Mt type handles parallelism internally (D&C via join). The experiment does NOT
+//! Uses ArraySeqMtEphSliceS<u64> as the inner Mt type. After acquiring the lock, the
+//! experiment calls the slice type's reduce and map directly — the Mt type handles
+//! parallelism internally (D&C via join on O(1) slices). The experiment does NOT
 //! manually split, loop, or re-implement these operations.
 //!
 //! This is the key architectural point from architecture-coarse-lock-parallel-mt.md:
 //! when M1 stores M2 inside its lock, M1's locked trait calls M2's unlocked trait
-//! directly on the owned M2 data.
+//! directly on the owned M2 data. The slice type provides O(1) split for D&C.
 //!
 //! Zero assumes, zero accepts, zero external_body (except inside the Mt type's internals).
 //!
@@ -72,7 +72,7 @@ pub mod coarse_lock_parallel_tsm {
 
     // 2. imports
 
-    use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+    use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -89,9 +89,9 @@ pub mod coarse_lock_parallel_tsm {
 
     // 4. type definitions
 
-    /// Lock interior: concrete sequence + ghost count token.
+    /// Lock interior: slice-backed sequence + ghost count token.
     pub struct CollectionInterior {
-        pub seq: ArraySeqMtEphS<u64>,
+        pub seq: ArraySeqMtEphSliceS<u64>,
         pub token: Tracked<CollectionSM::count>,
     }
 
@@ -102,7 +102,7 @@ pub mod coarse_lock_parallel_tsm {
 
     impl RwLockPredicate<CollectionInterior> for CollectionInv {
         open spec fn inv(self, interior: CollectionInterior) -> bool {
-            interior.seq.spec_arrayseqmteph_wf()
+            interior.seq.spec_arrayseqmtephslice_wf()
             && interior.token@.value() == interior.seq.spec_len()
             && interior.token@.instance_id() == self.instance.id()
         }
@@ -133,7 +133,7 @@ pub mod coarse_lock_parallel_tsm {
             ) = CollectionSM::Instance::initialize(0);
 
             let interior = CollectionInterior {
-                seq: ArraySeqMtEphS::empty(),
+                seq: ArraySeqMtEphSliceS::empty(),
                 token: Tracked(count_token),
             };
 
@@ -154,7 +154,7 @@ pub mod coarse_lock_parallel_tsm {
             ) = CollectionSM::Instance::initialize(len as nat);
 
             let interior = CollectionInterior {
-                seq: ArraySeqMtEphS::from_vec(v),
+                seq: ArraySeqMtEphSliceS::from_vec(v),
                 token: Tracked(count_token),
             };
 
@@ -175,12 +175,12 @@ pub mod coarse_lock_parallel_tsm {
             n
         }
 
-        /// Read + parallel: reduce via the Mt type's own parallel reduce.
+        /// Read + parallel: reduce via the slice type's own parallel reduce.
         ///
-        /// Acquires read lock, calls ArraySeqMtEphTrait::reduce on the interior
-        /// data. The Mt type handles parallelism internally (D&C with join).
-        /// This is the architectural pattern: call the inner type's unlocked
-        /// operations after acquire.
+        /// Acquires read lock, calls reduce on the interior slice data.
+        /// The slice type handles parallelism internally (D&C with O(1)
+        /// slice split + join). This is the architectural pattern: call
+        /// the inner type's unlocked operations after acquire.
         pub fn mt_parallel_reduce<F: Fn(&u64, &u64) -> u64 + Clone + Send + Sync + 'static>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(u64, u64) -> u64>, id: u64,
         ) -> (result: u64)
@@ -193,17 +193,17 @@ pub mod coarse_lock_parallel_tsm {
         {
             let read_handle = self.lock.acquire_read();
             let interior = read_handle.borrow();
-            // Call the Mt type's own parallel reduce — internally uses D&C + join.
-            let result = <ArraySeqMtEphS<u64> as ArraySeqMtEphTrait<u64>>::reduce(&interior.seq, f, Ghost(spec_f), id);
+            // Call the slice type's own parallel reduce — O(1) split, D&C + join.
+            let result = interior.seq.reduce(f, Ghost(spec_f), id);
             read_handle.release_read();
             result
         }
 
-        /// Write + parallel: map via the Mt type's own parallel map.
+        /// Write + parallel: map via the slice type's own parallel map.
         ///
-        /// Acquires write lock, calls ArraySeqMtEphTrait::map on the interior
-        /// data. Map preserves length, so the TSM token stays unchanged.
-        /// The Mt type handles parallelism internally (D&C with join).
+        /// Acquires write lock, calls map on the interior slice data.
+        /// Map preserves length, so the TSM token stays unchanged.
+        /// The slice type handles parallelism internally (D&C with O(1) split + join).
         pub fn mt_parallel_map<F: Fn(&u64) -> u64 + Clone + Send + Sync + 'static>(
             &self, f: &F,
         )
@@ -214,13 +214,13 @@ pub mod coarse_lock_parallel_tsm {
         {
             let (mut interior, write_handle) = self.lock.acquire_write();
             let ghost orig_len = interior.seq.spec_len();
-            // Call the Mt type's own parallel map — internally uses D&C + join.
-            let new_seq = <ArraySeqMtEphS<u64> as ArraySeqMtEphTrait<u64>>::map(&interior.seq, f);
+            // Call the slice type's own parallel map — O(1) split, D&C + join.
+            let new_seq = interior.seq.map(f);
             // Map preserves length: new_seq.spec_len() == orig_len.
             interior.seq = new_seq;
             proof {
                 // Predicate: token value == seq length, both == orig_len.
-                assert(interior.seq.spec_arrayseqmteph_wf());
+                assert(interior.seq.spec_arrayseqmtephslice_wf());
                 assert(interior.seq.spec_len() == orig_len);
                 assert(interior.token@.value() == orig_len);
                 assert(interior.token@.value() == interior.seq.spec_len());

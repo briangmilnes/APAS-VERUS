@@ -1,0 +1,24 @@
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:464:25
+    |
+464 |                         #[trigger] left_backing[i] == s.subrange(0, mid as int)[i]
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:472:25
+    |
+472 |                         #[trigger] right_backing[i] == s.subrange(mid as int, len as int)[i]
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left_backing.index(i) == s.subrange(0, mid).index(i) 
+
+verification results:: 835 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 661MB, peak z3 RSS: 50MB, min free: 24402MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 4s
