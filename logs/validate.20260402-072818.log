@@ -1,0 +1,38 @@
+error: this file contains an unclosed delimiter
+    --> src/Chap43/OrderedTableStPer.rs:4297:3
+     |
+   5 | pub mod OrderedTableStPer {
+     |                           - unclosed delimiter
+...
+  28 |     verus! {
+     |            - unclosed delimiter
+...
+1361 |     {
+     |     - unclosed delimiter
+1362 |         proof { lemma_pair_set_to_map_dom_finite(tree@); }
+1363 |         match tree.expose() {
+     |                             - unclosed delimiter
+1364 |             Exposed::Leaf => None,
+1365 |             Exposed::Node(left, root_pair, right) => {
+     |                                                      - unclosed delimiter
+...
+1380 |                 match c {
+     |                         - another 5 unclosed delimiters begin from here
+...
+1647 |                                         assert(tp.0@ != root_pair.0@) by {
+     |                                                                          - this delimiter might not be properly closed...
+...
+1766 |                         by {};
+     |                            -- block is empty, you might have not meant to close it
+...
+4253 |     } // verus!
+     |     - ...as it matches this but it has different indentation
+...
+4297 | }
+     |  ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25505MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

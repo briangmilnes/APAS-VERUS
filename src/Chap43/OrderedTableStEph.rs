@@ -2215,37 +2215,41 @@ broadcast use {
                             // Key uniqueness and view generation for new_right.
                             lemma_key_unique_subset(tree@, new_right@);
                             lemma_view_gen_subset::<K, V>(new_right@, tree@);
-                            // Size bounds.
-                            vstd::set_lib::lemma_len_subset(ll@, tree@);
-                            vstd::set_lib::lemma_len_subset(new_right@, tree@);
-                            vstd::set_lib::lemma_len_subset(ll@, left@);
-                            // ll + new_right ≤ tree.
-                            // found value proof.
-                            if spec_pair_set_to_map(tree@).contains_key(k@) {
-                                lemma_map_contains_pair_in_set(tree@, k@);
-                                let tv: V::V = choose|tv: V::V| tree@.contains((k@, tv));
-                                if left@.contains((k@, tv)) {
-                                    lemma_pair_in_set_map_contains(left@, k@, tv);
-                                } else if (k@, tv) == root_pair@ {
-                                    assert(root_pair.0@ == k@);
-                                    assert(root_pair.0 == *k);
-                                    assert(k.cmp_spec(&root_pair.0) == Less);
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                } else {
-                                    // k@ in right, but right has keys > root > k. Contradiction.
-                                    assert(right@.contains((k@, tv)));
-                                    let rp: Pair<K, V> = choose|rp: Pair<K, V>| rp@ == (k@, tv);
-                                    assert(right@.contains(rp@));
-                                    assert(rp.cmp_spec(&root_pair) == Greater);
-                                    assert(rp.0@ == k@);
-                                    assert(rp.0 == *k);
-                                    assert(k.cmp_spec(&root_pair.0) == Less);
-                                    // rp.cmp_spec(root) == Greater but rp.0.cmp_spec(root.0) == Less.
-                                    // spec_pair_key_determines_order with rp.0 != root.0.
-                                    assert(rp.0@ != root_pair.0@);
-                                    assert(rp.0.cmp_spec(&root_pair.0) == Less);
-                                    assert(rp.cmp_spec(&root_pair) == Less);
-                                }
+                            // Size bounds: ll.len() + new_right.len() <= tree.len().
+                            // new_right@ = lr@ ∪ right@ ∪ {root@}, all disjoint.
+                            // |new_right| = |lr| + |right| + 1.
+                            // |ll| + |lr| <= |left| (from recursion).
+                            // |tree| = |left| + |right| + 1 (from expose).
+                            vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
+                            assert(new_right@.len() == lr@.len() + right@.len() + 1) by {
+                                let lr_r = lr@.union(right@);
+                                vstd::set_lib::lemma_set_disjoint_lens(lr@, right@);
+                                assert(lr_r.len() == lr@.len() + right@.len());
+                                assert(!lr_r.contains(root_pair@)) by {
+                                    if lr_r.contains(root_pair@) {
+                                        if lr@.contains(root_pair@) { assert(left@.contains(root_pair@)); }
+                                    }
+                                };
+                                // |lr_r.insert(root_pair@)| = |lr_r| + 1 since !lr_r.contains(root_pair@).
+                                assert(lr_r.insert(root_pair@).len() == lr_r.len() + 1) by {
+                                    assert(lr_r.insert(root_pair@) =~= lr_r.union(Set::empty().insert(root_pair@)));
+                                    let singleton = Set::empty().insert(root_pair@);
+                                    assert(lr_r.disjoint(singleton));
+                                    vstd::set_lib::lemma_set_disjoint_lens(lr_r, singleton);
+                                };
+                            };
+                            // found value proof: from recursive result upward.
+                            // If found is Some(v), recursion ensures left@.contains_key(k@).
+                            // left@ ⊆ tree@, so tree@.contains_key(k@).
+                            if found is Some {
+                                let fv = found->Some_0;
+                                // Recursive ensures: spec_pair_set_to_map(left@).contains_key(k@)
+                                lemma_map_contains_pair_in_set(left@, k@);
+                                let lv: V::V = choose|lv: V::V| left@.contains((k@, lv));
+                                assert(tree@.contains((k@, lv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, lv);
+                                // Value matches: by key uniqueness, left@[k@] == tree@[k@].
+                                lemma_pair_in_set_map_contains(left@, k@, lv);
                             }
                         }
                         (ll, found, new_right)
@@ -2311,6 +2315,9 @@ broadcast use {
                                 };
                             };
                             // Key ordering for new_left: all keys < k.
+                            // k.cmp_spec(root_pair.0) == Greater → root_pair.0.cmp_spec(k) == Less (by cmp symmetry).
+                            reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                            assert(root_pair.0.cmp_spec(k) == Less);
                             assert forall|p: Pair<K, V>| (#[trigger] new_left@.contains(p@))
                                 implies p.0.cmp_spec(k) == Less by {
                                 if left@.contains(p@) {
@@ -2322,15 +2329,12 @@ broadcast use {
                                         }
                                     };
                                     assert(p.0.cmp_spec(&root_pair.0) == Less);
-                                    lemma_cmp_antisymmetry(root_pair.0, *k);
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+                                    // p.0 < root_pair.0 < k by cmp transitivity.
                                 } else if rl@.contains(p@) {
                                 } else {
                                     assert(p@ == root_pair@);
-                                    assert(p.0@ == root_pair.0@);
                                     assert(p.0 == root_pair.0);
-                                    assert(k.cmp_spec(&root_pair.0) == Greater);
-                                    lemma_cmp_antisymmetry(root_pair.0, *k);
+                                    // root_pair.0 < k already proven above.
                                 }
                             };
                             // k not in new_left domain.
@@ -2360,31 +2364,32 @@ broadcast use {
                             };
                             lemma_key_unique_subset(tree@, new_left@);
                             lemma_view_gen_subset::<K, V>(new_left@, tree@);
-                            vstd::set_lib::lemma_len_subset(new_left@, tree@);
-                            vstd::set_lib::lemma_len_subset(rr@, tree@);
-                            // found value.
-                            if spec_pair_set_to_map(tree@).contains_key(k@) {
-                                lemma_map_contains_pair_in_set(tree@, k@);
-                                let tv: V::V = choose|tv: V::V| tree@.contains((k@, tv));
-                                if right@.contains((k@, tv)) {
-                                    lemma_pair_in_set_map_contains(right@, k@, tv);
-                                } else if (k@, tv) == root_pair@ {
-                                    assert(root_pair.0@ == k@);
-                                    assert(root_pair.0 == *k);
-                                    assert(k.cmp_spec(&root_pair.0) == Greater);
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                } else {
-                                    assert(left@.contains((k@, tv)));
-                                    let lp: Pair<K, V> = choose|lp: Pair<K, V>| lp@ == (k@, tv);
-                                    assert(left@.contains(lp@));
-                                    assert(lp.cmp_spec(&root_pair) == Less);
-                                    assert(lp.0@ == k@);
-                                    assert(lp.0 == *k);
-                                    assert(lp.0@ != root_pair.0@);
-                                    assert(lp.0.cmp_spec(&root_pair.0) == Less);
-                                    assert(k.cmp_spec(&root_pair.0) == Greater);
-                                    reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-                                }
+                            // Size bounds: new_left.len() + rr.len() <= tree.len().
+                            vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
+                            assert(new_left@.len() == left@.len() + rl@.len() + 1) by {
+                                let l_rl = left@.union(rl@);
+                                vstd::set_lib::lemma_set_disjoint_lens(left@, rl@);
+                                assert(l_rl.len() == left@.len() + rl@.len());
+                                assert(!l_rl.contains(root_pair@)) by {
+                                    if l_rl.contains(root_pair@) {
+                                        if rl@.contains(root_pair@) { assert(right@.contains(root_pair@)); }
+                                    }
+                                };
+                                assert(l_rl.insert(root_pair@).len() == l_rl.len() + 1) by {
+                                    assert(l_rl.insert(root_pair@) =~= l_rl.union(Set::empty().insert(root_pair@)));
+                                    let singleton = Set::empty().insert(root_pair@);
+                                    assert(l_rl.disjoint(singleton));
+                                    vstd::set_lib::lemma_set_disjoint_lens(l_rl, singleton);
+                                };
+                            };
+                            // found value: from recursive result upward.
+                            if found is Some {
+                                let fv = found->Some_0;
+                                lemma_map_contains_pair_in_set(right@, k@);
+                                let rv: V::V = choose|rv: V::V| right@.contains((k@, rv));
+                                assert(tree@.contains((k@, rv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, rv);
+                                lemma_pair_in_set_map_contains(right@, k@, rv);
                             }
                         }
                         (new_left, found, rr)
@@ -2415,7 +2420,7 @@ broadcast use {
             spec_pair_set_to_map(tree@).dom().finite(),
             rank <= spec_pair_set_to_map(tree@).dom().len(),
             rank as int == spec_pair_set_to_map(tree@).dom().filter(
-                |x: K::V| spec_rank_pred::<K>(x, *k)
+                |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@
             ).len(),
         decreases tree@.len(),
     {
@@ -2424,7 +2429,7 @@ broadcast use {
             lemma_pair_set_to_map_len(tree@);
             lemma_reveal_view_injective::<K>();
         }
-        let ghost rank_pred = |x: K::V| spec_rank_pred::<K>(x, *k);
+        let ghost rank_pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
         match tree.expose() {
             Exposed::Leaf => {
                 proof {
@@ -2571,7 +2576,7 @@ broadcast use {
                                     assert(xp.0@ != k@);
                                     assert(root_pair.0 == *k);
                                     // Witness: xp.0 has xp.0@ == x, le(xp.0, k), xp.0@ != k@.
-                                    assert(spec_rank_pred::<K>(x, *k));
+                                    assert(rank_pred(x));
                                 };
                             };
                             lemma_pair_set_to_map_len(tree@);
@@ -2630,14 +2635,14 @@ broadcast use {
                                         assert(xp.0@ != root_pair.0@);
                                         assert(root_pair.0@ != k@);
                                         assert(xp.0@ != k@);
-                                        assert(spec_rank_pred::<K>(x, *k));
+                                        assert(rank_pred(x));
                                     } else if root_key_set.contains(x) {
                                         assert(x == root_pair.0@);
                                         assert(tree@.contains(root_pair@));
                                         lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                                         K::cmp_spec_greater_implies_le(*k, root_pair.0);
                                         assert(root_pair.0@ != k@);
-                                        assert(spec_rank_pred::<K>(root_pair.0@, *k));
+                                        assert(rank_pred(root_pair.0@));
                                     } else {
                                         // x in right_dom.filter(pred).
                                         lemma_map_contains_pair_in_set(right@, x);
@@ -2732,7 +2737,7 @@ broadcast use {
             i >= spec_pair_set_to_map(tree@).dom().len() ==> selected matches None,
             selected matches Some(k) ==> spec_pair_set_to_map(tree@).dom().contains(k@),
             selected matches Some(v) ==> spec_pair_set_to_map(tree@).dom().filter(
-                |x: K::V| spec_rank_pred::<K>(x, v)
+                |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@
             ).len() == i as int,
         decreases tree@.len(),
     {
@@ -2780,7 +2785,7 @@ broadcast use {
                                 // - Root: root > sel_key, not counted.
                                 // - In right: all > root > sel_key, not counted.
                                 // So rank in tree = rank in left.
-                                let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key);
+                                let rank_pred_sel = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
                                 let tree_dom = spec_pair_set_to_map(tree@).dom();
                                 let left_dom = spec_pair_set_to_map(left@).dom();
                                 assert(tree_dom.filter(rank_pred_sel) =~= left_dom.filter(rank_pred_sel)) by {
@@ -2832,7 +2837,9 @@ broadcast use {
                                             K::cmp_spec_greater_implies_le(xp.0, root_pair.0);
                                             assert(sp.0 == sel_key);
                                             assert(xp.0 == t);
-                                            K::transitive(t, root_pair.0, sel_key);
+                                            // le(sel_key, root_pair.0) and le(root_pair.0, t) → le(sel_key, t).
+                                            K::transitive(sel_key, root_pair.0, t);
+                                            // le(t, sel_key) from rank_pred + le(sel_key, t) → t == sel_key.
                                             K::antisymmetric(t, sel_key);
                                         }
                                     };
@@ -2858,7 +2865,7 @@ broadcast use {
                         lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
                         // rank(root) in tree = left_size.
                         // Use bst_rank_by_key's logic: elements < root in tree = left_dom.
-                        let rank_pred_root = |x: K::V| spec_rank_pred::<K>(x, key);
+                        let rank_pred_root = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, key) && t@ != key@;
                         let tree_dom = spec_pair_set_to_map(tree@).dom();
                         let left_dom = spec_pair_set_to_map(left@).dom();
                         assert(tree_dom.filter(rank_pred_root) =~= left_dom) by {
@@ -2908,7 +2915,7 @@ broadcast use {
                                 assert(xp.0@ != root_pair.0@);
                                 assert(root_pair.0 == key);
                                 assert(xp.0@ != key@);
-                                assert(spec_rank_pred::<K>(x, key));
+                                assert(rank_pred_root(x));
                             };
                         };
                     }
@@ -2927,7 +2934,7 @@ broadcast use {
                                 assert(tree@.contains((sel_key@, sv)));
                                 lemma_pair_in_set_map_contains(tree@, sel_key@, sv);
                                 // rank(sel_key) in tree = left_size + 1 + rank(sel_key) in right.
-                                let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key);
+                                let rank_pred_sel = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
                                 let tree_dom = spec_pair_set_to_map(tree@).dom();
                                 let left_dom = spec_pair_set_to_map(left@).dom();
                                 let right_dom = spec_pair_set_to_map(right@).dom();
@@ -2978,7 +2985,7 @@ broadcast use {
                                             assert(sp.0 == sel_key);
                                             K::transitive(xp.0, root_pair.0, sel_key);
                                             assert(xp.0@ != sel_key@);
-                                            assert(spec_rank_pred::<K>(x, sel_key));
+                                            assert(rank_pred_sel(x));
                                         } else if root_key_set.contains(x) {
                                             assert(x == root_pair.0@);
                                             assert(tree@.contains(root_pair@));
@@ -2996,7 +3003,7 @@ broadcast use {
                                             K::cmp_spec_greater_implies_le(sp.0, root_pair.0);
                                             assert(sp.0 == sel_key);
                                             assert(root_pair.0@ != sel_key@);
-                                            assert(spec_rank_pred::<K>(root_pair.0@, sel_key));
+                                            assert(rank_pred_sel(root_pair.0@));
                                         } else {
                                             lemma_map_contains_pair_in_set(right@, x);
                                             let xv: V::V = choose|xv: V::V| right@.contains((x, xv));
@@ -5110,16 +5117,28 @@ broadcast use {
             let size = self.size();
             if i >= size {
                 // Everything goes left, right is empty.
-                let right = Self::empty();
+                let right_tree = ParamBST::<Pair<K, V>>::new();
+                let right = OrderedTableStEph { tree: right_tree };
                 let left_tree = self.tree.clone();
                 *self = Self::empty();
                 let left = OrderedTableStEph { tree: left_tree };
                 proof {
                     lemma_pair_set_to_map_dom_finite(old_tree);
                     lemma_pair_set_to_map_dom_finite(left_tree@);
+                    lemma_pair_set_to_map_dom_finite(right_tree@);
+                    lemma_set_to_map_empty::<K::V, V::V>();
                     assert(left@.dom() =~= old_map.dom());
-                    assert(left@.dom().disjoint(right@.dom())) by {
-                        assert(right@.dom() =~= Set::empty());
+                    assert(right@.dom() =~= Set::empty());
+                    assert(left@.dom().disjoint(right@.dom()));
+                    // left wf: same tree as self (cloned).
+                    assert(left.tree@ =~= old_tree);
+                    // right wf: empty BST.
+                    assert(right.tree@ =~= Set::empty());
+                    lemma_key_unique_empty::<K::V, V::V>();
+                    assert(spec_set_pair_view_generated::<K, V>(right.tree@)) by {
+                        assert forall|elem: (K::V, V::V)| right.tree@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        };
                     };
                 }
                 (left, right)
@@ -5128,6 +5147,7 @@ broadcast use {
                 // This is O(n) for finding the key but the spec is satisfied.
                 // TODO: replace with O(lg n) BST-level select when available without TotalOrder.
                 let sorted = self.tree.in_order();
+                proof { lemma_pair_set_to_map_len(self.tree@); }
                 let pair_at_i = sorted.nth(i);
                 let split_key = pair_at_i.0.clone_plus();
                 let (left_tree, _found, right_tree) = bst_split_by_key(&self.tree, &split_key);
