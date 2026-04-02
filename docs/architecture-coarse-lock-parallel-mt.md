@@ -108,18 +108,20 @@ The data lives in a `PCell` (Permissioned Cell) on the struct. The `PointsTo` pr
 
 ### 3.3. Detailed comparison
 
-| | RwLock + TSM | PCell + TSM + Atomics |
-|---|---|---|
-| **Zero-Assume Locking** | 0 assumes | 0 assumes |
-| **Caller-Observable State** | 2 accepts per file | 0 assumes |
-| **Composable Parallelism** | 0 assumes | 0 assumes |
-| **Optimal Split Cost** | 0 assumes | 0 assumes |
-| **Capacity exec checks** | 1 per mutating op | 1 per mutating op |
-| **Total accepts/assumes** | 2 per file | 0 |
-| **Ghost protocol complexity** | Low (TSM tracks count/state) | High (storage_map, withdraw/deposit) |
-| **Runtime cost** | RwLock acquire/release | Atomic ops only |
-| **Proven in experiment** | Yes | Partially |
-| **Migration effort from current** | Low | High |
+| | Current (RwLock+Ghost) | RwLock + TSM | PCell + TSM + Atomics |
+|---|---|---|---|
+| **Zero-Assume Locking** | ~19 assumes/module | 0 assumes | 0 assumes |
+| **Caller-Observable State** | Yes (ghost field, 0 accepts) | Yes (2 accepts/file) | Yes (0 accepts) |
+| **Composable Parallelism** | Yes (0 assumes) | Yes (0 assumes) | Yes (0 assumes) |
+| **Optimal Split Cost** | Yes (slice-backed) | Yes (slice-backed) | Yes (slice-backed) |
+| **Capacity exec checks** | 1 per mutating op | 1 per mutating op | 1 per mutating op |
+| **Verus limitation assumes** | ~3/module (clone/eq/iter) | ~3/module | ~3/module |
+| **Total assumes+accepts/module** | ~22 | ~5 | ~3 |
+| **Ghost protocol complexity** | None | Low (TSM tracks state) | High (storage_map, withdraw/deposit) |
+| **Runtime cost** | RwLock acquire/release | RwLock acquire/release | Atomic ops only |
+| **Boilerplate per file** | ~10 lines (ghost field) | ~68 lines (TSM) | ~150+ lines (TSM+atomics) |
+| **Proven in experiment** | Deployed (30+ files) | Yes | Partially |
+| **Migration effort** | — | Low | High |
 
 ### 3.4. What the accepts mean in RwLock + TSM
 
