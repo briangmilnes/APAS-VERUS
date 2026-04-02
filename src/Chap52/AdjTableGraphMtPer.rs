@@ -52,6 +52,7 @@ broadcast use {
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphMtPer<V: StTInMtT + Ord + TotalOrder + 'static> {
         pub adj: OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
+        pub num_edges: usize,
     }
 
     // 5. view impls
@@ -65,11 +66,11 @@ broadcast use {
 
     /// Sum of all neighbor set sizes across all vertices in the adjacency map.
     /// Local copy — standalone rule forbids importing from StEph.
-    pub open spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
-        decreases m.dom().len()
-        when m.dom().finite()
+    /// Total function: returns 0 for infinite domains; sums set sizes for finite domains.
+    pub closed spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
+        decreases if m.dom().finite() { m.dom().len() as int } else { 0int }
     {
-        if m.dom().is_empty() {
+        if !m.dom().finite() || m.dom().is_empty() {
             0
         } else {
             let k = m.dom().choose();
@@ -86,6 +87,7 @@ broadcast use {
         ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))
         decreases m.dom().len()
     {
+        reveal(spec_sum_adj_sizes);
         let chosen = m.dom().choose();
         if chosen == k {
             // Definition picks k directly.
@@ -95,6 +97,128 @@ broadcast use {
             lemma_sum_adj_remove(m.remove(k), chosen);
             assert(m.remove(chosen).remove(k) =~= m.remove(k).remove(chosen));
         }
+    }
+
+    /// If every value set in m1 is no larger than the corresponding set in m2
+    /// (same domain), then the sum of sizes is no larger.
+    pub proof fn lemma_sum_adj_sizes_monotone<VV>(m1: Map<VV, Set<VV>>, m2: Map<VV, Set<VV>>)
+        requires
+            m1.dom().finite(),
+            m1.dom() =~= m2.dom(),
+            forall|k: VV| #[trigger] m1.dom().contains(k) ==> m1[k].len() <= m2[k].len(),
+        ensures
+            spec_sum_adj_sizes(m1) <= spec_sum_adj_sizes(m2)
+        decreases m1.dom().len()
+    {
+        reveal(spec_sum_adj_sizes);
+        if m1.dom().is_empty() {
+        } else {
+            let k = m1.dom().choose();
+            lemma_sum_adj_remove(m1, k);
+            lemma_sum_adj_remove(m2, k);
+            assert(m1.remove(k).dom() =~= m2.remove(k).dom());
+            assert forall|j: VV| #[trigger] m1.remove(k).dom().contains(j)
+                implies m1.remove(k)[j].len() <= m2.remove(k)[j].len()
+            by {
+                assert(m1.dom().contains(j));
+            };
+            lemma_sum_adj_sizes_monotone(m1.remove(k), m2.remove(k));
+        }
+    }
+
+    /// Count all edges in a table that satisfies the graph closure property.
+    /// Used by operations that cannot cheaply compute the new edge count incrementally.
+    fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>(
+        table: &OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
+    ) -> (count: usize)
+        where V: TotalOrder
+        requires
+            table.spec_orderedtablemtper_wf(),
+            forall|u: <V as View>::V, w: <V as View>::V|
+                table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
+                ==> table@.dom().contains(w),
+            spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+        ensures
+            count as nat == spec_sum_adj_sizes(table@)
+    {
+        proof { reveal(spec_sum_adj_sizes); }
+        let mut remaining = table.clone();
+        let mut count: usize = 0;
+        let mut n = remaining.size();
+        while n > 0
+            invariant
+                remaining.spec_orderedtablemtper_wf(),
+                n as nat == remaining@.dom().len(),
+                count as nat + spec_sum_adj_sizes(remaining@) == spec_sum_adj_sizes(table@),
+                remaining@.dom().subset_of(table@.dom()),
+                forall|k: <V as View>::V| #[trigger] remaining@.dom().contains(k)
+                    ==> remaining@[k] == table@[k],
+                forall|u: <V as View>::V, w: <V as View>::V|
+                    table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
+                    ==> table@.dom().contains(w),
+                table@.dom().finite(),
+                spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+                count as nat <= spec_sum_adj_sizes(table@),
+            decreases n,
+        {
+            let first = remaining.first_key();
+            match first {
+                None => {
+                    proof { assert(false); }
+                }
+                Some(v_key) => {
+                    let ghost old_remaining_view = remaining@;
+                    match remaining.find(&v_key) {
+                        None => {
+                            proof { assert(false); }
+                        }
+                        Some(neighbors) => {
+                            proof {
+                                assert(remaining@.dom().contains(v_key@));
+                                assert(neighbors@ == table@[v_key@]);
+                                let dom = table@.dom();
+                                assert(neighbors@.subset_of(dom)) by {
+                                    assert forall|w: <V as View>::V|
+                                        #[trigger] neighbors@.contains(w)
+                                        implies dom.contains(w)
+                                    by {
+                                        assert(table@.index(v_key@).contains(w));
+                                    };
+                                };
+                                vstd::set_lib::lemma_len_subset(neighbors@, dom);
+                                lemma_sum_adj_remove(remaining@, v_key@);
+                            }
+                            let neighbor_count = neighbors.size();
+                            count = count + neighbor_count;
+                            remaining = remaining.delete(&v_key);
+                            n = remaining.size();
+                            proof {
+                                assert(remaining@ == old_remaining_view.remove(v_key@));
+                                assert(remaining@.dom().subset_of(table@.dom())) by {
+                                    assert forall|k: <V as View>::V|
+                                        #[trigger] remaining@.dom().contains(k)
+                                        implies table@.dom().contains(k)
+                                    by {
+                                        assert(old_remaining_view.dom().contains(k));
+                                    };
+                                };
+                                assert forall|k: <V as View>::V|
+                                    #[trigger] remaining@.dom().contains(k)
+                                    implies remaining@[k] == table@[k]
+                                by {
+                                    assert(old_remaining_view.dom().contains(k));
+                                    assert(k != v_key@);
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        proof {
+            assert(remaining@.dom().is_empty());
+        }
+        count
     }
 
     // 8. traits
@@ -113,15 +237,17 @@ broadcast use {
                 spec_pair_key_determines_order::<V, AVLTreeSetMtPer<V>>(),
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
                 view_ord_consistent::<V>(),
-            ensures out.spec_adjtablegraphmtper_wf();
+            ensures
+                out.spec_adjtablegraphmtper_wf(),
+                out.spec_num_edges() == spec_sum_adj_sizes(out.spec_adj());
         /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; table size
         fn num_vertices(&self) -> usize
             requires self.spec_adjtablegraphmtper_wf();
-        /// Work Theta(|V| + |E|), Span Theta(log |V| * log |E|)
+        /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(lg n * lg m) — DIFFERS: APAS assumes cached; impl sums degrees
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; cached field
         fn num_edges(&self) -> (m: usize)
             where V: crate::vstdplus::total_order::total_order::TotalOrder
             requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
@@ -152,33 +278,47 @@ broadcast use {
             requires
                 self.spec_adjtablegraphmtper_wf(),
                 self.spec_adj().dom().len() + 1 < usize::MAX as nat,
-            ensures updated.spec_adjtablegraphmtper_wf(), updated.spec_adj().dom().contains(v@);
+                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+            ensures
+                updated.spec_adjtablegraphmtper_wf(),
+                updated.spec_adj().dom().contains(v@),
+                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta((|V| + |E|) log |V|), Span Theta(log^2 |V| + log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * (log n + d)), Span O(n * (log n + d))
         fn delete_vertex(&self, v: &V) -> (updated: Self)
-            requires self.spec_adjtablegraphmtper_wf()
-            ensures updated.spec_adjtablegraphmtper_wf(), !updated.spec_adj().dom().contains(v@);
+            requires
+                self.spec_adjtablegraphmtper_wf(),
+                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
+            ensures
+                updated.spec_adjtablegraphmtper_wf(),
+                !updated.spec_adj().dom().contains(v@),
+                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta(log |V|), Span Theta(log |V|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn insert_edge(&self, u: V, v: V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
                 self.spec_adj().dom().len() + 3 < usize::MAX as nat,
+                self.spec_num_edges() < usize::MAX as nat,
+                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
             ensures
                 updated.spec_adjtablegraphmtper_wf(),
                 updated.spec_adj().dom().contains(u@),
                 updated.spec_adj().dom().contains(v@),
-                updated.spec_adj()[u@].contains(v@);
+                updated.spec_adj()[u@].contains(v@),
+                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + d), Span O(log n + d)
         fn delete_edge(&self, u: &V, v: &V) -> (updated: Self)
             requires
                 self.spec_adjtablegraphmtper_wf(),
                 self.spec_adj().dom().len() + 1 < usize::MAX as nat,
+                self.spec_num_edges() == spec_sum_adj_sizes(self.spec_adj()),
             ensures
                 updated.spec_adjtablegraphmtper_wf(),
                 !updated.spec_adj().dom().contains(u@)
-                    || !updated.spec_adj()[u@].contains(v@);
+                    || !updated.spec_adj()[u@].contains(v@),
+                updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
     }
 
     // 9. impls
@@ -198,6 +338,8 @@ broadcast use {
                 self.spec_adj().dom().contains(u)
                 && #[trigger] self.spec_adj().index(u).contains(v)
                 ==> self.spec_adj().dom().contains(v)
+            // Edge count invariant proved per-operation (not in wf due to Z3 matching loops).
+            // See ensures on each operation for: num_edges == spec_sum_adj_sizes(adj@).
         }
 
         open spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>> {
@@ -205,14 +347,15 @@ broadcast use {
         }
 
         open spec fn spec_num_edges(&self) -> nat {
-            spec_sum_adj_sizes(self.spec_adj())
+            self.num_edges as nat
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (out: Self) {
             let adj = OrderedTableMtPer::empty();
-            let out = AdjTableGraphMtPer { adj };
+            let out = AdjTableGraphMtPer { adj, num_edges: 0 };
             proof {
+                reveal(spec_sum_adj_sizes);
                 // Type-level preds come from requires. Graph closure is vacuous
                 // on an empty map since no u satisfies dom().contains(u).
                 assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
@@ -233,111 +376,11 @@ broadcast use {
             self.adj.size()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; cached field
         fn num_edges(&self) -> (m: usize)
             where V: crate::vstdplus::total_order::total_order::TotalOrder
         {
-            // Strategy: clone the table, repeatedly extract first_key, look up
-            // neighbor size via find, delete the key, and accumulate.  The
-            // invariant tracks count + spec_sum_adj_sizes(remaining@) == total.
-            let mut remaining = self.adj.clone();
-            let mut count: usize = 0;
-            let mut n = remaining.size();
-            while n > 0
-                invariant
-                    remaining.spec_orderedtablemtper_wf(),
-                    n as nat == remaining@.dom().len(),
-                    count as nat + spec_sum_adj_sizes(remaining@) == self.spec_num_edges(),
-                    remaining@.dom().subset_of(self.spec_adj().dom()),
-                    forall|k: <V as View>::V| #[trigger] remaining@.dom().contains(k)
-                        ==> remaining@[k] == self.spec_adj()[k],
-                    self.spec_adjtablegraphmtper_wf(),
-                    self.spec_num_edges() <= usize::MAX as nat,
-                    count as nat <= self.spec_num_edges(),
-                decreases n,
-            {
-                let first = remaining.first_key();
-                // first_key ensures: dom.len() > 0 ==> Some(k), dom.contains(k@).
-                match first {
-                    None => {
-                        // Contradicts n > 0.
-                        proof { assert(false); }
-                    }
-                    Some(v_key) => {
-                        let ghost old_remaining_view = remaining@;
-                        match remaining.find(&v_key) {
-                            None => {
-                                // Contradicts first_key: v_key@ in dom.
-                                proof { assert(false); }
-                            }
-                            Some(neighbors) => {
-                                // find ensures: remaining@[v_key@] == neighbors@.
-                                proof {
-                                    // neighbors@ == remaining@[v_key@] == self.spec_adj()[v_key@].
-                                    assert(remaining@.dom().contains(v_key@));
-                                    assert(neighbors@ == self.spec_adj()[v_key@]);
-                                    // Prove neighbors@.finite() via graph closure on self.
-                                    let dom = self.spec_adj().dom();
-                                    assert(neighbors@.subset_of(dom)) by {
-                                        assert forall|w: <V as View>::V|
-                                            #[trigger] neighbors@.contains(w)
-                                            implies dom.contains(w)
-                                        by {
-                                            assert(self.spec_adj().index(v_key@).contains(w));
-                                        };
-                                    };
-                                    vstd::set_lib::lemma_len_subset(neighbors@, dom);
-                                    // Overflow: lemma_sum_adj_remove decomposes the sum.
-                                    lemma_sum_adj_remove(remaining@, v_key@);
-                                    // spec_sum_adj_sizes(remaining@)
-                                    //   == remaining@[v_key@].len()
-                                    //      + spec_sum_adj_sizes(remaining@.remove(v_key@))
-                                    // So count + remaining@[v_key@].len()
-                                    //   <= count + spec_sum_adj_sizes(remaining@)
-                                    //   == self.spec_num_edges() <= usize::MAX.
-                                }
-                                let neighbor_count = neighbors.size();
-                                count = count + neighbor_count;
-                                remaining = remaining.delete(&v_key);
-                                n = remaining.size();
-                                proof {
-                                    // delete ensures: remaining@ == old_remaining_view.remove(v_key@).
-                                    // new count + spec_sum_adj_sizes(new remaining@)
-                                    //   == (old count + neighbor_count)
-                                    //      + spec_sum_adj_sizes(old_remaining_view.remove(v_key@))
-                                    //   == old count + spec_sum_adj_sizes(old_remaining_view)
-                                    //   == self.spec_num_edges().
-                                    assert(remaining@ == old_remaining_view.remove(v_key@));
-                                    // Subset preservation: remaining dom ⊆ self dom.
-                                    assert(remaining@.dom().subset_of(self.spec_adj().dom())) by {
-                                        assert forall|k: <V as View>::V|
-                                            #[trigger] remaining@.dom().contains(k)
-                                            implies self.spec_adj().dom().contains(k)
-                                        by {
-                                            assert(old_remaining_view.dom().contains(k));
-                                        };
-                                    };
-                                    // Value preservation: remaining@[k] == self.spec_adj()[k].
-                                    assert forall|k: <V as View>::V|
-                                        #[trigger] remaining@.dom().contains(k)
-                                        implies remaining@[k] == self.spec_adj()[k]
-                                    by {
-                                        assert(old_remaining_view.dom().contains(k));
-                                        assert(k != v_key@);
-                                    };
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            proof {
-                // n == 0 → remaining@.dom().len() == 0 → dom is empty.
-                // spec_sum_adj_sizes on empty map == 0.
-                // count + 0 == self.spec_num_edges().
-                assert(remaining@.dom().is_empty());
-            }
-            count
+            self.num_edges
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -407,15 +450,17 @@ broadcast use {
                 // v already in domain. Clone preserves view → preserves wf.
                 let cloned_adj = self.adj.clone();
                 // OrderedTableMtPer::clone ensures cloned_adj@ == self.adj@.
-                let updated = AdjTableGraphMtPer { adj: cloned_adj };
+                let updated = AdjTableGraphMtPer { adj: cloned_adj, num_edges: self.num_edges };
                 // updated.spec_adj() == self.spec_adj(), so wf follows from self's wf.
                 // dom.contains(v@): find returned Some → self.adj@.contains_key(v@).
                 updated
             } else {
                 // v not in domain. Insert v with empty neighbor set.
                 let empty_set = AVLTreeSetMtPer::empty();
+                let new_adj = self.adj.insert_wf(v, empty_set);
                 let updated = AdjTableGraphMtPer {
-                    adj: self.adj.insert_wf(v, empty_set),
+                    adj: new_adj,
+                    num_edges: self.num_edges,
                 };
                 proof {
                     // insert_wf ensures:
@@ -423,6 +468,16 @@ broadcast use {
                     //   updated.adj@[v@] == empty_set@ == Set::empty()
                     //   forall|k2 != v@| self.adj@.contains_key(k2) ==> updated.adj@[k2] == self.adj@[k2]
                     //   updated.adj.spec_orderedtablemtper_wf()
+
+                    // Edge count: inserting v with empty set adds 0 to the sum.
+                    // spec_sum_adj_sizes(updated.adj@)
+                    //   = updated.adj@[v@].len() + spec_sum_adj_sizes(updated.adj@.remove(v@))
+                    //   = 0 + spec_sum_adj_sizes(self.adj@)
+                    //   = self.num_edges
+                    reveal(spec_sum_adj_sizes);
+                    lemma_sum_adj_remove(updated.adj@, v@);
+                    assert(updated.adj@[v@] =~= Set::<<V as View>::V>::empty());
+                    assert(updated.adj@.remove(v@) =~= self.adj@);
 
                     // Graph closure: every neighbor of every vertex is also a vertex.
                     assert forall|u2: <V as View>::V, w: <V as View>::V|
@@ -467,46 +522,88 @@ broadcast use {
                 },
                 Ghost(|ns: Set<<V as View>::V>| -> Set<<V as View>::V> { ns.remove(v_view) }),
             );
-            let updated = AdjTableGraphMtPer { adj: cleaned };
             proof {
                 // delete ensures: without_v@ == self.adj@.remove(v@)
                 // map ensures: cleaned@.dom() =~= without_v@.dom(),
                 //   forall|k| without_v@.contains_key(k) ==> cleaned@[k] == without_v@[k].remove(v@)
                 assert(without_v@ == self.adj@.remove(v@));
                 assert(cleaned@.dom() =~= without_v@.dom());
-                assert(!updated.spec_adj().dom().contains(v@));
 
-                // Graph closure: every neighbor of every vertex is still a vertex.
+                // Graph closure on cleaned.
                 assert forall|u: <V as View>::V, w: <V as View>::V|
-                    updated.spec_adj().dom().contains(u)
-                    && #[trigger] updated.spec_adj().index(u).contains(w)
-                    implies updated.spec_adj().dom().contains(w)
+                    cleaned@.dom().contains(u)
+                    && #[trigger] cleaned@.index(u).contains(w)
+                    implies cleaned@.dom().contains(w)
                 by {
-                    // updated.spec_adj() == cleaned@
-                    assert(updated.adj@ == cleaned@);
                     assert(cleaned@.dom().contains(u));
                     assert(cleaned@.index(u).contains(w));
-                    // u in cleaned@.dom() =~= without_v@.dom()
                     assert(without_v@.contains_key(u));
-                    // Map value ensures: cleaned@[u] == f_spec(without_v@[u]) == without_v@[u].remove(v_view)
                     assert(without_v@.contains_key(u));
                     assert(cleaned@[u] =~= without_v@[u].remove(v_view));
-                    // without_v@ == self.adj@.remove(v@), and u != v@ (since u in without_v dom)
                     assert(u != v@);
                     assert(self.adj@.contains_key(u));
                     assert(without_v@[u] =~= self.adj@[u]);
-                    // So cleaned@[u] =~= self.adj@[u].remove(v_view)
-                    // w in cleaned@[u] → w in self.adj@[u] and w != v_view
                     assert(self.adj@.index(u).contains(w));
                     assert(w != v_view);
-                    // v_view == v@ (from clone)
                     assert(v_view == v@);
-                    // By self's graph closure: w in self.adj@.dom()
                     assert(self.adj@.dom().contains(w));
-                    // w != v@ → w in self.adj@.dom().remove(v@) = without_v@.dom() =~= cleaned@.dom()
                     assert(without_v@.dom().contains(w));
                     assert(cleaned@.dom().contains(w));
                 };
+
+                // Prove spec_sum_adj_sizes(cleaned@) <= self.num_edges for overflow bound.
+                reveal(spec_sum_adj_sizes);
+                // cleaned@ values are subsets of without_v@ values (removing an element).
+                // without_v@ values equal self.adj@ values for keys in without_v@.dom().
+                // Monotonicity: smaller sets → smaller sum.
+                assert forall|k: <V as View>::V| #[trigger] cleaned@.dom().contains(k)
+                    implies cleaned@[k].len() <= without_v@[k].len()
+                by {
+                    assert(without_v@.contains_key(k));
+                    assert(cleaned@[k] =~= without_v@[k].remove(v_view));
+                    // S.remove(x) ⊆ S, so |S.remove(x)| <= |S|.
+                    // Prove without_v@[k] is finite for len() to be defined.
+                    assert(k != v@);
+                    assert(self.adj@.contains_key(k));
+                    assert(without_v@[k] =~= self.adj@[k]);
+                    let dom = self.spec_adj().dom();
+                    assert(self.adj@[k].subset_of(dom)) by {
+                        assert forall|w: <V as View>::V| #[trigger] self.adj@[k].contains(w)
+                            implies dom.contains(w)
+                        by {
+                            assert(self.spec_adj().index(k).contains(w));
+                        };
+                    };
+                    vstd::set_lib::lemma_len_subset(self.adj@[k], dom);
+                    vstd::set_lib::lemma_len_subset(without_v@[k].remove(v_view), without_v@[k]);
+                };
+                assert(cleaned@.dom().finite()) by { assert(cleaned.spec_orderedtablemtper_wf()); };
+                assert(without_v@.dom().finite()) by { assert(without_v.spec_orderedtablemtper_wf()); };
+                assert(self.adj@.dom().finite());
+                lemma_sum_adj_sizes_monotone(cleaned@, without_v@);
+                assert(spec_sum_adj_sizes(cleaned@) <= spec_sum_adj_sizes(without_v@));
+                // without_v@ == self.adj@.remove(v@). Prove its sum <= self's sum.
+                assert(without_v@ =~= self.adj@.remove(v@));
+                if self.adj@.dom().contains(v@) {
+                    lemma_sum_adj_remove(self.adj@, v@);
+                    // self sum = adj[v@].len + sum(adj.remove(v@)) >= sum(adj.remove(v@))
+                    assert(spec_sum_adj_sizes(self.adj@.remove(v@))
+                        <= spec_sum_adj_sizes(self.adj@));
+                } else {
+                    assert(self.adj@.remove(v@) =~= self.adj@);
+                }
+                // Verus needs substitution: without_v@ =~= self.adj@.remove(v@)
+                assert(spec_sum_adj_sizes(without_v@)
+                    == spec_sum_adj_sizes(self.adj@.remove(v@)));
+                assert(spec_sum_adj_sizes(without_v@) <= spec_sum_adj_sizes(self.adj@));
+                assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+                assert(spec_sum_adj_sizes(cleaned@) <= self.num_edges as nat);
+                assert(spec_sum_adj_sizes(cleaned@) <= usize::MAX as nat);
+            }
+            let new_num_edges = count_table_edges(&cleaned);
+            let updated = AdjTableGraphMtPer { adj: cleaned, num_edges: new_num_edges };
+            proof {
+                assert(!updated.spec_adj().dom().contains(v@));
             }
             updated
         }
@@ -544,10 +641,8 @@ broadcast use {
             // After match 1: u@ in dom. Establish u-value invariant.
             proof {
                 if u_in_orig {
-                    // Some arm: new_adj unchanged from clone. new_adj@[u@] == orig_adj[u@].
                     assert(new_adj@[u@] == orig_adj[u@]);
                 } else {
-                    // None arm: insert_wf set new_adj@[u@] to empty.
                     assert(new_adj@[u@] =~= Set::<<V as View>::V>::empty());
                 }
             }
@@ -571,14 +666,9 @@ broadcast use {
 
             // After match 2: u@ and v@ both in dom. u's value is unchanged.
             proof {
-                // In None arm of match 2: v@ was NOT in adj_after_u's dom. Since u@ WAS
-                // in adj_after_u's dom, v@ != u@. insert_wf preserves new_adj@[u@].
-                // In Some arm: new_adj unchanged.
                 assert(new_adj@[u@] == adj_after_u[u@]);
-                // Establish finiteness of new_adj@[u@].
                 if u_in_orig {
                     assert(new_adj@[u@] == orig_adj[u@]);
-                    // Graph closure on self: self.adj@[u@] ⊆ self.adj@.dom().
                     let dom = orig_adj.dom();
                     assert(new_adj@[u@].subset_of(dom)) by {
                         assert forall|w: <V as View>::V| #[trigger] new_adj@[u@].contains(w)
@@ -598,30 +688,32 @@ broadcast use {
                 None => AVLTreeSetMtPer::empty(),
             };
             proof {
-                // find returned Some (u@ in dom) → ns@ == new_adj@[u@].
-                // new_adj@[u@] is finite (established above).
-                // spec_avltreesetmtper_wf() = self@.finite() = new_adj@[u@].finite(). ✓
                 assert(u_neighbors@.finite());
-                // Overflow: u_neighbors@.len() ≤ orig_dom_len (if from self) or 0 (if empty).
-                // orig_dom_len + 2 < usize::MAX → u_neighbors@.len() + 1 < usize::MAX.
                 if u_in_orig {
                     assert(u_neighbors@.len() <= orig_dom_len);
                 }
             }
+            // Check whether edge already exists before consuming v.
+            assert_avltreesetmtper_always_wf(&u_neighbors);
+            let had_edge = u_neighbors.find(&v);
             let new_u_neighbors = u_neighbors.insert(v);
             // insert ensures: new_u_neighbors@ == u_neighbors@.insert(v@), wf preserved.
             proof {
-                // After match 1: dom.len() <= orig_dom_len + 1.
-                // After match 2: dom.len() <= orig_dom_len + 2.
-                // requires: orig_dom_len + 3 < usize::MAX.
-                // Therefore: new_adj@.dom().len() + 1 <= orig_dom_len + 3 < usize::MAX.
                 assert(new_adj@.dom().len() <= orig_dom_len + 2);
                 assert(new_adj@.dom().len() + 1 < usize::MAX as nat);
             }
+            proof {
+                assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+                assert((self.num_edges as nat) < (usize::MAX as nat));
+            }
+            let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
+            let updated_adj = new_adj.insert_wf(u, new_u_neighbors);
             let updated = AdjTableGraphMtPer {
-                adj: new_adj.insert_wf(u, new_u_neighbors),
+                adj: updated_adj,
+                num_edges: new_num_edges,
             };
             proof {
+                reveal(spec_sum_adj_sizes);
                 // insert_wf ensures:
                 //   updated.adj@.dom() =~= new_adj@.dom().insert(u@) (u@ already in dom)
                 //   updated.adj@[u@] == new_u_neighbors@ == u_neighbors@.insert(v@)
@@ -631,6 +723,72 @@ broadcast use {
                 assert(updated.adj@[u@] =~= u_neighbors@.insert(v@));
                 assert(updated.spec_adj()[u@].contains(v@));
 
+                // Prove cached edge count is correct.
+                // Step 1: spec_sum_adj_sizes(new_adj@) == self.num_edges.
+                // new_adj@ was built from self.adj@ by inserting at most u@→empty, v@→empty.
+                // Each such insert adds 0 to the sum because empty set has 0 elements.
+                // Prove by decomposing at each inserted key.
+                if !u_in_orig {
+                    // u@ was inserted with empty set. adj_after_u == self.adj@.insert(u@, empty).
+                    // But after v's potential insert, we need to reason about new_adj@.
+                    // Since adj_after_u[u@] == empty and new_adj@ preserves u@'s value:
+                }
+                // Prove spec_sum_adj_sizes(new_adj@) == self.num_edges as nat.
+                assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+                let self_sum = spec_sum_adj_sizes(self.adj@);
+                assert(self_sum == self.num_edges as nat);
+                // After adding u@ (if not present):
+                if !u_in_orig {
+                    assert(adj_after_u.dom().finite()) by {
+                        // adj_after_u == result of insert_wf on self.adj, which is wf.
+                        // insert_wf ensures dom =~= self.adj@.dom().insert(u@).
+                        assert(adj_after_u.dom() =~= self.adj@.dom().insert(u@));
+                    };
+                    assert(adj_after_u.dom().contains(u@));
+                    lemma_sum_adj_remove(adj_after_u, u@);
+                    assert(adj_after_u[u@] =~= Set::<<V as View>::V>::empty());
+                    assert(adj_after_u.remove(u@) =~= self.adj@);
+                    assert(spec_sum_adj_sizes(adj_after_u) == self_sum);
+                } else {
+                    assert(adj_after_u =~= self.adj@);
+                    assert(adj_after_u.dom().finite());
+                }
+                // After adding v@ (if not present):
+                assert(new_adj@.dom().finite()) by {
+                    assert(new_adj.spec_orderedtablemtper_wf());
+                };
+                let ghost v_in_adj_after_u = adj_after_u.dom().contains(v@);
+                if !v_in_adj_after_u {
+                    assert(new_adj@.dom().contains(v@));
+                    lemma_sum_adj_remove(new_adj@, v@);
+                    assert(new_adj@[v@] =~= Set::<<V as View>::V>::empty());
+                    assert(new_adj@.remove(v@) =~= adj_after_u);
+                    assert(spec_sum_adj_sizes(new_adj@) == spec_sum_adj_sizes(adj_after_u));
+                } else {
+                    assert(new_adj@ =~= adj_after_u);
+                }
+                assert(spec_sum_adj_sizes(new_adj@) == self_sum);
+
+                // Step 2: Relate updated.adj@ sum to new_adj@ sum.
+                lemma_sum_adj_remove(updated.adj@, u@);
+                lemma_sum_adj_remove(new_adj@, u@);
+                assert(updated.adj@.remove(u@) =~= new_adj@.remove(u@));
+                // spec_sum_adj_sizes(updated.adj@)
+                //   = updated.adj@[u@].len() + spec_sum_adj_sizes(new_adj@.remove(u@))
+                //   = (u_neighbors@.insert(v@)).len() + (self_sum - u_neighbors@.len())
+                // If had_edge (v@ in u_neighbors@): insert is idempotent, len unchanged.
+                // If !had_edge: len increases by 1.
+                if had_edge {
+                    assert(u_neighbors@.contains(v@));
+                    assert(u_neighbors@.insert(v@) =~= u_neighbors@);
+                    assert(spec_sum_adj_sizes(updated.adj@) == self_sum);
+                } else {
+                    assert(!u_neighbors@.contains(v@));
+                    vstd::set_lib::lemma_len_union(u_neighbors@, Set::<<V as View>::V>::empty().insert(v@));
+                    assert(u_neighbors@.insert(v@).len() == u_neighbors@.len() + 1nat);
+                    assert(spec_sum_adj_sizes(updated.adj@) == self_sum + 1);
+                }
+
                 // Graph closure on updated.
                 assert forall|u2: <V as View>::V, w: <V as View>::V|
                     updated.spec_adj().dom().contains(u2)
@@ -638,39 +796,22 @@ broadcast use {
                     implies updated.spec_adj().dom().contains(w)
                 by {
                     if u2 == u@ {
-                        // updated.adj@[u@] == u_neighbors@.insert(v@).
-                        // w is in u_neighbors@.insert(v@).
                         if w == v@ {
-                            // v@ is in new_adj@.dom() (from match 2) ⊆ updated dom.
                             assert(new_adj@.dom().contains(v@));
                         } else {
-                            // w in u_neighbors@ == new_adj@[u@].
                             assert(u_neighbors@.contains(w));
                             if u_in_orig {
-                                // u_neighbors@ == self.adj@[u@]. Graph closure on self.
                                 assert(orig_adj.index(u@).contains(w));
                                 assert(orig_adj.dom().contains(w));
                             }
-                            // If !u_in_orig: u_neighbors@ == Set::empty(), w can't be in it.
                         }
                     } else {
-                        // u2 != u@. updated.adj@[u2] == new_adj@[u2].
                         assert(new_adj@.contains_key(u2));
                         assert(updated.adj@[u2] == new_adj@[u2]);
-                        // new_adj@[u2] comes from either self (via clone + insert_wf preserve)
-                        // or is Set::empty() (newly inserted key). Either way, all elements
-                        // are in self's domain ⊆ updated's domain.
-                        // Trace: new_adj was built from self.adj via clone + up to 2 insert_wf.
-                        // For u2 != u@ and u2 != v@ (if v@ was inserted):
-                        //   new_adj@[u2] == orig_adj[u2] (preserved through both inserts).
-                        //   Graph closure on self: orig_adj[u2] ⊆ orig_adj.dom() ⊆ updated dom.
-                        // For u2 == v@ (if v@ was newly inserted):
-                        //   new_adj@[v@] == Set::empty(). No elements.
                         if orig_adj.contains_key(u2) {
                             assert(orig_adj.index(u2).contains(w));
                             assert(orig_adj.dom().contains(w));
                         }
-                        // If u2 was newly inserted (not in orig_adj): its value is Set::empty().
                     }
                 };
             }
@@ -694,26 +835,51 @@ broadcast use {
                         };
                         vstd::set_lib::lemma_len_subset(u_neighbors@, dom);
                     }
+                    // Check whether edge exists before deleting.
+                    assert_avltreesetmtper_always_wf(&u_neighbors);
+                    let had_edge = u_neighbors.find(v);
                     let new_u_neighbors = u_neighbors.delete(v);
                     // delete ensures: new_u_neighbors@ == u_neighbors@.remove(v@), wf preserved.
                     let u_clone = u.clone();
                     proof {
                         assert(obeys_feq_full_trigger::<V>());
                         crate::vstdplus::feq::feq::lemma_cloned_view_eq::<V>(*u, u_clone);
-                        // u_clone@ == u@.
                     }
+                    proof {
+                        reveal(spec_sum_adj_sizes);
+                        if had_edge {
+                            // Edge exists → u_neighbors@ contains v@ → u_neighbors@.len() >= 1.
+                            // spec_sum_adj_sizes(self.adj@) >= self.adj@[u@].len() >= 1.
+                            lemma_sum_adj_remove(self.adj@, u@);
+                            assert(u_neighbors@.contains(v@));
+                            assert(u_neighbors@.len() >= 1);
+                        }
+                    }
+                    let new_num_edges: usize = if had_edge { self.num_edges - 1 } else { self.num_edges };
                     let updated_inner = AdjTableGraphMtPer {
                         adj: self.adj.insert_wf(u_clone, new_u_neighbors),
+                        num_edges: new_num_edges,
                     };
                     proof {
-                        // insert_wf ensures (key is u_clone where u_clone@ == u@):
-                        //   dom =~= self.adj@.dom().insert(u@) (u@ already in dom, so same)
-                        //   updated_inner.adj@[u@] == new_u_neighbors@ == u_neighbors@.remove(v@)
-                        //   forall|k2 != u@| self.adj@.contains_key(k2) ==>
-                        //       updated_inner.adj@[k2] == self.adj@[k2]
-
+                        reveal(spec_sum_adj_sizes);
                         // Dom is same as self's dom (u@ already present).
                         assert(self.adj@.dom().insert(u@) =~= self.adj@.dom());
+
+                        // Prove cached edge count.
+                        assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+                        lemma_sum_adj_remove(updated_inner.adj@, u@);
+                        lemma_sum_adj_remove(self.adj@, u@);
+                        assert(updated_inner.adj@.remove(u@) =~= self.adj@.remove(u@));
+                        // updated sum = (u_neighbors@.remove(v@)).len() + spec_sum_adj_sizes(self.adj@.remove(u@))
+                        // self sum = u_neighbors@.len() + spec_sum_adj_sizes(self.adj@.remove(u@))
+                        if had_edge {
+                            assert(u_neighbors@.contains(v@));
+                            vstd::set_lib::lemma_len_subset(u_neighbors@.remove(v@), u_neighbors@);
+                            assert(u_neighbors@.remove(v@).len() == u_neighbors@.len() - 1);
+                        } else {
+                            assert(!u_neighbors@.contains(v@));
+                            assert(u_neighbors@.remove(v@) =~= u_neighbors@);
+                        }
 
                         // Graph closure on updated_inner.
                         assert forall|u2: <V as View>::V, w: <V as View>::V|
@@ -722,12 +888,10 @@ broadcast use {
                             implies updated_inner.spec_adj().dom().contains(w)
                         by {
                             if u2 == u@ {
-                                // Neighbors = u_neighbors@.remove(v@) ⊆ u_neighbors@ == self.adj@[u@].
                                 assert(u_neighbors@.contains(w));
                                 assert(self.spec_adj().index(u@).contains(w));
                                 assert(self.spec_adj().dom().contains(w));
                             } else {
-                                // u2 in updated dom == self dom, u2 != u@.
                                 assert(self.adj@.contains_key(u2));
                                 assert(updated_inner.adj@[u2] == self.adj@[u2]);
                                 assert(self.spec_adj().index(u2).contains(w));
@@ -743,10 +907,8 @@ broadcast use {
                 None => {
                     // u not in domain. Clone adj, reconstruct struct.
                     let cloned_adj = self.adj.clone();
-                    // OrderedTableMtPer::clone ensures cloned_adj@ == self.adj@.
-                    let cloned = AdjTableGraphMtPer { adj: cloned_adj };
+                    let cloned = AdjTableGraphMtPer { adj: cloned_adj, num_edges: self.num_edges };
                     proof {
-                        // cloned.adj@ == self.adj@, so spec_adj() is identical.
                         assert(cloned.adj@ == self.adj@);
 
                         // Graph closure follows from self's invariant.
@@ -759,7 +921,6 @@ broadcast use {
                             assert(self.spec_adj().index(u2).contains(w));
                             assert(self.spec_adj().dom().contains(w));
                         };
-                        // Postcondition: !dom.contains(u@), so disjunction holds.
                         assert(!cloned.spec_adj().dom().contains(u@));
                     }
                     cloned
@@ -775,7 +936,7 @@ broadcast use {
 
     impl<V: StTInMtT + Ord + TotalOrder + Clone + 'static> Clone for AdjTableGraphMtPer<V> {
         fn clone(&self) -> Self {
-            AdjTableGraphMtPer { adj: self.adj.clone() }
+            AdjTableGraphMtPer { adj: self.adj.clone(), num_edges: self.num_edges }
         }
     }
 }

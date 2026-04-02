@@ -1,0 +1,41 @@
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:249:21
+    |
+249 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+364 |             self.num_edges
+    |             -------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == old(self).spec_num_edges() 
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:578:24
+    |
+578 |                 assert(spec_sum_adj_sizes(self.adj@) == self.num_edges as nat);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_sum_adj_sizes(self.adj.view()) == self.num_edges 
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:686:24
+    |
+686 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+verification results:: 3004 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 39s
+Sampled Memory Usage: peak rust_verify RSS: 3087MB, peak z3 RSS: 371MB, min free: 20341MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 72s

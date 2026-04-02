@@ -1,0 +1,113 @@
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:249:21
+    |
+249 |             ensures m as nat == self.spec_num_edges();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+363 |             self.num_edges
+    |             -------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == old(self).spec_num_edges() 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:569:33
+    |
+138 |             spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+    |             ----------------------------------------------- failed precondition
+...
+569 |             let new_num_edges = count_table_edges(&cleaned);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:138:13
+    |
+138 |             spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+cleaned.spec_orderedtablemtper_wf() ✔
+forall |u, w|
+    cleaned.view().dom().contains(u) && cleaned.view().index(u).contains(w) ==>
+        cleaned.view().dom().contains(w) ✔
+spec_sum_adj_sizes(cleaned.view()) <= UnsignedMax.Exec(usize::BITS) ✘
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:289:17
+    |
+289 |                 updated.spec_adjtablegraphmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+770 |             updated
+    |             ------- at the end of the function body
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphMtPer.rs:671:78
+    |
+671 |             let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:671:78
+    |
+671 |             let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= self.num_edges + 1 ✔
+    self.num_edges + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= self.num_edges + 1 ✔
+    self.num_edges + 1 < 18446744073709551616 ✘
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:702:32
+    |
+ 71 |         when m.dom().finite()
+    |              ---------------- recommendation not met
+...
+702 |                 let self_sum = spec_sum_adj_sizes(self.adj@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:722:24
+    |
+ 71 |         when m.dom().finite()
+    |              ---------------- recommendation not met
+...
+722 |                 assert(spec_sum_adj_sizes(new_adj@) == self_sum);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphMtPer.rs:800:62
+    |
+800 |                     let new_num_edges: usize = if had_edge { self.num_edges - 1 } else { self.num_edges };
+    |                                                              ^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:800:62
+    |
+800 |                     let new_num_edges: usize = if had_edge { self.num_edges - 1 } else { self.num_edges };
+    |                                                              ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= self.num_edges - 1 ✘
+    self.num_edges - 1 < 4294967296 ✔
+usize::BITS == 64 ==>
+    0 <= self.num_edges - 1 ✘
+    self.num_edges - 1 < 18446744073709551616 ✔
+
+verification results:: 3003 verified, 4 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 54s
+Sampled Memory Usage: peak rust_verify RSS: 11138MB, peak z3 RSS: 492MB, min free: 12547MB
+Sampled CPU Usage: rust_verify: 273s, z3 children: 195s
