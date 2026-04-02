@@ -449,3 +449,66 @@ Option 3 is simplest with current Verus. Options 1-2 give true O(1) span for the
 - `make-ghost-send-sync` branch: fixes `Ghost<T>` Send/Sync, eliminates need for `unsafe impl Send/Sync` on types containing Ghost fields
 - `new-mut-ref`: enables disjoint mutable borrows, potentially simplifying the parallel write pattern
 - Clone on closures: still unrecognized by Verus; `clone_fn` workaround remains necessary
+
+## 15. Migration Cost Estimate (2026-04-02)
+
+Based on the current codebase: 28 Mt files with RwLock, 189 total assumes + accepts.
+
+### 15.1. What TSM eliminates
+
+| Category | Current | After TSM | Change |
+|----------|---------|-----------|--------|
+| Ghost-lock bridge assumes | ~65 | 0 | Eliminated by TSM predicate |
+| View propagation assumes | ~30 | 0 | Eliminated by token |
+| Read result assumes | ~40 | 0 | Token proves result |
+| Return value assumes (size/height/etc) | ~20 | 0 | Token proves return |
+| Extrema assumes (min/max) | ~15 | 0 | Token proves extrema |
+| **Subtotal eliminated** | **~170** | **0** | **−170** |
+
+### 15.2. What stays
+
+| Category | Count | Why |
+|----------|-------|-----|
+| Clone bridge (assume in Clone::clone) | ~8 | Verus doesn't verify Clone on generics |
+| PartialEq bridge (assume in eq) | ~5 | Verus doesn't verify PartialEq on generics |
+| Iterator invariant (assume in next) | ~3 | Verus can't add requires to external trait impls |
+| assume(false); diverge() | ~3 | Unreachable thread-join error arm |
+| **Subtotal stays** | **~19** | All Verus language limitations |
+
+### 15.3. What TSM adds
+
+| Category | Count | Why |
+|----------|-------|-----|
+| View bridge accepts (2 per file × 28 files) | ~56 | Ghost View ↔ TSM token |
+| TSM boilerplate (per file) | ~68 lines | tokenized_state_machine!, transitions, predicate |
+| **Total new boilerplate** | **~1900 lines** | Across 28 files |
+
+### 15.4. Net result
+
+| Metric | Before | After | Delta |
+|--------|--------|-------|-------|
+| Total assumes | 153 | 19 | −134 |
+| Total accepts | 36 | 92 (36 + 56) | +56 |
+| Total assumes + accepts | 189 | 111 | −78 |
+| Ad-hoc ghost assumes | 170 | 0 | −170 |
+| Structured accepts (View bridge) | 0 | 56 | +56 |
+| Verus limitation workarounds | 19 | 19 | 0 |
+
+Every remaining assume is a documented Verus workaround. Every accept is a
+well-understood View bridge (ghost ↔ token, correct by induction on `&mut self`
+ownership). No more ad-hoc ghost-lock guessing.
+
+### 15.5. Time estimate (4 agents)
+
+| Phase | Files | Agent-hours | Wall-clock |
+|-------|-------|-------------|------------|
+| Pilot (BSTPlainMtEph, 11 ops) | 1 | 2h | 2h |
+| Small tier (2-5 ops) | 8 | 8h | 2h |
+| Medium tier (6-12 ops) | 11 | 22h | 6h |
+| Large tier (16-30 ops) | 9 | 30h | 8h |
+| Conflicts + validation | — | 8h | 4h |
+| **Total** | **29** | **~70h** | **~22h** |
+
+Pilot file: `BSTPlainMtEph.rs` — 11 lock ops, no downstream callers, already
+proven in `experiments/bst_plain_mt_tsm.rs`. Callably identical: same locked
+trait signatures, same View, same RTTs.
