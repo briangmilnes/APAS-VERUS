@@ -31,23 +31,13 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqMtEph.rs:485: info: trivial_spec_wf
    Info: 1 total
 ⚠ ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqMtEphSlice.rs:718: error: fn_missing_ensures - fn flatten_dc_vec — exec fn should have ensures
-       704 |     pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqMtEphSlice.rs:1453: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1449 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       716 | 
-       717 |     /// D&C flatten producing Vec<T>. Called by flatten.
-       719 |         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-       720 |     ) -> (result: Vec<T>)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqMtEphSlice.rs:950: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       946 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-       948 |         {
-       949 |             let equal = self.start == other.start && self.len == other.len;
-       951 |             equal
-       952 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqMtEphSlice.rs:413: error: bare_impl - impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> { — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
-       414 |         /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-       415 |         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
+      1451 |         {
+      1452 |             let equal = self.start == other.start && self.len == other.len;
+      1454 |             equal
+      1455 |         }
 ⚠ ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap19/ArraySeqStEph.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1222 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -96,28 +86,27 @@ ArraySeqStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 75%)
-   1 holed (holes or errors, 25%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
-   15 clean (100%)
+   19 clean (100%)
    0 holed (0%)
-   15 total
+   19 total
 
 Function Specs:
-   202 exec fns with complete spec (requires+ensures) (66%)
-   1 exec fns missing spec (0%)
-   101 proof/spec fns clean (33%)
+   209 exec fns with complete spec (requires+ensures) (66%)
+   0 exec fns missing spec (0%)
+   107 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   304 total fns
+   316 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
 
-Warnings: 5 total
-   1 × fn_missing_ensures
+Warnings: 4 total
    4 × assume_eq_clone_workaround
 
 Accepted (reviewed): 3 total
@@ -129,9 +118,8 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:24:44 -07:00
-Ended:     2026-04-02 07:24:44 -07:00
-Duration:  67ms
+Started:   2026-04-02 08:21:29 -07:00
+Ended:     2026-04-02 08:21:29 -07:00
+Duration:  91ms
 
 Full output: src/Chap19/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap19/analyses/veracity-review-verus-proof-holes.log

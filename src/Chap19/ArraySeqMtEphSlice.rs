@@ -102,6 +102,22 @@ pub mod ArraySeqMtEphSlice {
         else { spec_f(spec_prefix_fold(seq_fn, spec_f, id, n - 1), seq_fn(n - 1)) }
     }
 
+    /// Sum of inner sequence lengths for a nested ArraySeqMtEphSliceS.
+    pub open spec fn spec_sum_inner_lens<T>(
+        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+    ) -> nat
+        decreases a.len,
+    {
+        if a.len == 0 { 0 }
+        else {
+            let inner = (*a.data)@[a.start as int];
+            let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
+            };
+            inner.len as nat + spec_sum_inner_lens(&rest)
+        }
+    }
+
     // 8. traits
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
@@ -430,7 +446,7 @@ pub mod ArraySeqMtEphSlice {
                 }
                 id
             } else {
-                Self::reduce_dc(self, f, Ghost(spec_f), id)
+                reduce_dc(self, f, Ghost(spec_f), id)
             }
         }
 
@@ -439,7 +455,7 @@ pub mod ArraySeqMtEphSlice {
         ) -> (mapped: ArraySeqMtEphSliceS<U>)
             where T: Send + Sync + 'static
         {
-            let v = Self::map_dc_vec(self, f);
+            let v = map_dc_vec(self, f);
             ArraySeqMtEphSliceS::<U>::from_vec(v)
         }
 
@@ -448,14 +464,14 @@ pub mod ArraySeqMtEphSlice {
         ) -> (filtered: Self)
             where T: Send + Sync + 'static
         {
-            let v = Self::filter_dc_vec(self, pred, Ghost(spec_pred));
+            let v = filter_dc_vec(self, pred, Ghost(spec_pred));
             Self::from_vec(v)
         }
 
         fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
             where T: Send + Sync + 'static
         {
-            let v = Self::tabulate_dc_vec(f, 0, length);
+            let v = tabulate_dc_vec(f, 0, length);
             let ghost v_view = v@;
             let tab = Self::from_vec(v);
             proof {
@@ -482,7 +498,7 @@ pub mod ArraySeqMtEphSlice {
                 }
                 (Self::empty(), id)
             } else {
-                let (v, total) = Self::scan_dc_vec(self, f, Ghost(spec_f), id);
+                let (v, total) = scan_dc_vec(self, f, Ghost(spec_f), id);
                 let ghost s = self.spec_backing_seq();
                 let ghost a_fn = |i: int| self.spec_index(i);
                 let result = Self::from_vec(v);
@@ -491,9 +507,9 @@ pub mod ArraySeqMtEphSlice {
                         0 <= i < self.spec_len() implies
                         result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                     by {
-                        Self::lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, i + 1);
+                        lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, i + 1);
                     }
-                    Self::lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, self.spec_len() as int);
+                    lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, self.spec_len() as int);
                 }
                 (result, total)
             }
@@ -501,11 +517,10 @@ pub mod ArraySeqMtEphSlice {
 
     }
 
-    // 9b. bare impl — D&C helpers and proof fns
+    // 9b. free functions — D&C helpers and proof fns
 
-    impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> {
-        /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-        proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
+    /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+    pub(crate) proof fn lemma_monoid_fold_left<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
             requires spec_monoid(f, id)
             ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
             decreases s.len()
@@ -523,17 +538,17 @@ pub mod ArraySeqMtEphSlice {
                 reveal_with_fuel(Seq::fold_left, 2);
                 let lid = s1.fold_left(id, f);
                 let lx = s1.fold_left(x, f);
-                Self::lemma_monoid_fold_left(s1, f, id, x);
+                lemma_monoid_fold_left(s1, f, id, x);
 
                 assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
             }
         }
 
 
-        proof fn lemma_prefix_fold_matching(
-            f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,
-            spec_f: spec_fn(T, T) -> T, id: T, n: int,
-        )
+    pub(crate) proof fn lemma_prefix_fold_matching<T>(
+        f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,
+        spec_f: spec_fn(T, T) -> T, id: T, n: int,
+    )
             requires
                 0 <= n,
                 forall|k: int| 0 <= k < n ==> #[trigger] f1(k) == f2(k),
@@ -542,14 +557,14 @@ pub mod ArraySeqMtEphSlice {
             decreases n,
         {
             if n > 0 {
-                Self::lemma_prefix_fold_matching(f1, f2, spec_f, id, n - 1);
+                lemma_prefix_fold_matching(f1, f2, spec_f, id, n - 1);
             }
         }
 
-        /// Monoid split: prefix_fold(a, f, id, m+k) = f(prefix_fold(a, f, id, m), prefix_fold(shifted_a, f, id, k)).
-        proof fn lemma_prefix_fold_split(
-            a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,
-        )
+    /// Monoid split: prefix_fold(a, f, id, m+k) = f(prefix_fold(a, f, id, m), prefix_fold(shifted_a, f, id, k)).
+    pub(crate) proof fn lemma_prefix_fold_split<T>(
+        a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,
+    )
             requires
                 spec_monoid(spec_f, id),
                 m >= 0, k >= 0,
@@ -564,7 +579,7 @@ pub mod ArraySeqMtEphSlice {
             if k == 0 {
                 // RHS = f(prefix_fold(m), id) = prefix_fold(m) by right identity.
             } else {
-                Self::lemma_prefix_fold_split(a_fn, spec_f, id, m, k - 1);
+                lemma_prefix_fold_split(a_fn, spec_f, id, m, k - 1);
                 // prefix_fold(a, f, id, m + k)
                 // = f(prefix_fold(a, f, id, m + k - 1), a(m + k - 1))
                 // = f(f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k-1)), a(m + k - 1))   [by IH]
@@ -581,10 +596,10 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
-        /// Connect spec_prefix_fold to spec_backing_seq().take(n).fold_left(id, f).
-        proof fn lemma_prefix_fold_eq_fold_left(
-            s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
-        )
+    /// Connect spec_prefix_fold to spec_backing_seq().take(n).fold_left(id, f).
+    pub(crate) proof fn lemma_prefix_fold_eq_fold_left<T>(
+        s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
+    )
             requires
                 0 <= n <= s.len(),
                 forall|k: int| 0 <= k < s.len() ==> #[trigger] seq_fn(k) == s[k],
@@ -594,19 +609,16 @@ pub mod ArraySeqMtEphSlice {
         {
             reveal(Seq::fold_left);
             if n > 0 {
-                Self::lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
+                lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
                 assert(s.take(n).drop_last() =~= s.take(n - 1));
             }
         }
 
-        /// D&C reduce on O(1) slices. Called by trait reduce for non-empty sequences.
-
-        /// D&C reduce on O(1) slices. Called by trait reduce for non-empty sequences.
-        fn reduce_dc<F: MtReduceFn<T>>(
-            a: &ArraySeqMtEphSliceS<T>, f: &F,
-            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (reduced: T)
-            where T: Send + Sync + 'static
+    /// D&C reduce on O(1) slices. Called by trait reduce for non-empty sequences.
+    pub(crate) fn reduce_dc<T: Eq + Clone + Send + Sync + 'static, F: MtReduceFn<T>>(
+        a: &ArraySeqMtEphSliceS<T>, f: &F,
+        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+    ) -> (reduced: T)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 a.spec_len() > 0,
@@ -678,7 +690,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r == left_backing.fold_left(id, spec_f),
                 {
-                    Self::reduce_dc(&left, &f1, Ghost(spec_f), id1)
+                    reduce_dc(&left, &f1, Ghost(spec_f), id1)
                 };
 
                 let fb = move || -> (r: T)
@@ -692,7 +704,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r == right_backing.fold_left(id, spec_f),
                 {
-                    Self::reduce_dc(&right, &f2, Ghost(spec_f), id2)
+                    reduce_dc(&right, &f2, Ghost(spec_f), id2)
                 };
 
                 let (lr, rr) = join(fa, fb);
@@ -700,17 +712,16 @@ pub mod ArraySeqMtEphSlice {
 
                 proof {
                     s.lemma_fold_left_split(id, spec_f, mid as int);
-                    Self::lemma_monoid_fold_left(right_backing, spec_f, id, lr);
+                    lemma_monoid_fold_left(right_backing, spec_f, id, lr);
                 }
                 combined
             }
         }
 
-        /// D&C map producing Vec<U>. Called by trait map.
-        fn map_dc_vec<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
-            a: &ArraySeqMtEphSliceS<T>, f: &F,
-        ) -> (result: Vec<U>)
-            where T: Send + Sync + 'static
+    /// D&C map producing Vec<U>. Called by trait map.
+    pub(crate) fn map_dc_vec<T: Eq + Clone + Send + Sync + 'static, U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+        a: &ArraySeqMtEphSliceS<T>, f: &F,
+    ) -> (result: Vec<U>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -746,7 +757,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r@.len() == left_len,
                 {
-                    Self::map_dc_vec(&left, &f1)
+                    map_dc_vec(&left, &f1)
                 };
 
                 let fb = move || -> (r: Vec<U>)
@@ -758,7 +769,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r@.len() == right_len,
                 {
-                    Self::map_dc_vec(&right, &f2)
+                    map_dc_vec(&right, &f2)
                 };
 
                 let (mut left_v, right_v) = join(fa, fb);
@@ -780,12 +791,11 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
-        /// D&C filter producing Vec<T>. Called by trait filter.
-        fn filter_dc_vec<F: MtPred<T>>(
-            a: &ArraySeqMtEphSliceS<T>, pred: &F,
-            Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-        ) -> (result: Vec<T>)
-            where T: Send + Sync + 'static
+    /// D&C filter producing Vec<T>. Called by trait filter.
+    pub(crate) fn filter_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtPred<T>>(
+        a: &ArraySeqMtEphSliceS<T>, pred: &F,
+        Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
+    ) -> (result: Vec<T>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -825,7 +835,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r@.len() <= left_len,
                 {
-                    Self::filter_dc_vec(&left, &p1, Ghost(spec_pred))
+                    filter_dc_vec(&left, &p1, Ghost(spec_pred))
                 };
 
                 let fb = move || -> (r: Vec<T>)
@@ -837,7 +847,7 @@ pub mod ArraySeqMtEphSlice {
                     ensures
                         r@.len() <= right_len,
                 {
-                    Self::filter_dc_vec(&right, &p2, Ghost(spec_pred))
+                    filter_dc_vec(&right, &p2, Ghost(spec_pred))
                 };
 
                 let (mut left_v, right_v) = join(fa, fb);
@@ -858,11 +868,10 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
-        /// D&C tabulate producing Vec<T>. Called by trait tabulate.
-        fn tabulate_dc_vec<F: MtTabulateFn<T>>(
-            f: &F, start: usize, count: usize,
-        ) -> (result: Vec<T>)
-            where T: Send + Sync + 'static
+    /// D&C tabulate producing Vec<T>. Called by trait tabulate.
+    pub(crate) fn tabulate_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtTabulateFn<T>>(
+        f: &F, start: usize, count: usize,
+    ) -> (result: Vec<T>)
             requires
                 start + count <= usize::MAX,
                 obeys_feq_clone::<T>(),
@@ -898,7 +907,7 @@ pub mod ArraySeqMtEphSlice {
                         forall|i: int| #![trigger r@[i]]
                             0 <= i < left_len ==> f1.ensures(((start as int + i) as usize,), r@[i]),
                 {
-                    Self::tabulate_dc_vec(&f1, start, mid)
+                    tabulate_dc_vec(&f1, start, mid)
                 };
 
                 let fb = move || -> (r: Vec<T>)
@@ -912,7 +921,7 @@ pub mod ArraySeqMtEphSlice {
                         forall|i: int| #![trigger r@[i]]
                             0 <= i < right_len ==> f2.ensures(((right_start as int + i) as usize,), r@[i]),
                 {
-                    Self::tabulate_dc_vec(&f2, right_start, right_count)
+                    tabulate_dc_vec(&f2, right_start, right_count)
                 };
 
                 let (mut left_v, right_v) = join(fa, fb);
@@ -957,11 +966,10 @@ pub mod ArraySeqMtEphSlice {
         }
 
 
-        fn scan_dc_vec<F: MtReduceFn<T>>(
-            a: &ArraySeqMtEphSliceS<T>, f: &F,
-            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
-        ) -> (scanned: (Vec<T>, T))
-            where T: Send + Sync + 'static
+    pub(crate) fn scan_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtReduceFn<T>>(
+        a: &ArraySeqMtEphSliceS<T>, f: &F,
+        Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+    ) -> (scanned: (Vec<T>, T))
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 a.spec_len() > 0,
@@ -1031,7 +1039,7 @@ pub mod ArraySeqMtEphSlice {
                         &&& r.1 == spec_prefix_fold(lf, spec_f, id, left_len as int)
                     }),
                 {
-                    Self::scan_dc_vec(&left, &f1, Ghost(spec_f), id1)
+                    scan_dc_vec(&left, &f1, Ghost(spec_f), id1)
                 };
 
                 let fb = move || -> (r: (Vec<T>, T))
@@ -1050,7 +1058,7 @@ pub mod ArraySeqMtEphSlice {
                         &&& r.1 == spec_prefix_fold(rf, spec_f, id, right_len as int)
                     }),
                 {
-                    Self::scan_dc_vec(&right, &f2, Ghost(spec_f), id2)
+                    scan_dc_vec(&right, &f2, Ghost(spec_f), id2)
                 };
 
                 let ((left_vec, left_total), (right_vec, right_total)) = join(fa, fb);
@@ -1078,7 +1086,7 @@ pub mod ArraySeqMtEphSlice {
                     let elem = left_vec[i].clone_plus();
                     proof {
                         axiom_cloned_implies_eq_owned(left_vec@[i as int], elem);
-                        Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, i as int + 1);
+                        lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, i as int + 1);
                     }
                     result_vec.push(elem);
                     i += 1;
@@ -1111,11 +1119,11 @@ pub mod ArraySeqMtEphSlice {
                     let adjusted = f(&left_total, &right_vec[j]);
                     proof {
                         // left_total == prefix_fold(left_fn, mid) == prefix_fold(a_fn, mid)
-                        Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+                        lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
                         // prefix_fold(a_fn, mid + j + 1) = f(prefix_fold(a_fn, mid), prefix_fold(shifted_a, j+1))
-                        Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, j as int + 1);
+                        lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, j as int + 1);
                         // shifted_a(k) == a_fn(mid + k) == right_fn(k)
-                        Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, j as int + 1);
+                        lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, j as int + 1);
                     }
                     result_vec.push(adjusted);
                     j += 1;
@@ -1123,15 +1131,45 @@ pub mod ArraySeqMtEphSlice {
 
                 let total = f(&left_total, &right_total);
                 proof {
-                    Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
-                    Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, right_len as int);
-                    Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, right_len as int);
+                    lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+                    lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, right_len as int);
+                    lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, right_len as int);
                 }
 
                 (result_vec, total)
             }
         }
 
+    // 9c. proof fns — flatten
+
+    /// Split lemma: spec_sum_inner_lens over a contiguous window equals the
+    /// sum of the left half plus the right half.
+    pub(crate) proof fn lemma_sum_inner_lens_split<T>(
+        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+        mid: usize,
+    )
+        requires
+            mid <= a.len,
+            a.start + a.len <= (*a.data)@.len(),
+            a.start + a.len <= usize::MAX,
+        ensures ({
+            let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: a.start, len: mid,
+            };
+            let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: (a.start + mid) as usize, len: (a.len - mid) as usize,
+            };
+            spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
+        }),
+        decreases mid,
+    {
+        if mid > 0 {
+            // Peel first element from both a and left.
+            let a_rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
+            };
+            lemma_sum_inner_lens_split(&a_rest, (mid - 1) as usize);
+        }
     }
 
     // 9d. free functions — flatten
@@ -1148,9 +1186,11 @@ pub mod ArraySeqMtEphSlice {
             obeys_feq_clone::<T>(),
         ensures
             flattened.spec_arrayseqmtephslice_wf(),
+            flattened.spec_len() == spec_sum_inner_lens(a),
     {
         let v = flatten_dc_vec(a);
-        ArraySeqMtEphSliceS::<T>::from_vec(v)
+        let flattened = ArraySeqMtEphSliceS::<T>::from_vec(v);
+        flattened
     }
 
     /// D&C flatten producing Vec<T>. Called by flatten.
@@ -1160,6 +1200,8 @@ pub mod ArraySeqMtEphSlice {
         requires
             spec_nested_wf(a),
             obeys_feq_clone::<T>(),
+        ensures
+            result@.len() == spec_sum_inner_lens(a),
         decreases a.len,
     {
         let len = a.len;
@@ -1169,7 +1211,18 @@ pub mod ArraySeqMtEphSlice {
             let backing: &Vec<ArraySeqMtEphSliceS<T>> = arc_deref(&a.data);
             let inner: &ArraySeqMtEphSliceS<T> = &backing[a.start];
             assert(inner == (*a.data)@[a.start as int + 0]);
-            inner.to_vec()
+            let v = inner.to_vec();
+            proof {
+                // spec_sum_inner_lens(a) with len==1 unfolds to
+                // inner.len + spec_sum_inner_lens(rest) where rest.len==0, so inner.len + 0.
+                let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                    data: a.data, start: (a.start + 1) as usize, len: 0usize,
+                };
+                assert(spec_sum_inner_lens(&rest) == 0nat);
+                assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
+                assert(v@.len() == inner.spec_len());
+            }
+            v
         } else {
             let mid = len / 2;
             // O(1) slice of the outer sequence.
@@ -1183,6 +1236,9 @@ pub mod ArraySeqMtEphSlice {
                 start: a.start + mid,
                 len: len - mid,
             };
+
+            let ghost left_sum = spec_sum_inner_lens(&left);
+            let ghost right_sum = spec_sum_inner_lens(&right);
 
             // Propagate nested wf to left and right halves.
             proof {
@@ -1207,12 +1263,17 @@ pub mod ArraySeqMtEphSlice {
                         == (*a.data)@[a.start as int + (mid as int + i)]);
                 }
                 assert(spec_nested_wf(&right));
+
+                // Connect Arc::clone-based split to a.data-based split for the lemma.
+                lemma_sum_inner_lens_split(a, mid);
             }
 
             let fa = move || -> (r: Vec<T>)
                 requires
                     spec_nested_wf(&left),
                     obeys_feq_clone::<T>(),
+                ensures
+                    r@.len() == left_sum,
             {
                 flatten_dc_vec(&left)
             };
@@ -1221,6 +1282,8 @@ pub mod ArraySeqMtEphSlice {
                 requires
                     spec_nested_wf(&right),
                     obeys_feq_clone::<T>(),
+                ensures
+                    r@.len() == right_sum,
             {
                 flatten_dc_vec(&right)
             };
@@ -1232,6 +1295,7 @@ pub mod ArraySeqMtEphSlice {
                 invariant
                     i <= rlen,
                     rlen == right_v@.len(),
+                    left_v@.len() == left_sum + i as int,
                     obeys_feq_clone::<T>(),
                 decreases rlen - i,
             {
