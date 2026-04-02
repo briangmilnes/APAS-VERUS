@@ -1,0 +1,294 @@
+error[E0277]: the trait bound `&K: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1538:49
+     |
+1538 | ...                   implies TotalOrder::le(rk, t) by {
+     |                               ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `&K`
+     |
+help: consider borrowing here
+     |
+1538 |                                         implies &TotalOrder::le(rk, t) by {
+     |                                                 +
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:1538:68
+     |
+1259 |     fn bst_next_by_key<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                        - found this type parameter
+...
+1538 |                                         implies TotalOrder::le(rk, t) by {
+     |                                                 --------------     ^ expected `&K`, found type parameter `K`
+     |                                                 |
+     |                                                 arguments to this function are incorrect
+     |
+     = note:   expected reference `&_`
+             found type parameter `_`
+note: method defined here
+    --> src/vstdplus/total_order.rs:15:13
+     |
+  15 |     spec fn le(self, other: Self) -> bool;
+     |             ^^       -----
+help: consider borrowing here
+     |
+1538 |                                         implies TotalOrder::le(rk, &t) by {
+     |                                                                    +
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:1842:67
+     |
+1581 |     fn bst_prev_by_key<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                        - expected this type parameter
+...
+1842 |                                         implies TotalOrder::le(t, lk) by {
+     |                                                 --------------    ^^ expected type parameter `K`, found `&K`
+     |                                                 |
+     |                                                 arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: method defined here
+    --> src/vstdplus/total_order.rs:15:13
+     |
+  15 |     spec fn le(self, other: Self) -> bool;
+     |             ^^       -----
+help: consider using clone here
+     |
+1842 |                                         implies TotalOrder::le(t, lk.clone()) by {
+     |                                                                     ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2714:86
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2714 |                                 let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key);
+     |                                                               -------------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                               |
+     |                                                               arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: function defined here
+    --> src/Chap43/OrderedTableStEph.rs:103:22
+     |
+ 103 |     pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+     |                      ^^^^^^^^^^^^^^                                     ----
+help: consider using clone here
+     |
+2714 |                                 let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key.clone());
+     |                                                                                             ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2722:109
+     |
+2646 | ...select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                   - expected this type parameter
+...
+2722 | ...                             let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
+     |                                                                                   --------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                                                   |
+     |                                                                                   arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: method defined here
+    --> src/vstdplus/total_order.rs:15:13
+     |
+  15 |     spec fn le(self, other: Self) -> bool;
+     |             ^^       -----
+help: consider using clone here
+     |
+2722 |                                         let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key.clone()) && t@ != sel_key@;
+     |                                                                                                                    ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2741:65
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2741 |                                             K::antisymmetric(t, sel_key);
+     |                                             ----------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                             |
+     |                                             arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: associated function defined here
+    --> src/vstdplus/total_order.rs:33:14
+     |
+  33 |     proof fn antisymmetric(x: Self, y: Self)
+     |              ^^^^^^^^^^^^^          -
+help: consider using clone here
+     |
+2741 |                                             K::antisymmetric(t, sel_key.clone());
+     |                                                                        ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2766:75
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2766 |                                             K::transitive(t, root_pair.0, sel_key);
+     |                                             -------------                 ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                             |
+     |                                             arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: associated function defined here
+    --> src/vstdplus/total_order.rs:24:14
+     |
+  24 |     proof fn transitive(x: Self, y: Self, z: Self)
+     |              ^^^^^^^^^^                   -
+help: consider using clone here
+     |
+2766 |                                             K::transitive(t, root_pair.0, sel_key.clone());
+     |                                                                                  ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2767:65
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2767 |                                             K::antisymmetric(t, sel_key);
+     |                                             ----------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                             |
+     |                                             arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: associated function defined here
+    --> src/vstdplus/total_order.rs:33:14
+     |
+  33 |     proof fn antisymmetric(x: Self, y: Self)
+     |              ^^^^^^^^^^^^^          -
+help: consider using clone here
+     |
+2767 |                                             K::antisymmetric(t, sel_key.clone());
+     |                                                                        ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2866:86
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2866 |                                 let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key);
+     |                                                               -------------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                               |
+     |                                                               arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: function defined here
+    --> src/Chap43/OrderedTableStEph.rs:103:22
+     |
+ 103 |     pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+     |                      ^^^^^^^^^^^^^^                                     ----
+help: consider using clone here
+     |
+2866 |                                 let rank_pred_sel = |x: K::V| spec_rank_pred::<K>(x, sel_key.clone());
+     |                                                                                             ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2877:109
+     |
+2646 | ...select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                   - expected this type parameter
+...
+2877 | ...                             let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key) && t@ != sel_key@;
+     |                                                                                   --------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                                                   |
+     |                                                                                   arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: method defined here
+    --> src/vstdplus/total_order.rs:15:13
+     |
+  15 |     spec fn le(self, other: Self) -> bool;
+     |             ^^       -----
+help: consider using clone here
+     |
+2877 |                                         let t: K = choose|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, sel_key.clone()) && t@ != sel_key@;
+     |                                                                                                                    ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2915:78
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2915 |                                             K::transitive(xp.0, root_pair.0, sel_key);
+     |                                             -------------                    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                             |
+     |                                             arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: associated function defined here
+    --> src/vstdplus/total_order.rs:24:14
+     |
+  24 |     proof fn transitive(x: Self, y: Self, z: Self)
+     |              ^^^^^^^^^^                   -
+help: consider using clone here
+     |
+2915 |                                             K::transitive(xp.0, root_pair.0, sel_key.clone());
+     |                                                                                     ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2917:75
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2917 |                                             assert(spec_rank_pred::<K>(x, sel_key));
+     |                                                    -------------------    ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                    |
+     |                                                    arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: function defined here
+    --> src/Chap43/OrderedTableStEph.rs:103:22
+     |
+ 103 |     pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+     |                      ^^^^^^^^^^^^^^                                     ----
+help: consider using clone here
+     |
+2917 |                                             assert(spec_rank_pred::<K>(x, sel_key.clone()));
+     |                                                                                  ++++++++
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:2935:86
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                           - expected this type parameter
+...
+2935 |                                             assert(spec_rank_pred::<K>(root_pair.0@, sel_key));
+     |                                                    -------------------               ^^^^^^^ expected type parameter `K`, found `&K`
+     |                                                    |
+     |                                                    arguments to this function are incorrect
+     |
+     = note: expected type parameter `_`
+                     found reference `&_`
+note: function defined here
+    --> src/Chap43/OrderedTableStEph.rs:103:22
+     |
+ 103 |     pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
+     |                      ^^^^^^^^^^^^^^                                     ----
+help: consider using clone here
+     |
+2935 |                                             assert(spec_rank_pred::<K>(root_pair.0@, sel_key.clone()));
+     |                                                                                             ++++++++
+
+error: aborting due to 13 previous errors
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1047MB, peak z3 RSS: 0MB, min free: 25204MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

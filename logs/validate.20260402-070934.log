@@ -1,0 +1,36 @@
+error[E0425]: cannot find function `lemma_len_insert` in module `vstd::set_lib`
+    --> src/Chap43/OrderedTableStEph.rs:2233:48
+     |
+2233 | ...                   vstd::set_lib::lemma_len_insert(lr_r, root_pair@);
+     |                                      ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1078:0
+     |
+     = note: similarly named function `lemma_len_intersect` defined here
+help: a function with a similar name exists
+     |
+2233 -                                 vstd::set_lib::lemma_len_insert(lr_r, root_pair@);
+2233 +                                 vstd::set_lib::lemma_len_intersect(lr_r, root_pair@);
+     |
+
+error[E0425]: cannot find function `lemma_len_insert` in module `vstd::set_lib`
+    --> src/Chap43/OrderedTableStEph.rs:2372:48
+     |
+2372 | ...                   vstd::set_lib::lemma_len_insert(l_rl, root_pair@);
+     |                                      ^^^^^^^^^^^^^^^^
+     |
+    --> vstd/set_lib.rs:1078:0
+     |
+     = note: similarly named function `lemma_len_intersect` defined here
+help: a function with a similar name exists
+     |
+2372 -                                 vstd::set_lib::lemma_len_insert(l_rl, root_pair@);
+2372 +                                 vstd::set_lib::lemma_len_intersect(l_rl, root_pair@);
+     |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 290MB, peak z3 RSS: 0MB, min free: 25729MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

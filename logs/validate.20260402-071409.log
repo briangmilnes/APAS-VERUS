@@ -1,0 +1,55 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1103:17
+     |
+1103 |                   split.1.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5118 | /             if i >= size {
+5119 | |                 // Everything goes left, right is empty.
+5120 | |                 let right = Self::empty();
+5121 | |                 let left_tree = self.tree.clone();
+...    |
+5221 | |                 (left_table, right_table)
+5222 | |             }
+     | |_____________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5138:33
+     |
+5138 |                 let pair_at_i = sorted.nth(i);
+     |                                 ^^^^^^^^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:136:22
+     |
+ 136 |             requires index < self.spec_len()
+     |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1103:17
+     |
+1103 |                 split.1.spec_orderedtablesteph_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom().finite() ✔
+old(self).view().dom().finite() ✔
+%return.0.view().dom().finite() ✔
+%return.1.view().dom().finite() ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✔
+%return.1.view().dom().subset_of(old(self).view().dom()) ✔
+%return.0.view().dom().disjoint(%return.1.view().dom()) ✔
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key)) ==>
+            %return.1.view().dom().contains(key) ✔
+%return.0.spec_orderedtablesteph_wf() ✔
+%return.1.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2669 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 40s
+Sampled Memory Usage: peak rust_verify RSS: 2707MB, peak z3 RSS: 365MB, min free: 22389MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 48s

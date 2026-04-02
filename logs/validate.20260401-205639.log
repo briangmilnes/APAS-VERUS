@@ -1,0 +1,683 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1630:49
+     |
+1630 | ...                   implies TotalOrder::le(t, rk) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1648:45
+     |
+1648 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, rk);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1673:45
+     |
+1673 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, rk);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1674:45
+     |
+1674 | ...                   K::transitive(t, root_pair.0, rk);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1688:37
+     |
+1688 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1693:49
+     |
+1693 | ...                   implies TotalOrder::le(t, key) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1746:45
+     |
+1746 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1748:45
+     |
+1748 | ...                   K::antisymmetric(*k, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:35:13
+     |
+  35 |             Self::le(x, y),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1793:45
+     |
+1793 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1795:45
+     |
+1795 | ...                   K::antisymmetric(*k, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:35:13
+     |
+  35 |             Self::le(x, y),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1842:41
+     |
+1842 | ...                   K::cmp_spec_less_implies_le(*k, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:584:18
+     |
+ 584 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1856:41
+     |
+1856 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1857:41
+     |
+1857 | ...                   K::cmp_spec_less_implies_le(*k, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:584:18
+     |
+ 584 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1858:41
+     |
+1858 | ...                   K::transitive(*k, root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/vstdplus/total_order.rs:584:36
+    |
+584 |         requires a.cmp_spec(&b) == Ordering::Less
+    |                                    ^^^^^^^^^^^^^^
+
+note: 
+
+k.cmp_spec(tmp%) == Less
+|   !(k.cmp_spec(tmp%) is Equal) ✔
+|   !(k.cmp_spec(tmp%) is Greater) ✘
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1276:13
+     |
+1276 |               successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1283 | /         match tree.expose() {
+1284 | |             Exposed::Leaf => None,
+1285 | |             Exposed::Node(left, root_pair, right) => {
+1286 | |                 reveal_param_bst_backings(&left);
+...    |
+1569 | |         }
+     | |_________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1361:45
+     |
+1361 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1362:45
+     |
+1362 | ...                   K::transitive(lk, root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1377:37
+     |
+1377 | ...                   K::cmp_spec_less_implies_le(*k, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:584:18
+     |
+ 584 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1383:49
+     |
+1383 | ...                   implies TotalOrder::le(key, t) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1404:45
+     |
+1404 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1470:37
+     |
+1470 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, min_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1551:41
+     |
+1551 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1556:41
+     |
+1556 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+note: 
+
+k.cmp_spec(tmp%) == Less
+|   !(k.cmp_spec(tmp%) is Equal) ✔
+|   !(k.cmp_spec(tmp%) is Greater) ✘
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1890:13
+     |
+1890 |               parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1921 | /         match tree.expose() {
+1922 | |             Exposed::Leaf => {
+1923 | |                 proof {
+1924 | |                     if spec_pair_set_to_map(tree@).contains_key(k@) {
+...    |
+2314 | |         }
+     | |_________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1918:13
+     |
+1918 |               parts.0@.len() + parts.2@.len() <= tree@.len(),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1921 | /         match tree.expose() {
+1922 | |             Exposed::Leaf => {
+1923 | |                 proof {
+1924 | |                     if spec_pair_set_to_map(tree@).contains_key(k@) {
+...    |
+2314 | |         }
+     | |_________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2235:41
+     |
+2235 | ...                   implies p.0.cmp_spec(k) == Less by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2245:37
+     |
+2245 |                                     lemma_cmp_antisymmetry(root_pair.0, *k);
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+2991 |             a.cmp_spec(&b) == Less,
+     |             ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2253:37
+     |
+2253 |                                     lemma_cmp_antisymmetry(root_pair.0, *k);
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+2991 |             a.cmp_spec(&b) == Less,
+     |             ---------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1890:41
+     |
+1890 |             parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1918 |             parts.0@.len() + parts.2@.len() <= tree@.len(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = parts.1;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view()) ✘
+                function is uninterpreted
+            v.view() == spec_pair_set_to_map(old(tree).view()).index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = parts.1;
+    tmp%% is None ==>
+        !(spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view())) ✔
+    !(tmp%% is None) ==>
+        true ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+forall |p|
+    parts.0.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Less ✔
+forall |p|
+    parts.2.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Greater ✔
+parts.0.view().subset_of(old(tree).view()) ✔
+parts.2.view().subset_of(old(tree).view()) ✔
+parts.0.view().disjoint(parts.2.view()) ✔
+!(spec_pair_set_to_map(parts.0.view()).dom().contains(old(k).view())) ✔
+!(spec_pair_set_to_map(parts.2.view()).dom().contains(old(k).view())) ✔
+forall |kv, vv|
+    old(tree).view().contains((kv, vv)) ==>
+        !(parts.0.view().contains((kv, vv)) || parts.2.view().contains((kv, vv))) ==>
+            kv == old(k).view() ✔
+spec_key_unique_pairs_set(parts.0.view()) ✔
+spec_key_unique_pairs_set(parts.2.view()) ✔
+spec_set_pair_view_generated(parts.0.view()) ✔
+spec_set_pair_view_generated(parts.2.view()) ✔
+parts.0.spec_bstparasteph_wf() ✔
+parts.2.spec_bstparasteph_wf() ✔
+clip(nat, parts.0.view().len() + parts.2.view().len()) <= old(tree).view().len() ✘
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2399:41
+     |
+2399 | ...                   K::cmp_spec_less_implies_le(*k, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:584:18
+     |
+ 584 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2413:41
+     |
+2413 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, xp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2414:41
+     |
+2414 | ...                   K::cmp_spec_less_implies_le(*k, root_pair.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:584:18
+     |
+ 584 |         requires a.cmp_spec(&b) == Ordering::Less
+     |                  -------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2416:41
+     |
+2416 | ...                   K::transitive(*k, root_pair.0, t);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2467:41
+     |
+2467 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, xp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2470:41
+     |
+2470 | ...                   K::antisymmetric(t, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:36:13
+     |
+  36 |             Self::le(y, x),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2548:41
+     |
+2548 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2552:48
+     |
+2552 | ...                   assert(xp.0@ != k@);
+     |                              ^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2558:41
+     |
+2558 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, *k);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+note: 
+
+k.cmp_spec(tmp%) == Less
+|   !(k.cmp_spec(tmp%) is Equal) ✔
+|   !(k.cmp_spec(tmp%) is Greater) ✘
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1087:17
+     |
+1087 | ...       rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+4997 | ...   bst_rank_by_key(&self.tree, k)
+     |       ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1087:17
+     |
+1087 | ...   rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+%return <= old(self).view().dom().len() ✔
+%return == old(self).view().dom().filter((|x| (exists |t| ))).len() ✘
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2752:45
+     |
+2752 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, xp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2755:45
+     |
+2755 | ...                   K::transitive(t, root_pair.0, sel_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2756:45
+     |
+2756 | ...                   K::antisymmetric(t, sel_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:36:13
+     |
+  36 |             Self::le(y, x),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2806:37
+     |
+2806 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, xp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2809:37
+     |
+2809 | ...                   K::antisymmetric(t, key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:36:13
+     |
+  36 |             Self::le(y, x),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2897:45
+     |
+2897 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, sp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2899:45
+     |
+2899 | ...                   K::transitive(xp.0, root_pair.0, sel_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:27:13
+     |
+  27 |             Self::le(y, z),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2916:45
+     |
+2916 | ...                   K::cmp_spec_greater_implies_le(root_pair.0, sp.0);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:588:18
+     |
+ 588 |         requires a.cmp_spec(&b) == Ordering::Greater
+     |                  ----------------------------------- failed precondition
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2919:52
+     |
+2919 | ...                   assert(spec_rank_pred::<K>(root_pair.0@, sel_key));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/vstdplus/total_order.rs:588:36
+    |
+588 |         requires a.cmp_spec(&b) == Ordering::Greater
+    |                                    ^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.cmp_spec(tmp%) == Greater
+|   !(tmp%.cmp_spec(tmp%) is Less) ✘
+|   !(tmp%.cmp_spec(tmp%) is Equal) ✔
++---
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:956:17
+     |
+ 956 | ...       selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5004 | ...   bst_select_by_rank(&self.tree, i)
+     |       --------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:956:46
+    |
+956 | ...==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+old(i) >= old(self).view().dom().len() ==>
+    let tmp%% = %return;
+        tmp%% is None ==>
+            true ✔
+        !(tmp%% is None) ==>
+            false ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let k = tmp%%.0;
+            old(self).view().dom().contains(k.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().dom().filter((|x| (exists |t| ))).len() == old(i) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1104:17
+     |
+1104 |                   split.1.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5021 | /             if i >= size {
+5022 | |                 // Everything goes left, right is empty.
+5023 | |                 let right = Self::empty();
+5024 | |                 let left_tree = self.tree.clone();
+...    |
+5124 | |                 (left_table, right_table)
+5125 | |             }
+     | |_____________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5041:33
+     |
+5041 |                 let pair_at_i = sorted.nth(i);
+     |                                 ^^^^^^^^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:136:22
+     |
+ 136 |             requires index < self.spec_len()
+     |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1104:17
+     |
+1104 |                 split.1.spec_orderedtablesteph_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom().finite() ✔
+old(self).view().dom().finite() ✔
+%return.0.view().dom().finite() ✔
+%return.1.view().dom().finite() ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✔
+%return.1.view().dom().subset_of(old(self).view().dom()) ✔
+%return.0.view().dom().disjoint(%return.1.view().dom()) ✔
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key)) ==>
+            %return.1.view().dom().contains(key) ✔
+%return.0.spec_orderedtablesteph_wf() ✔
+%return.1.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2651 verified, 8 errors
+error: aborting due to 50 previous errors
+
+Elapsed: 55s
+Sampled Memory Usage: peak rust_verify RSS: 11447MB, peak z3 RSS: 404MB, min free: 14531MB
+Sampled CPU Usage: rust_verify: 302s, z3 children: 257s

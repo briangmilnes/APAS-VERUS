@@ -1,0 +1,98 @@
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap43/OrderedTableStEph.rs:1572:25
+     |
+1528 |                                 Some(rk) => {
+     |                                      -- value partially moved here
+...
+1572 |                         result
+     |                         ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `K`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+1528 |                                 Some(ref rk) => {
+     |                                      +++
+help: consider further restricting type parameter `K` with trait `Copy`
+     |
+1259 |     fn bst_next_by_key<K: StT + Ord + TotalOrderBridge + std::marker::Copy, V: StT + Ord>(
+     |                                                        +++++++++++++++++++
+
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap43/OrderedTableStEph.rs:1875:25
+     |
+1834 |                                 Some(lk) => {
+     |                                      -- value partially moved here
+...
+1875 |                         result
+     |                         ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `K`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+1834 |                                 Some(ref lk) => {
+     |                                      +++
+help: consider further restricting type parameter `K` with trait `Copy`
+     |
+1581 |     fn bst_prev_by_key<K: StT + Ord + TotalOrderBridge + std::marker::Copy, V: StT + Ord>(
+     |                                                        +++++++++++++++++++
+
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap43/OrderedTableStEph.rs:2787:21
+     |
+2698 |                             Some(sel_key) => {
+     |                                  ------- value partially moved here
+...
+2787 |                     result
+     |                     ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `K`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+2698 |                             Some(ref sel_key) => {
+     |                                  +++
+help: consider further restricting type parameter `K` with trait `Copy`
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge + std::marker::Copy, V: StT + Ord>(
+     |                                                           +++++++++++++++++++
+
+error[E0382]: use of partially moved value: `result`
+    --> src/Chap43/OrderedTableStEph.rs:2999:21
+     |
+2860 |                             Some(sel_key) => {
+     |                                  ------- value partially moved here
+...
+2999 |                     result
+     |                     ^^^^^^ value used here after partial move
+     |
+     = note: partial move occurs because value has type `K`, which does not implement the `Copy` trait
+help: borrow this binding in the pattern to avoid moving the value
+     |
+2860 |                             Some(ref sel_key) => {
+     |                                  +++
+help: consider further restricting type parameter `K` with trait `Copy`
+     |
+2646 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge + std::marker::Copy, V: StT + Ord>(
+     |                                                           +++++++++++++++++++
+
+error[E0507]: cannot move out of `pair_at_i` which is behind a shared reference
+    --> src/Chap43/OrderedTableStEph.rs:5061:33
+     |
+5061 |                 let split_key = pair_at_i.0;
+     |                                 ^^^^^^^^^^^ move occurs because `pair_at_i.0` has type `K`, which does not implement the `Copy` trait
+     |
+help: consider borrowing here
+     |
+5061 |                 let split_key = &pair_at_i.0;
+     |                                 +
+help: consider cloning the value if the performance cost is acceptable
+     |
+5061 |                 let split_key = pair_at_i.0.clone();
+     |                                            ++++++++
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0382, E0507.
+For more information about an error, try `rustc --explain E0382`.
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 11665MB, peak z3 RSS: 197MB, min free: 14391MB
+Sampled CPU Usage: rust_verify: 268s, z3 children: 162s

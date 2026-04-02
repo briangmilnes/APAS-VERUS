@@ -1,0 +1,48 @@
+error[E0428]: the name `lemma_key_unique_subset` is defined multiple times
+    --> src/Chap43/OrderedTableStEph.rs:1258:11
+     |
+ 341 |       proof fn lemma_key_unique_subset<KV, VV>(s: Set<(KV, VV)>, sub: Set<(KV, VV)>)
+     |  ___________-
+ 342 | |         requires
+ 343 | |             spec_key_unique_pairs_set(s),
+ 344 | |             sub.subset_of(s),
+...    |
+ 349 | |     }
+     | |_____- previous definition of the value `lemma_key_unique_subset` here
+...
+1258 |       proof fn lemma_key_unique_subset<KV, VV>(sub: Set<(KV, VV)>, sup: Set<(KV, VV)>)
+     |  ___________^
+1259 | |         requires sub.subset_of(sup), spec_key_unique_pairs_set(sup),
+1260 | |         ensures spec_key_unique_pairs_set(sub),
+...    |
+1268 | |         };
+1269 | |     }
+     | |_____^ `lemma_key_unique_subset` redefined here
+     |
+     = note: `lemma_key_unique_subset` must be defined only once in the value namespace of this module
+
+error[E0425]: cannot find value `t` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2946:60
+     |
+2946 | ...                   assert(xp.0 == t);
+     |                                      ^ not found in this scope
+
+error[E0425]: cannot find value `t` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2948:59
+     |
+2948 | ...                   K::transitive(t, root_pair.0, sel_key);
+     |                                     ^ not found in this scope
+
+error[E0425]: cannot find value `t` in this scope
+    --> src/Chap43/OrderedTableStEph.rs:2950:52
+     |
+2950 | ...                   assert(t@ != sel_key@);
+     |                              ^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0428.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 287MB, peak z3 RSS: 0MB, min free: 25945MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
