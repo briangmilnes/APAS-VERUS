@@ -93,6 +93,12 @@ src/Chap19/ArraySeqMtEph.rs:347: error: Mt fn `ninject` DIFFERS from APAS — : 
 src/Chap19/ArraySeqMtEph.rs:420: error: Mt fn `scan` DIFFERS from APAS — : sequential loop, span = work
 src/Chap19/ArraySeqMtEph.rs:447: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop, span = work
 src/Chap19/ArraySeqMtEph.rs:459: error: Mt fn `flatten` DIFFERS from APAS — : nested sequential loops, span = work
+src/Chap19/ArraySeqMtEphSlice.rs:357: error: fn `reduce` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:374: error: fn `map` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:383: error: fn `filter` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:422: error: fn `reduce_dc` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:527: error: fn `map_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:601: error: fn `filter_dc_vec` missing alg analysis annotation
 src/Chap19/ArraySeqStEph.rs:177: info: St fn `new` sequential as expected
 src/Chap19/ArraySeqStEph.rs:215: info: St fn `subseq_copy` sequential as expected
 src/Chap19/ArraySeqStEph.rs:229: info: St fn `subseq` sequential as expected
@@ -199,13 +205,13 @@ src/Chap38/BSTParaMtEph.rs:278: error: Mt fn `join_mid` DIFFERS from APAS — : 
 src/Chap38/BSTParaMtEph.rs:343: error: Mt fn `join_pair` DIFFERS from APAS — : delegates to union_inner (ParaPair)
 src/Chap38/BSTParaMtEph.rs:382: error: Mt fn `filter` DIFFERS from APAS — : sequential recursion in filter_inner (spec_fn not Send)
 src/Chap38/BSTParaMtEph.rs:419: error: Mt fn `join_m` DIFFERS from APAS — : delegates to join_mid which is O(1) in parametric impl
-src/Chap38/BSTParaStEph.rs:280: info: St fn `join_mid` sequential as expected
-src/Chap38/BSTParaStEph.rs:296: info: St fn `join_m` sequential as expected
-src/Chap38/BSTParaStEph.rs:383: info: St fn `union` sequential as expected
-src/Chap38/BSTParaStEph.rs:391: info: St fn `intersect` sequential as expected
-src/Chap38/BSTParaStEph.rs:398: info: St fn `difference` sequential as expected
-src/Chap38/BSTParaStEph.rs:405: info: St fn `filter` sequential as expected
-src/Chap38/BSTParaStEph.rs:427: info: St fn `reduce` sequential as expected
+src/Chap38/BSTParaStEph.rs:289: info: St fn `join_mid` sequential as expected
+src/Chap38/BSTParaStEph.rs:305: info: St fn `join_m` sequential as expected
+src/Chap38/BSTParaStEph.rs:403: info: St fn `union` sequential as expected
+src/Chap38/BSTParaStEph.rs:411: info: St fn `intersect` sequential as expected
+src/Chap38/BSTParaStEph.rs:418: info: St fn `difference` sequential as expected
+src/Chap38/BSTParaStEph.rs:425: info: St fn `filter` sequential as expected
+src/Chap38/BSTParaStEph.rs:447: info: St fn `reduce` sequential as expected
 src/Chap39/BSTTreapStEph.rs:2127: info: St fn `union_inner_st` sequential as expected
 src/Chap39/BSTTreapStEph.rs:2282: info: St fn `intersect_inner_st` sequential as expected
 src/Chap39/BSTTreapStEph.rs:2436: info: St fn `difference_inner_st` sequential as expected
@@ -291,7 +297,7 @@ src/Chap42/TableStPer.rs:528: info: St fn `delete` sequential as expected
 src/Chap42/TableStPer.rs:538: info: St fn `insert` sequential as expected
 src/Chap42/TableStPer.rs:606: info: St fn `restrict` sequential as expected
 src/Chap42/TableStPer.rs:615: info: St fn `subtract` sequential as expected
-src/Chap43/OrderedTableStPer.rs:728: info: St fn `get_key_range` sequential as expected
+src/Chap43/OrderedTableStPer.rs:795: info: St fn `get_key_range` sequential as expected
 src/Chap49/MinEditDistStEph.rs:107: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/MinEditDistStEph.rs:162: info: St fn `min_edit_distance_rec` sequential as expected
 src/Chap49/MinEditDistStEph.rs:238: info: St fn `min_edit_distance` sequential as expected
@@ -321,18 +327,10 @@ src/Chap51/TopDownDPStPer.rs:156: info: St fn `med_memoized` sequential as expec
 src/Chap51/TopDownDPStPer.rs:163: info: St fn `med_recursive` sequential as expected
 src/Chap51/TopDownDPStPer.rs:262: info: St fn `med_memoized` sequential as expected
 src/Chap51/TopDownDPStPer.rs:272: info: St fn `med_recursive` sequential as expected
-src/Chap52/AdjMatrixGraphMtEph.rs:143: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl counts trues in n*n matrix
-src/Chap52/AdjMatrixGraphMtPer.rs:144: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl counts trues in n*n matrix
-src/Chap52/AdjMatrixGraphMtPer.rs:197: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(1); persistent seq requires row copy
-src/Chap52/AdjMatrixGraphStEph.rs:142: info: St fn `num_edges` sequential as expected
-src/Chap52/AdjMatrixGraphStPer.rs:148: info: St fn `num_edges` sequential as expected
-src/Chap52/AdjMatrixGraphStPer.rs:194: info: St fn `set_edge` sequential as expected
-src/Chap52/AdjSeqGraphMtEph.rs:123: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl sums degrees
-src/Chap52/AdjSeqGraphMtEph.rs:186: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(n), O(1); impl rebuilds neighbor list
-src/Chap52/AdjSeqGraphMtPer.rs:120: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl sums degrees
-src/Chap52/AdjSeqGraphStEph.rs:123: info: St fn `num_edges` sequential as expected
-src/Chap52/AdjSeqGraphStEph.rs:225: info: St fn `set_edge` sequential as expected
-src/Chap52/AdjSeqGraphStPer.rs:126: info: St fn `num_edges` sequential as expected
+src/Chap52/AdjMatrixGraphMtPer.rs:349: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(1); persistent seq requires row copy
+src/Chap52/AdjMatrixGraphStPer.rs:344: info: St fn `set_edge` sequential as expected
+src/Chap52/AdjSeqGraphMtEph.rs:260: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(n), O(1); impl rebuilds neighbor list
+src/Chap52/AdjSeqGraphStEph.rs:301: info: St fn `set_edge` sequential as expected
 src/Chap52/AdjTableGraphMtPer.rs:125: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl sums degrees
 src/Chap52/AdjTableGraphStEph.rs:235: info: St fn `num_edges` sequential as expected
 src/Chap52/AdjTableGraphStPer.rs:138: info: St fn `num_edges` sequential as expected
@@ -441,21 +439,21 @@ src/Chap66/BoruvkaStEph.rs:510: info: St fn `boruvka_mst_with_seed` sequential a
 Summary
 =============================================================
 
-  Total exec fns scanned:    5084
+  Total exec fns scanned:    5096
   Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              246
 
-  Alg analysis annotations:  5084  (fns with any APAS or Code review line)
-  Missing alg analysis:         0  <- errors
+  Alg analysis annotations:  5090  (fns with any APAS or Code review line)
+  Missing alg analysis:         6  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       78  <- errors
-  St DIFFERS (expected):      357  <- info
+  Mt DIFFERS (blockers):       74  <- errors
+  St DIFFERS (expected):      353  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 78
+  Errors: 80
   Warnings: 0
-  Info: 357
+  Info: 353
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
