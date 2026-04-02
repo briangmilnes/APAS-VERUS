@@ -1,0 +1,38 @@
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphMtPer.rs:240:21
+    |
+240 |                     len as nat == self.edges@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:292:48
+    |
+129 |                 self.spec_edges().len() < usize::MAX as nat,
+    |                 ------------------------------------------- failed precondition
+...
+292 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                ^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/EdgeSetGraphMtPer.rs:129:17
+    |
+129 |                 self.spec_edges().len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_edgesetgraphmtper_wf() ✔
+self.spec_edges().len() < UnsignedMax.Exec(usize::BITS) ✘
+
+error: invariant not satisfied before loop
+   --> src/Chap52/EdgeSetGraphMtPer.rs:326:21
+    |
+326 |                     len as nat == self.edges@.len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 5579 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 91s
+Sampled Memory Usage: peak rust_verify RSS: 11688MB, peak z3 RSS: 488MB, min free: 14225MB
+Sampled CPU Usage: rust_verify: 270s, z3 children: 159s

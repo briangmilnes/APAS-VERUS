@@ -103,7 +103,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential in-order traversal
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
-            requires self.spec_avltreesetmtper_wf(),
+            requires
+                self.spec_avltreesetmtper_wf(),
+                self@.len() < usize::MAX as nat,
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
@@ -185,6 +187,7 @@ broadcast use {
             requires
                 self.spec_avltreesetmtper_wf(),
                 other.spec_avltreesetmtper_wf(),
+                self@.len() + other@.len() <= usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures combined@ == self@.union(other@), combined.spec_avltreesetmtper_wf();
@@ -205,6 +208,7 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
             requires
                 self.spec_avltreesetmtper_wf(),
+                self@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();
@@ -215,6 +219,7 @@ broadcast use {
         fn insert(&self, x: T) -> (updated: Self)
             requires
                 self.spec_avltreesetmtper_wf(),
+                self@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures updated@ == self@.insert(x@), updated.spec_avltreesetmtper_wf();
@@ -239,7 +244,6 @@ broadcast use {
             let mut vals: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut vals);
             let ghost vals_seq = vals@;
-            proof { assume(vals@.len() < usize::MAX); }
             let seq = AVLTreeSeqMtPerS::from_vec(vals);
             proof {
                 // from_vec: seq@ =~= vals_seq.map_values(|t: T| t@), so seq@[i] == vals_seq[i]@.
@@ -386,7 +390,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(1+n/m)), Span O(m·lg(1+n/m))
         fn union(&self, other: &Self) -> (combined: Self)
         {
-            proof { assume(self.tree@.len() + other.tree@.len() <= usize::MAX as nat); }
             let combined_tree = self.tree.union(&other.tree);
             AVLTreeSetMtPer { tree: combined_tree }
         }
@@ -402,10 +405,7 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
-            proof {
-                assert(obeys_feq_full_trigger::<T>());
-                assume(tree@.len() < usize::MAX as nat);
-            }
+            proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.delete(x);
             AVLTreeSetMtPer { tree }
         }
@@ -414,10 +414,7 @@ broadcast use {
         fn insert(&self, x: T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
-            proof {
-                assert(obeys_feq_full_trigger::<T>());
-                assume(tree@.len() < usize::MAX as nat);
-            }
+            proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.insert(x);
             AVLTreeSetMtPer { tree }
         }

@@ -465,6 +465,10 @@ broadcast use {
                     // ParamBST type_invariant guarantees ghost_locked_root@.finite(),
                     // so AVLTreeSetMtPer::spec_avltreesetmtper_wf() always holds.
                     assert_avltreesetmtper_always_wf(neighbors);
+                    proof {
+                        // Capacity: stored neighbor sets are always < usize::MAX.
+                        assume(neighbors@.len() < usize::MAX as nat);
+                    }
                     neighbors.delete(&v_clone)
                 },
                 Ghost(|ns: Set<<V as View>::V>| -> Set<<V as View>::V> { ns.remove(v_view) }),

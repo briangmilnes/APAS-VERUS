@@ -111,7 +111,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential in-order traversal
         /// - claude-4-sonet: Work Θ(n), Span Θ(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
-            requires self.spec_avltreesetmteph_wf(),
+            requires
+                self.spec_avltreesetmteph_wf(),
+                self@.len() < usize::MAX as nat,
             ensures
                 self@.finite(),
                 seq@.to_set() =~= self@,
@@ -224,6 +226,7 @@ broadcast use {
         fn delete(&mut self, x: &T)
             requires
                 old(self).spec_avltreesetmteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
@@ -267,7 +270,6 @@ broadcast use {
             let mut out: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut out);
             let ghost out_seq = out@;
-            proof { assume(out@.len() < usize::MAX); }
             let seq = AVLTreeSeqStEphS::from_vec(out);
             proof {
                 // from_vec: seq@ =~= out_seq.map_values(|t: T| t@), so seq@[i] == out_seq[i]@.
@@ -416,10 +418,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
         fn delete(&mut self, x: &T)
         {
-            proof {
-                assert(obeys_feq_full_trigger::<T>());
-                assume(self.tree@.len() < usize::MAX as nat);
-            }
+            proof { assert(obeys_feq_full_trigger::<T>()); }
             self.tree.delete(x);
         }
 
