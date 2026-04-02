@@ -86,6 +86,20 @@ broadcast use {
         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
     }
 
+    /// ParamBST size is stored as usize, so @.len() <= usize::MAX.
+    /// Returns the size so callers can use it in capacity proofs.
+    pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + 'static>(
+        s: &AVLTreeSetMtPer<T>,
+    ) -> (sz: usize)
+        ensures
+            s.spec_avltreesetmtper_wf(),
+            sz as nat == s@.len(),
+            s@.len() <= usize::MAX as nat,
+    {
+        crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+        s.size()
+    }
+
     // 8. traits
 
     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {

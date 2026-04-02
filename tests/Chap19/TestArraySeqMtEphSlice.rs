@@ -272,3 +272,52 @@ fn test_slice_then_reduce() {
     let sum = sliced.reduce(&|a: &i64, b: &i64| -> i64 { *a + *b }, Ghost::assume_new(), 0i64);
     assert_eq!(sum, 90);
 }
+
+// flatten tests
+
+#[test]
+fn test_flatten_empty() {
+    let outer: ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<i64>> =
+        ArraySeqMtEphSliceS::from_vec(vec![]);
+    let flat = flatten(&outer);
+    assert_eq!(flat.length(), 0);
+}
+
+#[test]
+fn test_flatten_single() {
+    let inner = ArraySeqMtEphSliceS::from_vec(vec![1i64, 2, 3]);
+    let outer = ArraySeqMtEphSliceS::from_vec(vec![inner]);
+    let flat = flatten(&outer);
+    assert_eq!(flat.length(), 3);
+}
+
+#[test]
+fn test_flatten_multiple() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1i64, 2]);
+    let b = ArraySeqMtEphSliceS::from_vec(vec![3i64]);
+    let c = ArraySeqMtEphSliceS::from_vec(vec![4i64, 5, 6]);
+    let outer = ArraySeqMtEphSliceS::from_vec(vec![a, b, c]);
+    let flat = flatten(&outer);
+    assert_eq!(flat.length(), 6);
+}
+
+#[test]
+fn test_flatten_with_empties() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1i64]);
+    let b: ArraySeqMtEphSliceS<i64> = ArraySeqMtEphSliceS::from_vec(vec![]);
+    let c = ArraySeqMtEphSliceS::from_vec(vec![2i64, 3]);
+    let outer = ArraySeqMtEphSliceS::from_vec(vec![a, b, c]);
+    let flat = flatten(&outer);
+    assert_eq!(flat.length(), 3);
+}
+
+#[test]
+fn test_flatten_large() {
+    let mut seqs: Vec<ArraySeqMtEphSliceS<i64>> = Vec::new();
+    for i in 0..20 {
+        seqs.push(ArraySeqMtEphSliceS::from_vec(vec![i as i64; 10]));
+    }
+    let outer = ArraySeqMtEphSliceS::from_vec(seqs);
+    let flat = flatten(&outer);
+    assert_eq!(flat.length(), 200);
+}

@@ -1,0 +1,73 @@
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0425]: cannot find function `flatten` in this scope
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:282:16
+    |
+282 |     let flat = flatten(&outer);
+    |                ^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap18::ArraySeq::ArraySeq::flatten;
+    |
+
+error[E0425]: cannot find function `flatten` in this scope
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:290:16
+    |
+290 |     let flat = flatten(&outer);
+    |                ^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap18::ArraySeq::ArraySeq::flatten;
+    |
+
+error[E0425]: cannot find function `flatten` in this scope
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:300:16
+    |
+300 |     let flat = flatten(&outer);
+    |                ^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap18::ArraySeq::ArraySeq::flatten;
+    |
+
+error[E0425]: cannot find function `flatten` in this scope
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:310:16
+    |
+310 |     let flat = flatten(&outer);
+    |                ^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap18::ArraySeq::ArraySeq::flatten;
+    |
+
+error[E0425]: cannot find function `flatten` in this scope
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:321:16
+    |
+321 |     let flat = flatten(&outer);
+    |                ^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+  4 + use apas_verus::Chap18::ArraySeq::ArraySeq::flatten;
+    |
+
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `apas-verus` (test "TestChap19ArraySeqMtEphSlice") due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 10s
