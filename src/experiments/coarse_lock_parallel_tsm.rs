@@ -5,11 +5,18 @@
 //! Demonstrates all three layers of the target Mt architecture:
 //! - Layer 1: One coarse RwLock wrapping an interior with data + TSM token.
 //! - Layer 2: TSM token inside the lock; predicate ties token to data. Zero assumes.
-//! - Layer 3: Parallel operations inside acquire via join() on owned O(1) slices.
+//! - Layer 3: After acquire, call the Mt type's OWN parallel operations on owned data.
 //!
-//! Uses ArraySeqMtEphSliceS<u64> for O(1) slicing (Arc<Vec> sharing).
-//! Parallel reduce and map use HFScheduler join() with named closures.
-//! Zero assumes, zero accepts, zero external_body (except HFScheduler join and clone_fn).
+//! Uses ArraySeqMtEphS<u64> as the inner Mt type. After acquiring the lock, the
+//! experiment calls ArraySeqMtEphTrait::reduce and ArraySeqMtEphTrait::map directly —
+//! the Mt type handles parallelism internally (D&C via join). The experiment does NOT
+//! manually split, loop, or re-implement these operations.
+//!
+//! This is the key architectural point from architecture-coarse-lock-parallel-mt.md:
+//! when M1 stores M2 inside its lock, M1's locked trait calls M2's unlocked trait
+//! directly on the owned M2 data.
+//!
+//! Zero assumes, zero accepts, zero external_body (except inside the Mt type's internals).
 //!
 //! DO NOT register in lib.rs — experiments stay commented out.
 
@@ -65,11 +72,11 @@ pub mod coarse_lock_parallel_tsm {
 
     // 2. imports
 
-    use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
-    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
-    use crate::vstdplus::clone_plus::clone_plus::*;
+    use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
+    #[cfg(verus_keep_ghost)]
+    use crate::vstdplus::monoid::monoid::*;
 
     // 3. broadcast use
 
@@ -84,7 +91,7 @@ pub mod coarse_lock_parallel_tsm {
 
     /// Lock interior: concrete sequence + ghost count token.
     pub struct CollectionInterior {
-        pub seq: ArraySeqMtEphSliceS<u64>,
+        pub seq: ArraySeqMtEphS<u64>,
         pub token: Tracked<CollectionSM::count>,
     }
 
@@ -95,7 +102,7 @@ pub mod coarse_lock_parallel_tsm {
 
     impl RwLockPredicate<CollectionInterior> for CollectionInv {
         open spec fn inv(self, interior: CollectionInterior) -> bool {
-            interior.seq.spec_arrayseqmtephslice_wf()
+            interior.seq.spec_arrayseqmteph_wf()
             && interior.token@.value() == interior.seq.spec_len()
             && interior.token@.instance_id() == self.instance.id()
         }
@@ -110,65 +117,6 @@ pub mod coarse_lock_parallel_tsm {
     // 6. spec fns
 
     // 9. impls
-
-    /// Sequential reduce over a slice-backed sequence.
-    fn seq_reduce_u64<F: Fn(&u64, &u64) -> u64>(
-        seq: &ArraySeqMtEphSliceS<u64>, f: &F, id: u64,
-    ) -> (result: u64)
-        requires
-            seq.spec_arrayseqmtephslice_wf(),
-            forall|x: &u64, y: &u64| #[trigger] f.requires((x, y)),
-            obeys_feq_clone::<u64>(),
-    {
-        let len = seq.length();
-        let mut acc: u64 = id;
-        let mut i: usize = 0;
-        while i < len
-            invariant
-                i <= len,
-                len == seq.spec_len(),
-                seq.spec_arrayseqmtephslice_wf(),
-                forall|x: &u64, y: &u64| #[trigger] f.requires((x, y)),
-                obeys_feq_clone::<u64>(),
-            decreases len - i,
-        {
-            let elem = seq.nth_cloned(i);
-            acc = f(&acc, &elem);
-            i += 1;
-        }
-        acc
-    }
-
-    /// Sequential map over a slice-backed sequence, producing a Vec.
-    fn seq_map_u64<F: Fn(&u64) -> u64>(
-        seq: &ArraySeqMtEphSliceS<u64>, f: &F,
-    ) -> (result: Vec<u64>)
-        requires
-            seq.spec_arrayseqmtephslice_wf(),
-            forall|x: &u64| #[trigger] f.requires((x,)),
-            obeys_feq_clone::<u64>(),
-        ensures
-            result@.len() == seq.spec_len(),
-    {
-        let len = seq.length();
-        let mut v: Vec<u64> = Vec::with_capacity(len);
-        let mut i: usize = 0;
-        while i < len
-            invariant
-                i <= len,
-                len == seq.spec_len(),
-                v@.len() == i as int,
-                seq.spec_arrayseqmtephslice_wf(),
-                forall|x: &u64| #[trigger] f.requires((x,)),
-                obeys_feq_clone::<u64>(),
-            decreases len - i,
-        {
-            let elem = seq.nth_cloned(i);
-            v.push(f(&elem));
-            i += 1;
-        }
-        v
-    }
 
     impl CollectionMt {
         pub open spec fn wf(&self) -> bool {
@@ -185,7 +133,7 @@ pub mod coarse_lock_parallel_tsm {
             ) = CollectionSM::Instance::initialize(0);
 
             let interior = CollectionInterior {
-                seq: ArraySeqMtEphSliceS::empty(),
+                seq: ArraySeqMtEphS::empty(),
                 token: Tracked(count_token),
             };
 
@@ -206,7 +154,7 @@ pub mod coarse_lock_parallel_tsm {
             ) = CollectionSM::Instance::initialize(len as nat);
 
             let interior = CollectionInterior {
-                seq: ArraySeqMtEphSliceS::from_vec(v),
+                seq: ArraySeqMtEphS::from_vec(v),
                 token: Tracked(count_token),
             };
 
@@ -227,159 +175,56 @@ pub mod coarse_lock_parallel_tsm {
             n
         }
 
-        /// Read + parallel: reduce via O(1) slice split + join. Zero assumes.
+        /// Read + parallel: reduce via the Mt type's own parallel reduce.
         ///
-        /// Acquires read lock, creates two owned slices via O(1) Arc::clone,
-        /// releases the lock, then forks reduce over both halves.
-        pub fn mt_parallel_reduce<F: Fn(&u64, &u64) -> u64 + Clone + Send + 'static>(
-            &self, f: &F, id: u64,
+        /// Acquires read lock, calls ArraySeqMtEphTrait::reduce on the interior
+        /// data. The Mt type handles parallelism internally (D&C with join).
+        /// This is the architectural pattern: call the inner type's unlocked
+        /// operations after acquire.
+        pub fn mt_parallel_reduce<F: Fn(&u64, &u64) -> u64 + Clone + Send + Sync + 'static>(
+            &self, f: &F, Ghost(spec_f): Ghost<spec_fn(u64, u64) -> u64>, id: u64,
         ) -> (result: u64)
             requires
                 self.wf(),
-                forall|x: &u64, y: &u64| #[trigger] f.requires((x, y)),
                 obeys_feq_clone::<u64>(),
+                spec_monoid(spec_f, id),
+                forall|x: &u64, y: &u64| #[trigger] f.requires((x, y)),
+                forall|x: u64, y: u64, ret: u64| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
         {
             let read_handle = self.lock.acquire_read();
             let interior = read_handle.borrow();
-            let len = interior.seq.length();
-
-            if len == 0 {
-                read_handle.release_read();
-                return id;
-            }
-
-            let mid = len / 2;
-            // O(1) slice: Arc::clone + window adjust. Owned, Send, 'static.
-            let left_slice = interior.seq.slice(0, mid);
-            let right_slice = interior.seq.slice(mid, len - mid);
-            // Slices hold their own Arc — safe to release the lock.
+            // Call the Mt type's own parallel reduce — internally uses D&C + join.
+            let result = <ArraySeqMtEphS<u64> as ArraySeqMtEphTrait<u64>>::reduce(&interior.seq, f, Ghost(spec_f), id);
             read_handle.release_read();
-
-            // Clone the combiner for each join arm.
-            let f1 = clone_fn2(f);
-            let f2 = clone_fn2(f);
-            let id1 = id;
-            let id2 = id;
-
-            // Named closures with explicit ensures (standard 8).
-            let fa = move || -> (r: u64)
-                requires
-                    left_slice.spec_arrayseqmtephslice_wf(),
-                    forall|x: &u64, y: &u64| #[trigger] f1.requires((x, y)),
-                    obeys_feq_clone::<u64>(),
-            {
-                seq_reduce_u64(&left_slice, &f1, id1)
-            };
-
-            let fb = move || -> (r: u64)
-                requires
-                    right_slice.spec_arrayseqmtephslice_wf(),
-                    forall|x: &u64, y: &u64| #[trigger] f2.requires((x, y)),
-                    obeys_feq_clone::<u64>(),
-            {
-                seq_reduce_u64(&right_slice, &f2, id2)
-            };
-
-            let (left_result, right_result) = join(fa, fb);
-            f(&left_result, &right_result)
+            result
         }
 
-        /// Write + parallel: map via O(1) slice split + join. Zero assumes.
+        /// Write + parallel: map via the Mt type's own parallel map.
         ///
-        /// Acquires write lock, creates two owned slices, forks map over both,
-        /// combines results, rebuilds sequence, releases write lock. Count
-        /// unchanged (map preserves length), so TSM token stays the same.
-        pub fn mt_parallel_map<F: Fn(&u64) -> u64 + Clone + Send + 'static>(
+        /// Acquires write lock, calls ArraySeqMtEphTrait::map on the interior
+        /// data. Map preserves length, so the TSM token stays unchanged.
+        /// The Mt type handles parallelism internally (D&C with join).
+        pub fn mt_parallel_map<F: Fn(&u64) -> u64 + Clone + Send + Sync + 'static>(
             &self, f: &F,
         )
             requires
                 self.wf(),
-                forall|x: &u64| #[trigger] f.requires((x,)),
                 obeys_feq_clone::<u64>(),
+                forall|x: &u64| #[trigger] f.requires((x,)),
         {
             let (mut interior, write_handle) = self.lock.acquire_write();
-
-            // Save ghost facts from the predicate for the release proof.
-            let ghost orig_token_val = interior.token@.value();
-            let len = interior.seq.length();
-            // Predicate guarantees: orig_token_val == len as nat.
-
-            if len == 0 {
-                write_handle.release_write(interior);
-                return;
-            }
-
-            let mid = len / 2;
-            let right_len = len - mid;
-
-            // O(1) slice: Arc::clone + window adjust.
-            let left_slice = interior.seq.slice(0, mid);
-            let right_slice = interior.seq.slice(mid, right_len);
-
-            let ghost left_len = left_slice.spec_len();
-            let ghost right_len_spec = right_slice.spec_len();
-
-            let f1 = clone_fn(f);
-            let f2 = clone_fn(f);
-
-            let fa = move || -> (r: Vec<u64>)
-                requires
-                    left_slice.spec_arrayseqmtephslice_wf(),
-                    forall|x: &u64| #[trigger] f1.requires((x,)),
-                    obeys_feq_clone::<u64>(),
-                ensures
-                    r@.len() == left_len,
-            {
-                seq_map_u64(&left_slice, &f1)
-            };
-
-            let fb = move || -> (r: Vec<u64>)
-                requires
-                    right_slice.spec_arrayseqmtephslice_wf(),
-                    forall|x: &u64| #[trigger] f2.requires((x,)),
-                    obeys_feq_clone::<u64>(),
-                ensures
-                    r@.len() == right_len_spec,
-            {
-                seq_map_u64(&right_slice, &f2)
-            };
-
-            let (mut left_vec, right_vec) = join(fa, fb);
-
-            // Combine: append right results to left.
-            let rlen = right_vec.len();
-            let mut i: usize = 0;
-            while i < rlen
-                invariant
-                    i <= rlen,
-                    rlen == right_vec@.len(),
-                    rlen as int == right_len_spec,
-                    left_vec@.len() == mid as int + i as int,
-                decreases rlen - i,
-            {
-                left_vec.push(right_vec[i]);
-                i += 1;
-            }
-
-            // Build new sequence from combined results.
-            assert(left_vec@.len() == mid as int + rlen as int);
-            assert(mid + right_len == len);
-            assert(left_vec@.len() == len as int);
-
-            let new_seq = ArraySeqMtEphSliceS::from_vec(left_vec);
-
-            // Replace seq; token unchanged. Predicate still holds:
-            // token.value() == orig_token_val == len == new_seq.spec_len().
+            let ghost orig_len = interior.seq.spec_len();
+            // Call the Mt type's own parallel map — internally uses D&C + join.
+            let new_seq = <ArraySeqMtEphS<u64> as ArraySeqMtEphTrait<u64>>::map(&interior.seq, f);
+            // Map preserves length: new_seq.spec_len() == orig_len.
             interior.seq = new_seq;
-
             proof {
-                assert(interior.seq.spec_arrayseqmtephslice_wf());
-                assert(interior.token@.value() == orig_token_val);
-                assert(orig_token_val == len as nat);
-                assert(interior.seq.spec_len() == len as nat);
+                // Predicate: token value == seq length, both == orig_len.
+                assert(interior.seq.spec_arrayseqmteph_wf());
+                assert(interior.seq.spec_len() == orig_len);
+                assert(interior.token@.value() == orig_len);
                 assert(interior.token@.value() == interior.seq.spec_len());
             }
-
             write_handle.release_write(interior);
         }
     }
@@ -396,7 +241,7 @@ pub mod coarse_lock_parallel_tsm {
         assert_eq!(c.mt_size(), 0);
 
         // Reduce on empty returns identity.
-        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(sum, 0);
 
         // From vec.
@@ -404,7 +249,7 @@ pub mod coarse_lock_parallel_tsm {
         assert_eq!(c.mt_size(), 8);
 
         // Parallel reduce: sum.
-        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(sum, 36);
 
         // Parallel map: double each element.
@@ -412,23 +257,23 @@ pub mod coarse_lock_parallel_tsm {
         assert_eq!(c.mt_size(), 8);
 
         // Parallel reduce after map: doubled sum.
-        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(sum, 72);
 
         // Parallel map: add 1 to each element.
         c.mt_parallel_map(&|x: &u64| -> u64 { *x + 1 });
-        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(sum, 80);
 
         // Single element.
         let c = CollectionMt::from_vec(vec![42]);
         assert_eq!(c.mt_size(), 1);
-        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let sum = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(sum, 42);
 
         // Parallel map on single element.
         c.mt_parallel_map(&|x: &u64| -> u64 { *x * 10 });
-        let val = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, 0);
+        let val = c.mt_parallel_reduce(&|a: &u64, b: &u64| -> u64 { *a + *b }, Ghost::assume_new(), 0);
         assert_eq!(val, 420);
     }
 }
