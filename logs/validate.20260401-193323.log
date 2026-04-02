@@ -1,0 +1,87 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+  --> src/vstdplus/total_order.rs:57:20
+   |
+12 |  pub trait TotalOrder: Sized {
+   |  --------------------------- method `cmp_spec` not found for this type parameter
+...
+57 |         requires a.cmp_spec(&b) == Ordering::Less
+   |                    ^^^^^^^^ method not found in `Self`
+   |
+   = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `cmp_spec`, perhaps you need to add another supertrait for one of them:
+   |
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::ExOrd {
+   |                              +++++++++++++++++++++++++++++
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::OrdSpec {
+   |                              +++++++++++++++++++++++++++++++
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::OrdSpecImpl {
+   |                              +++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+  --> src/vstdplus/total_order.rs:62:20
+   |
+12 |  pub trait TotalOrder: Sized {
+   |  --------------------------- method `cmp_spec` not found for this type parameter
+...
+62 |         requires a.cmp_spec(&b) == Ordering::Greater
+   |                    ^^^^^^^^ method not found in `Self`
+   |
+   = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `cmp_spec`, perhaps you need to add another supertrait for one of them:
+   |
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::ExOrd {
+   |                              +++++++++++++++++++++++++++++
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::OrdSpec {
+   |                              +++++++++++++++++++++++++++++++
+12 |  pub trait TotalOrder: Sized + vstd::std_specs::cmp::OrdSpecImpl {
+   |                              +++++++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:611:22
+    |
+611 |         assume(Self::le(a, b));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:577:15
+    |
+577 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+611 -         assume(Self::le(a, b));
+611 +         assume(std::cmp::PartialOrd::le(a, b));
+    |
+611 -         assume(Self::le(a, b));
+611 +         assume(vstdplus::total_order::total_order::TotalOrder::le(a, b));
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:615:22
+    |
+615 |         assume(Self::le(b, a));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:577:15
+    |
+577 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+615 -         assume(Self::le(b, a));
+615 +         assume(std::cmp::PartialOrd::le(b, a));
+    |
+615 -         assume(Self::le(b, a));
+615 +         assume(vstdplus::total_order::total_order::TotalOrder::le(b, a));
+    |
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0034, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 609MB, peak z3 RSS: 0MB, min free: 25244MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

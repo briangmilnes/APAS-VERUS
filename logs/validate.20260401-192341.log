@@ -1,0 +1,395 @@
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:695:13
+    |
+695 |             self.base_table.first_key()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:786:56
+    |
+786 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+786 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:708:13
+    |
+708 |             self.base_table.last_key()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:797:56
+    |
+797 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+797 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:721:13
+    |
+721 |             self.base_table.previous_key(k)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:808:56
+    |
+808 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+808 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:734:13
+    |
+734 |             self.base_table.next_key(k)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:819:56
+    |
+819 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+819 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:825:13
+    |
+825 |             self.base_table.rank_key(k)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:881:17
+    |
+881 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+881 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+obeys_view_eq() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/AugOrderedTableStEph.rs:838:13
+    |
+838 |             self.base_table.select_key(i)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:894:17
+    |
+894 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ---------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:103:59
+    |
+103 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+    |                                                           ^^^^^^^^^^^^^^^^^^^^
+104 |         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
+    |                                                              ^^^^^^^^^^^^^^^^^^^^
+...
+894 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_orderedtablesteph_wf() ✔
+obeys_view_eq() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:627:25
+    |
+627 |             let first = inner.first_key();
+    |                         ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:786:56
+    |
+786 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:640:24
+    |
+640 |             let last = inner.last_key();
+    |                        ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:797:56
+    |
+797 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:653:31
+    |
+653 |             let predecessor = inner.previous_key(k);
+    |                               ^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:808:56
+    |
+808 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:666:29
+    |
+666 |             let successor = inner.next_key(k);
+    |                             ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:819:56
+    |
+819 |             requires self.spec_orderedtablesteph_wf(), spec_ord_agrees_total_order::<K>()
+    |                                                        ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:718:24
+    |
+718 |             let rank = inner.rank_key(k);
+    |                        ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:881:17
+    |
+881 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+obeys_view_eq() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: precondition not satisfied
+   --> src/Chap43/OrderedTableMtEph.rs:731:28
+    |
+731 |             let selected = inner.select_key(i);
+    |                            ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:894:17
+    |
+894 |                 spec_ord_agrees_total_order::<K>(),
+    |                 ---------------------------------- failed precondition
+
+note: 
+
+inner.spec_orderedtablesteph_wf() ✔
+obeys_view_eq() ✔
+spec_ord_agrees_total_order() ✘
+|   forall |a, b|
+|       a.cmp_spec(b) == Less ==>
+|           a.le(b) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |a, b|
+|       a.cmp_spec(b) == Greater ==>
+|           b.le(a) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
++---
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2775:37
+     |
+2775 | ...                   implies TotalOrder::le(key, t) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+key.le(t) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: invariant not satisfied before loop
+    --> src/Chap43/OrderedTableStEph.rs:2844:25
+     |
+2844 |                         self@.dom().contains(max_key@),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2608 verified, 14 errors
+error: aborting due to 14 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2557MB, peak z3 RSS: 364MB, min free: 22660MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 46s

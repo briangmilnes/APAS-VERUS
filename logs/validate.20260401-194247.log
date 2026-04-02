@@ -1,0 +1,16 @@
+error: type invariant function is not visible to this program point
+    --> src/Chap43/OrderedTableStEph.rs:2766:45
+     |
+2766 |                         use_type_invariant(&self.tree);
+     |                                             ^^^^^^^^^
+     |
+    ::: src/Chap38/BSTParaStEph.rs:121:14
+     |
+ 121 |         spec fn wf(self) -> bool {
+     |              -------------------
+
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 2778MB, peak z3 RSS: 0MB, min free: 22761MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 54s

@@ -15,6 +15,7 @@ pub mod OrderedTableStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -655,7 +656,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn first_key(&self) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -665,7 +666,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn last_key(&self) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -675,7 +676,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn previous_key(&self, k: &K) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -685,7 +686,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn next_key(&self, k: &K) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -735,7 +736,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
@@ -746,7 +747,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         fn select_key(&self, i: usize) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
@@ -795,7 +796,7 @@ broadcast use {
             ensures table@ == self@.remove(k@), table.spec_orderedtablestper_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take first
         fn first_key_iter(&self) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -804,7 +805,7 @@ broadcast use {
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take last
         fn last_key_iter(&self) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -813,7 +814,7 @@ broadcast use {
                 key matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
         fn previous_key_iter(&self, k: &K) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -822,7 +823,7 @@ broadcast use {
                 key matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
         fn next_key_iter(&self, k: &K) -> (key: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -857,7 +858,7 @@ broadcast use {
                 table.spec_orderedtablestper_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablestper_wf(),
                 obeys_view_eq::<K>(),
@@ -2268,7 +2269,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.first_key_iter()
         }
@@ -2276,7 +2277,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns first
         #[verifier::loop_isolation(false)]
         fn first_key_iter(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 lemma_reveal_view_injective::<K>();
@@ -2356,7 +2357,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.last_key_iter()
         }
@@ -2364,7 +2365,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns last
         #[verifier::loop_isolation(false)]
         fn last_key_iter(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 lemma_reveal_view_injective::<K>();
@@ -2444,7 +2445,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to previous_key_iter
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.previous_key_iter(k)
         }
@@ -2452,7 +2453,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for predecessor
         #[verifier::loop_isolation(false)]
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_reveal_view_injective::<K>(); lemma_pair_set_to_map_dom_finite(self.tree@); }
             let sorted = self.tree.in_order();
@@ -2557,7 +2558,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to next_key_iter
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.next_key_iter(k)
         }
@@ -2565,7 +2566,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for successor
         #[verifier::loop_isolation(false)]
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_reveal_view_injective::<K>(); lemma_pair_set_to_map_dom_finite(self.tree@); }
             let sorted = self.tree.in_order();
@@ -2996,7 +2997,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.rank_key_iter(k)
         }
@@ -3004,7 +3005,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
         #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 lemma_reveal_view_injective::<K>();
@@ -3131,7 +3132,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index access
         #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 assert(obeys_feq_full_trigger::<K>());

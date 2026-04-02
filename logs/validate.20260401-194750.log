@@ -1,0 +1,11 @@
+error: expression has mode spec, expected mode proof
+   --> src/Chap38/BSTParaStEph.rs:163:28
+    |
+163 |         use_type_invariant(tree);
+    |                            ^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 986MB, peak z3 RSS: 0MB, min free: 24790MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

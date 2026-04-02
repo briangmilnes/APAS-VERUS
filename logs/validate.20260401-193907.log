@@ -1,0 +1,25 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2784:40
+     |
+2784 | ...                   assert(key.cmp_spec(&t) == Less);
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:2784:60
+     |
+2784 | ...                   assert(key.cmp_spec(&t) == Less);
+     |                                                  ^^^^
+
+note: 
+
+key.cmp_spec(t) == Less
+|   !(key.cmp_spec(t) is Equal) ✔
+|   !(key.cmp_spec(t) is Greater) ✘
++---
+
+verification results:: 2647 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 2562MB, peak z3 RSS: 348MB, min free: 22841MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 47s

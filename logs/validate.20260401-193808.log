@@ -1,0 +1,139 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:582:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+581 |     proof fn cmp_spec_less_implies_le(a: Self, b: Self)
+582 |         requires a.cmp_spec(&b) == Ordering::Less
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+582 |         requires a.partial_cmp_spec(&b) == Ordering::Less
+    |                    ++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:583:23
+    |
+583 |         ensures Self::le(a, b);
+    |                       ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:13:10
+    |
+ 13 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+583 -         ensures Self::le(a, b);
+583 +         ensures std::cmp::PartialOrd::le(a, b);
+    |
+583 -         ensures Self::le(a, b);
+583 +         ensures vstdplus::total_order::total_order::TotalOrder::le(a, b);
+    |
+
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:586:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+...
+586 |         requires a.cmp_spec(&b) == Ordering::Greater
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+586 |         requires a.partial_cmp_spec(&b) == Ordering::Greater
+    |                    ++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:587:23
+    |
+587 |         ensures Self::le(b, a);
+    |                       ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:13:10
+    |
+ 13 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+587 -         ensures Self::le(b, a);
+587 +         ensures std::cmp::PartialOrd::le(b, a);
+    |
+587 -         ensures Self::le(b, a);
+587 +         ensures vstdplus::total_order::total_order::TotalOrder::le(b, a);
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:641:22
+    |
+641 |         assume(Self::le(a, b));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:543:15
+    |
+543 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+641 -         assume(Self::le(a, b));
+641 +         assume(std::cmp::PartialOrd::le(a, b));
+    |
+641 -         assume(Self::le(a, b));
+641 +         assume(vstdplus::total_order::total_order::TotalOrder::le(a, b));
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:644:22
+    |
+644 |         assume(Self::le(b, a));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:543:15
+    |
+543 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+644 -         assume(Self::le(b, a));
+644 +         assume(std::cmp::PartialOrd::le(b, a));
+    |
+644 -         assume(Self::le(b, a));
+644 +         assume(vstdplus::total_order::total_order::TotalOrder::le(b, a));
+    |
+
+error: aborting due to 6 previous errors
+
+Some errors have detailed explanations: E0034, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3179MB, peak z3 RSS: 352MB, min free: 22090MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 55s
