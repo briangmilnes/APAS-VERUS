@@ -240,6 +240,14 @@ pub mod BSTParaMtEph {
             view_ord_consistent::<T>(),
     {}
 
+    /// Expose ParamBST type_invariant across module boundaries:
+    /// ghost_locked_root@.finite() is always true, so @.finite() holds.
+    pub fn assert_parambst_view_finite<T: MtKey>(s: &ParamBST<T>)
+        ensures s@.finite()
+    {
+        proof { use_type_invariant(s); }
+    }
+
     // 8. traits
 
     pub trait ParamBSTTrait<T: MtKey>: Sized + View<V = Set<<T as View>::V>> {

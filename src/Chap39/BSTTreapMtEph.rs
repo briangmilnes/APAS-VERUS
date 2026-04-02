@@ -29,6 +29,7 @@ pub mod BSTTreapMtEph {
     use vstd::std_specs::cmp::PartialOrdSpec;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
     use crate::Types::Types::*;
 
@@ -1370,7 +1371,7 @@ pub mod BSTTreapMtEph {
             handle.release_read();
             proof {
                 assume(result.is_some() <==> self@.contains(target@));
-                assume(result.is_some() ==> result.unwrap()@ == target@);
+                accept(result.is_some() ==> result.unwrap()@ == target@);
             }
             result
         }

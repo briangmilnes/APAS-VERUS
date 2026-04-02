@@ -259,11 +259,12 @@ pub mod OrderedSetMtEph {
             ensures self@.finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
-        fn get_range(&self, k1: &T, k2: &T) -> (range: Self)
+        fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>)
             requires
                 self.spec_orderedsetmteph_wf(),
-                self@.len() + 1 < usize::MAX as nat,
-            ensures self@.finite();
+            ensures
+                self@.finite(),
+                range matches Ok(r) ==> r.spec_orderedsetmteph_wf();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS
         fn rank(&self, k: &T) -> (rank: usize)
@@ -561,15 +562,18 @@ pub mod OrderedSetMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST splits
-        fn get_range(&self, k1: &T, k2: &T) -> (range: Self) {
+        fn get_range(&self, k1: &T, k2: &T) -> (range: Result<Self, ()>) {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
-            proof { assume(inner@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
+            if inner.size() + 1 >= usize::MAX {
+                read_handle.release_read();
+                return Err(());
+            }
             let range = inner.get_range(k1, k2);
             read_handle.release_read();
             proof { assume(range.spec_orderedsetsteph_wf()); }
-            from_st(range)
+            Ok(from_st(range))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST split + size

@@ -1,0 +1,28 @@
+error[E0599]: no method named `unwrap` found for struct `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPer<T>` in the current scope
+  --> src/Chap43/Example43_1.rs:72:83
+   |
+72 |         let range_set = set_a.get_range(&"burt".to_string(), &"mike".to_string()).unwrap();
+   |                                                                                   ^^^^^^ method not found in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPer<std::string::String>`
+   |
+  ::: src/Chap43/OrderedSetStPer.rs:59:5
+   |
+59 |     pub struct OrderedSetStPer<T: StT + Ord> {
+   |     ---------------------------------------- method `unwrap` not found for this struct
+
+error[E0599]: no method named `unwrap` found for struct `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPer<T>` in the current scope
+   --> src/Chap43/Example43_1.rs:199:47
+    |
+199 |         let range = int_set.get_range(&3, &9).unwrap();
+    |                                               ^^^^^^ method not found in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPer<i32>`
+    |
+   ::: src/Chap43/OrderedSetStPer.rs:59:5
+    |
+ 59 |     pub struct OrderedSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- method `unwrap` not found for this struct
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 654MB, peak z3 RSS: 0MB, min free: 25737MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

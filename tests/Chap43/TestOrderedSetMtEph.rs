@@ -165,7 +165,7 @@ fn test_get_range() {
     set.insert(7);
     set.insert(9);
 
-    let range = set.get_range(&3, &7);
+    let range = set.get_range(&3, &7).unwrap();
     assert_eq!(range.size(), 3);
     assert!(range.find(&3));
     assert!(range.find(&5));
@@ -174,7 +174,7 @@ fn test_get_range() {
     assert!(!range.find(&9));
 
     // Empty range
-    let empty_range = set.get_range(&10, &20);
+    let empty_range = set.get_range(&10, &20).unwrap();
     assert_eq!(empty_range.size(), 0);
 }
 

@@ -462,10 +462,9 @@ broadcast use {
                 move |neighbors: &AVLTreeSetMtPer<V>| -> (r: AVLTreeSetMtPer<V>)
                     ensures r@ == neighbors@.remove(v_clone@)
                 {
-                    proof {
-                        // Value wf: stored AVLTreeSetMtPer values are always wf (finite ghost set).
-                        assume(neighbors.spec_avltreesetmtper_wf());
-                    }
+                    // ParamBST type_invariant guarantees ghost_locked_root@.finite(),
+                    // so AVLTreeSetMtPer::spec_avltreesetmtper_wf() always holds.
+                    assert_avltreesetmtper_always_wf(neighbors);
                     neighbors.delete(&v_clone)
                 },
                 Ghost(|ns: Set<<V as View>::V>| -> Set<<V as View>::V> { ns.remove(v_view) }),

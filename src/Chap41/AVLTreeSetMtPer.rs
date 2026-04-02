@@ -75,6 +75,17 @@ broadcast use {
         }
     }
 
+    // 7. proof fns
+
+    /// ParamBST type_invariant guarantees ghost_locked_root@.finite(),
+    /// which means AVLTreeSetMtPer::spec_avltreesetmtper_wf() always holds.
+    /// This wraps the Chap38 helper that has visibility to the type_invariant.
+    pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + 'static>(s: &AVLTreeSetMtPer<T>)
+        ensures s.spec_avltreesetmtper_wf()
+    {
+        crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+    }
+
     // 8. traits
 
     pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
