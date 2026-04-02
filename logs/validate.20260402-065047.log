@@ -1,0 +1,45 @@
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:826:21
+    |
+826 |               ensures ({
+    |  _____________________^
+827 | |                 let a_fn = |i: int| a.spec_index(i);
+828 | |                 &&& scanned.0@.len() == a.spec_len()
+829 | |                 &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>
+830 | |                         scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)
+831 | |                 &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)
+832 | |             }),
+    | |______________^ failed this postcondition
+...
+837 | /             if len == 1 {
+838 | |                 let elem = a.nth_cloned(0);
+839 | |                 let elem2 = elem.clone_plus();
+840 | |                 proof { axiom_cloned_implies_eq_owned(elem, elem2); }
+...   |
+977 | |                 (result_vec, total)
+978 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap19/ArraySeqMtEphSlice.rs:830:25
+    |
+830 |                         scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+831 |                 &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let a_fn = (|i| old(a).spec_index(i));
+    scanned.0.view().len() == old(a).spec_len() ✔
+    forall |i|
+        let tmp%% = 0 in let tmp%% = i in let tmp%% = old(a).spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            scanned.0.view().index(i) == spec_prefix_fold(a_fn, old(spec_f), old(id), i + 1) ✘
+    scanned.1 == spec_prefix_fold(a_fn, old(spec_f), old(id), old(a).spec_len()) ✘
+
+verification results:: 869 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 445MB, peak z3 RSS: 0MB, min free: 25629MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

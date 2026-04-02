@@ -74,6 +74,18 @@ pub mod ArraySeqMtEphSlice {
 
     // 6. spec fns
 
+    /// Inclusive prefix fold: fold of the first `n` elements of the sequence
+    /// accessed via `spec_index`. Avoids `Seq::take` and `fold_left` to keep
+    /// Z3 reasoning purely arithmetic + function application.
+    pub open spec fn spec_prefix_fold<T>(
+        seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
+    ) -> T
+        decreases n,
+    {
+        if n <= 0 { id }
+        else { spec_f(spec_prefix_fold(seq_fn, spec_f, id, n - 1), seq_fn(n - 1)) }
+    }
+
     // 8. traits
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
@@ -225,6 +237,27 @@ pub mod ArraySeqMtEphSlice {
             ensures
                 filtered.spec_arrayseqmtephslice_wf(),
                 filtered.spec_len() <= self.spec_len();
+
+        /// Parallel inclusive scan via D&C on O(1) slices.
+        /// Returns (prefixes, total) where prefixes[i] = fold_left of elements 0..=i.
+        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — D&C + join, O(1) split, sequential prefix adjustment O(n) at each level.
+        fn scan<F: MtReduceFn<T>>(
+            &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+        ) -> (scanned: (Self, T))
+            where T: Send + Sync + 'static
+            requires
+                self.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.spec_arrayseqmtephslice_wf(),
+                scanned.0.spec_len() == self.spec_len(),
+                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < self.spec_len() ==>
+                    scanned.0.spec_index(i) == self.spec_backing_seq().take(i + 1).fold_left(id, spec_f),
+                scanned.1 == self.spec_backing_seq().fold_left(id, spec_f);
     }
 
     // 9. impls
@@ -388,6 +421,37 @@ pub mod ArraySeqMtEphSlice {
             let v = Self::filter_dc_vec(self, pred, Ghost(spec_pred));
             Self::from_vec(v)
         }
+
+        fn scan<F: MtReduceFn<T>>(
+            &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+        ) -> (scanned: (Self, T))
+            where T: Send + Sync + 'static
+        {
+            let len = self.length();
+            if len == 0 {
+                proof {
+                    assert(self.spec_backing_seq() =~= Seq::<T>::empty());
+                    reveal(Seq::fold_left);
+                }
+                (Self::empty(), id)
+            } else {
+                let (v, total) = Self::scan_dc_vec(self, f, Ghost(spec_f), id);
+                let ghost s = self.spec_backing_seq();
+                let ghost a_fn = |i: int| self.spec_index(i);
+                let result = Self::from_vec(v);
+                proof {
+                    // Connect spec_prefix_fold to spec_backing_seq().take().fold_left().
+                    assert forall|i: int| #![trigger result.spec_index(i)]
+                        0 <= i < self.spec_len() implies
+                        result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
+                    by {
+                        Self::lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, i + 1);
+                    }
+                    Self::lemma_prefix_fold_eq_fold_left(s, a_fn, spec_f, id, self.spec_len() as int);
+                }
+                (result, total)
+            }
+        }
     }
 
     // 9b. bare impl — D&C helpers and proof fns
@@ -415,6 +479,76 @@ pub mod ArraySeqMtEphSlice {
                 Self::lemma_monoid_fold_left(s1, f, id, x);
 
                 assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
+            }
+        }
+
+        /// If two index functions agree on 0..n, their prefix folds agree.
+        proof fn lemma_prefix_fold_matching(
+            f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,
+            spec_f: spec_fn(T, T) -> T, id: T, n: int,
+        )
+            requires
+                0 <= n,
+                forall|k: int| 0 <= k < n ==> #[trigger] f1(k) == f2(k),
+            ensures
+                spec_prefix_fold(f1, spec_f, id, n) == spec_prefix_fold(f2, spec_f, id, n),
+            decreases n,
+        {
+            if n > 0 {
+                Self::lemma_prefix_fold_matching(f1, f2, spec_f, id, n - 1);
+            }
+        }
+
+        /// Monoid split: prefix_fold(a, f, id, m+k) = f(prefix_fold(a, f, id, m), prefix_fold(shifted_a, f, id, k)).
+        proof fn lemma_prefix_fold_split(
+            a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,
+        )
+            requires
+                spec_monoid(spec_f, id),
+                m >= 0, k >= 0,
+            ensures
+                spec_prefix_fold(a_fn, spec_f, id, m + k)
+                    == spec_f(
+                        spec_prefix_fold(a_fn, spec_f, id, m),
+                        spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k),
+                    ),
+            decreases k,
+        {
+            if k == 0 {
+                // RHS = f(prefix_fold(m), id) = prefix_fold(m) by right identity.
+            } else {
+                Self::lemma_prefix_fold_split(a_fn, spec_f, id, m, k - 1);
+                // prefix_fold(a, f, id, m + k)
+                // = f(prefix_fold(a, f, id, m + k - 1), a(m + k - 1))
+                // = f(f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k-1)), a(m + k - 1))   [by IH]
+                // = f(prefix_fold(a, f, id, m), f(prefix_fold(shifted, f, id, k-1), a(m + k - 1)))    [by assoc]
+                // = f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k))
+                // since shifted(k-1) = a(m + k - 1)
+                let left = spec_prefix_fold(a_fn, spec_f, id, m);
+                let right_prev = spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k - 1);
+                let elem = a_fn(m + k - 1);
+                assert(spec_prefix_fold(a_fn, spec_f, id, m + k) == spec_f(spec_f(left, right_prev), elem));
+                // shifted_a(k-1) == a_fn(m + (k-1)) == a_fn(m + k - 1) == elem
+                assert((|j: int| a_fn(m + j))(k - 1) == elem);
+                assert(spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k) == spec_f(right_prev, elem));
+            }
+        }
+
+        /// Connect spec_prefix_fold to spec_backing_seq().take(n).fold_left(id, f).
+        proof fn lemma_prefix_fold_eq_fold_left(
+            s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
+        )
+            requires
+                0 <= n <= s.len(),
+                forall|k: int| 0 <= k < s.len() ==> #[trigger] seq_fn(k) == s[k],
+            ensures
+                spec_prefix_fold(seq_fn, spec_f, id, n) == s.take(n).fold_left(id, spec_f),
+            decreases n,
+        {
+            reveal(Seq::fold_left);
+            if n > 0 {
+                Self::lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
+                assert(s.take(n).drop_last() =~= s.take(n - 1));
             }
         }
 
@@ -672,6 +806,183 @@ pub mod ArraySeqMtEphSlice {
                     i = i + 1;
                 }
                 left_v
+            }
+        }
+
+        /// D&C scan producing Vec<T>. Called by trait scan for non-empty sequences.
+        /// Uses spec_prefix_fold internally to avoid Seq extensional equality issues.
+        fn scan_dc_vec<F: MtReduceFn<T>>(
+            a: &ArraySeqMtEphSliceS<T>, f: &F,
+            Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+        ) -> (scanned: (Vec<T>, T))
+            where T: Send + Sync + 'static
+            requires
+                a.spec_arrayseqmtephslice_wf(),
+                a.spec_len() > 0,
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures ({
+                let a_fn = |i: int| a.spec_index(i);
+                &&& scanned.0@.len() == a.spec_len()
+                &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>
+                        scanned.0@[i] == spec_prefix_fold(a_fn, spec_f, id, i + 1)
+                &&& scanned.1 == spec_prefix_fold(a_fn, spec_f, id, a.spec_len() as int)
+            }),
+            decreases a.spec_len(),
+        {
+            let len = a.length();
+            let ghost a_fn = |i: int| a.spec_index(i);
+            if len == 1 {
+                let elem = a.nth_cloned(0);
+                let elem2 = elem.clone_plus();
+                proof {
+                    axiom_cloned_implies_eq_owned(elem, elem2);
+                    // spec_prefix_fold(a_fn, f, id, 1) = f(prefix_fold(a_fn, f, id, 0), a_fn(0)) = f(id, a[0]) = a[0].
+                    // Unfold one step: n=1 > 0 so prefix_fold(1) = f(prefix_fold(0), a_fn(0)) = f(id, a[0]).
+                    assert(spec_prefix_fold(a_fn, spec_f, id, 0int) == id);
+                    assert(spec_prefix_fold(a_fn, spec_f, id, 1int)
+                        == spec_f(spec_prefix_fold(a_fn, spec_f, id, 0int), a_fn(0int)));
+                    assert(a_fn(0int) == a.spec_index(0));
+                }
+                let mut v: Vec<T> = Vec::with_capacity(1);
+                v.push(elem);
+                (v, elem2)
+            } else {
+                let mid = len / 2;
+                let left = a.slice(0, mid);
+                let right = a.slice(mid, len - mid);
+
+                let f1 = clone_fn2(f);
+                let f2 = clone_fn2(f);
+                let id1 = id.clone_plus();
+                proof { axiom_cloned_implies_eq_owned(id, id1); }
+                let id2 = id.clone_plus();
+                proof { axiom_cloned_implies_eq_owned(id, id2); }
+
+                let ghost left_fn = |i: int| left.spec_index(i);
+                let ghost right_fn = |i: int| right.spec_index(i);
+                let ghost left_len = left.spec_len();
+                let ghost right_len = right.spec_len();
+
+
+                // From slice ensures: left_fn(k) == a_fn(k), right_fn(k) == a_fn(mid + k).
+
+                let fa = move || -> (r: (Vec<T>, T))
+                    requires
+                        left.spec_arrayseqmtephslice_wf(),
+                        left.spec_len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures ({
+                        let lf = |i: int| left.spec_index(i);
+                        &&& r.0@.len() == left_len
+                        &&& forall|i: int| #![trigger r.0@[i]] 0 <= i < left_len ==>
+                                r.0@[i] == spec_prefix_fold(lf, spec_f, id, i + 1)
+                        &&& r.1 == spec_prefix_fold(lf, spec_f, id, left_len as int)
+                    }),
+                {
+                    Self::scan_dc_vec(&left, &f1, Ghost(spec_f), id1)
+                };
+
+                let fb = move || -> (r: (Vec<T>, T))
+                    requires
+                        right.spec_arrayseqmtephslice_wf(),
+                        right.spec_len() > 0,
+                        obeys_feq_clone::<T>(),
+                        spec_monoid(spec_f, id),
+                        forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                    ensures ({
+                        let rf = |i: int| right.spec_index(i);
+                        &&& r.0@.len() == right_len
+                        &&& forall|i: int| #![trigger r.0@[i]] 0 <= i < right_len ==>
+                                r.0@[i] == spec_prefix_fold(rf, spec_f, id, i + 1)
+                        &&& r.1 == spec_prefix_fold(rf, spec_f, id, right_len as int)
+                    }),
+                {
+                    Self::scan_dc_vec(&right, &f2, Ghost(spec_f), id2)
+                };
+
+                let ((left_vec, left_total), (right_vec, right_total)) = join(fa, fb);
+
+                // Build result.
+                let mut result_vec: Vec<T> = Vec::with_capacity(len);
+                let rlen = len - mid;
+
+                // Copy left prefixes.
+                let mut i: usize = 0;
+                while i < mid
+                    invariant
+                        i <= mid,
+                        mid as int == left_len,
+                        result_vec@.len() == i as int,
+                        left_vec@.len() == left_len,
+                        obeys_feq_clone::<T>(),
+                        forall|j: int| #![trigger left_vec@[j]] 0 <= j < left_len ==>
+                            left_vec@[j] == spec_prefix_fold(left_fn, spec_f, id, j + 1),
+                        forall|j: int| #![trigger result_vec@[j]] 0 <= j < i as int ==>
+                            result_vec@[j] == spec_prefix_fold(a_fn, spec_f, id, j + 1),
+                        forall|k: int| 0 <= k < mid as int ==> #[trigger] left_fn(k) == a_fn(k),
+                    decreases mid - i,
+                {
+                    let elem = left_vec[i].clone_plus();
+                    proof {
+                        axiom_cloned_implies_eq_owned(left_vec@[i as int], elem);
+                        Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, i as int + 1);
+                    }
+                    result_vec.push(elem);
+                    i += 1;
+                }
+
+                // Adjusted right prefixes.
+                let mut j: usize = 0;
+                while j < rlen
+                    invariant
+                        j <= rlen,
+                        rlen == len - mid,
+                        rlen as int == right_len,
+                        mid as int == left_len,
+                        len as int == a.spec_len(),
+                        result_vec@.len() == mid as int + j as int,
+                        right_vec@.len() == right_len,
+                        left_total == spec_prefix_fold(left_fn, spec_f, id, left_len as int),
+                        spec_monoid(spec_f, id),
+                        obeys_feq_clone::<T>(),
+                        forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                        forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+                        forall|k: int| #![trigger right_vec@[k]] 0 <= k < right_len ==>
+                            right_vec@[k] == spec_prefix_fold(right_fn, spec_f, id, k + 1),
+                        forall|k: int| #![trigger result_vec@[k]] 0 <= k < mid as int + j as int ==>
+                            result_vec@[k] == spec_prefix_fold(a_fn, spec_f, id, k + 1),
+                        forall|k: int| 0 <= k < mid as int ==> #[trigger] left_fn(k) == a_fn(k),
+                        forall|k: int| 0 <= k < right_len ==> #[trigger] right_fn(k) == a_fn(mid as int + k),
+                    decreases rlen - j,
+                {
+                    let adjusted = f(&left_total, &right_vec[j]);
+                    proof {
+                        // left_total == prefix_fold(left_fn, mid) == prefix_fold(a_fn, mid)
+                        Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+                        // prefix_fold(a_fn, mid + j + 1) = f(prefix_fold(a_fn, mid), prefix_fold(shifted_a, j+1))
+                        Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, j as int + 1);
+                        // shifted_a(k) == a_fn(mid + k) == right_fn(k)
+                        Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, j as int + 1);
+                    }
+                    result_vec.push(adjusted);
+                    j += 1;
+                }
+
+                let total = f(&left_total, &right_total);
+                proof {
+                    Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+                    Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, right_len as int);
+                    Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, right_len as int);
+                }
+
+                (result_vec, total)
             }
         }
     }

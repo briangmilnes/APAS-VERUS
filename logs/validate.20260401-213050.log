@@ -1,0 +1,285 @@
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:768:21
+    |
+768 |               ensures ({
+    |  _____________________^
+769 | |                 let s = a.spec_backing_seq();
+770 | |                 &&& scanned.0@.len() == a.spec_len()
+771 | |                 &&& forall|i: int| #![trigger scanned.0@[i]] 0 <= i < a.spec_len() ==>
+772 | |                         scanned.0@[i] == s.take(i + 1).fold_left(id, spec_f)
+773 | |                 &&& scanned.1 == s.fold_left(id, spec_f)
+774 | |             }),
+    | |______________^ failed this postcondition
+...
+778 | /             if len == 1 {
+779 | |                 let elem = a.nth_cloned(0);
+780 | |                 let elem2 = elem.clone_plus();
+781 | |                 proof {
+...   |
+998 | |                 (result_vec, total)
+999 | |             }
+    | |_____________- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:904:25
+    |
+479 |                 n <= s1.len(),
+    |                 ------------- failed precondition
+...
+904 |                         Self::lemma_fold_left_prefix_matching(left_s, s, spec_f, id, i as int + 1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap19/ArraySeqMtEphSlice.rs:930:25
+    |
+930 | /                         forall|k: int| #![trigger result_vec@[k]] 0 <= k < mid as int + j as int ==>
+931 | |                             result_vec@[k] == s.take(k + 1).fold_left(id, spec_f),
+    | |_________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:941:25
+    |
+941 |                         full.lemma_fold_left_split(id, spec_f, left_len as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:668:12
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:947:25
+    |
+479 |                 n <= s1.len(),
+    |                 ------------- failed precondition
+...
+947 |                         Self::lemma_fold_left_prefix_matching(full_left, left_s, spec_f, id, left_len as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:949:32
+    |
+949 |                         assert(full_left.take(left_len as int) =~= full_left);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:950:32
+    |
+950 |                         assert(left_s.take(left_len as int) =~= left_s);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:956:29
+    |
+956 | ...                   #[trigger] full_right[k] == right_prefix[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:958:36
+    |
+958 | ...                   assert(full_right[k] == full[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:959:36
+    |
+959 | ...                   assert(full[left_len as int + k] == s[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:960:36
+    |
+960 | ...                   assert(right_prefix[k] == right_s[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:962:25
+    |
+479 |                 n <= s1.len(),
+    |                 ------------- failed precondition
+...
+962 |                         Self::lemma_fold_left_prefix_matching(full_right, right_s, spec_f, id, j as int + 1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap19/ArraySeqMtEphSlice.rs:479:17
+    |
+479 |                 n <= s1.len(),
+    |                 ^^^^^^^^^^^^^
+480 |                 n <= s2.len(),
+    |                 ^^^^^^^^^^^^^
+
+note: 
+
+0 <= tmp% ✔
+tmp% <= left_s.len() ✘
+tmp% <= s.len() ✘
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = tmp% in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        left_s.index(k) == s.index(k) ✔
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:894:86
+    |
+894 |                         forall|k: int| #![trigger left_s[k]] 0 <= k < mid as int ==> left_s[k] == s[k],
+    |                                                                                      ^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:894:99
+    |
+894 |                         forall|k: int| #![trigger left_s[k]] 0 <= k < mid as int ==> left_s[k] == s[k],
+    |                                                                                                   ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:923:86
+    |
+923 |                         forall|k: int| #![trigger right_s[k]] 0 <= k < right_len ==> right_s[k] == s[mid as int + k],
+    |                                                                                      ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:923:100
+    |
+923 |                         forall|k: int| #![trigger right_s[k]] 0 <= k < right_len ==> right_s[k] == s[mid as int + k],
+    |                                                                                                    ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:946:41
+    |
+946 |                         let full_left = full.subrange(0, left_len as int);
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:954:42
+    |
+954 |                         let full_right = full.subrange(left_len as int, full.len() as int);
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:958:36
+    |
+958 | ...                   assert(full_right[k] == full[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:958:53
+    |
+958 | ...                   assert(full_right[k] == full[left_len as int + k]);
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:959:36
+    |
+959 | ...                   assert(full[left_len as int + k] == s[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:959:65
+    |
+959 | ...                   assert(full[left_len as int + k] == s[left_len as int + k]);
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:960:55
+    |
+960 | ...                   assert(right_prefix[k] == right_s[k]);
+    |                                                 ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:956:29
+    |
+956 | ...                   #[trigger] full_right[k] == right_prefix[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:922:86
+    |
+922 |                         forall|k: int| #![trigger left_s[k]] 0 <= k < mid as int ==> left_s[k] == s[k],
+    |                                                                                      ^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:922:99
+    |
+922 |                         forall|k: int| #![trigger left_s[k]] 0 <= k < mid as int ==> left_s[k] == s[k],
+    |                                                                                                   ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:986:32
+    |
+986 |                         assert(s_right[k] == s[left_len as int + k]);
+    |                                ^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:984:25
+    |
+984 |                         #[trigger] s_right[k] == right_s[k]
+    |                         ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 864 verified, 3 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 687MB, peak z3 RSS: 0MB, min free: 25219MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 5s
