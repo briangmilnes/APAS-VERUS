@@ -39,11 +39,46 @@ M1 acquires its lock, owns M2 (an Mt type stored inside the locked interior), an
 
 The inner data structures use O(1) split so that D&C parallelism achieves the textbook span bounds. Slice-backed sequences (`ArraySeqMtEphSliceS`) split via Arc::clone + window adjust — O(1). Trees split via unbox — O(1). With O(1) split, reduce and scan achieve O(lg n) span. Map and filter achieve O(lg n) span if the output rejoin is also O(1) (via pre-allocated shared output or rope-style deferred merge).
 
-## 2. Two Concurrency Styles
+## 2. Comparison: Current vs Alternatives
+
+All three architectures compared against the four desired properties and
+per-interface costs.
+
+### 2.1. Properties
+
+| # | Property | Current (RwLock+Ghost) | RwLock+TSM | PCell+TSM+Atomics |
+|---|----------|----------------------|------------|-------------------|
+| a | Zero-Assume Locking | No (1 assume per op) | Yes | Yes |
+| b | Caller-Observable State (View) | Yes (ghost field) | Yes (2 accepts/file) | Yes (0 accepts) |
+| c | Composable Unlocked Parallelism | Yes | Yes | Yes |
+| d | Optimal Split Cost | Yes (slice-backed) | Yes (slice-backed) | Yes (slice-backed) |
+
+### 2.2. Per-interface cost (10-operation module)
+
+| Metric | Current | RwLock+TSM | PCell+TSM+Atomics |
+|--------|---------|------------|-------------------|
+| Lock bridge assumes | ~19 | 0 | 0 |
+| View accepts | 0 (ghost) | 2 | 0 |
+| Verus limitation assumes (clone/eq/iter) | ~3 | ~3 | ~3 |
+| **Total assumes+accepts per module** | **~22** | **~5** | **~3** |
+| TSM boilerplate (lines) | 0 | ~68 | ~150+ |
+| Ghost protocol complexity | None | Low | High |
+| Migration effort from current | — | Low | High |
+
+### 2.3. Codebase-wide projection
+
+| Metric | Current | After RwLock+TSM | After PCell+TSM |
+|--------|---------|------------------|-----------------|
+| Total assumes | 183 | ~62 | ~40 |
+| Total accepts | 0 | ~60 (2/file × 30) | 0 |
+| Boilerplate added | 0 | ~2000 lines | ~4500 lines |
+| Proof holes eliminated | — | ~121 | ~143 |
+
+## 3. Two Concurrency Styles
 
 There are two ways to achieve these four properties. Both use TSM for ghost-level proof. They differ in how they manage runtime concurrency.
 
-### 2.1. RwLock + TSM
+### 3.1. RwLock + TSM
 
 The data lives inside an `RwLock`. The TSM token lives alongside the data in the lock interior. A ghost field outside the lock provides View. `&mut self` for writes ensures the ghost stays in sync.
 
@@ -56,7 +91,7 @@ The data lives inside an `RwLock`. The TSM token lives alongside the data in the
 
 **Runtime cost:** RwLock acquire/release on every operation.
 
-### 2.2. PCell + TSM + Atomics
+### 3.2. PCell + TSM + Atomics
 
 The data lives in a `PCell` (Permissioned Cell) on the struct. The `PointsTo` proof token is managed by a TSM with `storage_map` or `storage_option` sharding. No RwLock — concurrency is controlled by atomic operations and TSM transitions that withdraw/deposit the PointsTo token.
 
@@ -71,7 +106,7 @@ The data lives in a `PCell` (Permissioned Cell) on the struct. The `PointsTo` pr
 
 **Runtime cost:** Atomic operations only. No lock acquire/release.
 
-### 2.3. Comparison
+### 3.3. Detailed comparison
 
 | | RwLock + TSM | PCell + TSM + Atomics |
 |---|---|---|
@@ -86,7 +121,7 @@ The data lives in a `PCell` (Permissioned Cell) on the struct. The `PointsTo` pr
 | **Proven in experiment** | Yes | Partially |
 | **Migration effort from current** | Low | High |
 
-### 2.4. What the accepts mean in RwLock + TSM
+### 3.4. What the accepts mean in RwLock + TSM
 
 If an accept is wrong (ghost != inner), every ensures referencing `self@` is a lie. Callers act on false postconditions.
 
@@ -99,7 +134,7 @@ If `&mut self` holds (sole ownership), the ghost set at release is still valid a
 
 **The constraint:** if the Mt struct is wrapped in `Arc` for sharing across threads, the `&mut self` guarantee breaks. Other Arc clones can acquire the lock independently, changing the inner data while our ghost is stale. The architectural rule: Mt structs with View must not be shared via Arc. Thread sharing goes through the locked trait (`&self` reads are fine — they don't use the ghost for computation, only for caller specs).
 
-### 2.5. Proof consequences
+### 3.5. Proof consequences
 
 **RwLock + TSM proof profile:**
 - Every operation's functional correctness (algorithmic logic, data structure invariants, cost bounds) is fully machine-checked by Verus.
@@ -115,29 +150,22 @@ If `&mut self` holds (sole ownership), the ghost set at release is still valid a
 
 **The tradeoff:** RwLock + TSM gets 98% of the proof for 20% of the effort. PCell + TSM + Atomics gets 100% for 5x the effort. The 2% gap (the 2 accepts) is well-understood, inductive, and constrained by the `&mut self` ownership rule.
 
-### 2.6. Current choice
+### 3.6. Current choice
 
 APAS-VERUS uses **RwLock + TSM** for the foreseeable future. The 2 accepts per file are well-understood, documented in the standard (`toplevel_coarse_rwlocks_for_mt_modules.rs`), and cheap. The PCell + TSM + Atomics path eliminates them but adds significant ghost protocol complexity and is only partially proven. Large data structures (sequences, trees, tables) don't naturally map to atomic-only concurrency.
 
 PCell + TSM + Atomics remains a future option for fine-grained concurrent data structures (lock-free queues, concurrent hash maps) where the complexity is inherent to the algorithm.
 
-## 3. Current Status
+## 4. Experiment Status
 
 | Property | Status | Evidence |
 |----------|--------|----------|
 | Zero-Assume Locking | **Proven** | `bst_plain_mt_tsm.rs`: 10 ops, zero assumes. `coarse_lock_parallel_tsm.rs`: TSM + lock, zero assumes. |
 | Caller-Observable State | **Partially proven** | `bst_plain_mt_pcell.rs` Approach B: View works with `&mut self` writes for a simple nat count. Not yet demonstrated with a rich type or composed with TSM + parallelism. |
 | Composable Unlocked Parallelism | **Proven** | `coarse_lock_parallel_tsm.rs` R135: acquire lock, call inner Mt type's reduce/map (D&C + join internally), release. No nested locks. |
-| Optimal Split Cost | **In progress** | `ArraySeqMtEphSliceS` has O(1) slice but no map/reduce/filter yet. Agent 3 R136 adding them. Reduce will get true O(lg n) span. Map/filter get O(1) split but O(n) rejoin — O(1) rejoin needs pre-allocated output or ropes. |
+| Optimal Split Cost | **Proven** | `ArraySeqMtEphSliceS` has O(1) slice with parallel reduce, map, filter, tabulate, scan, flatten. Reduce gets true O(lg n) span. Map/filter/tabulate get O(lg n) span with O(n) Vec rejoin. |
 
-| Property | Status | Evidence |
-|----------|--------|----------|
-| Zero-Assume Locking | **Proven** | `bst_plain_mt_tsm.rs`: 10 ops, zero assumes. `coarse_lock_parallel_tsm.rs`: TSM + lock, zero assumes. |
-| Caller-Observable State | **Partially proven** | `bst_plain_mt_pcell.rs` Approach B: View works with `&mut self` writes for a simple nat count. Not yet demonstrated with a rich type or composed with TSM + parallelism. |
-| Composable Unlocked Parallelism | **Proven** | `coarse_lock_parallel_tsm.rs` R135: acquire lock, call inner Mt type's reduce/map (D&C + join internally), release. No nested locks. |
-| Optimal Split Cost | **In progress** | `ArraySeqMtEphSliceS` has O(1) slice but no map/reduce/filter yet. Agent 3 R136 adding them. Reduce will get true O(lg n) span. Map/filter get O(1) split but O(n) rejoin — O(1) rejoin needs pre-allocated output or ropes. |
-
-## 3. Mt Trait Architecture: Locked and Unlocked
+## 5. Mt Trait Architecture: Locked and Unlocked
 
 Each Mt module exposes two trait layers:
 
@@ -207,9 +235,9 @@ fn size(&self) -> usize {
 
 When M1 stores M2 inside its lock, M1's locked trait calls M2's **unlocked** trait directly on the owned M2 data — bypassing M2's lock since M1 already has exclusive access. This works for all operations, sequential or parallel.
 
-## 4. How Rust and Verus Enable This
+## 6. How Rust and Verus Enable This
 
-### 4.1. What Rust gives us
+### 6.1. What Rust gives us
 
 Rust's ownership and borrowing system is the foundation. When `RwLock::acquire_write` returns the inner value by move, Rust's type system guarantees:
 
@@ -225,7 +253,7 @@ Rust's ownership and borrowing system is the foundation. When `RwLock::acquire_w
 
 The locked/unlocked trait split maps directly onto Rust's borrow checker: the locked trait takes `&self` / `&mut self` (borrows), while the unlocked trait takes `self` / `&self` (owned or borrowed, no lock). The compiler ensures you can't call the unlocked trait without owning the data — which means you either acquired the lock or you're inside another module that acquired its lock.
 
-### 4.2. What Verus verification adds on top
+### 6.2. What Verus verification adds on top
 
 Rust guarantees memory safety and data-race freedom. Verus adds functional correctness:
 
@@ -241,21 +269,21 @@ Rust guarantees memory safety and data-race freedom. Verus adds functional corre
 
 Together: Rust guarantees that the parallel operations can't corrupt memory or race. Verus guarantees that the parallel operations compute the right answer. The coarse lock ensures thread safety. The TSM ensures proof integrity. The fork-join ensures parallel performance. All three layers compose because Rust's ownership model and Verus's proof model agree on who owns what and when.
 
-## 5. Slice-Backed Sequences: O(1) Split
+## 7. Slice-Backed Sequences: O(1) Split
 
 `ArraySeqMtEphSliceS` (Chap19) stores `Arc<Vec<T>>` with offset+length window. `slice()` and `subseq_copy()` are O(1) — Arc::clone + adjust window. Both halves share the same backing storage. They're owned, `Send + 'static`, and move directly into `join()` closures.
 
 This makes splitting data for fork-join free.
 
-## 6. Slice Mutation and Rejoining
+## 8. Slice Mutation and Rejoining
 
-### 6.1. The problem: Arc sharing prevents mutation
+### 8.1. The problem: Arc sharing prevents mutation
 
 After `slice()`, two slices share the same `Arc<Vec<T>>`. The Arc refcount is > 1. Rust prevents mutation through a shared Arc — you'd need `Arc::make_mut` (which clones the backing Vec if refcount > 1, O(n)) or unsafe interior mutability.
 
 This means: **you cannot mutate the input slices in place after splitting.** All operations that produce modified output must create new data.
 
-### 6.2. Operation categories by output structure
+### 8.2. Operation categories by output structure
 
 **Category A — Scalar output (reduce, scan final value, size, find):** Both join arms read from input slices (shared, immutable). Results are scalars. No merge needed. O(1) combine.
 
@@ -263,7 +291,7 @@ This means: **you cannot mutate the input slices in place after splitting.** All
 
 **Category C — Variable-size output (filter, flatten):** Each arm produces a subset of unknown size. Total output size not known until both arms complete.
 
-### 6.3. Strategies for rejoining
+### 8.3. Strategies for rejoining
 
 **Strategy 1: Pre-allocated shared output (Categories B, C with max bound)**
 
@@ -292,7 +320,7 @@ When adjacent merge isn't possible, combine by copying both into a new Vec — O
 
 Don't merge at all. Return a pair of slices (or a small tree of slices) and let the consumer iterate over them logically. This is the rope/segmented approach. We don't have this data structure yet, but it would give O(1) "merge" for all categories by deferring the contiguous-memory requirement.
 
-### 6.4. Summary: what works today
+### 8.4. Summary: what works today
 
 | Strategy | Cost | Works in current Verus? | Categories |
 |----------|------|------------------------|------------|
@@ -306,7 +334,7 @@ For the near term, the PCell-per-element approach (Strategy 1) is the path to O(
 
 For filter (variable-size), Strategy 1 with a max-bound pre-allocation works but wastes space. Strategy 2 (independent Vecs + concat) is simpler and only O(n).
 
-## 7. Interior Structure
+## 9. Interior Structure
 
 ```
 FooMtEph {
@@ -322,9 +350,9 @@ FooInterior {
 }
 ```
 
-## 8. Operation Lifecycle
+## 10. Operation Lifecycle
 
-### 8.1. Write (parallel)
+### 10.1. Write (parallel)
 
 ```
 acquire_write → own (interior, write_handle)
@@ -339,7 +367,7 @@ step TSM token (proof block)
 release_write(updated interior)
 ```
 
-### 8.2. Read
+### 10.2. Read
 
 ```
 acquire_read → borrow interior
@@ -351,11 +379,11 @@ compute from real data (via unlocked trait)
 release_read → return value
 ```
 
-## 9. View
+## 11. View
 
 Since writes take `&mut self`, PCell Approach B gives View + zero assumes. Ghost field outside the lock updated atomically with release_write. `&mut self` guarantees sole ownership during write — no other thread observes the gap.
 
-## 10. Cost Analysis vs APAS
+## 12. Cost Analysis vs APAS
 
 | Operation  | APAS Span              | Current Span    | New Span               | Notes                          |
 |------------|------------------------|-----------------|------------------------|--------------------------------|
@@ -375,7 +403,7 @@ Since writes take `&mut self`, PCell Approach B gives View + zero assumes. Ghost
 | intersect  | O(lg n)                | O(lg² n)        | O(lg² n)               | Fork-join vs PRAM gap          |
 | difference | O(lg n)                | O(lg² n)        | O(lg² n)               | Fork-join vs PRAM gap          |
 
-### 10.1. Remaining gaps
+### 12.1. Remaining gaps
 
 **O(lg n) vs O(1) for map/tabulate**: APAS assumes PRAM O(1) fork. Fork-join D&C has O(lg n) recursion depth. This is the fundamental PRAM-vs-fork-join gap — unavoidable without true PRAM.
 
@@ -385,7 +413,7 @@ Since writes take `&mut self`, PCell Approach B gives View + zero assumes. Ghost
 
 **inject**: Needs parallel inject implementation. Deterministic ordering constraint makes this harder than map/filter.
 
-## 11. Disjoint Parallel Writes
+## 13. Disjoint Parallel Writes
 
 The pre-allocated output pattern requires two `join()` arms to write to disjoint regions of the same Vec. Options:
 
@@ -397,9 +425,9 @@ The pre-allocated output pattern requires two `join()` arms to write to disjoint
 
 Option 3 is simplest with current Verus. Options 1-2 give true O(1) span for the output construction.
 
-## 12. What's Needed
+## 14. What's Needed
 
-### 12.1. Experiments
+### 14.1. Experiments
 
 1. **coarse_lock_parallel_tsm.rs**: Currently uses `ArraySeqMtEphS` (Vec-backed). Switch to `ArraySeqMtEphSliceS` once R136 adds map/reduce/filter to the slice type. Also add a second inner Mt type (set or table) to demonstrate composability.
 
@@ -407,14 +435,14 @@ Option 3 is simplest with current Verus. Options 1-2 give true O(1) span for the
 
 3. **View + TSM + parallelism composed**: Demonstrate all four properties in a single experiment. PCell Approach B for View, TSM for zero assumes, slice-backed for O(1) split, unlocked trait for composable parallelism.
 
-### 12.2. Migration
+### 14.2. Migration
 
 1. Verify experiments
 2. Migrate one real module (graph module from Chap52+ — has both sequences and sets)
 3. Update `toplevel_coarse_rwlocks_for_mt_modules.rs` standard
 4. Systematize across all Mt modules
 
-### 12.3. Verus Dependencies
+### 14.3. Verus Dependencies
 
 - `make-ghost-send-sync` branch: fixes `Ghost<T>` Send/Sync, eliminates need for `unsafe impl Send/Sync` on types containing Ghost fields
 - `new-mut-ref`: enables disjoint mutable borrows, potentially simplifying the parallel write pattern

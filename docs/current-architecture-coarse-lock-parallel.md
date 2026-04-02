@@ -16,7 +16,53 @@ migration would change, and what it would not.
 For the target architecture (RwLock+TSM+parallel inside), see
 `docs/architecture-coarse-lock-parallel-mt.md`.
 
-## 1. How It Works
+## 1. Desired Properties
+
+We want four properties from every Mt module:
+
+| # | Property | Description |
+|---|----------|-------------|
+| a | Zero-Assume Locking | Lock acquire/release proves data identity without assumes |
+| b | Caller-Observable State | Callers write specs against `self@` without holding the lock |
+| c | Composable Unlocked Parallelism | M1 owns M2 inside its lock, calls M2's parallel ops directly |
+| d | Optimal Split Cost | O(1) split for D&C parallelism to hit textbook span bounds |
+
+The current architecture achieves (b), (c), and (d) but not (a). Every lock
+boundary needs assumes to bridge the ghost field to the locked data. The
+alternative architectures (RwLock+TSM, PCell+TSM+Atomics) achieve (a) at
+the cost of additional boilerplate or proof complexity.
+
+### 1.1. Per-interface assume cost (single Mt module)
+
+What a typical Mt module with 10 operations looks like today:
+
+| # | Operation | Assumes | Pattern |
+|---|-----------|---------|---------|
+| 1 | insert (write) | 1 | ghost-lock bridge |
+| 2 | delete (write) | 1 | ghost-lock bridge |
+| 3 | find (read) | 2 | ghost-lock bridge + result correctness |
+| 4 | contains (read) | 2 | ghost-lock bridge + result correctness |
+| 5 | size (read) | 2 | ghost-lock bridge + return value |
+| 6 | is_empty (read) | 2 | ghost-lock bridge + return value |
+| 7 | height (read) | 2 | ghost-lock bridge + return value |
+| 8 | min (read) | 3 | ghost-lock bridge + exists + contains |
+| 9 | max (read) | 3 | ghost-lock bridge + exists + contains |
+| 10 | union (write) | 1 | ghost-lock bridge |
+| | **Subtotal (lock)** | **19** | |
+| 11 | clone | 1 | Verus limitation |
+| 12 | eq | 1 | Verus limitation |
+| 13 | iterator next | 1 | Verus limitation |
+| | **Subtotal (Verus)** | **3** | |
+| | **Total per module** | **~22** | |
+
+Every read has at least 2 assumes (bridge + result). Writes have 1 (bridge
+only, because the StEph operation's ensures chain through). Reads with rich
+return values (min/max with exists/contains guarantees) have 3.
+
+The alternative architectures eliminate the lock column (~19) but not the
+Verus column (~3). See `docs/architecture-coarse-lock-parallel-mt.md`.
+
+## 2. How It Works
 
 Each Mt module wraps an inner StEph type with an RwLock and a ghost field:
 
@@ -44,12 +90,12 @@ after acquire).
 
 Reads are similar but acquire_read and don't update the ghost.
 
-## 2. Assume Taxonomy
+## 3. Assume Taxonomy
 
 There are 183 assumes across 30+ Mt files. They fall into well-defined
 categories.
 
-### 2.1. Categories
+### 4.1. Categories
 
 | # | Category | Count | Example | Necessary? |
 |---|----------|-------|---------|------------|
@@ -68,7 +114,7 @@ categories.
 | 13 | Domain finiteness | ~3 | `assume(self@.dom().finite())` | TSM eliminates |
 | 14 | Miscellaneous | ~24 | Various | Mixed |
 
-### 2.2. The ghost-lock bridge in detail
+### 4.2. The ghost-lock bridge in detail
 
 The single most common assume pattern. After acquiring the lock, the code
 needs to assert that the ghost field (which callers used to write specs)
@@ -91,7 +137,7 @@ TSM eliminates this by putting a token inside the lock. The RwLockPredicate
 ties the token to the data: `inv(data, token) == (data@ == token.value)`.
 After acquire, the predicate is known true — no assume needed.
 
-### 2.3. The read-result pattern
+### 4.3. The read-result pattern
 
 After a read operation (find, size, contains, min, max), the code assumes
 the result from the inner StEph operation matches the abstract state:
@@ -110,9 +156,9 @@ TSM eliminates this because the token proves `tree@ == self@`, so the
 StEph operation's ensures (which are proved from `tree@`) chain through
 the token to prove the result in terms of `self@`.
 
-## 3. What TSM Migration Changes
+## 4. What TSM Migration Changes
 
-### 3.1. Structure
+### 4.1. Structure
 
 Replace the ghost field with a TSM instance:
 
@@ -138,7 +184,7 @@ impl RwLockPredicate<(ParamBST<T>, BSTPlainTSM::Instance)> for BSTPlainMtEphInv<
 }
 ```
 
-### 3.2. Operation pattern with TSM
+### 4.2. Operation pattern with TSM
 
 ```rust
 fn insert(&mut self, x: T) {
@@ -150,7 +196,7 @@ fn insert(&mut self, x: T) {
 }
 ```
 
-### 3.3. Assume reduction
+### 4.3. Assume reduction
 
 | Metric | Current | After TSM |
 |--------|---------|-----------|
@@ -162,7 +208,7 @@ fn insert(&mut self, x: T) {
 | TSM boilerplate per file | 0 lines | ~68 lines |
 | Accepts per file (View) | 2 | 2 |
 
-### 3.4. What TSM does NOT fix
+### 4.4. What TSM does NOT fix
 
 **Clone bridge (~12 assumes).** Verus does not recognize Clone on closures
 or generic types. The `assume(cloned@ == self@)` inside `Clone::clone` is a
@@ -188,7 +234,7 @@ The accept says `self@ == token.value`. This is the irreducible gap:
 callers see `self@` without holding the lock, so the connection between
 the lock-protected token and the externally-visible view requires trust.
 
-## 4. The Accepts: Why 2 Per File Is the Floor
+## 5. The Accepts: Why 2 Per File Is the Floor
 
 Both the current pattern and TSM need exactly 2 accepts per file for
 the View bridge:
@@ -205,38 +251,34 @@ These 2 accepts are architecturally irreducible with Verus's current
 type system. PCell+`&mut self` can eliminate the write accept (ownership
 guarantees sole access), but the read accept remains.
 
-## 5. Current Proof Hole Status (2026-04-02)
+## 6. Current Proof Hole Status (2026-04-02)
 
-11 holes on main:
+10 holes on main after R138-R140 merges:
 
 | # | Chap | File | Hole | Blocked on |
 |---|------|------|------|------------|
-| 1 | 19 | ArraySeqMtEphSlice.rs | bare_impl | Style — being fixed (R140) |
-| 2 | 19 | ArraySeqMtEphSlice.rs | fn_missing_ensures | Style — being fixed (R140) |
+| 1 | 19 | ArraySeqMtEphSlice.rs | bare_impl | Being fixed (R141 agent3) |
+| 2 | 19 | ArraySeqMtEphSlice.rs | fn_missing_ensures | Being fixed (R141 agent3) |
 | 3 | 41 | AVLTreeSetMtEph.rs | unsafe impl Send | Verus: Ghost not Send |
 | 4 | 41 | AVLTreeSetMtEph.rs | unsafe impl Sync | Verus: Ghost not Sync |
 | 5 | 41 | AVLTreeSetMtPer.rs | unsafe impl Send | Verus: Ghost not Send |
 | 6 | 41 | AVLTreeSetMtPer.rs | unsafe impl Sync | Verus: Ghost not Sync |
-| 7 | 52 | AdjTableGraphMtPer.rs | assume (capacity) | Off-by-one — being fixed (R140) |
-| 8-11 | 57 | DijkstraStEphU64.rs | 4x assume/proof_fn | Verus: OrdSpecImpl panic |
+| 7-10 | 57 | DijkstraStEphU64.rs | 4× assume/proof_fn | Verus: OrdSpecImpl panic |
 
-Agent1 (R138, unmerged) adds 5 more from new BST helpers — R140 is fixing those.
-
-### 5.1. Blocked holes by Verus issue
+### 6.1. Blocked holes by Verus issue
 
 | Issue | Holes | Verus fix |
 |-------|-------|-----------|
 | Ghost not Send/Sync | 4 | make-ghost-send-sync (Elanor Tang, UMich) |
 | OrdSpecImpl panic on user types | 4 | vir/ast_util.rs:734 fix needed |
 
-### 5.2. Verification metrics
+### 6.2. Verification metrics
 
-- 5595 verified, 0 errors
+- 5608 verified, 0 errors
 - 3627 runtime tests pass
 - 221 proof-time tests pass
-- 232 clean modules (95%)
 
-## 6. Migration Path
+## 7. Migration Path
 
 TSM migration is a separate project phase. The steps:
 
