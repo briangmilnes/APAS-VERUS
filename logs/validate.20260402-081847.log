@@ -1,0 +1,43 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/ArraySeqMtEphSlice.rs:710:21
+    |
+710 |                     v@.len() == self.spec_len(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/ArraySeqMtEphSlice.rs:711:21
+    |
+711 |                     forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> v@[i] == self.spec_index(i),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap18/ArraySeqMtEphSlice.rs:717:21
+    |
+717 |                     v.set(*pos, val.clone_plus());
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/pervasive.rs:392:12
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp% < spec_vec_len(v) 
+
+note: recommendation not met
+   --> src/Chap18/ArraySeqMtEphSlice.rs:711:85
+    |
+192 |             recommends self.spec_arrayseqmtephslice_wf(), i < self.spec_len();
+    |                        --------------------------------- recommendation not met
+...
+711 |                     forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> v@[i] == self.spec_index(i),
+    |                                                                                     ^^^^^^^^^^^^^^^^^^
+
+verification results:: 1070 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 2984MB, peak z3 RSS: 265MB, min free: 19028MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 9s
