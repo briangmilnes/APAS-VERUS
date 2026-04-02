@@ -40,6 +40,7 @@ pub mod AVLTreeSetMtPer {
 
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::*;
     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::*;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
 
     verus! {
@@ -116,7 +117,7 @@ broadcast use {
             ensures count == self@.len(), self@.finite();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential in-order traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential; APAS O(lg n) span assumes tree-based sequence output, Vec output requires O(n) materialization
         /// - claude-4-sonet: Work Θ(1), Span Θ(1)
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
             requires
@@ -141,7 +142,7 @@ broadcast use {
         /// - claude-4-sonet: Work Θ(n log n), Span Θ(log n), Parallelism Θ(n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential loop of inserts
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C: split Vec, recurse via join(), union results
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
             requires
                 seq@.len() <= usize::MAX - 2,
@@ -242,6 +243,131 @@ broadcast use {
 
     // 9. impls
 
+    /// Parallel D&C set construction from Vec: split in half, recurse via join(), union.
+    /// Work O(n lg n), Span O(lg^2 n) — matches APAS Ex 41.3 parallel fromSeq.
+    fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+        requires
+            obeys_feq_full_trigger::<T>(),
+            vals@.len() <= usize::MAX,
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+        ensures
+            tree@.finite(),
+            tree@ =~= vals@.map_values(|t: T| t@).to_set(),
+        decreases vals@.len(),
+    {
+        let n = vals.len();
+        if n == 0 {
+            let tree = ParamBST::<T>::new();
+            proof {
+                assert(vals@.map_values(|t: T| t@) =~= Seq::<T::V>::empty());
+            }
+            tree
+        } else if n == 1 {
+            let elem = vals[0].clone_plus();
+            proof { lemma_cloned_view_eq::<T>(vals@[0int], elem); }
+            let tree = ParamBST::singleton(elem);
+            proof {
+                let views = vals@.map_values(|t: T| t@);
+                assert(views.len() == 1);
+                assert(views =~= Seq::<T::V>::empty().push(views[0]));
+                vstd::seq_lib::seq_to_set_is_finite(views);
+            }
+            tree
+        } else {
+            let mid = n / 2;
+            let mut left_vals: Vec<T> = Vec::with_capacity(mid);
+            let mut right_vals: Vec<T> = Vec::with_capacity(n - mid);
+            let mut i: usize = 0;
+            while i < mid
+                invariant
+                    i <= mid,
+                    mid == n / 2,
+                    n == vals@.len(),
+                    n <= usize::MAX,
+                    left_vals@.len() == i as nat,
+                    obeys_feq_full_trigger::<T>(),
+                    forall|j: int| 0 <= j < i as int ==> (#[trigger] left_vals@[j])@ == vals@[j]@,
+                decreases mid - i,
+            {
+                let elem = vals[i].clone_plus();
+                proof { lemma_cloned_view_eq::<T>(vals@[i as int], elem); }
+                left_vals.push(elem);
+                i += 1;
+            }
+            while i < n
+                invariant
+                    mid <= i <= n,
+                    mid == n / 2,
+                    n == vals@.len(),
+                    n <= usize::MAX,
+                    left_vals@.len() == mid as nat,
+                    right_vals@.len() == (i - mid) as nat,
+                    obeys_feq_full_trigger::<T>(),
+                    forall|j: int| 0 <= j < mid as int ==> (#[trigger] left_vals@[j])@ == vals@[j]@,
+                    forall|j: int| 0 <= j < (i - mid) as int
+                        ==> (#[trigger] right_vals@[j])@ == vals@[(mid as int + j)]@,
+                decreases n - i,
+            {
+                let elem = vals[i].clone_plus();
+                proof { lemma_cloned_view_eq::<T>(vals@[i as int], elem); }
+                right_vals.push(elem);
+                i += 1;
+            }
+            let ghost all_views = vals@.map_values(|t: T| t@);
+            let ghost left_views = left_vals@.map_values(|t: T| t@);
+            let ghost right_views = right_vals@.map_values(|t: T| t@);
+            proof {
+                assert(left_views =~= all_views.subrange(0, mid as int)) by {
+                    assert(left_views.len() == mid as nat);
+                    assert forall|j: int| 0 <= j < mid as int implies
+                        #[trigger] left_views[j] == all_views.subrange(0, mid as int)[j] by {
+                        assert(left_views[j] == left_vals@[j]@);
+                        assert(all_views.subrange(0, mid as int)[j] == all_views[j]);
+                    };
+                };
+                assert(right_views =~= all_views.subrange(mid as int, n as int)) by {
+                    assert(right_views.len() == (n - mid) as nat);
+                    assert forall|j: int| 0 <= j < (n - mid) as int implies
+                        #[trigger] right_views[j] == all_views.subrange(mid as int, n as int)[j] by {
+                        assert(right_views[j] == right_vals@[j]@);
+                        assert(all_views.subrange(mid as int, n as int)[j]
+                            == all_views[mid as int + j]);
+                    };
+                };
+            }
+            let f1 = move || -> (t: ParamBST<T>)
+                ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+            {
+                from_vec_dc_per(left_vals)
+            };
+            let f2 = move || -> (t: ParamBST<T>)
+                ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+            {
+                from_vec_dc_per(right_vals)
+            };
+            let (left_tree, right_tree) = join(f1, f2);
+            proof {
+                assert(left_tree@ =~= left_views.to_set());
+                assert(right_tree@ =~= right_views.to_set());
+                left_views.lemma_cardinality_of_set();
+                right_views.lemma_cardinality_of_set();
+                assert(left_tree@.len() + right_tree@.len() <= n as nat);
+            }
+            let result = left_tree.union(&right_tree);
+            proof {
+                vstd::seq_lib::seq_to_set_distributes_over_add(left_views, right_views);
+                assert(left_views + right_views =~= all_views) by {
+                    assert((left_views + right_views).len() == all_views.len());
+                    assert forall|j: int| 0 <= j < all_views.len() implies
+                        (left_views + right_views)[j] == #[trigger] all_views[j] by {};
+                };
+                assert(result@ =~= all_views.to_set());
+            }
+            result
+        }
+    }
+
     impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             self.tree@.finite()
@@ -253,7 +379,7 @@ broadcast use {
             self.tree.size()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential; APAS O(lg n) span assumes tree-based output
         fn to_seq(&self) -> (seq: AVLTreeSeqMtPerS<T>)
         {
             let mut vals: Vec<T> = Vec::new();
@@ -298,81 +424,27 @@ broadcast use {
             AVLTreeSetMtPer { tree: ParamBST::singleton(x) }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C via join() + union
         fn from_seq(seq: AVLTreeSeqMtPerS<T>) -> (constructed: Self)
         {
             proof { assert(obeys_feq_full_trigger::<T>()); }
             let vals = seq.values_in_order();
             let n = vals.len();
-            let mut tree = ParamBST::new();
-            proof {
-                assert(vals@.len() == seq@.len());
+            if n == 0 {
+                return Self::empty();
             }
             if n > usize::MAX - 2 {
                 proof { assert(false); }
-                return AVLTreeSetMtPer { tree };
+                return Self::empty();
             }
-            let ghost seq_view = seq@;
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    tree@.finite(),
-                    i <= n,
-                    n == vals@.len(),
-                    n <= usize::MAX - 2,
-                    tree@.len() <= i as nat,
-                    tree@.len() < usize::MAX as nat,
-                    vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                    view_ord_consistent::<T>(),
-                    vals@.map_values(|t: T| t@) =~= seq_view,
-                    forall|j: int| 0 <= j < i as int ==> #[trigger] tree@.contains(vals@[j]@),
-                    forall|v: T::V| tree@.contains(v) ==>
-                        exists|j: int| 0 <= j < i as int && #[trigger] vals@[j]@ == v,
-                decreases n - i,
-            {
-                let ghost old_tree = tree@;
-                let elem = &vals[i];
-                let cloned = elem.clone_plus();
-                proof {
-                    assert(obeys_feq_full_trigger::<T>());
-                    lemma_cloned_view_eq::<T>(*elem, cloned);
-                    assert(cloned@ == vals@[i as int]@);
-                }
-                tree.insert(cloned);
-                proof {
-                    assert forall|j: int| 0 <= j < i as int implies
-                        #[trigger] tree@.contains(vals@[j]@)
-                    by {
-                        assert(old_tree.contains(vals@[j]@));
-                    };
-                    assert(tree@.contains(vals@[i as int]@));
-                    assert forall|v: T::V| tree@.contains(v) implies
-                        exists|j: int| 0 <= j < i + 1 && #[trigger] vals@[j]@ == v
-                    by {
-                        if v == cloned@ {
-                            assert(vals@[i as int]@ == v);
-                        } else {
-                            assert(old_tree.contains(v));
-                        }
-                    };
-                }
-                i += 1;
-            }
+            let ghost vals_views = vals@.map_values(|t: T| t@);
             proof {
-                assert forall|v: T::V| tree@.contains(v) <==> seq_view.to_set().contains(v)
-                by {
-                    if tree@.contains(v) {
-                        let j = choose|j: int| 0 <= j < n as int && #[trigger] vals@[j]@ == v;
-                        assert(seq_view[j] == vals@[j]@);
-                        assert(seq_view.to_set().contains(v));
-                    }
-                    if seq_view.to_set().contains(v) {
-                        let j = choose|j: int| 0 <= j < seq_view.len() && seq_view[j] == v;
-                        assert(vals@[j]@ == seq_view[j]);
-                        assert(tree@.contains(vals@[j]@));
-                    }
-                };
-                assert(tree@ =~= seq_view.to_set());
+                assert(vals_views =~= seq@);
+            }
+            let tree = from_vec_dc_per(vals);
+            proof {
+                assert(tree@ =~= vals_views.to_set());
+                assert(vals_views.to_set() =~= seq@.to_set());
             }
             AVLTreeSetMtPer { tree }
         }
