@@ -1,0 +1,28 @@
+error: assertion failed
+   --> src/Chap52/AdjSeqGraphMtPer.rs:608:24
+    |
+608 |                 assert(new_deg_u <= deg_u);
+    |                        ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_deg_u <= deg_u 
+
+error: assertion failed
+   --> src/Chap52/AdjSeqGraphStPer.rs:634:24
+    |
+634 |                 assert(new_deg_u <= deg_u);
+    |                        ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+new_deg_u <= deg_u 
+
+verification results:: 2943 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 36s
+Sampled Memory Usage: peak rust_verify RSS: 5436MB, peak z3 RSS: 704MB, min free: 19418MB
+Sampled CPU Usage: rust_verify: 113s, z3 children: 138s

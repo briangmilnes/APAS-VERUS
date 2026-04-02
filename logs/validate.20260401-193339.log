@@ -1,0 +1,308 @@
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphMtEph.rs:245:17
+    |
+245 |                   self.spec_adjseqgraphmteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+446 | /             if new_deg >= old_deg {
+447 | |                 self.num_edges = self.num_edges + (new_deg - old_deg);
+448 | |             } else {
+449 | |                 self.num_edges = self.num_edges - (old_deg - new_deg);
+450 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphMtEph.rs:245:17
+    |
+245 |                 self.spec_adjseqgraphmteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjseqgraphmteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_num_vertices() == old(self).spec_num_vertices() ✔
+self.spec_degree(old(v)) == old(neighbors).spec_len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old(neighbors).spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(old(v), j) == old(neighbors).spec_index(j) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(v)) ==>
+        self.spec_degree(i) == old(self).spec_degree(i) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(v)) && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_degree(i) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j) ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphMtEph.rs:247:17
+    |
+157 |             recommends 0 <= u < self.spec_num_vertices();
+    |                        --------------------------------- recommendation not met
+...
+247 |                 self.spec_degree(v as int) == neighbors.spec_len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphMtEph.rs:249:36
+    |
+159 |             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
+    |                        --------------------------------- recommendation not met
+...
+249 |                     ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphMtEph.rs:267:17
+    |
+267 |                   self.spec_adjseqgraphmteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+461 | /             if exists {
+462 | |                 let old_len = self.adj.nth(u).length();
+463 | |                 let mut found = false;
+464 | |                 let mut i: usize = 0;
+...   |
+587 | |                 self.num_edges = self.num_edges - (old_len - new_len);
+588 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphMtEph.rs:275:17
+    |
+275 | /                 exists ==> (exists|j: int|
+276 | |                     0 <= j < self.spec_degree(u as int)
+277 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^ failed this postcondition
+...
+461 | /             if exists {
+462 | |                 let old_len = self.adj.nth(u).length();
+463 | |                 let mut found = false;
+464 | |                 let mut i: usize = 0;
+...   |
+587 | |                 self.num_edges = self.num_edges - (old_len - new_len);
+588 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphMtEph.rs:267:17
+    |
+267 |                   self.spec_adjseqgraphmteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+275 |                   exists ==> (exists|j: int|
+    |  ____________________________^
+276 | |                     0 <= j < self.spec_degree(u as int)
+277 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^
+
+note: 
+
+self.spec_adjseqgraphmteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_num_vertices() == old(self).spec_num_vertices() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) ==>
+        self.spec_degree(i) == old(self).spec_degree(i) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_degree(i) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j) ✔
+old(exists) ==>
+    (exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% && self.spec_neighbor(old(u), j) == old(v)) ✘
+!old(exists) ==>
+    forall |j|
+        let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            !(self.spec_neighbor(old(u), j) == old(v)) ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphMtEph.rs:455:36
+    |
+157 |             recommends 0 <= u < self.spec_num_vertices();
+    |                        --------------------------------- recommendation not met
+...
+455 |             let ghost old_degree = self.spec_degree(u as int);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjSeqGraphMtPer.rs:593:40
+    |
+593 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjSeqGraphMtPer.rs:593:57
+    |
+593 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                                         ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphMtPer.rs:593:57
+    |
+593 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                                         ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= deg_u - new_deg_u ✘
+    deg_u - new_deg_u < 4294967296 ✔
+usize::BITS == 64 ==>
+    0 <= deg_u - new_deg_u ✘
+    deg_u - new_deg_u < 18446744073709551616 ✔
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphStEph.rs:243:17
+    |
+243 |                   self.spec_adjseqgraphsteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+487 | /             if new_deg >= old_deg {
+488 | |                 self.num_edges = self.num_edges + (new_deg - old_deg);
+489 | |             } else {
+490 | |                 self.num_edges = self.num_edges - (old_deg - new_deg);
+491 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphStEph.rs:243:17
+    |
+243 |                 self.spec_adjseqgraphsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_adjseqgraphsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_num_vertices() == old(self).spec_num_vertices() ✔
+self.spec_degree(old(v)) == old(neighbors).spec_len() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old(neighbors).spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(old(v), j) == old(neighbors).spec_index(j) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(v)) ==>
+        self.spec_degree(i) == old(self).spec_degree(i) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(v)) && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_degree(i) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j) ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphStEph.rs:245:17
+    |
+157 |             recommends 0 <= u < self.spec_num_vertices();
+    |                        --------------------------------- recommendation not met
+...
+245 |                 self.spec_degree(v as int) == neighbors.spec_len(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphStEph.rs:247:36
+    |
+159 |             recommends 0 <= u < self.spec_num_vertices(), 0 <= j < self.spec_degree(u);
+    |                        --------------------------------- recommendation not met
+...
+247 |                     ==> #[trigger] self.spec_neighbor(v as int, j) == neighbors.spec_index(j),
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphStEph.rs:308:17
+    |
+308 |                   self.spec_adjseqgraphsteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+512 | /             if exists {
+513 | |                 let old_len = self.adj.nth(u).length();
+514 | |                 let mut found = false;
+515 | |                 let mut i: usize = 0;
+...   |
+638 | |                 self.num_edges = self.num_edges - (old_len - new_len);
+639 | |             }
+    | |_____________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjSeqGraphStEph.rs:316:17
+    |
+316 | /                 exists ==> (exists|j: int|
+317 | |                     0 <= j < self.spec_degree(u as int)
+318 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^ failed this postcondition
+...
+512 | /             if exists {
+513 | |                 let old_len = self.adj.nth(u).length();
+514 | |                 let mut found = false;
+515 | |                 let mut i: usize = 0;
+...   |
+638 | |                 self.num_edges = self.num_edges - (old_len - new_len);
+639 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphStEph.rs:308:17
+    |
+308 |                   self.spec_adjseqgraphsteph_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+316 |                   exists ==> (exists|j: int|
+    |  ____________________________^
+317 | |                     0 <= j < self.spec_degree(u as int)
+318 | |                     && #[trigger] self.spec_neighbor(u as int, j) == v),
+    | |_______________________________________________________________________^
+
+note: 
+
+self.spec_adjseqgraphsteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+self.spec_num_vertices() == old(self).spec_num_vertices() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) ==>
+        self.spec_degree(i) == old(self).spec_degree(i) ✔
+forall |i, j|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(self).spec_num_vertices() in tmp%% <= tmp%% && tmp%% < tmp%% && !(i == old(u)) && let tmp%% = 0 in let tmp%% = j in let tmp%% = old(self).spec_degree(i) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j) ✔
+old(exists) ==>
+    (exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% && self.spec_neighbor(old(u), j) == old(v)) ✘
+!old(exists) ==>
+    forall |j|
+        let tmp%% = 0 in let tmp%% = j in let tmp%% = self.spec_degree(old(u)) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            !(self.spec_neighbor(old(u), j) == old(v)) ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjSeqGraphStEph.rs:506:36
+    |
+157 |             recommends 0 <= u < self.spec_num_vertices();
+    |                        --------------------------------- recommendation not met
+...
+506 |             let ghost old_degree = self.spec_degree(u as int);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjSeqGraphStPer.rs:631:40
+    |
+631 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjSeqGraphStPer.rs:631:57
+    |
+631 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                                         ^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjSeqGraphStPer.rs:631:57
+    |
+631 |             let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+    |                                                         ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= deg_u - new_deg_u ✘
+    deg_u - new_deg_u < 4294967296 ✔
+usize::BITS == 64 ==>
+    0 <= deg_u - new_deg_u ✘
+    deg_u - new_deg_u < 18446744073709551616 ✔
+
+verification results:: 2938 verified, 6 errors
+error: aborting due to 10 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 2843MB, peak z3 RSS: 364MB, min free: 22314MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 56s
