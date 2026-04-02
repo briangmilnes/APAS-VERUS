@@ -325,6 +325,7 @@ pub mod Chap18 {
     pub mod LinkedListStPer;
     pub mod LinkedListStEph;
     pub mod ArraySeqMtEph;
+    pub mod ArraySeqMtEphSlice;
     pub mod ArraySeqMtPer;
 }
 
