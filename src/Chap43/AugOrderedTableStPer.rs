@@ -29,7 +29,6 @@ pub mod AugOrderedTableStPer {
     use crate::OrderedTableStPerLit;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     use crate::vstdplus::clone_plus::clone_plus::clone_fn2;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -338,7 +337,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, returns first key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -349,7 +348,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, returns last key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -360,7 +359,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, finds predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -371,7 +370,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, finds successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_augorderedtablestper_wf(),
             ensures
                 self@.dom().finite(),
@@ -425,7 +424,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, counts predecessors
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires
                 self.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
@@ -437,7 +436,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- collects entries, sorts, selects by index
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires
                 self.spec_augorderedtablestper_wf(),
                 obeys_view_eq::<K>(),
@@ -739,7 +738,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base first_key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -752,7 +751,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base last_key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -765,7 +764,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -778,7 +777,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -880,7 +879,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 rank <= self@.dom().len(),
@@ -892,7 +891,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 i >= self@.dom().len() ==> selected matches None,

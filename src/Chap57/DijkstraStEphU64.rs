@@ -156,6 +156,14 @@ pub mod DijkstraStEphU64 {
                 Ordering::Greater
             }
         }
+
+        // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
+        proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+            assume(TotalOrder::le(a, b));
+        }
+        proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+            assume(TotalOrder::le(b, a));
+        }
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph.

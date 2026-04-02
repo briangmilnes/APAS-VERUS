@@ -25,7 +25,6 @@ pub mod OrderedTableMtPer {
     use crate::Chap43::OrderedTableStPer::OrderedTableStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     use crate::vstdplus::accept::accept;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
@@ -220,7 +219,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + first)
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
                 self@.dom().finite(),
@@ -232,7 +231,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + last)
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
                 self@.dom().finite(),
@@ -244,7 +243,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
                 self@.dom().finite(),
@@ -256,7 +255,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + scan)
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf()
             ensures
                 self@.dom().finite(),
@@ -295,7 +294,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + count)
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
@@ -306,7 +305,7 @@ pub mod OrderedTableMtPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires lock, delegates to StPer (collect + index)
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablemtper_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
@@ -545,7 +544,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer first_key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -558,7 +557,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer last_key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -571,7 +570,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -584,7 +583,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof { use_type_invariant(self); }
             let read_handle = self.locked_table.acquire_read();
@@ -642,7 +641,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof {
                 assert(obeys_view_eq_trigger::<K>());
@@ -658,7 +657,7 @@ pub mod OrderedTableMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof {
                 assert(obeys_view_eq_trigger::<K>());
