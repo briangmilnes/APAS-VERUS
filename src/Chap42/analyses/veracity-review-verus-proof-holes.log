@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ TableMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2711: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2711: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2707 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2709 |         {
       2710 |             let equal = self.entries == other.entries;
       2712 |             equal
       2713 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableMtEph.rs:2723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableMtEph.rs:2723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2717 |         fn clone(&self) -> (cloned: Self)
             ...
       2721 |                 entries: self.entries.clone(),
@@ -36,7 +36,7 @@ Table of Contents:
       2724 |             cloned
       2725 |         }
 ⚠ TableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStEph.rs:2750: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStEph.rs:2750: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2746 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2748 |         {
@@ -44,14 +44,14 @@ Table of Contents:
       2751 |             equal
       2752 |         }
 ⚠ TableStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2804: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2804: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2800 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       2802 |         {
       2803 |             let equal = self.entries == other.entries;
       2805 |             equal
       2806 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap42/TableStPer.rs:2815: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap42/TableStPer.rs:2815: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       2810 |         fn clone(&self) -> (cloned: Self)
             ...
       2813 |             let cloned = TableStPer { entries: self.entries.clone() };
@@ -113,9 +113,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 20:03:44 -07:00
-Ended:     2026-04-01 20:03:44 -07:00
-Duration:  175ms
+Started:   2026-04-02 07:24:45 -07:00
+Ended:     2026-04-02 07:24:45 -07:00
+Duration:  119ms
 
 Full output: src/Chap42/analyses/veracity-review-verus-proof-holes.log
-veracity-review-verus-proof-holes.log
+output: src/Chap42/analyses/veracity-review-verus-proof-holes.log

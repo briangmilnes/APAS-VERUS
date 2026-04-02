@@ -321,7 +321,6 @@ pub mod BSTParaMtEph {
         fn delete(&mut self, key: &T)
             requires
                 old(self).spec_bstparamteph_wf(),
-                old(self)@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures
@@ -604,6 +603,9 @@ pub mod BSTParaMtEph {
                     lemma_cmp_transitivity(s, *key, o);
                 };
                 assert(old_view.remove(key@) =~= left@.union(right@));
+                // Capacity: _sz: usize == old_view.len(), so old_view.len() <= usize::MAX.
+                // left@ ∪ right@ = old_view.remove(key@), whose len <= old_view.len().
+                assert(left@.len() + right@.len() <= usize::MAX as nat);
             }
             *self = left.join_pair_inner(&right);
         }

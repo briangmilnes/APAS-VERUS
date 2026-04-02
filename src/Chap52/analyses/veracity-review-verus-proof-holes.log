@@ -48,17 +48,8 @@ Table of Contents:
        687 |             let equal = self.adj == other.adj;
        689 |             equal
        690 |         }
-❌ AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjTableGraphMtPer.rs:472: error: assume() [algorithmic] - assume(neighbors@.len() < usize::MAX as nat);
-       452 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
-            ...
-       470 |                         // Proved: neighbors@.len() <= usize::MAX (from sz: usize).
-       471 |                         // Gap: < vs <= — a set of usize::MAX elements is unreachable in practice.
-       473 |                     }
-       474 |                     neighbors.delete(&v_clone)
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 1 total (1 clean, 0 holed)
+✓ AdjTableGraphMtPer.rs
+   1 clean proof function
 ✓ AdjTableGraphStEph.rs
    3 clean proof functions
 ✓ AdjTableGraphStPer.rs
@@ -136,8 +127,8 @@ EdgeSetGraphStPer.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   13 clean (no holes, no errors; 92%)
-   1 holed (holes or errors, 7%)
+   14 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    14 total
 
 Proof Functions:
@@ -153,19 +144,23 @@ Function Specs:
    534 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × assume() [algorithmic] (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Warnings: 5 total
    5 × assume_eq_clone_workaround
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 21:31:32 -07:00
-Ended:     2026-04-01 21:31:32 -07:00
-Duration:  83ms
+Started:   2026-04-02 07:24:46 -07:00
+Ended:     2026-04-02 07:24:46 -07:00
+Duration:  89ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+uration:  89ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

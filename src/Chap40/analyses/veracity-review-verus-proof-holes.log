@@ -21,45 +21,45 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTKeyValueStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:606: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:606: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        593 |     fn clone_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
             ...
        604 |                 let k = node.key.clone();
        605 |                 let v = node.value.clone();
        607 |                 Some(Box::new(Node {
        608 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1564: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1564: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1562 |     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
       1563 |         fn clone(&self) -> Self {
       1565 |             Node {
       1566 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1564: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1564: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1562 |     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
       1563 |         fn clone(&self) -> Self {
       1565 |             Node {
       1566 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1581: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1581: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1576 |         fn clone(&self) -> (cloned: Self)
             ...
       1579 |                 cloned.size == self.size,
       1580 |         {
       1582 |             BSTKeyValueStEph {
       1583 |                 root: clone_link(&self.root),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1601: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1601: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1598 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1599 |             ensures equal == (self@ == other@)
       1600 |         {
       1602 |             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
       1603 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1601: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1601: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1598 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1599 |             ensures equal == (self@ == other@)
       1600 |         {
       1602 |             let equal = compare_kv_links(&self.root, &other.root) && self.size == other.size;
       1603 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTKeyValueStEph.rs:1603: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTKeyValueStEph.rs:1603: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1598 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1601 |             proof { assume(spec_ordered_link(&self.root)); assume(spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
@@ -67,88 +67,88 @@ Table of Contents:
       1604 |             equal
       1605 |         }
 ⚠ BSTReducedStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:643: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:643: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        630 |     fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
             ...
        641 |                 let k = node.key.clone();
        642 |                 let v = node.value.clone();
        644 |                 Some(Box::new(Node {
        645 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1681: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:1681: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1679 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
       1680 |         fn clone(&self) -> Self {
       1682 |             Node {
       1683 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1681: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:1681: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1679 |     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
       1680 |         fn clone(&self) -> Self {
       1682 |             Node {
       1683 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:1723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1720 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1721 |             ensures equal == (self@ == other@)
       1722 |         {
       1724 |             let equal = compare_reduced_links(&self.root, &other.root);
       1725 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:1723: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1720 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1721 |             ensures equal == (self@ == other@)
       1722 |         {
       1724 |             let equal = compare_reduced_links(&self.root, &other.root);
       1725 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:1725: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:1725: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1720 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1723 |             proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
       1724 |             let equal = compare_reduced_links(&self.root, &other.root);
       1726 |             equal
       1727 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:714: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:717: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTReducedStEph.rs:731: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:714: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:717: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTReducedStEph.rs:731: info: external_body_accept_hole
    Info: 3 total
 ⚠ BSTSizeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1485: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1485: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1473 |     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
             ...
       1483 |             Some(node) => {
       1484 |                 let k = node.key.clone();
       1486 |                 Some(Box::new(Node {
       1487 |                     key: k,
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1506: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1506: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1504 |     impl<T: StT + Ord> Clone for Node<T> {
       1505 |         fn clone(&self) -> (cloned: Self) {
       1507 |             Node {
       1508 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1506: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1506: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1504 |     impl<T: StT + Ord> Clone for Node<T> {
       1505 |         fn clone(&self) -> (cloned: Self) {
       1507 |             Node {
       1508 |                 key: self.key.clone(),
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1524: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1524: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1518 |         fn clone(&self) -> (cloned: Self)
             ...
       1522 |                 Lnk::spec_link_size_wf(&self.root) ==> Lnk::spec_link_size_wf(&cloned.root),
       1523 |         {
       1525 |             BSTSizeStEph { root: clone_link(&self.root) }
       1526 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1541: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1541: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1538 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1539 |             ensures equal == (self@ == other@)
       1540 |         {
       1542 |             let equal = compare_links(&self.root, &other.root);
       1543 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1541: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1541: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1538 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1539 |             ensures equal == (self@ == other@)
       1540 |         {
       1542 |             let equal = compare_links(&self.root, &other.root);
       1543 |             proof { assume(equal == (self@ == other@)); }
-/home/milnes/projects/APAS-VERUS/src/Chap40/BSTSizeStEph.rs:1543: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap40/BSTSizeStEph.rs:1543: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1538 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
       1541 |             proof { assume(Lnk::spec_ordered_link(&self.root)); assume(Lnk::spec_ordered_link(&other.root)); } // PartialEq body: ordering bridge
@@ -213,15 +213,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 20:03:44 -07:00
-Ended:     2026-04-01 20:03:44 -07:00
-Duration:  131ms
+Started:   2026-04-02 07:24:45 -07:00
+Ended:     2026-04-02 07:24:45 -07:00
+Duration:  64ms
 
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
-=================
-
-Started:   2026-04-01 20:03:44 -07:00
-Ended:     2026-04-01 20:03:44 -07:00
-Duration:  131ms
-
 Full output: src/Chap40/analyses/veracity-review-verus-proof-holes.log
