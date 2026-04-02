@@ -345,8 +345,8 @@ pub mod BSTParaMtEph {
                 !parts.2@.contains(key@),
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
-        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(lg^2 n) — DIFFERS: delegates to union_inner (ParaPair)
+        /// - Alg Analysis: APAS (Ch38 Alg 38.4, CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(n/m)), Span O(lg n) — DIFFERS: APAS joinPair assumes T1 < T2 (disjoint ordered), ours ensures general union without that precondition, so delegates to union_inner
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
                 self@.len() + other@.len() <= usize::MAX as nat,
@@ -651,7 +651,7 @@ pub mod BSTParaMtEph {
             r
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(n/m)), Span O(lg n) — DIFFERS: general union, not APAS disjoint joinPair
         fn join_pair(&self, other: Self) -> (joined: Self)
             ensures joined@ == self@.union(other@), joined@.finite()
         {

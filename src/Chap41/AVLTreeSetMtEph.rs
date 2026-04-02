@@ -109,7 +109,7 @@ broadcast use {
             ensures count == self@.len(), self@.finite();
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential; APAS O(lg n) span assumes tree-based sequence output, Vec output requires O(n) materialization
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: APAS O(lg n) span requires tree-based sequence concat (join); AVLTreeSeqStEphS lacks concat, so O(n) materialization into Vec is unavoidable
         /// - claude-4-sonet: Work Θ(n), Span Θ(n)
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
             requires
@@ -392,7 +392,7 @@ broadcast use {
             self.tree.size()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — sequential; APAS O(lg n) span assumes tree-based output
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: APAS O(lg n) span requires tree-based sequence concat; AVLTreeSeqStEphS lacks concat
         fn to_seq(&self) -> (seq: AVLTreeSeqStEphS<T>)
         {
             proof { assert(obeys_feq_full_trigger::<T>()); }
