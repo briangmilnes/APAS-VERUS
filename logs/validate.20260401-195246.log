@@ -1,0 +1,1015 @@
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+  --> src/Chap52/AdjTableGraphMtPer.rs:54:18
+   |
+54 |         pub adj: OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+   |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+  --> src/Chap43/OrderedTableMtPer.rs:63:45
+   |
+63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+   |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+   |
+53 |     pub struct AdjTableGraphMtPer<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> {
+   |                                                                            ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:203:21
+    |
+203 |             self.adj@
+    |                     ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:212:23
+    |
+212 |             let adj = OrderedTableMtPer::empty();
+    |                       ^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+   --> src/Chap43/OrderedTableMtPer.rs:322:78
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ---------------- unsatisfied trait bound introduced here ^^^^^^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:213:44
+    |
+213 |             let out = AdjTableGraphMtPer { adj };
+    |                                            ^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:217:31
+    |
+217 |                 assert(out.adj@ == Map::<<V as View>::V, Set<<V as View>::V>>::empty());
+    |                               ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:232:22
+    |
+232 |             self.adj.size()
+    |                      ^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `size` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:240:42
+    |
+240 |             let mut remaining = self.adj.clone();
+    |                                          ^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:676:21
+    |
+676 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here -----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap52/AdjTableGraphMtPer.rs:243:23
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |          - expected this type parameter
+...
+243 |             while n > 0
+    |                       ^ expected type parameter `V`, found integer
+    |
+    = note: expected type parameter `V`
+                         found type `{integer}`
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphMtPer.rs:274:70
+    |
+274 | ...                   assert(remaining@.dom().contains(v_key@));
+    |                                                        ^^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphMtPer.rs:275:44
+    |
+275 | ...                   assert(neighbors@ == self.spec_adj()[v_key@]);
+    |                              ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `find` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:342:28
+    |
+342 |             match self.adj.find(u) {
+    |                            ^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `find` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphMtPer.rs:348:32
+    |
+348 |                         assert(neighbors@.subset_of(dom)) by {
+    |                                ^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `find` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:371:28
+    |
+371 |             match self.adj.find(u) {
+    |                            ^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `find` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphMtPer.rs:377:32
+    |
+377 |                         assert(ns@.subset_of(dom)) by {
+    |                                ^^ cannot infer type
+
+error[E0599]: the method `find` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:403:25
+    |
+403 |             if self.adj.find(&v).is_some() {
+    |                         ^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `find` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:405:43
+    |
+405 |                 let cloned_adj = self.adj.clone();
+    |                                           ^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:676:21
+    |
+676 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here -----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:407:57
+    |
+407 |                 let updated = AdjTableGraphMtPer { adj: cloned_adj };
+    |                                                         ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert_wf` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:415:35
+    |
+415 |                     adj: self.adj.insert_wf(v, empty_set),
+    |                                   ^^^^^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `insert_wf` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:435:44
+    |
+435 | ...                   assert(self.adj@.contains_key(u2));
+    |                                      ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:436:64
+    |
+436 | ...                   assert(updated.adj@[u2] == self.adj@[u2]);
+    |                                                          ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:415:26
+    |
+415 |                     adj: self.adj.insert_wf(v, empty_set),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:432:47
+    |
+432 | ...                   assert(updated.adj@[v@] =~= Set::<<V as View>::V>::empty());
+    |                                         ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `delete` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:450:38
+    |
+450 |             let without_v = self.adj.delete(v);
+    |                                      ^^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `delete` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:475:46
+    |
+475 |                 assert(without_v@ == self.adj@.remove(v@));
+    |                                              ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:496:36
+    |
+496 |                     assert(self.adj@.contains_key(u));
+    |                                    ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:497:54
+    |
+497 |                     assert(without_v@[u] =~= self.adj@[u]);
+    |                                                      ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:500:36
+    |
+500 |                     assert(self.adj@.index(u).contains(w));
+    |                                    ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:505:36
+    |
+505 |                     assert(self.adj@.dom().contains(w));
+    |                                    ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:470:53
+    |
+470 |             let updated = AdjTableGraphMtPer { adj: cleaned };
+    |                                                     ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:486:39
+    |
+486 |                     assert(updated.adj@ == cleaned@);
+    |                                       ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:516:40
+    |
+516 |             let mut new_adj = self.adj.clone();
+    |                                        ^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:676:21
+    |
+676 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here -----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:518:42
+    |
+518 |             let ghost orig_adj = self.adj@;
+    |                                          ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:519:46
+    |
+519 |             let ghost orig_dom_len = self.adj@.dom().len();
+    |                                              ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:526:43
+    |
+526 |             let ghost u_in_orig = self.adj@.contains_key(u@);
+    |                                           ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:622:22
+    |
+622 |                 adj: new_adj.insert_wf(u, new_u_neighbors),
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:631:35
+    |
+631 |                 assert(updated.adj@[u@] =~= u_neighbors@.insert(v@));
+    |                                   ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `find` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:682:42
+    |
+682 |             let updated = match self.adj.find(u) {
+    |                                          ^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `find` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0282]: type annotations needed
+   --> src/Chap52/AdjTableGraphMtPer.rs:688:32
+    |
+688 |                         assert(u_neighbors@.subset_of(dom)) by {
+    |                                ^^^^^^^^^^^ cannot infer type
+
+error[E0599]: the method `insert_wf` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:706:39
+    |
+706 |                         adj: self.adj.insert_wf(u_clone, new_u_neighbors),
+    |                                       ^^^^^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `insert_wf` not found for this struct because it doesn't satisfy `_: OrderedTableMtPerTrait<V, AVLTreeSetMtPer<V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:322:21
+    |
+322 | ...tKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |           ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----------------------------     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:716:40
+    |
+716 |                         assert(self.adj@.dom().insert(u@) =~= self.adj@.dom());
+    |                                        ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:716:71
+    |
+716 |                         assert(self.adj@.dom().insert(u@) =~= self.adj@.dom());
+    |                                                                       ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:731:48
+    |
+731 | ...                   assert(self.adj@.contains_key(u2));
+    |                                      ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:732:74
+    |
+732 | ...                   assert(updated_inner.adj@[u2] == self.adj@[u2]);
+    |                                                                ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:745:47
+    |
+745 |                     let cloned_adj = self.adj.clone();
+    |                                               ^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:676:21
+    |
+676 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here -----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:750:55
+    |
+750 |                         assert(cloned.adj@ == self.adj@);
+    |                                                       ^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:102:21
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here ----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:706:30
+    |
+706 |                         adj: self.adj.insert_wf(u_clone, new_u_neighbors),
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:732:57
+    |
+732 | ...                   assert(updated_inner.adj@[u2] == self.adj@[u2]);
+    |                                               ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:747:60
+    |
+747 |                     let cloned = AdjTableGraphMtPer { adj: cloned_adj };
+    |                                                            ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:750:42
+    |
+750 |                         assert(cloned.adj@ == self.adj@);
+    |                                          ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required for `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` to implement `vstd::string::View`
+   --> src/Chap43/OrderedTableMtPer.rs:102:78
+    |
+102 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
+    |                     ---------------- unsatisfied trait bound introduced here ^^^^     ^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:778:48
+    |
+778 |             AdjTableGraphMtPer { adj: self.adj.clone() }
+    |                                                ^^^^^ method cannot be called on `OrderedTableMtPer<V, AVLTreeSetMtPer<V>>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap43/OrderedTableMtPer.rs:63:5
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |     ------------------------------------------------------------------------------------------------ method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` was not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:676:21
+    |
+676 |     impl<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
+    |                     ^^^^^^^^^^^^^^^^ unsatisfied trait bound introduced here -----     -----------------------
+    = note: the full name for the type has been written to 'lib.long-type-10810012753745499337.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap43/OrderedTableMtPer.rs:63:101
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> where V: vstdplus::total_order::total_order::TotalOrderBridge {
+    |                                                                                                      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:778:39
+    |
+778 |             AdjTableGraphMtPer { adj: self.adj.clone() }
+    |                                       ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPer`
+   --> src/Chap43/OrderedTableMtPer.rs:63:45
+    |
+ 63 |     pub struct OrderedTableMtPer<K: MtKey + TotalOrderBridge + 'static, V: StTInMtT + Ord + 'static> {
+    |                                             ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+776 |     impl<V: StTInMtT + Ord + TotalOrder + Clone + 'static + vstdplus::total_order::total_order::TotalOrderBridge> Clone for AdjTableGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 51 previous errors
+
+Some errors have detailed explanations: E0277, E0282, E0308, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 12071MB, peak z3 RSS: 995MB, min free: 13211MB
+Sampled CPU Usage: rust_verify: 169s, z3 children: 75s

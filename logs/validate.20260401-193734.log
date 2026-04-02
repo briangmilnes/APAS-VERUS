@@ -1,0 +1,253 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:582:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+581 |     proof fn cmp_spec_less_implies_le(a: Self, b: Self)
+582 |         requires a.cmp_spec(&b) == Ordering::Less
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+582 |         requires a.partial_cmp_spec(&b) == Ordering::Less
+    |                    ++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:583:23
+    |
+583 |         ensures Self::le(a, b);
+    |                       ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:13:10
+    |
+ 13 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+583 -         ensures Self::le(a, b);
+583 +         ensures std::cmp::PartialOrd::le(a, b);
+    |
+583 -         ensures Self::le(a, b);
+583 +         ensures vstdplus::total_order::total_order::TotalOrder::le(a, b);
+    |
+
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:586:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+...
+586 |         requires a.cmp_spec(&b) == Ordering::Greater
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+586 |         requires a.partial_cmp_spec(&b) == Ordering::Greater
+    |                    ++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:587:23
+    |
+587 |         ensures Self::le(b, a);
+    |                       ^^ multiple `le` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::PartialOrd`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:1420:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:13:10
+    |
+ 13 |     spec fn le(self, other: Self) -> bool;
+    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+587 -         ensures Self::le(b, a);
+587 +         ensures std::cmp::PartialOrd::le(b, a);
+    |
+587 -         ensures Self::le(b, a);
+587 +         ensures vstdplus::total_order::total_order::TotalOrder::le(b, a);
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:641:22
+    |
+641 |         assume(Self::le(a, b));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:543:15
+    |
+543 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+641 -         assume(Self::le(a, b));
+641 +         assume(std::cmp::PartialOrd::le(a, b));
+    |
+641 -         assume(Self::le(a, b));
+641 +         assume(vstdplus::total_order::total_order::TotalOrder::le(a, b));
+    |
+
+error[E0034]: multiple applicable items in scope
+   --> src/vstdplus/total_order.rs:644:22
+    |
+644 |         assume(Self::le(b, a));
+    |                      ^^ multiple `le` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `std::cmp::PartialOrd` for the type `std::string::String`
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `std::string::String`
+   --> src/vstdplus/total_order.rs:543:15
+    |
+543 |     open spec fn le(self, other: Self) -> bool {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: use fully-qualified syntax to disambiguate
+    |
+644 -         assume(Self::le(b, a));
+644 +         assume(std::cmp::PartialOrd::le(b, a));
+    |
+644 -         assume(Self::le(b, a));
+644 +         assume(vstdplus::total_order::total_order::TotalOrder::le(b, a));
+    |
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:546:31
+    |
+546 |             let first = inner.first_key();
+    |                               ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::first_key`
+   --> src/Chap43/OrderedTableStPer.rs:659:22
+    |
+658 |         fn first_key(&self) -> (key: Option<K>)
+    |            --------- required by a bound in this associated function
+659 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::first_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:558:30
+    |
+558 |             let last = inner.last_key();
+    |                              ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::last_key`
+   --> src/Chap43/OrderedTableStPer.rs:669:22
+    |
+668 |         fn last_key(&self) -> (key: Option<K>)
+    |            -------- required by a bound in this associated function
+669 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::last_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:570:50
+    |
+570 |             let predecessor = inner.previous_key(k);
+    |                                     ------------ ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |                                     |
+    |                                     required by a bound introduced by this call
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::previous_key`
+   --> src/Chap43/OrderedTableStPer.rs:679:22
+    |
+678 |         fn previous_key(&self, k: &K) -> (key: Option<K>)
+    |            ------------ required by a bound in this associated function
+679 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::previous_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:582:44
+    |
+582 |             let successor = inner.next_key(k);
+    |                                   -------- ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |                                   |
+    |                                   required by a bound introduced by this call
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::next_key`
+   --> src/Chap43/OrderedTableStPer.rs:689:22
+    |
+688 |         fn next_key(&self, k: &K) -> (key: Option<K>)
+    |            -------- required by a bound in this associated function
+689 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::next_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:642:39
+    |
+642 |             let rank = inner.rank_key(k);
+    |                              -------- ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |                              |
+    |                              required by a bound introduced by this call
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::rank_key`
+   --> src/Chap43/OrderedTableStPer.rs:739:22
+    |
+738 |         fn rank_key(&self, k: &K) -> (rank: usize)
+    |            -------- required by a bound in this associated function
+739 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::rank_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap43/OrderedTableMtPer.rs:657:34
+    |
+657 |             let selected = inner.select_key(i);
+    |                                  ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+    |
+note: required by a bound in `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait::select_key`
+   --> src/Chap43/OrderedTableStPer.rs:750:22
+    |
+749 |         fn select_key(&self, i: usize) -> (key: Option<K>)
+    |            ---------- required by a bound in this associated function
+750 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableStPerTrait::select_key`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+    |
+322 |     impl<K: MtKey + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
+    |                                          ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 12 previous errors
+
+Some errors have detailed explanations: E0034, E0277, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 607MB, peak z3 RSS: 0MB, min free: 25333MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

@@ -154,6 +154,15 @@ pub mod BSTParaStEph {
 
     // 7. proof fns
 
+    /// Exposes the BST type invariant: every view in the set has a backing element.
+    /// Enables callers to instantiate forall-over-T quantifiers from view-level containment.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — proof-only.
+    pub fn reveal_param_bst_backings<T: StT + Ord>(tree: &ParamBST<T>)
+        ensures forall|v: <T as View>::V| tree@.contains(v) ==> exists|t: T| #[trigger] tree@.contains(t@) && t@ == v
+    {
+        proof { use_type_invariant(tree); }
+    }
+
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clones a single element.
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
     fn clone_elem<T: StT>(x: &T) -> (c: T)
@@ -367,6 +376,17 @@ pub mod BSTParaStEph {
                 minimum.is_some() ==> self@.contains(minimum.unwrap()@),
                 minimum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
                     minimum.unwrap().cmp_spec(&t) == Less || minimum.unwrap()@ == t@;
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — agrees with APAS.
+        fn max_key(&self) -> (maximum: Option<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent::<T>(),
+            ensures
+                self@.len() == 0 <==> maximum.is_none(),
+                maximum.is_some() ==> self@.contains(maximum.unwrap()@),
+                maximum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
+                    t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@;
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
         fn join_pair(&self, other: Self) -> (joined: Self)
@@ -869,6 +889,66 @@ pub mod BSTParaStEph {
                                         lemma_cmp_antisymmetry(t, key);
                                     }
                                     // Otherwise t@ ∈ left@ (empty) or t@ == key@.
+                                };
+                            }
+                            Some(key)
+                        }
+                    }
+                }
+            }
+        }
+
+        /// APAS: "last need only to traverse right branches."
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn max_key(&self) -> (maximum: Option<T>)
+            ensures
+                self@.len() == 0 <==> maximum.is_none(),
+                maximum.is_some() ==> self@.contains(maximum.unwrap()@),
+                maximum.is_some() ==> forall|t: T| (#[trigger] self@.contains(t@)) ==>
+                    t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@,
+            decreases self@.len(),
+        {
+            match self.expose() {
+                | Exposed::Leaf => None,
+                | Exposed::Node(left, key, right) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
+                    }
+                    match right.max_key() {
+                        | Some(rec) => {
+                            proof {
+                                assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
+                                    t.cmp_spec(&rec) == Less || rec@ == t@ by {
+                                    if right@.contains(t@) {
+                                        // IH covers this.
+                                    } else if left@.contains(t@) {
+                                        // expose: t.cmp_spec(&key) == Less.
+                                        // rec ∈ right, expose: rec.cmp_spec(&key) == Greater,
+                                        // so key.cmp_spec(&rec) == Less (antisymmetry).
+                                        lemma_cmp_antisymmetry(rec, key);
+                                        // t < key < rec (transitivity).
+                                        lemma_cmp_transitivity(t, key, rec);
+                                    } else {
+                                        // t@ == key@, so t.cmp_spec(&key) == Equal.
+                                        // key.cmp_spec(&rec) == Less (from above).
+                                        // t cmp rec == key cmp rec == Less (congruence).
+                                        lemma_cmp_antisymmetry(rec, key);
+                                        lemma_cmp_equal_congruent(t, key, rec);
+                                    }
+                                };
+                            }
+                            Some(rec)
+                        }
+                        | None => {
+                            proof {
+                                assert forall|t: T| #![trigger self@.contains(t@)] self@.contains(t@) implies
+                                    t.cmp_spec(&key) == Less || key@ == t@ by {
+                                    if left@.contains(t@) {
+                                        // expose: t.cmp_spec(&key) == Less. Done.
+                                    }
+                                    // Otherwise t@ ∈ right@ (empty) or t@ == key@.
                                 };
                             }
                             Some(key)

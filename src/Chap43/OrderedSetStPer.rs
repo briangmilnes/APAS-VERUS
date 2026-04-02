@@ -34,6 +34,7 @@ pub mod OrderedSetStPer {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, lemma_cloned_view_eq};
     #[cfg(verus_keep_ghost)]

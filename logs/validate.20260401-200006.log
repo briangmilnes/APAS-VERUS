@@ -1,0 +1,24 @@
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:256:39
+    |
+256 |                 let first = remaining.first_key();
+    |                                       ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `V`
+    |
+note: required by a bound in `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait::first_key`
+   --> src/Chap43/OrderedTableMtPer.rs:223:22
+    |
+222 |         fn first_key(&self) -> (first: Option<K>)
+    |            --------- required by a bound in this associated function
+223 |             where K: TotalOrderBridge
+    |                      ^^^^^^^^^^^^^^^^ required by this bound in `OrderedTableMtPerTrait::first_key`
+help: consider further restricting type parameter `V` with trait `TotalOrderBridge`
+    |
+185 |     impl<V: StTInMtT + Ord + TotalOrder + 'static + vstdplus::total_order::total_order::TotalOrderBridge> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
+    |                                                   ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 5757MB, peak z3 RSS: 0MB, min free: 18975MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 0s

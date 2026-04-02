@@ -1,0 +1,52 @@
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:582:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+581 |     proof fn cmp_spec_less_implies_le(a: Self, b: Self)
+582 |         requires a.cmp_spec(&b) == Ordering::Less
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+582 |         requires a.partial_cmp_spec(&b) == Ordering::Less
+    |                    ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `Self` in the current scope
+   --> src/vstdplus/total_order.rs:586:20
+    |
+580 | pub trait TotalOrderBridge: TotalOrder + Ord {
+    | -------------------------------------------- method `cmp_spec` not found for this type parameter
+...
+586 |         requires a.cmp_spec(&b) == Ordering::Greater
+    |                    ^^^^^^^^
+    |
+   --> vstd/std_specs/cmp.rs:121:12
+    |
+    = note: the method is available for `Self` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+  5 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+586 |         requires a.partial_cmp_spec(&b) == Ordering::Greater
+    |                    ++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 569MB, peak z3 RSS: 0MB, min free: 25116MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

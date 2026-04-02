@@ -32,6 +32,7 @@ pub mod OrderedTableMtEph {
     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full, obeys_feq_full_trigger, obeys_view_eq_trigger};
@@ -267,7 +268,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.first_key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -279,7 +280,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.last_key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -291,7 +292,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -303,7 +304,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- acquires read lock, delegates to StEph.next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -341,7 +342,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
@@ -352,7 +353,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- acquires read lock, delegates to StEph.select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablemteph_wf(), obeys_view_eq::<K>()
             ensures
                 self@.dom().finite(),
@@ -619,7 +620,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph first_key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -632,7 +633,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph last_key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -645,7 +646,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -658,7 +659,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
@@ -710,7 +711,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
 
             let read_handle = self.locked_table.acquire_read();
@@ -723,7 +724,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
 
             let read_handle = self.locked_table.acquire_read();

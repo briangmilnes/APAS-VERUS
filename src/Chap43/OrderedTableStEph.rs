@@ -15,6 +15,7 @@ pub mod OrderedTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -101,6 +102,14 @@ broadcast use {
     /// Spec predicate for rank_key: x is strictly less than k in the total order.
     pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
         exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
+    }
+
+    /// Connection between K's Ord ordering (cmp_spec) and K's TotalOrder (le).
+    /// Required by O(lg n) ordering operations that leverage BST structure.
+    /// Trivially holds for all integer types and String.
+    pub open spec fn spec_ord_agrees_total_order<K: StT + Ord + TotalOrder>() -> bool {
+        &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
+        &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
     }
 
     // 7. proof fns
@@ -835,7 +844,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST min
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
@@ -846,9 +855,8 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST max
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
@@ -857,9 +865,8 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
@@ -868,9 +875,8 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
@@ -927,7 +933,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST rank
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -939,7 +945,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST select
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -1001,47 +1007,43 @@ broadcast use {
                 obeys_view_eq::<K>(),
             ensures self@ == old(self)@.remove(k@), self@.dom().finite(), self.spec_orderedtablesteph_wf();
         /// Iterative alternative to `first_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key
         fn first_key_iter(&self) -> (first: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
                 first matches Some(k) ==> self@.dom().contains(k@),
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// Iterative alternative to `last_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key
         fn last_key_iter(&self) -> (last: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// Iterative alternative to `previous_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST predecessor
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
                 predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// Iterative alternative to `next_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + scan
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST successor
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
-            requires self.spec_orderedtablesteph_wf()
-            ensures
+            where K: TotalOrderBridge
+            requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
                 successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// Iterative alternative to `split_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + rebuild
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST key-only split
         fn split_key_iter(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized
             requires
@@ -1063,7 +1065,7 @@ broadcast use {
                 split.0.spec_orderedtablesteph_wf(),
                 split.2.spec_orderedtablesteph_wf();
         /// Iterative alternative to `get_key_range`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + filter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- two BST key-only splits
         fn get_key_range_iter(&self, k1: &K, k2: &K) -> (range: Self)
             requires
                 self.spec_orderedtablesteph_wf(),
@@ -1073,9 +1075,9 @@ broadcast use {
                 forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
                 range.spec_orderedtablesteph_wf();
         /// Iterative alternative to `rank_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST rank
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -1084,7 +1086,7 @@ broadcast use {
                 rank <= self@.dom().len(),
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// Iterative alternative to `split_rank_key`.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + rebuild
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST size-based select + split
         fn split_rank_key_iter(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized
             requires
@@ -2897,14 +2899,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.first_key_iter()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + take first
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key + key extraction
         fn first_key_iter(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -2915,175 +2917,122 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(self.tree@);
                 lemma_pair_set_to_map_len(self.tree@);
             }
-            let sorted = self.tree.in_order();
-            let len = sorted.length();
-            if len == 0 {
-                None
-            } else {
-                let mut min_key = sorted.nth(0).0.clone_plus();
-                proof {
-                    lemma_reveal_view_injective::<K>();
-                    assert(obeys_feq_full_trigger::<K>());
-                    K::reflexive(min_key);
-                }
-                let mut i: usize = 1;
-                while i < len
-                    invariant
-                        1 <= i, i <= len,
-                        len as nat == sorted@.len(),
-                        self.spec_orderedtablesteph_wf(),
-                        self.tree@.contains(sorted@[0]),
-                        forall|j: int| 0 <= j < sorted@.len() ==>
-                            self.tree@.contains(#[trigger] sorted@[j]),
-                        forall|j: int| 0 <= j < i as int ==>
-                            TotalOrder::le(min_key, (#[trigger] sorted.spec_index(j)).0),
-                        self@.dom().contains(min_key@),
-                    decreases len - i,
-                {
-                    let elem = sorted.nth(i);
-                    let c = TotalOrder::cmp(&elem.0, &min_key);
-                    match c {
-                        core::cmp::Ordering::Less => {
-                            proof {
-                                let old_min = min_key;
-                                assert forall|j: int| 0 <= j < i + 1
-                                    implies TotalOrder::le(elem.0, (#[trigger] sorted.spec_index(j)).0) by {
-                                    if j == i as int {
-                                        K::reflexive(elem.0);
-                                    } else {
-                                        K::transitive(elem.0, old_min, sorted.spec_index(j).0);
-                                    }
-                                };
+            let min_pair = self.tree.min_key();
+            match min_pair {
+                None => None,
+                Some(pair) => {
+                    let key = pair.0.clone_plus();
+                    // Expose BST type invariant: every view has a backing Pair value.
+                    reveal_param_bst_backings(&self.tree);
+                    proof {
+                        lemma_reveal_view_injective::<K>();
+                        lemma_cloned_view_eq(pair.0, key);
+                        lemma_pair_in_set_map_contains(self.tree@, pair.0@, pair.1@);
+                        assert(key == pair.0);
+                        assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                            implies TotalOrder::le(key, t) by {
+                            lemma_map_contains_pair_in_set(self.tree@, t@);
+                            let vv: V::V = choose|vv: V::V| self.tree@.contains((t@, vv));
+                            if pair.0@ == t@ {
+                                assert(key@ == t@);
+                                assert(key == t);
+                                K::reflexive(key);
+                            } else {
+                                assert(pair@ != (t@, vv));
+                                // From reveal_param_bst_backings: exists tp with tp@ == (t@, vv).
+                                let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.tree@.contains(tp@) && tp@ == (t@, vv);
+                                // min_key: pair.cmp_spec(&tp) == Less (since pair@ != tp@).
+                                assert(pair.cmp_spec(&tp) == Less);
+                                // Keys differ: pair.0@ != tp.0@.
+                                assert(pair.0@ != tp.0@);
+                                // spec_pair_key_determines_order: pair.0.cmp_spec(&tp.0) == Less.
+                                assert(pair.0.cmp_spec(&tp.0) == Less);
+                                // tp.0@ == t@ → tp.0 == t (obeys_feq_eq).
+                                assert(tp.0 == t);
+                                assert(key.cmp_spec(&t) == Less);
+                                K::cmp_spec_less_implies_le(key, t);
                             }
-                            min_key = elem.0.clone_plus();
-                            proof {
-                                lemma_cloned_view_eq(elem.0, min_key);
-                                assert(self.tree@.contains(sorted@[i as int]));
-                                lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
-                            }
-                        },
-                        _ => {
-                            proof { K::total(elem.0, min_key); }
-                        },
+                        };
                     }
-                    i = i + 1;
+                    Some(key)
                 }
-                proof {
-                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
-                        implies TotalOrder::le(min_key, t) by {
-                        lemma_map_contains_pair_in_set(self.tree@, t@);
-                        let v: V::V = choose|v: V::V| self.tree@.contains((t@, v));
-                        assert(sorted@.contains((t@, v)));
-                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (t@, v);
-                        assert(TotalOrder::le(min_key, sorted.spec_index(j).0));
-                        assert(sorted.spec_index(j).0@ == t@);
-                        assert(sorted.spec_index(j).0 == t);
-                    };
-                }
-                Some(min_key)
             }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.last_key_iter()
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal, returns last element
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key + key extraction
         fn last_key_iter(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
                 last matches Some(k) ==> self@.dom().contains(k@),
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v),
         {
-            // Collect sorted, find max.
             proof {
                 lemma_pair_set_to_map_dom_finite(self.tree@);
                 lemma_pair_set_to_map_len(self.tree@);
             }
-            let sorted = self.tree.in_order();
-            let len = sorted.length();
-            if len == 0 {
-                None
-            } else {
-                let mut max_key = sorted.nth(0).0.clone_plus();
-                proof {
-                    lemma_reveal_view_injective::<K>();
-                    assert(obeys_feq_full_trigger::<K>());
-                    K::reflexive(max_key);
-                }
-                let mut i: usize = 1;
-                while i < len
-                    invariant
-                        1 <= i, i <= len,
-                        len as nat == sorted@.len(),
-                        self.spec_orderedtablesteph_wf(),
-                        self.tree@.contains(sorted@[0]),
-                        forall|j: int| 0 <= j < sorted@.len() ==>
-                            self.tree@.contains(#[trigger] sorted@[j]),
-                        forall|j: int| 0 <= j < i as int ==>
-                            TotalOrder::le((#[trigger] sorted.spec_index(j)).0, max_key),
-                        self@.dom().contains(max_key@),
-                    decreases len - i,
-                {
-                    let elem = sorted.nth(i);
-                    let c = TotalOrder::cmp(&elem.0, &max_key);
-                    match c {
-                        core::cmp::Ordering::Greater => {
-                            proof {
-                                let old_max = max_key;
-                                assert forall|j: int| 0 <= j < i + 1
-                                    implies TotalOrder::le((#[trigger] sorted.spec_index(j)).0, elem.0) by {
-                                    if j == i as int {
-                                        K::reflexive(elem.0);
-                                    } else {
-                                        K::transitive(sorted.spec_index(j).0, old_max, elem.0);
-                                    }
-                                };
+            let max_pair = self.tree.max_key();
+            match max_pair {
+                None => None,
+                Some(pair) => {
+                    let key = pair.0.clone_plus();
+                    // Expose BST type invariant for quantifier instantiation.
+                    reveal_param_bst_backings(&self.tree);
+                    proof {
+                        lemma_reveal_view_injective::<K>();
+                        lemma_cloned_view_eq(pair.0, key);
+                        lemma_pair_in_set_map_contains(self.tree@, pair.0@, pair.1@);
+                        assert(key == pair.0);
+                        // max_key ensures: forall|tp| tree@.contains(tp@) ==> tp.cmp_spec(&pair) == Less || pair@ == tp@
+                        // This means pair has the max key. Bridge to TotalOrder::le(t, key) for all t in domain.
+                        assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                            implies TotalOrder::le(t, key) by {
+                            lemma_map_contains_pair_in_set(self.tree@, t@);
+                            let vv: V::V = choose|vv: V::V| self.tree@.contains((t@, vv));
+                            if pair.0@ == t@ {
+                                assert(key@ == t@);
+                                assert(key == t);
+                                K::reflexive(key);
+                            } else {
+                                assert(pair@ != (t@, vv));
+                                // Backing Pair witness from reveal_param_bst_backings.
+                                let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.tree@.contains(tp@) && tp@ == (t@, vv);
+                                // max_key: tp.cmp_spec(&pair) == Less (since pair@ != tp@).
+                                assert(tp.cmp_spec(&pair) == Less);
+                                // Keys differ: tp.0@ != pair.0@.
+                                assert(tp.0@ != pair.0@);
+                                // spec_pair_key_determines_order: tp.0.cmp_spec(&pair.0) == Less.
+                                assert(tp.0.cmp_spec(&pair.0) == Less);
+                                // tp.0@ == t@ → tp.0 == t.
+                                assert(tp.0 == t);
+                                assert(t.cmp_spec(&key) == Less);
+                                K::cmp_spec_less_implies_le(t, key);
                             }
-                            max_key = elem.0.clone_plus();
-                            proof {
-                                lemma_cloned_view_eq(elem.0, max_key);
-                                assert(self.tree@.contains(sorted@[i as int]));
-                                lemma_pair_in_set_map_contains(self.tree@, sorted@[i as int].0, sorted@[i as int].1);
-                            }
-                        },
-                        _ => {
-                            proof { K::total(elem.0, max_key); }
-                        },
+                        };
                     }
-                    i = i + 1;
+                    Some(key)
                 }
-                proof {
-                    assert forall|t: K| #[trigger] self@.dom().contains(t@)
-                        implies TotalOrder::le(t, max_key) by {
-                        lemma_map_contains_pair_in_set(self.tree@, t@);
-                        let v: V::V = choose|v: V::V| self.tree@.contains((t@, v));
-                        assert(sorted@.contains((t@, v)));
-                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (t@, v);
-                        assert(TotalOrder::le(sorted.spec_index(j).0, max_key));
-                        assert(sorted.spec_index(j).0@ == t@);
-                        assert(sorted.spec_index(j).0 == t);
-                    };
-                }
-                Some(max_key)
             }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to previous_key_iter
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.previous_key_iter(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for predecessor
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -3195,14 +3144,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to next_key_iter
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.next_key_iter(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for successor
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -3686,7 +3635,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             self.rank_key_iter(k)
         }
@@ -3694,7 +3643,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
         #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 lemma_reveal_view_injective::<K>();
@@ -3821,7 +3770,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index into sorted sequence
         #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof {
                 assert(obeys_feq_full_trigger::<K>());

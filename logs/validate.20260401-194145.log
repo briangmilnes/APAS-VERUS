@@ -1,0 +1,11 @@
+error: proof blocks inside spec code is currently supported only for spec functions with decreases
+    --> src/Chap43/OrderedTableStEph.rs:2778:39
+     |
+2778 | ...                   proof { use_type_invariant(&self.tree); }
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 986MB, peak z3 RSS: 0MB, min free: 24929MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

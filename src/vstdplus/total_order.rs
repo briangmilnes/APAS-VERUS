@@ -6,6 +6,8 @@ pub mod total_order {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialOrdIs;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::OrdSpec;
 
     verus! {
 
@@ -50,6 +52,7 @@ pub mod total_order {
                 Ordering::Greater => other.le(*self) && self != other,
             }),
     ;
+
 }
 
 // Note: A blanket impl for all T: Ord would be nice, but Verus has limitations
@@ -570,6 +573,77 @@ impl TotalOrder for String {
             proof { assume(TotalOrder::le(*other, *self) && self != other); }
             Ordering::Greater
         }
+    }
+}
+
+/// Bridge between Ord's cmp_spec and TotalOrder's le.
+/// Required for O(lg n) ordered table operations that leverage BST structure.
+/// For integer types, the proof is trivial (empty body). For String, assumed.
+pub trait TotalOrderBridge: TotalOrder + Ord {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self)
+        requires a.cmp_spec(&b) == Ordering::Less
+        ensures TotalOrder::le(a, b);
+
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self)
+        requires a.cmp_spec(&b) == Ordering::Greater
+        ensures TotalOrder::le(b, a);
+}
+
+impl TotalOrderBridge for u8 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for u16 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for u32 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for u64 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for u128 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for usize {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for i8 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for i16 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for i32 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for i64 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for i128 {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+impl TotalOrderBridge for isize {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+}
+// accept hole
+impl TotalOrderBridge for String {
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+        assume(TotalOrder::le(a, b));
+    }
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+        assume(TotalOrder::le(b, a));
     }
 }
 

@@ -1,0 +1,32 @@
+error[E0425]: cannot find value `Less` in this scope
+  --> src/vstdplus/total_order.rs:57:36
+   |
+57 |         requires a.cmp_spec(&b) == Less
+   |                                    ^^^^ not found in this scope
+   |
+help: consider importing one of these unit variants
+   |
+ 5 +     use crate::vstdplus::total_order::total_order::Ordering::Less;
+   |
+ 5 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Greater` in this scope
+  --> src/vstdplus/total_order.rs:62:36
+   |
+62 |         requires a.cmp_spec(&b) == Greater
+   |                                    ^^^^^^^ not found in this scope
+   |
+help: consider importing one of these unit variants
+   |
+ 5 +     use crate::vstdplus::total_order::total_order::Ordering::Greater;
+   |
+ 5 +     use std::cmp::Ordering::Greater;
+   |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 297MB, peak z3 RSS: 0MB, min free: 25554MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

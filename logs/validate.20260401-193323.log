@@ -83,5 +83,5 @@ error: aborting due to 4 previous errors
 Some errors have detailed explanations: E0034, E0599.
 For more information about an error, try `rustc --explain E0034`.
 Elapsed: 7s
-Sampled Memory Usage: peak rust_verify RSS: 926MB, peak z3 RSS: 0MB, min free: 24906MB
-Sampled CPU Usage: rust_verify: 11s, z3 children: 0s
+Sampled Memory Usage: peak rust_verify RSS: 609MB, peak z3 RSS: 0MB, min free: 25244MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

@@ -41,6 +41,7 @@ pub mod AugOrderedTableMtEph {
     use crate::{OrderedTableMtEphLit, ParaPair};
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
+    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_fulls;
     #[cfg(verus_keep_ghost)]
@@ -318,7 +319,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -329,7 +330,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -340,7 +341,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -351,7 +352,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf()
             ensures
                 self@.dom().finite(),
@@ -384,7 +385,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+counts
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
@@ -394,7 +395,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- external_body, delegates to base table which collects+sorts+selects
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires self.spec_augorderedtablemteph_wf(), obeys_view_eq::<K>(),
             ensures
                 self@.dom().finite(),
@@ -423,7 +424,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work O(n log n), Span O(n log n) -- parallel via ParaPair! with named closures
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
-            where K: TotalOrder
+            where K: TotalOrderBridge
             requires
                 self.spec_augorderedtablemteph_wf(),
                 obeys_view_eq::<K>(),
@@ -654,7 +655,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base first_key
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.first_key()
@@ -662,7 +663,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base last_key
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.last_key()
@@ -670,7 +671,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base previous_key
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.previous_key(k)
@@ -678,7 +679,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base next_key
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.next_key(k)
@@ -739,7 +740,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.rank_key(k)
@@ -747,7 +748,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             proof { lemma_aug_view(self); }
             self.base_table.select_key(i)
@@ -799,7 +800,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- get_key_range + parallel reduce via ParaPair
         fn reduce_range_parallel(&self, k1: &K, k2: &K) -> (reduced: V)
-            where K: TotalOrder
+            where K: TotalOrderBridge
         {
             let range_table = self.get_key_range(k1, k2);
 
