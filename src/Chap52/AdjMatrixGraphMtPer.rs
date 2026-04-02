@@ -343,9 +343,9 @@ broadcast use {
                 ),
                 u >= self.spec_n() ==> d == 0;
 
-        /// Work Theta(n), Span Theta(n)
-        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: APAS says O(1); persistent seq requires row copy
+        /// Work Theta(n^2), Span Theta(n^2)
+        /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: APAS assumes O(1) row-pointer copy in outer seq; Vec-backed persistent deep-copies all n rows
         fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self)
             requires
                 self.spec_adjmatrixgraphmtper_wf(),
@@ -594,7 +594,7 @@ broadcast use {
             count
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: Vec-backed persistent deep-copies all n rows
         fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self) {
             let n = self.n;
             let old_val = *self.matrix.nth(u).nth(v);

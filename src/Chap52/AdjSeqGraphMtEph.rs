@@ -255,8 +255,8 @@ broadcast use {
                     ==> #[trigger] self.spec_neighbor(i, j) == old(self).spec_neighbor(i, j);
 
         /// Work Theta(deg(u)), Span Theta(deg(u))
-        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — DIFFERS: APAS says O(n), O(1); impl rebuilds neighbor list
+        /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1) — persistent cost; APAS notes ephemeral improves to O(d_g(u)) or better
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — matches APAS ephemeral improvement; sequential span
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphmteph_wf(),
@@ -450,7 +450,7 @@ broadcast use {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d_g(u)), Span O(d_g(u)) — matches APAS ephemeral improvement
         fn set_edge(&mut self, u: usize, v: usize, exists: bool) {
             let ghost old_degree_fn: spec_fn(int) -> nat = |i: int| self.spec_degree(i);
             let ghost adj_len = self.adj.spec_len();

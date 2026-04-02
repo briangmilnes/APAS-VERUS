@@ -219,8 +219,8 @@ pub mod AVLTreeSeqMtPer {
             requires self.spec_avltreeseqmtper_wf(),
             ensures len as nat == self.spec_seq().len();
 
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — DIFFERS: tree traversal to indexed node
+        /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg n), Span O(lg n) — balanced tree descent via subtree sizes
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS; rank-based tree descent
         fn nth(&self, index: usize) -> (elem: &T)
             requires self.spec_avltreeseqmtper_wf(), (index as int) < self.spec_seq().len(),
             ensures elem@ == self.spec_seq()[index as int];
