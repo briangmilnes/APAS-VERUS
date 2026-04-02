@@ -126,6 +126,184 @@ fn test_debug() {
     assert!(!s.is_empty());
 }
 
+// is_empty / is_singleton tests
+
+#[test]
+fn test_is_empty_true() {
+    let seq = ArraySeqMtEphSliceS::<i32>::empty();
+    assert!(seq.is_empty());
+}
+
+#[test]
+fn test_is_empty_false() {
+    let seq = ArraySeqMtEphSliceS::from_vec(vec![1]);
+    assert!(!seq.is_empty());
+}
+
+#[test]
+fn test_is_singleton_true() {
+    let seq = ArraySeqMtEphSliceS::singleton(42);
+    assert!(seq.is_singleton());
+}
+
+#[test]
+fn test_is_singleton_false_empty() {
+    let seq = ArraySeqMtEphSliceS::<i32>::empty();
+    assert!(!seq.is_singleton());
+}
+
+#[test]
+fn test_is_singleton_false_multi() {
+    let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2]);
+    assert!(!seq.is_singleton());
+}
+
+// set tests
+
+#[test]
+fn test_set_first() {
+    let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30]);
+    let updated = seq.set(0, 99);
+    assert_eq!(updated.nth_cloned(0), 99);
+    assert_eq!(updated.nth_cloned(1), 20);
+    assert_eq!(updated.nth_cloned(2), 30);
+}
+
+#[test]
+fn test_set_last() {
+    let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30]);
+    let updated = seq.set(2, 99);
+    assert_eq!(updated.nth_cloned(0), 10);
+    assert_eq!(updated.nth_cloned(1), 20);
+    assert_eq!(updated.nth_cloned(2), 99);
+}
+
+#[test]
+fn test_set_preserves_length() {
+    let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3, 4, 5]);
+    let updated = seq.set(3, 0);
+    assert_eq!(updated.length(), 5);
+}
+
+// append tests
+
+#[test]
+fn test_append_basic() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+    let b = ArraySeqMtEphSliceS::from_vec(vec![4, 5]);
+    let ab = ArraySeqMtEphSliceS::append(&a, &b);
+    assert_eq!(ab.length(), 5);
+    assert_eq!(ab.nth_cloned(0), 1);
+    assert_eq!(ab.nth_cloned(2), 3);
+    assert_eq!(ab.nth_cloned(3), 4);
+    assert_eq!(ab.nth_cloned(4), 5);
+}
+
+#[test]
+fn test_append_empty_left() {
+    let a = ArraySeqMtEphSliceS::<i32>::empty();
+    let b = ArraySeqMtEphSliceS::from_vec(vec![1, 2]);
+    let ab = ArraySeqMtEphSliceS::append(&a, &b);
+    assert_eq!(ab.length(), 2);
+    assert_eq!(ab.nth_cloned(0), 1);
+}
+
+#[test]
+fn test_append_empty_right() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2]);
+    let b = ArraySeqMtEphSliceS::<i32>::empty();
+    let ab = ArraySeqMtEphSliceS::append(&a, &b);
+    assert_eq!(ab.length(), 2);
+    assert_eq!(ab.nth_cloned(1), 2);
+}
+
+#[test]
+fn test_append_both_empty() {
+    let a = ArraySeqMtEphSliceS::<i32>::empty();
+    let b = ArraySeqMtEphSliceS::<i32>::empty();
+    let ab = ArraySeqMtEphSliceS::append(&a, &b);
+    assert_eq!(ab.length(), 0);
+}
+
+// update tests
+
+#[test]
+fn test_update_basic() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30]);
+    let updated = ArraySeqMtEphSliceS::update(&a, 1, 99);
+    assert_eq!(updated.length(), 3);
+    assert_eq!(updated.nth_cloned(0), 10);
+    assert_eq!(updated.nth_cloned(1), 99);
+    assert_eq!(updated.nth_cloned(2), 30);
+}
+
+// inject tests
+
+#[test]
+fn test_inject_empty_updates() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+    let updates: Vec<(usize, i32)> = vec![];
+    let injected = ArraySeqMtEphSliceS::inject(&a, &updates);
+    assert_eq!(injected.length(), 3);
+    assert_eq!(injected.nth_cloned(0), 1);
+    assert_eq!(injected.nth_cloned(1), 2);
+    assert_eq!(injected.nth_cloned(2), 3);
+}
+
+#[test]
+fn test_inject_single_update() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30, 40]);
+    let updates = vec![(2, 99)];
+    let injected = ArraySeqMtEphSliceS::inject(&a, &updates);
+    assert_eq!(injected.length(), 4);
+    assert_eq!(injected.nth_cloned(0), 10);
+    assert_eq!(injected.nth_cloned(2), 99);
+    assert_eq!(injected.nth_cloned(3), 40);
+}
+
+#[test]
+fn test_inject_multiple_updates() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3, 4, 5]);
+    let updates = vec![(0, 10), (4, 50)];
+    let injected = ArraySeqMtEphSliceS::inject(&a, &updates);
+    assert_eq!(injected.length(), 5);
+    assert_eq!(injected.nth_cloned(0), 10);
+    assert_eq!(injected.nth_cloned(1), 2);
+    assert_eq!(injected.nth_cloned(4), 50);
+}
+
+#[test]
+fn test_inject_out_of_bounds_ignored() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+    let updates = vec![(10, 99)];
+    let injected = ArraySeqMtEphSliceS::inject(&a, &updates);
+    assert_eq!(injected.length(), 3);
+    assert_eq!(injected.nth_cloned(0), 1);
+}
+
+// ninject tests
+
+#[test]
+fn test_ninject_basic() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3, 4]);
+    let updates = vec![(1, 20), (3, 40)];
+    let injected = ArraySeqMtEphSliceS::ninject(&a, &updates);
+    assert_eq!(injected.length(), 4);
+    assert_eq!(injected.nth_cloned(0), 1);
+    assert_eq!(injected.nth_cloned(2), 3);
+}
+
+#[test]
+fn test_ninject_empty_updates() {
+    let a = ArraySeqMtEphSliceS::from_vec(vec![5, 6, 7]);
+    let updates: Vec<(usize, i32)> = vec![];
+    let injected = ArraySeqMtEphSliceS::ninject(&a, &updates);
+    assert_eq!(injected.length(), 3);
+    assert_eq!(injected.nth_cloned(0), 5);
+    assert_eq!(injected.nth_cloned(1), 6);
+    assert_eq!(injected.nth_cloned(2), 7);
+}
+
 // reduce tests
 
 #[test]
