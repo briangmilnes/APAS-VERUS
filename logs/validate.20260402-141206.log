@@ -1,0 +1,94 @@
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:249:21
+    |
+249 | /                     forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==>
+250 | |                         T::le(r.0@[j], pivot_val) && r.0@[j] != pivot_val,
+    | |_________________________________________________________________________^ failed this postcondition
+...
+259 |                   partition_three_dc(&left_half, &p1)
+    |                   ----------------------------------- returning this expression
+
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:251:21
+    |
+251 | /                     forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+252 | |                         r.1@[j] == pivot_val,
+    | |____________________________________________^ failed this postcondition
+...
+259 |                   partition_three_dc(&left_half, &p1)
+    |                   ----------------------------------- returning this expression
+
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:253:21
+    |
+253 | /                     forall|j: int| #![trigger r.2@[j]] 0 <= j < r.2@.len() ==>
+254 | |                         T::le(pivot_val, r.2@[j]) && r.2@[j] != pivot_val,
+    | |_________________________________________________________________________^ failed this postcondition
+...
+259 |                   partition_three_dc(&left_half, &p1)
+    |                   ----------------------------------- returning this expression
+
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:267:21
+    |
+267 | /                     forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==>
+268 | |                         T::le(r.0@[j], pivot_val) && r.0@[j] != pivot_val,
+    | |_________________________________________________________________________^ failed this postcondition
+...
+277 |                   partition_three_dc(&right_half, &p2)
+    |                   ------------------------------------ returning this expression
+
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:269:21
+    |
+269 | /                     forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+270 | |                         r.1@[j] == pivot_val,
+    | |____________________________________________^ failed this postcondition
+...
+277 |                   partition_three_dc(&right_half, &p2)
+    |                   ------------------------------------ returning this expression
+
+error: unable to prove post-condition of closure
+   --> src/Chap35/OrderStatSelectMtEph.rs:271:21
+    |
+271 | /                     forall|j: int| #![trigger r.2@[j]] 0 <= j < r.2@.len() ==>
+272 | |                         T::le(pivot_val, r.2@[j]) && r.2@[j] != pivot_val,
+    | |_________________________________________________________________________^ failed this postcondition
+...
+277 |                   partition_three_dc(&right_half, &p2)
+    |                   ------------------------------------ returning this expression
+
+note: diagnostics via expansion
+   --> src/Chap35/OrderStatSelectMtEph.rs:250:25
+    |
+250 |                         T::le(r.0@[j], pivot_val) && r.0@[j] != pivot_val,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = r.0.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        r.0.view().index(j).le(pivot_val) ✘
+            trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+        !(r.0.view().index(j) == pivot_val) ✘
+
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:439:32
+    |
+439 |                           assert(eq_vec@.to_multiset().count(pivot) ==
+    |  ________________________________^
+440 | |                             eq_seq.to_multiset().count(pivot));
+    | |_____________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+eq_vec.view().to_multiset().count(pivot) == eq_seq.to_multiset().count(pivot) 
+
+verification results:: 1301 verified, 2 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 4450MB, peak z3 RSS: 326MB, min free: 17908MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 10s

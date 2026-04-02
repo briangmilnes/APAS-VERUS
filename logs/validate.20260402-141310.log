@@ -1,0 +1,18 @@
+error: assertion failed
+   --> src/Chap35/OrderStatSelectMtEph.rs:454:21
+    |
+454 |                     eq_vec@.to_multiset().count(x) == #[trigger] eq_seq.to_multiset().count(x)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+eq_vec.view().to_multiset().count(x) == eq_seq.to_multiset().count(x) 
+
+verification results:: 1302 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 11755MB, peak z3 RSS: 302MB, min free: 10707MB
+Sampled CPU Usage: rust_verify: 263s, z3 children: 197s

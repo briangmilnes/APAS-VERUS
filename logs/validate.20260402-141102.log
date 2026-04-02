@@ -1,0 +1,92 @@
+error[E0277]: the trait bound `T: std::cmp::Eq` is not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:120:35
+    |
+120 |                 obeys_feq_clone::<T>(),
+    |                                   ^ the trait `std::cmp::Eq` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+   --> src/vstdplus/feq.rs:51:41
+    |
+ 51 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+    |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider further restricting type parameter `T` with trait `Eq`
+    |
+113 |     pub trait OrderStatSelectMtEphTrait<T: TotalOrder + std::cmp::Eq> {
+    |                                                       ++++++++++++++
+
+error[E0277]: the trait bound `T: std::clone::Clone` is not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:120:35
+    |
+120 |                 obeys_feq_clone::<T>(),
+    |                                   ^ the trait `std::clone::Clone` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+   --> src/vstdplus/feq.rs:51:46
+    |
+ 51 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+    |                                              ^^^^^ required by this bound in `obeys_feq_clone`
+help: consider further restricting type parameter `T` with trait `Clone`
+    |
+113 |     pub trait OrderStatSelectMtEphTrait<T: TotalOrder + std::clone::Clone> {
+    |                                                       +++++++++++++++++++
+
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:169:20
+    |
+169 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                    ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:61:5
+    |
+ 61 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: the following trait bounds were not satisfied:
+      `T: std::clone::Clone`
+      `T: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:466:13
+    |
+466 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameters to satisfy the trait bounds
+    |
+168 |     pub open spec fn spec_slice_elements<T>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> where T: std::clone::Clone, T: std::cmp::Eq {
+    |                                                                                  +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:169:43
+    |
+169 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                                           ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:61:5
+    |
+ 61 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: the following trait bounds were not satisfied:
+      `T: std::clone::Clone`
+      `T: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:466:13
+    |
+466 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameters to satisfy the trait bounds
+   --> src/Chap19/ArraySeqMtEphSlice.rs:61:38
+    |
+ 61 |     pub struct ArraySeqMtEphSliceS<T> where T: std::clone::Clone, T: std::cmp::Eq {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 10684MB, peak z3 RSS: 0MB, min free: 11222MB
+Sampled CPU Usage: rust_verify: 347s, z3 children: 271s
