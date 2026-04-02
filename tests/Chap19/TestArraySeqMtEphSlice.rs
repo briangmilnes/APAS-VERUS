@@ -247,6 +247,63 @@ fn test_filter_large() {
     assert_eq!(filtered.length(), (n / 3) as usize);
 }
 
+// tabulate tests
+
+#[test]
+fn test_tabulate_empty() {
+    let tab = ArraySeqMtEphSliceS::<i64>::tabulate(&|i: usize| -> i64 { i as i64 }, 0);
+    assert_eq!(tab.length(), 0);
+}
+
+#[test]
+fn test_tabulate_singleton() {
+    let tab = ArraySeqMtEphSliceS::tabulate(&|i: usize| -> i64 { (i as i64) * 10 }, 1);
+    assert_eq!(tab.length(), 1);
+    assert_eq!(tab.nth_cloned(0), 0);
+}
+
+#[test]
+fn test_tabulate_small() {
+    let tab = ArraySeqMtEphSliceS::tabulate(&|i: usize| -> i64 { (i as i64) * (i as i64) }, 5);
+    assert_eq!(tab.length(), 5);
+    assert_eq!(tab.nth_cloned(0), 0);
+    assert_eq!(tab.nth_cloned(1), 1);
+    assert_eq!(tab.nth_cloned(2), 4);
+    assert_eq!(tab.nth_cloned(3), 9);
+    assert_eq!(tab.nth_cloned(4), 16);
+}
+
+#[test]
+fn test_tabulate_identity() {
+    let n = 100;
+    let tab = ArraySeqMtEphSliceS::tabulate(&|i: usize| -> usize { i }, n);
+    assert_eq!(tab.length(), n);
+    for i in 0..n {
+        assert_eq!(tab.nth_cloned(i), i);
+    }
+}
+
+#[test]
+fn test_tabulate_large() {
+    let n = 10000;
+    let tab = ArraySeqMtEphSliceS::tabulate(&|i: usize| -> i64 { (i as i64) + 1 }, n);
+    assert_eq!(tab.length(), n);
+    assert_eq!(tab.nth_cloned(0), 1);
+    assert_eq!(tab.nth_cloned(n - 1), n as i64);
+    let sum = tab.reduce(&|a: &i64, b: &i64| -> i64 { *a + *b }, Ghost::assume_new(), 0i64);
+    assert_eq!(sum, (n as i64) * (n as i64 + 1) / 2);
+}
+
+#[test]
+fn test_tabulate_then_map() {
+    let tab = ArraySeqMtEphSliceS::tabulate(&|i: usize| -> i64 { i as i64 }, 10);
+    let doubled = tab.map(&|x: &i64| -> i64 { *x * 2 });
+    assert_eq!(doubled.length(), 10);
+    assert_eq!(doubled.nth_cloned(0), 0);
+    assert_eq!(doubled.nth_cloned(5), 10);
+    assert_eq!(doubled.nth_cloned(9), 18);
+}
+
 // combined operation tests
 
 #[test]

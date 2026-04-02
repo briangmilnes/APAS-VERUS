@@ -225,6 +225,20 @@ pub mod ArraySeqMtEphSlice {
             ensures
                 filtered.spec_arrayseqmtephslice_wf(),
                 filtered.spec_len() <= self.spec_len();
+
+        /// Parallel tabulate via D&C with join.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(n * W(f)), Span O(lg n + S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(lg n * S(f)) — D&C + join, O(n) rejoin.
+        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
+            where T: Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
+            ensures
+                tab.spec_arrayseqmtephslice_wf(),
+                tab.spec_len() == length as nat,
+                forall|i: int| #![trigger tab.spec_index(i)]
+                    0 <= i < length ==> f.ensures((i as usize,), tab.spec_index(i));
     }
 
     // 9. impls
@@ -387,6 +401,23 @@ pub mod ArraySeqMtEphSlice {
         {
             let v = Self::filter_dc_vec(self, pred, Ghost(spec_pred));
             Self::from_vec(v)
+        }
+
+        fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
+            where T: Send + Sync + 'static
+        {
+            let v = Self::tabulate_dc_vec(f, 0, length);
+            let ghost v_view = v@;
+            let tab = Self::from_vec(v);
+            proof {
+                assert forall|i: int| 0 <= i < length implies
+                    #[trigger] f.ensures((i as usize,), tab.spec_index(i))
+                by {
+                    assert(tab.spec_index(i) == v_view[i]);
+                    assert(f.ensures((i as usize,), v_view[i]));
+                }
+            }
+            tab
         }
     }
 
@@ -670,6 +701,104 @@ pub mod ArraySeqMtEphSlice {
                 {
                     left_v.push(right_v[i].clone_plus());
                     i = i + 1;
+                }
+                left_v
+            }
+        }
+
+        /// D&C tabulate producing Vec<T>. Called by trait tabulate.
+        fn tabulate_dc_vec<F: MtTabulateFn<T>>(
+            f: &F, start: usize, count: usize,
+        ) -> (result: Vec<T>)
+            where T: Send + Sync + 'static
+            requires
+                start + count <= usize::MAX,
+                obeys_feq_clone::<T>(),
+                forall|i: usize| start <= i < start + count ==> #[trigger] f.requires((i,)),
+            ensures
+                result@.len() == count as int,
+                forall|i: int| #![trigger result@[i]]
+                    0 <= i < count ==> f.ensures(((start as int + i) as usize,), result@[i]),
+            decreases count,
+        {
+            if count == 0 {
+                Vec::new()
+            } else if count == 1 {
+                let mut v: Vec<T> = Vec::with_capacity(1);
+                v.push(f(start));
+                v
+            } else {
+                let mid = count / 2;
+                let right_start = start + mid;
+                let right_count = count - mid;
+                let f1 = clone_fn_usize(f);
+                let f2 = clone_fn_usize(f);
+                let ghost left_len = mid as nat;
+                let ghost right_len = right_count as nat;
+
+                let fa = move || -> (r: Vec<T>)
+                    requires
+                        start + mid <= usize::MAX,
+                        obeys_feq_clone::<T>(),
+                        forall|i: usize| start <= i < start + mid ==> #[trigger] f1.requires((i,)),
+                    ensures
+                        r@.len() == left_len,
+                        forall|i: int| #![trigger r@[i]]
+                            0 <= i < left_len ==> f1.ensures(((start as int + i) as usize,), r@[i]),
+                {
+                    Self::tabulate_dc_vec(&f1, start, mid)
+                };
+
+                let fb = move || -> (r: Vec<T>)
+                    requires
+                        right_start + right_count <= usize::MAX,
+                        obeys_feq_clone::<T>(),
+                        forall|i: usize| right_start <= i < right_start + right_count
+                            ==> #[trigger] f2.requires((i,)),
+                    ensures
+                        r@.len() == right_len,
+                        forall|i: int| #![trigger r@[i]]
+                            0 <= i < right_len ==> f2.ensures(((right_start as int + i) as usize,), r@[i]),
+                {
+                    Self::tabulate_dc_vec(&f2, right_start, right_count)
+                };
+
+                let (mut left_v, right_v) = join(fa, fb);
+                let rlen = right_v.len();
+                let mut i: usize = 0;
+                while i < rlen
+                    invariant
+                        i <= rlen,
+                        rlen == right_v@.len(),
+                        rlen as int == right_len,
+                        left_v@.len() == left_len + i as int,
+                        obeys_feq_clone::<T>(),
+                        forall|j: int| #![trigger left_v@[j]]
+                            0 <= j < left_len as int
+                            ==> f.ensures(((start as int + j) as usize,), left_v@[j]),
+                        forall|j: int|
+                            0 <= j < i as int
+                            ==> #[trigger] left_v@[left_len as int + j] == right_v@[j],
+                        forall|j: int| #![trigger right_v@[j]]
+                            0 <= j < right_len as int
+                            ==> f.ensures(((right_start as int + j) as usize,), right_v@[j]),
+                    decreases rlen - i,
+                {
+                    left_v.push(right_v[i].clone_plus());
+                    i = i + 1;
+                }
+                proof {
+                    assert forall|j: int| 0 <= j < count implies
+                        #[trigger] f.ensures(((start as int + j) as usize,), left_v@[j])
+                    by {
+                        if j < left_len as int {
+                            assert(f.ensures(((start as int + j) as usize,), left_v@[j]));
+                        } else {
+                            let k = j - left_len as int;
+                            assert(left_v@[left_len as int + k] == right_v@[k]);
+                            assert(f.ensures(((right_start as int + k) as usize,), right_v@[k]));
+                        }
+                    }
                 }
                 left_v
             }
