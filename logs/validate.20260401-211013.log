@@ -1,0 +1,303 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1637:13
+     |
+1637 | /             predecessor is None ==> forall|t: K| #![trigger t@]
+1638 | |                 spec_pair_set_to_map(tree@).dom().contains(t@)
+1639 | |                 ==> !(TotalOrder::le(t, *k) && t@ != k@),
+     | |________________________________________________________^ failed this postcondition
+...
+1643 | /         match tree.expose() {
+1644 | |             Exposed::Leaf => None,
+1645 | |             Exposed::Node(left, root_pair, right) => {
+1646 | |                 reveal_param_bst_backings(&left);
+...    |
+1913 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1639:48
+     |
+1639 |                 ==> !(TotalOrder::le(t, *k) && t@ != k@),
+     |                                                ^^^^^^^^
+
+note: 
+
+spec_pair_set_to_map(old(tree).view()).dom().finite() ✔
+let tmp%% = predecessor;
+    tmp%% is Some && true ==>
+        let pk = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(pk.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = predecessor;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            v.le(old(k)) ✔
+            !(v.view() == old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = predecessor;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            forall |t|
+                spec_pair_set_to_map(old(tree).view()).dom().contains(t.view()) && t.le(old(k)) && !(t.view() == old(k).view()) ==>
+                    t.le(v) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+predecessor is None ==>
+    forall |t|
+        spec_pair_set_to_map(old(tree).view()).dom().contains(t.view()) ==>
+            t.le(old(k)) ==>
+                t.view() == old(k).view() ✘
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1935:13
+     |
+1935 |               parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1966 | /         match tree.expose() {
+1967 | |             Exposed::Leaf => {
+1968 | |                 proof {
+1969 | |                     if spec_pair_set_to_map(tree@).contains_key(k@) {
+...    |
+2359 | |         }
+     | |_________- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1963:13
+     |
+1963 |               parts.0@.len() + parts.2@.len() <= tree@.len(),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1966 | /         match tree.expose() {
+1967 | |             Exposed::Leaf => {
+1968 | |                 proof {
+1969 | |                     if spec_pair_set_to_map(tree@).contains_key(k@) {
+...    |
+2359 | |         }
+     | |_________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:2280:41
+     |
+2280 | ...                   implies p.0.cmp_spec(k) == Less by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2290:37
+     |
+2290 |                                     lemma_cmp_antisymmetry(root_pair.0, *k);
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3036 |             a.cmp_spec(&b) == Less,
+     |             ---------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2298:37
+     |
+2298 |                                     lemma_cmp_antisymmetry(root_pair.0, *k);
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3036 |             a.cmp_spec(&b) == Less,
+     |             ---------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1935:41
+     |
+1935 |             parts.1 matches Some(v) ==> spec_pair_set_to_map(tree@).contains_key(k@) && v@ == spec_pair_set_to_map(tree@)[k@],
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1963 |             parts.0@.len() + parts.2@.len() <= tree@.len(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = parts.1;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view()) ✘
+                function is uninterpreted
+            v.view() == spec_pair_set_to_map(old(tree).view()).index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = parts.1;
+    tmp%% is None ==>
+        !(spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view())) ✔
+    !(tmp%% is None) ==>
+        true ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+forall |p|
+    parts.0.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Less ✔
+forall |p|
+    parts.2.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Greater ✔
+parts.0.view().subset_of(old(tree).view()) ✔
+parts.2.view().subset_of(old(tree).view()) ✔
+parts.0.view().disjoint(parts.2.view()) ✔
+!(spec_pair_set_to_map(parts.0.view()).dom().contains(old(k).view())) ✔
+!(spec_pair_set_to_map(parts.2.view()).dom().contains(old(k).view())) ✔
+forall |kv, vv|
+    old(tree).view().contains((kv, vv)) ==>
+        !(parts.0.view().contains((kv, vv)) || parts.2.view().contains((kv, vv))) ==>
+            kv == old(k).view() ✔
+spec_key_unique_pairs_set(parts.0.view()) ✔
+spec_key_unique_pairs_set(parts.2.view()) ✔
+spec_set_pair_view_generated(parts.0.view()) ✔
+spec_set_pair_view_generated(parts.2.view()) ✔
+parts.0.spec_bstparasteph_wf() ✔
+parts.2.spec_bstparasteph_wf() ✔
+clip(nat, parts.0.view().len() + parts.2.view().len()) <= old(tree).view().len() ✘
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1087:17
+     |
+1087 | ...       rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5042 | ...   bst_rank_by_key(&self.tree, k)
+     |       ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1087:17
+     |
+1087 | ...   rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
+     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+%return <= old(self).view().dom().len() ✔
+%return == old(self).view().dom().filter((|x| (exists |t| ))).len() ✘
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2800:45
+     |
+2800 | ...                   K::transitive(t, root_pair.0, sel_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:26:13
+     |
+  26 |             Self::le(x, y),
+     |             -------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:2801:45
+     |
+2801 | ...                   K::antisymmetric(t, sel_key);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/vstdplus/total_order.rs:36:13
+     |
+  36 |             Self::le(y, x),
+     |             -------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:26:13
+   |
+26 |             Self::le(x, y),
+   |             ^^^^^^^^^^^^^^
+27 |             Self::le(y, z),
+   |             ^^^^^^^^^^^^^^
+
+note: 
+
+t.le(tmp%) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.le(sel_key) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:956:17
+     |
+ 956 | ...       selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+     |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5049 | ...   bst_select_by_rank(&self.tree, i)
+     |       --------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:956:46
+    |
+956 | ...==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✔
+old(i) >= old(self).view().dom().len() ==>
+    let tmp%% = %return;
+        tmp%% is None ==>
+            true ✔
+        !(tmp%% is None) ==>
+            false ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let k = tmp%%.0;
+            old(self).view().dom().contains(k.view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().dom().filter((|x| (exists |t| ))).len() == old(i) ✘
+    !(tmp%% is Some && true) ==>
+        true ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1104:17
+     |
+1104 |                   split.1.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+5066 | /             if i >= size {
+5067 | |                 // Everything goes left, right is empty.
+5068 | |                 let right = Self::empty();
+5069 | |                 let left_tree = self.tree.clone();
+...    |
+5169 | |                 (left_table, right_table)
+5170 | |             }
+     | |_____________- at the end of the function body
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5086:33
+     |
+5086 |                 let pair_at_i = sorted.nth(i);
+     |                                 ^^^^^^^^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:136:22
+     |
+ 136 |             requires index < self.spec_len()
+     |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1104:17
+     |
+1104 |                 split.1.spec_orderedtablesteph_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom().finite() ✔
+old(self).view().dom().finite() ✔
+%return.0.view().dom().finite() ✔
+%return.1.view().dom().finite() ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✔
+%return.1.view().dom().subset_of(old(self).view().dom()) ✔
+%return.0.view().dom().disjoint(%return.1.view().dom()) ✔
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key)) ==>
+            %return.1.view().dom().contains(key) ✔
+%return.0.spec_orderedtablesteph_wf() ✔
+%return.1.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2653 verified, 6 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 50s
+Sampled Memory Usage: peak rust_verify RSS: 5741MB, peak z3 RSS: 473MB, min free: 19933MB
+Sampled CPU Usage: rust_verify: 111s, z3 children: 109s

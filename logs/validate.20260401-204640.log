@@ -1,0 +1,11 @@
+error: cannot call function `lib::Chap38::BSTParaStEph::BSTParaStEph::reveal_param_bst_backings` with mode exec
+    --> src/Chap43/OrderedTableStEph.rs:1323:45
+     |
+1323 | ...                   reveal_param_bst_backings(&left);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 11182MB, peak z3 RSS: 581MB, min free: 14507MB
+Sampled CPU Usage: rust_verify: 122s, z3 children: 33s

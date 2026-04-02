@@ -1,0 +1,113 @@
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStEph.rs:1296:27
+     |
+1296 |                 let c = k.cmp(&root_pair.0);
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:47:5
+     |
+  47 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  48 | |         ensures
+  49 | |             (match c {
+  50 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  53 | |             }),
+  54 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1296 -                 let c = k.cmp(&root_pair.0);
+1296 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+     |
+help: disambiguate the method for candidate #2
+     |
+1296 -                 let c = k.cmp(&root_pair.0);
+1296 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+     |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStEph.rs:1623:27
+     |
+1623 |                 let c = k.cmp(&root_pair.0);
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:47:5
+     |
+  47 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  48 | |         ensures
+  49 | |             (match c {
+  50 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  53 | |             }),
+  54 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1623 -                 let c = k.cmp(&root_pair.0);
+1623 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+     |
+help: disambiguate the method for candidate #2
+     |
+1623 -                 let c = k.cmp(&root_pair.0);
+1623 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+     |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStEph.rs:2390:27
+     |
+2390 |                 let c = k.cmp(&root_pair.0);
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:47:5
+     |
+  47 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  48 | |         ensures
+  49 | |             (match c {
+  50 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  53 | |             }),
+  54 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+2390 -                 let c = k.cmp(&root_pair.0);
+2390 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+     |
+help: disambiguate the method for candidate #2
+     |
+2390 -                 let c = k.cmp(&root_pair.0);
+2390 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+     |
+
+error[E0277]: the trait bound `K: vstdplus::total_order::total_order::TotalOrderBridge` is not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5059:44
+     |
+5059 |             let sel = bst_select_by_rank::<K, V>(&self.tree, i);
+     |                                            ^ the trait `vstdplus::total_order::total_order::TotalOrderBridge` is not implemented for `K`
+     |
+note: required by a bound in `Chap43::OrderedTableStEph::OrderedTableStEph::bst_select_by_rank`
+    --> src/Chap43/OrderedTableStEph.rs:2659:42
+     |
+2659 |     fn bst_select_by_rank<K: StT + Ord + TotalOrderBridge, V: StT + Ord>(
+     |                                          ^^^^^^^^^^^^^^^^ required by this bound in `bst_select_by_rank`
+help: consider further restricting type parameter `K` with trait `TotalOrderBridge`
+     |
+3037 |     impl<K: StT + Ord + vstdplus::total_order::total_order::TotalOrderBridge, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0034, E0277.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 656MB, peak z3 RSS: 0MB, min free: 25528MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s
