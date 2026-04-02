@@ -1,0 +1,50 @@
+error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+   --> src/experiments/coarse_lock_parallel_tsm.rs:197:26
+    |
+197 |               let result = ArraySeqMtEphTrait::reduce(&interior.seq, f, Ghost(spec_f), id);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:407:9
+    |
+407 | / ...   fn reduce<F: Fn(&T, &T) -> T + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T,...
+408 | | ...       where T: Clone + Eq + Send + Sync + 'static
+409 | | ...       requires
+410 | | ...           obeys_feq_clone::<T>(),
+...   |
+414 | | ...       ensures
+415 | | ...           reduced == spec_iterate(a.seq@, spec_f, id);
+    | |__________________________________________________________- `ArraySeqMtEphTrait::reduce` defined here
+    |
+help: use the fully-qualified path to the only available implementation
+    |
+197 |             let result = <Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T> as ArraySeqMtEphTrait>::reduce(&interior.seq, f, Ghost(spec_f), id);
+    |                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++                   +
+
+error[E0790]: cannot call associated function on trait without specifying the corresponding `impl` type
+   --> src/experiments/coarse_lock_parallel_tsm.rs:218:27
+    |
+218 |               let new_seq = ArraySeqMtEphTrait::map(&interior.seq, f);
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ cannot call associated function of trait
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:435:9
+    |
+435 | /         fn map<U: Clone + Send + Sync + 'static, F: Fn(&T) -> U + Send + Sync + Clone + 'static>(a: &ArraySeqMtEphS<T>, f: &F) ->...
+436 | |             where T: Clone + Eq + Send + Sync + 'static
+437 | |             requires
+438 | |                 obeys_feq_clone::<T>(),
+...   |
+441 | |                 mapped.seq@.len() == a.seq@.len(),
+442 | |                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
+    | |_____________________________________________________________________________________________________________________________- `ArraySeqMtEphTrait::map` defined here
+    |
+help: use the fully-qualified path to the only available implementation
+    |
+218 |             let new_seq = <Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T> as ArraySeqMtEphTrait>::map(&interior.seq, f);
+    |                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++                   +
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0790`.
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1111MB, peak z3 RSS: 0MB, min free: 22937MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s
