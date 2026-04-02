@@ -1,0 +1,66 @@
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1435:13
+     |
+1435 |             spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1435:39
+     |
+1435 |             spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
+     |                                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1435:68
+     |
+1435 |             spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
+     |                                                                    ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1462:37
+     |
+1462 |             flattened.spec_len() == spec_sum_inner_lens(a),
+     |                                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1477:30
+     |
+1477 |             result@.len() == spec_sum_inner_lens(a),
+     |                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1494:24
+     |
+1494 |                 assert(spec_sum_inner_lens(&rest) == 0nat);
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1495:24
+     |
+1495 |                 assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
+     |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1495:69
+     |
+1495 |                 assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
+     |                                                                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1513:34
+     |
+1513 |             let ghost left_sum = spec_sum_inner_lens(&left);
+     |                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_sum_inner_lens` in this scope
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1514:35
+     |
+1514 |             let ghost right_sum = spec_sum_inner_lens(&right);
+     |                                   ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 10 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20442MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

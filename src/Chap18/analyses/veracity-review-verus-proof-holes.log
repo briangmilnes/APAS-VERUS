@@ -20,34 +20,14 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-❌ ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqMtEphSlice.rs:729: error: assume() [algorithmic] - assume(injected_seq =~= expected);
-       700 |         fn inject(&self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+⚠ ArraySeqMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS-agent1/src/Chap18/ArraySeqMtEphSlice.rs:1742: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1738 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       727 |                 assert(injected_seq.len() == expected.len());
-       728 |                 // The sequential application matches spec_inject for the simple case.
-       730 |             }
-       731 |             result
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqMtEphSlice.rs:1408: error: fn_missing_ensures - fn flatten_dc_vec — exec fn should have ensures
-      1394 |     pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
-            ...
-      1406 | 
-      1407 |     /// D&C flatten producing Vec<T>. Called by flatten.
-      1409 |         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-      1410 |     ) -> (result: Vec<T>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqMtEphSlice.rs:1640: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1636 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1638 |         {
-      1639 |             let equal = self.start == other.start && self.len == other.len;
-      1641 |             equal
-      1642 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap18/ArraySeqMtEphSlice.rs:757: error: bare_impl - impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> { — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
-       758 |         /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-       759 |         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 6 total (6 clean, 0 holed)
+      1740 |         {
+      1741 |             let equal = self.start == other.start && self.len == other.len;
+      1743 |             equal
+      1744 |         }
 
 =================================================================
 2. Depends Upon
@@ -70,37 +50,37 @@ ArraySeqMtEphSlice.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   0 clean (no holes, no errors; 0%)
-   1 holed (holes or errors, 100%)
+   1 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    1 total
 
 Proof Functions:
-   6 clean (100%)
+   7 clean (100%)
    0 holed (0%)
-   6 total
+   7 total
 
 Function Specs:
-   50 exec fns with complete spec (requires+ensures) (60%)
-   1 exec fns missing spec (1%)
-   31 proof/spec fns clean (37%)
+   51 exec fns with complete spec (requires+ensures) (60%)
+   0 exec fns missing spec (0%)
+   33 proof/spec fns clean (39%)
    0 proof/spec fns with holes (0%)
-   82 total fns
+   84 total fns
 
 
-Holes Found: 1 (actionable)
-   1 × assume() [algorithmic] (100%)
-Real Proof Targets: 1 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
-Warnings: 2 total
-   1 × fn_missing_ensures
+Warnings: 1 total
    1 × assume_eq_clone_workaround
+
+No proof holes found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 08:21:12 -07:00
-Ended:     2026-04-02 08:21:12 -07:00
-Duration:  28ms
+Started:   2026-04-02 08:59:36 -07:00
+Ended:     2026-04-02 08:59:37 -07:00
+Duration:  21ms
 
 Full output: src/Chap18/analyses/veracity-review-verus-proof-holes.log
