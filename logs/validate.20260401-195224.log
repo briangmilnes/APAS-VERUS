@@ -1,0 +1,84 @@
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:275:42
+    |
+275 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:285:42
+    |
+285 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:295:42
+    |
+295 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:305:42
+    |
+305 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:315:42
+    |
+315 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error[E0308]: mismatched types
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:325:42
+    |
+325 |             let inner = self.cell.borrow(tracked_perm.borrow());
+    |                                   ------ ^^^^^^^^^^^^^^^^^^^^^ expected `Tracked<&PointsTo<SetInner>>`, found `&PointsTo<SetInner>`
+    |                                   |
+    |                                   arguments to this method are incorrect
+    |
+    = note: expected struct `vstd::prelude::Tracked<&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>>`
+            found reference `&vstd::cell::PointsTo<experiments::atomic_spinlock_pcell_mt::atomic_spinlock_pcell_mt::SetInner>`
+note: method defined here
+   --> vstd/cell.rs:245:11
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 3246MB, peak z3 RSS: 0MB, min free: 22537MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 0s

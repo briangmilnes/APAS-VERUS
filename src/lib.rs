@@ -92,6 +92,7 @@ pub mod experiments {
 //    pub mod bst_plain_mt_tsm;                              // SUCCEEDS: TSM scaled to 10 ops, zero assumes
 //    pub mod coarse_lock_parallel_tsm;                      // SUCCEEDS: coarse lock + TSM + parallel inside
 //    pub mod bst_plain_mt_pcell;                            // SUCCEEDS: PCell+RwLock, zero assumes, View experiment
+//    pub mod atomic_spinlock_pcell_mt;                      // SUCCEEDS: AtomicBool spinlock + PCell, zero assumes
 //    pub mod closure_clone_first_class;                     // FAILS: Verus 3390e9af0 — Clone on closures still not recognized
 //    pub mod named_fn_clone_bounds;                         // PARTIAL: named fns — tests 4,6 pass, 1,2,3,5 fail (Clone)
 //    pub mod rwlock_no_ghost_field;                         // SUCCEEDS: PCell+PointsTo eliminates assumes

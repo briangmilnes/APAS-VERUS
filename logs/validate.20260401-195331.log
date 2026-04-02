@@ -1,0 +1,11 @@
+error: in 'ensures' clause of public function, cannot refer to private function
+   --> src/experiments/atomic_spinlock_pcell_mt.rs:204:21
+    |
+204 |             ensures s.wf(),
+    |                     ^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 12181MB, peak z3 RSS: 43MB, min free: 13534MB
+Sampled CPU Usage: rust_verify: 314s, z3 children: 256s
