@@ -1,0 +1,400 @@
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:871:29
+    |
+871 | ...                   #[trigger] s.take(i as int + 1)[k] == left_backing.take(i as int + 1)[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:873:36
+    |
+873 | ...                   assert(s.take(i as int + 1)[k] == s[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:874:36
+    |
+874 | ...                   assert(left_backing.take(i as int + 1)[k] == left_backing[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:876:32
+    |
+876 |                         assert(s.take(i as int + 1) =~= left_backing.take(i as int + 1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:914:32
+    |
+914 |                         assert(lhs.len() == rhs.len());
+    |                                ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:916:29
+    |
+916 | ...                   #[trigger] lhs[k] == rhs[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:920:40
+    |
+920 | ...                   assert(lhs[k] == s[k]);
+    |                              ^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:921:40
+    |
+921 | ...                   assert(rhs[k] == left_backing[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:924:40
+    |
+924 | ...                   assert(lhs[k] == s[k]);
+    |                              ^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:926:40
+    |
+926 | ...                   assert(rhs[k] == right_prefix[rk]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:927:40
+    |
+927 | ...                   assert(right_prefix[rk] == right_backing[rk]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:930:32
+    |
+930 |                         assert(lhs =~= rhs);
+    |                                ^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:933:25
+    |
+933 |                         lhs.lemma_fold_left_split(id, spec_f, left_len as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:668:12
+    |
+    = note: failed precondition
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:936:29
+    |
+936 | ...                   #[trigger] lhs.subrange(0, left_len as int)[k] == left_backing[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:937:37
+    |
+937 |                         by { assert(lhs.subrange(0, left_len as int)[k] == lhs[k]); }
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:938:32
+    |
+938 |                         assert(lhs.subrange(0, left_len as int) =~= left_backing);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:941:29
+    |
+941 | ...                   #[trigger] lhs.subrange(left_len as int, lhs.len() as int)[k] == right_prefix[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:943:36
+    |
+943 | ...                   assert(lhs.subrange(left_len as int, lhs.len() as int)[k] == lhs[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:945:32
+    |
+945 |                         assert(lhs.subrange(left_len as int, lhs.len() as int) =~= right_prefix);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.subrange(0, i + 1).index(k) == s.index(k) 
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:873:36
+    |
+873 | ...                   assert(s.take(i as int + 1)[k] == s[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:873:63
+    |
+873 | ...                   assert(s.take(i as int + 1)[k] == s[k]);
+    |                                                         ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:874:36
+    |
+874 | ...                   assert(left_backing.take(i as int + 1)[k] == left_backing[k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:874:74
+    |
+874 | ...                   assert(left_backing.take(i as int + 1)[k] == left_backing[k]);
+    |                                                                    ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:871:29
+    |
+871 | ...                   #[trigger] s.take(i as int + 1)[k] == left_backing.take(i as int + 1)[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:871:67
+    |
+871 | ...                   #[trigger] s.take(i as int + 1)[k] == left_backing.take(i as int + 1)[k]
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:857:42
+    |
+857 |                         left_backing =~= s.subrange(0, mid as int),
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:920:40
+    |
+920 | ...                   assert(lhs[k] == s[k]);
+    |                              ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:920:50
+    |
+920 | ...                   assert(lhs[k] == s[k]);
+    |                                        ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:921:40
+    |
+921 | ...                   assert(rhs[k] == left_backing[k]);
+    |                              ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:921:50
+    |
+921 | ...                   assert(rhs[k] == left_backing[k]);
+    |                                        ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:924:40
+    |
+924 | ...                   assert(lhs[k] == s[k]);
+    |                              ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:924:50
+    |
+924 | ...                   assert(lhs[k] == s[k]);
+    |                                        ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:926:40
+    |
+926 | ...                   assert(rhs[k] == right_prefix[rk]);
+    |                              ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:926:50
+    |
+926 | ...                   assert(rhs[k] == right_prefix[rk]);
+    |                                        ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:927:40
+    |
+927 | ...                   assert(right_prefix[rk] == right_backing[rk]);
+    |                              ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:927:60
+    |
+927 | ...                   assert(right_prefix[rk] == right_backing[rk]);
+    |                                                  ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:916:29
+    |
+916 | ...                   #[trigger] lhs[k] == rhs[k]
+    |                       ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:916:50
+    |
+916 | ...                   #[trigger] lhs[k] == rhs[k]
+    |                                            ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:937:37
+    |
+937 |                         by { assert(lhs.subrange(0, left_len as int)[k] == lhs[k]); }
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:937:37
+    |
+937 |                         by { assert(lhs.subrange(0, left_len as int)[k] == lhs[k]); }
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:937:76
+    |
+937 |                         by { assert(lhs.subrange(0, left_len as int)[k] == lhs[k]); }
+    |                                                                            ^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:936:40
+    |
+936 | ...                   #[trigger] lhs.subrange(0, left_len as int)[k] == left_backing[k]
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:936:29
+    |
+936 | ...                   #[trigger] lhs.subrange(0, left_len as int)[k] == left_backing[k]
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:936:79
+    |
+936 | ...                   #[trigger] lhs.subrange(0, left_len as int)[k] == left_backing[k]
+    |                                                                         ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:938:32
+    |
+938 |                         assert(lhs.subrange(0, left_len as int) =~= left_backing);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:943:36
+    |
+943 | ...                   assert(lhs.subrange(left_len as int, lhs.len() as int)[k] == lhs[left_len as int + k]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+verification results:: 864 verified, 2 errors
+error: aborting due to 19 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3736MB, peak z3 RSS: 258MB, min free: 22342MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 6s

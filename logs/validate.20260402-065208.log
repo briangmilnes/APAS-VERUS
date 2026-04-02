@@ -1,0 +1,24 @@
+error: unexpected token, expected `;`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:844:21
+    |
+844 |                     where T: Eq + Clone;
+    |                     ^^^^^
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1106:50
+     |
+1106 |     impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
+     |                                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1114:54
+     |
+1114 |     impl<T: std::fmt::Display> std::fmt::Display for ArraySeqMtEphSliceS<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25784MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

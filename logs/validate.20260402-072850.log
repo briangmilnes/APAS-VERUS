@@ -1,0 +1,55 @@
+error[E0592]: duplicate definitions with name `reduce_dc`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:959:9
+    |
+534 | /         fn reduce_dc<F: MtReduceFn<T>>(
+535 | |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+536 | |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+537 | |         ) -> (reduced: T)
+538 | |             where T: Send + Sync + 'static
+    | |__________________________________________- other definition for `reduce_dc`
+...
+959 | /         fn reduce_dc<F: MtReduceFn<T>>(
+960 | |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+961 | |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+962 | |         ) -> (reduced: T)
+963 | |             where T: Send + Sync + 'static
+    | |__________________________________________^ duplicate definitions for `reduce_dc`
+
+error[E0592]: duplicate definitions with name `map_dc_vec`
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1064:9
+     |
+ 639 | /         fn map_dc_vec<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+ 640 | |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+ 641 | |         ) -> (result: Vec<U>)
+ 642 | |             where T: Send + Sync + 'static
+     | |__________________________________________- other definition for `map_dc_vec`
+...
+1064 | /         fn map_dc_vec<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+1065 | |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+1066 | |         ) -> (result: Vec<U>)
+1067 | |             where T: Send + Sync + 'static
+     | |__________________________________________^ duplicate definitions for `map_dc_vec`
+
+error[E0592]: duplicate definitions with name `filter_dc_vec`
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1138:9
+     |
+ 713 | /         fn filter_dc_vec<F: MtPred<T>>(
+ 714 | |             a: &ArraySeqMtEphSliceS<T>, pred: &F,
+ 715 | |             Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
+ 716 | |         ) -> (result: Vec<T>)
+ 717 | |             where T: Send + Sync + 'static
+     | |__________________________________________- other definition for `filter_dc_vec`
+...
+1138 | /         fn filter_dc_vec<F: MtPred<T>>(
+1139 | |             a: &ArraySeqMtEphSliceS<T>, pred: &F,
+1140 | |             Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
+1141 | |         ) -> (result: Vec<T>)
+1142 | |             where T: Send + Sync + 'static
+     | |__________________________________________^ duplicate definitions for `filter_dc_vec`
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0592`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25612MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

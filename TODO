@@ -11,5 +11,5 @@
   └────────────────────────────────────────────┴──────────┴─────────────────────────┘
   do we give these to vstd?
 
-3) Do all our clone woes go away with copy? What does it do the the algorithms complexities?
+
 

@@ -1,0 +1,779 @@
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1068:38
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            -----------               ^ use of generic parameter from outer item
+     |            |
+     |            generic parameter used in this inner function
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1072:19
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1072 |             where T: Send + Sync + 'static
+     |                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1069:37
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+1069 |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+     |                                     ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1070:42
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+1069 |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+1070 |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+     |                                          ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1070:45
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+1069 |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+1070 |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+     |                                             ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1070:51
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+1069 |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+1070 |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+     |                                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1070:59
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+1069 |             a: &ArraySeqMtEphSliceS<T>, f: &F,
+1070 |             Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
+     |                                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1071:29
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1071 |         ) -> (scanned: (Vec<T>, T))
+     |                             ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1071:33
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1071 |         ) -> (scanned: (Vec<T>, T))
+     |                                 ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1076:35
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1076 |                 obeys_feq_clone::<T>(),
+     |                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1078:28
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1078 |                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+     |                            ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1078:35
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1078 |                 forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+     |                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1079:27
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1079 |                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1079:33
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1079 |                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                 ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1079:41
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1079 |                 forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                         ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1103:32
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1103 |                 let mut v: Vec<T> = Vec::with_capacity(1);
+     |                                ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1126:46
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1126 |                 let fa = move || -> (r: (Vec<T>, T))
+     |                                              ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1126:50
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1126 |                 let fa = move || -> (r: (Vec<T>, T))
+     |                                                  ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1130:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1130 |                         obeys_feq_clone::<T>(),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1132:36
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1132 |                         forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+     |                                    ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1132:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1132 |                         forall|x: &T, y: &T| #[trigger] f1.requires((x, y)),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1133:35
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1133 |                         forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1133:41
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1133 |                         forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                         ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1133:49
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1133 |                         forall|x: T, y: T, ret: T| f1.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                                 ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1145:46
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1145 |                 let fb = move || -> (r: (Vec<T>, T))
+     |                                              ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1145:50
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1145 |                 let fb = move || -> (r: (Vec<T>, T))
+     |                                                  ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1149:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1149 |                         obeys_feq_clone::<T>(),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1151:36
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1151 |                         forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+     |                                    ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1151:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1151 |                         forall|x: &T, y: &T| #[trigger] f2.requires((x, y)),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1152:35
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1152 |                         forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1152:41
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1152 |                         forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                         ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1152:49
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1152 |                         forall|x: T, y: T, ret: T| f2.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                                 ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1167:41
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1167 |                 let mut result_vec: Vec<T> = Vec::with_capacity(len);
+     |                                         ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1178:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1178 |                         obeys_feq_clone::<T>(),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1208:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1208 |                         obeys_feq_clone::<T>(),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1209:36
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1209 |                         forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+     |                                    ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1209:43
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1209 |                         forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+     |                                           ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1210:35
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1210 |                         forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                   ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1210:41
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1210 |                         forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                         ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0401]: can't use generic parameters from outer item
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1210:49
+     |
+ 979 |     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+     |                       - type parameter from outer item
+...
+1068 |         fn scan_dc_vec<F: MtReduceFn<T>>(
+     |            ----------- generic parameter used in this inner function
+...
+1210 |                         forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+     |                                                 ^ use of generic parameter from outer item
+     |
+     = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+     |
+1068 |         fn scan_dc_vec<T, F: MtReduceFn<T>>(
+     |                        ++
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1142:21
+     |
+1142 |                     Self::scan_dc_vec(&left, &f1, Ghost(spec_f), id1)
+     |                     ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1161:21
+     |
+1161 |                     Self::scan_dc_vec(&right, &f2, Ghost(spec_f), id2)
+     |                     ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1189:25
+     |
+1189 |                         Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, i as int + 1);
+     |                         ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1222:25
+     |
+1222 |                         Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+     |                         ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1224:25
+     |
+1224 |                         Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, j as int + 1);
+     |                         ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1226:25
+     |
+1226 |                         Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, j as int + 1);
+     |                         ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1234:21
+     |
+1234 |                     Self::lemma_prefix_fold_matching(left_fn, a_fn, spec_f, id, mid as int);
+     |                     ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1235:21
+     |
+1235 |                     Self::lemma_prefix_fold_split(a_fn, spec_f, id, mid as int, right_len as int);
+     |                     ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error[E0433]: failed to resolve: `Self` is only available in impls, traits, and type definitions
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1236:21
+     |
+1236 |                     Self::lemma_prefix_fold_matching(|k: int| a_fn(mid as int + k), right_fn, spec_f, id, right_len as int);
+     |                     ^^^^ `Self` is only available in impls, traits, and type definitions
+
+error: aborting due to 49 previous errors
+
+Some errors have detailed explanations: E0401, E0433.
+For more information about an error, try `rustc --explain E0401`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24789MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

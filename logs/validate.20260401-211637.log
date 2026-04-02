@@ -1,0 +1,76 @@
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:868:32
+    |
+868 |                         assert(s.take(i as int + 1) =~= left_backing.take(i as int + 1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:901:32
+    |
+901 |                         assert(s.take(idx + 1) =~= left_backing + right_backing.take(j as int + 1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:905:25
+    |
+905 |                         full.lemma_fold_left_split(id, spec_f, left_len as int);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:668:12
+    |
+    = note: failed precondition
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:906:32
+    |
+906 |                         assert(full.subrange(0, left_len as int) =~= left_backing);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap19/ArraySeqMtEphSlice.rs:907:32
+    |
+907 |                         assert(full.subrange(left_len as int, full.len() as int) =~= right_backing.take(j as int + 1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.subrange(0, i + 1) =~= left_backing.subrange(0, i + 1) 
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:857:42
+    |
+857 |                         left_backing =~= s.subrange(0, mid as int),
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:906:32
+    |
+906 |                         assert(full.subrange(0, left_len as int) =~= left_backing);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqMtEphSlice.rs:907:32
+    |
+907 |                         assert(full.subrange(left_len as int, full.len() as int) =~= right_backing.take(j as int + 1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:116:12
+    |
+    = note: recommendation not met
+
+verification results:: 864 verified, 2 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2167MB, peak z3 RSS: 49MB, min free: 23652MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 4s
