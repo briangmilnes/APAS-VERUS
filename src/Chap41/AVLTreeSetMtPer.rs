@@ -224,7 +224,6 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
             requires
                 self.spec_avltreesetmtper_wf(),
-                self@.len() < usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures updated@ == self@.remove(x@), updated.spec_avltreesetmtper_wf();

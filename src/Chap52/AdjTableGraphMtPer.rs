@@ -462,15 +462,7 @@ broadcast use {
                 move |neighbors: &AVLTreeSetMtPer<V>| -> (r: AVLTreeSetMtPer<V>)
                     ensures r@ == neighbors@.remove(v_clone@)
                 {
-                    // ParamBST type_invariant guarantees ghost_locked_root@.finite()
-                    // and size is stored as usize, so @.len() <= usize::MAX.
-                    let sz = assert_avltreesetmtper_bounded_size(neighbors);
-                    proof {
-                        // sz: usize == neighbors@.len(). Delete requires < usize::MAX.
-                        // Proved: neighbors@.len() <= usize::MAX (from sz: usize).
-                        // Gap: < vs <= — a set of usize::MAX elements is unreachable in practice.
-                        assume(neighbors@.len() < usize::MAX as nat);
-                    }
+                    assert_avltreesetmtper_always_wf(neighbors);
                     neighbors.delete(&v_clone)
                 },
                 Ghost(|ns: Set<<V as View>::V>| -> Set<<V as View>::V> { ns.remove(v_view) }),

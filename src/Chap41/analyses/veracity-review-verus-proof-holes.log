@@ -31,11 +31,11 @@ Table of Contents:
       2 × unsafe impl
    Info: 1 total
 ❌ AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:533: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
-       534 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:534: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-       535 | 
-       536 |     // 13. macros
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:532: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
+       533 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:533: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+       534 | 
+       535 |     // 13. macros
 /home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:83: error: fn_missing_requires - fn assert_avltreesetmtper_always_wf — exec fn should have requires
         73 |         pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             ...
@@ -50,15 +50,15 @@ Table of Contents:
         90 |     /// Returns the size so callers can use it in capacity proofs.
         92 |         s: &AVLTreeSetMtPer<T>,
         93 |     ) -> (sz: usize)
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:487: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       452 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:486: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       451 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       485 |                 i = i + 1;
-       486 |             }
-       488 |             all_eq
-       489 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:493: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:500: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+       484 |                 i = i + 1;
+       485 |             }
+       487 |             all_eq
+       488 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:492: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap41/AVLTreeSetMtPer.rs:499: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Holes: 2 total
       2 × unsafe impl
    Info: 2 × structural_false_positive
@@ -246,8 +246,15 @@ Structural (info only): 2
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 21:31:43 -07:00
-Ended:     2026-04-01 21:31:43 -07:00
-Duration:  48ms
+Started:   2026-04-02 07:24:45 -07:00
+Ended:     2026-04-02 07:24:45 -07:00
+Duration:  50ms
+
+Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
+========================
+
+Started:   2026-04-02 07:24:45 -07:00
+Ended:     2026-04-02 07:24:45 -07:00
+Duration:  50ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

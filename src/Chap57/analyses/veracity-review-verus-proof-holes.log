@@ -21,21 +21,50 @@ Table of Contents:
 =================================================================
 
 ℹ DijkstraStEphF64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:147: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:149: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:151: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:153: info: external_body_accept_hole
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:156: info: external_body_accept_hole
-   Info: 5 total
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:117: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:136: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:147: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:149: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:151: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:153: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:156: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:173: info: external_body_accept_hole
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:175: info: external_body_accept_hole
+   Info: 7 total
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:117: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphF64.rs:136: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
-   4 clean proof functions
-ℹ DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:113: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:130: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   6 clean proof functions
+❌ DijkstraStEphU64.rs
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:162: error: assume() [algorithmic] - assume(TotalOrder::le(a, b));
+       160 |         // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
+       161 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+       163 |         }
+       164 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:165: error: assume() [algorithmic] - assume(TotalOrder::le(b, a));
+       163 |         }
+       164 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+       166 |         }
+       167 |     }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:161: error: proof_fn_with_holes - proof fn cmp_spec_less_implies_le — contains assume/external_body/admit, needs proof
+       146 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
+            ...
+       159 | 
+       160 |         // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
+       162 |             assume(TotalOrder::le(a, b));
+       163 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:164: error: proof_fn_with_holes - proof fn cmp_spec_greater_implies_le — contains assume/external_body/admit, needs proof
+       161 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+            ...
+       162 |             assume(TotalOrder::le(a, b));
+       163 |         }
+       165 |             assume(TotalOrder::le(b, a));
+       166 |         }
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:113: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS-agent3/src/Chap57/DijkstraStEphU64.rs:130: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+   Holes: 2 total
+      2 × assume()
    Info: 2 × structural_false_positive
-   4 clean proof functions
+      2 × STD_TRAIT_IMPL
+   Proof functions: 6 total (4 clean, 2 holed)
 ✓ StackStEph.rs
 
 =================================================================
@@ -63,41 +92,46 @@ StackStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 100%)
-   0 holed (holes or errors, 0%)
+   2 clean (no holes, no errors; 66%)
+   1 holed (holes or errors, 33%)
    3 total
 
 Proof Functions:
-   8 clean (100%)
-   0 holed (0%)
-   8 total
+   10 clean (83%)
+   2 holed (16%)
+   12 total
 
 Function Specs:
-   26 exec fns with complete spec (requires+ensures) (55%)
-   2 exec fns missing spec (4%)
-   19 proof/spec fns clean (40%)
-   0 proof/spec fns with holes (0%)
-   47 total fns
+   26 exec fns with complete spec (requires+ensures) (50%)
+   2 exec fns missing spec (3%)
+   21 proof/spec fns clean (41%)
+   2 proof/spec fns with holes (3%)
+   51 total fns
 
 
-Holes Found: 0 (actionable)
-Real Proof Targets: 0 (all actionable)
+Holes Found: 2 (actionable)
+   2 × assume() [algorithmic] (100%)
+Real Proof Targets: 2 (all actionable)
 
-Accepted (reviewed): 5 total
-   5 × external_body_accept_hole
+Accepted (reviewed): 7 total
+   7 × external_body_accept_hole
 
 Structural (info only): 4
    4 × STD_TRAIT_IMPL
-
-No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 20:03:45 -07:00
-Ended:     2026-04-01 20:03:45 -07:00
-Duration:  11ms
+Started:   2026-04-02 07:24:46 -07:00
+Ended:     2026-04-02 07:24:46 -07:00
+Duration:  7ms
 
 Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
+========
 
+Started:   2026-04-02 07:24:46 -07:00
+Ended:     2026-04-02 07:24:46 -07:00
+Duration:  7ms
+
+Full output: src/Chap57/analyses/veracity-review-verus-proof-holes.log
