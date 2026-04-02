@@ -102,6 +102,73 @@ pub mod ArraySeqMtEphSlice {
         else { spec_f(spec_prefix_fold(seq_fn, spec_f, id, n - 1), seq_fn(n - 1)) }
     }
 
+    /// Definition 18.16 (inject). Apply updates left-to-right; the first update wins
+    /// when positions collide.
+    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
+        decreases updates.len()
+    {
+        if updates.len() == 0 {
+            s
+        } else {
+            let rest = spec_inject(s, updates.drop_first());
+            let pos = updates[0].0 as int;
+            let val = updates[0].1;
+            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
+        }
+    }
+
+    /// Definition 18.17 (ninject). Non-deterministic inject: each position in the result
+    /// holds either the original value or a value from some update. The choice of which
+    /// update "wins" is unspecified.
+    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, injected: Seq<T>) -> bool {
+        injected.len() == s.len()
+        && forall|i: int| #![trigger injected[i]] 0 <= i < s.len() ==> {
+            injected[i] == s[i]
+            || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
+                && updates[j].0 == i as usize && injected[i] == updates[j].1
+        }
+    }
+
+    // 7. proof fns
+
+    /// spec_inject preserves length.
+    proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)
+        ensures spec_inject(s, u).len() == s.len(),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+        }
+    }
+
+    /// Each element of spec_inject(s, u) is either the original s[i] or some update value.
+    proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
+        requires 0 <= i < s.len(),
+        ensures ({
+            let r = spec_inject(s, u);
+            r.len() == s.len()
+            && (r[i] == s[i]
+                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                    && u[j].0 == i as usize && r[i] == u[j].1)
+        }),
+        decreases u.len(),
+    {
+        reveal(spec_inject);
+        if u.len() > 0 {
+            lemma_spec_inject_len(s, u.drop_first());
+            lemma_spec_inject_element(s, u.drop_first(), i);
+            let rest = spec_inject(s, u.drop_first());
+            let pos = u[0].0 as int;
+            let val = u[0].1;
+            if 0 <= pos < s.len() {
+                if i == pos {
+                } else {
+                }
+            }
+        }
+    }
+
     // 8. traits
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
@@ -200,6 +267,94 @@ pub mod ArraySeqMtEphSlice {
                 v@.len() == self.spec_len(),
                 forall|i: int| #![trigger v@[i]]
                     0 <= i < self.spec_len() ==> v@[i] == self.spec_index(i);
+
+        /// Algorithm 19.7 (isEmpty). isEmpty a = (|a| = 0).
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn is_empty(&self) -> (empty: bool)
+            ensures empty <==> self.spec_len() == 0;
+
+        /// Algorithm 19.7 (isSingleton). isSingleton a = (|a| = 1).
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn is_singleton(&self) -> (single: bool)
+            ensures single <==> self.spec_len() == 1;
+
+        /// Functional set: clone the backing, set one element, return new slice.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones backing Vec.
+        fn set(&self, index: usize, item: T) -> (result: Self)
+            requires
+                self.spec_arrayseqmtephslice_wf(),
+                index < self.spec_len(),
+                obeys_feq_clone::<T>(),
+            ensures
+                result.spec_arrayseqmtephslice_wf(),
+                result.spec_len() == self.spec_len(),
+                result.spec_index(index as int) == item,
+                forall|i: int| #![trigger result.spec_index(i)]
+                    0 <= i < self.spec_len() && i != index as int
+                    ==> result.spec_index(i) == self.spec_index(i);
+
+        /// Concatenate two sequences.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — allocates new Vec, copies both halves.
+        fn append(a: &Self, b: &Self) -> (appended: Self)
+            requires
+                a.spec_arrayseqmtephslice_wf(),
+                b.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+                a.spec_len() + b.spec_len() <= usize::MAX as int,
+            ensures
+                appended.spec_arrayseqmtephslice_wf(),
+                appended.spec_len() == a.spec_len() + b.spec_len(),
+                forall|i: int| #![trigger appended.spec_index(i)]
+                    0 <= i < a.spec_len() ==> appended.spec_index(i) == a.spec_index(i),
+                forall|i: int| #![trigger b.spec_index(i)]
+                    0 <= i < b.spec_len()
+                    ==> appended.spec_index(a.spec_len() as int + i) == b.spec_index(i);
+
+        /// Return new sequence with one element changed.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones slice window into new Vec.
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self)
+            requires
+                a.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+                index < a.spec_len(),
+            ensures
+                updated.spec_arrayseqmtephslice_wf(),
+                updated.spec_len() == a.spec_len(),
+                updated.spec_index(index as int) == item,
+                forall|i: int| #![trigger updated.spec_index(i)]
+                    0 <= i < a.spec_len() && i != index as int
+                    ==> updated.spec_index(i) == a.spec_index(i);
+
+        /// Definition 18.16 (inject). Update multiple positions at once; the first update in
+        /// the ordering of `updates` takes effect when positions collide.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — clone slice window + loop.
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            requires
+                a.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_arrayseqmtephslice_wf(),
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
+
+        /// Definition 18.17 (ninject). Non-deterministic inject: each position in the result
+        /// holds either the original value or a value from some update.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — delegates to inject.
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            requires
+                a.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_arrayseqmtephslice_wf(),
+                spec_ninject(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    updates@,
+                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
 
         fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>)
             requires self.spec_arrayseqmtephslice_wf(),
@@ -408,6 +563,181 @@ pub mod ArraySeqMtEphSlice {
                 i = i + 1;
             }
             v
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn is_empty(&self) -> (empty: bool) {
+            self.len == 0
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn is_singleton(&self) -> (single: bool) {
+            self.len == 1
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn set(&self, index: usize, item: T) -> (result: Self) {
+            let mut v = self.to_vec();
+            v.set(index, item);
+            Self::from_vec(v)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        fn append(a: &Self, b: &Self) -> (appended: Self) {
+            let a_len = a.length();
+            let b_len = b.length();
+            let total = a_len + b_len;
+            let mut v: Vec<T> = Vec::with_capacity(total);
+            let mut i: usize = 0;
+            while i < a_len
+                invariant
+                    0 <= i <= a_len,
+                    a_len as int == a.spec_len(),
+                    b_len as int == b.spec_len(),
+                    a.spec_arrayseqmtephslice_wf(),
+                    b.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                    v@.len() == i as int,
+                    forall|j: int| #![trigger v@[j]]
+                        0 <= j < i as int ==> v@[j] == a.spec_index(j),
+                decreases a_len - i,
+            {
+                v.push(a.nth_cloned(i));
+                i = i + 1;
+            }
+            let mut k: usize = 0;
+            while k < b_len
+                invariant
+                    0 <= k <= b_len,
+                    a_len as int == a.spec_len(),
+                    b_len as int == b.spec_len(),
+                    a.spec_arrayseqmtephslice_wf(),
+                    b.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                    v@.len() == a_len as int + k as int,
+                    forall|j: int| #![trigger v@[j]]
+                        0 <= j < a_len as int ==> v@[j] == a.spec_index(j),
+                    forall|j: int| #![trigger v@[a_len as int + j]]
+                        0 <= j < k as int ==> v@[a_len as int + j] == b.spec_index(j),
+                decreases b_len - k,
+            {
+                v.push(b.nth_cloned(k));
+                k = k + 1;
+            }
+            let result = Self::from_vec(v);
+            proof {
+                assert forall|i: int| #![trigger result.spec_index(i)]
+                    0 <= i < a.spec_len() implies result.spec_index(i) == a.spec_index(i)
+                by {
+                    assert(result.spec_index(i) == v@[i]);
+                }
+                assert forall|i: int| #![trigger b.spec_index(i)]
+                    0 <= i < b.spec_len() implies
+                    result.spec_index(a.spec_len() as int + i) == b.spec_index(i)
+                by {
+                    assert(result.spec_index(a.spec_len() as int + i) == v@[a_len as int + i]);
+                }
+            }
+            result
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn update(a: &Self, index: usize, item: T) -> (updated: Self) {
+            let mut v = a.to_vec();
+            v.set(index, item);
+            Self::from_vec(v)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+            let ghost s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+            let ghost u = updates@;
+            let len = a.length();
+            let ulen = updates.len();
+
+            let mut result_vec: Vec<T> = Vec::with_capacity(len);
+            let mut k: usize = 0;
+            while k < len
+                invariant
+                    k <= len,
+                    len as int == a.spec_len(),
+                    a.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                    s == Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    result_vec@.len() == k as int,
+                    forall|j: int| #![trigger result_vec@[j]]
+                        0 <= j < k as int ==> result_vec@[j] == a.spec_index(j),
+                decreases len - k,
+            {
+                result_vec.push(a.nth_cloned(k));
+                k = k + 1;
+            }
+            proof {
+                assert(result_vec@ =~= s);
+            }
+
+            // Apply updates from end to front (matches spec_inject recursion).
+            let mut i: usize = ulen;
+            while i > 0
+                invariant
+                    0 <= i <= ulen,
+                    ulen == u.len(),
+                    len as int == a.spec_len(),
+                    result_vec@.len() == s.len(),
+                    s.len() == len as int,
+                    obeys_feq_clone::<T>(),
+                    s == Seq::new(a.spec_len(), |j: int| a.spec_index(j)),
+                    u == updates@,
+                    result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+                decreases i,
+            {
+                i = i - 1;
+                let pos = updates[i].0;
+                if pos < len {
+                    let val = updates[i].1.clone_plus();
+                    proof {
+                        axiom_cloned_implies_eq_owned(u[i as int].1, val);
+                    }
+                    result_vec.set(pos, val);
+                }
+                proof {
+                    let ghost sub = u.subrange(i as int, ulen as int);
+                    assert(sub.len() > 0);
+                    assert(sub[0] == u[i as int]);
+                    assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+                    reveal(spec_inject);
+                }
+            }
+
+            proof {
+                assert(u.subrange(0, ulen as int) =~= u);
+                assert(result_vec@ =~= spec_inject(s, u));
+            }
+            let injected = Self::from_vec(result_vec);
+            proof {
+                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
+            }
+            injected
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+            let injected = Self::inject(a, updates);
+            proof {
+                let s = Seq::new(a.spec_len(), |i: int| a.spec_index(i));
+                let r = Seq::new(injected.spec_len(), |i: int| injected.spec_index(i));
+                let u = updates@;
+                assert(r =~= spec_inject(s, u));
+                lemma_spec_inject_len(s, u);
+                assert forall|i: int| 0 <= i < s.len() implies {
+                    r[i] == s[i]
+                    || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
+                        && u[j].0 == i as usize && r[i] == u[j].1
+                } by {
+                    lemma_spec_inject_element(s, u, i);
+                }
+            }
+            injected
         }
 
         fn iter(&self) -> (it: ArraySeqMtEphSliceIter<'_, T>) {
