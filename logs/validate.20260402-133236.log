@@ -1,0 +1,99 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1208:13
+     |
+1208 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:943:25
+    |
+943 | /                         exists|s: int| start as int <= s < t as int + 1 &&
+944 | |                             #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+    | |__________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |s| let tmp%% = start in let tmp%% = s in let tmp%% = t + 1 in tmp%% <= tmp%% && tmp%% < tmp%% && verts_view.index(the_view.index(s).0).view() == v_view) 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:944:40
+    |
+944 | ...                   #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:910:36
+    |
+910 |                         #[trigger] verts_view[the_view[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:860:36
+    |
+860 |                         #[trigger] v1@[the1@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:863:56
+    |
+863 |                     vi1@.contains_key(r@[v_view]@) && (vi1@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:880:36
+    |
+880 |                         #[trigger] v2@[the2@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:883:56
+    |
+883 |                     vi2@.contains_key(r@[v_view]@) && (vi2@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:791:32
+    |
+791 |                     #[trigger] vertices@[th_edges@[s].0 as int]@ == v_view,
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap62/StarPartitionMtEph.rs:1733:28
+     |
+1733 |                     assert(p_vec@[q_h as int]@ == vertices_vec@[q_h as int]@);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+p_vec.view().index(q_h).view() == vertices_vec.view().index(q_h).view() 
+
+verification results:: 1326 verified, 2 errors
+error: aborting due to 2 previous errors; 1 warning emitted
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4013MB, peak z3 RSS: 338MB, min free: 18571MB
+Sampled CPU Usage: rust_verify: 54s, z3 children: 17s

@@ -1,0 +1,35 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1217:13
+     |
+1217 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1669:13
+     |
+1669 |             assert forall|j2: int| 0 <= j2 < nv as int implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+    --> src/Chap62/StarPartitionMtEph.rs:1722:24
+     |
+1722 |                 assert(pm@.dom().finite());
+     |                        ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pm.view().dom().finite() 
+    function is uninterpreted
+
+verification results:: 5687 verified, 1 errors
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 87s
+Sampled Memory Usage: peak rust_verify RSS: 10711MB, peak z3 RSS: 556MB, min free: 10962MB
+Sampled CPU Usage: rust_verify: 220s, z3 children: 173s

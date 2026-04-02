@@ -1,0 +1,117 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1162:13
+     |
+1162 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1615:13
+     |
+1615 |             assert forall|j2: int| 0 <= j2 < nv as int implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:897:25
+    |
+897 | /                         exists|s: int| start as int <= s < t as int + 1 &&
+898 | |                             #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+    | |__________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |s| let tmp%% = start in let tmp%% = s in let tmp%% = t + 1 in tmp%% <= tmp%% && tmp%% < tmp%% && verts_view.index(the_view.index(s).0).view() == v_view) 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:898:40
+    |
+898 | ...                   #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:864:36
+    |
+864 |                         #[trigger] verts_view[the_view[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:814:36
+    |
+814 |                         #[trigger] v1@[the1@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:817:56
+    |
+817 |                     vi1@.contains_key(r@[v_view]@) && (vi1@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:834:36
+    |
+834 |                         #[trigger] v2@[the2@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:837:56
+    |
+837 |                     vi2@.contains_key(r@[v_view]@) && (vi2@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:745:32
+    |
+745 |                     #[trigger] vertices@[th_edges@[s].0 as int]@ == v_view,
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap62/StarPartitionMtEph.rs:1609:17
+     |
+1609 | /                 coin_flips@.contains_key(vertices_vec@[j2]@) &&
+1610 | |                 (coin_flips@[vertices_vec@[j2]@] ==>
+1611 | |                  #[trigger] pv_snap[j2]@ == vertices_vec@[j2]@) by {
+     | |_______________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap62/StarPartitionMtEph.rs:1611:18
+     |
+1611 |                  #[trigger] pv_snap[j2]@ == vertices_vec@[j2]@) by {
+     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+coin_flips.view().dom().contains(vertices_vec.view().index(j2).view()) ✔
+coin_flips.view().index(vertices_vec.view().index(j2).view()) ==>
+    pv_snap.index(j2).view() == vertices_vec.view().index(j2).view() ✘
+
+verification results:: 1326 verified, 2 errors
+error: aborting due to 2 previous errors; 2 warnings emitted
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 2002MB, peak z3 RSS: 302MB, min free: 20222MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 17s
