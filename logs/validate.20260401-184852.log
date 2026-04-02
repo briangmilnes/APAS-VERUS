@@ -1,0 +1,67 @@
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:687:40
+    |
+687 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:687:78
+    |
+687 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:687:78
+    |
+687 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:693:68
+    |
+693 | ...                   ensures r == (i as int != j as int && !row.spec_index(j as int))
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:734:87
+    |
+734 |                         forall|j: int| 0 <= j < n ==> #[trigger] row.spec_index(j) == matrix.spec_index(u as int).spec_index(j),
+    |                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+error: invariant not satisfied before loop
+   --> src/Chap52/AdjMatrixGraphStEph.rs:737:25
+    |
+737 |                         spec_count_true(edge_fn, n as int) <= n as nat,
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2883 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 2830MB, peak z3 RSS: 412MB, min free: 22056MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 56s

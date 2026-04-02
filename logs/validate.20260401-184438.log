@@ -1,0 +1,250 @@
+error: postcondition not satisfied
+   --> src/Chap52/AdjMatrixGraphStEph.rs:226:17
+    |
+226 |           ensures spec_sum_of(n, f) <= n as nat * bound
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+229 | /         if n > 0 {
+230 | |             assert(f(n - 1) <= bound);
+231 | |             lemma_sum_of_bounded(n - 1, f, bound);
+232 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_sum_of(old(n), old(f)) <= clip(nat, clip(nat, old(n)) * old(bound)) 
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjMatrixGraphStEph.rs:615:34
+    |
+615 |                 self.num_edges = self.num_edges - 1;
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjMatrixGraphStEph.rs:629:34
+    |
+629 |                 self.num_edges = self.num_edges + 1;
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjMatrixGraphStEph.rs:615:34
+    |
+615 |                 self.num_edges = self.num_edges - 1;
+    |                                  ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= self.num_edges - 1 ✘
+    self.num_edges - 1 < 4294967296 ✔
+usize::BITS == 64 ==>
+    0 <= self.num_edges - 1 ✘
+    self.num_edges - 1 < 18446744073709551616 ✔
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:568:29
+    |
+568 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:568:29
+    |
+568 | ...                   self.matrix.spec_index(u as int).spec_index(j as int)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:600:46
+    |
+600 | ...                   ensures r == row.spec_index(j as int)
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:585:40
+    |
+585 | ...                   #[trigger] r.spec_index(j) == (if j == v as int {
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:588:33
+    |
+588 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:588:33
+    |
+588 | ...                   self.matrix.spec_index(u as int).spec_index(j)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:591:40
+    |
+591 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:591:59
+    |
+591 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:591:59
+    |
+591 | ...                   #[trigger] r.spec_index(j) == self.matrix.spec_index(i as int).spec_index(j)
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:324:17
+    |
+241 |             recommends 0 <= u < self.spec_n(), 0 <= v < self.spec_n();
+    |                        ---------------------- recommendation not met
+...
+324 |                 self.spec_edge(u as int, v as int) == exists,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjMatrixGraphStEph.rs:335:17
+    |
+335 |                 complemented.spec_adjmatrixgraphsteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+729 |             AdjMatrixGraphStEph { matrix, n, num_edges: total }
+    |             --------------------------------------------------- at the end of the function body
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap52/AdjMatrixGraphStEph.rs:697:21
+    |
+697 |                     total <= u * n,
+    |                     ^^^^^^^^^^^^^^
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjMatrixGraphStEph.rs:726:25
+    |
+726 |                 total = total + count;
+    |                         ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjMatrixGraphStEph.rs:726:25
+    |
+726 |                 total = total + count;
+    |                         ^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= total + count ✔
+    total + count < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= total + count ✔
+    total + count < 18446744073709551616 ✘
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:714:87
+    |
+714 |                         forall|j: int| 0 <= j < n ==> #[trigger] row.spec_index(j) == matrix.spec_index(u as int).spec_index(j),
+    |                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:677:68
+    |
+677 | ...                   ensures r == (i as int != j as int && !row.spec_index(j as int))
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:671:40
+    |
+671 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                  ^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:671:78
+    |
+671 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+note: recommendation not met
+   --> src/Chap52/AdjMatrixGraphStEph.rs:671:78
+    |
+671 | ...                   #[trigger] r.spec_index(j) == (i as int != j && !self.matrix.spec_index(i as int).spec_index(j))
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:172:24
+    |
+172 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+
+verification results:: 2878 verified, 4 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 2825MB, peak z3 RSS: 356MB, min free: 21974MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 51s

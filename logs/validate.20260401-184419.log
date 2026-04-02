@@ -1,0 +1,12 @@
+error[E0425]: cannot find value `old_matrix` in this scope
+   --> src/Chap52/AdjMatrixGraphStEph.rs:622:43
+    |
+622 |                         let f2 = |c: int| old_matrix.spec_index(r).spec_index(c);
+    |                                           ^^^^^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 284MB, peak z3 RSS: 0MB, min free: 25137MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

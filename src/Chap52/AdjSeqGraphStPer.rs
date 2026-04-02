@@ -35,6 +35,7 @@ broadcast use {
 
     pub struct AdjSeqGraphStPer {
         pub adj: ArraySeqStPerS<ArraySeqStPerS<usize>>,
+        pub num_edges: usize,
     }
 
     // 5. view impls
@@ -78,6 +79,78 @@ broadcast use {
     {
     }
 
+    /// Sum of all-zero function is zero.
+    proof fn lemma_sum_of_all_zero(f: spec_fn(int) -> nat, n: int)
+        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == 0nat
+        ensures spec_sum_of(n, f) == 0
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) == 0nat);
+            lemma_sum_of_all_zero(f, n - 1);
+        }
+    }
+
+    /// Extensionality for spec_sum_of: identical functions yield identical sums.
+    proof fn lemma_sum_of_ext(f: spec_fn(int) -> nat, g: spec_fn(int) -> nat, n: int)
+        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)
+        ensures spec_sum_of(n, f) == spec_sum_of(n, g)
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) == g(n - 1));
+            lemma_sum_of_ext(f, g, n - 1);
+        }
+    }
+
+    /// Changing one term in the sum: the total changes by the difference.
+    proof fn lemma_sum_of_change_one(n: int, old_f: spec_fn(int) -> nat, new_f: spec_fn(int) -> nat, k: int)
+        requires
+            0 <= k < n,
+            forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),
+        ensures
+            spec_sum_of(n, new_f) + old_f(k) == spec_sum_of(n, old_f) + new_f(k),
+        decreases n,
+    {
+        if n > 0 {
+            if k == n - 1 {
+                lemma_sum_of_ext(old_f, new_f, n - 1);
+            } else {
+                assert(old_f(n - 1) == new_f(n - 1));
+                lemma_sum_of_change_one(n - 1, old_f, new_f, k);
+            }
+        }
+    }
+
+    /// Lower bound: the sum of nats is at least any single term.
+    proof fn lemma_sum_of_lower_bound(n: int, f: spec_fn(int) -> nat, k: int)
+        requires 0 <= k < n
+        ensures spec_sum_of(n, f) >= f(k)
+        decreases n
+    {
+        if k == n - 1 {
+        } else {
+            lemma_sum_of_lower_bound(n - 1, f, k);
+        }
+    }
+
+    /// Upper bound: if each f(i) ≤ bound, then sum ≤ n * bound.
+    proof fn lemma_sum_of_bounded(n: int, f: spec_fn(int) -> nat, bound: nat)
+        requires
+            n >= 0,
+            forall|i: int| 0 <= i < n ==> #[trigger] f(i) <= bound,
+        ensures spec_sum_of(n, f) <= (n as nat) * bound
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) <= bound);
+            lemma_sum_of_bounded(n - 1, f, bound);
+            assert(spec_sum_of(n, f) <= bound + ((n - 1) as nat) * bound);
+            assert((n as nat) * bound == bound + ((n - 1) as nat) * bound) by(nonlinear_arith)
+                requires n >= 1;
+        }
+    }
+
     // 8. traits
 
     pub trait AdjSeqGraphStPerTrait: Sized {
@@ -96,14 +169,18 @@ broadcast use {
                 empty.spec_num_vertices() == n,
                 forall|i: int| 0 <= i < n ==> #[trigger] empty.spec_degree(i) == 0;
 
-        /// Work Theta(1), Span Theta(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// Work Theta(n + m), Span Theta(n + m)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — counting loop
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
                     0 <= u < adj.spec_len()
                     && 0 <= j < adj.spec_index(u).spec_len()
                     ==> #[trigger] adj.spec_index(u).spec_index(j) < adj.spec_len(),
+                spec_sum_of(
+                    adj.spec_len() as int,
+                    |i: int| adj.spec_index(i).spec_len(),
+                ) <= usize::MAX as nat,
             ensures
                 constructed.spec_adjseqgraphstper_wf(),
                 constructed.spec_num_vertices() == adj.spec_len(),
@@ -120,16 +197,11 @@ broadcast use {
             requires self.spec_adjseqgraphstper_wf()
             ensures n as nat == self.spec_num_vertices();
 
-        /// Work Theta(n + m), Span Theta(n + m)
+        /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — DIFFERS: APAS assumes cached; impl sums degrees sequentially
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached field
         fn num_edges(&self) -> (m: usize)
-            requires
-                self.spec_adjseqgraphstper_wf(),
-                spec_sum_of(
-                    self.spec_num_vertices() as int,
-                    |i: int| self.spec_degree(i),
-                ) <= usize::MAX as nat
+            requires self.spec_adjseqgraphstper_wf()
             ensures
                 m as nat == spec_sum_of(
                     self.spec_num_vertices() as int,
@@ -169,6 +241,7 @@ broadcast use {
                 self.spec_adjseqgraphstper_wf(),
                 u < self.spec_num_vertices(),
                 v < self.spec_num_vertices(),
+                spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i)) < usize::MAX as nat,
             ensures
                 updated.spec_adjseqgraphstper_wf(),
                 updated.spec_num_vertices() == self.spec_num_vertices(),
@@ -205,10 +278,11 @@ broadcast use {
     impl AdjSeqGraphStPerTrait for AdjSeqGraphStPer {
 
         open spec fn spec_adjseqgraphstper_wf(&self) -> bool {
-            forall|u: int, j: int|
+            &&& forall|u: int, j: int|
                 0 <= u < self.adj.spec_len()
                 && 0 <= j < self.adj.spec_index(u).spec_len()
                 ==> #[trigger] self.adj.spec_index(u).spec_index(j) < self.adj.spec_len()
+            &&& self.num_edges as nat == spec_sum_of(self.spec_num_vertices() as int, |i: int| self.spec_degree(i))
         }
 
         open spec fn spec_num_vertices(&self) -> nat {
@@ -233,31 +307,27 @@ broadcast use {
                 },
                 n,
             );
-            AdjSeqGraphStPer { adj }
+            let empty = AdjSeqGraphStPer { adj, num_edges: 0 };
+            proof {
+                let degree_fn = |i: int| empty.spec_degree(i);
+                assert forall|i: int| 0 <= i < n implies #[trigger] degree_fn(i) == 0nat by {};
+                lemma_sum_of_all_zero(degree_fn, n as int);
+            }
+            empty
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
         fn from_seq(adj: ArraySeqStPerS<ArraySeqStPerS<usize>>) -> (constructed: Self) {
-            AdjSeqGraphStPer { adj }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn num_vertices(&self) -> (n: usize) {
-            self.adj.length()
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn num_edges(&self) -> (m: usize) {
-            let n = self.adj.length();
+            let n = adj.length();
+            let ghost degree_fn: spec_fn(int) -> nat = |i: int| adj.spec_index(i).spec_len();
             let mut count: usize = 0;
             let mut i: usize = 0;
-            let ghost degree_fn: spec_fn(int) -> nat = |k: int| self.spec_degree(k);
             while i < n
                 invariant
                     i <= n,
-                    n as nat == self.spec_num_vertices(),
+                    n as nat == adj.spec_len(),
                     count as nat == spec_sum_of(i as int, degree_fn),
-                    degree_fn == (|k: int| self.spec_degree(k)),
+                    degree_fn == (|k: int| adj.spec_index(k).spec_len()),
                     spec_sum_of(n as int, degree_fn) <= usize::MAX as nat,
                 decreases n - i
             {
@@ -265,11 +335,27 @@ broadcast use {
                     lemma_sum_of_unfold(i as int, degree_fn);
                     lemma_sum_of_monotone(i as int + 1, n as int, degree_fn);
                 }
-                let deg = self.adj.nth(i).length();
+                let deg = adj.nth(i).length();
                 count = count + deg;
                 i = i + 1;
             }
-            count
+            let constructed = AdjSeqGraphStPer { adj, num_edges: count };
+            proof {
+                let wf_degree = |i: int| constructed.spec_degree(i);
+                assert forall|i: int| 0 <= i < n implies #[trigger] degree_fn(i) == wf_degree(i) by {};
+                lemma_sum_of_ext(degree_fn, wf_degree, n as int);
+            }
+            constructed
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn num_vertices(&self) -> (n: usize) {
+            self.adj.length()
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn num_edges(&self) -> (m: usize) {
+            self.num_edges
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(d), Span O(d)
@@ -424,10 +510,39 @@ broadcast use {
                 n_v,
             );
 
-            let updated = AdjSeqGraphStPer { adj: result_adj };
+            // Compute new num_edges: self.num_edges + (0 or 1 depending on found).
+            let new_num_edges: usize = if found { self.num_edges } else { self.num_edges + 1 };
+
+            let updated = AdjSeqGraphStPer { adj: result_adj, num_edges: new_num_edges };
             assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
             assert(updated.spec_neighbor(u as int, witness) == new_neighbors.spec_index(witness));
             assert(updated.spec_neighbor(u as int, witness) == v);
+
+            proof {
+                let old_degree_fn = |i: int| self.spec_degree(i);
+                let new_degree_fn = |i: int| updated.spec_degree(i);
+                assert(forall|i: int| 0 <= i < n_v as int && i != u as int
+                    ==> #[trigger] old_degree_fn(i) == new_degree_fn(i));
+                lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+                // old_sum + new_deg == new_sum + old_deg
+                // new_sum == old_sum + (new_deg - old_deg)
+                assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+                if found {
+                    assert(new_neighbors.spec_len() == deg_u as nat);
+                    assert(new_degree_fn(u as int) == old_degree_fn(u as int));
+                    assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn));
+                    assert(new_num_edges as nat == self.num_edges as nat);
+                    assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+                } else {
+                    assert(new_neighbors.spec_len() == deg_u + 1);
+                    assert(new_degree_fn(u as int) == old_degree_fn(u as int) + 1);
+                    assert(spec_sum_of(n_v as int, new_degree_fn) == spec_sum_of(n_v as int, old_degree_fn) + 1);
+                    assert(new_num_edges as nat == self.num_edges as nat + 1);
+                    assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+                }
+                assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
+            }
+
             updated
         }
 
@@ -446,6 +561,7 @@ broadcast use {
                     u < self.spec_num_vertices(),
                     deg_u as nat == self.spec_degree(u as int),
                     deg_u as nat == src_u.spec_len(),
+                    nvec@.len() <= j,
                     forall|k: int| 0 <= k < nvec@.len() as int
                         ==> #[trigger] nvec@[k] != v,
                     self.spec_adjseqgraphstper_wf(),
@@ -459,6 +575,7 @@ broadcast use {
                 }
                 j = j + 1;
             }
+            let new_deg_u = nvec.len();
             let new_neighbors = ArraySeqStPerS::from_vec(nvec);
 
             // Build new adj: tabulate copies each row; row u gets new_neighbors.
@@ -511,7 +628,41 @@ broadcast use {
                 }
             }
 
-            AdjSeqGraphStPer { adj: result_adj }
+            // Prove overflow safety before subtraction.
+            proof {
+                let old_degree_fn = |i: int| self.spec_degree(i);
+                lemma_sum_of_lower_bound(n_v as int, old_degree_fn, u as int);
+                assert(new_deg_u <= deg_u);
+            }
+
+            // Compute new num_edges: self.num_edges - (deg_u - new_deg_u).
+            let new_num_edges: usize = self.num_edges - (deg_u - new_deg_u);
+
+            let updated = AdjSeqGraphStPer { adj: result_adj, num_edges: new_num_edges };
+
+            proof {
+                let old_degree_fn = |i: int| self.spec_degree(i);
+                let new_degree_fn = |i: int| updated.spec_degree(i);
+                assert(updated.spec_degree(u as int) == new_neighbors.spec_len());
+                assert(new_neighbors.spec_len() == new_deg_u as nat);
+                assert(forall|i: int| 0 <= i < n_v as int && i != u as int
+                    ==> #[trigger] old_degree_fn(i) == new_degree_fn(i));
+                lemma_sum_of_change_one(n_v as int, old_degree_fn, new_degree_fn, u as int);
+                // spec_sum(new) + old_deg == spec_sum(old) + new_deg
+                // spec_sum(new) == spec_sum(old) - (old_deg - new_deg)
+                assert(spec_sum_of(n_v as int, new_degree_fn) + old_degree_fn(u as int)
+                    == spec_sum_of(n_v as int, old_degree_fn) + new_degree_fn(u as int));
+                assert(old_degree_fn(u as int) == deg_u as nat);
+                assert(new_degree_fn(u as int) == new_deg_u as nat);
+                assert(new_deg_u <= deg_u);
+                assert(spec_sum_of(n_v as int, old_degree_fn) == self.num_edges as nat);
+                assert(spec_sum_of(n_v as int, new_degree_fn)
+                    == self.num_edges as nat - (deg_u - new_deg_u) as nat);
+                assert(new_num_edges as nat == spec_sum_of(n_v as int, new_degree_fn));
+                assert(updated.num_edges as nat == spec_sum_of(updated.spec_num_vertices() as int, |i: int| updated.spec_degree(i)));
+            }
+
+            updated
         }
     }
 
@@ -519,7 +670,7 @@ broadcast use {
 
     impl Clone for AdjSeqGraphStPer {
         fn clone(&self) -> (out: Self) {
-            AdjSeqGraphStPer { adj: self.adj.clone() }
+            AdjSeqGraphStPer { adj: self.adj.clone(), num_edges: self.num_edges }
         }
     }
 
@@ -547,7 +698,10 @@ broadcast use {
 
     impl Debug for AdjSeqGraphStPer {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("AdjSeqGraphStPer").field("adj", &self.adj).finish()
+            f.debug_struct("AdjSeqGraphStPer")
+                .field("adj", &self.adj)
+                .field("num_edges", &self.num_edges)
+                .finish()
         }
     }
 }

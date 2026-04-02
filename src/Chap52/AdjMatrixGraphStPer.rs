@@ -36,6 +36,7 @@ broadcast use {
     pub struct AdjMatrixGraphStPer {
         pub matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>,
         pub n: usize,
+        pub num_edges: usize,
     }
 
     // 5. view impls
@@ -66,11 +67,15 @@ broadcast use {
         else { f(n - 1) + spec_sum_of(n - 1, f) }
     }
 
-    /// A well-formed adjacency matrix: square n x n.
+    /// A well-formed adjacency matrix: square n x n, with cached edge count.
     pub open spec fn spec_adjmatrixgraphstper_wf(g: AdjMatrixGraphStPer) -> bool {
         g.matrix.spec_len() == g.n
         && forall|i: int| 0 <= i < g.n ==>
             #[trigger] g.matrix.spec_index(i).spec_len() == g.n
+        && g.num_edges as nat == spec_sum_of(
+            g.n as int,
+            |u: int| spec_count_true(|v: int| g.matrix.spec_index(u).spec_index(v), g.n as int),
+        )
     }
 
     // 7. proof fns
@@ -105,6 +110,152 @@ broadcast use {
         }
     }
 
+    /// Count of an all-false predicate is zero.
+    proof fn lemma_count_true_all_false(f: spec_fn(int) -> bool, n: int)
+        requires forall|i: int| 0 <= i < n ==> !#[trigger] f(i)
+        ensures spec_count_true(f, n) == 0
+        decreases n
+    {
+        if n > 0 {
+            assert(!f(n - 1));
+            lemma_count_true_all_false(f, n - 1);
+        }
+    }
+
+    /// Sum of all-zero function is zero.
+    proof fn lemma_sum_of_all_zero(f: spec_fn(int) -> nat, n: int)
+        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == 0nat
+        ensures spec_sum_of(n, f) == 0
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) == 0nat);
+            lemma_sum_of_all_zero(f, n - 1);
+        }
+    }
+
+    /// Extensionality for spec_count_true: identical predicates yield identical counts.
+    proof fn lemma_count_true_ext(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, n: int)
+        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)
+        ensures spec_count_true(f, n) == spec_count_true(g, n)
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) == g(n - 1));
+            lemma_count_true_ext(f, g, n - 1);
+        }
+    }
+
+    /// Flipping one position from false to true increases count by 1.
+    proof fn lemma_count_true_set_true(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, k: int, n: int)
+        requires
+            0 <= k < n,
+            !f(k) && g(k),
+            forall|i: int| 0 <= i < n && i != k ==> #[trigger] f(i) == g(i),
+        ensures spec_count_true(g, n) == spec_count_true(f, n) + 1
+        decreases n
+    {
+        if n > 0 {
+            if k == n - 1 {
+                lemma_count_true_ext(f, g, n - 1);
+            } else {
+                assert(f(n - 1) == g(n - 1));
+                lemma_count_true_set_true(f, g, k, n - 1);
+            }
+        }
+    }
+
+    /// Flipping one position from true to false decreases count by 1.
+    proof fn lemma_count_true_set_false(f: spec_fn(int) -> bool, g: spec_fn(int) -> bool, k: int, n: int)
+        requires
+            0 <= k < n,
+            f(k) && !g(k),
+            forall|i: int| 0 <= i < n && i != k ==> #[trigger] f(i) == g(i),
+        ensures spec_count_true(f, n) == spec_count_true(g, n) + 1
+        decreases n
+    {
+        if n > 0 {
+            if k == n - 1 {
+                lemma_count_true_ext(f, g, n - 1);
+            } else {
+                assert(f(n - 1) == g(n - 1));
+                lemma_count_true_set_false(f, g, k, n - 1);
+            }
+        }
+    }
+
+    /// Extensionality for spec_sum_of: identical functions yield identical sums.
+    proof fn lemma_sum_of_ext(f: spec_fn(int) -> nat, g: spec_fn(int) -> nat, n: int)
+        requires forall|i: int| 0 <= i < n ==> #[trigger] f(i) == g(i)
+        ensures spec_sum_of(n, f) == spec_sum_of(n, g)
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) == g(n - 1));
+            lemma_sum_of_ext(f, g, n - 1);
+        }
+    }
+
+    /// Changing one term in the sum: the total changes by the difference.
+    proof fn lemma_sum_of_change_one(n: int, old_f: spec_fn(int) -> nat, new_f: spec_fn(int) -> nat, k: int)
+        requires
+            0 <= k < n,
+            forall|i: int| 0 <= i < n && i != k ==> #[trigger] old_f(i) == new_f(i),
+        ensures
+            spec_sum_of(n, new_f) + old_f(k) == spec_sum_of(n, old_f) + new_f(k),
+        decreases n,
+    {
+        if n > 0 {
+            if k == n - 1 {
+                lemma_sum_of_ext(old_f, new_f, n - 1);
+            } else {
+                assert(old_f(n - 1) == new_f(n - 1));
+                lemma_sum_of_change_one(n - 1, old_f, new_f, k);
+            }
+        }
+    }
+
+    /// Lower bound: the sum of nats is at least any single term.
+    proof fn lemma_sum_of_lower_bound(n: int, f: spec_fn(int) -> nat, k: int)
+        requires 0 <= k < n
+        ensures spec_sum_of(n, f) >= f(k)
+        decreases n
+    {
+        if k == n - 1 {
+        } else {
+            lemma_sum_of_lower_bound(n - 1, f, k);
+        }
+    }
+
+    /// Upper bound: if each f(i) ≤ bound, then sum ≤ n * bound.
+    proof fn lemma_sum_of_bounded(n: int, f: spec_fn(int) -> nat, bound: nat)
+        requires
+            n >= 0,
+            forall|i: int| 0 <= i < n ==> #[trigger] f(i) <= bound,
+        ensures spec_sum_of(n, f) <= (n as nat) * bound
+        decreases n
+    {
+        if n > 0 {
+            assert(f(n - 1) <= bound);
+            lemma_sum_of_bounded(n - 1, f, bound);
+            assert(spec_sum_of(n, f) <= bound + ((n - 1) as nat) * bound);
+            assert((n as nat) * bound == bound + ((n - 1) as nat) * bound) by(nonlinear_arith)
+                requires n >= 1;
+        }
+    }
+
+    /// Count is at least 1 if the predicate holds at some position.
+    proof fn lemma_count_true_at_least_one(f: spec_fn(int) -> bool, k: int, n: int)
+        requires 0 <= k < n, f(k)
+        ensures spec_count_true(f, n) >= 1
+        decreases n
+    {
+        if k == n - 1 {
+        } else {
+            lemma_count_true_at_least_one(f, k, n - 1);
+        }
+    }
+
     // 8. traits
 
     pub trait AdjMatrixGraphStPerTrait: Sized {
@@ -122,12 +273,16 @@ broadcast use {
                 forall|u: int, v: int|
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
-        /// Work Theta(1), Span Theta(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// Work Theta(n^2), Span Theta(n^2)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — counts edges during construction
         fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| 0 <= i < matrix.spec_len() ==>
-                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len()
+                    #[trigger] matrix.spec_index(i).spec_len() == matrix.spec_len(),
+                spec_sum_of(
+                    matrix.spec_len() as int,
+                    |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), matrix.spec_len() as int),
+                ) <= usize::MAX as nat,
             ensures
                 constructed.spec_adjmatrixgraphstper_wf(),
                 constructed.spec_n() == matrix.spec_len(),
@@ -142,16 +297,11 @@ broadcast use {
             requires self.spec_adjmatrixgraphstper_wf()
             ensures n as nat == self.spec_n();
 
-        /// Work Theta(n^2), Span Theta(n^2)
+        /// Work Theta(1), Span Theta(1)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: APAS assumes cached; impl counts trues in n*n matrix
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; cached edge count
         fn num_edges(&self) -> (m: usize)
-            requires
-                self.spec_adjmatrixgraphstper_wf(),
-                spec_sum_of(
-                    self.spec_n() as int,
-                    |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
-                ) <= usize::MAX as nat
+            requires self.spec_adjmatrixgraphstper_wf()
             ensures
                 m as nat == spec_sum_of(
                     self.spec_n() as int,
@@ -196,6 +346,7 @@ broadcast use {
                 self.spec_adjmatrixgraphstper_wf(),
                 u < self.spec_n(),
                 v < self.spec_n(),
+                self.spec_n() * self.spec_n() < usize::MAX as nat,
             ensures
                 updated.spec_adjmatrixgraphstper_wf(),
                 updated.spec_n() == self.spec_n(),
@@ -209,7 +360,9 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(n^2), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — matches APAS work; negate all entries
         fn complement(&self) -> (complemented: Self)
-            requires self.spec_adjmatrixgraphstper_wf()
+            requires
+                self.spec_adjmatrixgraphstper_wf(),
+                self.spec_n() * self.spec_n() <= usize::MAX as nat,
             ensures
                 complemented.spec_adjmatrixgraphstper_wf(),
                 complemented.spec_n() == self.spec_n(),
@@ -223,9 +376,13 @@ broadcast use {
     impl AdjMatrixGraphStPerTrait for AdjMatrixGraphStPer {
 
         open spec fn spec_adjmatrixgraphstper_wf(&self) -> bool {
-            self.matrix.spec_len() == self.n
-            && forall|i: int| 0 <= i < self.n ==>
+            &&& self.matrix.spec_len() == self.n
+            &&& forall|i: int| 0 <= i < self.n ==>
                 #[trigger] self.matrix.spec_index(i).spec_len() == self.n
+            &&& self.num_edges as nat == spec_sum_of(
+                self.spec_n() as int,
+                |u: int| spec_count_true(|v: int| self.spec_edge(u, v), self.spec_n() as int),
+            )
         }
 
         open spec fn spec_n(&self) -> nat { self.n as nat }
@@ -249,49 +406,51 @@ broadcast use {
                 },
                 n,
             );
-            AdjMatrixGraphStPer { matrix, n }
+            let empty = AdjMatrixGraphStPer { matrix, n, num_edges: 0 };
+            proof {
+                // Each row has zero true entries, so each row count is 0.
+                let row_count = |u: int| spec_count_true(|v: int| empty.spec_edge(u, v), empty.spec_n() as int);
+                assert forall|u: int| 0 <= u < n implies #[trigger] row_count(u) == 0nat by {
+                    let edge_fn = |v: int| empty.spec_edge(u, v);
+                    assert forall|v: int| 0 <= v < n implies !#[trigger] edge_fn(v) by {};
+                    lemma_count_true_all_false(edge_fn, n as int);
+                };
+                lemma_sum_of_all_zero(row_count, n as int);
+            }
+            empty
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — counts edges during construction
         fn from_matrix(matrix: ArraySeqStPerS<ArraySeqStPerS<bool>>) -> (constructed: Self) {
             let n = matrix.length();
-            AdjMatrixGraphStPer { matrix, n }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn num_vertices(&self) -> (n: usize) { self.n }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
-        fn num_edges(&self) -> (m: usize) {
-            let n = self.n;
+            let ghost row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+            // Count total edges in the matrix.
             let mut total: usize = 0;
             let mut u: usize = 0;
-            let ghost row_count = |u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int);
             while u < n
                 invariant
                     u <= n,
-                    self.spec_adjmatrixgraphstper_wf(),
-                    n as nat == self.spec_n(),
+                    n as nat == matrix.spec_len(),
+                    forall|i: int| 0 <= i < n ==> #[trigger] matrix.spec_index(i).spec_len() == n,
                     total as nat == spec_sum_of(u as int, row_count),
-                    row_count == (|u: int| spec_count_true(|v: int| self.spec_edge(u, v), n as int)),
+                    row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
                     spec_sum_of(n as int, row_count) <= usize::MAX as nat,
                 decreases n - u
             {
                 proof { lemma_sum_of_monotone(u as int + 1, n as int, row_count); }
-                let row = self.matrix.nth(u);
+                let row = matrix.nth(u);
                 let mut count: usize = 0;
                 let mut v: usize = 0;
-                let ghost edge_fn = |v: int| self.spec_edge(u as int, v);
+                let ghost edge_fn = |v: int| matrix.spec_index(u as int).spec_index(v);
                 while v < n
                     invariant
                         v <= n,
-                        self.spec_adjmatrixgraphstper_wf(),
-                        n as nat == self.spec_n(),
+                        n as nat == matrix.spec_len(),
                         u < n,
                         row.spec_len() == n,
-                        forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == self.spec_edge(u as int, vi),
+                        forall|vi: int| 0 <= vi < n ==> #[trigger] row.spec_index(vi) == matrix.spec_index(u as int).spec_index(vi),
                         count as nat == spec_count_true(edge_fn, v as int),
-                        edge_fn == (|v: int| self.spec_edge(u as int, v)),
+                        edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
                         spec_count_true(edge_fn, n as int) <= usize::MAX as nat,
                     decreases n - v
                 {
@@ -304,7 +463,28 @@ broadcast use {
                 total = total + count;
                 u = u + 1;
             }
-            total
+            // Connect the loop's row_count (using matrix directly) to the wf's row_count (using spec_edge).
+            let constructed = AdjMatrixGraphStPer { matrix, n, num_edges: total };
+            proof {
+                let wf_row_count = |u: int| spec_count_true(|v: int| constructed.spec_edge(u, v), constructed.spec_n() as int);
+                assert forall|u: int| 0 <= u < n implies #[trigger] row_count(u) == wf_row_count(u) by {
+                    let inner_mat = |v: int| matrix.spec_index(u).spec_index(v);
+                    let inner_edge = |v: int| constructed.spec_edge(u, v);
+                    assert forall|v: int| 0 <= v < n implies #[trigger] inner_mat(v) == inner_edge(v) by {};
+                    lemma_count_true_ext(inner_mat, inner_edge, n as int);
+                };
+                lemma_sum_of_ext(row_count, wf_row_count, n as int);
+            }
+            constructed
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn num_vertices(&self) -> (n: usize) { self.n }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; cached edge count
+        fn num_edges(&self) -> (m: usize) {
+            // wf directly contains: self.num_edges == spec_sum_of(spec_n, |u| count_true(|v| spec_edge(u,v), spec_n))
+            self.num_edges
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -403,6 +583,8 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self) {
             let n = self.n;
+            let old_val = *self.matrix.nth(u).nth(v);
+            let ghost old_row_count = |r: int| spec_count_true(|c: int| self.spec_edge(r, c), self.spec_n() as int);
             let new_row = ArraySeqStPerS::tabulate(
                 &|j: usize| -> (r: bool)
                     requires j < n
@@ -450,7 +632,61 @@ broadcast use {
                 },
                 n,
             );
-            AdjMatrixGraphStPer { matrix, n }
+            // Compute new edge count based on whether the edge changed.
+            let new_num_edges: usize;
+            if old_val && !exists {
+                proof {
+                    // num_edges >= 1: edge(u,v) was true, so row u count >= 1, so sum >= 1.
+                    let edge_u = |c: int| self.spec_edge(u as int, c);
+                    lemma_count_true_at_least_one(edge_u, v as int, n as int);
+                    lemma_sum_of_lower_bound(n as int, old_row_count, u as int);
+                    assert(self.num_edges as nat >= 1nat);
+                }
+                new_num_edges = self.num_edges - 1;
+            } else if !old_val && exists {
+                proof {
+                    // num_edges ≤ n² < usize::MAX, so +1 fits.
+                    assert forall|r: int| 0 <= r < n implies #[trigger] old_row_count(r) <= n as nat by {
+                        lemma_count_true_bound(|c: int| self.spec_edge(r, c), n as int);
+                    };
+                    lemma_sum_of_bounded(n as int, old_row_count, n as nat);
+                    assert(self.num_edges as nat <= (n as nat) * (n as nat));
+                }
+                new_num_edges = self.num_edges + 1;
+            } else {
+                new_num_edges = self.num_edges;
+            }
+            let updated = AdjMatrixGraphStPer { matrix, n, num_edges: new_num_edges };
+            proof {
+                let new_row_count = |r: int| spec_count_true(|c: int| updated.spec_edge(r, c), updated.spec_n() as int);
+                // For rows other than u, the edge predicate is unchanged.
+                assert forall|r: int| 0 <= r < n && r != u as int
+                    implies #[trigger] new_row_count(r) == old_row_count(r) by {
+                    let old_edge = |c: int| self.spec_edge(r, c);
+                    let new_edge = |c: int| updated.spec_edge(r, c);
+                    assert forall|c: int| 0 <= c < n implies #[trigger] old_edge(c) == new_edge(c) by {};
+                    lemma_count_true_ext(old_edge, new_edge, n as int);
+                };
+                // For row u, relate old and new counts.
+                let old_edge_u = |c: int| self.spec_edge(u as int, c);
+                let new_edge_u = |c: int| updated.spec_edge(u as int, c);
+                assert forall|c: int| 0 <= c < n && c != v as int
+                    implies #[trigger] old_edge_u(c) == new_edge_u(c) by {};
+                if old_val && !exists {
+                    lemma_count_true_set_false(old_edge_u, new_edge_u, v as int, n as int);
+                    assert(new_row_count(u as int) + 1 == old_row_count(u as int));
+                    lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+                } else if !old_val && exists {
+                    lemma_count_true_set_true(old_edge_u, new_edge_u, v as int, n as int);
+                    assert(new_row_count(u as int) == old_row_count(u as int) + 1);
+                    lemma_sum_of_change_one(n as int, old_row_count, new_row_count, u as int);
+                } else {
+                    lemma_count_true_ext(old_edge_u, new_edge_u, n as int);
+                    assert(new_row_count(u as int) == old_row_count(u as int));
+                    lemma_sum_of_ext(old_row_count, new_row_count, n as int);
+                }
+            }
+            updated
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
@@ -477,7 +713,67 @@ broadcast use {
                 },
                 n,
             );
-            AdjMatrixGraphStPer { matrix, n }
+            // Count edges in complement matrix.
+            let ghost comp_row_count = |u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int);
+            proof {
+                assert forall|r: int| 0 <= r < n implies #[trigger] comp_row_count(r) <= n as nat by {
+                    lemma_count_true_bound(|v: int| matrix.spec_index(r).spec_index(v), n as int);
+                };
+                lemma_sum_of_bounded(n as int, comp_row_count, n as nat);
+            }
+            let mut total: usize = 0;
+            let mut u: usize = 0;
+            while u < n
+                invariant
+                    u <= n,
+                    n as nat == matrix.spec_len(),
+                    forall|i: int| 0 <= i < n ==> #[trigger] matrix.spec_index(i).spec_len() == n,
+                    total as nat == spec_sum_of(u as int, comp_row_count),
+                    comp_row_count == (|u: int| spec_count_true(|v: int| matrix.spec_index(u).spec_index(v), n as int)),
+                    spec_sum_of(n as int, comp_row_count) <= (n as nat) * (n as nat),
+                    (n as nat) * (n as nat) <= usize::MAX as nat,
+                decreases n - u
+            {
+                proof { lemma_sum_of_monotone(u as int + 1, n as int, comp_row_count); }
+                let row = matrix.nth(u);
+                let mut count: usize = 0;
+                let mut vi: usize = 0;
+                let ghost edge_fn = |v: int| matrix.spec_index(u as int).spec_index(v);
+                proof { lemma_count_true_bound(edge_fn, n as int); }
+                while vi < n
+                    invariant
+                        vi <= n,
+                        n as nat == matrix.spec_len(),
+                        u < n,
+                        row.spec_len() == n,
+                        forall|j: int| 0 <= j < n ==> #[trigger] row.spec_index(j) == matrix.spec_index(u as int).spec_index(j),
+                        count as nat == spec_count_true(edge_fn, vi as int),
+                        edge_fn == (|v: int| matrix.spec_index(u as int).spec_index(v)),
+                        spec_count_true(edge_fn, n as int) <= n as nat,
+                    decreases n - vi
+                {
+                    proof { lemma_count_true_monotone(edge_fn, vi as int + 1, n as int); }
+                    if *row.nth(vi) {
+                        count = count + 1;
+                    }
+                    vi = vi + 1;
+                }
+                total = total + count;
+                u = u + 1;
+            }
+            // Connect the loop's row_count to the wf's row_count via spec_edge.
+            let complemented = AdjMatrixGraphStPer { matrix, n, num_edges: total };
+            proof {
+                let wf_row_count = |u: int| spec_count_true(|v: int| complemented.spec_edge(u, v), complemented.spec_n() as int);
+                assert forall|u: int| 0 <= u < n implies #[trigger] comp_row_count(u) == wf_row_count(u) by {
+                    let inner_mat = |v: int| matrix.spec_index(u).spec_index(v);
+                    let inner_edge = |v: int| complemented.spec_edge(u, v);
+                    assert forall|v: int| 0 <= v < n implies #[trigger] inner_mat(v) == inner_edge(v) by {};
+                    lemma_count_true_ext(inner_mat, inner_edge, n as int);
+                };
+                lemma_sum_of_ext(comp_row_count, wf_row_count, n as int);
+            }
+            complemented
         }
     }
 
@@ -485,7 +781,7 @@ broadcast use {
 
     impl Clone for AdjMatrixGraphStPer {
         fn clone(&self) -> (out: Self) {
-            AdjMatrixGraphStPer { matrix: self.matrix.clone(), n: self.n }
+            AdjMatrixGraphStPer { matrix: self.matrix.clone(), n: self.n, num_edges: self.num_edges }
         }
     }
 
@@ -516,6 +812,7 @@ broadcast use {
             f.debug_struct("AdjMatrixGraphStPer")
                 .field("matrix", &self.matrix)
                 .field("n", &self.n)
+                .field("num_edges", &self.num_edges)
                 .finish()
         }
     }
