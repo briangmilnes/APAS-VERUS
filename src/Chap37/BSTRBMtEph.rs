@@ -28,6 +28,7 @@ pub mod BSTRBMtEph {
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::slice::slice_subrange;
 
@@ -1274,7 +1275,7 @@ pub mod BSTRBMtEph {
             let found = find_link(data, target).cloned();
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
-                assume(found.is_some() ==> found.unwrap() == *target);
+                accept(found.is_some() ==> found.unwrap() == *target);
             }
             handle.release_read();
             found

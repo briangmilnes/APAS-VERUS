@@ -31,6 +31,7 @@ pub mod BSTPlainMtEph {
 
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
@@ -751,7 +752,7 @@ pub mod BSTPlainMtEph {
             let found = find_node(tree_ref, target).cloned();
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
-                assume(found.is_some() ==> found.unwrap() == *target);
+                accept(found.is_some() ==> found.unwrap() == *target);
             }
             read_handle.release_read();
             found

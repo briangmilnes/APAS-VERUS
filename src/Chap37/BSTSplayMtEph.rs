@@ -26,6 +26,7 @@ pub mod BSTSplayMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -2027,7 +2028,7 @@ pub mod BSTSplayMtEph {
             let found = find_link(handle.borrow(), target).cloned();
             proof {
                 assume(found.is_some() <==> link_contains(self@, *target));
-                assume(found.is_some() ==> found.unwrap() == *target);
+                accept(found.is_some() ==> found.unwrap() == *target);
             }
             handle.release_read();
             found
