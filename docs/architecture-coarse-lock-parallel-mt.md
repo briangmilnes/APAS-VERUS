@@ -5,11 +5,21 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
-# Architecture: Coarse Lock + TSM + Parallel Inside
+# Alternative Architecture: Coarse Lock + TSM + Parallel Inside
 
-## Status: Design (2026-04-01)
+## Status: Alternative Design (2026-04-01)
 
-This document describes the target Mt module architecture for APAS-VERUS. It achieves four properties simultaneously: zero-assume locking, caller-observable state, composable unlocked parallelism, and optimal split cost.
+This document describes an alternative Mt module architecture for APAS-VERUS
+that would replace the current coarse RwLock pattern with RwLock+TSM. It
+eliminates ~66% of the 183 lock-boundary assumes at the cost of ~68 lines
+of TSM boilerplate per file.
+
+For the current deployed architecture, see
+`docs/current-architecture-coarse-lock-parallel.md`.
+
+This design achieves four properties simultaneously: zero-assume locking,
+caller-observable state, composable unlocked parallelism, and optimal split
+cost.
 
 ## 1. The Four Properties
 
