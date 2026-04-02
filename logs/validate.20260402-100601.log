@@ -1,0 +1,51 @@
+error[E0425]: cannot find function `join` in this scope
+   --> src/Chap36/QuickSortMtEphSlice.rs:351:60
+    |
+351 |             let ((mut l1, mut e1, mut r1), (l2, e2, r2)) = join(fa, fb);
+    |                                                            ^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 21 +     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+   --> src/Chap36/QuickSortMtEphSlice.rs:689:58
+    |
+689 |                         assert(equals@.to_multiset() =~= Multiset::empty());
+    |                                                          ^^^^^^^^ use of undeclared type `Multiset`
+    |
+help: consider importing this struct
+    |
+ 21 +     use vstd::multiset::Multiset;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+   --> src/Chap36/QuickSortMtEphSlice.rs:833:58
+    |
+833 |                         assert(equals@.to_multiset() =~= Multiset::empty());
+    |                                                          ^^^^^^^^ use of undeclared type `Multiset`
+    |
+help: consider importing this struct
+    |
+ 21 +     use vstd::multiset::Multiset;
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `Multiset`
+   --> src/Chap36/QuickSortMtEphSlice.rs:977:58
+    |
+977 |                         assert(equals@.to_multiset() =~= Multiset::empty());
+    |                                                          ^^^^^^^^ use of undeclared type `Multiset`
+    |
+help: consider importing this struct
+    |
+ 21 +     use vstd::multiset::Multiset;
+    |
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22387MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -1,0 +1,83 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:433:21
+    |
+433 | /                     forall|j: int| 0 <= j < right@.len() ==>
+434 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:476:32
+    |
+476 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:483:32
+    |
+483 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:677:32
+    |
+677 |                         assert(left@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:685:32
+    |
+685 |                         assert(right@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(left.view().index(j) == pivot) 
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:821:32
+    |
+821 |                         assert(left@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:829:32
+    |
+829 |                         assert(right@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(left.view().index(j) == pivot) 
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:965:32
+    |
+965 |                         assert(left@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap36/QuickSortMtEphSlice.rs:973:32
+    |
+973 |                         assert(right@[j] != pivot);
+    |                                ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+!(left.view().index(j) == pivot) 
+
+verification results:: 935 verified, 4 errors
+error: aborting due to 7 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 767MB, peak z3 RSS: 82MB, min free: 21436MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 4s

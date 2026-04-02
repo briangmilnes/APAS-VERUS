@@ -3,7 +3,7 @@
 //! Chapter 36 (Multi-threaded Slice): Quicksort over `ArraySeqMtEphSlice`.
 //! Three self-recursive trait methods: quick_sort_first, quick_sort_median3, quick_sort_random.
 //! Each applies its pivot strategy at every recursive level.
-//! Parallel recursion via ParaPair! for left/right subarrays after partition.
+//! Parallel D&C three-way partition via join; parallel recursion via ParaPair!.
 
 // Table of Contents
 // 1. module
@@ -30,6 +30,8 @@ pub mod QuickSortMtEphSlice {
     use crate::vstdplus::rand::rand::random_usize_range;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+    use vstd::multiset::Multiset;
     use vstd::relations::*;
 
     // 3. broadcast use
@@ -202,12 +204,198 @@ pub mod QuickSortMtEphSlice {
         };
     }
 
+    /// Append all elements of `b` onto the end of `a`.
+    fn append_vec<T: Eq + Clone>(a: &mut Vec<T>, b: &Vec<T>)
+        requires obeys_feq_clone::<T>()
+        ensures a@ =~= old(a)@ + b@
+    {
+        let ghost a_orig = a@;
+        let alen = a.len();
+        let blen = b.len();
+        let mut i: usize = 0;
+        while i < blen
+            invariant
+                i <= blen,
+                blen == b@.len(),
+                alen == a_orig.len(),
+                a@.len() == alen + i,
+                obeys_feq_clone::<T>(),
+                a@.subrange(0, alen as int) =~= a_orig,
+                forall|k: int| 0 <= k < i as int ==>
+                    #[trigger] a@[alen as int + k] == b@[k],
+            decreases blen - i,
+        {
+            a.push(b[i].clone_plus());
+            i = i + 1;
+        }
+        proof {
+            let ghost target = a_orig + b@;
+            assert(a@.len() == target.len());
+            assert forall|k: int| 0 <= k < a@.len()
+                implies a@[k] == #[trigger] target[k] by
+            {
+                if k < alen as int {
+                    assert(a@[k] == a_orig[k]);
+                } else {
+                    let kp = k - alen as int;
+                    assert(a@[alen as int + kp] == b@[kp]);
+                }
+            };
+        }
+    }
+
+    /// Parallel D&C three-way partition.  Split into halves, partition each half
+    /// in parallel via `join`, concatenate the three result Vecs.
+    /// Work O(n), Span O(lg n) for the partition itself (plus O(n) rejoin).
+    fn partition_three_dc<T: TotalOrder + Eq + Clone + Send + Sync + 'static>(
+        a: &ArraySeqMtEphSliceS<T>,
+        pivot: &T,
+    ) -> (result: (Vec<T>, Vec<T>, Vec<T>))
+        requires
+            a.spec_arrayseqmtephslice_wf(),
+            obeys_feq_clone::<T>(),
+        ensures
+            forall|j: int| #![trigger result.0@[j]] 0 <= j < result.0@.len() ==>
+                T::le(result.0@[j], *pivot) && result.0@[j] != *pivot,
+            forall|j: int| #![trigger result.1@[j]] 0 <= j < result.1@.len() ==>
+                result.1@[j] == *pivot,
+            forall|j: int| #![trigger result.2@[j]] 0 <= j < result.2@.len() ==>
+                T::le(*pivot, result.2@[j]) && result.2@[j] != *pivot,
+            elements(*a).to_multiset() =~=
+                result.0@.to_multiset().add(result.2@.to_multiset()).add(result.1@.to_multiset()),
+            result.0@.len() + result.1@.len() + result.2@.len() == a.spec_len(),
+        decreases a.spec_len(),
+    {
+        let n = a.length();
+        if n == 0 {
+            (Vec::new(), Vec::new(), Vec::new())
+        } else if n == 1 {
+            let elem = a.nth_cloned(0);
+            proof {
+                assert(elements(*a).len() == 1);
+                assert(elements(*a)[0] == elem);
+            }
+            match TotalOrder::cmp(&elem, pivot) {
+                core::cmp::Ordering::Less => {
+                    proof { assert(T::le(elem, *pivot)); assert(elem != *pivot); }
+                    let mut v: Vec<T> = Vec::new();
+                    v.push(elem);
+                    proof {
+                        assert(v@ =~= elements(*a));
+                    }
+                    (v, Vec::new(), Vec::new())
+                }
+                core::cmp::Ordering::Equal => {
+                    let mut v: Vec<T> = Vec::new();
+                    v.push(elem);
+                    proof {
+                        assert(v@ =~= elements(*a));
+                    }
+                    (Vec::new(), v, Vec::new())
+                }
+                core::cmp::Ordering::Greater => {
+                    proof { assert(T::le(*pivot, elem)); assert(elem != *pivot); }
+                    let mut v: Vec<T> = Vec::new();
+                    v.push(elem);
+                    proof {
+                        assert(v@ =~= elements(*a));
+                    }
+                    (Vec::new(), Vec::new(), v)
+                }
+            }
+        } else {
+            let mid = n / 2;
+            let left_half = a.slice(0, mid);
+            let right_half = a.slice(mid, n - mid);
+            let p1 = pivot.clone_plus();
+            let p2 = pivot.clone_plus();
+
+            let ghost pivot_val = *pivot;
+            let ghost left_elems = elements(left_half);
+            let ghost right_elems = elements(right_half);
+
+            let fa = move || -> (r: (Vec<T>, Vec<T>, Vec<T>))
+                requires
+                    left_half.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                ensures
+                    forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==>
+                        T::le(r.0@[j], pivot_val) && r.0@[j] != pivot_val,
+                    forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+                        r.1@[j] == pivot_val,
+                    forall|j: int| #![trigger r.2@[j]] 0 <= j < r.2@.len() ==>
+                        T::le(pivot_val, r.2@[j]) && r.2@[j] != pivot_val,
+                    left_elems.to_multiset() =~=
+                        r.0@.to_multiset().add(r.2@.to_multiset()).add(r.1@.to_multiset()),
+                    r.0@.len() + r.1@.len() + r.2@.len() == left_elems.len(),
+            {
+                partition_three_dc(&left_half, &p1)
+            };
+
+            let fb = move || -> (r: (Vec<T>, Vec<T>, Vec<T>))
+                requires
+                    right_half.spec_arrayseqmtephslice_wf(),
+                    obeys_feq_clone::<T>(),
+                ensures
+                    forall|j: int| #![trigger r.0@[j]] 0 <= j < r.0@.len() ==>
+                        T::le(r.0@[j], pivot_val) && r.0@[j] != pivot_val,
+                    forall|j: int| #![trigger r.1@[j]] 0 <= j < r.1@.len() ==>
+                        r.1@[j] == pivot_val,
+                    forall|j: int| #![trigger r.2@[j]] 0 <= j < r.2@.len() ==>
+                        T::le(pivot_val, r.2@[j]) && r.2@[j] != pivot_val,
+                    right_elems.to_multiset() =~=
+                        r.0@.to_multiset().add(r.2@.to_multiset()).add(r.1@.to_multiset()),
+                    r.0@.len() + r.1@.len() + r.2@.len() == right_elems.len(),
+            {
+                partition_three_dc(&right_half, &p2)
+            };
+
+            let ((mut l1, mut e1, mut r1), (l2, e2, r2)) = join(fa, fb);
+
+            let ghost l1_pre = l1@;
+            let ghost e1_pre = e1@;
+            let ghost r1_pre = r1@;
+
+            append_vec(&mut l1, &l2);
+            append_vec(&mut e1, &e2);
+            append_vec(&mut r1, &r2);
+
+            proof {
+                // elements(*a) =~= left_elems + right_elems
+                let ghost ea = elements(*a);
+                assert(ea.len() == left_elems.len() + right_elems.len());
+                assert forall|k: int| 0 <= k < ea.len()
+                    implies ea[k] == #[trigger] (left_elems + right_elems)[k] by
+                {
+                    if k < left_elems.len() {
+                        assert(left_half.spec_index(k) == a.spec_index(k));
+                    } else {
+                        let kp = k - left_elems.len();
+                        assert(right_half.spec_index(kp) == a.spec_index(mid as int + kp));
+                    }
+                };
+                assert(ea =~= left_elems + right_elems);
+
+                vstd::seq_lib::lemma_multiset_commutative(left_elems, right_elems);
+                vstd::seq_lib::lemma_multiset_commutative(l1_pre, l2@);
+                vstd::seq_lib::lemma_multiset_commutative(e1_pre, e2@);
+                vstd::seq_lib::lemma_multiset_commutative(r1_pre, r2@);
+
+                // Multiset rearrangement: Z3 handles integer arithmetic.
+                assert(ea.to_multiset() =~=
+                    l1@.to_multiset().add(r1@.to_multiset()).add(e1@.to_multiset()));
+            }
+
+            (l1, e1, r1)
+        }
+    }
+
     // 8. traits
 
     pub trait QuickSortMtEphSliceTrait<T: TotalOrder + Eq + Clone> {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — DIFFERS: sequential partition loop, parallel recursion via ParaPair but partition dominates span
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition via join + parallel recursion via ParaPair
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -221,7 +409,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — DIFFERS: sequential partition O(n) per level; parallel recursion via ParaPair gives geometric span
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -235,7 +423,7 @@ pub mod QuickSortMtEphSlice {
 
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n) expected — DIFFERS: sequential partition O(n) per level; parallel recursion via ParaPair
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             requires
                 old(a).spec_arrayseqmtephslice_wf(),
@@ -443,7 +631,7 @@ pub mod QuickSortMtEphSlice {
             out
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n) — first-element pivot + parallel recursion; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition + parallel recursion via ParaPair.
         fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {
@@ -471,54 +659,39 @@ pub mod QuickSortMtEphSlice {
             let pivot_idx: usize = 0;
             let pivot = a.nth_cloned(pivot_idx);
 
-            let mut left: Vec<T> = Vec::new();
-            let mut right: Vec<T> = Vec::new();
-            let mut equals: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.spec_arrayseqmtephslice_wf(),
-                    obeys_feq_clone::<T>(),
-                    pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
-                    leq == spec_leq::<T>(),
-                    forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                    forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                    forall|j: int| 0 <= j < equals@.len() ==>
-                        (#[trigger] equals@[j]) == pivot,
-                    left@.len() + right@.len() + equals@.len() == i,
-                    i > pivot_idx ==> left@.len() + right@.len() < i,
-                    s.subrange(0, i as int).to_multiset() =~=
-                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-                decreases n - i,
-            {
-                let elem = a.nth_cloned(i);
-                proof {
-                    assert(s.subrange(0, (i + 1) as int) =~=
-                        s.subrange(0, i as int).push(s[i as int]));
-                }
-                match TotalOrder::cmp(&elem, &pivot) {
-                    core::cmp::Ordering::Less => {
-                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                        left.push(elem);
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                        right.push(elem);
-                    },
-                    core::cmp::Ordering::Equal => {
-                        equals.push(elem);
-                    },
-                }
-                i = i + 1;
-            }
+            let (left, equals, right) = partition_three_dc(a, &pivot);
 
             proof {
-                assert(s.subrange(0, n as int) =~= s);
+                // The pivot itself is in elements(*a), so it lands in equals.
+                assert(s[pivot_idx as int] == pivot);
+                assert(s.to_multiset().count(pivot) > 0) by {
+                    s.to_multiset_ensures();
+                    assert(s.contains(pivot));
+                };
+                // left and right contain no copies of pivot.
+                assert(left@.to_multiset().count(pivot) == 0nat) by {
+                    if left@.to_multiset().count(pivot) > 0 {
+                        left@.to_multiset_ensures();
+                        assert(left@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
+                        assert(left@[j] != pivot);
+                    }
+                };
+                assert(right@.to_multiset().count(pivot) == 0nat) by {
+                    if right@.to_multiset().count(pivot) > 0 {
+                        right@.to_multiset_ensures();
+                        assert(right@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
+                        assert(right@[j] != pivot);
+                    }
+                };
+                assert(equals@.to_multiset().count(pivot) > 0nat);
+                assert(equals@.len() >= 1) by {
+                    if equals@.len() == 0 {
+                        assert(equals@.to_multiset() =~= Multiset::empty());
+                    }
+                };
                 assert(left@.len() + right@.len() < n);
-                assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;
@@ -604,7 +777,7 @@ pub mod QuickSortMtEphSlice {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n) expected — median-of-three pivot + parallel recursion; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition + parallel recursion via ParaPair.
         fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {
@@ -632,54 +805,37 @@ pub mod QuickSortMtEphSlice {
             let pivot_idx = Self::median3_pivot_idx(&*a, n);
             let pivot = a.nth_cloned(pivot_idx);
 
-            let mut left: Vec<T> = Vec::new();
-            let mut right: Vec<T> = Vec::new();
-            let mut equals: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.spec_arrayseqmtephslice_wf(),
-                    obeys_feq_clone::<T>(),
-                    pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
-                    leq == spec_leq::<T>(),
-                    forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                    forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                    forall|j: int| 0 <= j < equals@.len() ==>
-                        (#[trigger] equals@[j]) == pivot,
-                    left@.len() + right@.len() + equals@.len() == i,
-                    i > pivot_idx ==> left@.len() + right@.len() < i,
-                    s.subrange(0, i as int).to_multiset() =~=
-                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-                decreases n - i,
-            {
-                let elem = a.nth_cloned(i);
-                proof {
-                    assert(s.subrange(0, (i + 1) as int) =~=
-                        s.subrange(0, i as int).push(s[i as int]));
-                }
-                match TotalOrder::cmp(&elem, &pivot) {
-                    core::cmp::Ordering::Less => {
-                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                        left.push(elem);
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                        right.push(elem);
-                    },
-                    core::cmp::Ordering::Equal => {
-                        equals.push(elem);
-                    },
-                }
-                i = i + 1;
-            }
+            let (left, equals, right) = partition_three_dc(a, &pivot);
 
             proof {
-                assert(s.subrange(0, n as int) =~= s);
+                assert(s[pivot_idx as int] == pivot);
+                assert(s.to_multiset().count(pivot) > 0) by {
+                    s.to_multiset_ensures();
+                    assert(s.contains(pivot));
+                };
+                assert(left@.to_multiset().count(pivot) == 0nat) by {
+                    if left@.to_multiset().count(pivot) > 0 {
+                        left@.to_multiset_ensures();
+                        assert(left@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
+                        assert(left@[j] != pivot);
+                    }
+                };
+                assert(right@.to_multiset().count(pivot) == 0nat) by {
+                    if right@.to_multiset().count(pivot) > 0 {
+                        right@.to_multiset_ensures();
+                        assert(right@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
+                        assert(right@[j] != pivot);
+                    }
+                };
+                assert(equals@.to_multiset().count(pivot) > 0nat);
+                assert(equals@.len() >= 1) by {
+                    if equals@.len() == 0 {
+                        assert(equals@.to_multiset() =~= Multiset::empty());
+                    }
+                };
                 assert(left@.len() + right@.len() < n);
-                assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;
@@ -765,7 +921,7 @@ pub mod QuickSortMtEphSlice {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(n) expected — random pivot + parallel recursion; Mt parallel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition + parallel recursion via ParaPair.
         fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
             decreases old(a).spec_len(),
         {
@@ -793,54 +949,37 @@ pub mod QuickSortMtEphSlice {
             let pivot_idx = random_usize_range(0, n);
             let pivot = a.nth_cloned(pivot_idx);
 
-            let mut left: Vec<T> = Vec::new();
-            let mut right: Vec<T> = Vec::new();
-            let mut equals: Vec<T> = Vec::new();
-            let mut i: usize = 0;
-            while i < n
-                invariant
-                    0 <= i <= n, n == a.spec_len() as usize, n <= usize::MAX, n >= 2,
-                    a.spec_arrayseqmtephslice_wf(),
-                    obeys_feq_clone::<T>(),
-                    pivot_idx < n, pivot == s[pivot_idx as int], s == elements(*a),
-                    leq == spec_leq::<T>(),
-                    forall|j: int| 0 <= j < left@.len() ==>
-                        (#[trigger] T::le(left@[j], pivot)) && left@[j] != pivot,
-                    forall|j: int| 0 <= j < right@.len() ==>
-                        (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
-                    forall|j: int| 0 <= j < equals@.len() ==>
-                        (#[trigger] equals@[j]) == pivot,
-                    left@.len() + right@.len() + equals@.len() == i,
-                    i > pivot_idx ==> left@.len() + right@.len() < i,
-                    s.subrange(0, i as int).to_multiset() =~=
-                        left@.to_multiset().add(right@.to_multiset()).add(equals@.to_multiset()),
-                decreases n - i,
-            {
-                let elem = a.nth_cloned(i);
-                proof {
-                    assert(s.subrange(0, (i + 1) as int) =~=
-                        s.subrange(0, i as int).push(s[i as int]));
-                }
-                match TotalOrder::cmp(&elem, &pivot) {
-                    core::cmp::Ordering::Less => {
-                        proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
-                        left.push(elem);
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
-                        right.push(elem);
-                    },
-                    core::cmp::Ordering::Equal => {
-                        equals.push(elem);
-                    },
-                }
-                i = i + 1;
-            }
+            let (left, equals, right) = partition_three_dc(a, &pivot);
 
             proof {
-                assert(s.subrange(0, n as int) =~= s);
+                assert(s[pivot_idx as int] == pivot);
+                assert(s.to_multiset().count(pivot) > 0) by {
+                    s.to_multiset_ensures();
+                    assert(s.contains(pivot));
+                };
+                assert(left@.to_multiset().count(pivot) == 0nat) by {
+                    if left@.to_multiset().count(pivot) > 0 {
+                        left@.to_multiset_ensures();
+                        assert(left@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < left@.len() && left@[j] == pivot;
+                        assert(left@[j] != pivot);
+                    }
+                };
+                assert(right@.to_multiset().count(pivot) == 0nat) by {
+                    if right@.to_multiset().count(pivot) > 0 {
+                        right@.to_multiset_ensures();
+                        assert(right@.contains(pivot));
+                        let j = choose|j: int| 0 <= j < right@.len() && right@[j] == pivot;
+                        assert(right@[j] != pivot);
+                    }
+                };
+                assert(equals@.to_multiset().count(pivot) > 0nat);
+                assert(equals@.len() >= 1) by {
+                    if equals@.len() == 0 {
+                        assert(equals@.to_multiset() =~= Multiset::empty());
+                    }
+                };
                 assert(left@.len() + right@.len() < n);
-                assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;

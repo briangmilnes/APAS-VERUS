@@ -182,7 +182,7 @@ pub mod QuickSortMtEph {
     pub trait QuickSortMtEphTrait<T: TotalOrder> {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — DIFFERS: parallel recursion via ParaPair!, but sequential O(n) partition dominates span
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n^2) worst — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
         fn quick_sort_first(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -192,7 +192,7 @@ pub mod QuickSortMtEph {
 
         /// Quicksort with median-of-three pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — DIFFERS: parallel recursion via ParaPair!, but sequential O(n) partition dominates span
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
         fn quick_sort_median3(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures
@@ -202,7 +202,7 @@ pub mod QuickSortMtEph {
 
         /// Quicksort with random pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n) expected — DIFFERS: parallel recursion via ParaPair!, but sequential O(n) partition dominates span
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(n) expected — ACCEPTED DIFFERENCE: Vec-backed; see QuickSortMtEphSlice for parallel partition
         fn quick_sort_random(a: &mut ArraySeqMtEphS<T>)
             requires old(a).spec_len() <= usize::MAX,
             ensures

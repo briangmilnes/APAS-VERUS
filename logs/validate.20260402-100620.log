@@ -1,0 +1,38 @@
+error[E0277]: the trait bound `T: std::cmp::Eq` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:209:36
+    |
+209 |         requires obeys_feq_clone::<T>()
+    |                                    ^ the trait `std::cmp::Eq` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+   --> src/vstdplus/feq.rs:51:41
+    |
+ 51 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+    |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider further restricting type parameter `T` with trait `Eq`
+    |
+208 |     fn append_vec<T: Clone + std::cmp::Eq>(a: &mut Vec<T>, b: &Vec<T>)
+    |                            ++++++++++++++
+
+error[E0277]: the trait bound `T: std::cmp::Eq` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:222:35
+    |
+222 |                 obeys_feq_clone::<T>(),
+    |                                   ^ the trait `std::cmp::Eq` is not implemented for `T`
+    |
+note: required by a bound in `vstdplus::feq::feq::obeys_feq_clone`
+   --> src/vstdplus/feq.rs:51:41
+    |
+ 51 |     pub open spec fn obeys_feq_clone<T: Eq + Clone + Sized>() -> bool {
+    |                                         ^^ required by this bound in `obeys_feq_clone`
+help: consider further restricting type parameter `T` with trait `Eq`
+    |
+208 |     fn append_vec<T: Clone + std::cmp::Eq>(a: &mut Vec<T>, b: &Vec<T>)
+    |                            ++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22446MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
