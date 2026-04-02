@@ -22,16 +22,6 @@ src/Chap06/LabDirGraphStEph.rs:126: info: St fn `get_arc_label` sequential as ex
 src/Chap06/LabDirGraphStEph.rs:134: info: St fn `has_arc` sequential as expected
 src/Chap06/LabDirGraphStEph.rs:141: info: St fn `n_plus` sequential as expected
 src/Chap06/LabDirGraphStEph.rs:148: info: St fn `n_minus` sequential as expected
-src/Chap18/ArraySeqMtEph.rs:323: error: Mt fn `subseq` DIFFERS from APAS — : sequential clone loop, not O(1) slice
-src/Chap18/ArraySeqMtEph.rs:365: error: Mt fn `append` DIFFERS from APAS — : span O(|a|+|b|) not O(1), sequential loops
-src/Chap18/ArraySeqMtEph.rs:381: error: Mt fn `filter` DIFFERS from APAS — : parallel D&C with multiset distribution lemma
-src/Chap18/ArraySeqMtEph.rs:402: error: Mt fn `update` DIFFERS from APAS — : span O(n) not O(1), sequential clone loop
-src/Chap18/ArraySeqMtEph.rs:418: error: Mt fn `inject` DIFFERS from APAS — : span O(n+m) not O(lg degree), sequential loops
-src/Chap18/ArraySeqMtEph.rs:434: error: Mt fn `ninject` DIFFERS from APAS — : delegates to inject, span O(n+m) not O(1)
-src/Chap18/ArraySeqMtEph.rs:484: error: Mt fn `scan` DIFFERS from APAS — : span O(n) not O(lg n), sequential loop
-src/Chap18/ArraySeqMtEph.rs:501: error: Mt fn `map` DIFFERS from APAS — : parallel D&C via join; O(lg n) from Vec copy overhead
-src/Chap18/ArraySeqMtEph.rs:514: error: Mt fn `tabulate` DIFFERS from APAS — : span O(n) not O(1), sequential loop
-src/Chap18/ArraySeqMtEph.rs:525: error: Mt fn `flatten` DIFFERS from APAS — : span O(Σ|a_i|) not O(lg|a|), sequential nested loops
 src/Chap18/ArraySeqMtEphSlice.rs:566: error: fn `reduce` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:583: error: fn `map` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:592: error: fn `filter` missing alg analysis annotation
@@ -43,16 +33,6 @@ src/Chap18/ArraySeqMtEphSlice.rs:1084: error: fn `filter_dc_vec` missing alg ana
 src/Chap18/ArraySeqMtEphSlice.rs:1161: error: fn `tabulate_dc_vec` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:1258: error: fn `scan_dc_vec` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:1486: error: fn `flatten_dc_vec` missing alg analysis annotation
-src/Chap18/ArraySeqMtPer.rs:163: error: Mt fn `subseq` DIFFERS from APAS — : Vec-backed, sequential clone loop; O(1) requires tree representation
-src/Chap18/ArraySeqMtPer.rs:205: error: Mt fn `append` DIFFERS from APAS — : Vec-backed, sequential clone loops; O(1) requires tree representation
-src/Chap18/ArraySeqMtPer.rs:221: error: Mt fn `filter` DIFFERS from APAS — : parallel D&C with multiset distribution lemma
-src/Chap18/ArraySeqMtPer.rs:242: error: Mt fn `update` DIFFERS from APAS — : Vec-backed, sequential clone loop; O(1) requires tree representation
-src/Chap18/ArraySeqMtPer.rs:258: error: Mt fn `inject` DIFFERS from APAS — : sequential apply; parallel inject requires sort-by-position
-src/Chap18/ArraySeqMtPer.rs:295: error: Mt fn `reduce` DIFFERS from APAS — : sequential fold; parallel reduce_inner available via bare impl
-src/Chap18/ArraySeqMtPer.rs:308: error: Mt fn `scan` DIFFERS from APAS — : sequential loop; parallel scan requires upsweep/downsweep
-src/Chap18/ArraySeqMtPer.rs:325: error: Mt fn `map` DIFFERS from APAS — : sequential loop; parallel map_inner available via bare impl
-src/Chap18/ArraySeqMtPer.rs:335: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop; parallel tabulate_inner available via bare impl
-src/Chap18/ArraySeqMtPer.rs:346: error: Mt fn `flatten` DIFFERS from APAS — : sequential nested loops; D&C flatten requires outer array cloning proof
 src/Chap18/ArraySeqStEph.rs:115: info: St fn `new` sequential as expected
 src/Chap18/ArraySeqStEph.rs:152: info: St fn `subseq_copy` sequential as expected
 src/Chap18/ArraySeqStEph.rs:166: info: St fn `subseq` sequential as expected
@@ -96,14 +76,6 @@ src/Chap18/LinkedListStPer.rs:184: info: St fn `append` sequential as expected
 src/Chap18/LinkedListStPer.rs:218: info: St fn `flatten` sequential as expected
 src/Chap18/LinkedListStPer.rs:227: info: St fn `update` sequential as expected
 src/Chap18/LinkedListStPer.rs:250: info: St fn `iterate` sequential as expected
-src/Chap19/ArraySeqMtEph.rs:242: error: Mt fn `subseq` DIFFERS from APAS — : Vec-backed, copies elements sequentially
-src/Chap19/ArraySeqMtEph.rs:282: error: Mt fn `append` DIFFERS from APAS — : sequential tabulate, span = work
-src/Chap19/ArraySeqMtEph.rs:315: error: Mt fn `update` DIFFERS from APAS — : clone entire Vec + set, sequential
-src/Chap19/ArraySeqMtEph.rs:331: error: Mt fn `inject` DIFFERS from APAS — : sequential clone + loop
-src/Chap19/ArraySeqMtEph.rs:347: error: Mt fn `ninject` DIFFERS from APAS — : delegates to inject, sequential clone + loop
-src/Chap19/ArraySeqMtEph.rs:420: error: Mt fn `scan` DIFFERS from APAS — : sequential loop, span = work
-src/Chap19/ArraySeqMtEph.rs:447: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop, span = work
-src/Chap19/ArraySeqMtEph.rs:459: error: Mt fn `flatten` DIFFERS from APAS — : nested sequential loops, span = work
 src/Chap19/ArraySeqMtEphSlice.rs:766: error: fn `reduce` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:783: error: fn `map` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:792: error: fn `filter` missing alg analysis annotation
@@ -217,10 +189,8 @@ src/Chap37/AVLTreeSeqStEph.rs:283: info: St fn `nth` sequential as expected
 src/Chap37/AVLTreeSeqStEph.rs:323: info: St fn `update` sequential as expected
 src/Chap37/AVLTreeSeqStPer.rs:253: info: St fn `nth` sequential as expected
 src/Chap38/BSTParaMtEph.rs:245: error: fn `assert_parambst_view_finite` missing alg analysis annotation
-src/Chap38/BSTParaMtEph.rs:286: error: Mt fn `join_mid` DIFFERS from APAS — : parametric impl wraps node without rebalancing
 src/Chap38/BSTParaMtEph.rs:350: error: Mt fn `join_pair` DIFFERS from APAS — : delegates to union_inner (ParaPair)
 src/Chap38/BSTParaMtEph.rs:389: error: Mt fn `filter` DIFFERS from APAS — : sequential recursion in filter_inner (spec_fn not Send)
-src/Chap38/BSTParaMtEph.rs:426: error: Mt fn `join_m` DIFFERS from APAS — : delegates to join_mid which is O(1) in parametric impl
 src/Chap38/BSTParaStEph.rs:289: info: St fn `join_mid` sequential as expected
 src/Chap38/BSTParaStEph.rs:305: info: St fn `join_m` sequential as expected
 src/Chap38/BSTParaStEph.rs:403: info: St fn `union` sequential as expected
@@ -259,16 +229,6 @@ src/Chap41/AVLTreeSetStPer.rs:233: info: St fn `filter` sequential as expected
 src/Chap41/AVLTreeSetStPer.rs:255: info: St fn `intersection` sequential as expected
 src/Chap41/AVLTreeSetStPer.rs:267: info: St fn `difference` sequential as expected
 src/Chap41/AVLTreeSetStPer.rs:279: info: St fn `union` sequential as expected
-src/Chap41/ArraySetEnumMtEph.rs:189: error: Mt fn `size` DIFFERS from APAS — : sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
-src/Chap41/ArraySetEnumMtEph.rs:196: error: Mt fn `to_seq` DIFFERS from APAS — : sequential scan, APAS assumes parallel
-src/Chap41/ArraySetEnumMtEph.rs:214: error: Mt fn `singleton` DIFFERS from APAS — : sequential
-src/Chap41/ArraySetEnumMtEph.rs:224: error: Mt fn `from_seq` DIFFERS from APAS — : sequential init + insert loop
-src/Chap41/ArraySetEnumMtEph.rs:232: error: Mt fn `filter` DIFFERS from APAS — : sequential loop; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
-src/Chap41/ArraySetEnumMtEph.rs:244: error: Mt fn `intersection` DIFFERS from APAS — : sequential word-AND, APAS assumes parallel
-src/Chap41/ArraySetEnumMtEph.rs:257: error: Mt fn `difference` DIFFERS from APAS — : sequential word-AND-NOT, APAS assumes parallel
-src/Chap41/ArraySetEnumMtEph.rs:270: error: Mt fn `union` DIFFERS from APAS — : sequential word-OR, APAS assumes parallel
-src/Chap41/ArraySetEnumMtEph.rs:290: error: Mt fn `delete` DIFFERS from APAS — : ephemeral bit clear, APAS O(u) assumes copy
-src/Chap41/ArraySetEnumMtEph.rs:300: error: Mt fn `insert` DIFFERS from APAS — : ephemeral bit set, APAS O(u) assumes copy
 src/Chap41/ArraySetStEph.rs:309: info: St fn `size` sequential as expected
 src/Chap41/ArraySetStEph.rs:316: info: St fn `to_seq` sequential as expected
 src/Chap41/ArraySetStEph.rs:331: info: St fn `singleton` sequential as expected
@@ -280,15 +240,6 @@ src/Chap41/ArraySetStEph.rs:393: info: St fn `union` sequential as expected
 src/Chap41/ArraySetStEph.rs:406: info: St fn `find` sequential as expected
 src/Chap41/ArraySetStEph.rs:413: info: St fn `delete` sequential as expected
 src/Chap41/ArraySetStEph.rs:424: info: St fn `insert` sequential as expected
-src/Chap42/TableMtEph.rs:799: error: Mt fn `domain` DIFFERS from APAS — : sequential key extraction
-src/Chap42/TableMtEph.rs:833: error: Mt fn `filter` DIFFERS from APAS — : sequential loop; D&C no-dup proof pending
-src/Chap42/TableMtEph.rs:851: error: Mt fn `intersection` DIFFERS from APAS — : nested linear scans on array
-src/Chap42/TableMtEph.rs:868: error: Mt fn `union` DIFFERS from APAS — : nested linear scans on array
-src/Chap42/TableMtEph.rs:889: error: Mt fn `difference` DIFFERS from APAS — : nested linear scans on array
-src/Chap42/TableMtEph.rs:908: error: Mt fn `delete` DIFFERS from APAS — : linear scan + copy
-src/Chap42/TableMtEph.rs:913: error: Mt fn `insert` DIFFERS from APAS — : linear scan + copy
-src/Chap42/TableMtEph.rs:930: error: Mt fn `restrict` DIFFERS from APAS — : nested linear scans on array
-src/Chap42/TableMtEph.rs:940: error: Mt fn `subtract` DIFFERS from APAS — : nested linear scans on array
 src/Chap42/TableStEph.rs:314: info: St fn `domain` sequential as expected
 src/Chap42/TableStEph.rs:319: info: St fn `tabulate` sequential as expected
 src/Chap42/TableStEph.rs:330: info: St fn `map` sequential as expected
@@ -468,27 +419,114 @@ Summary
   Missing alg analysis:        35  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       66  <- errors
-  Mt ACCEPTED DIFFERENCE:       2  <- info (documented choices)
+  Mt DIFFERS (blockers):       17  <- errors
+  Mt ACCEPTED DIFFERENCE:      51  <- info (documented choices)
   St DIFFERS (expected):      353  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 101
+  Errors: 52
   Warnings: 0
-  Info: 355
+  Info: 404
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
- reformatted)
+St fn `bfs_tree` sequential as expected
+src/Chap54/BFSStPer.rs:145: info: St fn `bfs` sequential as expected
+src/Chap54/BFSStPer.rs:323: info: St fn `bfs_tree` sequential as expected
+src/Chap55/CycleDetectStEph.rs:283: info: St fn `dfs_check_cycle` sequential as expected
+src/Chap55/CycleDetectStEph.rs:776: info: St fn `has_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:257: info: St fn `has_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:270: info: St fn `dfs_check_cycle` sequential as expected
+src/Chap55/CycleDetectStPer.rs:607: info: St fn `has_cycle` sequential as expected
+src/Chap55/DFSStEph.rs:223: info: St fn `dfs_recursive` sequential as expected
+src/Chap55/DFSStEph.rs:463: info: St fn `dfs` sequential as expected
+src/Chap55/DFSStPer.rs:219: info: St fn `dfs_recursive` sequential as expected
+src/Chap55/DFSStPer.rs:422: info: St fn `dfs` sequential as expected
+src/Chap55/SCCStEph.rs:93: info: St fn `compute_finish_order` sequential as expected
+src/Chap55/SCCStEph.rs:188: info: St fn `transpose_graph` sequential as expected
+src/Chap55/SCCStEph.rs:319: info: St fn `check_wf_adj_list_eph` sequential as expected
+src/Chap55/SCCStEph.rs:373: info: St fn `dfs_reach` sequential as expected
+src/Chap55/SCCStEph.rs:493: info: St fn `scc` sequential as expected
+src/Chap55/SCCStPer.rs:72: info: St fn `scc` sequential as expected
+src/Chap55/SCCStPer.rs:85: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/SCCStPer.rs:179: info: St fn `compute_finish_order` sequential as expected
+src/Chap55/SCCStPer.rs:268: info: St fn `transpose_graph` sequential as expected
+src/Chap55/SCCStPer.rs:395: info: St fn `check_wf_adj_list_per` sequential as expected
+src/Chap55/SCCStPer.rs:451: info: St fn `dfs_reach` sequential as expected
+src/Chap55/SCCStPer.rs:554: info: St fn `scc` sequential as expected
+src/Chap55/TopoSortStEph.rs:413: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/TopoSortStEph.rs:754: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
+src/Chap55/TopoSortStEph.rs:878: info: St fn `topological_sort_opt` sequential as expected
+src/Chap55/TopoSortStEph.rs:902: info: St fn `topo_sort` sequential as expected
+src/Chap55/TopoSortStPer.rs:268: info: St fn `topo_sort` sequential as expected
+src/Chap55/TopoSortStPer.rs:282: info: St fn `dfs_finish_order` sequential as expected
+src/Chap55/TopoSortStPer.rs:589: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
+src/Chap55/TopoSortStPer.rs:687: info: St fn `topological_sort_opt` sequential as expected
+src/Chap55/TopoSortStPer.rs:711: info: St fn `topo_sort` sequential as expected
+src/Chap56/PathWeightUtilsStEph.rs:116: info: St fn `path_weight_int` sequential as expected
+src/Chap56/PathWeightUtilsStEph.rs:150: info: St fn `path_weight_float` sequential as expected
+src/Chap56/PathWeightUtilsStPer.rs:152: info: St fn `path_weight_int` sequential as expected
+src/Chap56/PathWeightUtilsStPer.rs:188: info: St fn `path_weight_float` sequential as expected
+src/Chap61/EdgeContractionStEph.rs:42: info: St fn `edge_contract` sequential as expected
+src/Chap61/EdgeContractionStEph.rs:51: info: St fn `contract_round` sequential as expected
+src/Chap61/EdgeContractionStEph.rs:65: info: St fn `edge_contract` sequential as expected
+src/Chap61/VertexMatchingStEph.rs:40: info: St fn `greedy_matching` sequential as expected
+src/Chap61/VertexMatchingStEph.rs:46: info: St fn `parallel_matching_st` sequential as expected
+src/Chap62/StarContractionStEph.rs:47: info: St fn `star_contract` sequential as expected
+src/Chap62/StarContractionStEph.rs:70: info: St fn `contract_to_vertices` sequential as expected
+src/Chap62/StarContractionStEph.rs:80: info: St fn `star_contract_fuel` sequential as expected
+src/Chap62/StarContractionStEph.rs:166: info: St fn `star_contract` sequential as expected
+src/Chap62/StarPartitionMtEph.rs:55: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+src/Chap62/StarPartitionMtEph.rs:845: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+src/Chap62/StarPartitionStEph.rs:43: info: St fn `sequential_star_partition` sequential as expected
+src/Chap63/ConnectivityStEph.rs:47: info: St fn `count_components` sequential as expected
+src/Chap63/ConnectivityStEph.rs:53: info: St fn `connected_components` sequential as expected
+src/Chap63/ConnectivityStEph.rs:59: info: St fn `count_components_hof` sequential as expected
+src/Chap63/ConnectivityStEph.rs:65: info: St fn `connected_components_hof` sequential as expected
+src/Chap64/SpanTreeStEph.rs:43: info: St fn `spanning_tree_star_contraction` sequential as expected
+src/Chap64/SpanTreeStEph.rs:49: info: St fn `verify_spanning_tree` sequential as expected
+src/Chap64/TSPApproxStEph.rs:47: info: St fn `euler_tour` sequential as expected
+src/Chap64/TSPApproxStEph.rs:60: info: St fn `shortcut_tour` sequential as expected
+src/Chap64/TSPApproxStEph.rs:65: info: St fn `tour_weight` sequential as expected
+src/Chap64/TSPApproxStEph.rs:76: info: St fn `approx_metric_tsp` sequential as expected
+src/Chap64/TSPApproxStEph.rs:91: info: St fn `vec_contains_pair` sequential as expected
+src/Chap65/PrimStEph.rs:177: info: St fn `prim_mst` sequential as expected
+src/Chap65/PrimStEph.rs:187: info: St fn `mst_weight` sequential as expected
+src/Chap65/UnionFindStEph.rs:1743: info: St fn `num_sets` sequential as expected
+src/Chap66/BoruvkaMtEph.rs:136: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:155: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:765: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaMtEph.rs:996: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
+src/Chap66/BoruvkaStEph.rs:128: info: St fn `vertex_bridges` sequential as expected
+src/Chap66/BoruvkaStEph.rs:140: info: St fn `bridge_star_partition` sequential as expected
+src/Chap66/BoruvkaStEph.rs:156: info: St fn `boruvka_mst` sequential as expected
+src/Chap66/BoruvkaStEph.rs:180: info: St fn `boruvka_mst_with_seed` sequential as expected
+src/Chap66/BoruvkaStEph.rs:199: info: St fn `mst_weight` sequential as expected
+src/Chap66/BoruvkaStEph.rs:225: info: St fn `vertex_bridges` sequential as expected
+src/Chap66/BoruvkaStEph.rs:291: info: St fn `bridge_star_partition` sequential as expected
+src/Chap66/BoruvkaStEph.rs:394: info: St fn `boruvka_mst` sequential as expected
+src/Chap66/BoruvkaStEph.rs:510: info: St fn `boruvka_mst_with_seed` sequential as expected
 
-  Mt DIFFERS (blockers):       66  <- errors
-  Mt ACCEPTED DIFFERENCE:       2  <- info (documented choices)
+=============================================================
+Summary
+=============================================================
+
+  Total exec fns scanned:    5176
+  Boilerplate excluded:       437  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
+  Files scanned:              247
+
+  Alg analysis annotations:  5141  (fns with any APAS or Code review line)
+  Missing alg analysis:        35  <- errors
+  Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
+
+  Mt DIFFERS (blockers):       17  <- errors
+  Mt ACCEPTED DIFFERENCE:      51  <- info (documented choices)
   St DIFFERS (expected):      353  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 101
+  Errors: 52
   Warnings: 0
-  Info: 355
+  Info: 404
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
