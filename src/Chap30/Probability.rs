@@ -16,6 +16,8 @@ pub mod Probability {
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::ops::AddSpecImpl;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::ops::SubSpecImpl;
 
     use crate::Types::Types::*;
 
@@ -170,6 +172,13 @@ pub mod Probability {
         open spec fn obeys_add_spec() -> bool { false }
         open spec fn add_req(self, rhs: Probability) -> bool { true }
         open spec fn add_spec(self, rhs: Probability) -> Probability { arbitrary() }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl SubSpecImpl for Probability {
+        open spec fn obeys_sub_spec() -> bool { false }
+        open spec fn sub_req(self, rhs: Probability) -> bool { true }
+        open spec fn sub_spec(self, rhs: Probability) -> Probability { arbitrary() }
     }
 
     } // verus!

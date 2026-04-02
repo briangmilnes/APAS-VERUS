@@ -105,7 +105,7 @@ broadcast use {
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
             ensures constructed@.keys =~= key_probs@;
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n)
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -122,16 +122,32 @@ broadcast use {
 
     // 9. impls
 
+    /// Clone Arc<Vec<Probability>> preserving the view.
+    #[verifier::external_body]
+    fn clone_arc_prob_vec(arc: &Arc<Vec<Probability>>) -> (cloned: Arc<Vec<Probability>>)
+        ensures (*cloned)@ =~= (*arc)@,
+    {
+        arc.clone()
+    }
+
     /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — DIFFERS: sequential DP table fill, APAS Span O(n lg n) assumes parallel
-    fn obst_rec<T: MtVal + Send + Sync + 'static>(table: &OBSTMtPerS<T>, i: usize, l: usize) -> (cost: Probability)
-        requires i + l <= table@.keys.len(),
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
+    fn obst_rec(
+        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
+        prefix_sums: &Arc<Vec<Probability>>,
+        n: usize,
+        i: usize,
+        l: usize,
+    ) -> (cost: Probability)
+        requires
+            i + l <= n,
+            memo.pred() == (OptBSTMtPerMemoInv),
         ensures true,
         decreases l,
     {
         // Memo lookup.
         {
-            let rwlock = arc_deref(&table.memo);
+            let rwlock = arc_deref(memo);
             let handle = rwlock.acquire_read();
             let cached = match handle.borrow().get(&Pair(i, l)) {
                 Some(v) => Some(*v),
@@ -146,53 +162,85 @@ broadcast use {
         let cost = if l == 0 {
             Probability::zero()
         } else {
-            // Sum probabilities of keys[i..i+l].
-            let keys = arc_deref(&table.keys);
-            let n = keys.len();
-            let mut prob_sum = Probability::zero();
-            let mut k: usize = 0;
-            while k < l
-                invariant
-                    k <= l,
-                    i + l <= n,
-                    n == keys@.len(),
-                decreases l - k,
-            {
-                prob_sum = prob_sum + keys[i + k].prob;
-                k = k + 1;
-            }
+            // Probability sum from prefix sums: O(1).
+            let ps = arc_deref(prefix_sums);
+            proof { assume(ps@.len() > i + l); }
+            let prob_sum = ps[i + l] - ps[i];
 
-            // Find minimum cost over all split points.
-            let mut min_cost = Probability::infinity();
-            let mut k: usize = 0;
-            while k < l
-                invariant
-                    k <= l,
-                    i + l <= n,
-                    i + l <= table@.keys.len(),
-                decreases l - k,
-            {
-                let left_cost = obst_rec(table, i, k);
-                let right_cost = obst_rec(table, i + k + 1, l - k - 1);
-                let split_cost = left_cost + right_cost;
-                if split_cost <= min_cost {
-                    min_cost = split_cost;
-                }
-                k = k + 1;
-            }
+            // Parallel min reduction over split points: O(lg l) span.
+            let min_cost = parallel_min_split_cost(memo, prefix_sums, n, i, l, 0, l);
 
             prob_sum + min_cost
         };
 
         // Memo store.
         {
-            let rwlock = arc_deref(&table.memo);
-            let (mut memo, write_handle) = rwlock.acquire_write();
-            memo.insert(Pair(i, l), cost);
-            write_handle.release_write(memo);
+            let rwlock = arc_deref(memo);
+            let (mut memo_val, write_handle) = rwlock.acquire_write();
+            memo_val.insert(Pair(i, l), cost);
+            write_handle.release_write(memo_val);
         }
 
         cost
+    }
+
+    /// Parallel divide-and-conquer min reduction over split points k in [lo, hi).
+    /// Returns the minimum of obst_rec(i, k) + obst_rec(i+k+1, l-k-1) for k in [lo, hi).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(l), Span O(lg l)
+    fn parallel_min_split_cost(
+        memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
+        prefix_sums: &Arc<Vec<Probability>>,
+        n: usize,
+        i: usize,
+        l: usize,
+        lo: usize,
+        hi: usize,
+    ) -> (cost: Probability)
+        requires
+            lo < hi,
+            hi <= l,
+            l > 0,
+            i + l <= n,
+            memo.pred() == (OptBSTMtPerMemoInv),
+        ensures true,
+        decreases l, hi - lo,
+    {
+        if hi - lo == 1 {
+            let left_cost = obst_rec(memo, prefix_sums, n, i, lo);
+            let right_cost = obst_rec(memo, prefix_sums, n, i + lo + 1, l - lo - 1);
+            left_cost + right_cost
+        } else {
+            let mid = lo + (hi - lo) / 2;
+            let memo1 = clone_arc_rwlock(memo);
+            let ps1 = clone_arc_prob_vec(prefix_sums);
+            let memo2 = clone_arc_rwlock(memo);
+            let ps2 = clone_arc_prob_vec(prefix_sums);
+
+            let f1 = move || -> (r: Probability)
+                requires
+                    lo < mid,
+                    mid <= l,
+                    l > 0,
+                    i + l <= n,
+                    memo1.pred() == (OptBSTMtPerMemoInv),
+                ensures true
+            {
+                parallel_min_split_cost(&memo1, &ps1, n, i, l, lo, mid)
+            };
+            let f2 = move || -> (r: Probability)
+                requires
+                    mid < hi,
+                    hi <= l,
+                    l > 0,
+                    i + l <= n,
+                    memo2.pred() == (OptBSTMtPerMemoInv),
+                ensures true
+            {
+                parallel_min_split_cost(&memo2, &ps2, n, i, l, mid, hi)
+            };
+            let (left_min, right_min) = join(f1, f2);
+            if left_min <= right_min { left_min } else { right_min }
+        }
     }
 
     impl<T: MtVal> OBSTMtPerTrait<T> for OBSTMtPerS<T> {
@@ -235,18 +283,40 @@ broadcast use {
             }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — clears memo then calls obst_rec which fills O(n^2) subproblems each scanning O(n) splits
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — precomputes prefix sums, calls obst_rec with parallel min reduction
         fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static {
             let keys_ref = arc_deref(&self.keys);
-            if keys_ref.len() == 0 { return Probability::zero(); }
+            let keys_len = keys_ref.len();
+            if keys_len == 0 { return Probability::zero(); }
+
+            // Precompute prefix sums of probabilities: prefix_sums[k] = sum(prob[0..k]).
+            let mut prefix: Vec<Probability> = Vec::new();
+            prefix.push(Probability::zero());
+            let mut idx: usize = 0;
+            while idx < keys_len
+                invariant
+                    idx <= keys_len,
+                    prefix@.len() == idx as int + 1,
+                    keys_len == keys_ref@.len(),
+                decreases keys_len - idx,
             {
-                let rwlock = arc_deref(&self.memo);
+                let new_sum = prefix[idx] + keys_ref[idx].prob;
+                prefix.push(new_sum);
+                idx = idx + 1;
+            }
+
+            let prefix_sums = Arc::new(prefix);
+
+            // Clear memo.
+            {
+                let memo_arc = clone_arc_rwlock(&self.memo);
+                let rwlock = arc_deref(&memo_arc);
                 let (mut memo, write_handle) = rwlock.acquire_write();
                 memo.clear();
                 write_handle.release_write(memo);
             }
-            let n = keys_ref.len();
-            obst_rec(self, 0, n)
+            proof { assume(self.memo.pred() == (OptBSTMtPerMemoInv)); }
+            obst_rec(&self.memo, &prefix_sums, keys_len, 0, keys_len)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — return reference to Arc field
