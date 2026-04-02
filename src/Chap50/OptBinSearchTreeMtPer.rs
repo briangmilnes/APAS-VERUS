@@ -92,21 +92,24 @@ broadcast use {
 
     // 8. traits
     pub trait OBSTMtPerTrait<T: MtVal>: Sized + View<V = OBSTMtPerV<T>> {
+        spec fn spec_optbinsearchtreemtper_wf(&self) -> bool;
+
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
-            ensures empty@.keys.len() == 0;
+            ensures empty@.keys.len() == 0, empty.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_keys_probs(keys: Vec<T>, probs: Vec<Probability>) -> (constructed: Self)
             requires keys@.len() == probs@.len(),
-            ensures constructed@.keys.len() == keys@.len();
+            ensures constructed@.keys.len() == keys@.len(), constructed.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_key_probs(key_probs: Vec<KeyProb<T>>) -> (constructed: Self)
-            ensures constructed@.keys =~= key_probs@;
+            ensures constructed@.keys =~= key_probs@, constructed.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n)
-        fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static;
+        fn optimal_cost(&self) -> (cost: Probability) where T: Send + Sync + 'static
+            requires self.spec_optbinsearchtreemtper_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn keys(&self) -> (keys: &Arc<Vec<KeyProb<T>>>)
@@ -142,6 +145,7 @@ broadcast use {
         requires
             i + l <= n,
             memo.pred() == (OptBSTMtPerMemoInv),
+            (*prefix_sums)@.len() == n + 1,
         ensures true,
         decreases l,
     {
@@ -164,7 +168,6 @@ broadcast use {
         } else {
             // Probability sum from prefix sums: O(1).
             let ps = arc_deref(prefix_sums);
-            proof { assume(ps@.len() > i + l); }
             let prob_sum = ps[i + l] - ps[i];
 
             // Parallel min reduction over split points: O(lg l) span.
@@ -202,6 +205,7 @@ broadcast use {
             l > 0,
             i + l <= n,
             memo.pred() == (OptBSTMtPerMemoInv),
+            (*prefix_sums)@.len() == n + 1,
         ensures true,
         decreases l, hi - lo,
     {
@@ -223,6 +227,7 @@ broadcast use {
                     l > 0,
                     i + l <= n,
                     memo1.pred() == (OptBSTMtPerMemoInv),
+                    (*ps1)@.len() == n + 1,
                 ensures true
             {
                 parallel_min_split_cost(&memo1, &ps1, n, i, l, lo, mid)
@@ -234,6 +239,7 @@ broadcast use {
                     l > 0,
                     i + l <= n,
                     memo2.pred() == (OptBSTMtPerMemoInv),
+                    (*ps2)@.len() == n + 1,
                 ensures true
             {
                 parallel_min_split_cost(&memo2, &ps2, n, i, l, mid, hi)
@@ -244,6 +250,10 @@ broadcast use {
     }
 
     impl<T: MtVal> OBSTMtPerTrait<T> for OBSTMtPerS<T> {
+        open spec fn spec_optbinsearchtreemtper_wf(&self) -> bool {
+            self.memo.pred() == (OptBSTMtPerMemoInv)
+        }
+
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — allocate empty Vec, wrap in Arc + Arc<RwLock>
         fn new() -> (empty: Self) {
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
@@ -315,7 +325,7 @@ broadcast use {
                 memo.clear();
                 write_handle.release_write(memo);
             }
-            proof { assume(self.memo.pred() == (OptBSTMtPerMemoInv)); }
+            assert(self.memo.pred() == (OptBSTMtPerMemoInv));
             obst_rec(&self.memo, &prefix_sums, keys_len, 0, keys_len)
         }
 
