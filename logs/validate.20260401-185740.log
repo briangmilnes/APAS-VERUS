@@ -1,0 +1,27 @@
+error: assertion failed
+   --> src/experiments/coarse_lock_parallel_tsm.rs:223:24
+    |
+223 |                 assert(interior.seq.spec_arrayseqmtephslice_wf());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap19/ArraySeqMtEphSlice.rs:231:13
+    |
+231 |             self.start + self.len <= (*self.data)@.len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+232 |             && self.start + self.len <= usize::MAX
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+interior.seq.spec_arrayseqmtephslice_wf()
+|   interior.seq.start + interior.seq.len <= interior.seq.data.view().len() ✘
+|   interior.seq.start + interior.seq.len <= UnsignedMax.Exec(usize::BITS) ✘
++---
+
+verification results:: 5487 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 93s
+Sampled Memory Usage: peak rust_verify RSS: 11780MB, peak z3 RSS: 527MB, min free: 13971MB
+Sampled CPU Usage: rust_verify: 275s, z3 children: 164s

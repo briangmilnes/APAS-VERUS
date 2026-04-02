@@ -1,0 +1,182 @@
+warning: unexpected `cfg` condition value: `all_chapters`
+ --> tests/Chap65/TestUnionFindStEph.rs:1:8
+  |
+1 | #![cfg(feature = "all_chapters")]
+  |        ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: expected values for `feature` are: `Chap02`, `Chap03`, `Chap05`, `Chap06`, `Chap11`, `Chap12`, `Chap17`, `Chap18`, `Chap19`, `Chap21`, `Chap23`, `Chap26`, `Chap27`, `Chap28`, `Chap30`, `Chap35`, `Chap36`, `Chap37`, `Chap38`, `Chap39`, `Chap40`, `Chap41`, `Chap42`, `Chap43`, `Chap44`, `Chap45`, `Chap47`, `Chap49`, `Chap50`, `Chap51`, `Chap52`, `Chap53`, `Chap54`, `Chap55`, and `Chap56` and 12 more
+  = help: consider adding `all_chapters` as a feature in `Cargo.toml`
+  = note: see <https://doc.rust-lang.org/nightly/rustc/check-cfg/cargo-specifics.html> for more information about checking conditional configuration
+  = note: requested on the command line with `-W unexpected-cfgs`
+
+warning: `apas-verus` (test "TestUnionFindStEph") generated 1 warning
+   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS-agent3)
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+ --> tests/Chap19/TestArraySeqMtEphSlice.rs:9:15
+  |
+9 |     let seq = ArraySeqMtEphSlice::<i32>::empty();
+  |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+  |
+help: a struct with a similar name exists
+  |
+9 |     let seq = ArraySeqMtEphSliceS::<i32>::empty();
+  |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:15:15
+   |
+15 |     let seq = ArraySeqMtEphSlice::singleton(42);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+15 |     let seq = ArraySeqMtEphSliceS::singleton(42);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:22:15
+   |
+22 |     let seq = ArraySeqMtEphSlice::from_vec(vec![10, 20, 30]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+22 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:30:15
+   |
+30 |     let seq = ArraySeqMtEphSlice::<i32>::new(5, 42);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+30 |     let seq = ArraySeqMtEphSliceS::<i32>::new(5, 42);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:38:15
+   |
+38 |     let seq = ArraySeqMtEphSlice::from_vec(vec![10, 20, 30, 40, 50]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+38 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30, 40, 50]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:48:15
+   |
+48 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+48 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:57:15
+   |
+57 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+57 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:64:15
+   |
+64 |     let seq = ArraySeqMtEphSlice::from_vec(vec![10, 20, 30, 40, 50]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+64 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30, 40, 50]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:73:15
+   |
+73 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3, 4]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+73 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3, 4]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:80:15
+   |
+80 |     let seq = ArraySeqMtEphSlice::from_vec(vec![10, 20, 30]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+80 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+  --> tests/Chap19/TestArraySeqMtEphSlice.rs:90:15
+   |
+90 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3, 4, 5]);
+   |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+   |
+help: a struct with a similar name exists
+   |
+90 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3, 4, 5]);
+   |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:101:15
+    |
+101 |     let seq = ArraySeqMtEphSlice::from_vec(data);
+    |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+    |
+help: a struct with a similar name exists
+    |
+101 |     let seq = ArraySeqMtEphSliceS::from_vec(data);
+    |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:109:15
+    |
+109 |     let seq = ArraySeqMtEphSlice::from_vec(vec![10, 20, 30, 40, 50]);
+    |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+    |
+help: a struct with a similar name exists
+    |
+109 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![10, 20, 30, 40, 50]);
+    |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:117:15
+    |
+117 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3]);
+    |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+    |
+help: a struct with a similar name exists
+    |
+117 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+    |                                 +
+
+error[E0433]: failed to resolve: use of undeclared type `ArraySeqMtEphSlice`
+   --> tests/Chap19/TestArraySeqMtEphSlice.rs:124:15
+    |
+124 |     let seq = ArraySeqMtEphSlice::from_vec(vec![1, 2, 3]);
+    |               ^^^^^^^^^^^^^^^^^^ use of undeclared type `ArraySeqMtEphSlice`
+    |
+help: a struct with a similar name exists
+    |
+124 |     let seq = ArraySeqMtEphSliceS::from_vec(vec![1, 2, 3]);
+    |                                 +
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `apas-verus` (test "TestChap19ArraySeqMtEphSlice") due to 15 previous errors
+error: command `/home/milnes/.rustup/toolchains/1.94.0-x86_64-unknown-linux-gnu/bin/cargo test --no-run --message-format json-render-diagnostics --release` exited with code 101
+Elapsed: 1s
