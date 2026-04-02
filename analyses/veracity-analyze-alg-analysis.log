@@ -32,6 +32,17 @@ src/Chap18/ArraySeqMtEph.rs:484: error: Mt fn `scan` DIFFERS from APAS — : spa
 src/Chap18/ArraySeqMtEph.rs:501: error: Mt fn `map` DIFFERS from APAS — : parallel D&C via join; O(lg n) from Vec copy overhead
 src/Chap18/ArraySeqMtEph.rs:514: error: Mt fn `tabulate` DIFFERS from APAS — : span O(n) not O(1), sequential loop
 src/Chap18/ArraySeqMtEph.rs:525: error: Mt fn `flatten` DIFFERS from APAS — : span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+src/Chap18/ArraySeqMtEphSlice.rs:566: error: fn `reduce` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:583: error: fn `map` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:592: error: fn `filter` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:601: error: fn `tabulate` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:618: error: fn `scan` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:907: error: fn `reduce_dc` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:1011: error: fn `map_dc_vec` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:1084: error: fn `filter_dc_vec` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:1161: error: fn `tabulate_dc_vec` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:1258: error: fn `scan_dc_vec` missing alg analysis annotation
+src/Chap18/ArraySeqMtEphSlice.rs:1486: error: fn `flatten_dc_vec` missing alg analysis annotation
 src/Chap18/ArraySeqMtPer.rs:163: error: Mt fn `subseq` DIFFERS from APAS — : Vec-backed, sequential clone loop; O(1) requires tree representation
 src/Chap18/ArraySeqMtPer.rs:205: error: Mt fn `append` DIFFERS from APAS — : Vec-backed, sequential clone loops; O(1) requires tree representation
 src/Chap18/ArraySeqMtPer.rs:221: error: Mt fn `filter` DIFFERS from APAS — : parallel D&C with multiset distribution lemma
@@ -93,12 +104,17 @@ src/Chap19/ArraySeqMtEph.rs:347: error: Mt fn `ninject` DIFFERS from APAS — : 
 src/Chap19/ArraySeqMtEph.rs:420: error: Mt fn `scan` DIFFERS from APAS — : sequential loop, span = work
 src/Chap19/ArraySeqMtEph.rs:447: error: Mt fn `tabulate` DIFFERS from APAS — : sequential loop, span = work
 src/Chap19/ArraySeqMtEph.rs:459: error: Mt fn `flatten` DIFFERS from APAS — : nested sequential loops, span = work
-src/Chap19/ArraySeqMtEphSlice.rs:357: error: fn `reduce` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:374: error: fn `map` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:383: error: fn `filter` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:422: error: fn `reduce_dc` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:527: error: fn `map_dc_vec` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:601: error: fn `filter_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:766: error: fn `reduce` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:783: error: fn `map` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:792: error: fn `filter` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:801: error: fn `tabulate` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:818: error: fn `scan` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:948: error: fn `reduce_dc` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:1052: error: fn `map_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:1125: error: fn `filter_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:1202: error: fn `tabulate_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:1299: error: fn `scan_dc_vec` missing alg analysis annotation
+src/Chap19/ArraySeqMtEphSlice.rs:1527: error: fn `flatten_dc_vec` missing alg analysis annotation
 src/Chap19/ArraySeqStEph.rs:177: info: St fn `new` sequential as expected
 src/Chap19/ArraySeqStEph.rs:215: info: St fn `subseq_copy` sequential as expected
 src/Chap19/ArraySeqStEph.rs:229: info: St fn `subseq` sequential as expected
@@ -197,14 +213,14 @@ src/Chap36/QuickSortStEph.rs:204: info: St fn `quick_sort_random` sequential as 
 src/Chap36/QuickSortStEph.rs:393: info: St fn `quick_sort_first` sequential as expected
 src/Chap36/QuickSortStEph.rs:498: info: St fn `quick_sort_median3` sequential as expected
 src/Chap36/QuickSortStEph.rs:600: info: St fn `quick_sort_random` sequential as expected
-src/Chap37/AVLTreeSeqMtPer.rs:224: error: Mt fn `nth` DIFFERS from APAS — : tree traversal to indexed node
 src/Chap37/AVLTreeSeqStEph.rs:283: info: St fn `nth` sequential as expected
 src/Chap37/AVLTreeSeqStEph.rs:323: info: St fn `update` sequential as expected
 src/Chap37/AVLTreeSeqStPer.rs:253: info: St fn `nth` sequential as expected
-src/Chap38/BSTParaMtEph.rs:278: error: Mt fn `join_mid` DIFFERS from APAS — : parametric impl wraps node without rebalancing
-src/Chap38/BSTParaMtEph.rs:343: error: Mt fn `join_pair` DIFFERS from APAS — : delegates to union_inner (ParaPair)
-src/Chap38/BSTParaMtEph.rs:382: error: Mt fn `filter` DIFFERS from APAS — : sequential recursion in filter_inner (spec_fn not Send)
-src/Chap38/BSTParaMtEph.rs:419: error: Mt fn `join_m` DIFFERS from APAS — : delegates to join_mid which is O(1) in parametric impl
+src/Chap38/BSTParaMtEph.rs:245: error: fn `assert_parambst_view_finite` missing alg analysis annotation
+src/Chap38/BSTParaMtEph.rs:286: error: Mt fn `join_mid` DIFFERS from APAS — : parametric impl wraps node without rebalancing
+src/Chap38/BSTParaMtEph.rs:350: error: Mt fn `join_pair` DIFFERS from APAS — : delegates to union_inner (ParaPair)
+src/Chap38/BSTParaMtEph.rs:389: error: Mt fn `filter` DIFFERS from APAS — : sequential recursion in filter_inner (spec_fn not Send)
+src/Chap38/BSTParaMtEph.rs:426: error: Mt fn `join_m` DIFFERS from APAS — : delegates to join_mid which is O(1) in parametric impl
 src/Chap38/BSTParaStEph.rs:289: info: St fn `join_mid` sequential as expected
 src/Chap38/BSTParaStEph.rs:305: info: St fn `join_m` sequential as expected
 src/Chap38/BSTParaStEph.rs:403: info: St fn `union` sequential as expected
@@ -225,12 +241,12 @@ src/Chap39/BSTTreapStEph.rs:3240: info: St fn `param_union` sequential as expect
 src/Chap39/BSTTreapStEph.rs:3251: info: St fn `param_intersect` sequential as expected
 src/Chap39/BSTTreapStEph.rs:3262: info: St fn `param_difference` sequential as expected
 src/Chap39/BSTTreapStEph.rs:3273: info: St fn `param_filter` sequential as expected
-src/Chap41/AVLTreeSetMtEph.rs:113: error: Mt fn `to_seq` DIFFERS from APAS — : sequential in-order traversal
-src/Chap41/AVLTreeSetMtEph.rs:139: error: Mt fn `from_seq` DIFFERS from APAS — : sequential loop of inserts
-src/Chap41/AVLTreeSetMtEph.rs:151: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
-src/Chap41/AVLTreeSetMtPer.rs:94: error: Mt fn `to_seq` DIFFERS from APAS — : sequential in-order traversal
-src/Chap41/AVLTreeSetMtPer.rs:116: error: Mt fn `from_seq` DIFFERS from APAS — : sequential loop of inserts
-src/Chap41/AVLTreeSetMtPer.rs:128: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
+src/Chap41/AVLTreeSetMtEph.rs:154: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
+src/Chap41/AVLTreeSetMtEph.rs:258: error: fn `from_vec_dc` missing alg analysis annotation
+src/Chap41/AVLTreeSetMtPer.rs:85: error: fn `assert_avltreesetmtper_always_wf` missing alg analysis annotation
+src/Chap41/AVLTreeSetMtPer.rs:94: error: fn `assert_avltreesetmtper_bounded_size` missing alg analysis annotation
+src/Chap41/AVLTreeSetMtPer.rs:158: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
+src/Chap41/AVLTreeSetMtPer.rs:248: error: fn `from_vec_dc_per` missing alg analysis annotation
 src/Chap41/AVLTreeSetStEph.rs:203: info: St fn `to_seq` sequential as expected
 src/Chap41/AVLTreeSetStEph.rs:228: info: St fn `from_seq` sequential as expected
 src/Chap41/AVLTreeSetStEph.rs:239: info: St fn `filter` sequential as expected
@@ -297,7 +313,14 @@ src/Chap42/TableStPer.rs:528: info: St fn `delete` sequential as expected
 src/Chap42/TableStPer.rs:538: info: St fn `insert` sequential as expected
 src/Chap42/TableStPer.rs:606: info: St fn `restrict` sequential as expected
 src/Chap42/TableStPer.rs:615: info: St fn `subtract` sequential as expected
-src/Chap43/OrderedTableStPer.rs:795: info: St fn `get_key_range` sequential as expected
+src/Chap43/OrderedTableStEph.rs:1258: error: fn `bst_next_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:1615: error: fn `bst_prev_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:1954: error: fn `bst_split_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:2404: error: fn `bst_rank_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:2720: error: fn `bst_select_by_rank` missing alg analysis annotation
+src/Chap43/OrderedTableStPer.rs:820: info: St fn `get_key_range` sequential as expected
+src/Chap43/OrderedTableStPer.rs:976: error: fn `bst_next_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStPer.rs:1333: error: fn `bst_prev_by_key` missing alg analysis annotation
 src/Chap49/MinEditDistStEph.rs:107: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/MinEditDistStEph.rs:162: info: St fn `min_edit_distance_rec` sequential as expected
 src/Chap49/MinEditDistStEph.rs:238: info: St fn `min_edit_distance` sequential as expected
@@ -327,11 +350,9 @@ src/Chap51/TopDownDPStPer.rs:156: info: St fn `med_memoized` sequential as expec
 src/Chap51/TopDownDPStPer.rs:163: info: St fn `med_recursive` sequential as expected
 src/Chap51/TopDownDPStPer.rs:262: info: St fn `med_memoized` sequential as expected
 src/Chap51/TopDownDPStPer.rs:272: info: St fn `med_recursive` sequential as expected
-src/Chap52/AdjMatrixGraphMtPer.rs:349: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(1); persistent seq requires row copy
 src/Chap52/AdjMatrixGraphStPer.rs:344: info: St fn `set_edge` sequential as expected
-src/Chap52/AdjSeqGraphMtEph.rs:260: error: Mt fn `set_edge` DIFFERS from APAS — : APAS says O(n), O(1); impl rebuilds neighbor list
 src/Chap52/AdjSeqGraphStEph.rs:301: info: St fn `set_edge` sequential as expected
-src/Chap52/AdjTableGraphMtPer.rs:125: error: Mt fn `num_edges` DIFFERS from APAS — : APAS assumes cached; impl sums degrees
+src/Chap52/AdjTableGraphMtPer.rs:131: error: fn `count_table_edges` missing alg analysis annotation
 src/Chap52/AdjTableGraphStEph.rs:235: info: St fn `num_edges` sequential as expected
 src/Chap52/AdjTableGraphStPer.rs:138: info: St fn `num_edges` sequential as expected
 src/Chap53/GraphSearchStEph.rs:131: info: St fn `graph_search` sequential as expected
@@ -439,21 +460,35 @@ src/Chap66/BoruvkaStEph.rs:510: info: St fn `boruvka_mst_with_seed` sequential a
 Summary
 =============================================================
 
-  Total exec fns scanned:    5096
-  Boilerplate excluded:       429  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
-  Files scanned:              246
+  Total exec fns scanned:    5176
+  Boilerplate excluded:       437  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
+  Files scanned:              247
 
-  Alg analysis annotations:  5090  (fns with any APAS or Code review line)
-  Missing alg analysis:         6  <- errors
+  Alg analysis annotations:  5141  (fns with any APAS or Code review line)
+  Missing alg analysis:        35  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       74  <- errors
+  Mt DIFFERS (blockers):       66  <- errors
+  Mt ACCEPTED DIFFERENCE:       2  <- info (documented choices)
   St DIFFERS (expected):      353  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 80
+  Errors: 101
   Warnings: 0
-  Info: 353
+  Info: 355
+
+Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
+ reformatted)
+
+  Mt DIFFERS (blockers):       66  <- errors
+  Mt ACCEPTED DIFFERENCE:       2  <- info (documented choices)
+  St DIFFERS (expected):      353  <- info
+  St parallel Code review:      0  <- errors (agent claimed parallel on St file)
+  APAS without Code review:     0  <- warnings
+
+  Errors: 101
+  Warnings: 0
+  Info: 355
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log

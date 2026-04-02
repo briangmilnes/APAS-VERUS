@@ -185,14 +185,14 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential bit scan; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
         fn size(&self) -> (count: usize)
             requires self.spec_arraysetenummteph_wf(),
             ensures count == self@.len(), self@.finite();
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential scan, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential scan, APAS assumes parallel
         fn to_seq(&self) -> (seq: ArraySeqMtEphS<usize>)
             requires self.spec_arraysetenummteph_wf(),
             ensures
@@ -210,7 +210,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — matches APAS CS 41.3 Work; Span DIFFERS: sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; matches APAS Work, Span sequential (PRAM assumes O(1) parallel)
         fn singleton(u: usize, x: usize) -> (tree: Self)
             ensures
                 (x < u ==> tree@ == Set::<usize>::empty().insert(x)),
@@ -220,7 +220,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(n lg n)
         /// - Alg Analysis: APAS (Ch41 Ex 41.3): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + n), Span O(u + n) — DIFFERS: sequential init + insert loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + n), Span O(u + n) — ACCEPTED DIFFERENCE: PRAM gap; sequential init + insert loop
         fn from_seq(u: usize, seq: ArraySeqMtEphS<usize>) -> (constructed: Self)
             ensures
                 constructed.spec_arraysetenummteph_wf(),
@@ -228,7 +228,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u + Σ W(f(x))), Span O(1 + max S(f(x)))
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(Σ W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — DIFFERS: sequential loop; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u + Σ W(f(x))), Span O(u + Σ W(f(x))) — ACCEPTED DIFFERENCE: PRAM gap; sequential loop; APAS CS 41.3 Span O(1) assumes PRAM, not fork-join
         fn filter<F: Fn(usize) -> bool + Send + Sync + 'static + Clone>(&self, f: F) -> (filtered: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -240,7 +240,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-AND, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-AND, APAS assumes parallel
         fn intersection(&self, other: &Self) -> (common: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -253,7 +253,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-AND-NOT, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-AND-NOT, APAS assumes parallel
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -266,7 +266,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(m * lg(1+n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — DIFFERS: sequential word-OR, APAS assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(u), Span O(u) — ACCEPTED DIFFERENCE: PRAM gap; sequential word-OR, APAS assumes parallel
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 self.spec_arraysetenummteph_wf(),
@@ -286,7 +286,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: ephemeral bit clear, APAS O(u) assumes copy
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: PRAM gap; ephemeral bit clear, APAS O(u) assumes copy
         fn delete(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures
@@ -296,7 +296,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
         /// - Alg Analysis: APAS (Ch41 CS 41.4): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: ephemeral bit set, APAS O(u) assumes copy
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: PRAM gap; ephemeral bit set, APAS O(u) assumes copy
         fn insert(&mut self, x: usize)
             requires old(self).spec_arraysetenummteph_wf(),
             ensures

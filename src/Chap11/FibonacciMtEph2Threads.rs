@@ -97,7 +97,7 @@ tokenized_state_machine!{
 /// Ex 11.10's parallel recursion: it achieves the same O(n) span with
 /// only O(n) total work instead of exponential.
 /// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — the recursive parallel version
-/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: not Ex 11.10; iterative sub-calls yield linear work and span
+/// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: iterative implementation, not Ex 11.10 recursive parallel; O(n) is strictly better than O(φⁿ)
 pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     requires n >= 2 && n <= 46
     ensures fibonacci == spec_fib(n as nat)

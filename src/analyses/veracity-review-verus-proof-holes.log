@@ -199,34 +199,14 @@ Table of Contents:
       1964 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEph.rs:537: info: trivial_spec_wf
    Info: 1 total
-❌ Chap18/ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:729: error: assume() [algorithmic] - assume(injected_seq =~= expected);
-       700 |         fn inject(&self, updates: &Vec<(usize, T)>) -> (injected: Self) {
+⚠ Chap18/ArraySeqMtEphSlice.rs
+/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:1742: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1738 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       727 |                 assert(injected_seq.len() == expected.len());
-       728 |                 // The sequential application matches spec_inject for the simple case.
-       730 |             }
-       731 |             result
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:1408: error: fn_missing_ensures - fn flatten_dc_vec — exec fn should have ensures
-      1394 |     pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
-            ...
-      1406 | 
-      1407 |     /// D&C flatten producing Vec<T>. Called by flatten.
-      1409 |         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-      1410 |     ) -> (result: Vec<T>)
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:1640: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1636 |         fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1638 |         {
-      1639 |             let equal = self.start == other.start && self.len == other.len;
-      1641 |             equal
-      1642 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtEphSlice.rs:757: error: bare_impl - impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> { — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
-       758 |         /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-       759 |         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
-   Holes: 1 total
-      1 × assume()
-   Proof functions: 6 total (6 clean, 0 holed)
+      1740 |         {
+      1741 |             let equal = self.start == other.start && self.len == other.len;
+      1743 |             equal
+      1744 |         }
 ⚠ Chap18/ArraySeqMtPer.rs
 /home/milnes/projects/APAS-VERUS/src/Chap18/ArraySeqMtPer.rs:1851: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1847 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -992,30 +972,30 @@ Table of Contents:
       1544 |             equal
       1545 |         }
 ❌ Chap41/AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:542: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-       543 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:543: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-       544 | 
-       545 |     // 12. macros
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:470: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:650: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
+       651 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:651: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+       652 | 
+       653 |     // 12. macros
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:578: info: accept()
    Holes: 2 total
       2 × unsafe impl
    Info: 1 total
 ❌ Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:534: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
-       535 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:535: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-       536 | 
-       537 |     // 13. macros
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:488: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       453 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:606: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
+       607 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:607: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+       608 | 
+       609 |     // 13. macros
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:560: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       525 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       486 |                 i = i + 1;
-       487 |             }
-       489 |             all_eq
-       490 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:494: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:501: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+       558 |                 i = i + 1;
+       559 |             }
+       561 |             all_eq
+       562 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:566: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:573: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Holes: 2 total
       2 × unsafe impl
    Info: 2 × structural_false_positive
@@ -1696,7 +1676,7 @@ Table of Contents:
        689 |             equal
        690 |         }
 ✓ Chap52/AdjTableGraphMtPer.rs
-   1 clean proof function
+   2 clean proof functions
 ✓ Chap52/AdjTableGraphStEph.rs
    3 clean proof functions
 ✓ Chap52/AdjTableGraphStPer.rs
@@ -2349,30 +2329,28 @@ ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   242 clean (no holes, no errors; 98%)
-   3 holed (holes or errors, 1%)
+   243 clean (no holes, no errors; 99%)
+   2 holed (holes or errors, 0%)
    245 total
 
 Proof Functions:
-   642 clean (100%)
+   644 clean (100%)
    0 holed (0%)
-   642 total
+   644 total
 
 Function Specs:
-   5556 exec fns with complete spec (requires+ensures) (66%)
-   65 exec fns missing spec (0%)
-   2793 proof/spec fns clean (33%)
+   5560 exec fns with complete spec (requires+ensures) (66%)
+   64 exec fns missing spec (0%)
+   2796 proof/spec fns clean (33%)
    0 proof/spec fns with holes (0%)
-   8414 total fns
+   8420 total fns
 
 
-Holes Found: 5 (actionable)
-   1 × assume() [algorithmic] (20%)
-   4 × unsafe impl (80%)
-Real Proof Targets: 5 (all actionable)
+Holes Found: 4 (actionable)
+   4 × unsafe impl (100%)
+Real Proof Targets: 4 (all actionable)
 
-Warnings: 161 total
-   1 × fn_missing_ensures
+Warnings: 160 total
    160 × assume_eq_clone_workaround
 
 Accepted (reviewed): 127 total
@@ -2382,9 +2360,9 @@ Accepted (reviewed): 127 total
    16 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
    1 × enum_outside_verus_accept_hole
-   1 × struct_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap05:  3  Chap06: 25
@@ -2405,8 +2383,8 @@ Structural (info only): 159
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 08:34:26 -07:00
-Ended:     2026-04-02 08:34:27 -07:00
-Duration:  1808ms
+Started:   2026-04-02 09:30:52 -07:00
+Ended:     2026-04-02 09:30:53 -07:00
+Duration:  1762ms
 
 Full output: src/analyses/veracity-review-verus-proof-holes.log
