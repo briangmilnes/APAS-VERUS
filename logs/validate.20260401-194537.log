@@ -1,0 +1,293 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:660:17
+     |
+ 660 |                 tabulated.spec_orderedtablesteph_wf(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1615 |             tabulated
+     |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:660:17
+    |
+660 |                 tabulated.spec_orderedtablesteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(keys).view() ✔
+%return.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |key_arg, result| key_arg.view() == k && ClosureEns(old(f), (key_arg), result) && %return.view().index(k) == result.view()) ✔
+%return.view().dom().finite() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:674:76
+     |
+ 674 |             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite(), mapped.spec_orderedtablesteph_wf();
+     |                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1727 |             mapped
+     |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:674:76
+    |
+674 |             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite(), mapped.spec_orderedtablesteph_wf();
+    |                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom() ✔
+%return.view().dom().finite() ✔
+%return.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:719:17
+     |
+ 719 |                   self.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1968 |               proof {
+     |  ___________________-
+1969 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+1970 | |                 lemma_pair_set_to_map_dom_finite(old_tree);
+...    |
+2013 | |                 assert(obeys_feq_fulls::<K, V>());
+2014 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:719:17
+    |
+719 |                 self.spec_orderedtablesteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✔
+self.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStEph.rs:1881:36
+     |
+1881 | ...                   v1@ == old_map[kv] && v2@ == other_map[kv]
+     |                              ^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStEph.rs:1941:44
+     |
+1941 | ...                   v1@ == old_map[kv] && v2@ == other_map[kv]
+     |                              ^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:743:17
+     |
+ 743 |                   self.spec_orderedtablesteph_wf();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2328 |               proof {
+     |  ___________________-
+2329 | |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+2330 | |                 lemma_pair_set_to_map_dom_finite(old_tree);
+2331 | |                 lemma_pair_set_to_map_dom_finite(other.tree@);
+...    |
+2391 | |                 assert(self.tree@.len() < usize::MAX as nat);
+2392 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:743:17
+    |
+743 |                 self.spec_orderedtablesteph_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        self.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✔
+self.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:625:17
+     |
+ 625 |                 table.spec_orderedtablestper_wf(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1324 |             tabulated
+     |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:625:17
+    |
+625 |                 table.spec_orderedtablestper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(keys).view() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |key_arg, result| key_arg.view() == k && ClosureEns(old(f), (key_arg), result) && %return.view().index(k) == result.view()) ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:641:17
+     |
+ 641 |                 table.spec_orderedtablestper_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1456 |             mapped
+     |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:641:17
+    |
+641 |                 table.spec_orderedtablestper_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom() ✔
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |old_val, result| old_val.view() == old(self).view().index(k) && ClosureEns(old(f), (old_val), result) && %return.view().index(k) == result.view()) ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:670:17
+     |
+ 670 |                 table.spec_orderedtablestper_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1657 |             table
+     |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:670:17
+    |
+670 |                 table.spec_orderedtablestper_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && %return.view().index(k) == r.view()) ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:691:17
+     |
+ 691 |                 table.spec_orderedtablestper_wf();
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1993 |             table
+     |             ----- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:691:17
+    |
+691 |                 table.spec_orderedtablestper_wf();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        %return.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        %return.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && %return.view().index(k) == r.view()) ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+note: recommendation not met
+    --> src/Chap43/OrderedTableStPer.rs:1855:68
+     |
+1855 |                         && !old_map.dom().contains(p.0) ==> p.1 == other_map[p.0],
+     |                                                                    ^^^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:3640:13
+     |
+3640 |             result.spec_orderedtablestper_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3724 |         result
+     |         ------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStPer.rs:963:16
+     |
+ 963 |             && spec_set_pair_view_generated::<K, V>(self.tree@)
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3640 |             result.spec_orderedtablestper_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+result.view().dom().finite() ✔
+result.spec_orderedtablestper_wf() ✘
+|   result.tree.spec_bstparasteph_wf() ✔
+|   spec_key_unique_pairs_set(result.tree.view()) ✔
+|   result.tree.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✔
+|   obeys_feq_full() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_pair_key_determines_order() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_set_pair_view_generated(result.tree.view()) ✘
+|   |   forall |elem|
+|   |       result.tree.view().contains(elem) ==>
+|   |           (exists |p| p.view() == elem) 
+|   +---
++---
+
+verification results:: 2611 verified, 9 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2874MB, peak z3 RSS: 406MB, min free: 22537MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 46s

@@ -76,6 +76,13 @@ broadcast use {
         )
     }
 
+    /// Every element in the set has a Pair preimage under View.
+    /// Sound: BSTs built from Pair operations only insert p@ for concrete Pair values.
+    /// Subsets of View-generated sets are View-generated.
+    pub open spec fn spec_set_pair_view_generated<K: View, V: View>(s: Set<(K::V, V::V)>) -> bool {
+        forall|elem: (K::V, V::V)| s.contains(elem) ==> exists|p: Pair<K, V>| (#[trigger] p@) == elem
+    }
+
     /// Key uniqueness for a set of pairs: no two pairs share the same first component.
     /// Nested quantifiers break the symmetric trigger loop that the flat form causes.
     pub open spec fn spec_key_unique_pairs_set<KV, VV>(s: Set<(KV, VV)>) -> bool {
@@ -97,6 +104,60 @@ broadcast use {
     }
 
     // 7. proof fns
+
+    /// Subset of a View-generated set is View-generated.
+    proof fn lemma_view_gen_subset<K: View, V: View>(
+        sub: Set<(K::V, V::V)>,
+        sup: Set<(K::V, V::V)>,
+    )
+        requires
+            sub.subset_of(sup),
+            spec_set_pair_view_generated::<K, V>(sup),
+        ensures
+            spec_set_pair_view_generated::<K, V>(sub),
+    {
+        assert forall|elem: (K::V, V::V)| sub.contains(elem)
+            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+            assert(sup.contains(elem));
+        };
+    }
+
+    /// Inserting a Pair view into a View-generated set preserves View-generation.
+    proof fn lemma_view_gen_insert<K: View, V: View>(
+        s: Set<(K::V, V::V)>,
+        pair: Pair<K, V>,
+    )
+        requires
+            spec_set_pair_view_generated::<K, V>(s),
+        ensures
+            spec_set_pair_view_generated::<K, V>(s.insert(pair@)),
+    {
+        assert forall|elem: (K::V, V::V)| s.insert(pair@).contains(elem)
+            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+            if elem == pair@ {
+                assert(pair@ == elem);
+            } else {
+                assert(s.contains(elem));
+            }
+        };
+    }
+
+    /// Union of two View-generated sets is View-generated.
+    proof fn lemma_view_gen_union<K: View, V: View>(
+        a: Set<(K::V, V::V)>,
+        b: Set<(K::V, V::V)>,
+    )
+        requires
+            spec_set_pair_view_generated::<K, V>(a),
+            spec_set_pair_view_generated::<K, V>(b),
+        ensures
+            spec_set_pair_view_generated::<K, V>(a.union(b)),
+    {
+        assert forall|elem: (K::V, V::V)| a.union(b).contains(elem)
+            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+            if a.contains(elem) {} else { assert(b.contains(elem)); }
+        };
+    }
 
     /// The domain of spec_pair_set_to_map is finite when the source set is finite.
     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
@@ -1052,6 +1113,7 @@ broadcast use {
         requires
             tree.spec_bstparasteph_wf(),
             spec_key_unique_pairs_set(tree@),
+            spec_set_pair_view_generated::<K, V>(tree@),
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             vstd::laws_cmp::obeys_cmp_spec::<K>(),
@@ -1081,6 +1143,7 @@ broadcast use {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
                     assert(tree@ =~= left@.union(right@).insert(root_pair@));
                     assert(tree@.len() == left@.len() + right@.len() + 1);
+                    // Propagate key uniqueness and View generation to subtrees (subsets of tree@).
                     assert(spec_key_unique_pairs_set(left@)) by {
                         assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
                             implies forall|vv2: V::V| left@.contains((kv, vv2)) ==> vv == vv2 by {
@@ -1097,6 +1160,18 @@ broadcast use {
                             assert forall|vv2: V::V| right@.contains((kv, vv2)) implies vv == vv2 by {
                                 assert(tree@.contains((kv, vv2)));
                             };
+                        };
+                    };
+                    assert(spec_set_pair_view_generated::<K, V>(left@)) by {
+                        assert forall|elem: (K::V, V::V)| left@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                            assert(tree@.contains(elem));
+                        };
+                    };
+                    assert(spec_set_pair_view_generated::<K, V>(right@)) by {
+                        assert forall|elem: (K::V, V::V)| right@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                            assert(tree@.contains(elem));
                         };
                     };
                 }
@@ -1132,15 +1207,11 @@ broadcast use {
                                     assert(!left@.contains((k@, vv)));
                                     assert(root_pair@.0 != k@);
                                     assert(right@.contains((k@, vv)));
-                                    // Use View surjectivity to get a V witness for vv.
-                                    assert(spec_view_surjective_trigger::<V>());
-                                    assert(spec_view_has_preimage::<V>(vv));
-                                    let ghost v_wit: V = choose|vw: V| vw@ == vv;
-                                    let ghost p_wit: Pair<K, V> = Pair(*k, v_wit);
-                                    assert(p_wit@ == (k@, vv));
+                                    // right@ is View-generated: (k@, vv) in right@ has a Pair preimage.
+                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
                                     assert(right@.contains(p_wit@));
-                                    // Trigger fires: p_wit.cmp_spec(&root_pair) == Greater.
-                                    // But p_wit.0 == *k, and k < root_pair.0.
+                                    // Expose trigger fires: p_wit.cmp_spec(&root_pair) == Greater.
+                                    // But p_wit.0@ == k@ and k < root_pair.0, so contradiction.
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
                                     assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
                                     assert(false);
@@ -1166,11 +1237,7 @@ broadcast use {
                                     assert(!right@.contains((k@, vv)));
                                     assert(root_pair@.0 != k@);
                                     assert(left@.contains((k@, vv)));
-                                    assert(spec_view_surjective_trigger::<V>());
-                                    assert(spec_view_has_preimage::<V>(vv));
-                                    let ghost v_wit: V = choose|vw: V| vw@ == vv;
-                                    let ghost p_wit: Pair<K, V> = Pair(*k, v_wit);
-                                    assert(p_wit@ == (k@, vv));
+                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
                                     assert(left@.contains(p_wit@));
                                     lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
                                     assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
@@ -1197,6 +1264,7 @@ broadcast use {
             && spec_pair_key_determines_order::<K, V>()
             && vstd::laws_cmp::obeys_cmp_spec::<K>()
             && view_ord_consistent::<K>()
+            && spec_set_pair_view_generated::<K, V>(self.tree@)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -1482,6 +1550,13 @@ broadcast use {
                 seq_view.unique_seq_to_set();
                 assert(seq_view.len() == keys@.len());
                 lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(tree@)) by {
+                    assert forall|elem: (K::V, V::V)| tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
             }
             while i < len
                 invariant
@@ -1511,6 +1586,7 @@ broadcast use {
                     forall|p: (K::V, V::V)| tree@.contains(p) ==>
                         exists|j: int| 0 <= j < i as int && p.0 == seq_view[j],
                     keys@.len() < usize::MAX as nat,
+                    spec_set_pair_view_generated::<K, V>(tree@),
                 decreases len - i,
             {
                 let k = seq.nth(i);
@@ -1534,6 +1610,7 @@ broadcast use {
                 }
                 tree.insert(Pair(k_clone, val));
                 proof {
+                    lemma_view_gen_insert::<K, V>(old_tree, Pair(k_clone, val));
                     // tree@ =~= old_tree.insert((seq_view[i], val@)).
                     // The pair was fresh, so set insert increases len by 1.
                     assert(old_tree.finite());
@@ -1612,6 +1689,13 @@ broadcast use {
             proof {
                 lemma_sorted_keys_pairwise_distinct(self.tree@, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
             }
             while i < len
                 invariant
@@ -1637,6 +1721,7 @@ broadcast use {
                     // Completeness: every processed key has a mapped entry in new_tree.
                     forall|j: int| 0 <= j < i as int
                         ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
@@ -1657,6 +1742,7 @@ broadcast use {
                 }
                 new_tree.insert(Pair(k_clone, new_val));
                 proof {
+                    lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(k_clone, new_val));
                     assert(new_tree@.len() == i as nat + 1);
                     assert(new_tree@.len() < usize::MAX as nat);
                     lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, new_val@);
@@ -1819,6 +1905,13 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(old_tree);
                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
             }
             while i < len
                 invariant
@@ -1867,6 +1960,7 @@ broadcast use {
                             v1@ == old_map[kv] && v2@ == other_map[kv]
                             && f.ensures((&v1, &v2), r)
                             && spec_pair_set_to_map(new_tree@)[kv] == r@),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
@@ -1897,6 +1991,7 @@ broadcast use {
                         }
                         new_tree.insert(Pair(key_clone, combined));
                         proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined));
                             assert(new_tree@.len() <= i as nat + 1);
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, combined@);
@@ -2021,6 +2116,13 @@ broadcast use {
             proof {
                 lemma_sorted_keys_pairwise_distinct(old_tree, self_sorted@);
                 lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
             }
             while i < self_len
                 invariant
@@ -2060,6 +2162,7 @@ broadcast use {
                         || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
                             v1@ == old_map[p.0] && v2@ == other_map[p.0]
                             && f.ensures((&v1, &v2), r) && p.1 == r@)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
                 decreases self_len - i,
             {
                 let pair = self_sorted.nth(i);
@@ -2088,6 +2191,7 @@ broadcast use {
                         proof { lemma_cloned_view_eq(pair.0, key_clone); }
                         new_tree.insert(Pair(key_clone, combined));
                         proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined));
                             assert(new_tree@.len() == i as nat + 1);
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, combined@);
@@ -2128,6 +2232,7 @@ broadcast use {
                         proof { lemma_cloned_view_eq(*pair, cloned); }
                         new_tree.insert(cloned);
                         proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             assert(new_tree@.len() == i as nat + 1);
                             assert(new_tree@.len() < usize::MAX as nat);
                             lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
@@ -2230,6 +2335,7 @@ broadcast use {
                                 v1@ == old_map[p.0] && v2@ == other_map[p.0]
                                 && f.ensures((&v1, &v2), r) && p.1 == r@)))
                         || (!old_map.dom().contains(p.0) && other.tree@.contains(p)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
                 decreases other_len - j,
             {
                 let pair = other_sorted.nth(j);
@@ -2258,6 +2364,7 @@ broadcast use {
                         }
                         new_tree.insert(cloned);
                         proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
                             assert(new_tree@.len() <= self_sorted@.len() + j as nat + 1);
                             lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
                             // Old keys preserved maintenance.
@@ -4155,6 +4262,7 @@ broadcast use {
                 // Provenance: every element in the tree came from entries[0..i].
                 forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv)) ==>
                     exists|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv),
+                spec_set_pair_view_generated::<K, V>(tree@),
                 // Entries have unique keys (from requires).
                 forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                     ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,

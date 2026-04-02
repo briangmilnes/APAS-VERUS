@@ -14,37 +14,41 @@ O(n) linear scan (in_order + loop) to O(lg n) recursive BST descent using `expos
 | 1 | 43 | OrderedTableStEph.rs | New `bst_find_by_key` using recursive BST descent via `expose()` |
 | 2 | 43 | OrderedTableStPer.rs | Same change, plus `find_pre` updated with Pair axioms |
 
-### New axiom: View surjectivity
+### New invariant: View-generation (`spec_set_pair_view_generated`)
 
-| # | File | Description |
-|---|------|-------------|
-| 3 | vstdplus/feq.rs | Added `spec_view_has_preimage`, `spec_view_surjective`, and broadcast `axiom_view_surjective` |
+Every element in the BST's set has a concrete `Pair<K,V>` preimage under View. This is
+a sound, provable property: BSTs built from Pair operations only insert `p@` for concrete
+Pair values. Subsets, unions, and inserts all preserve the property.
 
-The proof requires bridging from Pair-level BST quantifiers (from `expose()`) to view-level
-map properties. The expose postcondition `forall|t: Pair<K,V>| right@.contains(t@) ==> ...`
-quantifies over exec-level Pair values, but the map-level conclusion needs view-level
-(K::V, V::V) reasoning. The bridge requires View surjectivity: given a view-level value
-`vv: V::V`, there exists a `V` with `v@ == vv`. This is axiomatized via `admit()` in the
-`group_feq_axioms` broadcast group, consistent with the existing feq/view_eq axiom pattern.
+| # | Chap | File | Description |
+|---|------|------|-------------|
+| 3 | 43 | OrderedTableStEph.rs | Added `spec_set_pair_view_generated` spec + 3 helper lemmas |
+| 4 | 43 | OrderedTableStPer.rs | Added `spec_set_pair_view_generated` spec |
+| 5 | 43 | OrderedTableStEph.rs | Added to `spec_orderedtablesteph_wf` |
+| 6 | 43 | OrderedTableStPer.rs | Added to `spec_orderedtablestper_wf` and `find_pre` |
+
+Maintained through 9 functions (tabulate, map, intersection, union in both StEph/StPer,
+plus from_sorted_entries in StPer) by adding loop invariants and `lemma_view_gen_insert`
+calls after each BST insert.
 
 ### Annotation updates (O(n) → O(lg n))
 
 | # | Chap | File | Functions updated |
 |---|------|------|-------------------|
-| 4 | 43 | OrderedTableStEph.rs | find, lookup, find_iter, insert, delete_fn |
-| 5 | 43 | OrderedTableStPer.rs | find, find_iter, insert, delete_fn |
-| 6 | 43 | OrderedTableMtEph.rs | find, lookup |
-| 7 | 43 | OrderedTableMtPer.rs | find |
-| 8 | 43 | AugOrderedTableStEph.rs | find |
-| 9 | 43 | AugOrderedTableStPer.rs | find |
-| 10 | 43 | AugOrderedTableMtEph.rs | find |
+| 7 | 43 | OrderedTableStEph.rs | find, lookup, find_iter, insert, delete_fn |
+| 8 | 43 | OrderedTableStPer.rs | find, find_iter, insert, delete_fn |
+| 9 | 43 | OrderedTableMtEph.rs | find, lookup |
+| 10 | 43 | OrderedTableMtPer.rs | find |
+| 11 | 43 | AugOrderedTableStEph.rs | find |
+| 12 | 43 | AugOrderedTableStPer.rs | find |
+| 13 | 43 | AugOrderedTableMtEph.rs | find |
 
 ### StPer find_pre strengthened
 
 `spec_orderedtablestper_find_pre` now includes `spec_pair_key_determines_order`,
-`view_ord_consistent::<Pair<K,V>>()`, and `obeys_cmp_spec::<Pair<K,V>>()` — required
-for the BST descent proof. These were already in `wf`, so all callers with `wf` are
-automatically satisfied.
+`view_ord_consistent::<Pair<K,V>>()`, `obeys_cmp_spec::<Pair<K,V>>()`, and
+`spec_set_pair_view_generated`. These were already in `wf`, so all callers with `wf`
+are automatically satisfied.
 
 ## Proof technique
 
@@ -55,16 +59,22 @@ for the None (not found) case works by contradiction:
 2. Get witness `vv` via `lemma_map_contains_pair_in_set`
 3. Eliminate left subtree (recursive postcondition), root (key mismatch)
 4. Conclude the pair is in right subtree: `right@.contains((k@, vv))`
-5. Use View surjectivity to get `v_wit: V` with `v_wit@ == vv`
-6. Construct ghost Pair: `p_wit = Pair(*k, v_wit)`, assert `right@.contains(p_wit@)`
-7. Expose quantifier trigger fires: `p_wit.cmp_spec(&root_pair) == Greater`
+5. Use View-generation (not surjectivity!) to get a Pair preimage: right@ is
+   View-generated (subset of tree@, which is View-generated from wf), so
+   `exists|p: Pair| p@ == (k@, vv)`. Choose the witness `p_wit`.
+6. Assert `right@.contains(p_wit@)` — triggers the expose quantifier
+7. Expose quantifier fires: `p_wit.cmp_spec(&root_pair) == Greater`
 8. But `lemma_cmp_equal_congruent` + key ordering gives `p_wit.cmp_spec(&root_pair) == Less`
-9. Contradiction
+9. Contradiction: `Less != Greater`
+
+The critical distinction from View surjectivity: we only need preimages for elements
+actually IN the set, not for all possible view values. This is sound for all types
+(NonZeroU64, Vec-backed sequences, etc.) because only concrete values can be inserted.
 
 ## Validation
 
 ```
-verification results:: 5471 verified, 0 errors
+verification results:: 5473 verified, 0 errors
 RTT: 3583 tests run: 3583 passed, 0 skipped
 PTT: 221 tests run: 221 passed, 0 skipped
 ```
