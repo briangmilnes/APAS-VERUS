@@ -1,0 +1,137 @@
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:469:21
+    |
+469 |                     neighbors.delete(&v_clone)
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:200:17
+    |
+200 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap41/AVLTreeSetMtPer.rs:200:17
+    |
+200 |                 self@.len() < usize::MAX as nat,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+neighbors.spec_avltreesetmtper_wf() ✔
+neighbors.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:224:23
+    |
+224 |             let seq = self.edges.to_seq();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:97:17
+    |
+ 97 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:253:33
+    |
+253 |                     neighbors = neighbors.insert(w);
+    |                                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:211:17
+    |
+211 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/Chap41/AVLTreeSetMtPer.rs:97:17
+   |
+97 |                 self@.len() < usize::MAX as nat,
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() ✔
+tmp%.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:306:32
+    |
+306 |             let new_vertices = self.vertices.delete(&v_cv);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:200:17
+    |
+200 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:307:23
+    |
+307 |             let seq = self.edges.to_seq();
+    |                       ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:97:17
+    |
+ 97 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:339:33
+    |
+339 |                     new_edges = new_edges.insert(e);
+    |                                 ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:211:17
+    |
+211 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() ✔
+tmp%.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+error: precondition not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:380:29
+    |
+380 |             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:200:17
+    |
+200 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+note: 
+
+tmp%.spec_avltreesetmtper_wf() ✔
+tmp%.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchMtPer.rs:111:27
+    |
+111 |                 let seq = frontier.to_seq();
+    |                           ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:97:17
+    |
+ 97 |                 self@.len() < usize::MAX as nat,
+    |                 ------------------------------- failed precondition
+
+note: 
+
+frontier.spec_avltreesetmtper_wf() ✔
+frontier.view().len() < UnsignedMax.Exec(usize::BITS) ✘
+
+verification results:: 5577 verified, 5 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 108s
+Sampled Memory Usage: peak rust_verify RSS: 20311MB, peak z3 RSS: 844MB, min free: 5506MB
+Sampled CPU Usage: rust_verify: 484s, z3 children: 363s

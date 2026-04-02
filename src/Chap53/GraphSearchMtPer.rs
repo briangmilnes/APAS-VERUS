@@ -36,7 +36,10 @@ pub mod GraphSearchMtPer {
     pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool))
-            requires obeys_feq_clone::<V>(), frontier.spec_avltreesetmtper_wf(),
+            requires
+                obeys_feq_clone::<V>(),
+                frontier.spec_avltreesetmtper_wf(),
+                frontier@.len() < usize::MAX as nat,
             ensures selected.0@.subset_of(frontier@);
     }
 

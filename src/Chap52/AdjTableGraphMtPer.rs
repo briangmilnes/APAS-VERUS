@@ -465,6 +465,8 @@ broadcast use {
                     proof {
                         // Value wf: stored AVLTreeSetMtPer values are always wf (finite ghost set).
                         assume(neighbors.spec_avltreesetmtper_wf());
+                        // Capacity: stored neighbor sets are always < usize::MAX.
+                        assume(neighbors@.len() < usize::MAX as nat);
                     }
                     neighbors.delete(&v_clone)
                 },
