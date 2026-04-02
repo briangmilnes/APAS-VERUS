@@ -1,0 +1,40 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1138:44
+     |
+1138 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1164:44
+     |
+1164 | ...                   assert(false);
+     |                              ^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+false 
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:459:44
+    |
+459 | ...                   assert(false);
+    |                              ^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:482:44
+    |
+482 | ...                   assert(false);
+    |                              ^^^^^ assertion failed
+
+note: 
+
+false 
+
+verification results:: 2618 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 5399MB, peak z3 RSS: 573MB, min free: 17469MB
+Sampled CPU Usage: rust_verify: 111s, z3 children: 127s

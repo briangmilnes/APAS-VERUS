@@ -413,7 +413,7 @@ broadcast use {
             from_st(inner)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StEph find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- RwLock wrapper, delegates to StEph find
         fn find(&self, k: &K) -> (found: Option<V>) {
 
             let read_handle = self.locked_table.acquire_read();
@@ -424,7 +424,7 @@ broadcast use {
             found
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>) {
             self.find(k)
         }

@@ -351,7 +351,7 @@ pub mod OrderedTableMtPer {
             from_st_table(inner)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- RwLock wrapper, delegates to StPer find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- RwLock wrapper, delegates to StPer find
         fn find(&self, k: &K) -> (found: Option<V>) {
             proof {
                 use_type_invariant(self);

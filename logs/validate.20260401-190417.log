@@ -1,0 +1,11 @@
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+   --> src/vstdplus/feq.rs:273:9
+    |
+273 |         forall|v: T::V| exists|t: T| t@ == v
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 3989MB, peak z3 RSS: 343MB, min free: 21561MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 46s
