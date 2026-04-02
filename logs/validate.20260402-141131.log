@@ -1,0 +1,18 @@
+error: aborting due to 1 previous error
+
+
+error: the trait bound `A1_T: T14_Clone` is not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:460:18
+    |
+460 |     impl<T: TotalOrder + Copy + Send + Sync + Eq + 'static> OrderStatSelectMtEphTrait<T> for ArraySeqMtEphS<T> {
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+note: This error was found in Verus's Trait-Conflict-Checker
+
+error: aborting due to 2 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1097MB, peak z3 RSS: 0MB, min free: 21587MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s
