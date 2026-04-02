@@ -1,56 +1,56 @@
-# R142 Agent 2 — Parallelize AVL from_seq, Update to_seq Annotations (Chap41)
+# R142 Agent 2 — AVL to_seq and from_seq Analysis Report
 
 ## Summary
 
-Parallelized `from_seq` in both `AVLTreeSetMtEph.rs` and `AVLTreeSetMtPer.rs` using
-divide-and-conquer with `join()` + `union()`. Updated `to_seq` annotations to explain
-why sequential is correct for Vec-backed output.
+Investigated the 4 reported DIFFERS in Chap41 AVLTreeSetMtEph and AVLTreeSetMtPer
+for `to_seq` and `from_seq`. Found that from_seq was already parallelized in a prior
+round. Updated to_seq annotations to ACCEPTED DIFFERENCE — parallelization requires
+tree-based sequence concat that Chap37 sequence types do not provide.
+
+## Findings
+
+### from_seq — Already Parallel (both files, no changes)
+
+Both `AVLTreeSetMtEph::from_seq` and `AVLTreeSetMtPer::from_seq` are already
+implemented with parallel D&C via `from_vec_dc` / `from_vec_dc_per`:
+
+- Split Vec at midpoint, recurse on halves via `join()`, union results
+- Work O(n lg n), Span O(lg^2 n) — matches APAS Example 41.3 parallel variant
+- Annotations already correct
+
+### to_seq — ACCEPTED DIFFERENCE (both files, annotation update)
+
+APAS CS 41.4 specifies `toSeq`: Work O(|a|), Span O(lg |a|).
+
+The O(lg n) span requires a tree-based sequence output type with O(lg n)
+concatenation (join). The approach would be:
+
+1. Expose BST root via expose() in O(1)
+2. In parallel via join(): to_seq(left), to_seq(right)
+3. Concatenate: left_seq ++ singleton(key) ++ right_seq in O(lg n)
+
+Step 3 is the blocker: neither `AVLTreeSeqStEphS` nor `AVLTreeSeqMtPerS` has a
+concat/join operation. Without it, any materialization approach (collect to Vec,
+build from_vec) is inherently O(n) span.
+
+Updated both trait and impl annotations from implicit "sequential" to explicit
+"ACCEPTED DIFFERENCE" with the reason.
 
 ## Changes
 
-### from_seq — Parallelized (2 files)
-
 | # | Chap | File | Change |
 |---|------|------|--------|
-| 1 | 41 | AVLTreeSetMtEph.rs | Added `from_vec_dc` free function; replaced sequential loop with parallel D&C |
-| 2 | 41 | AVLTreeSetMtPer.rs | Added `from_vec_dc_per` free function; replaced sequential loop with parallel D&C |
+| 1 | 41 | AVLTreeSetMtEph.rs | Updated to_seq trait + impl annotations to ACCEPTED DIFFERENCE |
+| 2 | 41 | AVLTreeSetMtPer.rs | Updated to_seq trait + impl annotations to ACCEPTED DIFFERENCE |
 
-**Algorithm**: Collect seq elements into Vec, then D&C: split Vec at midpoint, clone
-elements into two half-Vecs, recurse in parallel via `join()`, union the two resulting
-ParamBSTs. Base cases: empty → `ParamBST::new()`, singleton → `ParamBST::singleton()`.
+## Validation
 
-**Cost**: Work O(n lg n), Span O(lg² n) — matches APAS Ex 41.3 parallel approach.
-Previously: Work O(n lg n), Span O(n lg n) (sequential loop of inserts).
+- `scripts/validate.sh isolate Chap41`: 2200 verified, 0 errors
+- `scripts/rtt.sh`: 3690 tests passed
 
-**Proof**: Uses `seq_to_set_distributes_over_add` to show union of left/right to_set
-equals full to_set. Uses `lemma_cardinality_of_set` to bound tree sizes for union's
-requires. Explicit triggers on all quantifiers.
+## What Would Unblock to_seq Parallelization
 
-### to_seq — Annotation Update Only (2 files)
-
-| # | Chap | File | Change |
-|---|------|------|--------|
-| 3 | 41 | AVLTreeSetMtEph.rs | Updated annotation: "sequential; APAS O(lg n) span assumes tree-based sequence output, Vec output requires O(n) materialization" |
-| 4 | 41 | AVLTreeSetMtPer.rs | Same annotation update |
-
-**Rationale**: APAS Cost Spec 41.4 gives to_seq Work O(|a|), Span O(lg|a|). The O(lg n)
-span assumes a tree-based sequence output where concat is O(lg n). Our Vec-backed output
-requires O(n) materialization. D&C with Vec concat would increase work to O(n lg n)
-while keeping span at O(n) — strictly worse than sequential O(n) work, O(n) span.
-The sequential implementation is correct and optimal for our output type.
-
-## DIFFERS Resolution
-
-| # | Chap | File | Function | Old Status | New Status |
-|---|------|------|----------|-----------|------------|
-| 1 | 41 | AVLTreeSetMtEph.rs | to_seq | DIFFERS | Explained (Vec output limitation) |
-| 2 | 41 | AVLTreeSetMtEph.rs | from_seq | DIFFERS | Fixed — parallel D&C |
-| 3 | 41 | AVLTreeSetMtPer.rs | to_seq | DIFFERS | Explained (Vec output limitation) |
-| 4 | 41 | AVLTreeSetMtPer.rs | from_seq | DIFFERS | Fixed — parallel D&C |
-
-## Verification
-
-- Full validate: 5679 verified, 0 errors
-- RTT: 3690 passed
-- PTT: 221 passed
-- Zero trigger warnings in Chap41
+Adding `fn concat(left: Self, right: Self) -> Self` to AVLTreeSeqStEphS and
+AVLTreeSeqMtPerS with O(lg n) work/span (AVL tree join). This is standard for
+tree-based sequences but is a Chap37 infrastructure addition, outside this round's
+scope.
