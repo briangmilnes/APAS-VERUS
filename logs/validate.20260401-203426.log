@@ -1,0 +1,46 @@
+error[E0046]: not all trait items implemented, missing: `cmp_spec_less_implies_le`, `cmp_spec_greater_implies_le`
+   --> src/Chap57/DijkstraStEphU64.rs:136:5
+    |
+136 |       impl TotalOrder for PQEntry {
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `cmp_spec_less_implies_le`, `cmp_spec_greater_implies_le` in implementation
+    |
+   ::: src/vstdplus/total_order.rs:56:11
+    |
+ 56 |       proof fn cmp_spec_less_implies_le(a: Self, b: Self) where Self: Ord
+    |  ___________-
+ 57 | |         requires a.cmp_spec(&b) == Ordering::Less
+ 58 | |         ensures TotalOrder::le(a, b);
+    | |_____________________________________- `cmp_spec_less_implies_le` from trait
+ 59 |
+ 60 |       proof fn cmp_spec_greater_implies_le(a: Self, b: Self) where Self: Ord
+    |  ___________-
+ 61 | |         requires a.cmp_spec(&b) == Ordering::Greater
+ 62 | |         ensures TotalOrder::le(b, a);
+    | |_____________________________________- `cmp_spec_greater_implies_le` from trait
+
+error[E0046]: not all trait items implemented, missing: `cmp_spec_less_implies_le`, `cmp_spec_greater_implies_le`
+   --> src/Chap57/DijkstraStEphF64.rs:142:5
+    |
+142 |       impl TotalOrder for PQEntry {
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `cmp_spec_less_implies_le`, `cmp_spec_greater_implies_le` in implementation
+    |
+   ::: src/vstdplus/total_order.rs:56:11
+    |
+ 56 |       proof fn cmp_spec_less_implies_le(a: Self, b: Self) where Self: Ord
+    |  ___________-
+ 57 | |         requires a.cmp_spec(&b) == Ordering::Less
+ 58 | |         ensures TotalOrder::le(a, b);
+    | |_____________________________________- `cmp_spec_less_implies_le` from trait
+ 59 |
+ 60 |       proof fn cmp_spec_greater_implies_le(a: Self, b: Self) where Self: Ord
+    |  ___________-
+ 61 | |         requires a.cmp_spec(&b) == Ordering::Greater
+ 62 | |         ensures TotalOrder::le(b, a);
+    | |_____________________________________- `cmp_spec_greater_implies_le` from trait
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0046`.
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 1158MB, peak z3 RSS: 0MB, min free: 25081MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 0s

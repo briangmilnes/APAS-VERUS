@@ -1,0 +1,40 @@
+error: postcondition not satisfied
+   --> src/vstdplus/total_order.rs:58:17
+    |
+ 58 |         ensures TotalOrder::le(a, b);
+    |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:160:15
+    |
+160 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    |               --------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+old(a).le(old(b)) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/vstdplus/total_order.rs:62:17
+    |
+ 62 |         ensures TotalOrder::le(b, a);
+    |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:161:15
+    |
+161 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+    |               ------------------------------------------------ at the end of the function body
+
+note: 
+
+old(b).le(old(a)) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 5582 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 97s
+Sampled Memory Usage: peak rust_verify RSS: 11676MB, peak z3 RSS: 884MB, min free: 13620MB
+Sampled CPU Usage: rust_verify: 253s, z3 children: 183s

@@ -169,6 +169,11 @@ pub mod DijkstraStEphF64 {
                 }
             }
         }
+
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
+        proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+        #[verifier::external_body] // accept hole: TotalOrder for float PQEntry (see reflexive)
+        proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph with float weights.

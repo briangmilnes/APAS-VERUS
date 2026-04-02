@@ -123,7 +123,7 @@ broadcast use {
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(lg n * lg m) — DIFFERS: APAS assumes cached; impl sums degrees
         fn num_edges(&self) -> (m: usize)
-            where V: crate::vstdplus::total_order::total_order::TotalOrderBridge
+            where V: crate::vstdplus::total_order::total_order::TotalOrder
             requires self.spec_adjtablegraphmtper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();
         /// Work Theta(log |V| + log |E|), Span Theta(log |V| + log |E|)
@@ -235,7 +235,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn num_edges(&self) -> (m: usize)
-            where V: crate::vstdplus::total_order::total_order::TotalOrderBridge
+            where V: crate::vstdplus::total_order::total_order::TotalOrder
         {
             // Strategy: clone the table, repeatedly extract first_key, look up
             // neighbor size via find, delete the key, and accumulate.  The

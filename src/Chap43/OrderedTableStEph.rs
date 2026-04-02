@@ -15,7 +15,6 @@ pub mod OrderedTableStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-    use crate::vstdplus::total_order::total_order::TotalOrderBridge;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -844,7 +843,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST min
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()
             ensures
                 self@.dom().finite(),
@@ -855,7 +854,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST max
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -865,7 +864,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -875,7 +874,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -933,7 +932,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST rank
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -945,7 +944,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) -- recursive BST select
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -1009,7 +1008,7 @@ broadcast use {
         /// Iterative alternative to `first_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key
         fn first_key_iter(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -1018,7 +1017,7 @@ broadcast use {
         /// Iterative alternative to `last_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key
         fn last_key_iter(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -1027,7 +1026,7 @@ broadcast use {
         /// Iterative alternative to `previous_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST predecessor
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -1036,7 +1035,7 @@ broadcast use {
         /// Iterative alternative to `next_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST successor
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires self.spec_orderedtablesteph_wf()            ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -1077,7 +1076,7 @@ broadcast use {
         /// Iterative alternative to `rank_key`.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST rank
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             requires
                 self.spec_orderedtablesteph_wf(),
                 obeys_view_eq::<K>(),
@@ -2899,14 +2898,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to first_key_iter
         fn first_key(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             self.first_key_iter()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key + key extraction
         fn first_key_iter(&self) -> (first: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> first matches None,
@@ -2961,14 +2960,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to last_key_iter
         fn last_key(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             self.last_key_iter()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key + key extraction
         fn last_key_iter(&self) -> (last: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 self@.dom().len() == 0 <==> last matches None,
@@ -3025,14 +3024,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to previous_key_iter
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             self.previous_key_iter(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for predecessor
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 predecessor matches Some(pk) ==> self@.dom().contains(pk@),
@@ -3144,14 +3143,14 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to next_key_iter
         fn next_key(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             self.next_key_iter(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan for successor
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
             ensures
                 self@.dom().finite(),
                 successor matches Some(nk) ==> self@.dom().contains(nk@),
@@ -3635,7 +3634,7 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
         fn rank_key(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             self.rank_key_iter(k)
         }
@@ -3643,7 +3642,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
         #[verifier::loop_isolation(false)]
         fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof {
                 lemma_reveal_view_injective::<K>();
@@ -3770,7 +3769,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index into sorted sequence
         #[verifier::loop_isolation(false)]
         fn select_key(&self, i: usize) -> (selected: Option<K>)
-            where K: TotalOrderBridge
+            where K: TotalOrder
         {
             proof {
                 assert(obeys_feq_full_trigger::<K>());
