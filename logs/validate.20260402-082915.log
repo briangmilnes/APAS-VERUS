@@ -1,0 +1,76 @@
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:364:24
+    |
+364 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:364:49
+    |
+ 71 |         when m.dom().finite()
+    |              ---------------- recommendation not met
+...
+364 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:571:24
+    |
+571 |                 assert(spec_sum_adj_sizes(cleaned@) <= self.num_edges as nat);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_sum_adj_sizes(cleaned.view()) <= self.num_edges 
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:289:17
+    |
+289 |                 updated.spec_adjtablegraphmtper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+787 |             updated
+    |             ------- at the end of the function body
+
+error: possible arithmetic underflow/overflow
+   --> src/Chap52/AdjTableGraphMtPer.rs:676:78
+    |
+676 |             let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap52/AdjTableGraphMtPer.rs:676:78
+    |
+676 |             let new_num_edges: usize = if had_edge { self.num_edges } else { self.num_edges + 1 };
+    |                                                                              ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+usize::BITS == 32 ==>
+    0 <= self.num_edges + 1 ✔
+    self.num_edges + 1 < 4294967296 ✘
+usize::BITS == 64 ==>
+    0 <= self.num_edges + 1 ✔
+    self.num_edges + 1 < 18446744073709551616 ✘
+
+note: recommendation not met
+   --> src/Chap52/AdjTableGraphMtPer.rs:707:32
+    |
+ 71 |         when m.dom().finite()
+    |              ---------------- recommendation not met
+...
+707 |                 let self_sum = spec_sum_adj_sizes(self.adj@);
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 3004 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 3081MB, peak z3 RSS: 356MB, min free: 20050MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 60s

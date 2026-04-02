@@ -1,0 +1,47 @@
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:593:24
+    |
+593 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:703:24
+    |
+703 |                   assert(self.adj@.dom().finite()
+    |  ________________________^
+704 | |                     ==> self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    | |______________________________________________________________________________^ assertion failed
+
+note: 
+
+self.adj.view().dom().finite() ==>
+    self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:133:17
+    |
+129 |       proof fn lemma_wf_edge_count<V: StTInMtT + Ord + TotalOrder + 'static>(
+    |  ___________-
+130 | |         g: &AdjTableGraphMtPer<V>,
+131 | |     )
+    | |_____- at the end of the function body
+132 |           requires g.spec_adjtablegraphmtper_wf()
+133 |           ensures g.num_edges as nat == spec_sum_adj_sizes(g.adj@)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: 
+
+old(g).num_edges == spec_sum_adj_sizes(old(g).adj.view()) 
+
+verification results:: 3005 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 38s
+Sampled Memory Usage: peak rust_verify RSS: 3089MB, peak z3 RSS: 365MB, min free: 20255MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 56s

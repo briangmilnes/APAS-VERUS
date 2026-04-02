@@ -1,0 +1,23 @@
+error[E0401]: can't use generic parameters from outer item
+   --> src/Chap52/AdjTableGraphMtPer.rs:137:48
+    |
+129 |     proof fn lemma_wf_edge_count<V: StTInMtT + Ord + TotalOrder + 'static>(
+    |                                  - type parameter from outer item
+...
+137 |         reveal_with_fuel(spec_sum_adj_sizes::<<V as View>::V>, 0);
+    |         ----------------                       ^ use of generic parameter from outer item
+    |         |
+    |         generic parameter used in this inner function
+    |
+    = note: nested items are independent from their parent item for everything except for privacy and name resolution
+help: try introducing a local generic parameter here
+    |
+137 |         reveal_with_fuel<V>(spec_sum_adj_sizes::<<V as View>::V>, 0);
+    |                         +++
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0401`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 295MB, peak z3 RSS: 0MB, min free: 23540MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

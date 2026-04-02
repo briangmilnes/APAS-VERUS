@@ -1,0 +1,34 @@
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:588:17
+    |
+132 |         requires g.num_edges as nat == spec_sum_adj_sizes(g.spec_adj())
+    |                  ------------------------------------------------------ failed precondition
+...
+588 |                 lemma_wf_edge_count(self);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.spec_adj()) 
+
+error: precondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:695:17
+    |
+132 |         requires g.num_edges as nat == spec_sum_adj_sizes(g.spec_adj())
+    |                  ------------------------------------------------------ failed precondition
+...
+695 |                 lemma_wf_edge_count(self);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.spec_adj()) 
+
+verification results:: 3006 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 3091MB, peak z3 RSS: 335MB, min free: 20244MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 61s

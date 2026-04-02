@@ -1,0 +1,24 @@
+error: postcondition not satisfied
+   --> src/Chap52/AdjTableGraphMtPer.rs:135:17
+    |
+131 |       proof fn lemma_wf_edge_count<V: StTInMtT + Ord + TotalOrder + 'static>(
+    |  ___________-
+132 | |         g: &AdjTableGraphMtPer<V>,
+133 | |     )
+    | |_____- at the end of the function body
+134 |           requires g.spec_adjtablegraphmtper_wf()
+135 |           ensures g.num_edges as nat == spec_sum_adj_sizes(g.adj@)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+old(g).num_edges == spec_sum_adj_sizes(old(g).adj.view()) 
+
+verification results:: 3007 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 42s
+Sampled Memory Usage: peak rust_verify RSS: 3091MB, peak z3 RSS: 406MB, min free: 20042MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 63s

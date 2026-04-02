@@ -1,0 +1,38 @@
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:366:24
+    |
+366 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:582:24
+    |
+582 |                 assert(spec_sum_adj_sizes(self.adj@) == self.num_edges as nat);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+spec_sum_adj_sizes(self.adj.view()) == self.num_edges 
+
+error: assertion failed
+   --> src/Chap52/AdjTableGraphMtPer.rs:690:24
+    |
+690 |                 assert(self.num_edges as nat == spec_sum_adj_sizes(self.adj@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+self.num_edges == spec_sum_adj_sizes(self.adj.view()) 
+
+verification results:: 3004 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 54s
+Sampled Memory Usage: peak rust_verify RSS: 13526MB, peak z3 RSS: 621MB, min free: 9696MB
+Sampled CPU Usage: rust_verify: 200s, z3 children: 194s

@@ -1,0 +1,105 @@
+error[E0615]: attempted to take value of method `num_edges` on type `Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:242:21
+    |
+242 |                 out.num_edges as nat == spec_sum_adj_sizes(out.spec_adj());
+    |                     ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+242 |                 out.num_edges() as nat == spec_sum_adj_sizes(out.spec_adj());
+    |                              ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `&Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:281:22
+    |
+281 |                 self.num_edges as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                      ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+281 |                 self.num_edges() as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                               ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:285:25
+    |
+285 |                 updated.num_edges as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                         ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+285 |                 updated.num_edges() as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                                  ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `&Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:291:22
+    |
+291 |                 self.num_edges as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                      ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+291 |                 self.num_edges() as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                               ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:295:25
+    |
+295 |                 updated.num_edges as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                         ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+295 |                 updated.num_edges() as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                                  ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `&Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:303:22
+    |
+303 |                 self.num_edges as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                      ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+303 |                 self.num_edges() as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                               ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:309:25
+    |
+309 |                 updated.num_edges as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                         ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+309 |                 updated.num_edges() as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                                  ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `&Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:316:22
+    |
+316 |                 self.num_edges as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                      ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+316 |                 self.num_edges() as nat == spec_sum_adj_sizes(self.spec_adj()),
+    |                               ++
+
+error[E0615]: attempted to take value of method `num_edges` on type `Self`
+   --> src/Chap52/AdjTableGraphMtPer.rs:321:25
+    |
+321 |                 updated.num_edges as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                         ^^^^^^^^^ method, not a field
+    |
+help: use parentheses to call the method
+    |
+321 |                 updated.num_edges() as nat == spec_sum_adj_sizes(updated.spec_adj());
+    |                                  ++
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0615`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 670MB, peak z3 RSS: 0MB, min free: 21917MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 29s
