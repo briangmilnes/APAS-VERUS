@@ -80,6 +80,7 @@ broadcast use {
     /// ParamBST type_invariant guarantees ghost_locked_root@.finite(),
     /// which means AVLTreeSetMtPer::spec_avltreesetmtper_wf() always holds.
     /// This wraps the Chap38 helper that has visibility to the type_invariant.
+    // veracity: no_requires
     pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + 'static>(s: &AVLTreeSetMtPer<T>)
         ensures s.spec_avltreesetmtper_wf()
     {
@@ -88,6 +89,7 @@ broadcast use {
 
     /// ParamBST size is stored as usize, so @.len() <= usize::MAX.
     /// Returns the size so callers can use it in capacity proofs.
+    // veracity: no_requires
     pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + 'static>(
         s: &AVLTreeSetMtPer<T>,
     ) -> (sz: usize)

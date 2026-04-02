@@ -274,9 +274,23 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEph.rs:485: info: trivial_spec_wf
    Info: 1 total
 ⚠ Chap19/ArraySeqMtEphSlice.rs
-/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:395: error: bare_impl - impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> { — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
-       396 |         /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-       397 |         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:847: error: fn_missing_ensures - fn flatten_dc_vec — exec fn should have ensures
+       833 |     pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
+            ...
+       845 | 
+       846 |     /// D&C flatten producing Vec<T>. Called by flatten.
+       848 |         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+       849 |     ) -> (result: Vec<T>)
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:1079: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1075 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1077 |         {
+      1078 |             let equal = self.start == other.start && self.len == other.len;
+      1080 |             equal
+      1081 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqMtEphSlice.rs:444: error: bare_impl - impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> { — `impl ArraySeqMtEphSliceS` without trait; file defines [ArraySeqMtEphSliceTrait]
+       445 |         /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+       446 |         proof fn lemma_monoid_fold_left(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
 ⚠ Chap19/ArraySeqStEph.rs
 /home/milnes/projects/APAS-VERUS/src/Chap19/ArraySeqStEph.rs:1226: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
       1222 |         fn eq(&self, other: &Self) -> (equal: bool)
@@ -970,11 +984,11 @@ Table of Contents:
       2 × unsafe impl
    Info: 1 total
 ❌ Chap41/AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:519: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
-       520 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:520: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-       521 | 
-       522 |     // 13. macros
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:533: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
+       534 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:534: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+       535 | 
+       536 |     // 13. macros
 /home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:83: error: fn_missing_requires - fn assert_avltreesetmtper_always_wf — exec fn should have requires
         73 |         pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             ...
@@ -982,15 +996,22 @@ Table of Contents:
         82 |     /// This wraps the Chap38 helper that has visibility to the type_invariant.
         84 |         ensures s.spec_avltreesetmtper_wf()
         85 |     {
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:473: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       438 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:91: error: fn_missing_requires - fn assert_avltreesetmtper_bounded_size — exec fn should have requires
+        83 |     pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + 'static>(s: &AVLTreeSetMtPer<T>)
             ...
-       471 |                 i = i + 1;
-       472 |             }
-       474 |             all_eq
-       475 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:479: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:486: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+        89 |     /// ParamBST size is stored as usize, so @.len() <= usize::MAX.
+        90 |     /// Returns the size so callers can use it in capacity proofs.
+        92 |         s: &AVLTreeSetMtPer<T>,
+        93 |     ) -> (sz: usize)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:487: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       452 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       485 |                 i = i + 1;
+       486 |             }
+       488 |             all_eq
+       489 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:493: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:500: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Holes: 2 total
       2 × unsafe impl
    Info: 2 × structural_false_positive
@@ -1671,13 +1692,13 @@ Table of Contents:
        689 |             equal
        690 |         }
 ❌ Chap52/AdjTableGraphMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:470: error: assume() [algorithmic] - assume(neighbors@.len() < usize::MAX as nat);
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjTableGraphMtPer.rs:472: error: assume() [algorithmic] - assume(neighbors@.len() < usize::MAX as nat);
        452 |         fn delete_vertex(&self, v: &V) -> (updated: Self) {
             ...
-       468 |                     proof {
-       469 |                         // Capacity: stored neighbor sets are always < usize::MAX.
-       471 |                     }
-       472 |                     neighbors.delete(&v_clone)
+       470 |                         // Proved: neighbors@.len() <= usize::MAX (from sz: usize).
+       471 |                         // Gap: < vs <= — a set of usize::MAX elements is unreachable in practice.
+       473 |                     }
+       474 |                     neighbors.delete(&v_clone)
    Holes: 1 total
       1 × assume()
    Proof functions: 1 total (1 clean, 0 holed)
@@ -1763,30 +1784,30 @@ Table of Contents:
    Info: 2 × structural_false_positive
    6 clean proof functions
 ❌ Chap57/DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:162: error: assume() [algorithmic] - assume(TotalOrder::le(a, b));
-       160 |         // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
-       161 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
-       163 |         }
-       164 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:165: error: assume() [algorithmic] - assume(TotalOrder::le(b, a));
-       163 |         }
-       164 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
-       166 |         }
-       167 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:161: error: proof_fn_with_holes - proof fn cmp_spec_less_implies_le — contains assume/external_body/admit, needs proof
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:163: error: assume() [algorithmic] - assume(TotalOrder::le(a, b));
+       161 |         // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
+       162 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+       164 |         }
+       165 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:166: error: assume() [algorithmic] - assume(TotalOrder::le(b, a));
+       164 |         }
+       165 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+       167 |         }
+       168 |     }
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:162: error: proof_fn_with_holes - proof fn cmp_spec_less_implies_le — contains assume/external_body/admit, needs proof
        146 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
             ...
-       159 | 
-       160 |         // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
-       162 |             assume(TotalOrder::le(a, b));
-       163 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:164: error: proof_fn_with_holes - proof fn cmp_spec_greater_implies_le — contains assume/external_body/admit, needs proof
-       161 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+       160 |         // Blocked: Verus panics on OrdSpecImpl for user types (vir/ast_util.rs:734).
+       161 |         // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
+       163 |             assume(TotalOrder::le(a, b));
+       164 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:165: error: proof_fn_with_holes - proof fn cmp_spec_greater_implies_le — contains assume/external_body/admit, needs proof
+       162 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
             ...
-       162 |             assume(TotalOrder::le(a, b));
-       163 |         }
-       165 |             assume(TotalOrder::le(b, a));
-       166 |         }
+       163 |             assume(TotalOrder::le(a, b));
+       164 |         }
+       166 |             assume(TotalOrder::le(b, a));
+       167 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:113: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:130: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Holes: 2 total
@@ -2368,11 +2389,11 @@ Proof Functions:
    629 total
 
 Function Specs:
-   5475 exec fns with complete spec (requires+ensures) (66%)
-   63 exec fns missing spec (0%)
-   2746 proof/spec fns clean (33%)
+   5481 exec fns with complete spec (requires+ensures) (66%)
+   65 exec fns missing spec (0%)
+   2749 proof/spec fns clean (33%)
    2 proof/spec fns with holes (0%)
-   8286 total fns
+   8297 total fns
 
 
 Holes Found: 7 (actionable)
@@ -2380,9 +2401,10 @@ Holes Found: 7 (actionable)
    4 × unsafe impl (57%)
 Real Proof Targets: 7 (all actionable)
 
-Warnings: 159 total
-   1 × fn_missing_requires
-   158 × assume_eq_clone_workaround
+Warnings: 162 total
+   2 × fn_missing_requires
+   1 × fn_missing_ensures
+   159 × assume_eq_clone_workaround
 
 Accepted (reviewed): 127 total
    51 × accept()
@@ -2391,9 +2413,9 @@ Accepted (reviewed): 127 total
    16 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × enum_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
    1 × struct_outside_verus_accept_hole
+   1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
   Chap02:  6  Chap05:  3  Chap06: 25
@@ -2414,8 +2436,8 @@ Structural (info only): 159
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 21:04:01 -07:00
-Ended:     2026-04-01 21:04:03 -07:00
-Duration:  1944ms
+Started:   2026-04-02 07:05:55 -07:00
+Ended:     2026-04-02 07:05:56 -07:00
+Duration:  1721ms
 
 Full output: src/analyses/veracity-review-verus-proof-holes.log
