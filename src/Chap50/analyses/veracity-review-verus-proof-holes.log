@@ -21,139 +21,139 @@ Table of Contents:
 =================================================================
 
 ⚠ MatrixChainMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:504: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       496 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:531: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       523 |         fn clone(&self) -> (mc: Self)
             ...
-       502 |                 ghost_dimensions: Ghost(self.ghost_dimensions@),
-       503 |             };
-       505 |             mc
-       506 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:526: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       516 |         fn eq(&self, other: &Self) -> (r: bool)
+       529 |                 ghost_dimensions: Ghost(self.ghost_dimensions@),
+       530 |             };
+       532 |             mc
+       533 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtEph.rs:553: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       543 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       524 |             other_handle.release_read();
-       525 |             self_handle.release_read();
-       527 |             r
-       528 |         }
+       551 |             other_handle.release_read();
+       552 |             self_handle.release_read();
+       554 |             r
+       555 |         }
 ⚠ MatrixChainMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:408: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       401 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:429: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       422 |         fn clone(&self) -> (mc: Self)
             ...
-       406 |                 memo: self.memo.clone(),
-       407 |             };
-       409 |             mc
-       410 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:426: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       420 |         fn eq(&self, other: &Self) -> (r: bool)
+       427 |                 memo: self.memo.clone(),
+       428 |             };
+       430 |             mc
+       431 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainMtPer.rs:447: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       441 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       424 |             let other_dims = arc_deref(&other.dimensions);
-       425 |             let r = *self_dims == *other_dims;
-       427 |             r
-       428 |         }
+       445 |             let other_dims = arc_deref(&other.dimensions);
+       446 |             let r = *self_dims == *other_dims;
+       448 |             r
+       449 |         }
 ⚠ MatrixChainStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:384: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       377 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:409: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       402 |         fn clone(&self) -> (mc: Self)
             ...
-       382 |                 memo: self.memo.clone(),
-       383 |             };
-       385 |             mc
-       386 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:400: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       396 |         fn eq(&self, other: &Self) -> (r: bool)
+       407 |                 memo: self.memo.clone(),
+       408 |             };
+       410 |             mc
+       411 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStEph.rs:425: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       421 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       398 |         {
-       399 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       401 |             r
-       402 |         }
+       423 |         {
+       424 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       426 |             r
+       427 |         }
 ⚠ MatrixChainStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:350: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       343 |         fn clone(&self) -> (mc: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:369: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       362 |         fn clone(&self) -> (mc: Self)
             ...
-       348 |                       memo: self.memo.clone(),
-       349 |                       };
-       351 |             mc
-       352 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:366: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       362 |         fn eq(&self, other: &Self) -> (r: bool)
+       367 |                       memo: self.memo.clone(),
+       368 |                       };
+       370 |             mc
+       371 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/MatrixChainStPer.rs:385: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       381 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       364 |         {
-       365 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
-       367 |             r
-       368 |         }
+       383 |         {
+       384 |             let r = self.dimensions == other.dimensions && self.memo == other.memo;
+       386 |             r
+       387 |         }
 ⚠ OptBinSearchTreeMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:57: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        53 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:58: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        54 |         fn clone(&self) -> (cloned: Self)
             ...
-        55 |         {
-        56 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-        58 |             cloned
-        59 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:373: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       365 |         fn clone(&self) -> (cloned: Self)
+        56 |         {
+        57 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+        59 |             cloned
+        60 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:394: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       386 |         fn clone(&self) -> (cloned: Self)
             ...
-       371 |                 ghost_keys: Ghost(self.ghost_keys@),
-       372 |             };
-       374 |             cloned
-       375 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:395: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       385 |         fn eq(&self, other: &Self) -> (r: bool)
+       392 |                 ghost_keys: Ghost(self.ghost_keys@),
+       393 |             };
+       395 |             cloned
+       396 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtEph.rs:416: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       406 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       393 |             other_handle.release_read();
-       394 |             self_handle.release_read();
-       396 |             r
-       397 |         }
+       414 |             other_handle.release_read();
+       415 |             self_handle.release_read();
+       417 |             r
+       418 |         }
 ⚠ OptBinSearchTreeMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:60: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        56 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:61: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        57 |         fn clone(&self) -> (cloned: Self)
             ...
-        58 |         {
-        59 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-        61 |             cloned
-        62 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:265: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       258 |         fn clone(&self) -> (cloned: Self)
+        59 |         {
+        60 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+        62 |             cloned
+        63 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:280: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       273 |         fn clone(&self) -> (cloned: Self)
             ...
-       263 |                 memo: self.memo.clone(),
-       264 |             };
-       266 |             cloned
-       267 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:283: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       277 |         fn eq(&self, other: &Self) -> (r: bool)
+       278 |                 memo: self.memo.clone(),
+       279 |             };
+       281 |             cloned
+       282 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeMtPer.rs:298: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       292 |         fn eq(&self, other: &Self) -> (r: bool)
             ...
-       281 |             let other_keys = arc_deref(&other.keys);
-       282 |             let r = *self_keys == *other_keys;
-       284 |             r
-       285 |         }
+       296 |             let other_keys = arc_deref(&other.keys);
+       297 |             let r = *self_keys == *other_keys;
+       299 |             r
+       300 |         }
 ⚠ OptBinSearchTreeStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:54: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        50 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        51 |         fn clone(&self) -> (cloned: Self)
             ...
-        52 |         {
-        53 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-        55 |             cloned
-        56 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:74: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        67 |         fn clone(&self) -> (cloned: Self)
+        53 |         {
+        54 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+        56 |             cloned
+        57 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStEph.rs:75: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        68 |         fn clone(&self) -> (cloned: Self)
             ...
-        72 |                 memo: self.memo.clone(),
-        73 |             };
-        75 |             cloned
-        76 |         }
+        73 |                 memo: self.memo.clone(),
+        74 |             };
+        76 |             cloned
+        77 |         }
 ⚠ OptBinSearchTreeStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:54: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        50 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:55: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        51 |         fn clone(&self) -> (cloned: Self)
             ...
-        52 |         {
-        53 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-        55 |             cloned
-        56 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:74: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        67 |         fn clone(&self) -> (cloned: Self)
+        53 |         {
+        54 |             let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+        56 |             cloned
+        57 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap50/OptBinSearchTreeStPer.rs:75: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+        68 |         fn clone(&self) -> (cloned: Self)
             ...
-        72 |                 memo: self.memo.clone(),
-        73 |             };
-        75 |             cloned
-        76 |         }
+        73 |                 memo: self.memo.clone(),
+        74 |             };
+        76 |             cloned
+        77 |         }
 
 =================================================================
 2. Depends Upon
@@ -219,15 +219,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 08:29:31 -07:00
-Ended:     2026-04-01 08:29:31 -07:00
-Duration:  27ms
+Started:   2026-04-01 20:03:45 -07:00
+Ended:     2026-04-01 20:03:45 -07:00
+Duration:  46ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
-==================
+=======================
 
-Started:   2026-04-01 08:29:31 -07:00
-Ended:     2026-04-01 08:29:31 -07:00
-Duration:  27ms
+Started:   2026-04-01 20:03:45 -07:00
+Ended:     2026-04-01 20:03:45 -07:00
+Duration:  46ms
 
 Full output: src/Chap50/analyses/veracity-review-verus-proof-holes.log
