@@ -1,0 +1,38 @@
+error: precondition not satisfied
+   --> src/Chap50/OptBinSearchTreeMtEph.rs:201:28
+    |
+201 |             let prob_sum = ps[i + l] - ps[i];
+    |                            ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/ops.rs:68:24
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.sub_req(tmp%) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+   --> src/Chap50/OptBinSearchTreeMtPer.rs:168:28
+    |
+168 |             let prob_sum = ps[i + l] - ps[i];
+    |                            ^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/ops.rs:68:24
+    |
+    = note: failed precondition
+
+note: 
+
+tmp%.sub_req(tmp%) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 827 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 451MB, peak z3 RSS: 0MB, min free: 21158MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
