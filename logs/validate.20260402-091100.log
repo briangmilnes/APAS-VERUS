@@ -1,0 +1,54 @@
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtEph.rs:304:56
+    |
+304 |                 proof { lemma_cloned_view_eq::<T>(vals[i], elem); }
+    |                                                   -----^-
+    |                                                   |    |
+    |                                                   |    expected `int`, found `usize`
+    |                                                   arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/std_specs/vec.rs:22:12
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtEph.rs:323:56
+    |
+323 |                 proof { lemma_cloned_view_eq::<T>(vals[i], elem); }
+    |                                                   -----^-
+    |                                                   |    |
+    |                                                   |    expected `int`, found `usize`
+    |                                                   arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/std_specs/vec.rs:22:12
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtPer.rs:294:56
+    |
+294 |                 proof { lemma_cloned_view_eq::<T>(vals[i], elem); }
+    |                                                   -----^-
+    |                                                   |    |
+    |                                                   |    expected `int`, found `usize`
+    |                                                   arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/std_specs/vec.rs:22:12
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtPer.rs:313:56
+    |
+313 |                 proof { lemma_cloned_view_eq::<T>(vals[i], elem); }
+    |                                                   -----^-
+    |                                                   |    |
+    |                                                   |    expected `int`, found `usize`
+    |                                                   arguments to this method are incorrect
+    |
+note: method defined here
+   --> vstd/std_specs/vec.rs:22:12
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 483MB, peak z3 RSS: 0MB, min free: 23348MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

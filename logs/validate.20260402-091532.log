@@ -1,0 +1,106 @@
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtPer.rs:323:21
+    |
+323 |                     assert forall|j: int| 0 <= j < mid as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtPer.rs:324:25
+    |
+324 |                         left_views[j] == all_views.subrange(0, mid as int)[j] by {
+    |                         ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtPer.rs:331:21
+    |
+331 |                     assert forall|j: int| 0 <= j < (n - mid) as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtPer.rs:332:25
+    |
+332 |                         right_views[j] == all_views.subrange(mid as int, n as int)[j] by {
+    |                         ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtPer.rs:362:21
+    |
+362 |                     assert forall|j: int| 0 <= j < all_views.len() implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtPer.rs:363:58
+    |
+363 |                         (left_views + right_views)[j] == all_views[j] by {};
+    |                                                          ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtEph.rs:333:21
+    |
+333 |                     assert forall|j: int| 0 <= j < mid as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtEph.rs:334:25
+    |
+334 |                         left_views[j] == all_views.subrange(0, mid as int)[j] by {
+    |                         ^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtEph.rs:341:21
+    |
+341 |                     assert forall|j: int| 0 <= j < (n - mid) as int implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtEph.rs:342:25
+    |
+342 |                         right_views[j] == all_views.subrange(mid as int, n as int)[j] by {
+    |                         ^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtEph.rs:375:21
+    |
+375 |                     assert forall|j: int| 0 <= j < all_views.len() implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtEph.rs:376:58
+    |
+376 |                         (left_views + right_views)[j] == all_views[j] by {};
+    |                                                          ^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+   --> src/Chap41/AVLTreeSetMtEph.rs:473:21
+    |
+473 |                     assert forall|j: int| 0 <= j < seq@.len() implies
+    |                     ^^^^^^
+
+note:   trigger 1 of 1:
+   --> src/Chap41/AVLTreeSetMtEph.rs:474:25
+    |
+474 |                         vals_views[j] == seq@[j] by {
+    |                         ^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+   --> src/Chap41/AVLTreeSetMtEph.rs:473:21
+    |
+473 |                     assert forall|j: int| 0 <= j < seq@.len() implies
+    |                     ^^^^^^
+
+verification results:: 2197 verified, 0 errors
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 1616MB, peak z3 RSS: 372MB, min free: 21868MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 31s

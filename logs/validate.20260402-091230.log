@@ -1,0 +1,82 @@
+error[E0277]: `<T as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap41/AVLTreeSetMtEph.rs:361:48
+    |
+351 |             let f1 = move || -> (t: ParamBST<T>)
+    |                      -------------------------- within this `{closure@src/Chap41/AVLTreeSetMtEph.rs:351:22: 351:48}`
+...
+361 |             let (left_tree, right_tree) = join(f1, f2);
+    |                                           ---- ^^ `<T as vstd::string::View>::V` cannot be sent between threads safely
+    |                                           |
+    |                                           required by a bound introduced by this call
+    |
+    = help: within `{closure@src/Chap41/AVLTreeSetMtEph.rs:351:22: 351:48}`, the trait `std::marker::Send` is not implemented for `<T as vstd::string::View>::V`
+    = note: required because it appears within the type `(<T as vstd::string::View>::V,)`
+    = note: required because it appears within the type `((<T as vstd::string::View>::V,), bool)`
+note: required because it appears within the type `std::marker::PhantomData<((<T as vstd::string::View>::V,), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<T as vstd::string::View>::V,), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it appears within the type `vstd::set::Set<<T as vstd::string::View>::V>`
+   --> vstd/set.rs:31:11
+note: required because it's used within this closure
+   --> src/Chap41/AVLTreeSetMtEph.rs:351:22
+    |
+351 |             let f1 = move || -> (t: ParamBST<T>)
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+   --> src/Chap02/HFSchedulerMtEph.rs:107:29
+    |
+105 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+    |            ---- required by a bound in this function
+106 |     where
+107 |         FA: FnOnce() -> A + Send + 'static,
+    |                             ^^^^ required by this bound in `join`
+help: consider further restricting the associated type
+    |
+258 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where <T as vstd::string::View>::V: std::marker::Send)
+    |                                                                                     +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: `<T as vstd::string::View>::V` cannot be sent between threads safely
+   --> src/Chap41/AVLTreeSetMtPer.rs:351:48
+    |
+341 |             let f1 = move || -> (t: ParamBST<T>)
+    |                      -------------------------- within this `{closure@src/Chap41/AVLTreeSetMtPer.rs:341:22: 341:48}`
+...
+351 |             let (left_tree, right_tree) = join(f1, f2);
+    |                                           ---- ^^ `<T as vstd::string::View>::V` cannot be sent between threads safely
+    |                                           |
+    |                                           required by a bound introduced by this call
+    |
+    = help: within `{closure@src/Chap41/AVLTreeSetMtPer.rs:341:22: 341:48}`, the trait `std::marker::Send` is not implemented for `<T as vstd::string::View>::V`
+    = note: required because it appears within the type `(<T as vstd::string::View>::V,)`
+    = note: required because it appears within the type `((<T as vstd::string::View>::V,), bool)`
+note: required because it appears within the type `std::marker::PhantomData<((<T as vstd::string::View>::V,), bool)>`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/marker.rs:819:11
+note: required because it appears within the type `vstd::prelude::FnSpec<(<T as vstd::string::View>::V,), bool>`
+   --> builtin/src/lib.rs:1874:11
+note: required because it appears within the type `vstd::set::Set<<T as vstd::string::View>::V>`
+   --> vstd/set.rs:31:11
+note: required because it's used within this closure
+   --> src/Chap41/AVLTreeSetMtPer.rs:341:22
+    |
+341 |             let f1 = move || -> (t: ParamBST<T>)
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+   --> src/Chap02/HFSchedulerMtEph.rs:107:29
+    |
+105 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+    |            ---- required by a bound in this function
+106 |     where
+107 |         FA: FnOnce() -> A + Send + 'static,
+    |                             ^^^^ required by this bound in `join`
+help: consider further restricting the associated type
+    |
+248 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where <T as vstd::string::View>::V: std::marker::Send)
+    |                                                                                         +++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 501MB, peak z3 RSS: 0MB, min free: 23385MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
