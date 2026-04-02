@@ -1466,7 +1466,7 @@ pub mod ArraySeqMtEphSlice {
     /// Parallel flatten via D&C on O(1) slices.
     /// - Primitive: flatten. Concatenate a sequence of sequences.
     /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — DIFFERS: Vec concat at each level adds lg factor
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — ACCEPTED DIFFERENCE: Vec concat at each D&C level; O(1) rejoin needs PCell pre-allocated output
     pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
     ) -> (flattened: ArraySeqMtEphSliceS<T>)

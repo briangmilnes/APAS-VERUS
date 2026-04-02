@@ -385,7 +385,7 @@ pub mod BSTParaMtEph {
             requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential recursion in filter_inner (spec_fn not Send)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — ACCEPTED DIFFERENCE: Verus limitation; spec_fn not Send, blocks parallel filter
         fn filter<F: Fn(&T) -> bool + Send + Sync + 'static>(
             &self,
             predicate: F,

@@ -175,6 +175,7 @@ broadcast use {
         requires
             i + l <= n,
             memo.pred() == (OptBSTMtEphMemoInv),
+            (*prefix_sums)@.len() == n + 1,
         ensures true,
         decreases l,
     {
@@ -197,7 +198,6 @@ broadcast use {
         } else {
             // Probability sum from prefix sums: O(1).
             let ps = arc_deref(prefix_sums);
-            proof { assume(ps@.len() > i + l); }
             let prob_sum = ps[i + l] - ps[i];
 
             // Parallel min reduction over split points: O(lg l) span.
@@ -235,6 +235,7 @@ broadcast use {
             l > 0,
             i + l <= n,
             memo.pred() == (OptBSTMtEphMemoInv),
+            (*prefix_sums)@.len() == n + 1,
         ensures true,
         decreases l, hi - lo,
     {
@@ -256,6 +257,7 @@ broadcast use {
                     l > 0,
                     i + l <= n,
                     memo1.pred() == (OptBSTMtEphMemoInv),
+                    (*ps1)@.len() == n + 1,
                 ensures true
             {
                 parallel_min_split_cost(&memo1, &ps1, n, i, l, lo, mid)
@@ -267,6 +269,7 @@ broadcast use {
                     l > 0,
                     i + l <= n,
                     memo2.pred() == (OptBSTMtEphMemoInv),
+                    (*ps2)@.len() == n + 1,
                 ensures true
             {
                 parallel_min_split_cost(&memo2, &ps2, n, i, l, mid, hi)
