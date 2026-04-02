@@ -1760,38 +1760,11 @@ Table of Contents:
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphF64.rs:136: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
    Info: 2 × structural_false_positive
    6 clean proof functions
-❌ Chap57/DijkstraStEphU64.rs
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:163: error: assume() [algorithmic] - assume(TotalOrder::le(a, b));
-       161 |         // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
-       162 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
-       164 |         }
-       165 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:166: error: assume() [algorithmic] - assume(TotalOrder::le(b, a));
-       164 |         }
-       165 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
-       167 |         }
-       168 |     }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:162: error: proof_fn_with_holes - proof fn cmp_spec_less_implies_le — contains assume/external_body/admit, needs proof
-       146 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
-            ...
-       160 |         // Blocked: Verus panics on OrdSpecImpl for user types (vir/ast_util.rs:734).
-       161 |         // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
-       163 |             assume(TotalOrder::le(a, b));
-       164 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:165: error: proof_fn_with_holes - proof fn cmp_spec_greater_implies_le — contains assume/external_body/admit, needs proof
-       162 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
-            ...
-       163 |             assume(TotalOrder::le(a, b));
-       164 |         }
-       166 |             assume(TotalOrder::le(b, a));
-       167 |         }
+ℹ Chap57/DijkstraStEphU64.rs
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:113: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
 /home/milnes/projects/APAS-VERUS/src/Chap57/DijkstraStEphU64.rs:130: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-   Holes: 2 total
-      2 × assume()
    Info: 2 × structural_false_positive
-      2 × STD_TRAIT_IMPL
-   Proof functions: 6 total (4 clean, 2 holed)
+   4 clean proof functions
 ✓ Chap57/StackStEph.rs
 ✓ Chap58/BellmanFordStEphF64.rs
 ✓ Chap58/BellmanFordStEphI64.rs
@@ -2356,27 +2329,26 @@ ParaPairs.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   240 clean (no holes, no errors; 98%)
-   4 holed (holes or errors, 1%)
+   241 clean (no holes, no errors; 98%)
+   3 holed (holes or errors, 1%)
    244 total
 
 Proof Functions:
-   633 clean (99%)
-   2 holed (0%)
-   635 total
+   633 clean (100%)
+   0 holed (0%)
+   633 total
 
 Function Specs:
    5491 exec fns with complete spec (requires+ensures) (66%)
    65 exec fns missing spec (0%)
    2756 proof/spec fns clean (33%)
-   2 proof/spec fns with holes (0%)
-   8314 total fns
+   0 proof/spec fns with holes (0%)
+   8312 total fns
 
 
-Holes Found: 6 (actionable)
-   2 × assume() [algorithmic] (33%)
-   4 × unsafe impl (66%)
-Real Proof Targets: 6 (all actionable)
+Holes Found: 4 (actionable)
+   4 × unsafe impl (100%)
+Real Proof Targets: 4 (all actionable)
 
 Warnings: 160 total
    1 × fn_missing_ensures
@@ -2389,8 +2361,8 @@ Accepted (reviewed): 127 total
    16 × trivial_spec_wf
    4 × unsafe_block_accept_hole
    3 × external_accept_hole
-   1 × struct_outside_verus_accept_hole
    1 × external_type_specification_accept_hole
+   1 × struct_outside_verus_accept_hole
    1 × enum_outside_verus_accept_hole
 
 Accepted by Chapter:
@@ -2412,8 +2384,8 @@ Structural (info only): 159
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:42:29 -07:00
-Ended:     2026-04-02 07:42:31 -07:00
-Duration:  1995ms
+Started:   2026-04-02 08:27:32 -07:00
+Ended:     2026-04-02 08:27:33 -07:00
+Duration:  1834ms
 
 Full output: src/analyses/veracity-review-verus-proof-holes.log

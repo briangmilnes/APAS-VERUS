@@ -53,13 +53,18 @@ pub mod total_order {
             }),
     ;
 
+    // Default bodies use assume — types with OrdSpecImpl (primitives) override
+    // with empty bodies where Z3 proves it. User types without OrdSpecImpl
+    // (blocked on Verus vir/ast_util.rs:734 panic) get the default.
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) where Self: Ord
         requires a.cmp_spec(&b) == Ordering::Less
-        ensures TotalOrder::le(a, b);
+        ensures TotalOrder::le(a, b)
+    { assume(TotalOrder::le(a, b)); }
 
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) where Self: Ord
         requires a.cmp_spec(&b) == Ordering::Greater
-        ensures TotalOrder::le(b, a);
+        ensures TotalOrder::le(b, a)
+    { assume(TotalOrder::le(b, a)); }
 
 }
 

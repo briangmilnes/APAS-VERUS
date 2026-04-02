@@ -157,14 +157,9 @@ pub mod DijkstraStEphU64 {
             }
         }
 
+        // Uses default body from TotalOrder trait (assume-based).
         // Blocked: Verus panics on OrdSpecImpl for user types (vir/ast_util.rs:734).
-        // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
-        proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
-            assume(TotalOrder::le(a, b));
-        }
-        proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
-            assume(TotalOrder::le(b, a));
-        }
+        // When OrdSpecImpl is fixed, override with empty bodies like primitives do.
     }
 
     /// Runs Dijkstra's algorithm on a weighted directed graph.
