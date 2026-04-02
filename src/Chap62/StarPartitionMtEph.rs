@@ -51,7 +51,7 @@ pub mod StarPartitionMtEph {
         /// Parallel star partition using randomized coin flips.
         /// APAS: Work O(|V| + |E|), Span O(lg |V|)
         /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
         fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
             graph: &UnDirGraphMtEph<V>,
             seed: u64,
@@ -96,6 +96,52 @@ pub mod StarPartitionMtEph {
     }
 
     // 9. impls — parallel helpers
+
+    // Arc clone helpers: vstd has no ensures on Arc::clone, so we add
+    // type-specific helpers that preserve the view across clone.
+
+    #[verifier::external_body]
+    fn clone_arc_vec<V>(arc: &Arc<Vec<V>>) -> (cloned: Arc<Vec<V>>)
+        ensures cloned@ == arc@,
+    {
+        arc.clone()
+    }
+
+    #[verifier::external_body]
+    fn clone_arc_hmvp_bool<V: View + Eq + Hash>(
+        arc: &Arc<HashMapWithViewPlus<V, bool>>,
+    ) -> (cloned: Arc<HashMapWithViewPlus<V, bool>>)
+        ensures cloned@ == arc@,
+    {
+        arc.clone()
+    }
+
+    #[verifier::external_body]
+    fn clone_arc_hmvp_usize<V: View + Eq + Hash>(
+        arc: &Arc<HashMapWithViewPlus<V, usize>>,
+    ) -> (cloned: Arc<HashMapWithViewPlus<V, usize>>)
+        ensures cloned@ == arc@,
+    {
+        arc.clone()
+    }
+
+    #[verifier::external_body]
+    fn clone_arc_hmvp_v<V: View + Eq + Hash>(
+        arc: &Arc<HashMapWithViewPlus<V, V>>,
+    ) -> (cloned: Arc<HashMapWithViewPlus<V, V>>)
+        ensures cloned@ == arc@,
+    {
+        arc.clone()
+    }
+
+    #[verifier::external_body]
+    fn clone_arc_th_edges<V>(
+        arc: &Arc<Vec<(usize, V)>>,
+    ) -> (cloned: Arc<Vec<(usize, V)>>)
+        ensures cloned@ == arc@,
+    {
+        arc.clone()
+    }
 
     /// Deterministic hash-based coin flip from (seed, index).
     /// Replaces sequential RNG with a parallelizable hash function.
@@ -536,6 +582,665 @@ pub mod StarPartitionMtEph {
         result
     }
 
+    /// Parallel build of vertex-to-index map using D&C + join.
+    ///
+    /// Maps each vertex to its position in the vertex sequence.
+    /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg n) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    fn build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        vertices: Arc<Vec<V>>,
+        start: usize,
+        end: usize,
+    ) -> (vi: HashMapWithViewPlus<V, usize>)
+        requires
+            start <= end,
+            end <= vertices@.len(),
+            vertices@.no_duplicates(),
+            valid_key_type_Edge::<V>(),
+        ensures
+            forall|j: int| start as int <= j < end as int ==>
+                #[trigger] vi@.contains_key(vertices@[j]@) &&
+                vi@[vertices@[j]@] as usize == j,
+            forall|v_view: V::V| #[trigger] vi@.contains_key(v_view) ==>
+                exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return HashMapWithViewPlus::new();
+        }
+        if size == 1 {
+            let verts = arc_deref(&vertices);
+            let mut vi = HashMapWithViewPlus::new();
+            vi.insert(verts[start].clone_view(), start);
+            return vi;
+        }
+
+        let mid = start + size / 2;
+        let ghost verts_view = vertices@;
+        let v_merge = vertices.clone();
+        let v1 = vertices.clone();
+        let v2 = vertices;
+
+        let f1 = move || -> (r: HashMapWithViewPlus<V, usize>)
+            requires
+                start <= mid, mid <= v1@.len(),
+                v1@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                forall|j: int| start as int <= j < mid as int ==>
+                    #[trigger] r@.contains_key(v1@[j]@) && r@[v1@[j]@] as usize == j,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|j: int| start as int <= j < mid as int && #[trigger] v1@[j]@ == v_view,
+        {
+            build_vertex_to_index_mt(v1, start, mid)
+        };
+
+        let f2 = move || -> (r: HashMapWithViewPlus<V, usize>)
+            requires
+                mid <= end, end <= v2@.len(),
+                v2@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+            ensures
+                forall|j: int| mid as int <= j < end as int ==>
+                    #[trigger] r@.contains_key(v2@[j]@) && r@[v2@[j]@] as usize == j,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|j: int| mid as int <= j < end as int && #[trigger] v2@[j]@ == v_view,
+        {
+            build_vertex_to_index_mt(v2, mid, end)
+        };
+
+        let Pair(mut merged, _right) = crate::ParaPair!(f1, f2);
+
+        // Merge: insert right half entries directly from vertex Arc.
+        let verts = arc_deref(&v_merge);
+        let ghost mut dom_witnesses: Map<V::V, int> = Map::empty();
+        proof {
+            dom_witnesses = Map::new(
+                |v_view: V::V| merged@.contains_key(v_view),
+                |v_view: V::V| {
+                    let j2 = choose|j2: int| start as int <= j2 < mid as int && #[trigger] verts_view[j2]@ == v_view;
+                    j2
+                },
+            );
+        }
+        let mut j: usize = mid;
+        while j < end
+            invariant
+                valid_key_type_Edge::<V>(),
+                start <= mid,
+                mid <= j <= end,
+                end <= verts_view.len(),
+                verts_view == verts@,
+                verts_view.no_duplicates(),
+                // merged covers [start, mid) with correct values.
+                forall|j2: int| start as int <= j2 < mid as int ==>
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@] as usize == j2,
+                // merged covers [mid, j) with correct values.
+                forall|j2: int| mid as int <= j2 < j as int ==>
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@] as usize == j2,
+                // Ghost domain tracking: every key in merged@ has a witness in [start, j).
+                forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    dom_witnesses.contains_key(v_view) &&
+                    start as int <= dom_witnesses[v_view] &&
+                    dom_witnesses[v_view] < j as int &&
+                    verts_view[dom_witnesses[v_view]]@ == v_view,
+            decreases end - j,
+        {
+            let ghost jv = verts_view[j as int]@;
+            let ghost pre_merged = merged@;
+            let ghost pre_dom = dom_witnesses;
+            merged.insert(verts[j].clone_view(), j);
+            proof {
+                lemma_reveal_view_injective::<V>();
+                dom_witnesses = pre_dom.insert(jv, j as int);
+                // Prior left entries preserved.
+                assert forall|j2: int| start as int <= j2 < mid as int implies
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@] as usize == j2 by {
+                    let ghost j2v = verts_view[j2]@;
+                    if j2v != jv {
+                        assert(pre_merged.contains_key(j2v));
+                        assert(merged@[j2v] == pre_merged[j2v]);
+                    } else {
+                        assert(verts_view[j2] == verts_view[j as int]);
+                        assert(false);
+                    }
+                };
+                // Prior right entries [mid, j) preserved + new entry j.
+                assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
+                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    merged@[verts_view[j2]@] as usize == j2 by {
+                    if j2 == j as int {
+                        assert(verts_view[j2]@ == jv);
+                    } else {
+                        let ghost j2v = verts_view[j2]@;
+                        if j2v != jv {
+                            assert(pre_merged.contains_key(j2v));
+                            assert(merged@[j2v] == pre_merged[j2v]);
+                        } else {
+                            assert(verts_view[j2] == verts_view[j as int]);
+                            assert(false);
+                        }
+                    }
+                };
+                // Domain witnesses updated.
+                assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                    dom_witnesses.contains_key(v_view) &&
+                    start as int <= dom_witnesses[v_view] &&
+                    dom_witnesses[v_view] < j as int + 1 &&
+                    verts_view[dom_witnesses[v_view]]@ == v_view by {
+                    if v_view == jv {
+                        assert(dom_witnesses.contains_key(jv));
+                        assert(dom_witnesses[jv] == j as int);
+                        assert(start <= mid && mid <= j);
+                        assert(verts_view[j as int]@ == jv);
+                    } else {
+                        assert(pre_merged.contains_key(v_view));
+                        assert(pre_dom.contains_key(v_view));
+                        assert(dom_witnesses.contains_key(v_view));
+                        assert(dom_witnesses[v_view] == pre_dom[v_view]);
+                    }
+                };
+            }
+            j = j + 1;
+        }
+
+        // Post-merge: domain bound follows from ghost witnesses.
+        proof {
+            assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                exists|j2: int| start as int <= j2 < end as int && #[trigger] verts_view[j2]@ == v_view by {
+                let w = dom_witnesses[v_view];
+                assert(start as int <= w < end as int);
+                assert(verts_view[w]@ == v_view);
+            };
+        }
+
+        merged
+    }
+
+    /// Parallel build of satellite-to-center map from th_edges using D&C + join.
+    ///
+    /// For each (idx, head) in th_edges[start..end], inserts (vertices[idx], head) into map.
+    /// Deduplicates naturally (HashMap last-write-wins; any center is acceptable per APAS).
+    /// Work O(m lg m), Span O(lg m) — binary fork-join via ParaPair!, sequential merge.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(lg m) — D&C fork-join + sequential merge of hashmaps; Mt parallel.
+    fn build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        th_edges: Arc<Vec<(usize, V)>>,
+        vertices: Arc<Vec<V>>,
+        nv: usize,
+        coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
+        vertex_to_index: Arc<HashMapWithViewPlus<V, usize>>,
+        start: usize,
+        end: usize,
+    ) -> (sm: HashMapWithViewPlus<V, V>)
+        requires
+            start <= end,
+            end <= th_edges@.len(),
+            nv == vertices@.len(),
+            vertices@.no_duplicates(),
+            valid_key_type_Edge::<V>(),
+            forall|s: int| 0 <= s < th_edges@.len() ==>
+                #[trigger] spec_valid_th_entry(th_edges@[s], nv as nat, coin_flips@, vertices@, vertex_to_index@),
+        ensures
+            // Every key in sm came from a th_edge in [start, end).
+            forall|v_view: V::V| #[trigger] sm@.contains_key(v_view) ==>
+                exists|s: int| start as int <= s < end as int &&
+                    #[trigger] vertices@[th_edges@[s].0 as int]@ == v_view,
+            // Values are heads vertices with valid vertex_to_index entries.
+            forall|v_view: V::V| #[trigger] sm@.contains_key(v_view) ==>
+                coin_flips@.contains_key(sm@[v_view]@) &&
+                coin_flips@[sm@[v_view]@] &&
+                vertex_to_index@.contains_key(sm@[v_view]@) &&
+                (vertex_to_index@[sm@[v_view]@] as usize) < nv,
+            // Keys are tails vertices (not heads).
+            forall|v_view: V::V| #[trigger] sm@.contains_key(v_view) ==>
+                coin_flips@.contains_key(v_view) &&
+                !coin_flips@[v_view],
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return HashMapWithViewPlus::new();
+        }
+        if size == 1 {
+            let the = arc_deref(&th_edges);
+            let verts = arc_deref(&vertices);
+            let (idx, ref head_v) = the[start];
+            proof {
+                assert(spec_valid_th_entry(th_edges@[start as int], nv as nat, coin_flips@, vertices@, vertex_to_index@));
+            }
+            if (idx as usize) < nv {
+                let mut sm = HashMapWithViewPlus::new();
+                sm.insert(verts[idx].clone_view(), head_v.clone_view());
+                proof {
+                    let ghost tail_v = vertices@[idx as int]@;
+                    let ghost head_view = head_v@;
+                    assert(sm@.contains_key(tail_v));
+                    assert(sm@[tail_v]@ == head_view);
+                    assert(coin_flips@.contains_key(tail_v));
+                    assert(!coin_flips@[tail_v]);
+                    assert(coin_flips@.contains_key(head_view));
+                    assert(coin_flips@[head_view]);
+                    assert(vertex_to_index@.contains_key(head_view));
+                    assert((vertex_to_index@[head_view] as usize) < nv);
+                }
+                return sm;
+            } else {
+                return HashMapWithViewPlus::new();
+            }
+        }
+
+        let mid = start + size / 2;
+        let ghost the_view = th_edges@;
+        let ghost verts_view = vertices@;
+        let the_merge = th_edges.clone();
+        let verts_merge = vertices.clone();
+        let the1 = th_edges.clone();
+        let the2 = th_edges;
+        let v1 = vertices.clone();
+        let v2 = vertices;
+        let cf1 = coin_flips.clone();
+        let cf2 = coin_flips.clone();
+        let vi1 = vertex_to_index.clone();
+        let vi2 = vertex_to_index.clone();
+
+        let f1 = move || -> (r: HashMapWithViewPlus<V, V>)
+            requires
+                start <= mid, mid <= the1@.len(),
+                nv == v1@.len(), v1@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+                forall|s: int| 0 <= s < the1@.len() ==>
+                    #[trigger] spec_valid_th_entry(the1@[s], nv as nat, cf1@, v1@, vi1@),
+            ensures
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|s: int| start as int <= s < mid as int &&
+                        #[trigger] v1@[the1@[s].0 as int]@ == v_view,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    cf1@.contains_key(r@[v_view]@) && cf1@[r@[v_view]@] &&
+                    vi1@.contains_key(r@[v_view]@) && (vi1@[r@[v_view]@] as usize) < nv,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    cf1@.contains_key(v_view) && !cf1@[v_view],
+        {
+            build_satellite_map_mt(the1, v1, nv, cf1, vi1, start, mid)
+        };
+
+        let f2 = move || -> (r: HashMapWithViewPlus<V, V>)
+            requires
+                mid <= end, end <= the2@.len(),
+                nv == v2@.len(), v2@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+                forall|s: int| 0 <= s < the2@.len() ==>
+                    #[trigger] spec_valid_th_entry(the2@[s], nv as nat, cf2@, v2@, vi2@),
+            ensures
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    exists|s: int| mid as int <= s < end as int &&
+                        #[trigger] v2@[the2@[s].0 as int]@ == v_view,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    cf2@.contains_key(r@[v_view]@) && cf2@[r@[v_view]@] &&
+                    vi2@.contains_key(r@[v_view]@) && (vi2@[r@[v_view]@] as usize) < nv,
+                forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
+                    cf2@.contains_key(v_view) && !cf2@[v_view],
+        {
+            build_satellite_map_mt(the2, v2, nv, cf2, vi2, mid, end)
+        };
+
+        let Pair(mut merged, _right) = crate::ParaPair!(f1, f2);
+
+        // Merge: re-insert right half entries from th_edges/vertices Arcs.
+        let the = arc_deref(&the_merge);
+        let verts = arc_deref(&verts_merge);
+        let cf = arc_deref(&coin_flips);
+        let vi = arc_deref(&vertex_to_index);
+        let mut t: usize = mid;
+        while t < end
+            invariant
+                valid_key_type_Edge::<V>(),
+                start <= mid,
+                mid <= t <= end,
+                end <= the_view.len(),
+                nv == verts_view.len(),
+                verts_view == verts@,
+                the_view == the@,
+                verts_view.no_duplicates(),
+                // Keys from left half and merged right entries.
+                forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    exists|s: int| start as int <= s < t as int &&
+                        #[trigger] verts_view[the_view[s].0 as int]@ == v_view,
+                // Values are heads with valid vi entries.
+                forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    cf@.contains_key(merged@[v_view]@) && cf@[merged@[v_view]@] &&
+                    vi@.contains_key(merged@[v_view]@) && (vi@[merged@[v_view]@] as usize) < nv,
+                // Keys are tails.
+                forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
+                    cf@.contains_key(v_view) && !cf@[v_view],
+                // th_edges invariant.
+                forall|s: int| 0 <= s < the_view.len() ==>
+                    #[trigger] spec_valid_th_entry(the_view[s], nv as nat, cf@, verts_view, vi@),
+            decreases end - t,
+        {
+            let (idx, ref head_v) = the[t];
+            proof {
+                assert(spec_valid_th_entry(the_view[t as int], nv as nat, cf@, verts_view, vi@));
+            }
+            if (idx as usize) < nv {
+                let ghost pre_merged = merged@;
+                let ghost tail_v = verts_view[idx as int]@;
+                let ghost head_view = head_v@;
+                // Bridge: connect destructured idx to the_view[t].0.
+                proof { assert(idx == the_view[t as int].0); }
+                merged.insert(verts[idx].clone_view(), head_v.clone_view());
+                proof {
+                    // New entry properties.
+                    assert(cf@.contains_key(tail_v) && !cf@[tail_v]);
+                    assert(cf@.contains_key(head_view) && cf@[head_view]);
+                    assert(vi@.contains_key(head_view) && (vi@[head_view] as usize) < nv);
+                    // Bridge: witness for t.
+                    assert(verts_view[the_view[t as int].0 as int]@ == tail_v);
+                    // Key source witness for new entry.
+                    assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                        exists|s: int| start as int <= s < t as int + 1 &&
+                            #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+                        if v_view == tail_v {
+                            // Witness: s = t.
+                            assert(start <= t);
+                            assert(mid <= t);
+                            assert(verts_view[the_view[t as int].0 as int]@ == tail_v);
+                        } else {
+                            assert(pre_merged.contains_key(v_view));
+                            // Old key; old invariant provides witness in [start, t).
+                            let s2 = choose|s2: int| start as int <= s2 < t as int &&
+                                #[trigger] verts_view[the_view[s2].0 as int]@ == v_view;
+                            assert(start as int <= s2 < t as int + 1);
+                        }
+                    };
+                    // Values are heads.
+                    assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                        cf@.contains_key(merged@[v_view]@) && cf@[merged@[v_view]@] &&
+                        vi@.contains_key(merged@[v_view]@) && (vi@[merged@[v_view]@] as usize) < nv by {
+                        if v_view == tail_v {
+                            assert(merged@[tail_v]@ == head_view);
+                        } else {
+                            assert(merged@[v_view] == pre_merged[v_view]);
+                        }
+                    };
+                    // Keys are tails.
+                    assert forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) implies
+                        cf@.contains_key(v_view) && !cf@[v_view] by {
+                        if v_view == tail_v {
+                        } else {
+                            assert(pre_merged.contains_key(v_view));
+                        }
+                    };
+                }
+            }
+            t = t + 1;
+        }
+
+        merged
+    }
+
+    /// Parallel build of p_vec with satellite injection using D&C + join.
+    ///
+    /// For each vertex j in [start, end): if satellite_map contains vertices[j], use
+    /// satellite_map[vertices[j]] (the center); otherwise use vertices[j] (self-pointing).
+    /// Replaces sequential Loop 4 (clone) + Loop 5 (inject) with a single parallel pass.
+    /// Work O(n), Span O(lg n) — binary fork-join via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — D&C fork-join over n vertices; Mt parallel.
+    fn build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+        vertices: Arc<Vec<V>>,
+        satellite_map: Arc<HashMapWithViewPlus<V, V>>,
+        coin_flips: Arc<HashMapWithViewPlus<V, bool>>,
+        vertex_to_index: Arc<HashMapWithViewPlus<V, usize>>,
+        nv: usize,
+        start: usize,
+        end: usize,
+    ) -> (result: Vec<V>)
+        requires
+            start <= end,
+            end <= vertices@.len(),
+            nv == vertices@.len(),
+            vertices@.no_duplicates(),
+            valid_key_type_Edge::<V>(),
+            // coin_flips covers all vertices.
+            forall|j: int| 0 <= j < nv as int ==>
+                #[trigger] coin_flips@.contains_key(vertices@[j]@),
+            // satellite_map values are heads with valid vi entries.
+            forall|v_view: V::V| #[trigger] satellite_map@.contains_key(v_view) ==>
+                coin_flips@.contains_key(satellite_map@[v_view]@) &&
+                coin_flips@[satellite_map@[v_view]@] &&
+                vertex_to_index@.contains_key(satellite_map@[v_view]@) &&
+                (vertex_to_index@[satellite_map@[v_view]@] as usize) < nv,
+            // satellite_map keys are tails.
+            forall|v_view: V::V| #[trigger] satellite_map@.contains_key(v_view) ==>
+                coin_flips@.contains_key(v_view) && !coin_flips@[v_view],
+            // vertex_to_index maps all vertices.
+            forall|j: int| 0 <= j < nv as int ==>
+                #[trigger] vertex_to_index@.contains_key(vertices@[j]@) &&
+                vertex_to_index@[vertices@[j]@] as usize == j,
+            forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
+                exists|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v_view,
+        ensures
+            result@.len() == (end - start) as int,
+            // Heads preserve: heads vertices keep themselves.
+            forall|j: int| 0 <= j < result@.len() ==>
+                coin_flips@.contains_key(vertices@[(start as int + j)]@) &&
+                (coin_flips@[vertices@[(start as int + j)]@] ==>
+                 #[trigger] result@[j]@ == vertices@[(start as int + j)]@),
+            // Modified entries point to heads.
+            forall|j: int| 0 <= j < result@.len() ==>
+                result@[j]@ != vertices@[(start as int + j)]@ ==>
+                (coin_flips@.contains_key(#[trigger] result@[j]@) &&
+                 coin_flips@[result@[j]@]),
+            // All entries in vertex_to_index.
+            forall|j: int| 0 <= j < result@.len() ==>
+                vertex_to_index@.contains_key(#[trigger] result@[j]@) &&
+                (vertex_to_index@[result@[j]@] as usize) < nv,
+        decreases end - start,
+    {
+        let size = end - start;
+        if size == 0 {
+            return Vec::new();
+        }
+        if size == 1 {
+            let verts = arc_deref(&vertices);
+            let sm = arc_deref(&satellite_map);
+            let mut result: Vec<V> = Vec::new();
+            match sm.get(&verts[start]) {
+                Some(center) => {
+                    result.push(center.clone_view());
+                    proof {
+                        let ghost sv = vertices@[start as int]@;
+                        assert(satellite_map@.contains_key(sv));
+                        assert(result@[0]@ == satellite_map@[sv]@);
+                        // Heads preserve: satellite_map key is tails, so coin_flips[sv] is false => vacuous.
+                        assert(!coin_flips@[sv]);
+                        // Modified entry points to heads.
+                        assert(coin_flips@[result@[0]@]);
+                        // In vertex_to_index.
+                        assert(vertex_to_index@.contains_key(result@[0]@));
+                    }
+                },
+                None => {
+                    result.push(verts[start].clone_view());
+                    proof {
+                        let ghost sv = vertices@[start as int]@;
+                        assert(result@[0]@ == sv);
+                        // Not modified, so modified-points-to-heads is vacuous.
+                        // In vertex_to_index.
+                        assert(vertex_to_index@.contains_key(sv));
+                        assert(vertex_to_index@[sv] as usize == start);
+                    }
+                },
+            }
+            return result;
+        }
+
+        let mid = start + size / 2;
+        let ghost verts_view = vertices@;
+        let v1 = vertices.clone();
+        let v2 = vertices;
+        let sm1 = satellite_map.clone();
+        let sm2 = satellite_map;
+        let cf1 = coin_flips.clone();
+        let cf2 = coin_flips;
+        let vi1 = vertex_to_index.clone();
+        let vi2 = vertex_to_index;
+
+        let f1 = move || -> (r: Vec<V>)
+            requires
+                start <= mid, mid <= v1@.len(),
+                nv == v1@.len(), v1@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+                forall|j: int| 0 <= j < nv as int ==>
+                    #[trigger] cf1@.contains_key(v1@[j]@),
+                forall|v_view: V::V| #[trigger] sm1@.contains_key(v_view) ==>
+                    cf1@.contains_key(sm1@[v_view]@) && cf1@[sm1@[v_view]@] &&
+                    vi1@.contains_key(sm1@[v_view]@) && (vi1@[sm1@[v_view]@] as usize) < nv,
+                forall|v_view: V::V| #[trigger] sm1@.contains_key(v_view) ==>
+                    cf1@.contains_key(v_view) && !cf1@[v_view],
+                forall|j: int| 0 <= j < nv as int ==>
+                    #[trigger] vi1@.contains_key(v1@[j]@) && vi1@[v1@[j]@] as usize == j,
+                forall|v_view: V::V| #[trigger] vi1@.contains_key(v_view) ==>
+                    exists|j: int| 0 <= j < nv as int && #[trigger] v1@[j]@ == v_view,
+            ensures
+                r@.len() == (mid - start) as int,
+                forall|j: int| 0 <= j < r@.len() ==>
+                    cf1@.contains_key(v1@[(start as int + j)]@) &&
+                    (cf1@[v1@[(start as int + j)]@] ==>
+                     #[trigger] r@[j]@ == v1@[(start as int + j)]@),
+                forall|j: int| 0 <= j < r@.len() ==>
+                    r@[j]@ != v1@[(start as int + j)]@ ==>
+                    (cf1@.contains_key(#[trigger] r@[j]@) && cf1@[r@[j]@]),
+                forall|j: int| 0 <= j < r@.len() ==>
+                    vi1@.contains_key(#[trigger] r@[j]@) && (vi1@[r@[j]@] as usize) < nv,
+        {
+            build_p_vec_with_inject_mt(v1, sm1, cf1, vi1, nv, start, mid)
+        };
+
+        let f2 = move || -> (r: Vec<V>)
+            requires
+                mid <= end, end <= v2@.len(),
+                nv == v2@.len(), v2@.no_duplicates(),
+                valid_key_type_Edge::<V>(),
+                forall|j: int| 0 <= j < nv as int ==>
+                    #[trigger] cf2@.contains_key(v2@[j]@),
+                forall|v_view: V::V| #[trigger] sm2@.contains_key(v_view) ==>
+                    cf2@.contains_key(sm2@[v_view]@) && cf2@[sm2@[v_view]@] &&
+                    vi2@.contains_key(sm2@[v_view]@) && (vi2@[sm2@[v_view]@] as usize) < nv,
+                forall|v_view: V::V| #[trigger] sm2@.contains_key(v_view) ==>
+                    cf2@.contains_key(v_view) && !cf2@[v_view],
+                forall|j: int| 0 <= j < nv as int ==>
+                    #[trigger] vi2@.contains_key(v2@[j]@) && vi2@[v2@[j]@] as usize == j,
+                forall|v_view: V::V| #[trigger] vi2@.contains_key(v_view) ==>
+                    exists|j: int| 0 <= j < nv as int && #[trigger] v2@[j]@ == v_view,
+            ensures
+                r@.len() == (end - mid) as int,
+                forall|j: int| 0 <= j < r@.len() ==>
+                    cf2@.contains_key(v2@[(mid as int + j)]@) &&
+                    (cf2@[v2@[(mid as int + j)]@] ==>
+                     #[trigger] r@[j]@ == v2@[(mid as int + j)]@),
+                forall|j: int| 0 <= j < r@.len() ==>
+                    r@[j]@ != v2@[(mid as int + j)]@ ==>
+                    (cf2@.contains_key(#[trigger] r@[j]@) && cf2@[r@[j]@]),
+                forall|j: int| 0 <= j < r@.len() ==>
+                    vi2@.contains_key(#[trigger] r@[j]@) && (vi2@[r@[j]@] as usize) < nv,
+        {
+            build_p_vec_with_inject_mt(v2, sm2, cf2, vi2, nv, mid, end)
+        };
+
+        let Pair(mut result, right) = crate::ParaPair!(f1, f2);
+
+        // Save left-half ghost snapshot before concatenation.
+        let ghost left_snap = result@;
+        let ghost left_len = result@.len();
+
+        // Concatenate right onto result, tracking only element values.
+        let mut i: usize = 0;
+        while i < right.len()
+            invariant
+                i <= right@.len(),
+                result@.len() == left_len + i as int,
+                left_len == (mid - start) as int,
+                // Left portion: elements unchanged from snapshot.
+                forall|j: int| 0 <= j < left_len ==>
+                    #[trigger] result@[j] == left_snap[j],
+                // Appended right elements match right source.
+                forall|j: int| 0 <= j < i as int ==>
+                    #[trigger] result@[(left_len + j)]@ == right@[j]@,
+                // Source right properties (immutable).
+                forall|j: int| 0 <= j < right@.len() ==>
+                    coin_flips@.contains_key(verts_view[(mid as int + j)]@) &&
+                    (coin_flips@[verts_view[(mid as int + j)]@] ==>
+                     #[trigger] right@[j]@ == verts_view[(mid as int + j)]@),
+                forall|j: int| 0 <= j < right@.len() ==>
+                    right@[j]@ != verts_view[(mid as int + j)]@ ==>
+                    (coin_flips@.contains_key(#[trigger] right@[j]@) && coin_flips@[right@[j]@]),
+                forall|j: int| 0 <= j < right@.len() ==>
+                    vertex_to_index@.contains_key(#[trigger] right@[j]@) &&
+                    (vertex_to_index@[right@[j]@] as usize) < nv,
+                right@.len() == (end - mid) as int,
+            decreases right@.len() - i,
+        {
+            result.push(right[i].clone_view());
+            i = i + 1;
+        }
+
+        // Post-merge: derive complex properties from element values.
+        proof {
+            assert(result@.len() == (end - start) as int);
+
+            // Left half: elements match snapshot, which came from f1's result.
+            // f1's ensures give us heads-preserve, modified-heads, vi properties for left_snap.
+            // Since result@[j] == left_snap[j] for j < left_len, these transfer.
+
+            // Heads preserve.
+            assert forall|j: int| 0 <= j < result@.len() implies
+                coin_flips@.contains_key(verts_view[(start as int + j)]@) &&
+                (coin_flips@[verts_view[(start as int + j)]@] ==>
+                 #[trigger] result@[j]@ == verts_view[(start as int + j)]@) by {
+                if j < left_len {
+                    // Left half: result@[j] == left_snap[j].
+                    assert(result@[j] == left_snap[j]);
+                    // left_snap has the heads-preserve property from f1.
+                } else {
+                    // Right half.
+                    let rj = j - left_len;
+                    assert(result@[(left_len + rj)]@ == right@[rj]@);
+                    assert(start as int + j == mid as int + rj);
+                    // right has heads-preserve from f2.
+                }
+            };
+            // Modified entries point to heads.
+            assert forall|j: int| 0 <= j < result@.len() implies
+                (result@[j]@ != verts_view[(start as int + j)]@ ==>
+                (coin_flips@.contains_key(#[trigger] result@[j]@) && coin_flips@[result@[j]@])) by {
+                if j < left_len {
+                    assert(result@[j] == left_snap[j]);
+                } else {
+                    let rj = j - left_len;
+                    assert(result@[(left_len + rj)]@ == right@[rj]@);
+                    assert(start as int + j == mid as int + rj);
+                }
+            };
+            // All entries in vertex_to_index.
+            assert forall|j: int| 0 <= j < result@.len() implies
+                vertex_to_index@.contains_key(#[trigger] result@[j]@) &&
+                (vertex_to_index@[result@[j]@] as usize) < nv by {
+                if j < left_len {
+                    assert(result@[j] == left_snap[j]);
+                } else {
+                    let rj = j - left_len;
+                    assert(result@[(left_len + rj)]@ == right@[rj]@);
+                }
+            };
+        }
+
+        result
+    }
+
     /// Parallel build of partition_map (vertex → center) using D&C + join.
     ///
     /// Work O(n lg n), Span O(lg n) — binary fork-join via ParaPair!, sequential merge.
@@ -554,7 +1259,9 @@ pub mod StarPartitionMtEph {
             valid_key_type_Edge::<V>(),
         ensures
             forall|j: int| start as int <= j < end as int ==>
-                #[trigger] pm@.contains_key(vertices@[j]@) &&
+                #[trigger] pm@.contains_key(vertices@[j]@),
+            forall|j: int| start as int <= j < end as int ==>
+                pm@.contains_key(vertices@[j]@) ==>
                 pm@[vertices@[j]@]@ == p_vec@[j]@,
             forall|v_view: V::V| #[trigger] pm@.contains_key(v_view) ==>
                 exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,
@@ -591,7 +1298,9 @@ pub mod StarPartitionMtEph {
                 valid_key_type_Edge::<V>(),
             ensures
                 forall|j: int| start as int <= j < mid as int ==>
-                    #[trigger] r@.contains_key(v1@[j]@) && r@[v1@[j]@]@ == p1@[j]@,
+                    #[trigger] r@.contains_key(v1@[j]@),
+                forall|j: int| start as int <= j < mid as int ==>
+                    r@.contains_key(v1@[j]@) ==> r@[v1@[j]@]@ == p1@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| start as int <= j < mid as int && #[trigger] v1@[j]@ == v_view,
         {
@@ -606,7 +1315,9 @@ pub mod StarPartitionMtEph {
                 valid_key_type_Edge::<V>(),
             ensures
                 forall|j: int| mid as int <= j < end as int ==>
-                    #[trigger] r@.contains_key(v2@[j]@) && r@[v2@[j]@]@ == p2@[j]@,
+                    #[trigger] r@.contains_key(v2@[j]@),
+                forall|j: int| mid as int <= j < end as int ==>
+                    r@.contains_key(v2@[j]@) ==> r@[v2@[j]@]@ == p2@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| mid as int <= j < end as int && #[trigger] v2@[j]@ == v_view,
         {
@@ -642,13 +1353,19 @@ pub mod StarPartitionMtEph {
                 pv_view == pv@,
                 pv_view.len() == verts_view.len(),
                 verts_view.no_duplicates(),
-                // merged covers [start, mid) with correct values.
+                // merged covers [start, mid) — contains_key.
                 forall|j2: int| start as int <= j2 < mid as int ==>
-                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    #[trigger] merged@.contains_key(verts_view[j2]@),
+                // merged covers [start, mid) — correct values.
+                forall|j2: int| start as int <= j2 < mid as int ==>
+                    merged@.contains_key(verts_view[j2]@) ==>
                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
-                // merged covers [mid, j) with correct values.
+                // merged covers [mid, j) — contains_key.
                 forall|j2: int| mid as int <= j2 < j as int ==>
-                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
+                    #[trigger] merged@.contains_key(verts_view[j2]@),
+                // merged covers [mid, j) — correct values.
+                forall|j2: int| mid as int <= j2 < j as int ==>
+                    merged@.contains_key(verts_view[j2]@) ==>
                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
                 // Ghost domain tracking: every key in merged@ has a witness in [start, j).
                 forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
@@ -669,10 +1386,21 @@ pub mod StarPartitionMtEph {
                 assert(merged@[jv]@ == pv_view[j as int]@);
                 // Update domain witnesses: add jv -> j.
                 dom_witnesses = pre_dom.insert(jv, j as int);
-                // Prior left entries preserved.
+                // Prior left entries preserved — contains_key.
                 assert forall|j2: int| start as int <= j2 < mid as int implies
-                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@ by {
+                    #[trigger] merged@.contains_key(verts_view[j2]@) by {
+                    let ghost j2v = verts_view[j2]@;
+                    if j2v != jv {
+                        assert(pre_merged.contains_key(j2v));
+                    } else {
+                        assert(verts_view[j2] == verts_view[j as int]);
+                        assert(false);
+                    }
+                };
+                // Prior left entries preserved — correct values.
+                assert forall|j2: int| start as int <= j2 < mid as int implies
+                    (merged@.contains_key(verts_view[j2]@) ==>
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
                     let ghost j2v = verts_view[j2]@;
                     if j2v != jv {
                         assert(pre_merged.contains_key(j2v));
@@ -682,10 +1410,25 @@ pub mod StarPartitionMtEph {
                         assert(false);
                     }
                 };
-                // Prior right entries [mid, j) preserved + new entry j.
+                // Prior right entries [mid, j) preserved + new entry j — contains_key.
                 assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
-                    #[trigger] merged@.contains_key(verts_view[j2]@) &&
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@ by {
+                    #[trigger] merged@.contains_key(verts_view[j2]@) by {
+                    if j2 == j as int {
+                        assert(verts_view[j2]@ == jv);
+                    } else {
+                        let ghost j2v = verts_view[j2]@;
+                        if j2v != jv {
+                            assert(pre_merged.contains_key(j2v));
+                        } else {
+                            assert(verts_view[j2] == verts_view[j as int]);
+                            assert(false);
+                        }
+                    }
+                };
+                // Prior right entries [mid, j) preserved + new entry j — correct values.
+                assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
+                    (merged@.contains_key(verts_view[j2]@) ==>
+                    merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
                     if j2 == j as int {
                         assert(verts_view[j2]@ == jv);
                     } else {
@@ -841,7 +1584,8 @@ pub mod StarPartitionMtEph {
     /// Algorithm 62.3: Parallel Star Partition.
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + lg m) — DIFFERS: Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+    #[verifier::rlimit(20)]
     pub fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,
@@ -870,63 +1614,14 @@ pub mod StarPartitionMtEph {
         let vertices_vec = graph.V.to_seq();
         let nv = vertices_vec.len();
 
-        // Loop 1: build vertex-to-index map.
-        // Domain invariant: every key in vertex_to_index came from vertices_vec[0..i].
-        let mut vertex_to_index = HashMapWithViewPlus::<V, usize>::new();
-        let mut i: usize = 0;
-        while i < nv
-            invariant
-                valid_key_type_Edge::<V>(),
-                i <= nv,
-                nv == vertices_vec@.len(),
-                vertices_vec@.no_duplicates(),
-                // vertex_to_index maps vertices_vec[0..i] to their indices.
-                forall|j: int| 0 <= j < i as int ==>
-                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j]@) &&
-                    vertex_to_index@[vertices_vec@[j]@] as usize == j,
-                // Domain is exactly {vertices_vec@[j]@ | 0 <= j < i}.
-                forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j: int| 0 <= j < i as int && #[trigger] vertices_vec@[j]@ == v_view,
-            decreases nv - i,
-        {
-            let ghost iv = vertices_vec@[i as int]@;
-            vertex_to_index.insert(vertices_vec[i].clone_view(), i as usize);
-            proof {
-                // After inserting vertices_vec[i] -> i, prove invariants for range [0..i+1].
-                assert forall|j: int| 0 <= j < i as int + 1 implies
-                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j]@) &&
-                    vertex_to_index@[vertices_vec@[j]@] as usize == j by {
-                    if j < i as int {
-                        let ghost jv = vertices_vec@[j]@;
-                        if jv != iv {
-                            assert(vertex_to_index@.contains_key(jv));
-                            assert(vertex_to_index@[jv] as usize == j);
-                        } else {
-                            // jv == iv (view-equal). By obeys_feq_view_injective, value-equal.
-                            lemma_reveal_view_injective::<V>();
-                            assert(vertices_vec@[j as int] == vertices_vec@[i as int]);
-                            assert(vertices_vec@.no_duplicates());
-                            assert(false);
-                        }
-                    }
-                };
-                // Domain update: any new key must be vertices_vec@[i]@ or an old key.
-                assert forall|v_view: V::V| vertex_to_index@.contains_key(v_view) implies
-                    exists|j: int| 0 <= j < i as int + 1 && #[trigger] vertices_vec@[j]@ == v_view by {
-                    if v_view != iv {
-                        // Old key; old invariant provides witness.
-                        let j2 = choose|j: int| 0 <= j < i as int && #[trigger] vertices_vec@[j]@ == v_view;
-                        assert(0 <= j2 < i as int + 1);
-                    }
-                    // v_view == iv: witness j = i.
-                };
-            }
-            i = i + 1;
-        }
+        // Wrap vertices_vec in Arc for parallel operations.
+        let vertices_arc: Arc<Vec<V>> = Arc::new(vertices_vec);
+        let vertices_vec = arc_deref(&vertices_arc);
 
-        // Ghost facts after loop 1:
-        // (a) vertex_to_index covers all graph@.V.
-        // (b) vertex_to_index domain is exactly {vertices_vec@[j]@ | j < nv}.
+        // Loop 1: parallel build of vertex-to-index map (Work O(n lg n), Span O(lg n)).
+        let vertex_to_index = build_vertex_to_index_mt(clone_arc_vec(&vertices_arc), 0, nv);
+
+        // Ghost facts after loop 1: vertex_to_index covers all graph@.V.
         proof {
             assert forall|v_view: V::V| #[trigger] graph@.V.contains(v_view) implies
                 vertex_to_index@.contains_key(v_view) by {
@@ -938,14 +1633,12 @@ pub mod StarPartitionMtEph {
             };
         }
 
-        // Wrap vertices_vec and vertex_to_index in Arc for parallel operations.
+        // Wrap vertex_to_index in Arc for parallel operations.
         let vtx_to_idx_arc: Arc<HashMapWithViewPlus<V, usize>> = Arc::new(vertex_to_index);
         let vertex_to_index = arc_deref(&vtx_to_idx_arc);
-        let vertices_arc: Arc<Vec<V>> = Arc::new(vertices_vec);
-        let vertices_vec = arc_deref(&vertices_arc);
 
         // Loop 2: parallel hash-based coin flips (Work O(n), Span O(lg n)).
-        let coin_flips_owned = hash_coin_flips_mt(vertices_arc.clone(), seed, 0, nv);
+        let coin_flips_owned = hash_coin_flips_mt(clone_arc_vec(&vertices_arc), seed, 0, nv);
         let coin_flips_arc: Arc<HashMapWithViewPlus<V, bool>> = Arc::new(coin_flips_owned);
         let coin_flips = arc_deref(&coin_flips_arc);
 
@@ -980,162 +1673,46 @@ pub mod StarPartitionMtEph {
         }
         let edge_arc: Arc<Vec<Edge<V>>> = Arc::new(edge_vec);
         let th_edges = build_th_edges_mt(
-            edge_arc, coin_flips_arc.clone(), vtx_to_idx_arc.clone(),
-            vertices_arc.clone(), nv, 0, ne,
+            edge_arc, clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc),
+            clone_arc_vec(&vertices_arc), nv, 0, ne,
         );
         let th_edges = th_edges;
 
-        // Bridge: expand spec_valid_th_entry for Loop 4 carry-through.
-        proof {
-            assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
-                (th_edges@[s].0 as usize) < nv &&
-                coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
-                !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
-                coin_flips@.contains_key(th_edges@[s].1@) &&
-                coin_flips@[th_edges@[s].1@] &&
-                vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                (vertex_to_index@[th_edges@[s].1@] as usize) < nv by {
-                assert(spec_valid_th_entry(th_edges@[s], nv as nat, coin_flips@, vertices_vec@, vertex_to_index@));
-            };
-        }
+        // Loops 4+5: parallel build of satellite map + injected p_vec.
+        // Step 4a: build satellite-to-center map from th_edges (Work O(m lg m), Span O(lg m)).
+        let th_edges_arc: Arc<Vec<(usize, V)>> = Arc::new(th_edges);
+        let nth = arc_deref(&th_edges_arc).len();
+        let satellite_map = build_satellite_map_mt(
+            th_edges_arc, clone_arc_vec(&vertices_arc), nv,
+            clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc), 0, nth,
+        );
+        let satellite_map_arc: Arc<HashMapWithViewPlus<V, V>> = Arc::new(satellite_map);
 
-        // Loop 4: parallel initialize p_vec = vertices_vec (Work O(n), Span O(lg n)).
-        let mut p_vec = build_p_vec_mt(vertices_arc.clone(), 0, nv);
+        // Step 4b: build p_vec with inject (Work O(n), Span O(lg n)).
+        let p_vec = build_p_vec_with_inject_mt(
+            clone_arc_vec(&vertices_arc), satellite_map_arc,
+            clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc), nv, 0, nv,
+        );
 
-        // Bridge: establish Loop 5 initial invariant — all p_vec entries are in vertex_to_index.
-        // build_p_vec_mt ensures p_vec@[j]@ == vertices_vec@[j]@, and Loop 1 proved
-        // vertex_to_index maps every vertices_vec entry to its index.
+        // Bridge: establish p_vec properties before Arc wrapping.
+        // The ensures of build_p_vec_with_inject_mt (with clone helpers) give us
+        // properties in terms of coin_flips@, vertices_vec@, vertex_to_index@.
         proof {
+            // Heads preserve.
+            assert(p_vec@.len() == nv as int);
+            assert forall|j2: int| 0 <= j2 < nv as int implies
+                coin_flips@.contains_key(vertices_vec@[j2]@) &&
+                (coin_flips@[vertices_vec@[j2]@] ==>
+                 #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@) by {};
+            // Modified entries point to heads.
+            assert forall|j2: int| 0 <= j2 < nv as int implies
+                (p_vec@[j2]@ != vertices_vec@[j2]@ ==>
+                (coin_flips@.contains_key(#[trigger] p_vec@[j2]@) &&
+                 coin_flips@[p_vec@[j2]@])) by {};
+            // All entries in vertex_to_index.
             assert forall|j2: int| 0 <= j2 < nv as int implies
                 vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                (vertex_to_index@[p_vec@[j2]@] as usize) < nv by {
-                assert(p_vec@[j2]@ == vertices_vec@[j2]@);
-                assert(vertex_to_index@.contains_key(vertices_vec@[j2]@));
-                assert(vertex_to_index@[vertices_vec@[j2]@] as usize == j2);
-            };
-        }
-
-        // Loop 5: apply th_edges to p_vec.
-        // Key invariant: heads vertices always keep p_vec[j] == vertices_vec[j].
-        let nth = th_edges.len();
-        let mut t: usize = 0;
-        while t < nth
-            invariant
-                valid_key_type_Edge::<V>(),
-                t <= nth,
-                nth == th_edges@.len(),
-                p_vec@.len() == nv as int,
-                nv == vertices_vec@.len(),
-                vertices_vec@.no_duplicates(),
-                // Carry-through: to_seq ensures for vertices.
-                forall|x: V::V| #[trigger] graph@.V.contains(x) <==>
-                    vertices_vec@.map(|_i: int, t: V| t@).contains(x),
-                // coin_flips covers all vertices (separate for trigger).
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    #[trigger] coin_flips@.contains_key(vertices_vec@[j2]@),
-                // Heads preserve: coin_flips[vertices_vec[j]] == true => p_vec[j] == vertices_vec[j].
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    coin_flips@.contains_key(vertices_vec@[j2]@) &&
-                    (coin_flips@[vertices_vec@[j2]@] ==>
-                     #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@),
-                // Modified entries point to heads vertices (coin_flips == true).
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    p_vec@[j2]@ != vertices_vec@[j2]@ ==>
-                    (coin_flips@.contains_key(p_vec@[j2]@) &&
-                     #[trigger] coin_flips@[p_vec@[j2]@]),
-                // All p_vec entries are in vertex_to_index (with valid indices).
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                    (vertex_to_index@[p_vec@[j2]@] as usize) < nv,
-                // vertex_to_index domain invariants.
-                forall|j2: int| 0 <= j2 < nv as int ==>
-                    #[trigger] vertex_to_index@.contains_key(vertices_vec@[j2]@) &&
-                    vertex_to_index@[vertices_vec@[j2]@] as usize == j2,
-                forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
-                    exists|j2: int| 0 <= j2 < nv as int && #[trigger] vertices_vec@[j2]@ == v_view,
-                // th_edges invariant (immutable).
-                forall|s: int| 0 <= s < th_edges@.len() ==>
-                    (th_edges@[s].0 as usize) < nv &&
-                    #[trigger] coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
-                    !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
-                    coin_flips@.contains_key(th_edges@[s].1@) &&
-                    coin_flips@[th_edges@[s].1@] &&
-                    vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                    (vertex_to_index@[th_edges@[s].1@] as usize) < nv,
-            decreases nth - t,
-        {
-            let (idx, ref vertex) = th_edges[t];
-            if (idx as usize) < nv {
-                let ghost new_val = (*vertex)@;
-                let ghost tail_view = vertices_vec@[idx as usize as int]@;
-                let ghost pre_p = p_vec@;
-                // Fire th_edges invariant trigger for s = t (before set).
-                proof {
-                    assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[t as int].0 as usize) as int]@));
-                    assert(!coin_flips@[tail_view]);
-                    assert(coin_flips@.contains_key(th_edges@[t as int].1@));
-                    assert(coin_flips@[new_val]);
-                    assert(vertex_to_index@.contains_key(new_val));
-                    assert((vertex_to_index@[new_val] as usize) < nv);
-                }
-                p_vec.set(idx as usize, vertex.clone_view());
-                proof {
-                    // After set: p_vec@[idx]@ == new_val (since clone_view preserves view).
-                    assert(p_vec@[idx as usize as int]@ == new_val);
-                    // new_val != tail_view since coin_flips differ.
-                    assert(new_val != tail_view) by {
-                        if new_val == tail_view { assert(false); }
-                    };
-                    // Heads preserve: for j == idx, coin_flips[vertices_vec[idx]] = false => vacuous.
-                    assert forall|j2: int| 0 <= j2 < nv as int implies
-                        coin_flips@.contains_key(#[trigger] vertices_vec@[j2]@) &&
-                        (coin_flips@[vertices_vec@[j2]@] ==>
-                         #[trigger] p_vec@[j2]@ == vertices_vec@[j2]@) by {
-                        if j2 != idx as usize as int {
-                            assert(p_vec@[j2] == pre_p[j2]);
-                        }
-                        // j2 == idx: coin_flips[tail_view] is false => implication vacuous.
-                    };
-                    // Modified entries point to heads.
-                    assert forall|j2: int|
-                        (0 <= j2 < nv as int && #[trigger] p_vec@[j2]@ != #[trigger] vertices_vec@[j2]@) implies
-                        (coin_flips@.contains_key(p_vec@[j2]@) &&
-                         coin_flips@[p_vec@[j2]@]) by {
-                        if j2 == idx as usize as int {
-                            assert(p_vec@[j2]@ == new_val);
-                            assert(coin_flips@[new_val]);
-                        } else {
-                            assert(p_vec@[j2] == pre_p[j2]);
-                        }
-                    };
-                    // vertex_to_index for p_vec entries.
-                    assert forall|j2: int| 0 <= j2 < nv as int implies
-                        vertex_to_index@.contains_key(#[trigger] p_vec@[j2]@) &&
-                        (vertex_to_index@[p_vec@[j2]@] as usize) < nv by {
-                        if j2 == idx as usize as int {
-                            assert(p_vec@[j2]@ == new_val);
-                            assert(vertex_to_index@.contains_key(new_val));
-                            assert((vertex_to_index@[new_val] as usize) < nv);
-                        } else {
-                            assert(p_vec@[j2] == pre_p[j2]);
-                        }
-                    };
-                }
-            }
-            // Re-assert th_edges invariant (th_edges is immutable, unchanged by p_vec.set).
-            proof {
-                assert forall|s: int| #![trigger th_edges@[s]] 0 <= s < th_edges@.len() implies
-                    (th_edges@[s].0 as usize) < nv &&
-                    coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@) &&
-                    !coin_flips@[vertices_vec@[(th_edges@[s].0 as usize) as int]@] &&
-                    coin_flips@.contains_key(th_edges@[s].1@) &&
-                    coin_flips@[th_edges@[s].1@] &&
-                    vertex_to_index@.contains_key(th_edges@[s].1@) &&
-                    (vertex_to_index@[th_edges@[s].1@] as usize) < nv by {
-                    assert(coin_flips@.contains_key(vertices_vec@[(th_edges@[s].0 as usize) as int]@));
-                };
-            }
-            t = t + 1;
+                (vertex_to_index@[p_vec@[j2]@] as usize) < nv by {};
         }
 
         // Loop 6: parallel build of centers and partition_map (Work O(n), Span O(lg n)).
@@ -1168,18 +1745,20 @@ pub mod StarPartitionMtEph {
 
         let f_pm = move || -> (r: HashMapWithViewPlus<V, V>)
             requires
+                nv == va2@.len(),
                 va2@.len() == pa2@.len(),
                 va2@.no_duplicates(),
                 valid_key_type_Edge::<V>(),
             ensures
-                forall|j: int| 0 <= j < va2@.len() as int ==>
-                    #[trigger] r@.contains_key(va2@[j]@) &&
+                forall|j: int| 0 <= j < nv as int ==>
+                    #[trigger] r@.contains_key(va2@[j]@),
+                forall|j: int| 0 <= j < nv as int ==>
+                    r@.contains_key(va2@[j]@) ==>
                     r@[va2@[j]@]@ == pa2@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
-                    exists|j: int| 0 <= j < va2@.len() as int && #[trigger] va2@[j]@ == v_view,
+                    exists|j: int| 0 <= j < nv as int && #[trigger] va2@[j]@ == v_view,
         {
-            let n = arc_deref(&va2).len();
-            build_partition_map_mt(va2, pa2, 0, n)
+            build_partition_map_mt(va2, pa2, 0, nv)
         };
 
         let Pair(centers, partition_map) = crate::ParaPair!(f_centers, f_pm);
@@ -1210,9 +1789,9 @@ pub mod StarPartitionMtEph {
                     // p_vec@[j]@ == vertices_vec@[j]@, so centers@.contains(h) from D&C.
                     assert(centers@.contains(h));
                 } else {
-                    // h != vertices_vec@[j]@: from loop 5, h is a heads vertex.
+                    // h != vertices_vec@[j]@: from inject, h is a heads vertex.
                     assert(coin_flips@[h]);
-                    // h is in vertex_to_index (loop 5 invariant).
+                    // h is in vertex_to_index (inject ensures).
                     assert(vertex_to_index@.contains_key(h));
                     let ghost q_h = vertex_to_index@[h] as usize;
                     assert(q_h < nv);

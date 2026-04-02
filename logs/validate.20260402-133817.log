@@ -1,0 +1,22 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1217:13
+     |
+1217 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1669:13
+     |
+1669 |             assert forall|j2: int| 0 <= j2 < nv as int implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+verification results:: 1328 verified, 0 errors
+warning: 2 warnings emitted
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 2091MB, peak z3 RSS: 308MB, min free: 19265MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 17s

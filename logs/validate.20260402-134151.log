@@ -1,0 +1,47 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1217:13
+     |
+1217 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1669:13
+     |
+1669 |             assert forall|j2: int| 0 <= j2 < nv as int implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: unable to prove post-condition of closure
+    --> src/Chap62/StarPartitionMtEph.rs:1713:17
+     |
+1713 | /                 forall|j: int| 0 <= j < va2@.len() as int ==>
+1714 | |                     #[trigger] r@.contains_key(va2@[j]@) &&
+1715 | |                     r@[va2@[j]@]@ == pa2@[j]@,
+     | |_____________________________________________^ failed this postcondition
+...
+1720 |               build_partition_map_mt(va2, pa2, 0, n)
+     |               -------------------------------------- returning this expression
+
+note: diagnostics via expansion
+
+note: 
+
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = va2.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        r.view().dom().contains(va2.view().index(j).view()) ✔
+        r.view().index(va2.view().index(j).view()).view() == pa2.view().index(j).view() ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 5687 verified, 1 errors
+error: aborting due to 1 previous error; 2 warnings emitted
+
+Elapsed: 87s
+Sampled Memory Usage: peak rust_verify RSS: 10691MB, peak z3 RSS: 514MB, min free: 10873MB
+Sampled CPU Usage: rust_verify: 223s, z3 children: 174s
