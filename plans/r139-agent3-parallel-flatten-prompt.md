@@ -101,9 +101,31 @@ Append for slices: create a new Vec from both halves, wrap in from_vec. O(n+m) w
 
 Check if append exists first. If not, add it to both trait and impl.
 
+## Also fix: AdjTableGraphMtPer capacity assume (1 hole)
+
+In R138, you built `assert_avltreesetmtper_always_wf` in `src/Chap41/AVLTreeSetMtPer.rs`
+to bridge `ParamBST`'s `type_invariant` to `spec_avltreesetmtper_wf()`. Another agent
+then added a NEW assume in `src/Chap52/AdjTableGraphMtPer.rs:470`:
+
+```rust
+assume(neighbors@.len() < usize::MAX as nat);
+```
+
+This assume is provable. `ParamBST` stores its size as `usize`, so the ghost view
+(`Set<T::V>`) has length ≤ usize::MAX by construction. Extend your helper to also
+prove capacity, or add a second helper. Then replace the assume in the closure at
+`AdjTableGraphMtPer.rs:470` with the helper call.
+
+Also fix `assert_avltreesetmtper_always_wf` itself — veracity reports
+`fn_missing_requires` on it (`src/Chap41/AVLTreeSetMtPer.rs:83`). It likely needs
+no requires (it works on any `&AVLTreeSetMtPer<T>`), so either add the real requires
+or confirm with the user. If it genuinely needs none, leave it for the user to annotate.
+
 ## Validation
 
-Run `scripts/validate.sh isolate Chap19`. Then `scripts/rtt.sh`.
+Run `scripts/validate.sh isolate Chap19` for flatten work.
+Run `scripts/validate.sh isolate Chap52` for the capacity fix.
+Then `scripts/rtt.sh`.
 Add RTTs for flatten (and append if added).
 
 ## Rules

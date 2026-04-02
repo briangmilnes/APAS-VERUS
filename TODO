@@ -1,18 +1,6 @@
 1) New TOC ify. Adjust style guide.
 
-2) X{St,Mt}{Per,Eph} consistency.
-
-3) Review marking for human review.
-
-5) AI alg analysis including marking discrepencies.
-
-7) RTT test review for the missing chapters.
- Anything not running?
-
-9) Union Find z3 problems.
-
-
-10) ┌────────────────────────────────────────────┬──────────┬─────────────────────────┐
+2) ┌────────────────────────────────────────────┬──────────┬─────────────────────────┐
   │                   Lemma                    │ In vstd? │ In APAS-VERUS vstdplus? │
   ├────────────────────────────────────────────┼──────────┼─────────────────────────┤
   │ lemma_multiset_filter_distributes_over_add │ No       │ New (agent 2 wrote it)  │
@@ -23,9 +11,5 @@
   └────────────────────────────────────────────┴──────────┴─────────────────────────┘
   do we give these to vstd?
 
-11) Named functions instead of moves. Update verus.
-
-12) < usize::Max in wfs?
-
-13) WF for containers of containers.
+3) Do all our clone woes go away with copy? What does it do the the algorithms complexities?
 
