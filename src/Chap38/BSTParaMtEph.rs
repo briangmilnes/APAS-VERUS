@@ -346,13 +346,17 @@ pub mod BSTParaMtEph {
                 forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(&key) == Less,
                 forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(&key) == Greater;
         /// - Alg Analysis: APAS (Ch38 Alg 38.4, CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(n/m)), Span O(lg n) — DIFFERS: should add requires T1 < T2 (disjoint ordered) per APAS and delegate to join_pair_inner; see Chap39/BSTTreapStEph.rs for disjoint usage pattern
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS; delegates to join_pair_inner
         fn join_pair(&self, other: Self) -> (joined: Self)
             requires
+                self@.finite(), other@.finite(),
+                self@.disjoint(other@),
                 self@.len() + other@.len() <= usize::MAX as nat,
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
-            ensures joined@ == self@.union(other@), joined@.finite();
+                forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)]
+                    self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
+            ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// Joins two disjoint BSTs where all elements of self are less than all elements of right.
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — sequential join by exposing right subtree
@@ -651,12 +655,11 @@ pub mod BSTParaMtEph {
             r
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m·lg(n/m)), Span O(lg n) — DIFFERS: should add requires T1 < T2 and delegate to join_pair_inner; see Chap39/BSTTreapStEph.rs
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS; delegates to join_pair_inner
         fn join_pair(&self, other: Self) -> (joined: Self)
-            ensures joined@ == self@.union(other@), joined@.finite()
+            ensures joined@.finite(), joined@ =~= self@.union(other@),
         {
-            proof { use_type_invariant(self); use_type_invariant(&other); }
-            union_inner(self, &other)
+            self.join_pair_inner(&other)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
