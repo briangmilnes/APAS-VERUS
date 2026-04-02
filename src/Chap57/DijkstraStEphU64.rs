@@ -157,7 +157,8 @@ pub mod DijkstraStEphU64 {
             }
         }
 
-        // accept hole: PQEntry Ord::cmp is external_body, so cmp_spec is opaque.
+        // Blocked: Verus panics on OrdSpecImpl for user types (vir/ast_util.rs:734).
+        // Without OrdSpecImpl, cmp_spec is opaque and these bridge lemmas can't be proved.
         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
             assume(TotalOrder::le(a, b));
         }

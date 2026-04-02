@@ -1,0 +1,39 @@
+error: invariant not satisfied before loop
+   --> src/Chap19/ArraySeqMtEphSlice.rs:957:25
+    |
+957 |                         self.spec_arrayseqmtephslice_wf(),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+   --> src/Chap19/ArraySeqMtEphSlice.rs:958:25
+    |
+958 |                         other.spec_arrayseqmtephslice_wf(),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:732:13
+    |
+185 |                 self.spec_arrayseqmtephslice_wf(),
+    |                 --------------------------------- failed precondition
+...
+732 |             inner.to_vec()
+    |             ^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap19/ArraySeqMtEphSlice.rs:185:17
+    |
+185 |                 self.spec_arrayseqmtephslice_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_arrayseqmtephslice_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_feq_clone() ✔
+
+verification results:: 866 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3547MB, peak z3 RSS: 215MB, min free: 22309MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 1s

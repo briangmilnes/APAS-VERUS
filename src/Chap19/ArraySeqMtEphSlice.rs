@@ -39,6 +39,9 @@ pub mod ArraySeqMtEphSlice {
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::monoid::monoid::*;
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::cmp::PartialEqSpecImpl;
+    use crate::vstdplus::accept::accept;
 
     // 3. broadcast use
 
@@ -73,6 +76,19 @@ pub mod ArraySeqMtEphSlice {
     }
 
     // 6. spec fns
+
+    /// Well-formedness check on a nested ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>.
+    /// True when the outer window is valid and every inner window is valid.
+    pub open spec fn spec_nested_wf<T>(a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>) -> bool {
+        &&& a.start + a.len <= (*a.data)@.len()
+        &&& a.start + a.len <= usize::MAX
+        &&& forall|i: int| #![trigger (*a.data)@[a.start as int + i]]
+            0 <= i < a.len as int ==> {
+                let inner = (*a.data)@[a.start as int + i];
+                &&& inner.start + inner.len <= (*inner.data)@.len()
+                &&& inner.start + inner.len <= usize::MAX
+            }
+    }
 
     // 8. traits
 
@@ -239,6 +255,7 @@ pub mod ArraySeqMtEphSlice {
                 tab.spec_len() == length as nat,
                 forall|i: int| #![trigger tab.spec_index(i)]
                     0 <= i < length ==> f.ensures((i as usize,), tab.spec_index(i));
+
     }
 
     // 9. impls
@@ -419,6 +436,7 @@ pub mod ArraySeqMtEphSlice {
             }
             tab
         }
+
     }
 
     // 9b. bare impl — D&C helpers and proof fns
@@ -803,6 +821,115 @@ pub mod ArraySeqMtEphSlice {
                 left_v
             }
         }
+
+    }
+
+    // 9d. free functions — flatten
+
+    /// Parallel flatten via D&C on O(1) slices.
+    /// - Primitive: flatten. Concatenate a sequence of sequences.
+    /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — DIFFERS: Vec concat at each level adds lg factor
+    pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
+        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+    ) -> (flattened: ArraySeqMtEphSliceS<T>)
+        requires
+            spec_nested_wf(a),
+            obeys_feq_clone::<T>(),
+        ensures
+            flattened.spec_arrayseqmtephslice_wf(),
+    {
+        let v = flatten_dc_vec(a);
+        ArraySeqMtEphSliceS::<T>::from_vec(v)
+    }
+
+    /// D&C flatten producing Vec<T>. Called by flatten.
+    fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+    ) -> (result: Vec<T>)
+        requires
+            spec_nested_wf(a),
+            obeys_feq_clone::<T>(),
+        decreases a.len,
+    {
+        let len = a.len;
+        if len == 0 {
+            Vec::new()
+        } else if len == 1 {
+            let backing: &Vec<ArraySeqMtEphSliceS<T>> = arc_deref(&a.data);
+            let inner: &ArraySeqMtEphSliceS<T> = &backing[a.start];
+            assert(inner == (*a.data)@[a.start as int + 0]);
+            inner.to_vec()
+        } else {
+            let mid = len / 2;
+            // O(1) slice of the outer sequence.
+            let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: Arc::clone(&a.data),
+                start: a.start,
+                len: mid,
+            };
+            let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: Arc::clone(&a.data),
+                start: a.start + mid,
+                len: len - mid,
+            };
+
+            // Propagate nested wf to left and right halves.
+            proof {
+                assert forall|i: int| #![trigger (*left.data)@[left.start as int + i]]
+                    0 <= i < left.len as int implies {
+                    let inner = (*left.data)@[left.start as int + i];
+                    &&& inner.start + inner.len <= (*inner.data)@.len()
+                    &&& inner.start + inner.len <= usize::MAX
+                } by {
+                    assert((*left.data)@[left.start as int + i]
+                        == (*a.data)@[a.start as int + i]);
+                }
+                assert(spec_nested_wf(&left));
+
+                assert forall|i: int| #![trigger (*right.data)@[right.start as int + i]]
+                    0 <= i < right.len as int implies {
+                    let inner = (*right.data)@[right.start as int + i];
+                    &&& inner.start + inner.len <= (*inner.data)@.len()
+                    &&& inner.start + inner.len <= usize::MAX
+                } by {
+                    assert((*right.data)@[right.start as int + i]
+                        == (*a.data)@[a.start as int + (mid as int + i)]);
+                }
+                assert(spec_nested_wf(&right));
+            }
+
+            let fa = move || -> (r: Vec<T>)
+                requires
+                    spec_nested_wf(&left),
+                    obeys_feq_clone::<T>(),
+            {
+                flatten_dc_vec(&left)
+            };
+
+            let fb = move || -> (r: Vec<T>)
+                requires
+                    spec_nested_wf(&right),
+                    obeys_feq_clone::<T>(),
+            {
+                flatten_dc_vec(&right)
+            };
+
+            let (mut left_v, right_v) = join(fa, fb);
+            let rlen = right_v.len();
+            let mut i: usize = 0;
+            while i < rlen
+                invariant
+                    i <= rlen,
+                    rlen == right_v@.len(),
+                    obeys_feq_clone::<T>(),
+                decreases rlen - i,
+            {
+                left_v.push(right_v[i].clone_plus());
+                i = i + 1;
+            }
+            left_v
+        }
     }
 
     // 10. iterators
@@ -918,6 +1045,43 @@ pub mod ArraySeqMtEphSlice {
             ArraySeqMtEphSliceIter { inner: sl.iter() }
         }
     }
+
+    // 9c. PartialEqSpecImpl — struct ArraySeqMtEphSliceS
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq + Eq + Clone> PartialEqSpecImpl for ArraySeqMtEphSliceS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    // 12. derive impls in verus! — struct ArraySeqMtEphSliceS
+
+    impl<T: Clone> Clone for ArraySeqMtEphSliceS<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures
+                cloned.data == self.data,
+                cloned.start == self.start,
+                cloned.len == self.len,
+        {
+            ArraySeqMtEphSliceS {
+                data: Arc::clone(&self.data),
+                start: self.start,
+                len: self.len,
+            }
+        }
+    }
+
+    impl<T: PartialEq + View + Eq + Clone> PartialEq for ArraySeqMtEphSliceS<T> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.start == other.start && self.len == other.len;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<T: Eq + View + Clone> Eq for ArraySeqMtEphSliceS<T> {}
 
     } // verus!
 

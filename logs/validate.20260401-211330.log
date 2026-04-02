@@ -1,0 +1,52 @@
+
+thread '<unnamed>' (844889) panicked at vir/src/ast_util.rs:734:13:
+mask_spec_or_default should not be called for TraitMethodImpl
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread '<unnamed>' (844889) panicked at rust_verify/src/verifier.rs:2217:29:
+worker thread panicked
+
+thread '<unnamed>' (844892) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844899) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844898) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844890) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844891) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844894) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844900) panicked at rust_verify/src/verifier.rs:216:14:
+could not send the message!: SendError { .. }
+
+thread '<unnamed>' (844892) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844891) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844890) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844900) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844899) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844894) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+
+thread '<unnamed>' (844898) panicked at rust_verify/src/verifier.rs:2216:34:
+mpsc open: SendError { .. }
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 3021MB, peak z3 RSS: 349MB, min free: 21832MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 43s

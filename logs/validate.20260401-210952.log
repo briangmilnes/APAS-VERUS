@@ -1,0 +1,68 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap57/DijkstraStEphU64.rs:113:12
+    |
+113 |         fn cmp(&self, other: &Self) -> (c: Ordering)
+    |            ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `std::cmp::Ord` for the type `Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry`
+   --> src/Chap57/DijkstraStEphU64.rs:113:9
+    |
+113 |         fn cmp(&self, other: &Self) -> (c: Ordering)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: candidate #2 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry`
+   --> src/Chap57/DijkstraStEphU64.rs:148:9
+    |
+148 |         fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: disambiguate the method for candidate #1
+    |
+113 -         fn cmp(&self, other: &Self) -> (c: Ordering)
+114 -             ensures c == self.cmp_spec(other)
+113 +         fn cmp(&std::cmp::Ord::cmp(&self, other) c == self.cmp_spec(other)
+    |
+help: disambiguate the method for candidate #2
+    |
+113 -         fn cmp(&self, other: &Self) -> (c: Ordering)
+114 -             ensures c == self.cmp_spec(other)
+113 +         fn cmp(&vstdplus::total_order::total_order::TotalOrder::cmp(&self, other) c == self.cmp_spec(other)
+    |
+
+error[E0599]: no method named `cmp_spec` found for reference `&Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry` in the current scope
+   --> src/Chap57/DijkstraStEphU64.rs:114:31
+    |
+114 |             ensures c == self.cmp_spec(other)
+    |                               ^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 13 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+114 |             ensures c == self.partial_cmp_spec(other)
+    |                               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for reference `&Chap57::DijkstraStEphU64::DijkstraStEphU64::PQEntry` in the current scope
+   --> src/Chap57/DijkstraStEphU64.rs:132:36
+    |
+132 |             ensures r == Some(self.cmp_spec(other))
+    |                                    ^^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+    |
+ 13 +     use vstd::std_specs::cmp::OrdSpec;
+    |
+help: there is a method `partial_cmp_spec` with a similar name
+    |
+132 |             ensures r == Some(self.partial_cmp_spec(other))
+    |                                    ++++++++
+
+error: aborting due to 3 previous errors
+
+Some errors have detailed explanations: E0034, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 554MB, peak z3 RSS: 0MB, min free: 25564MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

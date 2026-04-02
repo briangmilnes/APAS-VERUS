@@ -1,0 +1,22 @@
+error: this file contains an unclosed delimiter
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1127:3
+     |
+  24 | pub mod ArraySeqMtEphSlice {
+     |                            - unclosed delimiter
+...
+  30 |     verus! {
+     |            - this delimiter might not be properly closed...
+...
+1080 |     impl<T: Eq + View + Clone> Eq for ArraySeqMtEphSliceS<T> {}
+     |                                                              -- block is empty, you might have not meant to close it
+...
+1127 | }
+     | -^
+     | |
+     | ...as it matches this but it has different indentation
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21952MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

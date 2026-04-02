@@ -1,0 +1,382 @@
+error[E0599]: the method `spec_arrayseqmtephslice_wf` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:237:19
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+237 |                 a.spec_arrayseqmtephslice_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-833307561122676926.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_len` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:239:43
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+239 |                 forall|i: int| 0 <= i < a.spec_len()
+    |                                           ^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-833307561122676926.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_index` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:240:39
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+240 |                     ==> (#[trigger] a.spec_index(i)).spec_arrayseqmtephslice_wf(),
+    |                                       ^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-833307561122676926.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_arrayseqmtephslice_wf` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:707:19
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+707 |                 a.spec_arrayseqmtephslice_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_len` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:709:43
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+709 |                 forall|i: int| 0 <= i < a.spec_len()
+    |                                           ^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_index` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:710:39
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+710 |                     ==> (#[trigger] a.spec_index(i)).spec_arrayseqmtephslice_wf(),
+    |                                       ^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_len` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:713:25
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+713 |             decreases a.spec_len(),
+    |                         ^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `length` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:715:25
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+715 |             let len = a.length();
+    |                         ^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap19/ArraySeqMtEphSlice.rs:716:23
+    |
+418 |     impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> {
+    |          - expected this type parameter
+...
+716 |             if len == 0 {
+    |                       ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0308]: mismatched types
+   --> src/Chap19/ArraySeqMtEphSlice.rs:718:30
+    |
+418 |     impl<T: Eq + Clone> ArraySeqMtEphSliceS<T> {
+    |          - expected this type parameter
+...
+718 |             } else if len == 1 {
+    |                              ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0599]: the method `spec_index` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:720:26
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+720 |                 assert(a.spec_index(0) == (*a.data)@[a.start as int]);
+    |                          ^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `slice` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:724:30
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+724 |                 let left = a.slice(0, mid);
+    |                              ^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `slice` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:725:31
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+725 |                 let right = a.slice(mid, len - mid);
+    |                               ^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_index` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:732:56
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+732 |                         assert(left.spec_index(i) == a.spec_index(0int + i));
+    |                                                        ^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error[E0599]: the method `spec_index` exists for reference `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>`, but its trait bounds were not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:740:57
+    |
+ 58 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- doesn't satisfy `_: ArraySeqMtEphSliceTrait<ArraySeqMtEphSliceS<T>>`, `_: Clone` or `_: Eq`
+...
+740 |                         assert(right.spec_index(i) == a.spec_index(mid as int + i));
+    |                                                         ^^^^^^^^^^ method cannot be called on `&ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>` due to unsatisfied trait bounds
+    |
+note: the following trait bounds were not satisfied:
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::clone::Clone`
+      `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>: std::cmp::Eq`
+   --> src/Chap19/ArraySeqMtEphSlice.rs:247:13
+    |
+247 |     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^   ^^^^^  --------------------------     ----------------------
+    |             |    |
+    |             |    unsatisfied trait bound introduced here
+    |             unsatisfied trait bound introduced here
+    = note: the full name for the type has been written to 'lib.long-type-8910478239535256852.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: consider annotating `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>` with `#[derive(Clone, Eq, PartialEq)]`
+    |
+ 58 +     #[derive(Clone, Eq, PartialEq)]
+ 59 |     pub struct ArraySeqMtEphSliceS<T> {
+    |
+
+error: aborting due to 15 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25737MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

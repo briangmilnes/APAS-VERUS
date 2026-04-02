@@ -1,0 +1,17 @@
+error: `alloc::sync::impl&%55::eq` is not supported (note: you may be able to add a Verus specification to this function with `assume_specification`) (note: the vstd library provides some specification for the Rust std library, but it is currently limited)
+   --> src/Chap19/ArraySeqMtEphSlice.rs:949:25
+    |
+949 |             let equal = self.data == other.data
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: The following declaration may resolve this error:
+            pub assume_specification<T, A> [<std::sync::Arc<T, A> as std::cmp::PartialEq>::eq] (_0: &std::sync::Arc<T, A>, _1: &std::sync::Arc<T, A>) -> bool
+            where
+            A: std::alloc::Allocator,
+            T: std::marker::MetaSized + std::cmp::PartialEq + ?Sized,;
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25903MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

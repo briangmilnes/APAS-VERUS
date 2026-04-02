@@ -1,0 +1,102 @@
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:125:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:114:13
+    |
+114 | /             if self.dist < other.dist {
+115 | |                 Ordering::Less
+116 | |             } else if self.dist > other.dist {
+117 | |                 Ordering::Greater
+...   |
+123 | |                 Ordering::Greater
+124 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:125:44
+
+note: 
+
+obeys_cmp_spec() ==>
+    %return == old(self).cmp_spec(old(other))
+    |   %return is Less ==>
+    |       old(self).cmp_spec(old(other)) is Less ✘
+    |   %return is Equal ==>
+    |       old(self).cmp_spec(old(other)) is Equal ✘
+    |   %return is Greater ==>
+    |       old(self).cmp_spec(old(other)) is Greater ✘
+    +---
+
+error: postcondition not satisfied
+   --> vstd/std_specs/cmp.rs:51:12
+    |
+    = note: failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:130:13
+    |
+130 |             Some(Ord::cmp(self, other))
+    |             --------------------------- at the end of the function body
+
+note: diagnostics via expansion
+ --> vstd/std_specs/cmp.rs:51:47
+
+note: 
+
+obeys_partial_cmp_spec() ==>
+    %return =~= old(self).partial_cmp_spec(old(other))
+    |   %return is None ==>
+    |       old(self).partial_cmp_spec(old(other)) is None ✔
+    |   %return is Some ==>
+    |       old(self).partial_cmp_spec(old(other)) is Some ✘
+    |       %return.0 =~= old(self).partial_cmp_spec(old(other)).0 ✘
+    |       |   %return.0 is Less ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Less ✘
+    |       |   %return.0 is Equal ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Equal ✘
+    |       |   %return.0 is Greater ==>
+    |       |       old(self).partial_cmp_spec(old(other)).0 is Greater ✘
+    |       +---
+    +---
+
+error: postcondition not satisfied
+   --> src/vstdplus/total_order.rs:58:17
+    |
+ 58 |         ensures TotalOrder::le(a, b);
+    |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:158:15
+    |
+158 |         proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
+    |               --------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+old(a).le(old(b)) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+   --> src/vstdplus/total_order.rs:62:17
+    |
+ 62 |         ensures TotalOrder::le(b, a);
+    |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+    |
+   ::: src/Chap57/DijkstraStEphU64.rs:159:15
+    |
+159 |         proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
+    |               ------------------------------------------------ at the end of the function body
+
+note: 
+
+old(b).le(old(a)) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2578 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 33s
+Sampled Memory Usage: peak rust_verify RSS: 5741MB, peak z3 RSS: 439MB, min free: 19938MB
+Sampled CPU Usage: rust_verify: 110s, z3 children: 109s
