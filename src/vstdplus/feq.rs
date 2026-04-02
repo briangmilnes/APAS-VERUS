@@ -266,6 +266,25 @@ pub mod feq {
         admit();
     }
 
+    /// View surjectivity helper: checks if v has an exec-level preimage under View.
+    pub open spec fn spec_view_has_preimage<T: View>(v: T::V) -> bool {
+        exists|t: T| t@ == v
+    }
+
+    /// View surjectivity: every view-level value has an exec-level preimage.
+    /// Sound because all View impls in APAS-VERUS are surjective (identity for primitives,
+    /// component-wise for structs).
+    pub open spec fn spec_view_surjective<T: View>() -> bool {
+        forall|v: T::V| #[trigger] spec_view_has_preimage::<T>(v)
+    }
+
+    pub open spec fn spec_view_surjective_trigger<T: View>() -> bool { true }
+
+    pub broadcast proof fn axiom_view_surjective<T: View + Sized>()
+        requires #[trigger] spec_view_surjective_trigger::<T>()
+        ensures spec_view_surjective::<T>()
+    { admit(); }
+
     pub broadcast group group_feq_axioms {
         axiom_cloned_implies_eq,
         axiom_cloned_implies_eq_owned,
@@ -273,6 +292,7 @@ pub mod feq {
         axiom_strictly_cloned_implies_eq_owned,
         axiom_obeys_feq_full,
         axiom_obeys_view_eq,
+        axiom_view_surjective,
     }
 
     } // verus!

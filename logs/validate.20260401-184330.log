@@ -1,0 +1,75 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1162:13
+     |
+1162 | /             match found {
+1163 | |                 Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
+1164 | |                     && v@ == spec_pair_set_to_map(tree@)[k@],
+1165 | |                 None => !spec_pair_set_to_map(tree@).contains_key(k@),
+1166 | |             }
+     | |_____________^ failed this postcondition
+...
+1169 | /         match pair_result {
+1170 | |             Some(pair) => {
+1171 | |                 let v_clone = pair.1.clone_plus();
+1172 | |                 proof {
+...    |
+1196 | |             },
+1197 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1165:26
+     |
+1165 |                 None => !spec_pair_set_to_map(tree@).contains_key(k@),
+     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = found;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view()) ✔
+            v.view() == spec_pair_set_to_map(old(tree).view()).index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        !(spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view())) ✘
+            function is uninterpreted
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:479:13
+    |
+479 | /             match found {
+480 | |                 Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
+481 | |                     && v@ == spec_pair_set_to_map(tree@)[k@],
+482 | |                 None => !spec_pair_set_to_map(tree@).contains_key(k@),
+483 | |             }
+    | |_____________^ failed this postcondition
+...
+486 | /         match pair_result {
+487 | |             Some(pair) => {
+488 | |                 let v_clone = pair.1.clone_plus();
+489 | |                 proof {
+...   |
+506 | |             },
+507 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:482:26
+    |
+482 |                 None => !spec_pair_set_to_map(tree@).contains_key(k@),
+    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = found;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view()) ✔
+            v.view() == spec_pair_set_to_map(old(tree).view()).index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        !(spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view())) ✘
+            function is uninterpreted
+
+verification results:: 2620 verified, 2 errors
+error: aborting due to 2 previous errors
+

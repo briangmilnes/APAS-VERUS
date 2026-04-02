@@ -1,0 +1,63 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1138:44
+     |
+1138 | ...                   assert(right@.contains(p_wit@));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1168:44
+     |
+1168 | ...                   assert(left@.contains(p_wit@));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+right.view().contains(p_wit.view()) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap43/OrderedTableStEph.rs:1136:72
+     |
+1136 | ...                   let ghost v_wit: V = choose|vw: V| vw@ == vv;
+     |                                                          ^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+    --> src/Chap43/OrderedTableStEph.rs:1166:72
+     |
+1166 | ...                   let ghost v_wit: V = choose|vw: V| vw@ == vv;
+     |                                                          ^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:461:44
+    |
+461 | ...                   assert(right@.contains(p_wit@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap43/OrderedTableStPer.rs:489:44
+    |
+489 | ...                   assert(left@.contains(p_wit@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+right.view().contains(p_wit.view()) 
+    function is uninterpreted
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap43/OrderedTableStPer.rs:459:72
+    |
+459 | ...                   let ghost v_wit: V = choose|vw: V| vw@ == vv;
+    |                                                          ^^^^^^^^^
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap43/OrderedTableStPer.rs:487:72
+    |
+487 | ...                   let ghost v_wit: V = choose|vw: V| vw@ == vv;
+    |                                                          ^^^^^^^^^
+
+verification results:: 2618 verified, 2 errors
+error: aborting due to 4 previous errors
+

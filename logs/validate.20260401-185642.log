@@ -1,0 +1,17 @@
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+  --> src/Chap43/OrderedTableStEph.rs:89:9
+   |
+89 |         forall|v: T::V| exists|t: T| #[trigger] t@ == v
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: Could not automatically infer triggers for this quantifier.  Use #[trigger] annotations to manually mark trigger terms instead.
+  --> src/Chap43/OrderedTableStPer.rs:90:9
+   |
+90 |         forall|v: T::V| exists|t: T| #[trigger] t@ == v
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 2 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2469MB, peak z3 RSS: 378MB, min free: 22746MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 47s

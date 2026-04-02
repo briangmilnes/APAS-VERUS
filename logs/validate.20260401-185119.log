@@ -1,0 +1,94 @@
+error: prefix `v` is unknown
+    --> src/Chap43/OrderedTableStEph.rs:1136:65
+     |
+1136 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+     |                                                   ^ unknown prefix
+     |
+     = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+     |
+1136 |                                     let ghost v_wit: V = choose|v ': V| v'@ == vv;
+     |                                                                  +
+
+error: character literal may only contain one codepoint
+    --> src/Chap43/OrderedTableStEph.rs:1136:66
+     |
+1136 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+     |                                                    ^^^^^^^^
+     |
+help: if you meant to write a string literal, use double quotes
+     |
+1136 -                                     let ghost v_wit: V = choose|v': V| v'@ == vv;
+1136 +                                     let ghost v_wit: V = choose|v": V| v"@ == vv;
+     |
+
+error: prefix `v` is unknown
+    --> src/Chap43/OrderedTableStEph.rs:1166:65
+     |
+1166 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+     |                                                   ^ unknown prefix
+     |
+     = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+     |
+1166 |                                     let ghost v_wit: V = choose|v ': V| v'@ == vv;
+     |                                                                  +
+
+error: character literal may only contain one codepoint
+    --> src/Chap43/OrderedTableStEph.rs:1166:66
+     |
+1166 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+     |                                                    ^^^^^^^^
+     |
+help: if you meant to write a string literal, use double quotes
+     |
+1166 -                                     let ghost v_wit: V = choose|v': V| v'@ == vv;
+1166 +                                     let ghost v_wit: V = choose|v": V| v"@ == vv;
+     |
+
+error: prefix `v` is unknown
+   --> src/Chap43/OrderedTableStPer.rs:459:65
+    |
+459 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+    |                                                   ^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+459 |                                     let ghost v_wit: V = choose|v ': V| v'@ == vv;
+    |                                                                  +
+
+error: character literal may only contain one codepoint
+   --> src/Chap43/OrderedTableStPer.rs:459:66
+    |
+459 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+    |                                                    ^^^^^^^^
+    |
+help: if you meant to write a string literal, use double quotes
+    |
+459 -                                     let ghost v_wit: V = choose|v': V| v'@ == vv;
+459 +                                     let ghost v_wit: V = choose|v": V| v"@ == vv;
+    |
+
+error: prefix `v` is unknown
+   --> src/Chap43/OrderedTableStPer.rs:487:65
+    |
+487 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+    |                                                   ^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+487 |                                     let ghost v_wit: V = choose|v ': V| v'@ == vv;
+    |                                                                  +
+
+error: character literal may only contain one codepoint
+   --> src/Chap43/OrderedTableStPer.rs:487:66
+    |
+487 | ...                   let ghost v_wit: V = choose|v': V| v'@ == vv;
+    |                                                    ^^^^^^^^
+    |
+help: if you meant to write a string literal, use double quotes
+    |
+487 -                                     let ghost v_wit: V = choose|v': V| v'@ == vv;
+487 +                                     let g

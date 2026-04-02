@@ -1,0 +1,207 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:586:95
+     |
+ 586 |             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf();
+     |                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1256 |             OrderedTableStEph { tree: bst }
+     |             ------------------------------- at the end of the function body
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1238:95
+     |
+1238 |             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf()
+     |                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1256 |             OrderedTableStEph { tree: bst }
+     |             ------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:586:95
+    |
+586 |             ensures tree@ == Map::<K::V, V::V>::empty().insert(k@, v@), tree@.dom().finite(), tree.spec_orderedtablesteph_wf();
+    |                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree.view() =~= empty().insert(old(k).view(), old(v).view()) ✔
+tree.view().dom().finite() ✔
+tree.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tree.view() =~= empty().insert(old(k).view(), old(v).view()) ✔
+tree.view().dom().finite() ✔
+tree.spec_orderedtablesteph_wf() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:664:17
+     |
+ 664 |                 tabulated.spec_orderedtablesteph_wf(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1612 |             tabulated
+     |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:664:17
+    |
+664 |                 tabulated.spec_orderedtablesteph_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(keys).view() ✔
+%return.spec_orderedtablesteph_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |key_arg, result| key_arg.view() == k && ClosureEns(old(f), (key_arg), result) && %return.view().index(k) == result.view()) ✔
+%return.view().dom().finite() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:4143:13
+     |
+4143 |             result.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+4231 |         result
+     |         ------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStEph.rs:1210:16
+     |
+1210 |             && spec_view_surjective::<V>()
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+4143 |             result.spec_orderedtablesteph_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+result.view().dom().finite() ✔
+result.spec_orderedtablesteph_wf() ✘
+|   result.tree.spec_bstparasteph_wf() ✔
+|   spec_key_unique_pairs_set(result.tree.view()) ✔
+|   result.tree.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✔
+|   obeys_feq_full() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_pair_key_determines_order() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_view_surjective() ✘
+|   |   forall |v|
+|   |       spec_view_has_preimage(v) 
+|   +---
++---
+
+error: postcondition not satisfied
+   --> src/Chap43/OrderedTableStPer.rs:539:59
+    |
+539 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+996 |             OrderedTableStPer { tree }
+    |             -------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:539:59
+    |
+539 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:550:74
+     |
+ 550 |             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
+     |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1014 |             OrderedTableStPer { tree: bst }
+     |             ------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:550:74
+    |
+550 |             ensures table@ == Map::<K::V, V::V>::empty().insert(k@, v@), table.spec_orderedtablestper_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty().insert(old(k).view(), old(v).view()) ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:623:17
+     |
+ 623 |                 table.spec_orderedtablestper_wf(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1322 |             tabulated
+     |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:623:17
+    |
+623 |                 table.spec_orderedtablestper_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().dom() =~= old(keys).view() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+forall |k|
+    %return.view().dom().contains(k) ==>
+        (exists |key_arg, result| key_arg.view() == k && ClosureEns(old(f), (key_arg), result) && %return.view().index(k) == result.view()) ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:3638:13
+     |
+3638 |             result.spec_orderedtablestper_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3722 |         result
+     |         ------ at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap43/OrderedTableStPer.rs:961:16
+     |
+ 961 |             && spec_view_surjective::<V>()
+     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+3638 |             result.spec_orderedtablestper_wf(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+result.view().dom().finite() ✔
+result.spec_orderedtablestper_wf() ✘
+|   result.tree.spec_bstparasteph_wf() ✔
+|   spec_key_unique_pairs_set(result.tree.view()) ✔
+|   result.tree.view().len() < UnsignedMax.Exec(usize::BITS) ✔
+|   obeys_feq_fulls() ✔
+|   obeys_feq_full() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_pair_key_determines_order() ✔
+|   obeys_cmp_spec() ✔
+|   view_ord_consistent() ✔
+|   spec_view_surjective() ✘
+|   |   forall |v|
+|   |       spec_view_has_preimage(v) 
+|   +---
++---
+
+verification results:: 2613 verified, 7 errors
+error: aborting due to 8 previous errors
+
+Elapsed: 42s
+Sampled Memory Usage: peak rust_verify RSS: 11667MB, peak z3 RSS: 403MB, min free: 13981MB
+Sampled CPU Usage: rust_verify: 276s, z3 children: 164s

@@ -490,7 +490,7 @@ broadcast use {
             r
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to base find
         fn find(&self, k: &K) -> (found: Option<V>) {
             self.base_table.find(k)
         }

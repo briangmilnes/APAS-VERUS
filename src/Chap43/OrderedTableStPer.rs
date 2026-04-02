@@ -367,8 +367,8 @@ broadcast use {
     {
     }
 
-    /// Find by key in a ParamBST of pairs via in-order scan.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + linear scan
+    /// Find by key in a ParamBST of pairs via recursive BST descent.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST search by key
     fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
         k: &K,
@@ -379,76 +379,131 @@ broadcast use {
             view_ord_consistent::<K>(),
             obeys_feq_fulls::<K, V>(),
             vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            spec_pair_key_determines_order::<K, V>(),
+            view_ord_consistent::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
         ensures
             match found {
                 Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
                     && v@ == spec_pair_set_to_map(tree@)[k@],
                 None => !spec_pair_set_to_map(tree@).contains_key(k@),
             }
+        decreases tree@.len(),
     {
-        let sorted = tree.in_order();
-        let len = sorted.length();
-        let mut i: usize = 0;
-        let mut result: Option<V> = None;
-        while i < len
-            invariant
-                i <= len,
-                len as nat == sorted@.len(),
-                sorted@.len() == tree@.len(),
-                spec_key_unique_pairs_set(tree@),
-                obeys_feq_fulls::<K, V>(),
-                view_ord_consistent::<K>(),
-                vstd::laws_cmp::obeys_cmp_spec::<K>(),
-                forall|v: <Pair<K, V> as View>::V| tree@.contains(v) <==> sorted@.contains(v),
-                result is None ==> forall|j: int| 0 <= j < i as int ==>
-                    (#[trigger] sorted@[j]).0 != k@,
-                result is Some ==> {
-                    &&& spec_pair_set_to_map(tree@).contains_key(k@)
-                    &&& result->Some_0@ == spec_pair_set_to_map(tree@)[k@]
-                },
-            decreases len - i,
-        {
-            if result.is_some() { i = i + 1; } else {
-                let pair = sorted.nth(i);
-                let c = pair.0.cmp(k);
+        match tree.expose() {
+            Exposed::Leaf => {
+                proof {
+                    if spec_pair_set_to_map(tree@).contains_key(k@) {
+                        lemma_map_contains_pair_in_set(tree@, k@);
+                    }
+                }
+                None
+            },
+            Exposed::Node(left, root_pair, right) => {
+                proof {
+                    reveal(vstd::laws_cmp::obeys_cmp_ord);
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                    assert(spec_key_unique_pairs_set(left@)) by {
+                        assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
+                            implies forall|vv2: V::V| left@.contains((kv, vv2)) ==> vv == vv2 by {
+                            assert(tree@.contains((kv, vv)));
+                            assert forall|vv2: V::V| left@.contains((kv, vv2)) implies vv == vv2 by {
+                                assert(tree@.contains((kv, vv2)));
+                            };
+                        };
+                    };
+                    assert(spec_key_unique_pairs_set(right@)) by {
+                        assert forall|kv: K::V, vv: V::V| #[trigger] right@.contains((kv, vv))
+                            implies forall|vv2: V::V| right@.contains((kv, vv2)) ==> vv == vv2 by {
+                            assert(tree@.contains((kv, vv)));
+                            assert forall|vv2: V::V| right@.contains((kv, vv2)) implies vv == vv2 by {
+                                assert(tree@.contains((kv, vv2)));
+                            };
+                        };
+                    };
+                }
+                let c = k.cmp(&root_pair.0);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Equal => {
-                        let v_clone = pair.1.clone_plus();
+                        let v_clone = root_pair.1.clone_plus();
                         proof {
-                            lemma_cloned_view_eq(pair.1, v_clone);
-                            assert(pair.0.cmp_spec(k) == Equal);
-                            assert(pair.0@ == k@);
-                            assert(sorted@.contains(sorted@[i as int]));
-                            assert(tree@.contains(sorted@[i as int]));
-                            lemma_pair_in_set_map_contains(tree@, k@, sorted@[i as int].1);
+                            lemma_cloned_view_eq(root_pair.1, v_clone);
+                            assert(k.cmp_spec(&root_pair.0) == Equal);
+                            assert(k@ == root_pair.0@);
+                            assert(tree@.contains(root_pair@));
+                            assert(tree@.contains((k@, root_pair.1@)));
+                            lemma_pair_in_set_map_contains(tree@, k@, root_pair.1@);
                         }
-                        result = Some(v_clone);
+                        Some(v_clone)
                     },
-                    _ => {
+                    Less => {
+                        let result = bst_find_by_key(&left, k);
                         proof {
-                            assert(pair.0.cmp_spec(k) != Equal);
-                            assert(pair.0@ != k@);
-                            assert(sorted@[i as int].0 != k@);
+                            assert(k.cmp_spec(&root_pair.0) == Less);
+                            assert(k@ != root_pair.0@);
+                            if result is Some {
+                                lemma_map_contains_pair_in_set(left@, k@);
+                                let vv: V::V = choose|vv: V::V| left@.contains((k@, vv));
+                                assert(tree@.contains((k@, vv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, vv);
+                            } else {
+                                if spec_pair_set_to_map(tree@).contains_key(k@) {
+                                    lemma_map_contains_pair_in_set(tree@, k@);
+                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
+                                    assert(!left@.contains((k@, vv)));
+                                    assert(root_pair@.0 != k@);
+                                    assert(right@.contains((k@, vv)));
+                                    assert(spec_view_surjective_trigger::<V>());
+                                    assert(spec_view_has_preimage::<V>(vv));
+                                    let ghost v_wit: V = choose|vw: V| vw@ == vv;
+                                    let ghost p_wit: Pair<K, V> = Pair(*k, v_wit);
+                                    assert(p_wit@ == (k@, vv));
+                                    assert(right@.contains(p_wit@));
+                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
+                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
+                                    assert(false);
+                                }
+                            }
                         }
+                        result
+                    },
+                    Greater => {
+                        let result = bst_find_by_key(&right, k);
+                        proof {
+                            assert(k.cmp_spec(&root_pair.0) == Greater);
+                            assert(k@ != root_pair.0@);
+                            if result is Some {
+                                lemma_map_contains_pair_in_set(right@, k@);
+                                let vv: V::V = choose|vv: V::V| right@.contains((k@, vv));
+                                assert(tree@.contains((k@, vv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, vv);
+                            } else {
+                                if spec_pair_set_to_map(tree@).contains_key(k@) {
+                                    lemma_map_contains_pair_in_set(tree@, k@);
+                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
+                                    assert(!right@.contains((k@, vv)));
+                                    assert(root_pair@.0 != k@);
+                                    assert(left@.contains((k@, vv)));
+                                    assert(spec_view_surjective_trigger::<V>());
+                                    assert(spec_view_has_preimage::<V>(vv));
+                                    let ghost v_wit: V = choose|vw: V| vw@ == vv;
+                                    let ghost p_wit: Pair<K, V> = Pair(*k, v_wit);
+                                    assert(p_wit@ == (k@, vv));
+                                    assert(left@.contains(p_wit@));
+                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
+                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
+                                    assert(false);
+                                }
+                            }
+                        }
+                        result
                     },
                 }
-                i = i + 1;
             }
         }
-        proof {
-            if result is None {
-                if spec_pair_set_to_map(tree@).contains_key(k@) {
-                    lemma_map_contains_pair_in_set(tree@, k@);
-                    let v: V::V = choose|v: V::V| tree@.contains((k@, v));
-                    assert(sorted@.contains((k@, v)));
-                    let j = choose|j: int| 0 <= j < sorted@.len()
-                        && (#[trigger] sorted@[j]) == (k@, v);
-                    assert(sorted@[j].0 == k@);
-                }
-            }
-        }
-        result
     }
 
     // 8. traits
@@ -769,7 +824,7 @@ broadcast use {
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
                 parts.0.spec_orderedtablestper_wf(),
                 parts.1.spec_orderedtablestper_wf();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>)
             requires self.spec_orderedtablestper_find_pre(), obeys_view_eq::<K>(), obeys_feq_full::<V>(),
             ensures
@@ -902,6 +957,9 @@ broadcast use {
             && obeys_feq_fulls::<K, V>()
             && vstd::laws_cmp::obeys_cmp_spec::<K>()
             && view_ord_consistent::<K>()
+            && spec_pair_key_determines_order::<K, V>()
+            && view_ord_consistent::<Pair<K, V>>()
+            && vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -945,12 +1003,12 @@ broadcast use {
             OrderedTableStPer { tree: bst }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to bst_find_by_key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to bst_find_by_key
         fn find(&self, k: &K) -> (found: Option<V>) {
             bst_find_by_key(&self.tree, k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- bst_find_by_key + treap insert/delete
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap insert/delete
         fn insert(&self, k: K, v: V) -> (table: Self) {
             let mut tree = self.tree.clone();
             let ghost old_tree_view = self.tree@;
@@ -1024,7 +1082,7 @@ broadcast use {
             self.insert(k, v)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- bst_find_by_key + treap delete
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap delete
         fn delete(&self, k: &K) -> (table: Self) {
             let mut tree = self.tree.clone();
             let ghost old_tree_view = self.tree@;
@@ -3371,7 +3429,7 @@ broadcast use {
             (left_table, right_table)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to find
         fn find_iter(&self, k: &K) -> (found: Option<V>) {
             self.find(k)
         }
