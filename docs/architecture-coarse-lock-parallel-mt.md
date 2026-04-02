@@ -29,7 +29,96 @@ M1 acquires its lock, owns M2 (an Mt type stored inside the locked interior), an
 
 The inner data structures use O(1) split so that D&C parallelism achieves the textbook span bounds. Slice-backed sequences (`ArraySeqMtEphSliceS`) split via Arc::clone + window adjust — O(1). Trees split via unbox — O(1). With O(1) split, reduce and scan achieve O(lg n) span. Map and filter achieve O(lg n) span if the output rejoin is also O(1) (via pre-allocated shared output or rope-style deferred merge).
 
-## 2. Current Status
+## 2. Two Concurrency Styles
+
+There are two ways to achieve these four properties. Both use TSM for ghost-level proof. They differ in how they manage runtime concurrency.
+
+### 2.1. RwLock + TSM
+
+The data lives inside an `RwLock`. The TSM token lives alongside the data in the lock interior. A ghost field outside the lock provides View. `&mut self` for writes ensures the ghost stays in sync.
+
+**How it works:**
+- `acquire_write` → own interior (data + token). Predicate proves token == data.
+- Mutate data, step token. Release. Update external ghost.
+- `acquire_read` → borrow interior. Read from real data through the predicate.
+
+**Proof gap:** 2 accepts per file. The external ghost field can't see through the lock. On acquire, we accept that ghost == inner. This is correct by induction (ghost set at previous release, `&mut self` prevents interleaving) but not machine-checked by Verus.
+
+**Runtime cost:** RwLock acquire/release on every operation.
+
+### 2.2. PCell + TSM + Atomics
+
+The data lives in a `PCell` (Permissioned Cell) on the struct. The `PointsTo` proof token is managed by a TSM with `storage_map` or `storage_option` sharding. No RwLock — concurrency is controlled by atomic operations and TSM transitions that withdraw/deposit the PointsTo token.
+
+**How it works:**
+- PCell holds the data. PCell is always Send+Sync (it's just bytes without the proof token).
+- PointsTo is the ghost proof of what's in the PCell. Whoever holds it can access the data.
+- TSM transitions `withdraw` the PointsTo (lend it to a thread) and `deposit` it back.
+- Atomic variables (head/tail indices, flags) coordinate which thread gets the token.
+- Thread acquires PointsTo via TSM transition, accesses PCell, modifies data, deposits updated PointsTo back.
+
+**Proof gap:** 0 accepts. The PointsTo IS the proof of what's in the cell. `borrow` returns `v === perm.value()` — the value is what the token says, by construction. No ghost field, no bridge, no trust gap.
+
+**Runtime cost:** Atomic operations only. No lock acquire/release.
+
+### 2.3. Comparison
+
+| | RwLock + TSM | PCell + TSM + Atomics |
+|---|---|---|
+| **Zero-Assume Locking** | 0 assumes | 0 assumes |
+| **Caller-Observable State** | 2 accepts per file | 0 assumes |
+| **Composable Parallelism** | 0 assumes | 0 assumes |
+| **Optimal Split Cost** | 0 assumes | 0 assumes |
+| **Capacity exec checks** | 1 per mutating op | 1 per mutating op |
+| **Total accepts/assumes** | 2 per file | 0 |
+| **Ghost protocol complexity** | Low (TSM tracks count/state) | High (storage_map, withdraw/deposit) |
+| **Runtime cost** | RwLock acquire/release | Atomic ops only |
+| **Proven in experiment** | Yes | Partially |
+| **Migration effort from current** | Low | High |
+
+### 2.4. What the accepts mean in RwLock + TSM
+
+If an accept is wrong (ghost != inner), every ensures referencing `self@` is a lie. Callers act on false postconditions.
+
+The argument for correctness is inductive:
+1. `new()` sets ghost = inner (provably, no accept)
+2. Every write: acquire, accept ghost == inner, mutate, update ghost = new inner, release
+3. `&mut self` on writes means no interleaving between release and next acquire
+
+If `&mut self` holds (sole ownership), the ghost set at release is still valid at the next acquire. The accept is correct by induction. But this induction is not machine-checked — it's the 2-accept trust gap.
+
+**The constraint:** if the Mt struct is wrapped in `Arc` for sharing across threads, the `&mut self` guarantee breaks. Other Arc clones can acquire the lock independently, changing the inner data while our ghost is stale. The architectural rule: Mt structs with View must not be shared via Arc. Thread sharing goes through the locked trait (`&self` reads are fine — they don't use the ghost for computation, only for caller specs).
+
+### 2.5. Proof consequences
+
+**RwLock + TSM proof profile:**
+- Every operation's functional correctness (algorithmic logic, data structure invariants, cost bounds) is fully machine-checked by Verus.
+- The TSM predicate proves token == data on every lock acquire — machine-checked.
+- The 2 accepts per file are the ONLY unverified claims. They assert ghost_view == locked_data. If wrong, caller specs (ensures referencing `self@`) are unsound, but the internal algorithmic proofs remain valid — the data structure still works correctly, callers just can't observe its state through View.
+- Proof effort: low. The TSM is simple (tracks count or abstract state). The RwLock predicate is a conjunction. The accepts are boilerplate.
+
+**PCell + TSM + Atomics proof profile:**
+- Every operation's functional correctness is fully machine-checked.
+- The PointsTo token proves cell contents on every access — machine-checked. No accepts anywhere.
+- The TSM protocol (storage_map, withdraw/deposit, invariants) must prove that tokens are never duplicated, never lost, and always deposited in a consistent state. This is the bulk of the proof work — and it's ALL machine-checked. No trust gaps.
+- Proof effort: high. The TSM must model the full concurrency protocol. Each operation needs a corresponding transition. The invariants must capture the relationship between multiple threads' tokens and the shared state. The FIFO example is ~766 lines for a 4-operation queue.
+
+**The tradeoff:** RwLock + TSM gets 98% of the proof for 20% of the effort. PCell + TSM + Atomics gets 100% for 5x the effort. The 2% gap (the 2 accepts) is well-understood, inductive, and constrained by the `&mut self` ownership rule.
+
+### 2.6. Current choice
+
+APAS-VERUS uses **RwLock + TSM** for the foreseeable future. The 2 accepts per file are well-understood, documented in the standard (`toplevel_coarse_rwlocks_for_mt_modules.rs`), and cheap. The PCell + TSM + Atomics path eliminates them but adds significant ghost protocol complexity and is only partially proven. Large data structures (sequences, trees, tables) don't naturally map to atomic-only concurrency.
+
+PCell + TSM + Atomics remains a future option for fine-grained concurrent data structures (lock-free queues, concurrent hash maps) where the complexity is inherent to the algorithm.
+
+## 3. Current Status
+
+| Property | Status | Evidence |
+|----------|--------|----------|
+| Zero-Assume Locking | **Proven** | `bst_plain_mt_tsm.rs`: 10 ops, zero assumes. `coarse_lock_parallel_tsm.rs`: TSM + lock, zero assumes. |
+| Caller-Observable State | **Partially proven** | `bst_plain_mt_pcell.rs` Approach B: View works with `&mut self` writes for a simple nat count. Not yet demonstrated with a rich type or composed with TSM + parallelism. |
+| Composable Unlocked Parallelism | **Proven** | `coarse_lock_parallel_tsm.rs` R135: acquire lock, call inner Mt type's reduce/map (D&C + join internally), release. No nested locks. |
+| Optimal Split Cost | **In progress** | `ArraySeqMtEphSliceS` has O(1) slice but no map/reduce/filter yet. Agent 3 R136 adding them. Reduce will get true O(lg n) span. Map/filter get O(1) split but O(n) rejoin — O(1) rejoin needs pre-allocated output or ropes. |
 
 | Property | Status | Evidence |
 |----------|--------|----------|
