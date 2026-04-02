@@ -87,32 +87,6 @@ verus! {
 
     pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
 
-    #[verifier::accept_recursive_types(V)]
-    tracked struct ThreadShareablePlus<V> { phantom: marker::PhantomData<V> }
-
-    impl<V> ThreadShareablePlus<V> {
-        pub uninterp spec fn view(&self)                                 -> V;
-        pub uninterp spec fn id(&self)                                   -> ThreadIdPlus;
-
-        pub axiom fn into(tracked self, tracked is_thread: IsThreadPlus) -> (tracked res: V)
-        requires self.id() == is_thread@
-        ensures
-            res == self@;
-            pub axiom fn borrow(tracked &self, tracked is_thread: IsThreadPlus) -> (tracked res: &V)
-        requires self.id() == is_thread@
-        ensures *res == self@;
-    }
-
-    impl<V: Send> ThreadShareablePlus<V> {
-        pub axiom fn send_into(tracked self) -> (tracked res: V)
-        ensures res == self@;
-    }
-
-    impl<V: Sync> ThreadShareablePlus<V> {
-        pub axiom fn sync_borrow(tracked &self) -> (tracked res: &V)
-        ensures *res == self@;
-    }
-
 } // verus!
 
 impl Clone for IsThreadPlus {
@@ -123,7 +97,6 @@ impl Clone for IsThreadPlus {
     fn clone(&self) -> Self { IsThreadPlus { _no_send_sync: Default::default() } }
 }
 
-unsafe impl<V> Sync for ThreadShareablePlus<V> {}
-unsafe impl<V> Send for ThreadShareablePlus<V> {}
+// ThreadShareablePlus deleted — dead code, was the only source of unsafe impl Send/Sync in vstdplus.
 
 }
