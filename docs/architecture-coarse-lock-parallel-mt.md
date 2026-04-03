@@ -7,12 +7,24 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Alternative Architecture: Coarse Lock + TSM + Parallel Inside
 
-## Status: Alternative Design (2026-04-01)
+## Status: Failed experiment (2026-04-03)
 
-This document describes an alternative Mt module architecture for APAS-VERUS
-that would replace the current coarse RwLock pattern with RwLock+TSM. It
-eliminates ~66% of the 183 lock-boundary assumes at the cost of ~68 lines
-of TSM boilerplate per file.
+**Conclusion:** RwLock+TSM with View preserved does not reduce trust points.
+The R145-R146 pilot on BSTPlainMtEph showed that every operation needing the
+ghost↔locked bridge still requires a trust point — the TSM only relabels
+assumes as accepts without improving proof strength. The predicate proves
+wf/bounds (which the old predicate already proved). Net result: ~10 accepts
+replacing 14 assumes, plus ~68 lines of TSM boilerplate per file. Not worth
+migrating 28 files for relabeled trust points. The current RwLock+ghost
+pattern with assumes is honest and works. PCell+`&mut self` (0 accepts for
+writes) remains the real path to fewer trust points but requires significant
+Verus infrastructure (new-mut-ref, PCell per element).
+
+This document is preserved as design exploration. See
+`docs/current-architecture-coarse-lock-parallel.md` for the deployed architecture.
+
+Previously this document described an alternative Mt module architecture for
+APAS-VERUS that would replace the current coarse RwLock pattern with RwLock+TSM.
 
 For the current deployed architecture, see
 `docs/current-architecture-coarse-lock-parallel.md`.
