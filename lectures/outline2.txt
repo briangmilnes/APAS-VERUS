@@ -1,5 +1,6 @@
 I'm using + for slide titles and indented ** for slide lines, *** for a second indented
-slide line and a -- for revealing the slide lines one at a time.
+slide line and a -- for revealing the slide lines one at a time. 
+And for code formatting: ``code`` 
 
 + APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
 
@@ -18,6 +19,19 @@ slide line and a -- for revealing the slide lines one at a time.
     ** A new age of Software Engineering
     ** An opportunity for new techniques
     ** An encylopedia of cautionary tales
+
++ Poll: Get a feel for my audience 
+ ** How many of you have used Rust?
+ ** How many of you have created formally verified software?
+ ** How many of you have used AI LLMs to generate programs?
+ ** How many of you have used AI LLMs to generate verfied software?
+ ** Which verifiers:
+   ** Rocq?
+   ** Isabelle/HOL
+   ** F* (or it's DSL)
+   ** Verus
+   ** Twelfth
+   ** DCalf
 
 + Background
     ** B.Sc. Applied Math (Computer Science)
@@ -44,14 +58,17 @@ slide line and a -- for revealing the slide lines one at a time.
 
 + Formally Proven Algorithms Textbooks
     ** Verified Functional Algorithms by Andrew W. Appel
+    ** ? Size Coverage
     ** Functional Algorithms, Verified! by Tobias Nipkow, et al.
+    ** ? Size Coverage
     ** Algorithm Design with Haskell by Richard Bird and Jeremy Gibbons
+    ** ? Size Coverage
 
 + APAS-AI
     ** First, in about three months I implemented all of the algorithms in APAS using
      AI.
     ** I did not know Rust in detail when I started.
-    ** I used a variety of agents:
+    ** I used a variety of agents
     ** I ended up mostly using Cursor to start.
     ** Using Opus through four releases.
     ** And now Claude CLI.
@@ -62,34 +79,109 @@ slide line and a -- for revealing the slide lines one at a time.
    ** Quantitatives 
 
 + Rust
-  ** Rust is rather popular for good reasons.
-  ** Rust is rather bad for many many reasons.
+  ** 20 year old PL 
+  ** Mozilla project named for a fungi! 
+  -- Not quite as gross as naming your company for spiders.
+  ** Industrial acceptance: AWS, Google, Huawei, Microsoft, and Mozilla.
+  ** Linux Kernel now uses it. 
+  ** Rust is rather popular for good reasons: linear typing plus borrow
+  ** Rust is rather bad for many many reasons: 
   
 + Rust: Pros
+  ** Algebraic Data Types
+  ** Mutability
+  ** Linear Typing with Borrowing
+  ** No GC
+  ** Fast code
+  ** Typeclasses 
+
++ Rust: Pros: Algebraic Data Types
++ Rust: Pros: Mutability
++ Rust: Pros: Linear Typing with Borrowing
++ Rust: Pros: No GC
++ Rust: Pros: Fast code
++ Rust: Pros: Typeclasses (traits)
+
 + Rust: Cons 
+   ** The 94 technical terms in Rust, 4 of which are from the PL literature.
+   ** Typeclasses are weak and now only lightly used
+   ** The user has to import piecewise
+   ** No GC
+   ** Translating C to Rust is hard.
+
++ Rust: Cons: Terminology
+   ** I had an agent table all of the technical terms in Rust
+   ** How many were in 
+
++ Rust: Cons: Typeclasses are weak
++ Rust: Cons: Importing Piecewise
++ Rust: Cons: No GC
 
 + Paired Programming and Proving with AI LLM Agents
-+ Verus: overview
++ Verus: Overview
 + Verus: Pros
-+ Verus: EPR
-+ Verus: Speed
++ Verus: Pros: Change
++ Verus: Pros: The Logic EPR
++ Verus: Pros: Speed
+
 + Verus: Cons
-+ Verus: Change
 + Verus: Quantitatives
 
 + Rusticate - sending Python back to the family estate
-+ Veracity - driving AI proof with programmatic tools
+  **
+  **
+  **
+  **
+
++ Veracity  - driving AI proof with programmatic tools
+  **
+  **
+  **
+  **
+  **
 
 + A new age of Software Engineering: AI
++ The Agents
++ The Agents: The costs.
++ The Agents: Memory and throughput
++ The Agents: The economic model.
++ The Agents: Babysitting
+    ** Claude-Code is coming to your cell phone to ruin
++ The Agents: Brute Force
++ The Agents: Teaching your AI
++ The Agents: AI Brain Fry!
+
 + A new age of Software Engineering: Provers
+
 + A new age of Software Engineering: Prove or Die
+
 + A new age of Software Engineering: Quantitative Drive
 
-+ The scariest cautionary tales
++ The Scariest Cautionary Tales: Disassembly
   ** I asked Claude CLI how to run it in a few ways
   ** It immediately started disassembling the binary
   ** It did not find the answer but it came close
-  ** I then pointed out it could simply read the manuals
-  ** 
+  -- I then pointed out it could simply read the manuals
+  -- If these agents get better even compiled code is at huge risk.
+  
++ The Scariest Cautionary Tales: Open Source = Open Holes
+  ** Popular package LiteLLM was hacked
+  ** Node.js
+  ** 40,000 users
+  -- At this point you simply can't rely upon the security of
+   open source packages.
+  -- Not only are they heavily targeted but one can inject hidden
+   code or functionality.
+  -- Current AIs can simply reimplement them for you in a few hours, so
+    you should to seal your security.
 
-+ An encylopedia of cautionary tales
++ Questions?
+
++ Answers
+ ** How
+ ** 
+ ** 
+ ** 
+ ** 
+
++ An Encylopedia of Cautionary Tales
