@@ -1,0 +1,95 @@
+I'm using + for slide titles and indented ** for slide lines, *** for a second indented
+slide line and a -- for revealing the slide lines one at a time.
+
++ APAS-VERUS: AI Paired Proof Engineering Techniques and Experience
+
+    ** Brian G. Milnes <briangmilnes@gmail.com>
+
++ Outline of the talk
+    ** Background 
+    ** APAS
+    ** APAS-AI
+    ** APAS-VERUS
+    ** Rust
+    ** Paired Programming and Proving with AI LLM Agents
+    ** The AI LLM interfaces
+    ** Verus
+    ** Novel Techniques in APAS-VERUS
+    ** A new age of Software Engineering
+    ** An opportunity for new techniques
+    ** An encylopedia of cautionary tales
+
++ Background
+    ** B.Sc. Applied Math (Computer Science)
+    ** 2 years of Artificial Intelligence PL development (Carnegie Group)
+    ** 7 years of (symbolic) Artificial Intelligence Research (Soar Group, CMU C)
+    ** 2 years of Programming Languages research (Fox Group, CMU CS)
+    ** Founding member of Lycos - systems, performance, ran operations
+    ** Early Amazon - systems, performance, operations
+    ** M.Sc. Computer Science, University of Washington
+    ** Early Zillow - 6th engineer, ran operations, systems, performance
+    ** A general love of proving programs with Rocq, F* and now Verus
+
++ Algorithms Parallel and Sequential
+    ** I needed a practical, fairly large, very difficult task to learn Verus.
+    ** Rocq is good but complicated slow and I had used it manually and not
+       close the the PL. You have to generate the code from it.
+    ** F* is good, but complicated slow and I had used it manually, close to
+      the PL but far from a practical PL and generates code.
+    ** I chose to implement:
+      *** 'Algorithms Parallel and Sequential' (APAS)
+      *** Umut Acar and Guy Blelloch 2022
+      *** N algorithms
+      *** P parallel algorithms
+
++ Formally Proven Algorithms Textbooks
+    ** Verified Functional Algorithms by Andrew W. Appel
+    ** Functional Algorithms, Verified! by Tobias Nipkow, et al.
+    ** Algorithm Design with Haskell by Richard Bird and Jeremy Gibbons
+
++ APAS-AI
+    ** First, in about three months I implemented all of the algorithms in APAS using
+     AI.
+    ** I did not know Rust in detail when I started.
+    ** I used a variety of agents:
+    ** I ended up mostly using Cursor to start.
+    ** Using Opus through four releases.
+    ** And now Claude CLI.
+
++ APAS-VERUS
+   ** Then, I proved it in about four months APAS-VERUS
+   ** Using Open AI at first then settled on Anthropic's Opus and finally Claude CLI.
+   ** Quantitatives 
+
++ Rust
+  ** Rust is rather popular for good reasons.
+  ** Rust is rather bad for many many reasons.
+  
++ Rust: Pros
++ Rust: Cons 
+
++ Paired Programming and Proving with AI LLM Agents
++ Verus: overview
++ Verus: Pros
++ Verus: EPR
++ Verus: Speed
++ Verus: Cons
++ Verus: Change
++ Verus: Quantitatives
+
++ Rusticate - sending Python back to the family estate
++ Veracity - driving AI proof with programmatic tools
+
++ A new age of Software Engineering: AI
++ A new age of Software Engineering: Provers
++ A new age of Software Engineering: Prove or Die
++ A new age of Software Engineering: Quantitative Drive
+
++ The scariest cautionary tales
+  ** I asked Claude CLI how to run it in a few ways
+  ** It immediately started disassembling the binary
+  ** It did not find the answer but it came close
+  ** I then pointed out it could simply read the manuals
+  ** 
+
++ An encylopedia of cautionary tales

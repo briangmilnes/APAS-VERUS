@@ -1,5 +1,8 @@
 # R145 Agent 1 — TSM pilot: migrate BSTPlainMtEph to RwLock+TSM. AFK.
 
+## Record date
+`date'
+
 ## Setup
 
 Read ALL files in `src/standards/` before starting. Pay close attention to:
@@ -151,8 +154,12 @@ Document what you can and cannot prove.
 - If generics don't work in the TSM macro, document the limitation clearly
   and implement the best alternative you can find.
 
+## Record date again
+`date'
+
 ## When done
 
 Report: assumes before/after per operation. Verify zero ghost-lock assumes remain.
 
 RCP.
+
