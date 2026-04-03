@@ -113,6 +113,33 @@ RTTs should pass unchanged.
 
 Run `scripts/validate.sh isolate Chap37`. Then `scripts/rtt.sh`.
 
+## Generics and tokenized_state_machine!
+
+BSTPlainMtEph is generic over `T: TotalOrder`. The TSM must also be generic.
+The `tokenized_state_machine!` macro may or may not support type parameters
+directly. Investigate:
+
+1. Try `tokenized_state_machine!(BSTPlainSM<T: TotalOrder> { ... })`.
+2. If the macro doesn't support generics, check how other Verus codebases
+   handle this. Search `~/projects/verus/source/rust_verify_test/tests/` and
+   `~/projects/VerusCodebases/` for generic tokenized_state_machine examples.
+3. If generics aren't supported, possible workarounds:
+   - Erase the type: track `Set<int>` or a type-erased abstract state
+   - Use a concrete instantiation for the pilot (e.g., `u64`) and document
+     the generics limitation
+   - Use `state_machine_macros::state_machine!` instead if it supports generics
+
+The TSM field must track enough abstract state that reader ensures work.
+The experiment (`bst_plain_mt_tsm.rs`) only tracks a count — that's why it
+has no View and no reader specs. For the real module, the TSM must track
+the full tree view (`BalBinTree<T>` or equivalent) so that `contains`,
+`find`, `min`, `max` can prove their return values from the predicate.
+
+If tracking the full tree view is not possible with the TSM macro, fall back
+to tracking just `Set<T::V>` (the abstract set of values). This is enough
+for `contains` and `find` but may not suffice for `min`/`max` ordering specs.
+Document what you can and cannot prove.
+
 ## Rules
 
 - ZERO assumes in the migrated code (except Clone/PartialEq Verus workarounds).
@@ -121,6 +148,8 @@ Run `scripts/validate.sh isolate Chap37`. Then `scripts/rtt.sh`.
 - Do NOT change RTTs.
 - Follow `rwlock_tsm_standard.rs` exactly.
 - tokenized_state_machine! goes OUTSIDE verus!. Everything else INSIDE verus!.
+- If generics don't work in the TSM macro, document the limitation clearly
+  and implement the best alternative you can find.
 
 ## When done
 
