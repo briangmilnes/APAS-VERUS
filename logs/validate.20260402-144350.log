@@ -1,0 +1,71 @@
+error: params for 'inductive' lemma should be: `post: Self, initial_count: nat`
+  --> src/standards/rwlock_tsm_standard.rs:92:13
+   |
+92 |             fn initialize_inductive(post: Self) { }
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0433]: failed to resolve: use of undeclared type `CountDownTSM`
+   --> src/standards/rwlock_tsm_standard.rs:203:17
+    |
+203 |             ) = CountDownTSM::Instance::initialize(v as nat);
+    |                 ^^^^^^^^^^^^ use of undeclared type `CountDownTSM`
+    |
+help: consider importing one of these structs
+    |
+ 60 +     use crate::Chap11::FibonacciMtEph2Threads::FibPair::Instance;
+    |
+ 60 +     use crate::Chap11::FibonacciMtEphRecomputes::FibFork::Instance;
+    |
+ 60 +     use crate::Chap11::FibonacciMtPerTSM::FibForkJoin::Instance;
+    |
+ 60 +     use crate::standards::tsm_standard::tsm_standard::ForkJoinTracker::Instance;
+    |
+    = and 2 other candidates
+help: if you import `Instance`, refer to it directly
+    |
+203 -             ) = CountDownTSM::Instance::initialize(v as nat);
+203 +             ) = Instance::initialize(v as nat);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `CountDownTSM`
+   --> src/standards/rwlock_tsm_standard.rs:147:34
+    |
+147 |         pub ghost_token: Tracked<CountDownTSM::count>,
+    |                                  ^^^^^^^^^^^^ use of undeclared type `CountDownTSM`
+    |
+help: a struct with a similar name exists
+    |
+147 -         pub ghost_token: Tracked<CountDownTSM::count>,
+147 +         pub ghost_token: Tracked<CountDown::count>,
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `CountDownTSM`
+   --> src/standards/rwlock_tsm_standard.rs:152:23
+    |
+152 |         pub instance: CountDownTSM::Instance,
+    |                       ^^^^^^^^^^^^ use of undeclared type `CountDownTSM`
+    |
+help: a struct with a similar name exists
+    |
+152 -         pub instance: CountDownTSM::Instance,
+152 +         pub instance: CountDown::Instance,
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `CountDownTSM`
+   --> src/standards/rwlock_tsm_standard.rs:170:27
+    |
+170 |         pub inst: Tracked<CountDownTSM::Instance>,
+    |                           ^^^^^^^^^^^^ use of undeclared type `CountDownTSM`
+    |
+help: a struct with a similar name exists
+    |
+170 -         pub inst: Tracked<CountDownTSM::Instance>,
+170 +         pub inst: Tracked<CountDown::Instance>,
+    |
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0433`.
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 764MB, peak z3 RSS: 0MB, min free: 23191MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s

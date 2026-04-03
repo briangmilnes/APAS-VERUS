@@ -208,6 +208,7 @@ pub mod standards {
     pub mod spec_wf_standard;
     pub mod table_of_contents_standard;
     pub mod toplevel_coarse_rwlocks_for_mt_modules;
+    pub mod rwlock_tsm_standard;
 //  pub mod total_order_standard;                  // comment-only
     pub mod tsm_standard;
     pub mod using_closures_standard;

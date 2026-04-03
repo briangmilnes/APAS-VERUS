@@ -22,11 +22,6 @@ src/Chap06/LabDirGraphStEph.rs:126: info: St fn `get_arc_label` sequential as ex
 src/Chap06/LabDirGraphStEph.rs:134: info: St fn `has_arc` sequential as expected
 src/Chap06/LabDirGraphStEph.rs:141: info: St fn `n_plus` sequential as expected
 src/Chap06/LabDirGraphStEph.rs:148: info: St fn `n_minus` sequential as expected
-src/Chap18/ArraySeqMtEphSlice.rs:566: error: fn `reduce` missing alg analysis annotation
-src/Chap18/ArraySeqMtEphSlice.rs:583: error: fn `map` missing alg analysis annotation
-src/Chap18/ArraySeqMtEphSlice.rs:592: error: fn `filter` missing alg analysis annotation
-src/Chap18/ArraySeqMtEphSlice.rs:601: error: fn `tabulate` missing alg analysis annotation
-src/Chap18/ArraySeqMtEphSlice.rs:618: error: fn `scan` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:907: error: fn `reduce_dc` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:1011: error: fn `map_dc_vec` missing alg analysis annotation
 src/Chap18/ArraySeqMtEphSlice.rs:1084: error: fn `filter_dc_vec` missing alg analysis annotation
@@ -76,11 +71,6 @@ src/Chap18/LinkedListStPer.rs:184: info: St fn `append` sequential as expected
 src/Chap18/LinkedListStPer.rs:218: info: St fn `flatten` sequential as expected
 src/Chap18/LinkedListStPer.rs:227: info: St fn `update` sequential as expected
 src/Chap18/LinkedListStPer.rs:250: info: St fn `iterate` sequential as expected
-src/Chap19/ArraySeqMtEphSlice.rs:766: error: fn `reduce` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:783: error: fn `map` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:792: error: fn `filter` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:801: error: fn `tabulate` missing alg analysis annotation
-src/Chap19/ArraySeqMtEphSlice.rs:818: error: fn `scan` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:948: error: fn `reduce_dc` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:1052: error: fn `map_dc_vec` missing alg analysis annotation
 src/Chap19/ArraySeqMtEphSlice.rs:1125: error: fn `filter_dc_vec` missing alg analysis annotation
@@ -113,84 +103,42 @@ src/Chap19/ArraySeqStPer.rs:378: info: St fn `scan` sequential as expected
 src/Chap19/ArraySeqStPer.rs:393: info: St fn `map` sequential as expected
 src/Chap19/ArraySeqStPer.rs:403: info: St fn `tabulate` sequential as expected
 src/Chap19/ArraySeqStPer.rs:415: info: St fn `flatten` sequential as expected
-src/Chap23/BalBinTreeStEph.rs:363: info: St fn `size` sequential as expected
-src/Chap23/BalBinTreeStEph.rs:377: info: St fn `height` sequential as expected
-src/Chap23/BalBinTreeStEph.rs:391: info: St fn `in_order` sequential as expected
-src/Chap23/BalBinTreeStEph.rs:409: info: St fn `pre_order` sequential as expected
-src/Chap23/BalBinTreeStEph.rs:429: info: St fn `post_order` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:167: info: St fn `nth` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:175: info: St fn `expose` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:198: info: St fn `join` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:208: info: St fn `append` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:224: info: St fn `subseq` sequential as expected
 src/Chap23/PrimTreeSeqStPer.rs:240: info: St fn `update` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:398: info: St fn `expose` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:464: info: St fn `join` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:484: info: St fn `append` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:532: info: St fn `subseq` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:560: info: St fn `update` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:598: info: St fn `map` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:624: info: St fn `tabulate` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:643: info: St fn `filter` sequential as expected
-src/Chap23/PrimTreeSeqStPer.rs:701: info: St fn `flatten` sequential as expected
 src/Chap26/DivConReduceStPer.rs:64: info: St fn `max_element` sequential as expected
 src/Chap26/DivConReduceStPer.rs:80: info: St fn `sum` sequential as expected
 src/Chap26/DivConReduceStPer.rs:92: info: St fn `product` sequential as expected
 src/Chap26/DivConReduceStPer.rs:104: info: St fn `any` sequential as expected
 src/Chap26/DivConReduceStPer.rs:116: info: St fn `all` sequential as expected
-src/Chap26/DivConReduceStPer.rs:129: info: St fn `max_element` sequential as expected
-src/Chap26/DivConReduceStPer.rs:158: info: St fn `sum` sequential as expected
-src/Chap26/DivConReduceStPer.rs:167: info: St fn `product` sequential as expected
-src/Chap26/DivConReduceStPer.rs:176: info: St fn `any` sequential as expected
-src/Chap26/DivConReduceStPer.rs:185: info: St fn `all` sequential as expected
 src/Chap26/ETSPStEph.rs:323: info: St fn `etsp` sequential as expected
-src/Chap26/ETSPStEph.rs:518: info: St fn `etsp` sequential as expected
 src/Chap26/MergeSortStPer.rs:131: info: St fn `merge_sort` sequential as expected
-src/Chap26/MergeSortStPer.rs:144: info: St fn `merge` sequential as expected
-src/Chap26/MergeSortStPer.rs:211: info: St fn `merge_sort` sequential as expected
 src/Chap26/ScanDCStPer.rs:104: info: St fn `scan_dc` sequential as expected
-src/Chap26/ScanDCStPer.rs:136: info: St fn `scan_dc` sequential as expected
-src/Chap26/ScanDCStPer.rs:324: info: St fn `prefix_sums_dc` sequential as expected
 src/Chap27/ReduceContractStEph.rs:169: info: St fn `reduce_contract` sequential as expected
-src/Chap27/ReduceContractStEph.rs:188: info: St fn `reduce_contract` sequential as expected
 src/Chap27/ScanContractStEph.rs:229: info: St fn `scan_contract` sequential as expected
-src/Chap27/ScanContractStEph.rs:287: info: St fn `scan_contract` sequential as expected
-src/Chap27/ScanContractStEph.rs:395: info: St fn `expand_scan` sequential as expected
 src/Chap28/MaxContigSubSumBruteStEph.rs:53: info: St fn `max_contig_sub_sum_brute` sequential as expected
-src/Chap28/MaxContigSubSumBruteStEph.rs:84: info: St fn `max_contig_sub_sum_brute` sequential as expected
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:263: info: St fn `max_contig_sub_sum_divcon_opt` sequential as expected
 src/Chap28/MaxContigSubSumDivConOptStEph.rs:294: info: St fn `max_contig_sub_sum_aux` sequential as expected
-src/Chap28/MaxContigSubSumDivConOptStEph.rs:386: info: St fn `max_contig_sub_sum_divcon_opt` sequential as expected
 src/Chap28/MaxContigSubSumDivConStEph.rs:154: info: St fn `max_contig_sub_sum_divcon` sequential as expected
-src/Chap28/MaxContigSubSumDivConStEph.rs:304: info: St fn `max_contig_sub_sum_divcon` sequential as expected
-src/Chap28/MaxContigSubSumIterStEph.rs:160: info: St fn `max_contig_sub_sum_iter` sequential as expected
-src/Chap28/MaxContigSubSumOptStEph.rs:93: info: St fn `max_contig_sub_sum_opt` sequential as expected
-src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:82: info: St fn `max_contig_sub_sum_reduced_mcsse` sequential as expected
 src/Chap28/MaxContigSubSumReducedStEph.rs:49: info: St fn `max_contig_sub_sum_reduced` sequential as expected
-src/Chap28/MaxContigSubSumReducedStEph.rs:79: info: St fn `max_contig_sub_sum_reduced` sequential as expected
-src/Chap35/OrderStatSelectMtEph.rs:113: error: Mt fn `select` DIFFERS from APAS — : parallel recursion via join(), but sequential O(n) filter loops dominate span
-src/Chap35/OrderStatSelectMtPer.rs:113: error: Mt fn `select` DIFFERS from APAS — : parallel recursion via join(), but sequential O(n) filter loops dominate span
+src/Chap35/OrderStatSelectMtEph.rs:144: error: fn `append_vec` missing alg analysis annotation
+src/Chap35/OrderStatSelectMtPer.rs:149: error: fn `append_vec` missing alg analysis annotation
 src/Chap35/OrderStatSelectStEph.rs:91: info: St fn `select` sequential as expected
-src/Chap35/OrderStatSelectStEph.rs:103: info: St fn `select` sequential as expected
 src/Chap35/OrderStatSelectStEph.rs:117: info: St fn `select_inner` sequential as expected
 src/Chap35/OrderStatSelectStPer.rs:90: info: St fn `select` sequential as expected
-src/Chap35/OrderStatSelectStPer.rs:102: info: St fn `select` sequential as expected
 src/Chap35/OrderStatSelectStPer.rs:116: info: St fn `select_inner` sequential as expected
-src/Chap36/QuickSortMtEph.rs:186: error: Mt fn `quick_sort_first` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
-src/Chap36/QuickSortMtEph.rs:196: error: Mt fn `quick_sort_median3` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
-src/Chap36/QuickSortMtEph.rs:206: error: Mt fn `quick_sort_random` DIFFERS from APAS — : parallel recursion via ParaPair!, but sequential O(n) partition dominates span
+src/Chap36/QuickSortMtEphSlice.rs:208: error: fn `append_vec` missing alg analysis annotation
+src/Chap36/QuickSortMtEphSlice.rs:250: error: fn `partition_three_dc` missing alg analysis annotation
 src/Chap36/QuickSortStEph.rs:184: info: St fn `quick_sort_first` sequential as expected
 src/Chap36/QuickSortStEph.rs:194: info: St fn `quick_sort_median3` sequential as expected
 src/Chap36/QuickSortStEph.rs:204: info: St fn `quick_sort_random` sequential as expected
-src/Chap36/QuickSortStEph.rs:393: info: St fn `quick_sort_first` sequential as expected
-src/Chap36/QuickSortStEph.rs:498: info: St fn `quick_sort_median3` sequential as expected
-src/Chap36/QuickSortStEph.rs:600: info: St fn `quick_sort_random` sequential as expected
 src/Chap37/AVLTreeSeqStEph.rs:283: info: St fn `nth` sequential as expected
 src/Chap37/AVLTreeSeqStEph.rs:323: info: St fn `update` sequential as expected
 src/Chap37/AVLTreeSeqStPer.rs:253: info: St fn `nth` sequential as expected
 src/Chap38/BSTParaMtEph.rs:245: error: fn `assert_parambst_view_finite` missing alg analysis annotation
-src/Chap38/BSTParaMtEph.rs:350: error: Mt fn `join_pair` DIFFERS from APAS — : delegates to union_inner (ParaPair)
-src/Chap38/BSTParaMtEph.rs:389: error: Mt fn `filter` DIFFERS from APAS — : sequential recursion in filter_inner (spec_fn not Send)
 src/Chap38/BSTParaStEph.rs:289: info: St fn `join_mid` sequential as expected
 src/Chap38/BSTParaStEph.rs:305: info: St fn `join_m` sequential as expected
 src/Chap38/BSTParaStEph.rs:403: info: St fn `union` sequential as expected
@@ -207,15 +155,9 @@ src/Chap39/BSTTreapStEph.rs:2962: info: St fn `param_intersect` sequential as ex
 src/Chap39/BSTTreapStEph.rs:2976: info: St fn `param_difference` sequential as expected
 src/Chap39/BSTTreapStEph.rs:2990: info: St fn `param_filter` sequential as expected
 src/Chap39/BSTTreapStEph.rs:3014: info: St fn `param_reduce` sequential as expected
-src/Chap39/BSTTreapStEph.rs:3240: info: St fn `param_union` sequential as expected
-src/Chap39/BSTTreapStEph.rs:3251: info: St fn `param_intersect` sequential as expected
-src/Chap39/BSTTreapStEph.rs:3262: info: St fn `param_difference` sequential as expected
-src/Chap39/BSTTreapStEph.rs:3273: info: St fn `param_filter` sequential as expected
-src/Chap41/AVLTreeSetMtEph.rs:154: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
 src/Chap41/AVLTreeSetMtEph.rs:258: error: fn `from_vec_dc` missing alg analysis annotation
 src/Chap41/AVLTreeSetMtPer.rs:85: error: fn `assert_avltreesetmtper_always_wf` missing alg analysis annotation
 src/Chap41/AVLTreeSetMtPer.rs:94: error: fn `assert_avltreesetmtper_bounded_size` missing alg analysis annotation
-src/Chap41/AVLTreeSetMtPer.rs:158: error: Mt fn `filter` DIFFERS from APAS — : sequential filter (spec_fn not Send)
 src/Chap41/AVLTreeSetMtPer.rs:248: error: fn `from_vec_dc_per` missing alg analysis annotation
 src/Chap41/AVLTreeSetStEph.rs:203: info: St fn `to_seq` sequential as expected
 src/Chap41/AVLTreeSetStEph.rs:228: info: St fn `from_seq` sequential as expected
@@ -274,110 +216,68 @@ src/Chap43/OrderedTableStPer.rs:976: error: fn `bst_next_by_key` missing alg ana
 src/Chap43/OrderedTableStPer.rs:1333: error: fn `bst_prev_by_key` missing alg analysis annotation
 src/Chap49/MinEditDistStEph.rs:107: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/MinEditDistStEph.rs:162: info: St fn `min_edit_distance_rec` sequential as expected
-src/Chap49/MinEditDistStEph.rs:238: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/MinEditDistStPer.rs:107: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/MinEditDistStPer.rs:133: info: St fn `min_edit_distance_rec` sequential as expected
-src/Chap49/MinEditDistStPer.rs:209: info: St fn `min_edit_distance` sequential as expected
 src/Chap49/SubsetSumStEph.rs:95: info: St fn `subset_sum` sequential as expected
 src/Chap49/SubsetSumStEph.rs:130: info: St fn `subset_sum_rec` sequential as expected
-src/Chap49/SubsetSumStEph.rs:189: info: St fn `subset_sum` sequential as expected
 src/Chap49/SubsetSumStPer.rs:95: info: St fn `subset_sum` sequential as expected
 src/Chap49/SubsetSumStPer.rs:116: info: St fn `subset_sum_rec` sequential as expected
-src/Chap49/SubsetSumStPer.rs:175: info: St fn `subset_sum` sequential as expected
-src/Chap50/OptBinSearchTreeMtEph.rs:159: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
-src/Chap50/OptBinSearchTreeMtPer.rs:127: error: Mt fn `obst_rec` DIFFERS from APAS — : sequential DP table fill, APAS Span O(n lg n) assumes parallel
+src/Chap50/OptBinSearchTreeMtEph.rs:160: error: fn `clone_arc_prob_vec` missing alg analysis annotation
+src/Chap50/OptBinSearchTreeMtPer.rs:130: error: fn `clone_arc_prob_vec` missing alg analysis annotation
 src/Chap50/OptBinSearchTreeStEph.rs:158: info: St fn `obst_rec_st_eph` sequential as expected
 src/Chap50/OptBinSearchTreeStPer.rs:138: info: St fn `obst_rec_st_per` sequential as expected
 src/Chap51/BottomUpDPStEph.rs:103: info: St fn `med_bottom_up` sequential as expected
-src/Chap51/BottomUpDPStEph.rs:222: info: St fn `med_bottom_up` sequential as expected
-src/Chap51/BottomUpDPStEph.rs:373: info: St fn `initialize_base_cases` sequential as expected
 src/Chap51/BottomUpDPStPer.rs:82: info: St fn `med_bottom_up` sequential as expected
 src/Chap51/BottomUpDPStPer.rs:93: info: St fn `initialize_base_cases` sequential as expected
-src/Chap51/BottomUpDPStPer.rs:191: info: St fn `med_bottom_up` sequential as expected
-src/Chap51/BottomUpDPStPer.rs:331: info: St fn `initialize_base_cases` sequential as expected
-src/Chap51/TopDownDPStEph.rs:307: info: St fn `med_memoized` sequential as expected
-src/Chap51/TopDownDPStEph.rs:316: info: St fn `med_recursive` sequential as expected
 src/Chap51/TopDownDPStPer.rs:156: info: St fn `med_memoized` sequential as expected
 src/Chap51/TopDownDPStPer.rs:163: info: St fn `med_recursive` sequential as expected
-src/Chap51/TopDownDPStPer.rs:262: info: St fn `med_memoized` sequential as expected
-src/Chap51/TopDownDPStPer.rs:272: info: St fn `med_recursive` sequential as expected
 src/Chap52/AdjMatrixGraphStPer.rs:344: info: St fn `set_edge` sequential as expected
 src/Chap52/AdjSeqGraphStEph.rs:301: info: St fn `set_edge` sequential as expected
 src/Chap52/AdjTableGraphMtPer.rs:131: error: fn `count_table_edges` missing alg analysis annotation
 src/Chap52/AdjTableGraphStEph.rs:235: info: St fn `num_edges` sequential as expected
 src/Chap52/AdjTableGraphStPer.rs:138: info: St fn `num_edges` sequential as expected
-src/Chap53/GraphSearchStEph.rs:131: info: St fn `graph_search` sequential as expected
 src/Chap53/GraphSearchStEph.rs:163: info: St fn `graph_search_explore` sequential as expected
-src/Chap53/GraphSearchStEph.rs:265: info: St fn `graph_search_multi` sequential as expected
-src/Chap53/GraphSearchStEph.rs:292: info: St fn `graph_search` sequential as expected
-src/Chap53/GraphSearchStEph.rs:297: info: St fn `graph_search_multi` sequential as expected
-src/Chap53/GraphSearchStEph.rs:302: info: St fn `reachable` sequential as expected
-src/Chap53/GraphSearchStPer.rs:144: info: St fn `graph_search` sequential as expected
 src/Chap53/GraphSearchStPer.rs:176: info: St fn `graph_search_explore` sequential as expected
-src/Chap53/GraphSearchStPer.rs:278: info: St fn `graph_search_multi` sequential as expected
-src/Chap53/GraphSearchStPer.rs:305: info: St fn `graph_search` sequential as expected
-src/Chap53/GraphSearchStPer.rs:310: info: St fn `graph_search_multi` sequential as expected
-src/Chap53/GraphSearchStPer.rs:315: info: St fn `reachable` sequential as expected
-src/Chap53/PQMinStEph.rs:116: info: St fn `pq_min` sequential as expected
-src/Chap53/PQMinStEph.rs:124: info: St fn `pq_min_multi` sequential as expected
 src/Chap53/PQMinStEph.rs:177: info: St fn `pq_find_min_priority` sequential as expected
 src/Chap53/PQMinStEph.rs:205: info: St fn `pq_explore` sequential as expected
-src/Chap53/PQMinStEph.rs:492: info: St fn `pq_min_multi` sequential as expected
-src/Chap53/PQMinStPer.rs:112: info: St fn `pq_min` sequential as expected
-src/Chap53/PQMinStPer.rs:119: info: St fn `pq_min_multi` sequential as expected
-src/Chap53/PQMinStPer.rs:128: info: St fn `pq_min` sequential as expected
 src/Chap53/PQMinStPer.rs:165: info: St fn `pq_find_min_priority` sequential as expected
 src/Chap53/PQMinStPer.rs:195: info: St fn `pq_explore` sequential as expected
-src/Chap53/PQMinStPer.rs:447: info: St fn `pq_min_multi` sequential as expected
 src/Chap54/BFSStEph.rs:146: info: St fn `bfs` sequential as expected
-src/Chap54/BFSStEph.rs:333: info: St fn `bfs_tree` sequential as expected
 src/Chap54/BFSStPer.rs:145: info: St fn `bfs` sequential as expected
-src/Chap54/BFSStPer.rs:323: info: St fn `bfs_tree` sequential as expected
 src/Chap55/CycleDetectStEph.rs:283: info: St fn `dfs_check_cycle` sequential as expected
-src/Chap55/CycleDetectStEph.rs:776: info: St fn `has_cycle` sequential as expected
 src/Chap55/CycleDetectStPer.rs:257: info: St fn `has_cycle` sequential as expected
 src/Chap55/CycleDetectStPer.rs:270: info: St fn `dfs_check_cycle` sequential as expected
-src/Chap55/CycleDetectStPer.rs:607: info: St fn `has_cycle` sequential as expected
 src/Chap55/DFSStEph.rs:223: info: St fn `dfs_recursive` sequential as expected
-src/Chap55/DFSStEph.rs:463: info: St fn `dfs` sequential as expected
 src/Chap55/DFSStPer.rs:219: info: St fn `dfs_recursive` sequential as expected
-src/Chap55/DFSStPer.rs:422: info: St fn `dfs` sequential as expected
 src/Chap55/SCCStEph.rs:93: info: St fn `compute_finish_order` sequential as expected
 src/Chap55/SCCStEph.rs:188: info: St fn `transpose_graph` sequential as expected
 src/Chap55/SCCStEph.rs:319: info: St fn `check_wf_adj_list_eph` sequential as expected
 src/Chap55/SCCStEph.rs:373: info: St fn `dfs_reach` sequential as expected
-src/Chap55/SCCStEph.rs:493: info: St fn `scc` sequential as expected
 src/Chap55/SCCStPer.rs:72: info: St fn `scc` sequential as expected
 src/Chap55/SCCStPer.rs:85: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/SCCStPer.rs:179: info: St fn `compute_finish_order` sequential as expected
 src/Chap55/SCCStPer.rs:268: info: St fn `transpose_graph` sequential as expected
 src/Chap55/SCCStPer.rs:395: info: St fn `check_wf_adj_list_per` sequential as expected
 src/Chap55/SCCStPer.rs:451: info: St fn `dfs_reach` sequential as expected
-src/Chap55/SCCStPer.rs:554: info: St fn `scc` sequential as expected
 src/Chap55/TopoSortStEph.rs:413: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/TopoSortStEph.rs:754: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
 src/Chap55/TopoSortStEph.rs:878: info: St fn `topological_sort_opt` sequential as expected
-src/Chap55/TopoSortStEph.rs:902: info: St fn `topo_sort` sequential as expected
 src/Chap55/TopoSortStPer.rs:268: info: St fn `topo_sort` sequential as expected
 src/Chap55/TopoSortStPer.rs:282: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/TopoSortStPer.rs:589: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
 src/Chap55/TopoSortStPer.rs:687: info: St fn `topological_sort_opt` sequential as expected
-src/Chap55/TopoSortStPer.rs:711: info: St fn `topo_sort` sequential as expected
-src/Chap56/PathWeightUtilsStEph.rs:116: info: St fn `path_weight_int` sequential as expected
-src/Chap56/PathWeightUtilsStEph.rs:150: info: St fn `path_weight_float` sequential as expected
-src/Chap56/PathWeightUtilsStPer.rs:152: info: St fn `path_weight_int` sequential as expected
-src/Chap56/PathWeightUtilsStPer.rs:188: info: St fn `path_weight_float` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:42: info: St fn `edge_contract` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:51: info: St fn `contract_round` sequential as expected
-src/Chap61/EdgeContractionStEph.rs:65: info: St fn `edge_contract` sequential as expected
 src/Chap61/VertexMatchingStEph.rs:40: info: St fn `greedy_matching` sequential as expected
 src/Chap61/VertexMatchingStEph.rs:46: info: St fn `parallel_matching_st` sequential as expected
 src/Chap62/StarContractionStEph.rs:47: info: St fn `star_contract` sequential as expected
 src/Chap62/StarContractionStEph.rs:70: info: St fn `contract_to_vertices` sequential as expected
 src/Chap62/StarContractionStEph.rs:80: info: St fn `star_contract_fuel` sequential as expected
-src/Chap62/StarContractionStEph.rs:166: info: St fn `star_contract` sequential as expected
-src/Chap62/StarPartitionMtEph.rs:55: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
-src/Chap62/StarPartitionMtEph.rs:845: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+src/Chap62/StarPartitionMtEph.rs:104: error: fn `clone_arc_vec` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:111: error: fn `clone_arc_hmvp_bool` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:120: error: fn `clone_arc_hmvp_usize` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:129: error: fn `clone_arc_hmvp_v` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:138: error: fn `clone_arc_th_edges` missing alg analysis annotation
 src/Chap62/StarPartitionStEph.rs:43: info: St fn `sequential_star_partition` sequential as expected
 src/Chap63/ConnectivityStEph.rs:47: info: St fn `count_components` sequential as expected
 src/Chap63/ConnectivityStEph.rs:53: info: St fn `connected_components` sequential as expected
@@ -393,91 +293,107 @@ src/Chap64/TSPApproxStEph.rs:91: info: St fn `vec_contains_pair` sequential as e
 src/Chap65/PrimStEph.rs:177: info: St fn `prim_mst` sequential as expected
 src/Chap65/PrimStEph.rs:187: info: St fn `mst_weight` sequential as expected
 src/Chap65/UnionFindStEph.rs:1743: info: St fn `num_sets` sequential as expected
-src/Chap66/BoruvkaMtEph.rs:136: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:155: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:765: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:996: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
 src/Chap66/BoruvkaStEph.rs:128: info: St fn `vertex_bridges` sequential as expected
 src/Chap66/BoruvkaStEph.rs:140: info: St fn `bridge_star_partition` sequential as expected
 src/Chap66/BoruvkaStEph.rs:156: info: St fn `boruvka_mst` sequential as expected
 src/Chap66/BoruvkaStEph.rs:180: info: St fn `boruvka_mst_with_seed` sequential as expected
 src/Chap66/BoruvkaStEph.rs:199: info: St fn `mst_weight` sequential as expected
-src/Chap66/BoruvkaStEph.rs:225: info: St fn `vertex_bridges` sequential as expected
-src/Chap66/BoruvkaStEph.rs:291: info: St fn `bridge_star_partition` sequential as expected
-src/Chap66/BoruvkaStEph.rs:394: info: St fn `boruvka_mst` sequential as expected
-src/Chap66/BoruvkaStEph.rs:510: info: St fn `boruvka_mst_with_seed` sequential as expected
 
 =============================================================
 Summary
 =============================================================
 
-  Total exec fns scanned:    5176
-  Boilerplate excluded:       437  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
+  Total exec fns scanned:    2844
+  Boilerplate excluded:       359  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              247
 
-  Alg analysis annotations:  5141  (fns with any APAS or Code review line)
-  Missing alg analysis:        35  <- errors
+  Alg analysis annotations:  2808  (fns with any APAS or Code review line)
+  Missing alg analysis:        36  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       17  <- errors
-  Mt ACCEPTED DIFFERENCE:      51  <- info (documented choices)
-  St DIFFERS (expected):      353  <- info
+  Mt DIFFERS (blockers):        0  <- errors
+  Mt ACCEPTED DIFFERENCE:      58  <- info (documented choices)
+  St DIFFERS (expected):      261  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 52
+  Errors: 36
   Warnings: 0
-  Info: 404
+  Info: 319
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log
-St fn `bfs_tree` sequential as expected
+n
+src/Chap43/OrderedTableStEph.rs:1954: error: fn `bst_split_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:2404: error: fn `bst_rank_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStEph.rs:2720: error: fn `bst_select_by_rank` missing alg analysis annotation
+src/Chap43/OrderedTableStPer.rs:820: info: St fn `get_key_range` sequential as expected
+src/Chap43/OrderedTableStPer.rs:976: error: fn `bst_next_by_key` missing alg analysis annotation
+src/Chap43/OrderedTableStPer.rs:1333: error: fn `bst_prev_by_key` missing alg analysis annotation
+src/Chap49/MinEditDistStEph.rs:107: info: St fn `min_edit_distance` sequential as expected
+src/Chap49/MinEditDistStEph.rs:162: info: St fn `min_edit_distance_rec` sequential as expected
+src/Chap49/MinEditDistStPer.rs:107: info: St fn `min_edit_distance` sequential as expected
+src/Chap49/MinEditDistStPer.rs:133: info: St fn `min_edit_distance_rec` sequential as expected
+src/Chap49/SubsetSumStEph.rs:95: info: St fn `subset_sum` sequential as expected
+src/Chap49/SubsetSumStEph.rs:130: info: St fn `subset_sum_rec` sequential as expected
+src/Chap49/SubsetSumStPer.rs:95: info: St fn `subset_sum` sequential as expected
+src/Chap49/SubsetSumStPer.rs:116: info: St fn `subset_sum_rec` sequential as expected
+src/Chap50/OptBinSearchTreeMtEph.rs:160: error: fn `clone_arc_prob_vec` missing alg analysis annotation
+src/Chap50/OptBinSearchTreeMtPer.rs:130: error: fn `clone_arc_prob_vec` missing alg analysis annotation
+src/Chap50/OptBinSearchTreeStEph.rs:158: info: St fn `obst_rec_st_eph` sequential as expected
+src/Chap50/OptBinSearchTreeStPer.rs:138: info: St fn `obst_rec_st_per` sequential as expected
+src/Chap51/BottomUpDPStEph.rs:103: info: St fn `med_bottom_up` sequential as expected
+src/Chap51/BottomUpDPStPer.rs:82: info: St fn `med_bottom_up` sequential as expected
+src/Chap51/BottomUpDPStPer.rs:93: info: St fn `initialize_base_cases` sequential as expected
+src/Chap51/TopDownDPStPer.rs:156: info: St fn `med_memoized` sequential as expected
+src/Chap51/TopDownDPStPer.rs:163: info: St fn `med_recursive` sequential as expected
+src/Chap52/AdjMatrixGraphMtPer.rs:349: info: [accepted] Mt fn `set_edge` ACCEPTED DIFFERENCE — : APAS assumes O(1) row-pointer copy in outer seq; Vec-backed persistent deep-copies all n rows
+src/Chap52/AdjMatrixGraphStPer.rs:344: info: St fn `set_edge` sequential as expected
+src/Chap52/AdjSeqGraphStEph.rs:301: info: St fn `set_edge` sequential as expected
+src/Chap52/AdjTableGraphMtPer.rs:131: error: fn `count_table_edges` missing alg analysis annotation
+src/Chap52/AdjTableGraphStEph.rs:235: info: St fn `num_edges` sequential as expected
+src/Chap52/AdjTableGraphStPer.rs:138: info: St fn `num_edges` sequential as expected
+src/Chap53/GraphSearchStEph.rs:163: info: St fn `graph_search_explore` sequential as expected
+src/Chap53/GraphSearchStPer.rs:176: info: St fn `graph_search_explore` sequential as expected
+src/Chap53/PQMinStEph.rs:177: info: St fn `pq_find_min_priority` sequential as expected
+src/Chap53/PQMinStEph.rs:205: info: St fn `pq_explore` sequential as expected
+src/Chap53/PQMinStPer.rs:165: info: St fn `pq_find_min_priority` sequential as expected
+src/Chap53/PQMinStPer.rs:195: info: St fn `pq_explore` sequential as expected
+src/Chap54/BFSStEph.rs:146: info: St fn `bfs` sequential as expected
 src/Chap54/BFSStPer.rs:145: info: St fn `bfs` sequential as expected
-src/Chap54/BFSStPer.rs:323: info: St fn `bfs_tree` sequential as expected
 src/Chap55/CycleDetectStEph.rs:283: info: St fn `dfs_check_cycle` sequential as expected
-src/Chap55/CycleDetectStEph.rs:776: info: St fn `has_cycle` sequential as expected
 src/Chap55/CycleDetectStPer.rs:257: info: St fn `has_cycle` sequential as expected
 src/Chap55/CycleDetectStPer.rs:270: info: St fn `dfs_check_cycle` sequential as expected
-src/Chap55/CycleDetectStPer.rs:607: info: St fn `has_cycle` sequential as expected
 src/Chap55/DFSStEph.rs:223: info: St fn `dfs_recursive` sequential as expected
-src/Chap55/DFSStEph.rs:463: info: St fn `dfs` sequential as expected
 src/Chap55/DFSStPer.rs:219: info: St fn `dfs_recursive` sequential as expected
-src/Chap55/DFSStPer.rs:422: info: St fn `dfs` sequential as expected
 src/Chap55/SCCStEph.rs:93: info: St fn `compute_finish_order` sequential as expected
 src/Chap55/SCCStEph.rs:188: info: St fn `transpose_graph` sequential as expected
 src/Chap55/SCCStEph.rs:319: info: St fn `check_wf_adj_list_eph` sequential as expected
 src/Chap55/SCCStEph.rs:373: info: St fn `dfs_reach` sequential as expected
-src/Chap55/SCCStEph.rs:493: info: St fn `scc` sequential as expected
 src/Chap55/SCCStPer.rs:72: info: St fn `scc` sequential as expected
 src/Chap55/SCCStPer.rs:85: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/SCCStPer.rs:179: info: St fn `compute_finish_order` sequential as expected
 src/Chap55/SCCStPer.rs:268: info: St fn `transpose_graph` sequential as expected
 src/Chap55/SCCStPer.rs:395: info: St fn `check_wf_adj_list_per` sequential as expected
 src/Chap55/SCCStPer.rs:451: info: St fn `dfs_reach` sequential as expected
-src/Chap55/SCCStPer.rs:554: info: St fn `scc` sequential as expected
 src/Chap55/TopoSortStEph.rs:413: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/TopoSortStEph.rs:754: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
 src/Chap55/TopoSortStEph.rs:878: info: St fn `topological_sort_opt` sequential as expected
-src/Chap55/TopoSortStEph.rs:902: info: St fn `topo_sort` sequential as expected
 src/Chap55/TopoSortStPer.rs:268: info: St fn `topo_sort` sequential as expected
 src/Chap55/TopoSortStPer.rs:282: info: St fn `dfs_finish_order` sequential as expected
 src/Chap55/TopoSortStPer.rs:589: info: St fn `dfs_finish_order_cycle_detect` sequential as expected
 src/Chap55/TopoSortStPer.rs:687: info: St fn `topological_sort_opt` sequential as expected
-src/Chap55/TopoSortStPer.rs:711: info: St fn `topo_sort` sequential as expected
-src/Chap56/PathWeightUtilsStEph.rs:116: info: St fn `path_weight_int` sequential as expected
-src/Chap56/PathWeightUtilsStEph.rs:150: info: St fn `path_weight_float` sequential as expected
-src/Chap56/PathWeightUtilsStPer.rs:152: info: St fn `path_weight_int` sequential as expected
-src/Chap56/PathWeightUtilsStPer.rs:188: info: St fn `path_weight_float` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:42: info: St fn `edge_contract` sequential as expected
 src/Chap61/EdgeContractionStEph.rs:51: info: St fn `contract_round` sequential as expected
-src/Chap61/EdgeContractionStEph.rs:65: info: St fn `edge_contract` sequential as expected
 src/Chap61/VertexMatchingStEph.rs:40: info: St fn `greedy_matching` sequential as expected
 src/Chap61/VertexMatchingStEph.rs:46: info: St fn `parallel_matching_st` sequential as expected
 src/Chap62/StarContractionStEph.rs:47: info: St fn `star_contract` sequential as expected
 src/Chap62/StarContractionStEph.rs:70: info: St fn `contract_to_vertices` sequential as expected
 src/Chap62/StarContractionStEph.rs:80: info: St fn `star_contract_fuel` sequential as expected
-src/Chap62/StarContractionStEph.rs:166: info: St fn `star_contract` sequential as expected
-src/Chap62/StarPartitionMtEph.rs:55: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
-src/Chap62/StarPartitionMtEph.rs:845: error: Mt fn `parallel_star_partition` DIFFERS from APAS — : Loops 1, 5 sequential; loops 2, 3, 4, 6 parallel D&C
+src/Chap62/StarPartitionMtEph.rs:104: error: fn `clone_arc_vec` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:111: error: fn `clone_arc_hmvp_bool` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:120: error: fn `clone_arc_hmvp_usize` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:129: error: fn `clone_arc_hmvp_v` missing alg analysis annotation
+src/Chap62/StarPartitionMtEph.rs:138: error: fn `clone_arc_th_edges` missing alg analysis annotation
 src/Chap62/StarPartitionStEph.rs:43: info: St fn `sequential_star_partition` sequential as expected
 src/Chap63/ConnectivityStEph.rs:47: info: St fn `count_components` sequential as expected
 src/Chap63/ConnectivityStEph.rs:53: info: St fn `connected_components` sequential as expected
@@ -493,40 +409,32 @@ src/Chap64/TSPApproxStEph.rs:91: info: St fn `vec_contains_pair` sequential as e
 src/Chap65/PrimStEph.rs:177: info: St fn `prim_mst` sequential as expected
 src/Chap65/PrimStEph.rs:187: info: St fn `mst_weight` sequential as expected
 src/Chap65/UnionFindStEph.rs:1743: info: St fn `num_sets` sequential as expected
-src/Chap66/BoruvkaMtEph.rs:136: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:155: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:765: error: Mt fn `boruvka_mst_mt` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
-src/Chap66/BoruvkaMtEph.rs:996: error: Mt fn `boruvka_mst_mt_with_seed` DIFFERS from APAS — : sequential O(lg n) loop, each round O(lg m) span via ParaPair! helpers
 src/Chap66/BoruvkaStEph.rs:128: info: St fn `vertex_bridges` sequential as expected
 src/Chap66/BoruvkaStEph.rs:140: info: St fn `bridge_star_partition` sequential as expected
 src/Chap66/BoruvkaStEph.rs:156: info: St fn `boruvka_mst` sequential as expected
 src/Chap66/BoruvkaStEph.rs:180: info: St fn `boruvka_mst_with_seed` sequential as expected
 src/Chap66/BoruvkaStEph.rs:199: info: St fn `mst_weight` sequential as expected
-src/Chap66/BoruvkaStEph.rs:225: info: St fn `vertex_bridges` sequential as expected
-src/Chap66/BoruvkaStEph.rs:291: info: St fn `bridge_star_partition` sequential as expected
-src/Chap66/BoruvkaStEph.rs:394: info: St fn `boruvka_mst` sequential as expected
-src/Chap66/BoruvkaStEph.rs:510: info: St fn `boruvka_mst_with_seed` sequential as expected
 
 =============================================================
 Summary
 =============================================================
 
-  Total exec fns scanned:    5176
-  Boilerplate excluded:       437  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
+  Total exec fns scanned:    2844
+  Boilerplate excluded:       359  (clone, eq, fmt, next, default, drop, view, inv, cmp, hash, iter)
   Files scanned:              247
 
-  Alg analysis annotations:  5141  (fns with any APAS or Code review line)
-  Missing alg analysis:        35  <- errors
+  Alg analysis annotations:  2808  (fns with any APAS or Code review line)
+  Missing alg analysis:        36  <- errors
   Old format remaining:         0  <- errors (/// - APAS: lines not yet reformatted)
 
-  Mt DIFFERS (blockers):       17  <- errors
-  Mt ACCEPTED DIFFERENCE:      51  <- info (documented choices)
-  St DIFFERS (expected):      353  <- info
+  Mt DIFFERS (blockers):        0  <- errors
+  Mt ACCEPTED DIFFERENCE:      58  <- info (documented choices)
+  St DIFFERS (expected):      261  <- info
   St parallel Code review:      0  <- errors (agent claimed parallel on St file)
   APAS without Code review:     0  <- warnings
 
-  Errors: 52
+  Errors: 36
   Warnings: 0
-  Info: 404
+  Info: 319
 
 Full output: /home/milnes/projects/APAS-VERUS/analyses/veracity-analyze-alg-analysis.log

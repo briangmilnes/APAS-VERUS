@@ -1,0 +1,63 @@
+error: params for 'inductive' lemma should be: `post: Self, initial_count: nat`
+  --> src/standards/rwlock_tsm_standard.rs:92:13
+   |
+92 |             fn initialize_inductive(post: Self) { }
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0433]: failed to resolve: use of undeclared type `CdStateMachine`
+   --> src/standards/rwlock_tsm_standard.rs:203:17
+    |
+203 |             ) = CdStateMachine::Instance::initialize(v as nat);
+    |                 ^^^^^^^^^^^^^^ use of undeclared type `CdStateMachine`
+    |
+help: consider importing one of these structs
+    |
+ 60 +     use crate::Chap11::FibonacciMtEph2Threads::FibPair::Instance;
+    |
+ 60 +     use crate::Chap11::FibonacciMtEphRecomputes::FibFork::Instance;
+    |
+ 60 +     use crate::Chap11::FibonacciMtPerTSM::FibForkJoin::Instance;
+    |
+ 60 +     use crate::standards::tsm_standard::tsm_standard::ForkJoinTracker::Instance;
+    |
+    = and 2 other candidates
+help: if you import `Instance`, refer to it directly
+    |
+203 -             ) = CdStateMachine::Instance::initialize(v as nat);
+203 +             ) = Instance::initialize(v as nat);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `CdStateMachine`
+   --> src/standards/rwlock_tsm_standard.rs:147:34
+    |
+147 |         pub ghost_token: Tracked<CdStateMachine::count>,
+    |                                  ^^^^^^^^^^^^^^ use of undeclared type `CdStateMachine`
+    |
+help: a struct with a similar name exists
+    |
+147 |         pub ghost_token: Tracked<CdStateMachineInv::count>,
+    |                                                +++
+
+error[E0433]: failed to resolve: use of undeclared type `CdStateMachine`
+   --> src/standards/rwlock_tsm_standard.rs:152:23
+    |
+152 |         pub instance: CdStateMachine::Instance,
+    |                       ^^^^^^^^^^^^^^ use of undeclared type `CdStateMachine`
+
+error[E0433]: failed to resolve: use of undeclared type `CdStateMachine`
+   --> src/standards/rwlock_tsm_standard.rs:170:27
+    |
+170 |         pub inst: Tracked<CdStateMachine::Instance>,
+    |                           ^^^^^^^^^^^^^^ use of undeclared type `CdStateMachine`
+    |
+help: a struct with a similar name exists
+    |
+170 |         pub inst: Tracked<CdStateMachineInv::Instance>,
+    |                                         +++
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0433`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 686MB, peak z3 RSS: 0MB, min free: 23447MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 0s
