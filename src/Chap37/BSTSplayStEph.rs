@@ -9,8 +9,10 @@
 //	4. type definitions
 //	6. spec fns
 //	7. proof fns
-//	8. traits
-//	9. impls
+//	8a. traits — Node
+//	8b. traits — BSTSplayStEph
+//	9a. impls — Node
+//	9b. impls — BSTSplayStEph
 //	11. derive impls in verus!
 //	12. macros
 //	13. derive impls outside verus!
@@ -181,7 +183,115 @@ pub mod BSTSplayStEph {
     }
 
 
-    //		8. traits
+    //		8a. traits — Node
+
+    pub trait BSTSplayNodeFns<T: TotalOrder + Clone>: Sized {
+        spec fn spec_key(self) -> T;
+        spec fn spec_left(self) -> Link<T>;
+        spec fn spec_right(self) -> Link<T>;
+        spec fn spec_node_size(self) -> nat;
+
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
+        // veracity: no_requires
+        fn new_node(key: T) -> (node: Node<T>)
+            ensures
+                node.key == key,
+                node.size == 1,
+                node.left is None,
+                node.right is None;
+
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
+        // veracity: no_requires
+        fn size_link(link: &Link<T>) -> (size: usize)
+            ensures size as nat == spec_size_link(link);
+
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
+        fn height_link(link: &Link<T>) -> (height: usize)
+            requires spec_height_link(link) < usize::MAX as nat,
+            ensures height as nat == spec_height_link(link);
+
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        // veracity: no_requires
+        fn update(&mut self)
+            ensures
+                self.spec_key() == old(self).spec_key(),
+                self.spec_left() == old(self).spec_left(),
+                self.spec_right() == old(self).spec_right();
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — agrees with APAS.
+        fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
+            requires spec_is_bst_link(&Some(root)),
+            ensures
+                spec_is_bst_link(&Some(splayed)),
+                forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(root), x);
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST insert path.
+        fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(old(link)),
+            ensures
+                spec_is_bst_link(link),
+                spec_contains_link(link, value),
+                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
+                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — bst_insert + splay.
+        fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(old(link)),
+            ensures
+                spec_is_bst_link(link),
+                spec_contains_link(link, value),
+                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
+                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST search.
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+            requires spec_is_bst_link(link),
+            ensures
+                found.is_some() <==> spec_contains_link(link, *target),
+                found.is_some() ==> *found.unwrap() == *target;
+
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
+        fn min_link(link: &Link<T>) -> (min: Option<&T>)
+            requires spec_is_bst_link(link),
+            ensures
+                link.is_some() ==> min.is_some(),
+                min.is_some() ==> spec_contains_link(link, *min.unwrap()),
+                min.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(*min.unwrap(), x);
+
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
+        fn max_link(link: &Link<T>) -> (max: Option<&T>)
+            requires spec_is_bst_link(link),
+            ensures
+                link.is_some() ==> max.is_some(),
+                max.is_some() ==> spec_contains_link(link, *max.unwrap()),
+                max.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(x, *max.unwrap());
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
+        // veracity: no_requires
+        fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
+            requires spec_is_bst_link(link),
+            ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len();
+
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
+        // veracity: no_requires
+        fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
+            requires spec_is_bst_link(link),
+            ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len();
+    }
+
+    //		8b. traits — BSTSplayStEph
 
     pub trait BSTSplayStEphTrait<T: TotalOrder + Clone> {
         spec fn spec_size(self) -> nat;
@@ -256,18 +366,18 @@ pub mod BSTSplayStEph {
     }
 
 
-    //		9. impls
+    //		9a. impls — Node
+
+    impl<T: TotalOrder + Clone> BSTSplayNodeFns<T> for Node<T> {
+        open spec fn spec_key(self) -> T { self.key }
+        open spec fn spec_left(self) -> Link<T> { self.left }
+        open spec fn spec_right(self) -> Link<T> { self.right }
+        open spec fn spec_node_size(self) -> nat { self.size as nat }
 
     /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
     // veracity: no_requires
-    fn new_node<T: TotalOrder + Clone>(key: T) -> (node: Node<T>)
-
-        ensures
-            node.key == key,
-            node.size == 1,
-            node.left is None,
-            node.right is None,
+    fn new_node(key: T) -> (node: Node<T>)
     {
         Node {
             key,
@@ -280,8 +390,7 @@ pub mod BSTSplayStEph {
     /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
     // veracity: no_requires
-    fn size_link<T: TotalOrder + Clone>(link: &Link<T>) -> (size: usize)
-        ensures size as nat == spec_size_link(link),
+    fn size_link(link: &Link<T>) -> (size: usize)
     {
         proof { reveal(spec_size_link); }
         match link.as_ref() {
@@ -292,17 +401,15 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
-    fn height_link<T: TotalOrder + Clone>(link: &Link<T>) -> (height: usize)
-        requires spec_height_link(link) < usize::MAX as nat,
-        ensures height as nat == spec_height_link(link),
+    fn height_link(link: &Link<T>) -> (height: usize)
         decreases *link,
     {
         proof { reveal_with_fuel(spec_height_link, 2); }
         match link {
             | None => 0,
             | Some(node) => {
-                let lh = height_link(&node.left);
-                let rh = height_link(&node.right);
+                let lh = Self::height_link(&node.left);
+                let rh = Self::height_link(&node.right);
                 let m = if lh >= rh { lh } else { rh };
                 1 + m
             }
@@ -312,17 +419,13 @@ pub mod BSTSplayStEph {
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
     // veracity: no_requires
-    fn update<T: TotalOrder + Clone>(node: &mut Node<T>)
-        ensures
-            node.key == old(node).key,
-            node.left == old(node).left,
-            node.right == old(node).right,
+    fn update(&mut self)
     {
         proof { reveal(spec_size_link); }
-        let ls = size_link(&node.left);
-        let rs = size_link(&node.right);
+        let ls = Self::size_link(&self.left);
+        let rs = Self::size_link(&self.right);
         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
-            node.size = 1 + ls + rs;
+            self.size = 1 + ls + rs;
         }
     }
 
@@ -330,11 +433,7 @@ pub mod BSTSplayStEph {
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — agrees with APAS.
-    fn splay<T: TotalOrder + Clone>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
-        requires spec_is_bst_link(&Some(root)),
-        ensures
-            spec_is_bst_link(&Some(splayed)),
-            forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(root), x),
+    fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         decreases root,
     {
         let ghost orig = root;
@@ -387,14 +486,14 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Equal => {
                         // Zig: right rotation
                         root.left = left.right.take();
-                        update(&mut root);
+                        root.update();
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_left_right);
                             assert(root.right == orig_root_right);
                         }
                         left.right = Some(root);
-                        update(&mut left);
+                        left.update();
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
@@ -454,29 +553,29 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Less => {
                         // Zig-zig: recurse into left.left, then two right rotations.
                         if let Some(ll) = left.left.take() {
-                            left.left = Some(splay(ll, target));
+                            left.left = Some(Self::splay(ll, target));
                         }
                         root.left = left.right.take();
-                        update(&mut root);
+                        root.update();
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_left_right);
                             assert(root.right == orig_root_right);
                         }
                         left.right = Some(root);
-                        update(&mut left);
+                        left.update();
                         if let Some(mut ll) = left.left.take() {
                             let ghost ll_key = ll.key;
                             let ghost ll_left = ll.left;
                             let ghost ll_right = ll.right;
                             left.left = ll.right.take();
-                            update(&mut left);
+                            left.update();
                             proof {
                                 assert(left.key == left_key);
                                 assert(left.left == ll_right);
                             }
                             ll.right = Some(left);
-                            update(&mut ll);
+                            ll.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
@@ -627,7 +726,7 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Greater => {
                         // Zig-zag: recurse into left.right, left-rotate left, right-rotate root.
                         if let Some(lr) = left.right.take() {
-                            left.right = Some(splay(lr, target));
+                            left.right = Some(Self::splay(lr, target));
                         }
                         if left.right.is_some() {
                             let mut lr = left.right.take().unwrap();
@@ -645,23 +744,23 @@ pub mod BSTSplayStEph {
                                     (T::le(lr_key, x) && x != lr_key) by {};
                             }
                             left.right = lr.left.take();
-                            update(&mut left);
+                            left.update();
                             proof {
                                 assert(left.key == left_key);
                                 assert(left.left == orig_left_left);
                                 assert(left.right == lr_left);
                             }
                             lr.left = Some(left);
-                            update(&mut lr);
+                            lr.update();
                             root.left = lr.right.take();
-                            update(&mut root);
+                            root.update();
                             proof {
                                 assert(root.key == root_key);
                                 assert(root.left == lr_right);
                                 assert(root.right == orig_root_right);
                             }
                             lr.right = Some(root);
-                            update(&mut lr);
+                            lr.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
@@ -772,9 +871,9 @@ pub mod BSTSplayStEph {
                                 assert(root.right == orig_root_right);
                             }
                             root.left = left.right.take();
-                            update(&mut root);
+                            root.update();
                             left.right = Some(root);
-                            update(&mut left);
+                            left.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
@@ -864,14 +963,14 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Equal => {
                         // Zag: left rotation
                         root.right = right.left.take();
-                        update(&mut root);
+                        root.update();
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_root_left);
                             assert(root.right == orig_right_left);
                         }
                         right.left = Some(root);
-                        update(&mut right);
+                        right.update();
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(spec_contains_link, 4);
@@ -933,29 +1032,29 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Greater => {
                         // Zag-zag: recurse into right.right, then two left rotations.
                         if let Some(rr) = right.right.take() {
-                            right.right = Some(splay(rr, target));
+                            right.right = Some(Self::splay(rr, target));
                         }
                         root.right = right.left.take();
-                        update(&mut root);
+                        root.update();
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_root_left);
                             assert(root.right == orig_right_left);
                         }
                         right.left = Some(root);
-                        update(&mut right);
+                        right.update();
                         if let Some(mut rr) = right.right.take() {
                             let ghost rr_key = rr.key;
                             let ghost rr_left = rr.left;
                             let ghost rr_right = rr.right;
                             right.right = rr.left.take();
-                            update(&mut right);
+                            right.update();
                             proof {
                                 assert(right.key == right_key);
                                 assert(right.right == rr_left);
                             }
                             rr.left = Some(right);
-                            update(&mut rr);
+                            rr.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
@@ -1117,7 +1216,7 @@ pub mod BSTSplayStEph {
                     core::cmp::Ordering::Less => {
                         // Zag-zig: recurse into right.left, right-rotate right, left-rotate root.
                         if let Some(rl) = right.left.take() {
-                            right.left = Some(splay(rl, target));
+                            right.left = Some(Self::splay(rl, target));
                         }
                         if right.left.is_some() {
                             let mut rl = right.left.take().unwrap();
@@ -1135,23 +1234,23 @@ pub mod BSTSplayStEph {
                                     (T::le(rl_key, x) && x != rl_key) by {};
                             }
                             right.left = rl.right.take();
-                            update(&mut right);
+                            right.update();
                             proof {
                                 assert(right.key == right_key);
                                 assert(right.left == rl_right);
                                 assert(right.right == orig_right_right);
                             }
                             rl.right = Some(right);
-                            update(&mut rl);
+                            rl.update();
                             root.right = rl.left.take();
-                            update(&mut root);
+                            root.update();
                             proof {
                                 assert(root.key == root_key);
                                 assert(root.left == orig_root_left);
                                 assert(root.right == rl_left);
                             }
                             rl.left = Some(root);
-                            update(&mut rl);
+                            rl.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(spec_contains_link, 5);
@@ -1251,9 +1350,9 @@ pub mod BSTSplayStEph {
                                 assert(root.left == orig_root_left);
                             }
                             root.right = right.left.take();
-                            update(&mut root);
+                            root.update();
                             right.left = Some(root);
-                            update(&mut right);
+                            right.update();
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(spec_contains_link, 4);
@@ -1309,19 +1408,13 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST insert path.
-    fn bst_insert<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires spec_is_bst_link(old(link)),
-        ensures
-            spec_is_bst_link(link),
-            spec_contains_link(link, value),
-            forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
-            forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value),
+    fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
         decreases old(link),
     {
         let cur = link.take();
         match cur {
             | None => {
-                *link = Some(Box::new(new_node(value)));
+                *link = Some(Box::new(Self::new_node(value)));
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(spec_contains_link, 2);
@@ -1334,8 +1427,8 @@ pub mod BSTSplayStEph {
                 let ghost node_key = node.key;
                 match TotalOrder::cmp(&value, &node.key) {
                     core::cmp::Ordering::Less => {
-                        bst_insert(&mut node.left, value);
-                        update(&mut node);
+                        Self::bst_insert(&mut node.left, value);
+                        node.update();
                         *link = Some(node);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
@@ -1386,8 +1479,8 @@ pub mod BSTSplayStEph {
                         true
                     }
                     core::cmp::Ordering::Greater => {
-                        bst_insert(&mut node.right, value);
-                        update(&mut node);
+                        Self::bst_insert(&mut node.right, value);
+                        node.update();
                         *link = Some(node);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
@@ -1452,19 +1545,13 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — bst_insert + splay.
-    fn insert_link<T: TotalOrder + Clone>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires spec_is_bst_link(old(link)),
-        ensures
-            spec_is_bst_link(link),
-            spec_contains_link(link, value),
-            forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
-            forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value),
+    fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
     {
         let v = value.clone();
-        let inserted = bst_insert(link, value);
+        let inserted = Self::bst_insert(link, value);
         if inserted {
             if let Some(root) = link.take() {
-                *link = Some(splay(root, &v));
+                *link = Some(Self::splay(root, &v));
             }
         }
         inserted
@@ -1472,11 +1559,7 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — standard BST search.
-    fn find_link<'a, T: TotalOrder + Clone>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-        requires spec_is_bst_link(link),
-        ensures
-            found.is_some() <==> spec_contains_link(link, *target),
-            found.is_some() ==> *found.unwrap() == *target,
+    fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         decreases *link,
     {
         match link {
@@ -1492,7 +1575,7 @@ pub mod BSTSplayStEph {
                                 }
                             };
                         }
-                        find_link(&node.left, target)
+                        Self::find_link(&node.left, target)
                     }
                     core::cmp::Ordering::Greater => {
                         proof {
@@ -1502,7 +1585,7 @@ pub mod BSTSplayStEph {
                                 }
                             };
                         }
-                        find_link(&node.right, target)
+                        Self::find_link(&node.right, target)
                     }
                 }
             }
@@ -1511,12 +1594,7 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
-    fn min_link<T: TotalOrder + Clone>(link: &Link<T>) -> (min: Option<&T>)
-        requires spec_is_bst_link(link),
-        ensures
-            link.is_some() ==> min.is_some(),
-            min.is_some() ==> spec_contains_link(link, *min.unwrap()),
-            min.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(*min.unwrap(), x),
+    fn min_link(link: &Link<T>) -> (min: Option<&T>)
         decreases *link,
     {
         match link {
@@ -1537,7 +1615,7 @@ pub mod BSTSplayStEph {
                     Some(&node.key)
                 }
                 | Some(_) => {
-                    let min = min_link(&node.left);
+                    let min = Self::min_link(&node.left);
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
@@ -1563,12 +1641,7 @@ pub mod BSTSplayStEph {
 
     /// - Alg Analysis: APAS: (no cost stated)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
-    fn max_link<T: TotalOrder + Clone>(link: &Link<T>) -> (max: Option<&T>)
-        requires spec_is_bst_link(link),
-        ensures
-            link.is_some() ==> max.is_some(),
-            max.is_some() ==> spec_contains_link(link, *max.unwrap()),
-            max.is_some() ==> forall|x: T| #[trigger] spec_contains_link(link, x) ==> T::le(x, *max.unwrap()),
+    fn max_link(link: &Link<T>) -> (max: Option<&T>)
         decreases *link,
     {
         match link {
@@ -1589,7 +1662,7 @@ pub mod BSTSplayStEph {
                     Some(&node.key)
                 }
                 | Some(_) => {
-                    let max = max_link(&node.right);
+                    let max = Self::max_link(&node.right);
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(spec_contains_link, 2);
@@ -1616,32 +1689,32 @@ pub mod BSTSplayStEph {
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
     // veracity: no_requires
-    fn in_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-        requires spec_is_bst_link(link),
-        ensures out@.len() == old(out)@.len() + spec_in_order_link(link).len(),
+    fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
         if let Some(node) = link {
-            in_order_collect(&node.left, out);
+            Self::in_order_collect(&node.left, out);
             out.push(node.key.clone());
-            in_order_collect(&node.right, out);
+            Self::in_order_collect(&node.right, out);
         }
     }
 
     /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — visits every node.
     // veracity: no_requires
-    fn pre_order_collect<T: TotalOrder + Clone>(link: &Link<T>, out: &mut Vec<T>)
-        requires spec_is_bst_link(link),
-        ensures out@.len() == old(out)@.len() + spec_pre_order_link(link).len(),
+    fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
         if let Some(node) = link {
             out.push(node.key.clone());
-            pre_order_collect(&node.left, out);
-            pre_order_collect(&node.right, out);
+            Self::pre_order_collect(&node.left, out);
+            Self::pre_order_collect(&node.right, out);
         }
     }
+
+    } // impl BSTSplayNodeFns for Node
+
+    //		9b. impls — BSTSplayStEph
 
     impl<T: TotalOrder + Clone> BSTSplayStEphTrait<T> for BSTSplayStEph<T> {
         open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
@@ -1657,7 +1730,7 @@ pub mod BSTSplayStEph {
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — cached size field.
-        fn size(&self) -> (n: usize) { size_link(&self.root) }
+        fn size(&self) -> (n: usize) { Node::<T>::size_link(&self.root) }
 
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — compares cached size.
@@ -1666,16 +1739,16 @@ pub mod BSTSplayStEph {
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive tree traversal.
         fn height(&self) -> (h: usize) {
-            height_link(&self.root)
+            Node::<T>::height_link(&self.root)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n) amortized, Span O(lg n) amortized
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized — agrees with APAS.
-        fn insert(&mut self, value: T) { insert_link(&mut self.root, value); }
+        fn insert(&mut self, value: T) { Node::<T>::insert_link(&mut self.root, value); }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
-        fn find(&self, target: &T) -> (found: Option<&T>) { find_link(&self.root, target) }
+        fn find(&self, target: &T) -> (found: Option<&T>) { Node::<T>::find_link(&self.root, target) }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — delegates to find.
@@ -1685,21 +1758,21 @@ pub mod BSTSplayStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
             proof { reveal(spec_size_link); }
-            min_link(&self.root)
+            Node::<T>::min_link(&self.root)
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
             proof { reveal(spec_size_link); }
-            max_link(&self.root)
+            Node::<T>::max_link(&self.root)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — in-order traversal.
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
-            in_order_collect(&self.root, &mut out);
+            Node::<T>::in_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
 
@@ -1707,7 +1780,7 @@ pub mod BSTSplayStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — pre-order traversal.
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let mut out = Vec::with_capacity(self.size());
-            pre_order_collect(&self.root, &mut out);
+            Node::<T>::pre_order_collect(&self.root, &mut out);
             ArraySeqStPerS::from_vec(out)
         }
     }

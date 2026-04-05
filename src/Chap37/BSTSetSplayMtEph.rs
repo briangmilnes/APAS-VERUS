@@ -9,7 +9,9 @@
 //	5. view impls
 //	6. spec fns
 //	8. traits
-//	9. impls
+//	9a. traits — BSTSetSplayMtEphHelperFns
+//	9b. impls — BSTSetSplayMtEphHelperFns
+//	9c. impls — BSTSetSplayMtEphTrait
 //	10. iterators
 //	13. macros
 //	14. derive impls outside verus!
@@ -167,12 +169,33 @@ pub mod BSTSetSplayMtEph {
             ensures it@.0 == 0, bstsetsplaymteph_iter_invariant(&it);
     }
 
-    //	9. impls
+    //	9a. traits — BSTSetSplayMtEphHelperFns
+
+    pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized + BSTSetSplayMtEphTrait<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn values_vec(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
+            requires tree.spec_bstsplaymteph_wf(), obeys_feq_clone::<T>(),
+            ensures true;
+        // veracity: no_requires
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
+            ensures tree.spec_bstsplaymteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn build_from_vec(values: Vec<T>) -> (set: Self)
+            requires obeys_feq_clone::<T>(),
+            ensures set.spec_bstsetsplaymteph_wf();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn copy_set(&self) -> (out: Self)
+            requires self.spec_bstsetsplaymteph_wf(),
+            ensures out.spec_bstsetsplaymteph_wf();
+    }
+
+    //	9b. impls — BSTSetSplayMtEphHelperFns
+
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphHelperFns<T> for BSTSetSplayMtEph<T> {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn values_vec<T: StTInMtT + Ord + TotalOrder + 'static>(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
-        requires tree.spec_bstsplaymteph_wf(), obeys_feq_clone::<T>(),
-        ensures true,
+    fn values_vec(tree: &BSTSplayMtEph<T>) -> (values: Vec<T>)
     {
         let sorted = tree.in_order();
         let n = sorted.length();
@@ -192,8 +215,7 @@ pub mod BSTSetSplayMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn rebuild_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
-        ensures tree.spec_bstsplaymteph_wf(),
+    fn rebuild_from_vec(values: Vec<T>) -> (tree: BSTSplayMtEph<T>)
     {
         let mut tree = BSTSplayMtEph::new();
         let n = values.len();
@@ -212,20 +234,20 @@ pub mod BSTSetSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn build_from_vec<T: StTInMtT + Ord + TotalOrder + 'static>(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
-        requires obeys_feq_clone::<T>(),
-        ensures set.spec_bstsetsplaymteph_wf(),
+    fn build_from_vec(values: Vec<T>) -> (set: BSTSetSplayMtEph<T>)
     {
-        BSTSetSplayMtEph { tree: rebuild_from_vec(values) }
+        BSTSetSplayMtEph { tree: Self::rebuild_from_vec(values) }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn copy_set<T: StTInMtT + Ord + TotalOrder + 'static>(set: &BSTSetSplayMtEph<T>) -> (out: BSTSetSplayMtEph<T>)
-        requires set.spec_bstsetsplaymteph_wf()
-        ensures out.spec_bstsetsplaymteph_wf()
+    fn copy_set(&self) -> (out: BSTSetSplayMtEph<T>)
     {
-        build_from_vec(values_vec(&set.tree))
+        Self::build_from_vec(Self::values_vec(&self.tree))
     }
+
+    } // impl BSTSetSplayMtEphHelperFns for BSTSetSplayMtEph
+
+    //	9c. impls — BSTSetSplayMtEphTrait
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
         open spec fn spec_bstsetsplaymteph_wf(&self) -> bool {
@@ -288,28 +310,28 @@ pub mod BSTSetSplayMtEph {
                 }
                 i += 1;
             }
-            self.tree = rebuild_from_vec(filtered);
+            self.tree = Self::rebuild_from_vec(filtered);
         }
 
         #[verifier::exec_allows_no_decreases_clause]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
-                return copy_set(other);
+                return other.copy_set();
             }
             if other.is_empty() {
-                return copy_set(self);
+                return self.copy_set();
             }
 
             let pivot = if self.size() <= other.size() {
                 match self.tree.minimum() {
                     Some(v) => v,
-                    None => { return copy_set(other); }
+                    None => { return other.copy_set(); }
                 }
             } else {
                 match other.tree.minimum() {
                     Some(v) => v,
-                    None => { return copy_set(self); }
+                    None => { return self.copy_set(); }
                 }
             };
 
@@ -377,7 +399,7 @@ pub mod BSTSetSplayMtEph {
                 return Self::empty();
             }
             if other.is_empty() {
-                return copy_set(self);
+                return self.copy_set();
             }
 
             let pivot = match self.tree.minimum() {
@@ -428,7 +450,7 @@ pub mod BSTSetSplayMtEph {
                 }
                 i += 1;
             }
-            (build_from_vec(left), found, build_from_vec(right))
+            (Self::build_from_vec(left), found, Self::build_from_vec(right))
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
@@ -518,7 +540,7 @@ pub mod BSTSetSplayMtEph {
                 }
                 i += 1;
             }
-            build_from_vec(filtered)
+            Self::build_from_vec(filtered)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -552,7 +574,7 @@ pub mod BSTSetSplayMtEph {
         fn as_tree(&self) -> &BSTSplayMtEph<T> { &self.tree }
 
         fn iter(&self) -> BSTSetSplayMtEphIter<T> {
-            let values = values_vec(&self.tree);
+            let values = Self::values_vec(&self.tree);
             BSTSetSplayMtEphIter { snapshot: values, pos: 0 }
         }
     }

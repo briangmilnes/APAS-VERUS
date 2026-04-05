@@ -10,7 +10,9 @@
 //  2. imports
 //  4. type definitions
 //  6. spec fns
-//  9. impls
+//  7. proof fns
+//  8. traits — Node
+//  9. impls — Node
 //  11. top level coarse locking
 //  13. macros
 //  14. derive impls outside verus!
@@ -161,18 +163,159 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    // 9. impls
+    // 8. traits — Node
+
+    pub trait BSTSplayMtNodeFns<T: StTInMtT + Ord + TotalOrder>: Sized {
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn new_node(key: T) -> (node: Node<T>)
+            requires link_spec_size::<T>(None) + 1 <= usize::MAX as nat,
+            ensures
+                node.key == key,
+                node.size == 1,
+                node.left is None,
+                node.right is None;
+
+        // veracity: no_requires
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn size_link(link: &Link<T>) -> (size: usize)
+            ensures size as nat == link_spec_size(*link);
+
+        // veracity: no_requires
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn update(node: &mut Node<T>)
+            ensures
+                node.left == old(node).left,
+                node.right == old(node).right,
+                node.key == old(node).key,
+                link_spec_size(old(node).left) + link_spec_size(old(node).right) < usize::MAX as nat
+                    ==> node.size as nat == 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
+            requires spec_is_bst_link(Some(root)),
+            ensures
+                spec_is_bst_link(Some(splayed)),
+                forall|x: T| link_contains(Some(splayed), x) <==> link_contains(Some(root), x);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(*old(link)),
+            ensures
+                spec_is_bst_link(*link),
+                link_contains(*link, value),
+                forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
+                forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n) amortized, Span O(lg n) amortized
+        fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(*old(link)),
+            ensures
+                spec_is_bst_link(*link),
+                link_contains(*link, value),
+                forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
+                forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
+            requires spec_is_bst_link(*link),
+            ensures
+                found.is_some() <==> link_contains(*link, *target),
+                found.is_some() ==> *found.unwrap() == *target;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn min_link(link: &Link<T>) -> (min: Option<&T>)
+            requires spec_is_bst_link(*link),
+            ensures
+                link.is_some() ==> min.is_some(),
+                min.is_some() ==> link_contains(*link, *min.unwrap()),
+                min.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn max_link(link: &Link<T>) -> (max: Option<&T>)
+            requires spec_is_bst_link(*link),
+            ensures
+                link.is_some() ==> max.is_some(),
+                max.is_some() ==> link_contains(*link, *max.unwrap()),
+                max.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap());
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
+            requires link_spec_size(*link) <= usize::MAX as nat,
+            ensures true;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
+            requires link_spec_size(*link) <= usize::MAX as nat,
+            ensures true;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn in_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
+            requires link_spec_size(*link) <= usize::MAX as nat,
+            ensures true;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        fn pre_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
+            requires link_spec_size(*link) <= usize::MAX as nat,
+            ensures true;
+
+        // veracity: no_requires
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn clone_link(link: &Link<T>) -> (c: Link<T>)
+            ensures c == *link;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn build_balanced(values: &[T]) -> (link: Link<T>)
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int, j: int| 0 <= i < j < values@.len() ==>
+                    TotalOrder::le(#[trigger] values@[i], #[trigger] values@[j])
+                    && values@[i] != values@[j],
+            ensures
+                link_spec_size(link) <= values@.len(),
+                link_node_count(link) <= values@.len(),
+                spec_is_bst_link(link),
+                forall|x: T| #[trigger] link_contains(link, x) ==>
+                    exists|i: int| 0 <= i < values@.len() && values@[i] == x;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
+        fn filter_parallel<F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
+        where
+            F: Fn(&T) -> bool + Send + Sync
+            requires
+                link_node_count(*link) <= usize::MAX as nat,
+                forall|t: &T| #[trigger] predicate.requires((t,)),
+            ensures true;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
+        fn reduce_parallel<F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
+        where
+            F: Fn(T, T) -> T + Send + Sync
+            requires
+                link_node_count(*link) <= usize::MAX as nat,
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
+            ensures true;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn height_rec(link: &Link<T>) -> (h: usize)
+            requires link_height(*link) <= usize::MAX as nat,
+            ensures h as nat == link_height(*link);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn compute_link_spec_size(link: &Link<T>) -> (n: usize)
+            requires link_spec_size(*link) <= usize::MAX,
+            ensures n as nat == link_spec_size(*link);
+    }
+
+    // 9. impls — Node
+
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtNodeFns<T> for Node<T> {
 
     // Verified splay tree algorithms (Layer 1).
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn new_node<T: StTInMtT + Ord + TotalOrder>(key: T) -> (node: Node<T>)
-        requires link_spec_size::<T>(None) + 1 <= usize::MAX as nat,
-        ensures
-            node.key == key,
-            node.size == 1,
-            node.left is None,
-            node.right is None,
+    fn new_node(key: T) -> (node: Node<T>)
     {
         Node {
             key,
@@ -184,8 +327,7 @@ pub mod BSTSplayMtEph {
 
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn size_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (size: usize)
-        ensures size as nat == link_spec_size(*link),
+    fn size_link(link: &Link<T>) -> (size: usize)
     {
         proof { reveal(link_spec_size); }
         match link.as_ref() {
@@ -197,16 +339,10 @@ pub mod BSTSplayMtEph {
     // veracity: no_requires
     /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-    fn update<T: StTInMtT + Ord + TotalOrder>(node: &mut Node<T>)
-        ensures
-            node.left == old(node).left,
-            node.right == old(node).right,
-            node.key == old(node).key,
-            link_spec_size(old(node).left) + link_spec_size(old(node).right) < usize::MAX as nat
-                ==> node.size as nat == 1 + link_spec_size(old(node).left) + link_spec_size(old(node).right),
+    fn update(node: &mut Node<T>)
     {
-        let ls = size_link(&node.left);
-        let rs = size_link(&node.right);
+        let ls = Self::size_link(&node.left);
+        let rs = Self::size_link(&node.right);
         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
             node.size = 1 + ls + rs;
         }
@@ -216,11 +352,7 @@ pub mod BSTSplayMtEph {
     // Bottom-up splay: bring target (or nearest key) toward the root using
     // zig, zig-zig, and zig-zag rotations (Sleator & Tarjan).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn splay<T: StTInMtT + Ord + TotalOrder>(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
-        requires spec_is_bst_link(Some(root)),
-        ensures
-            spec_is_bst_link(Some(splayed)),
-            forall|x: T| link_contains(Some(splayed), x) <==> link_contains(Some(root), x),
+    fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
         decreases root,
     {
         let ghost orig = root;
@@ -273,14 +405,14 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Equal => {
                         // Zig: right rotation
                         root.left = left.right.take();
-                        update(&mut root);
+                        Self::update(&mut root);
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_left_right);
                             assert(root.right == orig_root_right);
                         }
                         left.right = Some(root);
-                        update(&mut left);
+                        Self::update(&mut left);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(link_contains, 4);
@@ -340,29 +472,29 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Less => {
                         // Zig-zig: recurse into left.left, then two right rotations.
                         if let Some(ll) = left.left.take() {
-                            left.left = Some(splay(ll, target));
+                            left.left = Some(Self::splay(ll, target));
                         }
                         root.left = left.right.take();
-                        update(&mut root);
+                        Self::update(&mut root);
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_left_right);
                             assert(root.right == orig_root_right);
                         }
                         left.right = Some(root);
-                        update(&mut left);
+                        Self::update(&mut left);
                         if let Some(mut ll) = left.left.take() {
                             let ghost ll_key = ll.key;
                             let ghost ll_left = ll.left;
                             let ghost ll_right = ll.right;
                             left.left = ll.right.take();
-                            update(&mut left);
+                            Self::update(&mut left);
                             proof {
                                 assert(left.key == left_key);
                                 assert(left.left == ll_right);
                             }
                             ll.right = Some(left);
-                            update(&mut ll);
+                            Self::update(&mut ll);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
@@ -513,7 +645,7 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Greater => {
                         // Zig-zag: recurse into left.right, left-rotate left, right-rotate root.
                         if let Some(lr) = left.right.take() {
-                            left.right = Some(splay(lr, target));
+                            left.right = Some(Self::splay(lr, target));
                         }
                         if left.right.is_some() {
                             let mut lr = left.right.take().unwrap();
@@ -531,23 +663,23 @@ pub mod BSTSplayMtEph {
                                     (TotalOrder::le(lr_key, x) && x != lr_key) by {};
                             }
                             left.right = lr.left.take();
-                            update(&mut left);
+                            Self::update(&mut left);
                             proof {
                                 assert(left.key == left_key);
                                 assert(left.left == orig_left_left);
                                 assert(left.right == lr_left);
                             }
                             lr.left = Some(left);
-                            update(&mut lr);
+                            Self::update(&mut lr);
                             root.left = lr.right.take();
-                            update(&mut root);
+                            Self::update(&mut root);
                             proof {
                                 assert(root.key == root_key);
                                 assert(root.left == lr_right);
                                 assert(root.right == orig_root_right);
                             }
                             lr.right = Some(root);
-                            update(&mut lr);
+                            Self::update(&mut lr);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
@@ -658,9 +790,9 @@ pub mod BSTSplayMtEph {
                                 assert(root.right == orig_root_right);
                             }
                             root.left = left.right.take();
-                            update(&mut root);
+                            Self::update(&mut root);
                             left.right = Some(root);
-                            update(&mut left);
+                            Self::update(&mut left);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
@@ -750,14 +882,14 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Equal => {
                         // Zag: left rotation
                         root.right = right.left.take();
-                        update(&mut root);
+                        Self::update(&mut root);
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_root_left);
                             assert(root.right == orig_right_left);
                         }
                         right.left = Some(root);
-                        update(&mut right);
+                        Self::update(&mut right);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 3);
                             reveal_with_fuel(link_contains, 4);
@@ -819,29 +951,29 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Greater => {
                         // Zag-zag: recurse into right.right, then two left rotations.
                         if let Some(rr) = right.right.take() {
-                            right.right = Some(splay(rr, target));
+                            right.right = Some(Self::splay(rr, target));
                         }
                         root.right = right.left.take();
-                        update(&mut root);
+                        Self::update(&mut root);
                         proof {
                             assert(root.key == root_key);
                             assert(root.left == orig_root_left);
                             assert(root.right == orig_right_left);
                         }
                         right.left = Some(root);
-                        update(&mut right);
+                        Self::update(&mut right);
                         if let Some(mut rr) = right.right.take() {
                             let ghost rr_key = rr.key;
                             let ghost rr_left = rr.left;
                             let ghost rr_right = rr.right;
                             right.right = rr.left.take();
-                            update(&mut right);
+                            Self::update(&mut right);
                             proof {
                                 assert(right.key == right_key);
                                 assert(right.right == rr_left);
                             }
                             rr.left = Some(right);
-                            update(&mut rr);
+                            Self::update(&mut rr);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
@@ -1003,7 +1135,7 @@ pub mod BSTSplayMtEph {
                     core::cmp::Ordering::Less => {
                         // Zag-zig: recurse into right.left, right-rotate right, left-rotate root.
                         if let Some(rl) = right.left.take() {
-                            right.left = Some(splay(rl, target));
+                            right.left = Some(Self::splay(rl, target));
                         }
                         if right.left.is_some() {
                             let mut rl = right.left.take().unwrap();
@@ -1021,23 +1153,23 @@ pub mod BSTSplayMtEph {
                                     (TotalOrder::le(rl_key, x) && x != rl_key) by {};
                             }
                             right.left = rl.right.take();
-                            update(&mut right);
+                            Self::update(&mut right);
                             proof {
                                 assert(right.key == right_key);
                                 assert(right.left == rl_right);
                                 assert(right.right == orig_right_right);
                             }
                             rl.right = Some(right);
-                            update(&mut rl);
+                            Self::update(&mut rl);
                             root.right = rl.left.take();
-                            update(&mut root);
+                            Self::update(&mut root);
                             proof {
                                 assert(root.key == root_key);
                                 assert(root.left == orig_root_left);
                                 assert(root.right == rl_left);
                             }
                             rl.left = Some(root);
-                            update(&mut rl);
+                            Self::update(&mut rl);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 4);
                                 reveal_with_fuel(link_contains, 5);
@@ -1137,9 +1269,9 @@ pub mod BSTSplayMtEph {
                                 assert(root.left == orig_root_left);
                             }
                             root.right = right.left.take();
-                            update(&mut root);
+                            Self::update(&mut root);
                             right.left = Some(root);
-                            update(&mut right);
+                            Self::update(&mut right);
                             proof {
                                 reveal_with_fuel(spec_is_bst_link, 3);
                                 reveal_with_fuel(link_contains, 4);
@@ -1194,19 +1326,13 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn bst_insert<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires spec_is_bst_link(*old(link)),
-        ensures
-            spec_is_bst_link(*link),
-            link_contains(*link, value),
-            forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
-            forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value),
+    fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
         decreases old(link),
     {
         let cur = link.take();
         match cur {
             | None => {
-                *link = Some(Box::new(new_node(value)));
+                *link = Some(Box::new(Self::new_node(value)));
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
@@ -1219,8 +1345,8 @@ pub mod BSTSplayMtEph {
                 let ghost node_key = node.key;
                 match TotalOrder::cmp(&value, &node.key) {
                     core::cmp::Ordering::Less => {
-                        bst_insert(&mut node.left, value);
-                        update(&mut node);
+                        Self::bst_insert(&mut node.left, value);
+                        Self::update(&mut node);
                         *link = Some(node);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
@@ -1267,8 +1393,8 @@ pub mod BSTSplayMtEph {
                         true
                     }
                     core::cmp::Ordering::Greater => {
-                        bst_insert(&mut node.right, value);
-                        update(&mut node);
+                        Self::bst_insert(&mut node.right, value);
+                        Self::update(&mut node);
                         *link = Some(node);
                         proof {
                             reveal_with_fuel(spec_is_bst_link, 2);
@@ -1328,30 +1454,20 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn insert_link<T: StTInMtT + Ord + TotalOrder>(link: &mut Link<T>, value: T) -> (inserted: bool)
-        requires spec_is_bst_link(*old(link)),
-        ensures
-            spec_is_bst_link(*link),
-            link_contains(*link, value),
-            forall|x: T| link_contains(*old(link), x) ==> link_contains(*link, x),
-            forall|x: T| link_contains(*link, x) ==> (link_contains(*old(link), x) || x == value),
+    fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
     {
         let v = value.clone();
-        let inserted = bst_insert(link, value);
+        let inserted = Self::bst_insert(link, value);
         if inserted {
             if let Some(root) = link.take() {
-                *link = Some(splay(root, &v));
+                *link = Some(Self::splay(root, &v));
             }
         }
         inserted
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn find_link<'a, T: StTInMtT + Ord + TotalOrder>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
-        requires spec_is_bst_link(*link),
-        ensures
-            found.is_some() <==> link_contains(*link, *target),
-            found.is_some() ==> *found.unwrap() == *target,
+    fn find_link<'a>(link: &'a Link<T>, target: &T) -> (found: Option<&'a T>)
         decreases *link,
     {
         match link {
@@ -1367,7 +1483,7 @@ pub mod BSTSplayMtEph {
                                 }
                             };
                         }
-                        find_link(&node.left, target)
+                        Self::find_link(&node.left, target)
                     }
                     core::cmp::Ordering::Greater => {
                         proof {
@@ -1377,7 +1493,7 @@ pub mod BSTSplayMtEph {
                                 }
                             };
                         }
-                        find_link(&node.right, target)
+                        Self::find_link(&node.right, target)
                     }
                 }
             }
@@ -1385,12 +1501,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn min_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (min: Option<&T>)
-        requires spec_is_bst_link(*link),
-        ensures
-            link.is_some() ==> min.is_some(),
-            min.is_some() ==> link_contains(*link, *min.unwrap()),
-            min.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(*min.unwrap(), x),
+    fn min_link(link: &Link<T>) -> (min: Option<&T>)
         decreases *link,
     {
         match link {
@@ -1411,7 +1522,7 @@ pub mod BSTSplayMtEph {
                     Some(&node.key)
                 }
                 | Some(_) => {
-                    let min = min_link(&node.left);
+                    let min = Self::min_link(&node.left);
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
@@ -1434,12 +1545,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-    fn max_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (max: Option<&T>)
-        requires spec_is_bst_link(*link),
-        ensures
-            link.is_some() ==> max.is_some(),
-            max.is_some() ==> link_contains(*link, *max.unwrap()),
-            max.is_some() ==> forall|x: T| #[trigger] link_contains(*link, x) ==> TotalOrder::le(x, *max.unwrap()),
+    fn max_link(link: &Link<T>) -> (max: Option<&T>)
         decreases *link,
     {
         match link {
@@ -1460,7 +1566,7 @@ pub mod BSTSplayMtEph {
                     Some(&node.key)
                 }
                 | Some(_) => {
-                    let max = max_link(&node.right);
+                    let max = Self::max_link(&node.right);
                     proof {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
@@ -1483,56 +1589,47 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn in_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
-        requires link_spec_size(*link) <= usize::MAX as nat,
-        ensures true,
+    fn in_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
         if let Some(node) = link {
-            in_order_collect(&node.left, out);
+            Self::in_order_collect(&node.left, out);
             out.push(node.key.clone());
-            in_order_collect(&node.right, out);
+            Self::in_order_collect(&node.right, out);
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn pre_order_collect<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>, out: &mut Vec<T>)
-        requires link_spec_size(*link) <= usize::MAX as nat,
-        ensures true,
+    fn pre_order_collect(link: &Link<T>, out: &mut Vec<T>)
         decreases *link,
     {
         if let Some(node) = link {
             out.push(node.key.clone());
-            pre_order_collect(&node.left, out);
-            pre_order_collect(&node.right, out);
+            Self::pre_order_collect(&node.left, out);
+            Self::pre_order_collect(&node.right, out);
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn in_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
-        requires link_spec_size(*link) <= usize::MAX as nat,
-        ensures true,
+    fn in_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
     {
         let mut out = Vec::new();
-        in_order_collect(link, &mut out);
+        Self::in_order_collect(link, &mut out);
         out
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
-    fn pre_order_parallel<T: StTInMtT + Ord + TotalOrder + 'static>(link: &Link<T>) -> (elements: Vec<T>)
-        requires link_spec_size(*link) <= usize::MAX as nat,
-        ensures true,
+    fn pre_order_parallel(link: &Link<T>) -> (elements: Vec<T>)
     {
         let mut out = Vec::new();
-        pre_order_collect(link, &mut out);
+        Self::pre_order_collect(link, &mut out);
         out
     }
 
     /// Recursive deep clone of a Link, bypassing derived Clone for Box/Option.
     // veracity: no_requires
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn clone_link<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (c: Link<T>)
-        ensures c == *link,
+    fn clone_link(link: &Link<T>) -> (c: Link<T>)
         decreases *link,
     {
         match link {
@@ -1541,8 +1638,8 @@ pub mod BSTSplayMtEph {
                 c
             }
             Some(node) => {
-                let left = clone_link(&node.left);
-                let right = clone_link(&node.right);
+                let left = Self::clone_link(&node.left);
+                let right = Self::clone_link(&node.right);
                 let c = Some(Box::new(Node {
                     key: node.key.clone(),
                     size: node.size,
@@ -1556,18 +1653,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn build_balanced<T: StTInMtT + Ord + TotalOrder>(values: &[T]) -> (link: Link<T>)
-        requires
-            obeys_feq_clone::<T>(),
-            forall|i: int, j: int| 0 <= i < j < values@.len() ==>
-                TotalOrder::le(#[trigger] values@[i], #[trigger] values@[j])
-                && values@[i] != values@[j],
-        ensures
-            link_spec_size(link) <= values@.len(),
-            link_node_count(link) <= values@.len(),
-            spec_is_bst_link(link),
-            forall|x: T| #[trigger] link_contains(link, x) ==>
-                exists|i: int| 0 <= i < values@.len() && values@[i] == x,
+    fn build_balanced(values: &[T]) -> (link: Link<T>)
         decreases values.len(),
     {
         if values.is_empty() {
@@ -1597,8 +1683,8 @@ pub mod BSTSplayMtEph {
                 assert(right_slice@[j] == values@[mid as int + 1 + j]);
             }
         }
-        let left = build_balanced(left_slice);
-        let right = build_balanced(right_slice);
+        let left = Self::build_balanced(left_slice);
+        let right = Self::build_balanced(right_slice);
         let ghost gl = left;
         let ghost gr = right;
         let ghost pivot = values@[mid as int];
@@ -1646,10 +1732,10 @@ pub mod BSTSplayMtEph {
             assert(cloned(pivot, gkey));
             // Broadcast axiom_cloned_implies_eq_owned fires: pivot == gkey.
         }
-        let mut node = Box::new(new_node(key));
+        let mut node = Box::new(Self::new_node(key));
         node.left = left;
         node.right = right;
-        update(&mut node);
+        Self::update(&mut node);
         proof {
             reveal_with_fuel(link_node_count, 2);
             assert(link_node_count(node.left) <= mid as nat);
@@ -1697,13 +1783,9 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
-    fn filter_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
-        where
-            F: Fn(&T) -> bool + Send + Sync,
-        requires
-            link_node_count(*link) <= usize::MAX as nat,
-            forall|t: &T| #[trigger] predicate.requires((t,)),
-        ensures true,
+    fn filter_parallel<F>(link: &Link<T>, predicate: &Arc<F>) -> (filtered: Vec<T>)
+    where
+        F: Fn(&T) -> bool + Send + Sync
         decreases *link,
     {
         match link {
@@ -1714,8 +1796,8 @@ pub mod BSTSplayMtEph {
                     assert(link_node_count(node.left) <= usize::MAX as nat);
                     assert(link_node_count(node.right) <= usize::MAX as nat);
                 }
-                let left_vals = filter_parallel(&node.left, predicate);
-                let mut right_vals = filter_parallel(&node.right, predicate);
+                let left_vals = Self::filter_parallel(&node.left, predicate);
+                let mut right_vals = Self::filter_parallel(&node.right, predicate);
                 let mut result = left_vals;
                 if (**predicate)(&node.key) {
                     result.push(node.key.clone());
@@ -1727,13 +1809,9 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
-    fn reduce_parallel<T: StTInMtT + Ord + TotalOrder, F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
-        where
-            F: Fn(T, T) -> T + Send + Sync,
-        requires
-            link_node_count(*link) <= usize::MAX as nat,
-            forall|a: T, b: T| #[trigger] op.requires((a, b)),
-        ensures true,
+    fn reduce_parallel<F>(link: &Link<T>, op: &Arc<F>, identity: T) -> (reduced: T)
+    where
+        F: Fn(T, T) -> T + Send + Sync
         decreases *link,
     {
         match link {
@@ -1745,8 +1823,8 @@ pub mod BSTSplayMtEph {
                     assert(link_node_count(node.right) <= usize::MAX as nat);
                 }
                 let id_left = identity.clone();
-                let left_acc = reduce_parallel(&node.left, op, id_left);
-                let right_acc = reduce_parallel(&node.right, op, identity);
+                let left_acc = Self::reduce_parallel(&node.left, op, id_left);
+                let right_acc = Self::reduce_parallel(&node.right, op, identity);
                 let with_key = (**op)(left_acc, node.key.clone());
                 (**op)(with_key, right_acc)
             }
@@ -1754,9 +1832,7 @@ pub mod BSTSplayMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn height_rec<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (h: usize)
-        requires link_height(*link) <= usize::MAX as nat,
-        ensures h as nat == link_height(*link),
+    fn height_rec(link: &Link<T>) -> (h: usize)
         decreases *link,
     {
         match link {
@@ -1766,22 +1842,22 @@ pub mod BSTSplayMtEph {
                     assert(link_height(node.left) < usize::MAX as nat);
                     assert(link_height(node.right) < usize::MAX as nat);
                 }
-                1 + height_rec(&node.left).max(height_rec(&node.right))
+                1 + Self::height_rec(&node.left).max(Self::height_rec(&node.right))
             }
         }
     }
 
     /// Exec mirror of link_spec_size for runtime size guards.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn compute_link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: &Link<T>) -> (n: usize)
-        requires link_spec_size(*link) <= usize::MAX,
-        ensures n as nat == link_spec_size(*link),
+    fn compute_link_spec_size(link: &Link<T>) -> (n: usize)
     {
         match link {
             None => 0,
             Some(node) => node.size,
         }
     }
+
+    } // impl BSTSplayMtNodeFns for Node
 
     // 11. top level coarse locking
 
@@ -1947,7 +2023,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn from_sorted_slice(values: &[T]) -> Self {
             let vlen = values.len();
-            let link = build_balanced(values);
+            let link = Node::<T>::build_balanced(values);
             assert(link_node_count(link) <= vlen as nat);
             let ghost ghost_link = link;
             BSTSplayMtEph {
@@ -1961,9 +2037,9 @@ pub mod BSTSplayMtEph {
         fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
-            let sz = compute_link_spec_size(&current);
+            let sz = Node::<T>::compute_link_spec_size(&current);
             if sz < usize::MAX {
-                insert_link(&mut current, value);
+                Node::<T>::insert_link(&mut current, value);
                 proof {
                     assume(link_node_count(current) <= usize::MAX as nat);
                     assume(link_spec_size(current) <= link_spec_size(old(self)@) + 1);
@@ -1982,7 +2058,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn contains(&self, target: &T) -> (found: bool) {
             let handle = self.root.acquire_read();
-            let found = find_link(handle.borrow(), target).is_some();
+            let found = Node::<T>::find_link(handle.borrow(), target).is_some();
             proof { assume(found == link_contains(self@, *target)); }
             handle.release_read();
             found
@@ -1992,7 +2068,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (n: usize) {
             let handle = self.root.acquire_read();
-            let n = size_link(handle.borrow());
+            let n = Node::<T>::size_link(handle.borrow());
             proof { assume(n as nat == link_spec_size(self@)); }
             handle.release_read();
             n
@@ -2016,7 +2092,7 @@ pub mod BSTSplayMtEph {
             proof {
                 lemma_height_le_node_count::<T>(*data);
             }
-            let h = height_rec(data);
+            let h = Node::<T>::height_rec(data);
             proof { assume(h as nat == link_height(self@)); }
             handle.release_read();
             h
@@ -2025,7 +2101,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn find(&self, target: &T) -> (found: Option<T>) {
             let handle = self.root.acquire_read();
-            let found = find_link(handle.borrow(), target).cloned();
+            let found = Node::<T>::find_link(handle.borrow(), target).cloned();
             proof {
                 assume(found.is_some() <==> link_contains(self@, *target));
                 accept(found.is_some() ==> found.unwrap() == *target);
@@ -2037,7 +2113,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn minimum(&self) -> (min: Option<T>) {
             let handle = self.root.acquire_read();
-            let min = min_link(handle.borrow()).cloned();
+            let min = Node::<T>::min_link(handle.borrow()).cloned();
             proof {
                 assume(link_spec_size(self@) > 0 ==> min.is_some());
                 assume(min.is_some() ==> link_contains(self@, min.unwrap()));
@@ -2051,7 +2127,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn maximum(&self) -> (max: Option<T>) {
             let handle = self.root.acquire_read();
-            let max = max_link(handle.borrow()).cloned();
+            let max = Node::<T>::max_link(handle.borrow()).cloned();
             proof {
                 assume(link_spec_size(self@) > 0 ==> max.is_some());
                 assume(max.is_some() ==> link_contains(self@, max.unwrap()));
@@ -2065,7 +2141,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn in_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
-            let out = in_order_parallel(handle.borrow());
+            let out = Node::<T>::in_order_parallel(handle.borrow());
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
@@ -2073,7 +2149,7 @@ pub mod BSTSplayMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn pre_order(&self) -> ArraySeqStPerS<T> {
             let handle = self.root.acquire_read();
-            let out = pre_order_parallel(handle.borrow());
+            let out = Node::<T>::pre_order_parallel(handle.borrow());
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
@@ -2086,7 +2162,7 @@ pub mod BSTSplayMtEph {
             let handle = self.root.acquire_read();
             let predicate = Arc::new(predicate);
             let data = handle.borrow();
-            let out = filter_parallel(data, &predicate);
+            let out = Node::<T>::filter_parallel(data, &predicate);
             handle.release_read();
             ArraySeqStPerS::from_vec(out)
         }
@@ -2099,7 +2175,7 @@ pub mod BSTSplayMtEph {
             let handle = self.root.acquire_read();
             let op = Arc::new(op);
             let data = handle.borrow();
-            let accumulated = reduce_parallel(data, &op, identity);
+            let accumulated = Node::<T>::reduce_parallel(data, &op, identity);
             handle.release_read();
             accumulated
         }
@@ -2115,8 +2191,8 @@ pub mod BSTSplayMtEph {
         fn clone(&self) -> (r: Self)
             ensures r == *self,
         {
-            let left = clone_link(&self.left);
-            let right = clone_link(&self.right);
+            let left = Node::<T>::clone_link(&self.left);
+            let right = Node::<T>::clone_link(&self.right);
             let r = Node {
                 key: self.key.clone(),
                 size: self.size,
