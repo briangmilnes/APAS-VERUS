@@ -1,0 +1,81 @@
+error: postcondition not satisfied
+  --> src/Chap37/BSTAVLMtEph.rs:47:13
+   |
+47 | /             match tree {
+48 | |                 BalBinTree::Leaf => true,
+49 | |                 BalBinTree::Node(node) =>
+50 | |                     node.left.tree_is_bst()
+...  |
+76 | |             }
+   | |_____________^ failed this postcondition
+77 |       {
+78 | /         match tree {
+79 | |             BalBinTree::Leaf => {},
+80 | |             BalBinTree::Node(node) => {
+81 | |                 match node.left {
+...  |
+89 | |             },
+90 | |         }
+   | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+let tmp%% = old(tree);
+    tmp%% is Leaf ==>
+        true ✔
+    !(tmp%% is Leaf) ==>
+        let node = tmp%%.0;
+            node.left.tree_is_bst() ✔
+            node.right.tree_is_bst() ✔
+            forall |x|
+                node.left.tree_contains(x) ==>
+                    x.le(node.value) ✔
+                    !(x == node.value) ✔
+            forall |x|
+                node.right.tree_contains(x) ==>
+                    node.value.le(x) ✔
+                    !(x == node.value) ✔
+            let tmp%% = node.left;
+                tmp%% is Leaf ==>
+                    true ✔
+                !(tmp%% is Leaf) ==>
+                    let lnode = tmp%%.0;
+                        lnode.left.tree_is_bst() ✔
+                        lnode.right.tree_is_bst() ✔
+                        forall |x|
+                            lnode.left.tree_contains(x) ==>
+                                x.le(lnode.value) ✔
+                                !(x == lnode.value) ✔
+                        forall |x|
+                            lnode.right.tree_contains(x) ==>
+                                lnode.value.le(x) ✔
+                                !(x == lnode.value) ✔
+            let tmp%% = node.right;
+                tmp%% is Leaf ==>
+                    true ✔
+                !(tmp%% is Leaf) ==>
+                    let rnode = tmp%%.0;
+                        rnode.left.tree_is_bst() ✔
+                        rnode.right.tree_is_bst() ✔
+                        forall |x|
+                            rnode.left.tree_contains(x) ==>
+                                x.le(rnode.value) ✔
+                                !(x == rnode.value) ✔
+                        forall |x|
+                            rnode.right.tree_contains(x) ==>
+                                rnode.value.le(x) ✔
+                                !(x == rnode.value) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 1945 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1385MB, peak z3 RSS: 417MB, min free: 16503MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 22s

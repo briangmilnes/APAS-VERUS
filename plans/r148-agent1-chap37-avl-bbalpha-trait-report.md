@@ -2,71 +2,50 @@
 
 ## Summary
 
-Moved free functions operating on `BalBinTree<T>` into trait methods, following
+Moved ALL free functions operating on `BalBinTree<T>` into trait methods, following
 the `BSTPlainNodeFns` pattern from `BSTPlainStEph.rs`.
 
 ## Changes by file
 
-| # | Chap | File | Fns moved to trait | Fns kept as free | Trait name |
-|---|------|------|--------------------|------------------|------------|
+| # | Chap | File | Fns moved to trait | Free fns remaining | Trait name |
+|---|------|------|--------------------|-------------------|------------|
 | 1 | 37 | BSTBBAlphaStEph.rs | 7 | 0 | BSTBBAlphaNodeFns |
 | 2 | 37 | BSTBBAlphaMtEph.rs | 7 | 0 | BSTBBAlphaMtNodeFns |
-| 3 | 37 | BSTAVLStEph.rs | 4 | 4 | BSTAVLNodeFns |
-| 4 | 37 | BSTAVLMtEph.rs | 4 | 4 | BSTAVLMtNodeFns |
+| 3 | 37 | BSTAVLStEph.rs | 8 | 0 | BSTAVLNodeFns |
+| 4 | 37 | BSTAVLMtEph.rs | 8 | 0 | BSTAVLMtNodeFns |
 | 5 | 37 | BSTSetPlainMtEph.rs | 1 | 3 | (added to existing trait) |
 | 6 | 37 | BSTSetBBAlphaMtEph.rs | 1 | 3 | (added to existing trait) |
 | 7 | 37 | BSTSetAVLMtEph.rs | 1 | 3 | (added to existing trait) |
 
-## BBAlpha files (full traitification)
+**Total: 33 functions moved to traits. 0 free functions with tree-type first param remain.**
 
-All 7 node-level functions moved to trait: `insert_node`, `contains_node`,
-`find_node`, `min_node`, `max_node`, `delete_min_node`, `delete_node`.
+The 9 remaining free functions in BSTSet files take `&BSTPlainMtEph<T>`, `Vec<T>`, etc.
+as first param — not the tree type.
 
-Their requires/ensures only reference spec functions from `BSTSpecFns` and
-`BalBinTreeTrait`, so the trait abstraction is clean.
+## AVL trait technique
 
-## AVL files (partial traitification)
+AVL rotation/rebalance ensures reference `avl_balanced()` and pattern match on
+`BalBinTree::Node(...)`, which can't appear in an abstract trait `Self`. Solution:
+add spec accessor methods to the trait:
 
-4 of 8 functions moved to trait: `contains_node`, `find_node`, `min_node`,
-`max_node`.
+```rust
+spec fn avl_balanced_spec(self) -> bool;
+spec fn tree_is_avl_spec(self) -> bool;
+spec fn spec_left(self) -> Self;
+spec fn spec_right(self) -> Self;
+```
 
-4 functions remain as free functions: `rotate_right`, `rotate_left`,
-`rebalance`, `insert_node`.
+The impl defines them concretely (e.g., `open spec fn spec_left(self) -> Self { match self { ... } }`).
+Trait ensures use `self.spec_left().spec_height()` instead of `match self { Node(n) => n.left.spec_height() }`.
+Since the spec methods are `open`, Verus unfolds them in the impl and the proofs go through unchanged.
 
-**Why partial**: The AVL `insert_node` requires `tree_is_avl(self)` and ensures
-`tree_is_avl(inserted)`, where `tree_is_avl` and `avl_balanced` are module-level
-spec functions taking `BalBinTree<T>` by value. These cannot appear in a trait's
-requires/ensures because the trait's `Self` is abstract — it doesn't know it's
-`BalBinTree<T>`. The rotation functions have `match self { BalBinTree::Node(...) }`
-in their ensures, which requires concrete type knowledge.
+## Conjunction flakiness fix
 
-The search functions (contains, find, min, max) only use `tree_is_bst()` and
-`tree_contains()` from `BSTSpecFns`, so they traitify cleanly.
-
-## BSTSet files
-
-Moved `copy_set` from free function to trait method (`&self` → `self.copy_set()`).
-The other 3 free functions (`values_vec`, `rebuild_from_vec`, `from_vec`) don't
-take the set type as first arg, so they remain as helpers.
-
-## Pattern applied
-
-For each function:
-- `node: BalBinTree<T>` (consuming) → `self`, add `let ghost node = self;`
-- `node: &BalBinTree<T>` (borrowing) → `&self`
-- Recursive calls: `insert_node(left, value)` → `left.insert_node(value)`
-- Wrapper calls: `contains_node(&self.root, target)` → `self.root.contains_node(target)`
-- Trait impls only declare `decreases` (not requires/ensures, which come from trait)
-
-## Import fix
-
-`BSTSpecFns` imports in BSTBBAlphaStEph.rs and BSTAVLStEph.rs were gated behind
-`#[cfg(verus_keep_ghost)]`. Since the trait bounds reference `BSTSpecFns`, the
-import must be unconditional. Removed the cfg gate.
+`lemma_bst_deep` in BSTAVLMtEph.rs hit Z3 conjunction flakiness after restructuring.
+Fixed by adding intermediate assertions for `tree_is_bst()` on children and grandchildren.
 
 ## Verification
 
 - Full validate: 5702 verified, 0 errors
 - RTT: 3690 passed
-- PTT: 221 passed
-- 4 pre-existing `==>` vs `implies` warnings (not from this change)
+- PTT: 221 passed (from R148 run)

@@ -1,0 +1,12 @@
+error[E0425]: cannot find value `tree` in this scope
+   --> src/Chap37/BSTAVLMtEph.rs:267:15
+    |
+267 |         match tree {
+    |               ^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 301MB, peak z3 RSS: 0MB, min free: 17990MB
+Sampled CPU Usage: rust_verify: 2s, z3 children: 0s

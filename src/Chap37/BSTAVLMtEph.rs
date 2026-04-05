@@ -78,13 +78,21 @@ pub mod BSTAVLMtEph {
         match tree {
             BalBinTree::Leaf => {},
             BalBinTree::Node(node) => {
+                assert(node.left.tree_is_bst());
+                assert(node.right.tree_is_bst());
                 match node.left {
                     BalBinTree::Leaf => {},
-                    BalBinTree::Node(_) => {},
+                    BalBinTree::Node(lnode) => {
+                        assert(lnode.left.tree_is_bst());
+                        assert(lnode.right.tree_is_bst());
+                    },
                 }
                 match node.right {
                     BalBinTree::Leaf => {},
-                    BalBinTree::Node(_) => {},
+                    BalBinTree::Node(rnode) => {
+                        assert(rnode.left.tree_is_bst());
+                        assert(rnode.right.tree_is_bst());
+                    },
                 }
             },
         }
@@ -96,52 +104,175 @@ pub mod BSTAVLMtEph {
     {
     }
 
+
     // 9. impls
 
-    // Verified rotations (Layer 1 algorithms on BalBinTree).
+    // 8. traits
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_right<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
-        requires tree.tree_is_bst(), !(tree is Leaf),
-        ensures
-            rotated.tree_is_bst(),
-            rotated.spec_size() == tree.spec_size(),
-            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
-            match tree {
-                BalBinTree::Node(outer) => match outer.left {
-                    BalBinTree::Node(l) => {
-                        let lr_h = l.right.spec_height();
-                        let r_h = outer.right.spec_height();
-                        let ll_h = l.left.spec_height();
-                        let new_rh: nat = 1 + if lr_h >= r_h { lr_h } else { r_h };
-                        &&& rotated.spec_height() == (1 + if ll_h >= new_rh { ll_h } else { new_rh })
-                        &&& ((avl_balanced(l.left) && avl_balanced(l.right) && avl_balanced(outer.right)
-                             && lr_h as int - r_h as int >= -1 && lr_h as int - r_h as int <= 1
-                             && ll_h as int - new_rh as int >= -1 && ll_h as int - new_rh as int <= 1)
-                            ==> avl_balanced(rotated))
-                        &&& rotated is Node
-                        &&& match rotated {
-                            BalBinTree::Node(res) => {
-                                &&& res.left.spec_height() == ll_h
-                                &&& avl_balanced(res.left) == avl_balanced(l.left)
-                                &&& res.right.spec_height() == new_rh
-                                &&& (avl_balanced(res.right) <==> (avl_balanced(l.right)
-                                    && avl_balanced(outer.right) && {
-                                    let lh = lr_h as int;
-                                    let rh = r_h as int;
-                                    -1 <= lh - rh && lh - rh <= 1
-                                }))
-                            },
-                            _ => false,
-                        }
-                    },
-                    _ => true,
+    /// Exec AVL BST operations on BalBinTree nodes (Mt variant).
+    pub trait BSTAVLMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
+        // Spec accessors for abstract ensures.
+        spec fn avl_balanced_spec(self) -> bool;
+        spec fn tree_is_avl_spec(self) -> bool;
+        spec fn spec_left(self) -> Self;
+        spec fn spec_right(self) -> Self;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_right(self) -> (rotated: Self)
+            requires self.tree_is_bst(), !self.spec_is_leaf(),
+            ensures
+                rotated.tree_is_bst(),
+                rotated.spec_size() == self.spec_size(),
+                forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x),
+                !self.spec_left().spec_is_leaf() ==> ({
+                    let sl = self.spec_left();
+                    let sr = self.spec_right();
+                    let sll = sl.spec_left();
+                    let slr = sl.spec_right();
+                    let lr_h = slr.spec_height();
+                    let r_h = sr.spec_height();
+                    let ll_h = sll.spec_height();
+                    let new_rh: nat = 1 + if lr_h >= r_h { lr_h } else { r_h };
+                    &&& rotated.spec_height() == (1 + if ll_h >= new_rh { ll_h } else { new_rh })
+                    &&& ((sll.avl_balanced_spec() && slr.avl_balanced_spec() && sr.avl_balanced_spec()
+                         && lr_h as int - r_h as int >= -1 && lr_h as int - r_h as int <= 1
+                         && ll_h as int - new_rh as int >= -1 && ll_h as int - new_rh as int <= 1)
+                        ==> rotated.avl_balanced_spec())
+                    &&& !rotated.spec_is_leaf()
+                    &&& rotated.spec_left().spec_height() == ll_h
+                    &&& rotated.spec_left().avl_balanced_spec() == sll.avl_balanced_spec()
+                    &&& rotated.spec_right().spec_height() == new_rh
+                    &&& (rotated.spec_right().avl_balanced_spec() <==> (slr.avl_balanced_spec()
+                        && sr.avl_balanced_spec() && {
+                        let lh = lr_h as int;
+                        let rh = r_h as int;
+                        -1 <= lh - rh && lh - rh <= 1
+                    }))
+                }),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_left(self) -> (rotated: Self)
+            requires self.tree_is_bst(), !self.spec_is_leaf(),
+            ensures
+                rotated.tree_is_bst(),
+                rotated.spec_size() == self.spec_size(),
+                forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x),
+                !self.spec_right().spec_is_leaf() ==> ({
+                    let sl = self.spec_left();
+                    let sr = self.spec_right();
+                    let srl = sr.spec_left();
+                    let srr = sr.spec_right();
+                    let rl_h = srl.spec_height();
+                    let l_h = sl.spec_height();
+                    let rr_h = srr.spec_height();
+                    let new_lh: nat = 1 + if l_h >= rl_h { l_h } else { rl_h };
+                    &&& rotated.spec_height() == (1 + if new_lh >= rr_h { new_lh } else { rr_h })
+                    &&& ((sl.avl_balanced_spec() && srl.avl_balanced_spec() && srr.avl_balanced_spec()
+                         && l_h as int - rl_h as int >= -1 && l_h as int - rl_h as int <= 1
+                         && new_lh as int - rr_h as int >= -1 && new_lh as int - rr_h as int <= 1)
+                        ==> rotated.avl_balanced_spec())
+                    &&& !rotated.spec_is_leaf()
+                    &&& rotated.spec_right().spec_height() == rr_h
+                    &&& rotated.spec_right().avl_balanced_spec() == srr.avl_balanced_spec()
+                    &&& rotated.spec_left().spec_height() == new_lh
+                    &&& (rotated.spec_left().avl_balanced_spec() <==> (sl.avl_balanced_spec()
+                        && srl.avl_balanced_spec() && {
+                        let lh = l_h as int;
+                        let rh = rl_h as int;
+                        -1 <= lh - rh && lh - rh <= 1
+                    }))
+                }),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rebalance(self) -> (balanced: Self)
+            requires
+                self.tree_is_bst(),
+                !self.spec_is_leaf(),
+                self.spec_height() <= usize::MAX,
+                self.spec_left().avl_balanced_spec() && self.spec_right().avl_balanced_spec()
+                && {
+                    let lh = self.spec_left().spec_height() as int;
+                    let rh = self.spec_right().spec_height() as int;
+                    -2 <= lh - rh && lh - rh <= 2
                 },
-                _ => true,
-            },
+            ensures
+                balanced.tree_is_bst(),
+                balanced.avl_balanced_spec(),
+                balanced.spec_size() == self.spec_size(),
+                balanced.spec_height() <= self.spec_height(),
+                balanced.spec_height() + 1 >= self.spec_height(),
+                forall|x: T| (#[trigger] balanced.tree_contains(x)) == self.tree_contains(x),
+                {
+                    let lh = self.spec_left().spec_height() as int;
+                    let rh = self.spec_right().spec_height() as int;
+                    (-1 <= lh - rh && lh - rh <= 1) ==> balanced.spec_height() == self.spec_height()
+                },
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn insert_node(self, value: T) -> (inserted: Self)
+            requires
+                self.tree_is_avl_spec(),
+                self.spec_height() <= usize::MAX - 1,
+            ensures
+                inserted.tree_is_avl_spec(),
+                inserted.tree_contains(value),
+                inserted.spec_size() <= self.spec_size() + 1,
+                inserted.spec_height() <= self.spec_height() + 1,
+                inserted.spec_height() >= self.spec_height(),
+                forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
+                    (self.tree_contains(x) || x == value),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn contains_node(&self, target: &T) -> (found: bool)
+            requires (*self).tree_is_bst(),
+            ensures found == (*self).tree_contains(*target),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn find_node(&self, target: &T) -> (found: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                found.is_some() == (*self).tree_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target,
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn min_node(&self) -> (min: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> min.is_none(),
+                (*self).spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> (*self).tree_contains(*min.unwrap()),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn max_node(&self) -> (max: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> max.is_none(),
+                (*self).spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> (*self).tree_contains(*max.unwrap()),
+            ;
+    }
+
+    impl<T: TotalOrder> BSTAVLMtNodeFns<T> for BalBinTree<T> {
+
+    open spec fn avl_balanced_spec(self) -> bool { avl_balanced(self) }
+    open spec fn tree_is_avl_spec(self) -> bool { tree_is_avl(self) }
+    open spec fn spec_left(self) -> Self {
+        match self {
+            BalBinTree::Leaf => BalBinTree::Leaf,
+            BalBinTree::Node(n) => n.left,
+        }
+    }
+    open spec fn spec_right(self) -> Self {
+        match self {
+            BalBinTree::Leaf => BalBinTree::Leaf,
+            BalBinTree::Node(n) => n.right,
+        }
+    }
+
+    fn rotate_right(self) -> (rotated: Self)
     {
-        let ghost tree_ghost = tree;
-        match tree {
+        let ghost tree_ghost = self;
+        match self {
             BalBinTree::Node(y_box) => {
                 let BalBinNode { left: left_tree, value: y_val, right: r } = *y_box;
                 let ghost old_left = left_tree;
@@ -225,48 +356,10 @@ pub mod BSTAVLMtEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_left<T: TotalOrder>(tree: BalBinTree<T>) -> (rotated: BalBinTree<T>)
-        requires tree.tree_is_bst(), !(tree is Leaf),
-        ensures
-            rotated.tree_is_bst(),
-            rotated.spec_size() == tree.spec_size(),
-            forall|x: T| (#[trigger] rotated.tree_contains(x)) == tree.tree_contains(x),
-            match tree {
-                BalBinTree::Node(outer) => match outer.right {
-                    BalBinTree::Node(r) => {
-                        let rl_h = r.left.spec_height();
-                        let l_h = outer.left.spec_height();
-                        let rr_h = r.right.spec_height();
-                        let new_lh: nat = 1 + if l_h >= rl_h { l_h } else { rl_h };
-                        &&& rotated.spec_height() == (1 + if new_lh >= rr_h { new_lh } else { rr_h })
-                        &&& ((avl_balanced(outer.left) && avl_balanced(r.left) && avl_balanced(r.right)
-                             && l_h as int - rl_h as int >= -1 && l_h as int - rl_h as int <= 1
-                             && new_lh as int - rr_h as int >= -1 && new_lh as int - rr_h as int <= 1)
-                            ==> avl_balanced(rotated))
-                        &&& rotated is Node
-                        &&& match rotated {
-                            BalBinTree::Node(res) => {
-                                &&& res.right.spec_height() == rr_h
-                                &&& avl_balanced(res.right) == avl_balanced(r.right)
-                                &&& res.left.spec_height() == new_lh
-                                &&& (avl_balanced(res.left) <==> (avl_balanced(outer.left)
-                                    && avl_balanced(r.left) && {
-                                    let lh = l_h as int;
-                                    let rh = rl_h as int;
-                                    -1 <= lh - rh && lh - rh <= 1
-                                }))
-                            },
-                            _ => false,
-                        }
-                    },
-                    _ => true,
-                },
-                _ => true,
-            },
+    fn rotate_left(self) -> (rotated: Self)
     {
-        let ghost tree_ghost = tree;
-        match tree {
+        let ghost tree_ghost = self;
+        match self {
             BalBinTree::Node(x_box) => {
                 let BalBinNode { left: l, value: x_val, right: right_tree } = *x_box;
                 let ghost old_right = right_tree;
@@ -350,40 +443,10 @@ pub mod BSTAVLMtEph {
 
     // Verified AVL rebalance (Layer 1).
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rebalance<T: TotalOrder>(tree: BalBinTree<T>) -> (balanced: BalBinTree<T>)
-        requires
-            tree.tree_is_bst(),
-            !(tree is Leaf),
-            tree.spec_height() <= usize::MAX,
-            match tree {
-                BalBinTree::Node(inner) =>
-                    avl_balanced(inner.left) && avl_balanced(inner.right)
-                    && {
-                        let lh = inner.left.spec_height() as int;
-                        let rh = inner.right.spec_height() as int;
-                        -2 <= lh - rh && lh - rh <= 2
-                    },
-                _ => false,
-            },
-        ensures
-            balanced.tree_is_bst(),
-            avl_balanced(balanced),
-            balanced.spec_size() == tree.spec_size(),
-            balanced.spec_height() <= tree.spec_height(),
-            balanced.spec_height() + 1 >= tree.spec_height(),
-            forall|x: T| (#[trigger] balanced.tree_contains(x)) == tree.tree_contains(x),
-            match tree {
-                BalBinTree::Node(inner) => {
-                    let lh = inner.left.spec_height() as int;
-                    let rh = inner.right.spec_height() as int;
-                    (-1 <= lh - rh && lh - rh <= 1) ==> balanced.spec_height() == tree.spec_height()
-                },
-                _ => true,
-            },
+    fn rebalance(self) -> (balanced: Self)
     {
-        let ghost tree_ghost = tree;
-        match tree {
+        let ghost tree_ghost = self;
+        match self {
             BalBinTree::Node(inner) => {
                 let lh = inner.left.height();
                 let rh = inner.right.height();
@@ -398,7 +461,7 @@ pub mod BSTAVLMtEph {
                     };
                     if left_rh > left_lh {
                         let BalBinNode { left, value: v, right } = *inner;
-                        let new_left = rotate_left(left);
+                        let new_left = left.rotate_left();
                         let intermediate = BalBinTree::Node(Box::new(BalBinNode {
                             left: new_left,
                             value: v,
@@ -414,7 +477,7 @@ pub mod BSTAVLMtEph {
                                     (v == x || left.tree_contains(x) || right.tree_contains(x)));
                             };
                         }
-                        let result = rotate_right(intermediate);
+                        let result = intermediate.rotate_right();
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -466,7 +529,7 @@ pub mod BSTAVLMtEph {
                         }
                         result
                     } else {
-                        let result = rotate_right(BalBinTree::Node(inner));
+                        let result = BalBinTree::Node(inner).rotate_right();
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -509,7 +572,7 @@ pub mod BSTAVLMtEph {
                     };
                     if right_lh > right_rh {
                         let BalBinNode { left, value: v, right } = *inner;
-                        let new_right = rotate_right(right);
+                        let new_right = right.rotate_right();
                         let intermediate = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: v,
@@ -525,7 +588,7 @@ pub mod BSTAVLMtEph {
                                     (v == x || left.tree_contains(x) || right.tree_contains(x)));
                             };
                         }
-                        let result = rotate_left(intermediate);
+                        let result = intermediate.rotate_left();
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -577,7 +640,7 @@ pub mod BSTAVLMtEph {
                         }
                         result
                     } else {
-                        let result = rotate_left(BalBinTree::Node(inner));
+                        let result = BalBinTree::Node(inner).rotate_left();
                         proof {
                             match tree_ghost {
                                 BalBinTree::Node(tg) => {
@@ -620,22 +683,11 @@ pub mod BSTAVLMtEph {
 
     // Verified AVL insert (Layer 1).
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
-        requires
-            tree_is_avl::<T>(node),
-            node.spec_height() <= usize::MAX - 1,
-        ensures
-            tree_is_avl::<T>(inserted),
-            inserted.tree_contains(value),
-            inserted.spec_size() <= node.spec_size() + 1,
-            inserted.spec_height() <= node.spec_height() + 1,
-            inserted.spec_height() >= node.spec_height(),
-            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
-                (node.tree_contains(x) || x == value),
-        decreases node.spec_size(),
+    fn insert_node(self, value: T) -> (inserted: Self)
+        decreases self.spec_size(),
     {
-        match node {
+        let ghost node = self;
+        match self {
             BalBinTree::Leaf => {
                 BalBinTree::Node(Box::new(BalBinNode {
                     left: BalBinTree::Leaf, value: value, right: BalBinTree::Leaf,
@@ -647,7 +699,7 @@ pub mod BSTAVLMtEph {
                 let ghost old_right = right;
                 match TotalOrder::cmp(&value, &node_val) {
                     core::cmp::Ordering::Less => {
-                        let new_left = insert_node(left, value);
+                        let new_left = left.insert_node(value);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: new_left, value: node_val, right: right,
                         }));
@@ -674,10 +726,10 @@ pub mod BSTAVLMtEph {
                             assert(avl_balanced(old_right));
                             assert(r.spec_height() >= node.spec_height());
                         }
-                        rebalance(r)
+                        r.rebalance()
                     }
                     core::cmp::Ordering::Greater => {
-                        let new_right = insert_node(right, value);
+                        let new_right = right.insert_node(value);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left, value: node_val, right: new_right,
                         }));
@@ -704,7 +756,7 @@ pub mod BSTAVLMtEph {
                             assert(avl_balanced(new_right));
                             assert(r.spec_height() >= node.spec_height());
                         }
-                        rebalance(r)
+                        r.rebalance()
                     }
                     core::cmp::Ordering::Equal => {
                         let r = BalBinTree::Node(Box::new(BalBinNode {
@@ -727,42 +779,6 @@ pub mod BSTAVLMtEph {
             }
         }
     }
-
-    // 8. traits
-
-    /// Exec BST search operations on BalBinTree nodes (AVL Mt variant).
-    pub trait BSTAVLMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        fn contains_node(&self, target: &T) -> (found: bool)
-            requires (*self).tree_is_bst(),
-            ensures found == (*self).tree_contains(*target),
-            ;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        fn find_node(&self, target: &T) -> (found: Option<&T>)
-            requires (*self).tree_is_bst(),
-            ensures
-                found.is_some() == (*self).tree_contains(*target),
-                found.is_some() ==> *found.unwrap() == *target,
-            ;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        fn min_node(&self) -> (min: Option<&T>)
-            requires (*self).tree_is_bst(),
-            ensures
-                (*self).spec_size() == 0 ==> min.is_none(),
-                (*self).spec_size() > 0 ==> min.is_some(),
-                min.is_some() ==> (*self).tree_contains(*min.unwrap()),
-            ;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        fn max_node(&self) -> (max: Option<&T>)
-            requires (*self).tree_is_bst(),
-            ensures
-                (*self).spec_size() == 0 ==> max.is_none(),
-                (*self).spec_size() > 0 ==> max.is_some(),
-                max.is_some() ==> (*self).tree_contains(*max.unwrap()),
-            ;
-    }
-
-    impl<T: TotalOrder> BSTAVLMtNodeFns<T> for BalBinTree<T> {
 
     fn contains_node(&self, target: &T) -> (found: bool)
         decreases self.spec_size(),
@@ -835,6 +851,7 @@ pub mod BSTAVLMtEph {
     }
 
     } // impl BSTAVLMtNodeFns
+
 
     // 11. top level coarse locking
 
@@ -967,7 +984,7 @@ pub mod BSTAVLMtEph {
             let current_size = tree.size();
             let current_height = tree.height();
             if current_size < usize::MAX && current_height < usize::MAX {
-                let new_tree = insert_node(tree, value);
+                let new_tree = tree.insert_node(value);
                 proof {
                     assert(tree_is_avl::<T>(new_tree));
                     assert(new_tree.spec_size() <= usize::MAX);
