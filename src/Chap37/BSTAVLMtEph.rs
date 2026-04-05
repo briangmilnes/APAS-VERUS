@@ -9,6 +9,7 @@
 //  1. module
 //  2. imports
 //  7. proof fns/broadcast groups
+//  8. traits
 //  9. impls
 //  11. top level coarse locking
 //  13. macros
@@ -727,24 +728,57 @@ pub mod BSTAVLMtEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
-        requires (*node).tree_is_bst(),
-        ensures found == (*node).tree_contains(*target),
-        decreases node.spec_size(),
+    // 8. traits
+
+    /// Exec BST search operations on BalBinTree nodes (AVL Mt variant).
+    pub trait BSTAVLMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn contains_node(&self, target: &T) -> (found: bool)
+            requires (*self).tree_is_bst(),
+            ensures found == (*self).tree_contains(*target),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn find_node(&self, target: &T) -> (found: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                found.is_some() == (*self).tree_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target,
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn min_node(&self) -> (min: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> min.is_none(),
+                (*self).spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> (*self).tree_contains(*min.unwrap()),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn max_node(&self) -> (max: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> max.is_none(),
+                (*self).spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> (*self).tree_contains(*max.unwrap()),
+            ;
+    }
+
+    impl<T: TotalOrder> BSTAVLMtNodeFns<T> for BalBinTree<T> {
+
+    fn contains_node(&self, target: &T) -> (found: bool)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => false,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
-                        let r = contains_node(&inner.left, target);
+                        let r = inner.left.contains_node(target);
                         proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = contains_node(&inner.right, target);
+                        let r = inner.right.contains_node(target);
                         proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
@@ -753,26 +787,21 @@ pub mod BSTAVLMtEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            found.is_some() == (*node).tree_contains(*target),
-            found.is_some() ==> *found.unwrap() == *target,
-        decreases node.spec_size(),
+    fn find_node(&self, target: &T) -> (found: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
-                        let r = find_node(&inner.left, target);
+                        let r = inner.left.find_node(target);
                         proof { if inner.right.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = find_node(&inner.right, target);
+                        let r = inner.right.find_node(target);
                         proof { if inner.left.tree_contains(*target) { T::antisymmetric(*target, inner.value); } }
                         r
                     }
@@ -781,41 +810,31 @@ pub mod BSTAVLMtEph {
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> min.is_none(),
-            node.spec_size() > 0 ==> min.is_some(),
-            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
-        decreases node.spec_size(),
+    fn min_node(&self) -> (min: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.left.is_leaf() { Some(&inner.value) }
-                else { min_node(&inner.left) }
+                else { inner.left.min_node() }
             }
         }
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> max.is_none(),
-            node.spec_size() > 0 ==> max.is_some(),
-            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
-        decreases node.spec_size(),
+    fn max_node(&self) -> (max: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.right.is_leaf() { Some(&inner.value) }
-                else { max_node(&inner.right) }
+                else { inner.right.max_node() }
             }
         }
     }
+
+    } // impl BSTAVLMtNodeFns
 
     // 11. top level coarse locking
 
@@ -969,7 +988,7 @@ pub mod BSTAVLMtEph {
         fn contains(&self, target: &T) -> (found: bool) {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            let found = contains_node(tree_ref, target);
+            let found = tree_ref.contains_node(target);
             proof { assume(found == self@.tree_contains(*target)); }
             read_handle.release_read();
             found
@@ -1014,7 +1033,7 @@ pub mod BSTAVLMtEph {
         fn find(&self, target: &T) -> (found: Option<T>) where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            let found = find_node(tree_ref, target).cloned();
+            let found = tree_ref.find_node(target).cloned();
             proof {
                 assume(found.is_some() == self@.tree_contains(*target));
                 accept(found.is_some() ==> found.unwrap() == *target);
@@ -1027,7 +1046,7 @@ pub mod BSTAVLMtEph {
         fn minimum(&self) -> Option<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            let min = min_node(tree_ref).cloned();
+            let min = tree_ref.min_node().cloned();
             read_handle.release_read();
             min
         }
@@ -1036,7 +1055,7 @@ pub mod BSTAVLMtEph {
         fn maximum(&self) -> Option<T> where T: Clone + Eq {
             let read_handle = self.root.acquire_read();
             let tree_ref = read_handle.borrow();
-            let max = max_node(tree_ref).cloned();
+            let max = tree_ref.max_node().cloned();
             read_handle.release_read();
             max
         }

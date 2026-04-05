@@ -27,7 +27,6 @@ pub mod BSTAVLStEph {
     // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
-    #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
@@ -184,6 +183,42 @@ pub mod BSTAVLStEph {
             ensures
                 found.is_some() == self.spec_root().tree_contains(*target),
                 found.is_some() ==> *found.unwrap() == *target;
+    }
+
+    /// Exec BST search operations on BalBinTree nodes (AVL variant).
+    pub trait BSTAVLNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
+        fn contains_node(&self, target: &T) -> (found: bool)
+            requires (*self).tree_is_bst(),
+            ensures found == (*self).tree_contains(*target),
+            ;
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
+        fn find_node(&self, target: &T) -> (found: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                found.is_some() == (*self).tree_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target,
+            ;
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — descends leftmost path; AVL balanced.
+        fn min_node(&self) -> (min: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> min.is_none(),
+                (*self).spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> (*self).tree_contains(*min.unwrap()),
+            ;
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — descends rightmost path; AVL balanced.
+        fn max_node(&self) -> (max: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> max.is_none(),
+                (*self).spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> (*self).tree_contains(*max.unwrap()),
+            ;
     }
 
     // 9. impls
@@ -953,20 +988,18 @@ pub mod BSTAVLStEph {
         }
     }
 
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
-        requires (*node).tree_is_bst(),
-        ensures found == (*node).tree_contains(*target),
-        decreases node.spec_size(),
+    impl<T: TotalOrder> BSTAVLNodeFns<T> for BalBinTree<T> {
+
+    fn contains_node(&self, target: &T) -> (found: bool)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => false,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
-                        let r = contains_node(&inner.left, target);
+                        let r = inner.left.contains_node(target);
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -975,7 +1008,7 @@ pub mod BSTAVLStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = contains_node(&inner.right, target);
+                        let r = inner.right.contains_node(target);
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -988,22 +1021,16 @@ pub mod BSTAVLStEph {
         }
     }
 
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS.
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            found.is_some() == (*node).tree_contains(*target),
-            found.is_some() ==> *found.unwrap() == *target,
-        decreases node.spec_size(),
+    fn find_node(&self, target: &T) -> (found: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
-                        let r = find_node(&inner.left, target);
+                        let r = inner.left.find_node(target);
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -1012,7 +1039,7 @@ pub mod BSTAVLStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = find_node(&inner.right, target);
+                        let r = inner.right.find_node(target);
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -1025,49 +1052,37 @@ pub mod BSTAVLStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — descends leftmost path; AVL balanced.
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> min.is_none(),
-            node.spec_size() > 0 ==> min.is_some(),
-            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
-        decreases node.spec_size(),
+    fn min_node(&self) -> (min: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.left.is_leaf() {
                     Some(&inner.value)
                 } else {
-                    min_node(&inner.left)
+                    inner.left.min_node()
                 }
             }
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — descends rightmost path; AVL balanced.
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> max.is_none(),
-            node.spec_size() > 0 ==> max.is_some(),
-            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
-        decreases node.spec_size(),
+    fn max_node(&self) -> (max: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.right.is_leaf() {
                     Some(&inner.value)
                 } else {
-                    max_node(&inner.right)
+                    inner.right.max_node()
                 }
             }
         }
     }
+
+    } // impl BSTAVLNodeFns
 
     impl<T: TotalOrder> BSTAVLStEphTrait<T> for BSTAVLStEph<T> {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
@@ -1106,13 +1121,13 @@ pub mod BSTAVLStEph {
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS; AVL guarantees h = O(lg n).
         fn contains(&self, target: &T) -> (found: bool) {
-            contains_node(&self.root, target)
+            self.root.contains_node(target)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(lg n), Span O(lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — agrees with APAS; AVL guarantees h = O(lg n).
         fn find(&self, target: &T) -> (found: Option<&T>) {
-            find_node(&self.root, target)
+            self.root.find_node(target)
         }
     }
 
