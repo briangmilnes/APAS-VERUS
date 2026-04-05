@@ -227,6 +227,65 @@ pub mod AVLTreeSeqStPer {
 
     // 8. traits
 
+    /// Spec accessors for AVL tree links, enabling trait-based contracts.
+    pub trait AVLTreeSeqStPerLinkSpec<T: StT>: Sized {
+        spec fn link_wf(self) -> bool;
+        spec fn link_inorder(self) -> Seq<T::V>;
+        spec fn link_cached_size(self) -> nat;
+        spec fn link_cached_height(self) -> nat;
+    }
+
+    impl<T: StT> AVLTreeSeqStPerLinkSpec<T> for Link<T> {
+        open spec fn link_wf(self) -> bool { spec_avltreeseqstper_wf(self) }
+        open spec fn link_inorder(self) -> Seq<T::V> { spec_inorder(self) }
+        open spec fn link_cached_size(self) -> nat { spec_cached_size(&self) }
+        open spec fn link_cached_height(self) -> nat { spec_cached_height(&self) }
+    }
+
+    /// Exec operations on AVL tree links (Option<Arc<Node>>).
+    pub trait AVLTreeSeqStPerLinkFns<T: StT>: Sized + AVLTreeSeqStPerLinkSpec<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn height_fn(&self) -> (h: usize)
+            requires (*self).link_cached_height() <= usize::MAX as nat,
+            ensures h as nat == (*self).link_cached_height(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn size_fn(&self) -> (sz: usize)
+            requires (*self).link_cached_size() <= usize::MAX as nat,
+            ensures sz as nat == (*self).link_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn nth_ref(&self, index: usize) -> (elem: &T)
+            requires (*self).link_wf(), (index as int) < (*self).link_inorder().len(),
+            ensures elem@ == (*self).link_inorder()[index as int],
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn set_rec(&self, index: usize, value: T) -> (outcome: Result<Self, &'static str>)
+            requires
+                (*self).link_wf(),
+                (index as int) < (*self).link_inorder().len(),
+                obeys_feq_clone::<T>(),
+            ensures
+                outcome is Ok,
+                outcome.unwrap().link_wf(),
+                outcome.unwrap().link_cached_size() == (*self).link_cached_size(),
+                outcome.unwrap().link_inorder() =~= (*self).link_inorder().update(index as int, value@),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn inorder_collect(&self, out: &mut Vec<T>)
+            requires (*self).link_wf(),
+            ensures true,
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        fn compare_trees(&self, other: &Self) -> (equal: bool)
+            requires
+                (*self).link_wf(),
+                (*other).link_wf(),
+                obeys_feq_full::<T>(),
+            ensures equal == ((*self).link_inorder() =~= (*other).link_inorder()),
+            ;
+    }
+
     pub trait AVLTreeSeqStPerTrait<T: StT>: Sized {
         spec fn spec_seq(&self) -> Seq<T::V>;
         spec fn spec_avltreeseqstper_wf(&self) -> bool;
@@ -309,28 +368,6 @@ pub mod AVLTreeSeqStPer {
     // 9. impls
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn height_fn<T: StT>(n: &Link<T>) -> (h: usize)
-        requires spec_cached_height(n) <= usize::MAX as nat,
-        ensures h as nat == spec_cached_height(n),
-    {
-        match n {
-            None => 0,
-            Some(node) => node.height,
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn size_fn<T: StT>(n: &Link<T>) -> (sz: usize)
-        requires spec_cached_size(n) <= usize::MAX as nat,
-        ensures sz as nat == spec_cached_size(n),
-    {
-        match n {
-            None => 0,
-            Some(node) => node.size,
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
     fn mk<T: StT>(value: T, left: Link<T>, right: Link<T>) -> (node: Arc<Node<T>>)
         requires
             1 + spec_cached_size(&left) + spec_cached_size(&right) < usize::MAX as nat,
@@ -345,9 +382,9 @@ pub mod AVLTreeSeqStPer {
             node.right == right,
     {
               assert(obeys_feq_full_trigger::<T>());
-        let hl = height_fn(&left);
-        let hr = height_fn(&right);
-        let sz = 1 + size_fn(&left) + size_fn(&right);
+        let hl = left.height_fn();
+        let hr = right.height_fn();
+        let sz = 1 + left.size_fn() + right.size_fn();
         let h = 1 + if hl >= hr { hl } else { hr };
         Arc::new(Node { value, height: h, size: sz, left, right })
     }
@@ -449,8 +486,8 @@ pub mod AVLTreeSeqStPer {
             spec_avltreeseqstper_wf(Some(balanced)),
             spec_cached_size(&Some(balanced)) == spec_cached_size(&Some(n)),
     {
-        let hl = height_fn(&n.left);
-        let hr = height_fn(&n.right);
+        let hl = n.left.height_fn();
+        let hr = n.right.height_fn();
         if hl > hr.saturating_add(1) {
             proof {
                 assert(spec_cached_height(&n.left) > 0);
@@ -462,7 +499,7 @@ pub mod AVLTreeSeqStPer {
                 // left == n.left.unwrap(), so size(Some(left)) == size(n.left).
                 assert(left_size == spec_cached_size(&n.left));
             }
-            if height_fn(&left.right) > height_fn(&left.left) {
+            if left.right.height_fn() > left.left.height_fn() {
                 // Left-right case: inner rotate_left, then rebuild with mk, then rotate_right.
                 proof { assert(left.right.is_some()); }
                 let rotated = rotate_left(left);
@@ -492,7 +529,7 @@ pub mod AVLTreeSeqStPer {
             proof {
                 assert(right_size == spec_cached_size(&n.right));
             }
-            if height_fn(&right.left) > height_fn(&right.right) {
+            if right.left.height_fn() > right.right.height_fn() {
                 proof { assert(right.left.is_some()); }
                 let rotated = rotate_right(right);
                 let n_val = n.value.clone_plus();
@@ -511,90 +548,6 @@ pub mod AVLTreeSeqStPer {
             return rotate_left(n);
         }
         n
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn nth_ref<'a, T: StT>(cur: &'a Link<T>, index: usize) -> (elem: &'a T)
-        requires spec_avltreeseqstper_wf(*cur), (index as int) < spec_inorder(*cur).len(),
-        ensures elem@ == spec_inorder(*cur)[index as int],
-        decreases *cur,
-    {
-        let node = cur.as_ref().unwrap();
-        proof { lemma_size_eq_inorder_len::<T>(&node.left); }
-        let ls = size_fn(&node.left);
-        if index < ls {
-            nth_ref(&node.left, index)
-        } else if index == ls {
-            &node.value
-        } else {
-            proof { lemma_size_eq_inorder_len::<T>(&node.right); }
-            nth_ref(&node.right, index - ls - 1)
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn set_rec<T: StT>(cur: &Link<T>, index: usize, value: T) -> (outcome: Result<Link<T>, &'static str>)
-        requires
-            spec_avltreeseqstper_wf(*cur),
-            (index as int) < spec_inorder(*cur).len(),
-            obeys_feq_clone::<T>(),
-        ensures
-            outcome is Ok,
-            spec_avltreeseqstper_wf(outcome.unwrap()),
-            spec_cached_size(&outcome.unwrap()) == spec_cached_size(cur),
-            spec_inorder(outcome.unwrap()) =~= spec_inorder(*cur).update(index as int, value@),
-        decreases *cur,
-    {
-        match cur {
-            None => {
-                if index == 0 {
-                    Ok(Some(mk(value, None, None)))
-                } else {
-                    Err("Index out of bounds")
-                }
-            }
-            Some(n) => {
-                proof { lemma_size_eq_inorder_len::<T>(&n.left); }
-                let ls = size_fn(&n.left);
-                if index < ls {
-                    let new_left = set_rec(&n.left, index, value)?;
-                    let n_val = n.value.clone_plus();
-                    proof {
-                        assert(obeys_feq_full_trigger::<T>());
-                        assert(n_val@ == n.value@);
-                        lemma_height_le_size::<T>(&new_left);
-                        lemma_height_le_size::<T>(&n.right);
-                    }
-                    Ok(Some(rebalance(mk(n_val, new_left, n.right.clone()))))
-                } else if index == ls {
-                    Ok(Some(mk(value, n.left.clone(), n.right.clone())))
-                } else {
-                    proof { lemma_size_eq_inorder_len::<T>(&n.right); }
-                    let new_right = set_rec(&n.right, index - ls - 1, value)?;
-                    let n_val = n.value.clone_plus();
-                    proof {
-                        assert(obeys_feq_full_trigger::<T>());
-                        assert(n_val@ == n.value@);
-                        lemma_height_le_size::<T>(&n.left);
-                        lemma_height_le_size::<T>(&new_right);
-                    }
-                    Ok(Some(rebalance(mk(n_val, n.left.clone(), new_right))))
-                }
-            }
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn inorder_collect<T: StT>(cur: &Link<T>, out: &mut Vec<T>)
-        requires spec_avltreeseqstper_wf(*cur),
-        ensures true,
-        decreases *cur,
-    {
-        if let Some(n) = cur {
-            inorder_collect(&n.left, out);
-            out.push(n.value.clone());
-            inorder_collect(&n.right, out);
-        }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
@@ -645,23 +598,109 @@ pub mod AVLTreeSeqStPer {
         Some(node)
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
-    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
-        requires
-            spec_avltreeseqstper_wf(*a),
-            spec_avltreeseqstper_wf(*b),
-            obeys_feq_full::<T>(),
-        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),
+    impl<T: StT> AVLTreeSeqStPerLinkFns<T> for Link<T> {
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn height_fn(&self) -> (h: usize)
     {
-        proof { lemma_size_eq_inorder_len::<T>(a); }
-        proof { lemma_size_eq_inorder_len::<T>(b); }
-        let sa = size_fn(a);
-        let sb = size_fn(b);
+        match self {
+            None => 0,
+            Some(node) => node.height,
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn size_fn(&self) -> (sz: usize)
+    {
+        match self {
+            None => 0,
+            Some(node) => node.size,
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    fn nth_ref(&self, index: usize) -> (elem: &T)
+        decreases *self,
+    {
+        let node = self.as_ref().unwrap();
+        proof { lemma_size_eq_inorder_len::<T>(&node.left); }
+        let ls = node.left.size_fn();
+        if index < ls {
+            node.left.nth_ref(index)
+        } else if index == ls {
+            &node.value
+        } else {
+            proof { lemma_size_eq_inorder_len::<T>(&node.right); }
+            node.right.nth_ref(index - ls - 1)
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    fn set_rec(&self, index: usize, value: T) -> (outcome: Result<Self, &'static str>)
+        decreases *self,
+    {
+        match self {
+            None => {
+                if index == 0 {
+                    Ok(Some(mk(value, None, None)))
+                } else {
+                    Err("Index out of bounds")
+                }
+            }
+            Some(n) => {
+                proof { lemma_size_eq_inorder_len::<T>(&n.left); }
+                let ls = n.left.size_fn();
+                if index < ls {
+                    let new_left = n.left.set_rec(index, value)?;
+                    let n_val = n.value.clone_plus();
+                    proof {
+                        assert(obeys_feq_full_trigger::<T>());
+                        assert(n_val@ == n.value@);
+                        lemma_height_le_size::<T>(&new_left);
+                        lemma_height_le_size::<T>(&n.right);
+                    }
+                    Ok(Some(rebalance(mk(n_val, new_left, n.right.clone()))))
+                } else if index == ls {
+                    Ok(Some(mk(value, n.left.clone(), n.right.clone())))
+                } else {
+                    proof { lemma_size_eq_inorder_len::<T>(&n.right); }
+                    let new_right = n.right.set_rec(index - ls - 1, value)?;
+                    let n_val = n.value.clone_plus();
+                    proof {
+                        assert(obeys_feq_full_trigger::<T>());
+                        assert(n_val@ == n.value@);
+                        lemma_height_le_size::<T>(&n.left);
+                        lemma_height_le_size::<T>(&new_right);
+                    }
+                    Ok(Some(rebalance(mk(n_val, n.left.clone(), new_right))))
+                }
+            }
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn inorder_collect(&self, out: &mut Vec<T>)
+        decreases *self,
+    {
+        if let Some(n) = self {
+            n.left.inorder_collect(out);
+            out.push(n.value.clone());
+            n.right.inorder_collect(out);
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+    fn compare_trees(&self, other: &Self) -> (equal: bool)
+    {
+        proof { lemma_size_eq_inorder_len::<T>(self); }
+        proof { lemma_size_eq_inorder_len::<T>(other); }
+        let sa = self.size_fn();
+        let sb = other.size_fn();
         if sa != sb {
             return false;
         }
-        let ghost seq_a = spec_inorder(*a);
-        let ghost seq_b = spec_inorder(*b);
+        let ghost seq_a = spec_inorder(*self);
+        let ghost seq_b = spec_inorder(*other);
         let mut i: usize = 0;
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while i < sa
@@ -669,17 +708,17 @@ pub mod AVLTreeSeqStPer {
                 sa == sb,
                 sa as nat == seq_a.len(),
                 sb as nat == seq_b.len(),
-                seq_a == spec_inorder(*a),
-                seq_b == spec_inorder(*b),
-                spec_avltreeseqstper_wf(*a),
-                spec_avltreeseqstper_wf(*b),
+                seq_a == spec_inorder(*self),
+                seq_b == spec_inorder(*other),
+                spec_avltreeseqstper_wf(*self),
+                spec_avltreeseqstper_wf(*other),
                 obeys_feq_full::<T>(),
                 0 <= i <= sa,
                 forall|j: int| 0 <= j < i as int ==> seq_a[j] == seq_b[j],
             decreases sa - i,
         {
-            let ai = nth_ref(a, i);
-            let bi = nth_ref(b, i);
+            let ai = self.nth_ref(i);
+            let bi = other.nth_ref(i);
             let eq = feq(ai, bi);
             if !eq {
                 return false;
@@ -690,6 +729,8 @@ pub mod AVLTreeSeqStPer {
         assert(seq_a =~= seq_b);
         true
     }
+
+    } // impl AVLTreeSeqStPerLinkFns
 
     // 9. trait impl
 
@@ -726,13 +767,13 @@ pub mod AVLTreeSeqStPer {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
-            size_fn(&self.root)
+            self.root.size_fn()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
-            nth_ref(&self.root, index)
+            self.root.nth_ref(index)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -749,7 +790,7 @@ pub mod AVLTreeSeqStPer {
         fn set(&self, index: usize, item: T) -> (outcome: Result<Self, &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             Ok(AVLTreeSeqStPerS {
-                root: set_rec(&self.root, index, item)?,
+                root: self.root.set_rec(index, item)?,
             })
         }
 
@@ -996,7 +1037,7 @@ pub mod AVLTreeSeqStPer {
                 assume(spec_avltreeseqstper_wf(other.root));
                 assume(obeys_feq_full::<T>());
             }
-            compare_trees(&self.root, &other.root)
+            self.root.compare_trees(&other.root)
         }
     }
 
@@ -1037,11 +1078,11 @@ pub mod AVLTreeSeqStPer {
 
     impl<T: StT> Debug for AVLTreeSeqStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let n = size_fn(&self.root);
+            let n = self.root.size_fn();
             write!(f, "[")?;
             for i in 0..n {
                 if i > 0 { write!(f, ", ")?; }
-                write!(f, "{:?}", nth_ref(&self.root, i))?;
+                write!(f, "{:?}", self.root.nth_ref(i))?;
             }
             write!(f, "]")
         }
@@ -1049,11 +1090,11 @@ pub mod AVLTreeSeqStPer {
 
     impl<T: StT> Display for AVLTreeSeqStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            let n = size_fn(&self.root);
+            let n = self.root.size_fn();
             write!(f, "[")?;
             for i in 0..n {
                 if i > 0 { write!(f, ", ")?; }
-                write!(f, "{}", nth_ref(&self.root, i))?;
+                write!(f, "{}", self.root.nth_ref(i))?;
             }
             write!(f, "]")
         }

@@ -1,0 +1,12 @@
+error[E0425]: cannot find function `inorder_collect` in this scope
+   --> src/Chap37/AVLTreeSeqMtPer.rs:775:13
+    |
+775 |             inorder_collect(&self.root, &mut out);
+    |             ^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 192MB, peak z3 RSS: 0MB, min free: 18263MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
