@@ -1,0 +1,264 @@
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:552:40
+    |
+552 | ...                   assert(spec_contains_link(&orig_left_left, ll_key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:595:37
+    |
+595 | ...                   spec_contains_link(&Some(ll), x)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:617:48
+    |
+617 | ...                   assert(spec_contains_link(&orig_left_left, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:625:52
+    |
+625 | ...                   assert(spec_contains_link(&orig_left_left, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:705:40
+    |
+705 | ...                   assert(spec_contains_link(&orig_left_right, lr_key));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:811:52
+    |
+811 | ...                   assert(spec_contains_link(&orig_left_right, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1031:40
+     |
+1031 | ...                   assert(spec_contains_link(&orig_right_right, rr_key));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1058:44
+     |
+1058 | ...                   assert(spec_contains_link(&orig_right_right, x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1074:37
+     |
+1074 | ...                   spec_contains_link(&Some(rr), x)
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1104:52
+     |
+1104 | ...                   assert(spec_contains_link(&orig_right_right, x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1195:40
+     |
+1195 | ...                   assert(spec_contains_link(&orig_right_left, rl_key));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap37/BSTSplayStEph.rs:83:21
+   |
+83 |             None => false,
+   |                     ^^^^^
+
+note: 
+
+spec_contains_link(orig_left_left, ll_key)
+|   let tmp%% = orig_left_left;
+|       tmp%% is None ==>
+|           false ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == ll_key || spec_contains_link(node.left, ll_key)) ==>
+|                   spec_contains_link(node.right, ll_key)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✘
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == ll_key || spec_contains_link(node.left, ll_key)) ==>
+|                   |                   spec_contains_link(node.right, ll_key)
+|                   |                   |   let tmp%% = node.right;
+|                   |                   |       tmp%% is None ==>
+|                   |                   |           false ✘
+|                   |                   |       !(tmp%% is None) ==>
+|                   |                   |           let node = tmp%%.0;
+|                   |                   |               !(node.key == ll_key || spec_contains_link(node.left, ll_key)) ==>
+|                   |                   |                   spec_contains_link(node.right, ll_key)
+|                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |           false ✘
+|                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |               !(node.key == ll_key || spec_contains_link(node.left, ll_key)) ==>
+|                   |                   |                   |                   spec_contains_link(node.right, ll_key)
+|                   |                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |                   |           false ✘
+|                   |                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |                   |               !(node.key == ll_key || spec_contains_link(node.left, ll_key)) ==>
+|                   |                   |                   |                   |                   spec_contains_link(node.right, ll_key) 
+|                   |                   |                   |                   +---
+|                   |                   |                   +---
+|                   |                   +---
+|                   +---
++---
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1451:44
+     |
+1451 | ...                   assert(x == value);
+     |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1472:44
+     |
+1472 | ...                   assert(spec_contains_link(&node.left, x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1477:33
+     |
+1477 | ...                   (spec_contains_link(old(self), x) || x == value)
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1503:44
+     |
+1503 | ...                   assert(x == value);
+     |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1524:44
+     |
+1524 | ...                   assert(spec_contains_link(&node.right, x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1529:33
+     |
+1529 | ...                   (spec_contains_link(old(self), x) || x == value)
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+x == value 
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1633:92
+     |
+1633 |                         assert forall|x: T| #[trigger] spec_contains_link(self, x) implies T::le(*min.unwrap(), x) by {
+     |                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+min.0.le(x) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: assertion failed
+    --> src/Chap37/BSTSplayStEph.rs:1679:92
+     |
+1679 |                         assert forall|x: T| #[trigger] spec_contains_link(self, x) implies T::le(x, *max.unwrap()) by {
+     |                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+x.le(max.0) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:321:17
+     |
+ 321 |                 forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1754 |         fn insert(&mut self, value: T) { self.root.insert_link(value); }
+     |         ------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayStEph.rs:321:61
+    |
+321 |                 forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_bstsplaysteph_wf() ✔
+self.spec_contains(old(value)) ✔
+forall |x|
+    old(self).spec_contains(x) ==>
+        self.spec_contains(x) ✘
+            trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:339:17
+     |
+ 339 |                 min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1768 |             self.root.min_link()
+     |             -------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayStEph.rs:339:74
+    |
+339 |                 min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_size() > 0 ==>
+    %return is Some ✔
+%return is Some ==>
+    old(self).spec_contains(%return.0) ✔
+%return is Some ==>
+    forall |x|
+        old(self).spec_contains(x) ==>
+            %return.0.le(x) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:346:17
+     |
+ 346 |                 max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1775 |             self.root.max_link()
+     |             -------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayStEph.rs:346:74
+    |
+346 |                 max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_size() > 0 ==>
+    %return is Some ✔
+%return is Some ==>
+    old(self).spec_contains(%return.0) ✔
+%return is Some ==>
+    forall |x|
+        old(self).spec_contains(x) ==>
+            x.le(%return.0) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1939 verified, 7 errors
+error: aborting due to 22 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 1390MB, peak z3 RSS: 365MB, min free: 16411MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 29s

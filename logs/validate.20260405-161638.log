@@ -1,0 +1,14 @@
+error[E0424]: expected value, found module `self`
+   --> src/Chap37/BSTSplayStEph.rs:136:35
+    |
+135 |     proof fn lemma_bst_deep_link<T: TotalOrder + Clone>(link: &Link<T>)
+    |              ------------------- this function can't have a `self` parameter
+136 |         requires spec_is_bst_link(self),
+    |                                   ^^^^ `self` value is a keyword only available in methods with a `self` parameter
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0424`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 180MB, peak z3 RSS: 0MB, min free: 18015MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

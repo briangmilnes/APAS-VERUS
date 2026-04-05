@@ -1,0 +1,60 @@
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:334:17
+     |
+ 334 |                 min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1762 |             self.root.min_link()
+     |             -------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayStEph.rs:334:74
+    |
+334 |                 min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_size() > 0 ==>
+    %return is Some ✔
+%return is Some ==>
+    old(self).spec_contains(%return.0) ✔
+%return is Some ==>
+    forall |x|
+        old(self).spec_contains(x) ==>
+            %return.0.le(x) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:341:17
+     |
+ 341 |                 max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1769 |             self.root.max_link()
+     |             -------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayStEph.rs:341:74
+    |
+341 |                 max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).spec_size() > 0 ==>
+    %return is Some ✔
+%return is Some ==>
+    old(self).spec_contains(%return.0) ✔
+%return is Some ==>
+    forall |x|
+        old(self).spec_contains(x) ==>
+            x.le(%return.0) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1944 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1603MB, peak z3 RSS: 325MB, min free: 16490MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 26s

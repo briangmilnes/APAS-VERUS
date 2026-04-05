@@ -1,0 +1,18 @@
+error[E0423]: expected value, found built-in attribute `link`
+   --> src/Chap37/BSTSplayStEph.rs:312:26
+    |
+312 |             requires old(link).spec_bstsplaysteph_wf(),
+    |                          ^^^^ not a value
+
+error[E0423]: expected value, found built-in attribute `link`
+   --> src/Chap37/BSTSplayStEph.rs:316:34
+    |
+316 |                 forall|x: T| old(link).spec_contains(x) ==> self.spec_contains(x);
+    |                                  ^^^^ not a value
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0423`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 193MB, peak z3 RSS: 0MB, min free: 18115MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

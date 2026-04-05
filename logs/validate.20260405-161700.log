@@ -1,0 +1,662 @@
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:219:51
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+219 |             ensures size as nat == spec_size_link(self);
+    |                                    -------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                                    |
+    |                                    arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:58:22
+    |
+ 58 |     pub open spec fn spec_size_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:221:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+221 |             requires spec_height_link(self) < usize::MAX as nat,
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:65:22
+    |
+ 65 |     pub open spec fn spec_height_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:222:55
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+222 |             ensures height as nat == spec_height_link(self);
+    |                                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                                      |
+    |                                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:65:22
+    |
+ 65 |     pub open spec fn spec_height_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:224:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+224 |             requires spec_is_bst_link(old(self)),
+    |                      ---------------- ^^^^^^^^^ expected `&Option<Box<Node<_>>>`, found `&mut Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:226:34
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+226 |                 spec_is_bst_link(self),
+    |                 ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:227:36
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+227 |                 spec_contains_link(self, value),
+    |                 ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:228:49
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+228 |                 forall|x: T| spec_contains_link(old(self), x) ==> spec_contains_link(self, x),
+    |                              ------------------ ^^^^^^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                              |
+    |                              arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:228:86
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+228 |                 forall|x: T| spec_contains_link(old(self), x) ==> spec_contains_link(self, x),
+    |                                                                   ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                                                                   |
+    |                                                                   arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:229:49
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+229 |                 forall|x: T| spec_contains_link(self, x) ==> (spec_contains_link(old(self), x) || x == value);
+    |                              ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                              |
+    |                              arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:229:82
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+229 |                 forall|x: T| spec_contains_link(self, x) ==> (spec_contains_link(old(self), x) || x == value);
+    |                                                               ------------------ ^^^^^^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                                                               |
+    |                                                               arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:231:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+231 |             requires spec_is_bst_link(old(self)),
+    |                      ---------------- ^^^^^^^^^ expected `&Option<Box<Node<_>>>`, found `&mut Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:233:34
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+233 |                 spec_is_bst_link(self),
+    |                 ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:234:36
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+234 |                 spec_contains_link(self, value),
+    |                 ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:235:49
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+235 |                 forall|x: T| spec_contains_link(old(self), x) ==> spec_contains_link(self, x),
+    |                              ------------------ ^^^^^^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                              |
+    |                              arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:235:86
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+235 |                 forall|x: T| spec_contains_link(old(self), x) ==> spec_contains_link(self, x),
+    |                                                                   ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                                                                   |
+    |                                                                   arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:236:49
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+236 |                 forall|x: T| spec_contains_link(self, x) ==> (spec_contains_link(old(self), x) || x == value);
+    |                              ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                              |
+    |                              arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:236:82
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+236 |                 forall|x: T| spec_contains_link(self, x) ==> (spec_contains_link(old(self), x) || x == value);
+    |                                                               ------------------ ^^^^^^^^^ expected `&Option<Box<Node<T>>>`, found `&mut Self`
+    |                                                               |
+    |                                                               arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:238:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+238 |             requires spec_is_bst_link(self),
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&'a Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:240:57
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+240 |                 found.is_some() <==> spec_contains_link(self, *target),
+    |                                      ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&Self`
+    |                                      |
+    |                                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+               found reference `&'a Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:243:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+243 |             requires spec_is_bst_link(self),
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0599]: no method named `is_some` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTSplayStEph.rs:245:22
+    |
+245 |                 self.is_some() ==> min.is_some(),
+    |                      ^^^^^^^ method not found in `&Self`
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:246:54
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+246 |                 min.is_some() ==> spec_contains_link(self, *min.unwrap()),
+    |                                   ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&Self`
+    |                                   |
+    |                                   arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:247:78
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+247 |                 min.is_some() ==> forall|x: T| #[trigger] spec_contains_link(self, x) ==> T::le(*min.unwrap(), x);
+    |                                                           ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&Self`
+    |                                                           |
+    |                                                           arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:249:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+249 |             requires spec_is_bst_link(self),
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0599]: no method named `is_some` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTSplayStEph.rs:251:22
+    |
+251 |                 self.is_some() ==> max.is_some(),
+    |                      ^^^^^^^ method not found in `&Self`
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:252:54
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+252 |                 max.is_some() ==> spec_contains_link(self, *max.unwrap()),
+    |                                   ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&Self`
+    |                                   |
+    |                                   arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:253:78
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+253 |                 max.is_some() ==> forall|x: T| #[trigger] spec_contains_link(self, x) ==> T::le(x, *max.unwrap());
+    |                                                           ------------------ ^^^^ expected `&Option<Box<Node<T>>>`, found `&Self`
+    |                                                           |
+    |                                                           arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<T>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:79:22
+    |
+ 79 |     pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:256:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+256 |             requires spec_is_bst_link(self),
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:257:72
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+257 |             ensures out@.len() == old(out)@.len() + spec_in_order_link(self).len();
+    |                                                     ------------------ ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                                                     |
+    |                                                     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:92:22
+    |
+ 92 |     pub open spec fn spec_in_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+    |                      ^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:260:39
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+260 |             requires spec_is_bst_link(self),
+    |                      ---------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:116:22
+    |
+116 |     pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:261:73
+    |
+216 |     pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+    |     ------------------------------------------------ found this type parameter
+...
+261 |             ensures out@.len() == old(out)@.len() + spec_pre_order_link(self).len();
+    |                                                     ------------------- ^^^^ expected `&Option<Box<Node<_>>>`, found `&Self`
+    |                                                     |
+    |                                                     arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/BSTSplayStEph.rs:104:22
+    |
+104 |     pub open spec fn spec_pre_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+    |                      ^^^^^^^^^^^^^^^^^^^                        --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:268:45
+    |
+266 |     pub trait BSTSplayBoxFns<T: TotalOrder + Clone>: Sized {
+    |     ------------------------------------------------------ found this type parameter
+267 |         fn splay(self, target: &T) -> (splayed: Self)
+268 |             requires spec_is_bst_link(&Some(self)),
+    |                                        ---- ^^^^ expected `Box<Node<_>>`, found type parameter `Self`
+    |                                        |
+    |                                        arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/BSTSplayStEph.rs:268:40
+    |
+268 |             requires spec_is_bst_link(&Some(self)),
+    |                                        ^^^^^----^
+    |                                             |
+    |                                             this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:270:40
+    |
+266 |     pub trait BSTSplayBoxFns<T: TotalOrder + Clone>: Sized {
+    |     ------------------------------------------------------ found this type parameter
+...
+270 |                 spec_is_bst_link(&Some(splayed)),
+    |                                   ---- ^^^^^^^ expected `Box<Node<_>>`, found type parameter `Self`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/BSTSplayStEph.rs:270:35
+    |
+270 |                 spec_is_bst_link(&Some(splayed)),
+    |                                   ^^^^^-------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:271:55
+    |
+266 |     pub trait BSTSplayBoxFns<T: TotalOrder + Clone>: Sized {
+    |     ------------------------------------------------------ found this type parameter
+...
+271 |                 forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(self), x);
+    |                                                  ---- ^^^^^^^ expected `Box<Node<_>>`, found type parameter `Self`
+    |                                                  |
+    |                                                  arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/BSTSplayStEph.rs:271:50
+    |
+271 |                 forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(self), x);
+    |                                                  ^^^^^-------^
+    |                                                       |
+    |                                                       this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTSplayStEph.rs:271:98
+    |
+266 |     pub trait BSTSplayBoxFns<T: TotalOrder + Clone>: Sized {
+    |     ------------------------------------------------------ found this type parameter
+...
+271 |                 forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(self), x);
+    |                                                                                             ---- ^^^^ expected `Box<Node<_>>`, found type parameter `Self`
+    |                                                                                             |
+    |                                                                                             arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::BSTSplayStEph::BSTSplayStEph::Node<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/BSTSplayStEph.rs:271:93
+    |
+271 |                 forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(self), x);
+    |                                                                                             ^^^^^----^
+    |                                                                                                  |
+    |                                                                                                  this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error: aborting due to 35 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 432MB, peak z3 RSS: 0MB, min free: 17811MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
