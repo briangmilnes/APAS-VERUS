@@ -1,0 +1,385 @@
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:170:22
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+170 |                 self.tree_is_bst(),
+    |                      ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:173:25
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+173 |                 rotated.tree_is_bst(),
+    |                         ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:174:50
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+174 |                 forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x);
+    |                                                  ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:174:76
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+174 |                 forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x);
+    |                                                                            ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:179:22
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+179 |                 self.tree_is_bst(),
+    |                      ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:182:25
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+182 |                 rotated.tree_is_bst(),
+    |                         ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:183:50
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+183 |                 forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x);
+    |                                                  ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:183:76
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+183 |                 forall|x: T| (#[trigger] rotated.tree_contains(x)) == self.tree_contains(x);
+    |                                                                            ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:187:27
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+187 |             requires self.tree_is_bst(),
+    |                           ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:189:26
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+189 |                 inserted.tree_is_bst(),
+    |                          ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:190:26
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+190 |                 inserted.tree_contains(value),
+    |                          ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:191:51
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+191 |                 forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
+    |                                                   ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:192:27
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+192 |                     (self.tree_contains(x) || x == value);
+    |                           ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:196:30
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+196 |             requires (*self).tree_is_bst(),
+    |                              ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:197:38
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+197 |             ensures found == (*self).tree_contains(*target);
+    |                                      ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:201:30
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+201 |             requires (*self).tree_is_bst(),
+    |                              ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:203:44
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+203 |                 found.is_some() == (*self).tree_contains(*target),
+    |                                            ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:208:30
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+208 |             requires (*self).tree_is_bst(),
+    |                              ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_size` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:210:22
+    |
+210 |                 self.spec_size() == 0 ==> min.is_none(),
+    |                      ^^^^^^^^^ method not found in `&Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `spec_size`, perhaps you need to add another supertrait for one of them:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait {
+    |                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_size` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:211:22
+    |
+211 |                 self.spec_size() > 0 ==> min.is_some(),
+    |                      ^^^^^^^^^ method not found in `&Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `spec_size`, perhaps you need to add another supertrait for one of them:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait {
+    |                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:212:43
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+212 |                 min.is_some() ==> (*self).tree_contains(*min.unwrap());
+    |                                           ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_is_bst` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:216:30
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_is_bst` not found for this type parameter
+...
+216 |             requires (*self).tree_is_bst(),
+    |                              ^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_is_bst`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_size` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:218:22
+    |
+218 |                 self.spec_size() == 0 ==> max.is_none(),
+    |                      ^^^^^^^^^ method not found in `&Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `spec_size`, perhaps you need to add another supertrait for one of them:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait {
+    |                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_size` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:219:22
+    |
+219 |                 self.spec_size() > 0 ==> max.is_some(),
+    |                      ^^^^^^^^^ method not found in `&Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following traits define an item `spec_size`, perhaps you need to add another supertrait for one of them:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait {
+    |                                                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `tree_contains` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTRBStEph.rs:220:43
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized {
+    |     -------------------------------------------- method `tree_contains` not found for this type parameter
+...
+220 |                 max.is_some() ==> (*self).tree_contains(*max.unwrap());
+    |                                           ^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `tree_contains`, perhaps you need to add another supertrait for it:
+    |
+165 |     pub trait BSTRBNodeFns<T: TotalOrder>: Sized + Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns {
+    |                                                  ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 25 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 446MB, peak z3 RSS: 0MB, min free: 18107MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

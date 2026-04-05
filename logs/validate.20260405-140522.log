@@ -1,0 +1,32 @@
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1314:41
+     |
+1314 |                       assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
+     |  _________________________________________^
+1315 | |                         <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+     | |____________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:1314:41
+     |
+1314 |                     assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1315 |                         <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+     |                                                                          ^^^^^^^^^^
+
+note: 
+
+link_to_bbt(new_root).tree_contains(x) == (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+|   link_to_bbt(new_root).tree_contains(x) ==>
+|       !(link_to_bbt(old_ghost).tree_contains(x)) ==>
+|           x == value ✘
+|   link_to_bbt(old_ghost).tree_contains(x) || x == value ==>
+|       link_to_bbt(new_root).tree_contains(x) ✘
++---
+
+verification results:: 1945 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1398MB, peak z3 RSS: 312MB, min free: 16650MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 27s
