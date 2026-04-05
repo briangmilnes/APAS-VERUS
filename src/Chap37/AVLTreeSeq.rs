@@ -227,6 +227,76 @@ pub mod AVLTreeSeq {
 
     // 8. traits
 
+    /// Spec accessors for AVL tree nodes (Box<AVLTreeNode>), enabling trait-based contracts.
+    pub trait AVLTreeSeqNodeSpec<T: StT>: Sized {
+        spec fn node_wf(self) -> bool;
+        spec fn node_inorder(self) -> Seq<T::V>;
+        spec fn node_cached_size(self) -> nat;
+        spec fn node_value(&self) -> T;
+        spec fn node_left(&self) -> Link<T>;
+        spec fn node_right(&self) -> Link<T>;
+        spec fn node_index(&self) -> usize;
+    }
+
+    impl<T: StT> AVLTreeSeqNodeSpec<T> for Box<AVLTreeNode<T>> {
+        open spec fn node_wf(self) -> bool { spec_avltreeseq_wf(Some(self)) }
+        open spec fn node_inorder(self) -> Seq<T::V> { spec_avltreeseq_inorder(Some(self)) }
+        open spec fn node_cached_size(self) -> nat { spec_avltreeseq_cached_size(&Some(self)) }
+        open spec fn node_value(&self) -> T { self.value }
+        open spec fn node_left(&self) -> Link<T> { self.left }
+        open spec fn node_right(&self) -> Link<T> { self.right }
+        open spec fn node_index(&self) -> usize { self.index }
+    }
+
+    /// Exec operations on non-empty AVL tree nodes (Box<AVLTreeNode>).
+    pub trait AVLTreeSeqNodeFns<T: StT>: Sized + AVLTreeSeqNodeSpec<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn update_size_height(&mut self)
+            requires
+                old(self).node_left().link_wf(),
+                old(self).node_right().link_wf(),
+                old(self).node_left().link_cached_size()
+                    + old(self).node_right().link_cached_size() + 1 < usize::MAX,
+            ensures
+                self.node_wf(),
+                self.node_inorder() =~= old(self).node_inorder(),
+                self.node_value() == old(self).node_value(),
+                self.node_left() == old(self).node_left(),
+                self.node_right() == old(self).node_right(),
+                self.node_index() == old(self).node_index(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_right(self) -> (rotated: Self)
+            requires self.node_wf(), self.node_left().is_some(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_left(self) -> (rotated: Self)
+            requires self.node_wf(), self.node_right().is_some(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rebalance(self) -> (balanced: Self)
+            requires
+                self.node_left().link_wf(),
+                self.node_right().link_wf(),
+                self.node_left().link_cached_size()
+                    + self.node_right().link_cached_size() + 1 < usize::MAX,
+            ensures
+                balanced.node_inorder() =~= self.node_inorder(),
+                balanced.node_wf(),
+                balanced.node_cached_size()
+                    == 1 + self.node_left().link_cached_size()
+                         + self.node_right().link_cached_size(),
+            ;
+    }
+
     /// Spec accessors for AVL tree links, enabling trait-based contracts.
     pub trait AVLTreeSeqLinkSpec<T: StT>: Sized {
         spec fn link_wf(self) -> bool;
@@ -438,59 +508,27 @@ pub mod AVLTreeSeq {
 
     // 9. impls
 
+    impl<T: StT> AVLTreeSeqNodeFns<T> for Box<AVLTreeNode<T>> {
+
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn update_size_height<T: StT>(n: &mut Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseq_wf(old(n).left),
-            spec_avltreeseq_wf(old(n).right),
-            1 + spec_avltreeseq_cached_size(&old(n).left)
-              + spec_avltreeseq_cached_size(&old(n).right) < usize::MAX,
-        ensures
-            n.left_size as nat == spec_avltreeseq_cached_size(&n.left),
-            n.right_size as nat == spec_avltreeseq_cached_size(&n.right),
-            n.height as nat == 1 + spec_avltreeseq_nat_max(
-                spec_avltreeseq_cached_height(&n.left),
-                spec_avltreeseq_cached_height(&n.right),
-            ),
-            n.value == old(n).value,
-            n.left == old(n).left,
-            n.right == old(n).right,
-            n.index == old(n).index,
-            spec_avltreeseq_wf(Some(*n)),
-            spec_avltreeseq_inorder(Some(*n)) =~= spec_avltreeseq_inorder(Some(*old(n))),
+    fn update_size_height(&mut self)
     {
-        n.left_size = n.left.cached_size_fn();
-        n.right_size = n.right.cached_size_fn();
-        let hl = n.left.cached_height_fn();
-        let hr = n.right.cached_height_fn();
+        self.left_size = self.left.cached_size_fn();
+        self.right_size = self.right.cached_size_fn();
+        let hl = self.left.cached_height_fn();
+        let hr = self.right.cached_height_fn();
         proof {
-            lemma_height_le_size::<T>(&n.left);
-            lemma_height_le_size::<T>(&n.right);
-            // h_left <= size_left, h_right <= size_right.
-            // size_left + size_right + 1 < usize::MAX (precondition).
-            // 1 + max(h_left, h_right) <= 1 + size_left + size_right < usize::MAX.
+            lemma_height_le_size::<T>(&self.left);
+            lemma_height_le_size::<T>(&self.right);
         }
-        n.height = 1 + if hl >= hr { hl } else { hr };
+        self.height = 1 + if hl >= hr { hl } else { hr };
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    pub fn rotate_right<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseq_wf(Some(node)),
-            node.left is Some,
-        ensures
-            spec_avltreeseq_wf(Some(rotated)),
-            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),
-            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),
+    fn rotate_right(self) -> (rotated: Self)
     {
-        // Standard AVL right rotation:
-        //      y                x
-        //     / \              / \
-        //    x   C   -->     A   y
-        //   / \                  / \
-        //  A   B                B   C
-        let ghost old_node = node;
-        let mut y = node;
+        let ghost node = self;
+        let mut y = self;
         let ghost old_y = *y;
         proof {
             assert(spec_avltreeseq_wf(old_y.left));
@@ -509,14 +547,13 @@ pub mod AVLTreeSeq {
             assert(spec_avltreeseq_wf(y.left));
             assert(spec_avltreeseq_wf(y.right));
         }
-        update_size_height(&mut y);
+        y.update_size_height();
         x.right = Some(y);
         proof {
             assert(spec_avltreeseq_wf(x.left));
             assert(spec_avltreeseq_wf(x.right));
         }
-        update_size_height(&mut x);
-
+        x.update_size_height();
         proof {
             reveal_with_fuel(spec_avltreeseq_inorder, 3);
         }
@@ -524,23 +561,10 @@ pub mod AVLTreeSeq {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_left<T: StT>(node: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseq_wf(Some(node)),
-            node.right is Some,
-        ensures
-            spec_avltreeseq_wf(Some(rotated)),
-            spec_avltreeseq_inorder(Some(rotated)) =~= spec_avltreeseq_inorder(Some(node)),
-            spec_avltreeseq_cached_size(&Some(rotated)) == spec_avltreeseq_cached_size(&Some(node)),
+    fn rotate_left(self) -> (rotated: Self)
     {
-        // Standard AVL left rotation:
-        //      x                y
-        //     / \              / \
-        //    A   y    -->    x   C
-        //       / \         / \
-        //      B   C       A   B
-        let ghost old_node = node;
-        let mut x = node;
+        let ghost node = self;
+        let mut x = self;
         let ghost old_x = *x;
         proof {
             assert(spec_avltreeseq_wf(old_x.left));
@@ -559,14 +583,13 @@ pub mod AVLTreeSeq {
             assert(spec_avltreeseq_wf(x.left));
             assert(spec_avltreeseq_wf(x.right));
         }
-        update_size_height(&mut x);
+        x.update_size_height();
         y.left = Some(x);
         proof {
             assert(spec_avltreeseq_wf(y.left));
             assert(spec_avltreeseq_wf(y.right));
         }
-        update_size_height(&mut y);
-
+        y.update_size_height();
         proof {
             reveal_with_fuel(spec_avltreeseq_inorder, 3);
         }
@@ -574,60 +597,47 @@ pub mod AVLTreeSeq {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rebalance<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseq_wf(n.left),
-            spec_avltreeseq_wf(n.right),
-            1 + spec_avltreeseq_cached_size(&n.left)
-              + spec_avltreeseq_cached_size(&n.right) < usize::MAX,
-        ensures
-            spec_avltreeseq_inorder(Some(balanced)) =~= spec_avltreeseq_inorder(Some(n)),
-            spec_avltreeseq_wf(Some(balanced)),
-            spec_avltreeseq_cached_size(&Some(balanced))
-                == 1 + spec_avltreeseq_cached_size(&n.left)
-                     + spec_avltreeseq_cached_size(&n.right),
+    fn rebalance(self) -> (balanced: Self)
     {
-        let ghost old_n = *n;
-        update_size_height(&mut n);
+        let ghost node = self;
+        let mut n = self;
+        n.update_size_height();
         let hl = n.left.cached_height_fn();
         let hr = n.right.cached_height_fn();
         if hl > hr.saturating_add(1) {
-            // Left-heavy: n.left must be Some since hl > 1.
             proof {
                 if n.left is None { assert(spec_avltreeseq_cached_height(&n.left) == 0); }
                 assert(n.left is Some);
             }
             if n.left.as_ref().unwrap().right.cached_height_fn() > n.left.as_ref().unwrap().left.cached_height_fn() {
-                // Left-right case: inner rotate_left on left child, then rotate_right.
                 let left = n.left.take().unwrap();
-                n.left = Some(rotate_left(left));
-                update_size_height(&mut n);
+                n.left = Some(left.rotate_left());
+                n.update_size_height();
             }
             proof {
                 reveal_with_fuel(spec_avltreeseq_inorder, 2);
             }
-            return rotate_right(n);
+            return n.rotate_right();
         }
         if hr > hl.saturating_add(1) {
-            // Right-heavy: n.right must be Some since hr > 1.
             proof {
                 if n.right is None { assert(spec_avltreeseq_cached_height(&n.right) == 0); }
                 assert(n.right is Some);
             }
             if n.right.as_ref().unwrap().left.cached_height_fn() > n.right.as_ref().unwrap().right.cached_height_fn() {
-                // Right-left case: inner rotate_right on right child, then rotate_left.
                 let right = n.right.take().unwrap();
-                n.right = Some(rotate_right(right));
-                update_size_height(&mut n);
+                n.right = Some(right.rotate_right());
+                n.update_size_height();
             }
             proof {
                 reveal_with_fuel(spec_avltreeseq_inorder, 2);
             }
-            return rotate_left(n);
+            return n.rotate_left();
         }
-        // Already balanced.
         n
     }
+
+    } // impl AVLTreeSeqNodeFns
 
     impl<T: StT> AVLTreeSeqLinkFns<T> for Link<T> {
 
@@ -713,7 +723,7 @@ pub mod AVLTreeSeq {
                              + spec_avltreeseq_cached_size(&n.right)
                         == 1 + old_left_size + old_right_size + 1);
                 }
-                let r = rebalance(n);
+                let r = n.rebalance();
                 Some(r)
             }
         }

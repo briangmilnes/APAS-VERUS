@@ -43,6 +43,22 @@ this gap.
 | 3 | 37 | AVLTreeSeqStPer.rs | 6 (height_fn, size_fn, nth_ref, set_rec, inorder_collect, compare_trees) | 4 (mk, rotate_right, rotate_left, rebalance) + build_balanced_from_slice | AVLTreeSeqStPerLinkSpec + AVLTreeSeqStPerLinkFns |
 | 4 | 37 | AVLTreeSeqMtPer.rs | 6 (height_fn, size_fn, nth_ref, set_rec, inorder_collect, compare_trees) | 4 (mk, rotate_right, rotate_left, rebalance) + build_balanced_from_slice | AVLTreeSeqMtPerLinkSpec + AVLTreeSeqMtPerLinkFns |
 
+## R148b — Node functions moved to traits
+
+All rotate/rebalance/update_meta functions now also live in trait impls
+(`*NodeSpec` + `*NodeFns` traits on `Box<AVLTreeNode<T>>` or `Arc<Node<T>>`).
+
+Remaining true free functions (first param is NOT a tree type):
+- `mk` (StPer, MtPer) — constructor, first param is `value: T`
+- `build_balanced_from_slice` (StPer, MtPer) — first param is `&[T]`
+- `push_left_iter` / `push_left_iter_stper` (StEph, StPer) — first param is `&mut Iterator`
+
+Free function counts per file (excluding trait/spec/proof/derive methods):
+- AVLTreeSeq.rs: 0 free (11 trait methods)
+- AVLTreeSeqStEph.rs: 1 free (push_left_iter — iterator helper, first param is &mut Iterator)
+- AVLTreeSeqStPer.rs: 3 free (mk, build_balanced_from_slice, push_left_iter_stper)
+- AVLTreeSeqMtPer.rs: 2 free (mk, build_balanced_from_slice)
+
 ## Verification
 
 - **validate**: 5702 verified, 0 errors

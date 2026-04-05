@@ -227,6 +227,51 @@ pub mod AVLTreeSeqStPer {
 
     // 8. traits
 
+    /// Spec accessors for AVL tree nodes (Arc<Node>), enabling trait-based contracts.
+    pub trait AVLTreeSeqStPerNodeSpec<T: StT>: Sized {
+        spec fn node_wf(self) -> bool;
+        spec fn node_inorder(self) -> Seq<T::V>;
+        spec fn node_cached_size(self) -> nat;
+        spec fn node_left(&self) -> Link<T>;
+        spec fn node_right(&self) -> Link<T>;
+    }
+
+    impl<T: StT> AVLTreeSeqStPerNodeSpec<T> for Arc<Node<T>> {
+        open spec fn node_wf(self) -> bool { spec_avltreeseqstper_wf(Some(self)) }
+        open spec fn node_inorder(self) -> Seq<T::V> { spec_inorder(Some(self)) }
+        open spec fn node_cached_size(self) -> nat { spec_cached_size(&Some(self)) }
+        open spec fn node_left(&self) -> Link<T> { self.left }
+        open spec fn node_right(&self) -> Link<T> { self.right }
+    }
+
+    /// Exec operations on non-empty AVL tree nodes (Arc<Node>).
+    pub trait AVLTreeSeqStPerNodeFns<T: StT>: Sized + AVLTreeSeqStPerNodeSpec<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_right(self) -> (rotated: Self)
+            requires self.node_wf(), self.node_left().is_some(), obeys_feq_clone::<T>(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_left(self) -> (rotated: Self)
+            requires self.node_wf(), self.node_right().is_some(), obeys_feq_clone::<T>(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rebalance(self) -> (balanced: Self)
+            requires self.node_wf(), obeys_feq_clone::<T>(),
+            ensures
+                balanced.node_inorder() =~= self.node_inorder(),
+                balanced.node_wf(),
+                balanced.node_cached_size() == self.node_cached_size(),
+            ;
+    }
+
     /// Spec accessors for AVL tree links, enabling trait-based contracts.
     pub trait AVLTreeSeqStPerLinkSpec<T: StT>: Sized {
         spec fn link_wf(self) -> bool;
@@ -389,14 +434,13 @@ pub mod AVLTreeSeqStPer {
         Arc::new(Node { value, height: h, size: sz, left, right })
     }
 
+    impl<T: StT> AVLTreeSeqStPerNodeFns<T> for Arc<Node<T>> {
+
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_right<T: StT>(y: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-        requires y.left.is_some(), spec_avltreeseqstper_wf(Some(y)), obeys_feq_clone::<T>(),
-        ensures
-            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
-            spec_avltreeseqstper_wf(Some(rotated)),
-            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),
+    fn rotate_right(self) -> (rotated: Self)
     {
+        let ghost node = self;
+        let y = self;
         let ghost old_y = y;
         let x = y.left.as_ref().unwrap().clone();
         proof {
@@ -436,13 +480,10 @@ pub mod AVLTreeSeqStPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_left<T: StT>(x: Arc<Node<T>>) -> (rotated: Arc<Node<T>>)
-        requires x.right.is_some(), spec_avltreeseqstper_wf(Some(x)), obeys_feq_clone::<T>(),
-        ensures
-            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
-            spec_avltreeseqstper_wf(Some(rotated)),
-            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),
+    fn rotate_left(self) -> (rotated: Self)
     {
+        let ghost node = self;
+        let x = self;
         let ghost old_x = x;
         let y = x.right.as_ref().unwrap().clone();
         proof {
@@ -479,13 +520,10 @@ pub mod AVLTreeSeqStPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rebalance<T: StT>(n: Arc<Node<T>>) -> (balanced: Arc<Node<T>>)
-        requires spec_avltreeseqstper_wf(Some(n)), obeys_feq_clone::<T>(),
-        ensures
-            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
-            spec_avltreeseqstper_wf(Some(balanced)),
-            spec_cached_size(&Some(balanced)) == spec_cached_size(&Some(n)),
+    fn rebalance(self) -> (balanced: Self)
     {
+        let ghost node = self;
+        let n = self;
         let hl = n.left.height_fn();
         let hr = n.right.height_fn();
         if hl > hr.saturating_add(1) {
@@ -502,7 +540,7 @@ pub mod AVLTreeSeqStPer {
             if left.right.height_fn() > left.left.height_fn() {
                 // Left-right case: inner rotate_left, then rebuild with mk, then rotate_right.
                 proof { assert(left.right.is_some()); }
-                let rotated = rotate_left(left);
+                let rotated = left.rotate_left();
                 let n_val = n.value.clone_plus();
                 proof {
                     assert(spec_cached_size(&Some(rotated)) == left_size);
@@ -514,10 +552,10 @@ pub mod AVLTreeSeqStPer {
                 }
                 let rebuilt = mk(n_val, Some(rotated), n.right.clone());
                 proof { reveal_with_fuel(spec_inorder, 2); }
-                return rotate_right(rebuilt);
+                return rebuilt.rotate_right();
             }
             proof { reveal_with_fuel(spec_inorder, 2); }
-            return rotate_right(n);
+            return n.rotate_right();
         }
         if hr > hl.saturating_add(1) {
             proof {
@@ -531,7 +569,7 @@ pub mod AVLTreeSeqStPer {
             }
             if right.left.height_fn() > right.right.height_fn() {
                 proof { assert(right.left.is_some()); }
-                let rotated = rotate_right(right);
+                let rotated = right.rotate_right();
                 let n_val = n.value.clone_plus();
                 proof {
                     assert(spec_cached_size(&Some(rotated)) == right_size);
@@ -542,13 +580,15 @@ pub mod AVLTreeSeqStPer {
                 }
                 let rebuilt = mk(n_val, n.left.clone(), Some(rotated));
                 proof { reveal_with_fuel(spec_inorder, 2); }
-                return rotate_left(rebuilt);
+                return rebuilt.rotate_left();
             }
             proof { reveal_with_fuel(spec_inorder, 2); }
-            return rotate_left(n);
+            return n.rotate_left();
         }
         n
     }
+
+    } // impl AVLTreeSeqStPerNodeFns
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
@@ -659,7 +699,7 @@ pub mod AVLTreeSeqStPer {
                         lemma_height_le_size::<T>(&new_left);
                         lemma_height_le_size::<T>(&n.right);
                     }
-                    Ok(Some(rebalance(mk(n_val, new_left, n.right.clone()))))
+                    Ok(Some(mk(n_val, new_left, n.right.clone()).rebalance()))
                 } else if index == ls {
                     Ok(Some(mk(value, n.left.clone(), n.right.clone())))
                 } else {
@@ -672,7 +712,7 @@ pub mod AVLTreeSeqStPer {
                         lemma_height_le_size::<T>(&n.left);
                         lemma_height_le_size::<T>(&new_right);
                     }
-                    Ok(Some(rebalance(mk(n_val, n.left.clone(), new_right))))
+                    Ok(Some(mk(n_val, n.left.clone(), new_right).rebalance()))
                 }
             }
         }
