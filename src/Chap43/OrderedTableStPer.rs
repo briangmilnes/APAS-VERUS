@@ -4144,7 +4144,7 @@ broadcast use {
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
     pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> (result: OrderedTableStPer<K, V>)
+    ) -> (table: OrderedTableStPer<K, V>)
         requires
             entries.spec_avltreeseqstper_wf(),
             obeys_feq_clone::<Pair<K, V>>(),
@@ -4160,8 +4160,8 @@ broadcast use {
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures
-            result@.dom().finite(),
-            result.spec_orderedtablestper_wf(),
+            table@.dom().finite(),
+            table.spec_orderedtablestper_wf(),
     {
         proof {
             assert(obeys_feq_full_trigger::<K>());
@@ -4256,9 +4256,9 @@ broadcast use {
             }
             i = i + 1;
         }
-        let result = OrderedTableStPer { tree };
+        let table = OrderedTableStPer { tree };
         proof { lemma_pair_set_to_map_dom_finite(tree@); }
-        result
+        table
     }
 
     } // verus!

@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Help-first scheduler with bounded parallelism using a global pool.
 //!
 //! - Uses a help-first strategy: if no capacity available, runs sequentially.

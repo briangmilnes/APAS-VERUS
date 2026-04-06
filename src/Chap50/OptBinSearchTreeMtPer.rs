@@ -369,14 +369,14 @@ broadcast use {
     }
 
     impl<T: MtVal> PartialEq for OBSTMtPerS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let self_keys = arc_deref(&self.keys);
             let other_keys = arc_deref(&other.keys);
-            let r = *self_keys == *other_keys;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = *self_keys == *other_keys;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 

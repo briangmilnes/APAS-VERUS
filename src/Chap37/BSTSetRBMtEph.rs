@@ -110,7 +110,7 @@ pub mod BSTSetRBMtEph {
             requires self.spec_bstsetrbmteph_wf()
             ensures true;
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstsetrbmteph_wf()
             ensures self.spec_bstsetrbmteph_wf();
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
@@ -260,7 +260,7 @@ pub mod BSTSetRBMtEph {
         fn maximum(&self) -> Option<T> { self.tree.maximum() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>) { self.tree.insert(value) }
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) { self.tree.insert(value) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
         fn delete(&mut self, target: &T) {

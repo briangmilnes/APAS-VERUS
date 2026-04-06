@@ -306,7 +306,7 @@ pub mod StarPartitionMtEph {
         nv: usize,
         start: usize,
         end: usize,
-    ) -> (result: Vec<(usize, V)>)
+    ) -> (th_edges: Vec<(usize, V)>)
         requires
             start <= end,
             end <= edges@.len(),
@@ -324,8 +324,8 @@ pub mod StarPartitionMtEph {
             forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
                 exists|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v_view,
         ensures
-            forall|s: int| 0 <= s < result@.len() ==>
-                #[trigger] spec_valid_th_entry(result@[s], nv as nat, coin_flips@, vertices@, vertex_to_index@),
+            forall|s: int| 0 <= s < th_edges@.len() ==>
+                #[trigger] spec_valid_th_entry(th_edges@[s], nv as nat, coin_flips@, vertices@, vertex_to_index@),
         decreases end - start,
     {
         let size = end - start;
@@ -486,14 +486,14 @@ pub mod StarPartitionMtEph {
         vertices: Arc<Vec<V>>,
         start: usize,
         end: usize,
-    ) -> (result: Vec<V>)
+    ) -> (p_vec: Vec<V>)
         requires
             start <= end,
             end <= vertices@.len(),
         ensures
-            result@.len() == (end - start) as int,
-            forall|j: int| 0 <= j < result@.len() ==>
-                #[trigger] result@[j]@ == vertices@[(start as int + j)]@,
+            p_vec@.len() == (end - start) as int,
+            forall|j: int| 0 <= j < p_vec@.len() ==>
+                #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@,
         decreases end - start,
     {
         let size = end - start;
@@ -997,7 +997,7 @@ pub mod StarPartitionMtEph {
         nv: usize,
         start: usize,
         end: usize,
-    ) -> (result: Vec<V>)
+    ) -> (p_vec: Vec<V>)
         requires
             start <= end,
             end <= vertices@.len(),
@@ -1023,21 +1023,21 @@ pub mod StarPartitionMtEph {
             forall|v_view: V::V| #[trigger] vertex_to_index@.contains_key(v_view) ==>
                 exists|j: int| 0 <= j < nv as int && #[trigger] vertices@[j]@ == v_view,
         ensures
-            result@.len() == (end - start) as int,
+            p_vec@.len() == (end - start) as int,
             // Heads preserve: heads vertices keep themselves.
-            forall|j: int| 0 <= j < result@.len() ==>
+            forall|j: int| 0 <= j < p_vec@.len() ==>
                 coin_flips@.contains_key(vertices@[(start as int + j)]@) &&
                 (coin_flips@[vertices@[(start as int + j)]@] ==>
-                 #[trigger] result@[j]@ == vertices@[(start as int + j)]@),
+                 #[trigger] p_vec@[j]@ == vertices@[(start as int + j)]@),
             // Modified entries point to heads.
-            forall|j: int| 0 <= j < result@.len() ==>
-                result@[j]@ != vertices@[(start as int + j)]@ ==>
-                (coin_flips@.contains_key(#[trigger] result@[j]@) &&
-                 coin_flips@[result@[j]@]),
+            forall|j: int| 0 <= j < p_vec@.len() ==>
+                p_vec@[j]@ != vertices@[(start as int + j)]@ ==>
+                (coin_flips@.contains_key(#[trigger] p_vec@[j]@) &&
+                 coin_flips@[p_vec@[j]@]),
             // All entries in vertex_to_index.
-            forall|j: int| 0 <= j < result@.len() ==>
-                vertex_to_index@.contains_key(#[trigger] result@[j]@) &&
-                (vertex_to_index@[result@[j]@] as usize) < nv,
+            forall|j: int| 0 <= j < p_vec@.len() ==>
+                vertex_to_index@.contains_key(#[trigger] p_vec@[j]@) &&
+                (vertex_to_index@[p_vec@[j]@] as usize) < nv,
         decreases end - start,
     {
         let size = end - start;

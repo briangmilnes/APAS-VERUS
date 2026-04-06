@@ -904,10 +904,10 @@ pub mod BSTAVLMtEph {
                     forall|x: T| !tree@.tree_contains(x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstavlmteph_wf(),
             ensures self.spec_bstavlmteph_wf(),
-                    match r {
+                    match inserted {
                         Ok(_) => tree_is_avl::<T>(self@)
                             && self@.tree_contains(value)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
@@ -978,7 +978,7 @@ pub mod BSTAVLMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();

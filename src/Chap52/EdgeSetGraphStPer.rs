@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 52: Edge Set Graph representation (persistent, single-threaded).
@@ -397,15 +397,15 @@ broadcast use {
     // 12. derive impls in verus!
 
     impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStPer<V> {
-        fn clone(&self) -> (result: Self)
-            ensures result@ == self@,
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
         {
-            let result = EdgeSetGraphStPer {
+            let cloned = EdgeSetGraphStPer {
                 vertices: self.vertices.clone(),
                 edges: self.edges.clone(),
             };
-            proof { assume(result@ == self@); }
-            result
+            proof { assume(cloned@ == self@); }
+            cloned
         }
     }
 

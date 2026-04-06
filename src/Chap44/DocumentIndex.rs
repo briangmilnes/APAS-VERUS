@@ -504,7 +504,7 @@ pub mod DocumentIndex {
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations — matches APAS
-        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet)
+        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet)
             requires
                 self.spec_index_wf(),
                 obeys_view_eq::<Word>(),
@@ -548,7 +548,7 @@ pub mod DocumentIndex {
 
         /// Complex query: (word1 AND word2) OR (word3 AND NOT word4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — 4 finds + 3 set ops; St sequential.
-        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (result: DocumentSet) {
+        fn complex_query(&self, word1: &Word, word2: &Word, word3: &Word, word4: &Word) -> (found: DocumentSet) {
             let set1 = self.find(word1);
             let set2 = self.find(word2);
             let set3 = self.find(word3);

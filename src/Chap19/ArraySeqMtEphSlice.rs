@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 19 slice-backed array sequence (multi-threaded ephemeral).
@@ -298,18 +298,18 @@ pub mod ArraySeqMtEphSlice {
 
         /// Functional set: clone the backing, set one element, return new slice.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones backing Vec.
-        fn set(&self, index: usize, item: T) -> (result: Self)
+        fn set(&self, index: usize, item: T) -> (updated: Self)
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 index < self.spec_len(),
                 obeys_feq_clone::<T>(),
             ensures
-                result.spec_arrayseqmtephslice_wf(),
-                result.spec_len() == self.spec_len(),
-                result.spec_index(index as int) == item,
-                forall|i: int| #![trigger result.spec_index(i)]
+                updated.spec_arrayseqmtephslice_wf(),
+                updated.spec_len() == self.spec_len(),
+                updated.spec_index(index as int) == item,
+                forall|i: int| #![trigger updated.spec_index(i)]
                     0 <= i < self.spec_len() && i != index as int
-                    ==> result.spec_index(i) == self.spec_index(i);
+                    ==> updated.spec_index(i) == self.spec_index(i);
 
         /// Concatenate two sequences.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — allocates new Vec, copies both halves.
@@ -592,7 +592,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn set(&self, index: usize, item: T) -> (result: Self) {
+        fn set(&self, index: usize, item: T) -> (updated: Self) {
             let mut v = self.to_vec();
             v.set(index, item);
             Self::from_vec(v)
@@ -1051,14 +1051,14 @@ pub mod ArraySeqMtEphSlice {
     /// D&C map producing Vec<U>. Called by trait map.
     pub(crate) fn map_dc_vec<T: Eq + Clone + Send + Sync + 'static, U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
-    ) -> (result: Vec<U>)
+    ) -> (mapped: Vec<U>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
                 obeys_feq_clone::<U>(),
                 forall|x: &T| #[trigger] f.requires((x,)),
             ensures
-                result@.len() == a.spec_len(),
+                mapped@.len() == a.spec_len(),
             decreases a.spec_len(),
         {
             let len = a.length();
@@ -1125,14 +1125,14 @@ pub mod ArraySeqMtEphSlice {
     pub(crate) fn filter_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtPred<T>>(
         a: &ArraySeqMtEphSliceS<T>, pred: &F,
         Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
-    ) -> (result: Vec<T>)
+    ) -> (filtered: Vec<T>)
             requires
                 a.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
                 forall|x: &T| #[trigger] pred.requires((x,)),
                 forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
             ensures
-                result@.len() <= a.spec_len(),
+                filtered@.len() <= a.spec_len(),
             decreases a.spec_len(),
         {
             let len = a.length();
@@ -1201,15 +1201,15 @@ pub mod ArraySeqMtEphSlice {
     /// D&C tabulate producing Vec<T>. Called by trait tabulate.
     pub(crate) fn tabulate_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtTabulateFn<T>>(
         f: &F, start: usize, count: usize,
-    ) -> (result: Vec<T>)
+    ) -> (tabulated: Vec<T>)
             requires
                 start + count <= usize::MAX,
                 obeys_feq_clone::<T>(),
                 forall|i: usize| start <= i < start + count ==> #[trigger] f.requires((i,)),
             ensures
-                result@.len() == count as int,
-                forall|i: int| #![trigger result@[i]]
-                    0 <= i < count ==> f.ensures(((start as int + i) as usize,), result@[i]),
+                tabulated@.len() == count as int,
+                forall|i: int| #![trigger tabulated@[i]]
+                    0 <= i < count ==> f.ensures(((start as int + i) as usize,), tabulated@[i]),
             decreases count,
         {
             if count == 0 {
@@ -1526,12 +1526,12 @@ pub mod ArraySeqMtEphSlice {
     /// D&C flatten producing Vec<T>. Called by flatten.
     fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-    ) -> (result: Vec<T>)
+    ) -> (flattened: Vec<T>)
         requires
             spec_nested_wf(a),
             obeys_feq_clone::<T>(),
         ensures
-            result@.len() == spec_sum_inner_lens(a),
+            flattened@.len() == spec_sum_inner_lens(a),
         decreases a.len,
     {
         let len = a.len;

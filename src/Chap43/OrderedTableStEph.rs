@@ -5377,7 +5377,7 @@ broadcast use {
     #[verifier::loop_isolation(false)]
     pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> (result: OrderedTableStEph<K, V>)
+    ) -> (table: OrderedTableStEph<K, V>)
         requires
             entries.spec_avltreeseqstper_wf(),
             obeys_feq_clone::<Pair<K, V>>(),
@@ -5393,8 +5393,8 @@ broadcast use {
             forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
                 ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
         ensures
-            result@.dom().finite(),
-            result.spec_orderedtablesteph_wf(),
+            table@.dom().finite(),
+            table.spec_orderedtablesteph_wf(),
     {
         proof {
             assert(obeys_feq_full_trigger::<K>());
@@ -5481,9 +5481,9 @@ broadcast use {
             }
             i = i + 1;
         }
-        let result = OrderedTableStEph { tree };
+        let table = OrderedTableStEph { tree };
         proof { lemma_pair_set_to_map_dom_finite(tree@); }
-        result
+        table
     }
 
     } // verus!

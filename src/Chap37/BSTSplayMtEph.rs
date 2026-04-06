@@ -1919,10 +1919,10 @@ pub mod BSTSplayMtEph {
             ensures tree.spec_bstsplaymteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstsplaymteph_wf(),
             ensures self.spec_bstsplaymteph_wf(),
-                    match r {
+                    match inserted {
                         Ok(_) => link_spec_size(self@) <= link_spec_size(old(self)@) + 1
                             && link_contains(self@, value)
                             && forall|x: T| link_contains(old(self)@, x) ==>
@@ -2034,7 +2034,7 @@ pub mod BSTSplayMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
             let sz = Node::<T>::compute_link_spec_size(&current);
@@ -2188,19 +2188,19 @@ pub mod BSTSplayMtEph {
     // 12. derive impls in verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> Clone for Node<T> {
-        fn clone(&self) -> (r: Self)
-            ensures r == *self,
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self,
         {
             let left = Node::<T>::clone_link(&self.left);
             let right = Node::<T>::clone_link(&self.right);
-            let r = Node {
+            let cloned = Node {
                 key: self.key.clone(),
                 size: self.size,
                 left,
                 right,
             };
-            proof { assume(r == *self); }
-            r
+            proof { assume(cloned == *self); }
+            cloned
         }
     }
 

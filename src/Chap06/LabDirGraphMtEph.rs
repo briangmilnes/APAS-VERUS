@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 6 Labeled Directed Graph (ephemeral) using Set for vertices and labeled arcs - Multi-threaded version.
@@ -805,21 +805,21 @@ pub mod LabDirGraphMtEph {
                 s@.A == labeled_arcs@;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
+        fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>)
             requires old(self).spec_labdirgraphmteph_wf()
             ensures
                 self.spec_labdirgraphmteph_wf(),
-                match r {
+                match added {
                     Ok(_) => self@.V == old(self)@.V.insert(v@) && self@.A == old(self)@.A,
                     Err(_) => self@ == old(self)@,
                 };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>)
+        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (added: std::result::Result<(), ()>)
             requires old(self).spec_labdirgraphmteph_wf()
             ensures
                 self.spec_labdirgraphmteph_wf(),
-                match r {
+                match added {
                     Ok(_) => self@.V == old(self)@.V.insert(from@).insert(to@)
                           && self@.A == old(self)@.A.insert((from@, to@, label@)),
                     Err(_) => self@ == old(self)@,
@@ -862,7 +862,7 @@ pub mod LabDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+        fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
@@ -873,7 +873,7 @@ pub mod LabDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (r: std::result::Result<(), ()>) {
+        fn add_labeled_arc(&mut self, from: V, to: V, label: L) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_arc(from, to, label);

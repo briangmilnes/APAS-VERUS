@@ -191,20 +191,20 @@ pub mod OrderStatSelectMtEph {
     fn partition_three_dc<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
         a: &ArraySeqMtEphSliceS<T>,
         pivot: &T,
-    ) -> (result: (Vec<T>, Vec<T>, Vec<T>))
+    ) -> (partitioned: (Vec<T>, Vec<T>, Vec<T>))
         requires
             a.spec_arrayseqmtephslice_wf(),
             obeys_feq_clone::<T>(),
         ensures
-            forall|j: int| #![trigger result.0@[j]] 0 <= j < result.0@.len() ==>
-                T::le(result.0@[j], *pivot) && result.0@[j] != *pivot,
-            forall|j: int| #![trigger result.1@[j]] 0 <= j < result.1@.len() ==>
-                result.1@[j] == *pivot,
-            forall|j: int| #![trigger result.2@[j]] 0 <= j < result.2@.len() ==>
-                T::le(*pivot, result.2@[j]) && result.2@[j] != *pivot,
+            forall|j: int| #![trigger partitioned.0@[j]] 0 <= j < partitioned.0@.len() ==>
+                T::le(partitioned.0@[j], *pivot) && partitioned.0@[j] != *pivot,
+            forall|j: int| #![trigger partitioned.1@[j]] 0 <= j < partitioned.1@.len() ==>
+                partitioned.1@[j] == *pivot,
+            forall|j: int| #![trigger partitioned.2@[j]] 0 <= j < partitioned.2@.len() ==>
+                T::le(*pivot, partitioned.2@[j]) && partitioned.2@[j] != *pivot,
             spec_slice_elements(*a).to_multiset() =~=
-                result.0@.to_multiset().add(result.2@.to_multiset()).add(result.1@.to_multiset()),
-            result.0@.len() + result.1@.len() + result.2@.len() == a.spec_len(),
+                partitioned.0@.to_multiset().add(partitioned.2@.to_multiset()).add(partitioned.1@.to_multiset()),
+            partitioned.0@.len() + partitioned.1@.len() + partitioned.2@.len() == a.spec_len(),
         decreases a.spec_len(),
     {
         let n = a.length();

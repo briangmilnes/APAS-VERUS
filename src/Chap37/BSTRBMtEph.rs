@@ -1176,10 +1176,10 @@ pub mod BSTRBMtEph {
             ensures tree.spec_bstrbmteph_wf();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstrbmteph_wf(),
             ensures self.spec_bstrbmteph_wf(),
-                    match r {
+                    match inserted {
                         Ok(_) => self@.tree_is_bst()
                             && self@.tree_contains(value)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
@@ -1278,7 +1278,7 @@ pub mod BSTRBMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (mut current, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == current); }
             let sz = current.compute_link_spec_size();

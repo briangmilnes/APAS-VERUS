@@ -596,10 +596,10 @@ pub mod BSTPlainMtEph {
                     forall|x: T| !tree@.tree_contains(x);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>)
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
             ensures self.spec_bstplainmteph_wf(),
-                    match r {
+                    match inserted {
                         Ok(_) => self@.tree_contains(value)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
                                 (old(self)@.tree_contains(x) || x == value),
@@ -607,10 +607,10 @@ pub mod BSTPlainMtEph {
                     };
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn delete(&mut self, target: &T) -> (r: Result<(), ()>)
+        fn delete(&mut self, target: &T) -> (removed: Result<(), ()>)
             requires old(self).spec_bstplainmteph_wf(),
             ensures self.spec_bstplainmteph_wf(),
-                    match r {
+                    match removed {
                         Ok(_) => !self@.tree_contains(*target)
                             && forall|x: T| (#[trigger] self@.tree_contains(x)) <==>
                                 (old(self)@.tree_contains(x) && x != *target),
@@ -688,7 +688,7 @@ pub mod BSTPlainMtEph {
 
         // Writer: assume ghost == inner, exec-check precondition, mutate or bail.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn insert(&mut self, value: T) -> (r: Result<(), ()>) {
+        fn insert(&mut self, value: T) -> (inserted: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
             let current_size = tree.size();
@@ -711,7 +711,7 @@ pub mod BSTPlainMtEph {
 
         // Writer: assume ghost == inner, delete always succeeds (no capacity check needed).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn delete(&mut self, target: &T) -> (r: Result<(), ()>) {
+        fn delete(&mut self, target: &T) -> (removed: Result<(), ()>) {
             let (tree, write_handle) = self.root.acquire_write();
             proof { assume(self.ghost_root@ == tree); }
             let new_tree = tree.delete_node(target);
