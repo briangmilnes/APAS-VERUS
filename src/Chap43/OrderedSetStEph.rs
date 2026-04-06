@@ -1192,4 +1192,28 @@ broadcast use {
             write!(f, "}}")
         }
     }
+
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for OrderedSetStEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphIter({:?})", self.inner)
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphIter")
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEphGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphGhostIterator")
+        }
+    }
+
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStEphGhostIterator")
+        }
+    }
 }

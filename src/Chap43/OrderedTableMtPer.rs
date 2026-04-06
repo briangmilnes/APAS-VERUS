@@ -725,4 +725,16 @@ pub mod OrderedTableMtPer {
             write!(f, "OrderedTableMtPer(size: {})", self.size())
         }
     }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Debug for OrderedTableMtPerInv<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPerInv")
+        }
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Display for OrderedTableMtPerInv<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPerInv")
+        }
+    }
 }

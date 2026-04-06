@@ -1601,4 +1601,16 @@ pub mod BSTSizeStEph {
             }
         }
     }
+
+    impl fmt::Debug for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
+
+    impl fmt::Display for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
 }

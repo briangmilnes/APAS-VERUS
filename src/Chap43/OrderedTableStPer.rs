@@ -4305,4 +4305,16 @@ broadcast use {
             write!(f, "OrderedTableStPerIter")
         }
     }
+
+    impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStPerGhostIterator<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStPerGhostIterator")
+        }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStPerGhostIterator<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStPerGhostIterator")
+        }
+    }
 }

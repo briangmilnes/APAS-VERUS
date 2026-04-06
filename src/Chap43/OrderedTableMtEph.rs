@@ -1035,6 +1035,18 @@ broadcast use {
         }
     }
 
+    impl fmt::Debug for OrderedTableMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphInv")
+        }
+    }
+
+    impl fmt::Display for OrderedTableMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphInv")
+        }
+    }
+
     // 14. macros
 
     /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs.

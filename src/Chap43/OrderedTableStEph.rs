@@ -5522,6 +5522,18 @@ broadcast use {
         }
     }
 
+    impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStEphGhostIterator<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStEphGhostIterator")
+        }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStEphGhostIterator<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableStEphGhostIterator")
+        }
+    }
+
     // 12. macros
 
     /// Macro for creating ephemeral ordered tables from sorted key-value pairs.

@@ -23,6 +23,7 @@
 
 pub mod BalBinTreeStEph {
 
+    use std::fmt::{Debug, Display, Formatter};
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
@@ -885,6 +886,94 @@ pub mod BalBinTreeStEph {
     impl<T: std::fmt::Debug> std::fmt::Debug for BalBinNode<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BalBinNode {{ left: {:?}, value: {:?}, right: {:?} }}", self.left, self.value, self.right)
+        }
+    }
+
+    impl<T: Display> Display for BalBinTree<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                BalBinTree::Leaf => write!(f, "Leaf"),
+                BalBinTree::Node(node) =>
+                    write!(f, "({}, {}, {})", node.left, node.value, node.right),
+            }
+        }
+    }
+
+    impl<T: Display> Display for BalBinNode<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "({}, {}, {})", self.left, self.value, self.right)
+        }
+    }
+
+    impl<T: Debug> Debug for InOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "InOrderIter({:?})", self.inner)
+        }
+    }
+
+    impl<T> Display for InOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "InOrderIter")
+        }
+    }
+
+    impl<T: Debug> Debug for PreOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PreOrderIter({:?})", self.inner)
+        }
+    }
+
+    impl<T> Display for PreOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PreOrderIter")
+        }
+    }
+
+    impl<T: Debug> Debug for PostOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PostOrderIter({:?})", self.inner)
+        }
+    }
+
+    impl<T> Display for PostOrderIter<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PostOrderIter")
+        }
+    }
+
+    impl<T> Debug for InOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "InOrderGhostIterator")
+        }
+    }
+
+    impl<T> Display for InOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "InOrderGhostIterator")
+        }
+    }
+
+    impl<T> Debug for PreOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PreOrderGhostIterator")
+        }
+    }
+
+    impl<T> Display for PreOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PreOrderGhostIterator")
+        }
+    }
+
+    impl<T> Debug for PostOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PostOrderGhostIterator")
+        }
+    }
+
+    impl<T> Display for PostOrderGhostIterator<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PostOrderGhostIterator")
         }
     }
 

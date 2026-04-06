@@ -20,6 +20,7 @@ pub mod BSTParaStEph {
     // 13. derive impls outside verus!
 
     use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
@@ -1807,6 +1808,39 @@ pub mod BSTParaStEph {
     impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBST<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("ParamBST").finish()
+        }
+    }
+
+    impl<T: StT + Ord> Debug for BSTParaStEphInv<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "BSTParaStEphInv")
+        }
+    }
+
+    impl<T: StT + Ord> Display for BSTParaStEphInv<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "BSTParaStEphInv")
+        }
+    }
+
+    impl<T: StT + Ord + Display> Display for Exposed<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                Exposed::Leaf => write!(f, "Leaf"),
+                Exposed::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+            }
+        }
+    }
+
+    impl<T: StT + Ord + Display> Display for NodeInner<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "NodeInner(key={}, size={})", self.key, self.size)
+        }
+    }
+
+    impl<T: StT + Ord + Display> Display for ParamBST<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ParamBST")
         }
     }
 }

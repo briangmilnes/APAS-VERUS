@@ -1138,4 +1138,28 @@ broadcast use {
             write!(f, "}}")
         }
     }
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStPerIter({:?})", self.inner)
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for OrderedSetStPerIter<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStPerIter")
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Debug for OrderedSetStPerGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStPerGhostIterator")
+        }
+    }
+
+    impl<T: StT + Ord> fmt::Display for OrderedSetStPerGhostIterator<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetStPerGhostIterator")
+        }
+    }
 }

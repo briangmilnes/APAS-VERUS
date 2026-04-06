@@ -26,6 +26,7 @@
 
 pub mod PrimTreeSeqStPer {
 
+    use std::fmt::{Debug, Display, Formatter};
     use std::slice::Iter;
     use std::vec::IntoIter;
 
@@ -985,6 +986,51 @@ pub mod PrimTreeSeqStPer {
                 PrimTreeSeqStTree::One(v) => write!(f, "One({v:?})"),
                 PrimTreeSeqStTree::Two(l, r) => write!(f, "Two({l:?}, {r:?})"),
             }
+        }
+    }
+
+    impl<T: Display> Display for PrimTreeSeqStS<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "[")?;
+            for (i, item) in self.seq.iter().enumerate() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{}", item)?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    impl<T: Display> Display for PrimTreeSeqStTree<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                PrimTreeSeqStTree::Zero => write!(f, "Zero"),
+                PrimTreeSeqStTree::One(v) => write!(f, "One({})", v),
+                PrimTreeSeqStTree::Two(l, r) => write!(f, "Two({}, {})", l, r),
+            }
+        }
+    }
+
+    impl<'a, T: Debug> Debug for PrimTreeSeqStIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PrimTreeSeqStIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for PrimTreeSeqStIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PrimTreeSeqStIter")
+        }
+    }
+
+    impl<'a, T> Debug for PrimTreeSeqStGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PrimTreeSeqStGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for PrimTreeSeqStGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "PrimTreeSeqStGhostIterator")
         }
     }
 

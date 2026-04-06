@@ -19,6 +19,7 @@ pub mod BSTParaMtEph {
     // 13. derive impls outside verus!
 
     use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::fmt::{Display, Formatter};
     use std::sync::Arc;
 
     use vstd::prelude::*;
@@ -2002,6 +2003,48 @@ pub mod BSTParaMtEph {
     impl<T: MtKey> std::fmt::Debug for ParamBST<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("ParamBST").finish()
+        }
+    }
+
+    impl<T: MtKey> std::fmt::Debug for BSTParaMtEphInv<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "BSTParaMtEphInv")
+        }
+    }
+
+    impl<T: MtKey> Display for BSTParaMtEphInv<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "BSTParaMtEphInv")
+        }
+    }
+
+    impl<T: MtKey> std::fmt::Debug for Exposed<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                Exposed::Leaf => write!(f, "Leaf"),
+                Exposed::Node(l, k, r) => write!(f, "Node({:?}, {:?}, {:?})", l, k, r),
+            }
+        }
+    }
+
+    impl<T: MtKey> Display for Exposed<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                Exposed::Leaf => write!(f, "Leaf"),
+                Exposed::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+            }
+        }
+    }
+
+    impl<T: MtKey> Display for NodeInner<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "NodeInner(key={}, size={})", self.key, self.size)
+        }
+    }
+
+    impl<T: MtKey> Display for ParamBST<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "ParamBST")
         }
     }
 }

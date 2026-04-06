@@ -23,6 +23,8 @@
 
 pub mod ETSPMtEph {
 
+    use std::fmt::{Debug, Display, Formatter};
+
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::div_mod::{
@@ -817,5 +819,33 @@ pub mod ETSPMtEph {
     }
 
     } // verus!
+
+    //		14a. derive impls outside verus! — struct Point
+
+    impl Debug for Point {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Point({}, {})", self.x, self.y)
+        }
+    }
+
+    impl Display for Point {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "({}, {})", self.x, self.y)
+        }
+    }
+
+    //		14b. derive impls outside verus! — struct Edge
+
+    impl Debug for Edge {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "Edge({:?} -> {:?})", self.from, self.to)
+        }
+    }
+
+    impl Display for Edge {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "{} -> {}", self.from, self.to)
+        }
+    }
 
 } // mod
