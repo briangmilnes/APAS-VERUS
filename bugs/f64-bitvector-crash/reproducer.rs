@@ -11,10 +11,16 @@
 // inside a by(bit_vector) assertion on f64. Range-bound assertions without
 // is_nan_spec work fine on f64.
 
+//  Table of Contents
+//	Section 7. proof fns/broadcast groups
+
 use vstd::prelude::*;
 use vstd::float::FloatBitsProperties;
 
 verus! {
+
+    //		Section 7. proof fns/broadcast groups
+
 
 // CRASHES: is_nan_spec() inside by(bit_vector) on f64.
 proof fn f64_reflexive_nan(x: f64)

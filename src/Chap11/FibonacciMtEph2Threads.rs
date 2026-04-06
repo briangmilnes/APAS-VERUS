@@ -7,6 +7,10 @@
 //!
 //! NOTE: This module is Verus-only due to TSM machinery.
 
+//  Table of Contents
+//	Section 4. type definitions
+//	Section 9. impls
+
 #![cfg(verus_keep_ghost)]
 
 use vstd::prelude::*;
@@ -21,33 +25,36 @@ verus! {
 
 use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
+    //		Section 4. type definitions
+
+
 // TSM for tracking two parallel Fibonacci subtasks
 tokenized_state_machine!{
     FibPair {
         fields {
             #[sharding(constant)]
             pub n: nat,
-            
+
             #[sharding(constant)]
             pub expected_left: nat,
-            
+
             #[sharding(constant)]
             pub expected_right: nat,
-            
+
             #[sharding(variable)]
             pub left_done: bool,
-            
+
             #[sharding(variable)]
             pub right_done: bool,
         }
-        
+
         #[invariant]
         pub fn main_inv(&self) -> bool {
             self.expected_left == spec_fib((self.n - 1) as nat)
             && self.expected_right == spec_fib((self.n - 2) as nat)
             && self.n >= 2
         }
-        
+
         init!{
             initialize(n: nat) {
                 require(n >= 2);
@@ -58,38 +65,41 @@ tokenized_state_machine!{
                 init right_done = false;
             }
         }
-        
+
         transition!{
             complete_left() {
                 require(!pre.left_done);
                 update left_done = true;
             }
         }
-        
+
         transition!{
             complete_right() {
                 require(!pre.right_done);
                 update right_done = true;
             }
         }
-        
+
         property!{
             finalize() {
                 require(pre.left_done);
                 require(pre.right_done);
             }
         }
-        
+
         #[inductive(initialize)]
         fn initialize_inductive(post: Self, n: nat) { }
-        
+
         #[inductive(complete_left)]
         fn complete_left_inductive(pre: Self, post: Self) { }
-        
+
         #[inductive(complete_right)]
         fn complete_right_inductive(pre: Self, post: Self) { }
     }
 }
+
+    //		Section 9. impls
+
 
 /// Two-threaded Fibonacci using TSM tokens to prove correctness.
 /// Top-level fork only — each thread runs iterative `fib` (O(n)), not
@@ -108,10 +118,10 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
         Tracked(left_done_token),
         Tracked(right_done_token),
     ) = FibPair::Instance::initialize(n as nat);
-    
+
     let tracked instance1 = instance.clone();
     let tracked instance2 = instance.clone();
-    
+
     // Thread 1: compute fib(n-1)
     let join_handle1 = spawn(
         (move || -> (out: (u64, Tracked<FibPair::left_done>))
@@ -130,7 +140,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             (val, Tracked(token))
         })
     );
-    
+
     // Thread 2: compute fib(n-2)
     let join_handle2 = spawn(
         (move || -> (out: (u64, Tracked<FibPair::right_done>))
@@ -149,7 +159,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
             (val, Tracked(token))
         })
     );
-    
+
     // Join thread 1
     let left_out = match join_handle1.join() {
         Result::Ok(out) => out,
@@ -157,7 +167,7 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     };
     let left_val = left_out.0;
     let tracked left_token = left_out.1.get();
-    
+
     // Join thread 2
     let right_out = match join_handle2.join() {
         Result::Ok(out) => out,
@@ -165,13 +175,13 @@ pub fn fib_2threads(n: u64) -> (fibonacci: u64)
     };
     let right_val = right_out.0;
     let tracked right_token = right_out.1.get();
-    
+
     // Use finalize property to prove left + right == fib(n)
     proof {
         instance.finalize(&left_token, &right_token);
         lemma_fib_sum_fits_u64(n as nat);
     }
-    
+
     left_val + right_val
 }
 

@@ -3,20 +3,38 @@
 //! Parametric multi-threaded BST built around a joinMid interface.
 //! Coarse lock (vstd RwLock) for thread-safe access.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 6d. spec fns
+//	Section 7d. proof fns/broadcast groups
+//	Section 8d. traits
+//	Section 9d. impls
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 12c. derive impls in verus!
+//	Section 12d. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod BSTParaMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns/broadcast groups
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::{Display, Formatter};
@@ -39,9 +57,11 @@ pub mod BSTParaMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -49,51 +69,15 @@ pub mod BSTParaMtEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct BSTParaMtEphInv<T: MtKey> {
         pub ghost contents: Set<<T as View>::V>,
     }
 
-    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaMtEphInv<T> {
-        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
-            match v {
-                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
-                Option::Some(box_node) => {
-                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
-                    && (*box_node).size >= 1
-                    && (*box_node).left@.finite() && (*box_node).right@.finite()
-                    && (*box_node).left@.disjoint((*box_node).right@)
-                    && !(*box_node).left@.contains((*box_node).key@)
-                    && !(*box_node).right@.contains((*box_node).key@)
-                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
-                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
-                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
-                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
-                }
-            }
-        }
-    }
+    //		Section 9a. impls
 
-    #[verifier::reject_recursive_types(T)]
-    pub enum Exposed<T: MtKey> {
-        Leaf,
-        Node(ParamBST<T>, T, ParamBST<T>),
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct NodeInner<T: MtKey> {
-        pub key: T,
-        pub size: usize,
-        pub left: ParamBST<T>,
-        pub right: ParamBST<T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamBST<T: MtKey> {
-        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv<T>>,
-        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
-    }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty BST.
     fn new_param_bst<T: MtKey>(
@@ -114,45 +98,6 @@ pub mod BSTParaMtEph {
         }
     }
 
-    // 5. view impls
-
-    impl<T: MtKey> ParamBST<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            self.ghost_locked_root@.finite()
-            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
-            && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
-                ==> exists|t: T| t@ == v)
-        }
-
-        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
-            self.ghost_locked_root@
-        }
-    }
-
-    impl<T: MtKey> View for ParamBST<T> {
-        type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
-    }
-
-    impl<T: MtKey> View for Exposed<T> {
-        type V = ();
-        open spec fn view(&self) -> () { () }
-    }
-
-    impl<T: MtKey> View for NodeInner<T> {
-        type V = ();
-        open spec fn view(&self) -> () { () }
-    }
-
-    // 6. spec fns
-
-    /// View-consistent ordering: elements with the same view compare Equal.
-    pub open spec fn view_ord_consistent<T: MtKey>() -> bool {
-        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
-    }
-
-    // 7. proof fns/broadcast groups
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — clones a single element.
     /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
@@ -164,6 +109,78 @@ pub mod BSTParaMtEph {
         assert(cloned(*x, c));  // strictly_cloned(*x,c) from call_ensures; triggers axiom
         c
     }
+
+    /// Expose ParamBST type_invariant across module boundaries:
+    /// ghost_locked_root@.finite() is always true, so @.finite() holds.
+    pub fn assert_parambst_view_finite<T: MtKey>(s: &ParamBST<T>)
+        ensures s@.finite()
+    {
+        proof { use_type_invariant(s); }
+    }
+
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub enum Exposed<T: MtKey> {
+        Leaf,
+        Node(ParamBST<T>, T, ParamBST<T>),
+    }
+
+    //		Section 5b. view impls
+
+
+    impl<T: MtKey> View for Exposed<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    //		Section 4c. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct NodeInner<T: MtKey> {
+        pub key: T,
+        pub size: usize,
+        pub left: ParamBST<T>,
+        pub right: ParamBST<T>,
+    }
+
+    //		Section 5c. view impls
+
+
+    impl<T: MtKey> View for NodeInner<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    //		Section 4d. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct ParamBST<T: MtKey> {
+        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaMtEphInv<T>>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
+    }
+
+    //		Section 5d. view impls
+
+
+    impl<T: MtKey> View for ParamBST<T> {
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
+    }
+
+    //		Section 6d. spec fns
+
+
+    /// View-consistent ordering: elements with the same view compare Equal.
+    pub open spec fn view_ord_consistent<T: MtKey>() -> bool {
+        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+    }
+
+    //		Section 7d. proof fns/broadcast groups
+
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: MtKey>(a: T, b: T)
@@ -241,15 +258,8 @@ pub mod BSTParaMtEph {
             view_ord_consistent::<T>(),
     {}
 
-    /// Expose ParamBST type_invariant across module boundaries:
-    /// ghost_locked_root@.finite() is always true, so @.finite() holds.
-    pub fn assert_parambst_view_finite<T: MtKey>(s: &ParamBST<T>)
-        ensures s@.finite()
-    {
-        proof { use_type_invariant(s); }
-    }
+    //		Section 8d. traits
 
-    // 8. traits
 
     pub trait ParamBSTTrait<T: MtKey>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_bstparamteph_wf(&self) -> bool;
@@ -459,7 +469,23 @@ pub mod BSTParaMtEph {
                 seq@.no_duplicates();
     }
 
-    // 9. impls
+    //		Section 9d. impls
+
+
+    impl<T: MtKey> ParamBST<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_root@.finite()
+            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
+            && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
+                ==> exists|t: T| t@ == v)
+        }
+
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
+        }
+    }
+
 
     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparamteph_wf(&self) -> bool {
@@ -850,58 +876,6 @@ pub mod BSTParaMtEph {
                 };
             }
             result
-        }
-    }
-
-    // 11. derive impls in verus!
-
-    impl<T: MtKey> Clone for Exposed<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            let cloned = match self {
-                Exposed::Leaf => Exposed::Leaf,
-                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-            };
-            proof { assume(cloned@ == self@); }
-            cloned
-        }
-    }
-
-    impl<T: MtKey> Clone for NodeInner<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@
-        {
-            let cloned = NodeInner {
-                key: self.key.clone(),
-                size: self.size,
-                left: self.left.clone(),
-                right: self.right.clone(),
-            };
-            proof { assume(cloned@ == self@); }  // assume_eq_clone_workaround
-            cloned
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones entire tree.
-    impl<T: MtKey> Clone for ParamBST<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@,
-            decreases self@.len(), 1nat,
-        {
-            proof { use_type_invariant(self); }
-            let _sz = self.size();
-            let exposed = expose_internal(self);
-            match exposed {
-                Exposed::Leaf => Self::new(),
-                Exposed::Node(l, k, r) => {
-                    proof {
-                        vstd::set_lib::lemma_set_disjoint_lens(l@, r@);
-                        assert(l@.len() + r@.len() + 1 == self@.len());
-                    }
-                    Self::join_mid(Exposed::Node(l, k, r))
-                }
-            }
         }
     }
 
@@ -1985,26 +1959,91 @@ pub mod BSTParaMtEph {
         }
     }
 
+    //		Section 11a. top level coarse locking
+
+
+    impl<T: MtKey> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaMtEphInv<T> {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+            match v {
+                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
+                Option::Some(box_node) => {
+                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
+                    && (*box_node).size >= 1
+                    && (*box_node).left@.finite() && (*box_node).right@.finite()
+                    && (*box_node).left@.disjoint((*box_node).right@)
+                    && !(*box_node).left@.contains((*box_node).key@)
+                    && !(*box_node).right@.contains((*box_node).key@)
+                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
+                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
+                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
+                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
+                }
+            }
+        }
+    }
+
+    //		Section 12b. derive impls in verus!
+
+
+    impl<T: MtKey> Clone for Exposed<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = match self {
+                Exposed::Leaf => Exposed::Leaf,
+                Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+            };
+            proof { assume(cloned@ == self@); }
+            cloned
+        }
+    }
+
+    //		Section 12c. derive impls in verus!
+
+
+    impl<T: MtKey> Clone for NodeInner<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            let cloned = NodeInner {
+                key: self.key.clone(),
+                size: self.size,
+                left: self.left.clone(),
+                right: self.right.clone(),
+            };
+            proof { assume(cloned@ == self@); }  // assume_eq_clone_workaround
+            cloned
+        }
+    }
+
+    //		Section 12d. derive impls in verus!
+
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones entire tree.
+    impl<T: MtKey> Clone for ParamBST<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
+            decreases self@.len(), 1nat,
+        {
+            proof { use_type_invariant(self); }
+            let _sz = self.size();
+            let exposed = expose_internal(self);
+            match exposed {
+                Exposed::Leaf => Self::new(),
+                Exposed::Node(l, k, r) => {
+                    proof {
+                        vstd::set_lib::lemma_set_disjoint_lens(l@, r@);
+                        assert(l@.len() + r@.len() + 1 == self@.len());
+                    }
+                    Self::join_mid(Exposed::Node(l, k, r))
+                }
+            }
+        }
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
-    // Ghost<Set<T::V>> contains FnSpec (PhantomData at runtime), which lacks Send/Sync.
-    // ParamBST is safe to send/share: the Ghost field is erased at runtime.
-    unsafe impl<T: MtKey> Send for ParamBST<T> {}
-    unsafe impl<T: MtKey> Sync for ParamBST<T> {}
-
-    impl<T: MtKey> std::fmt::Debug for NodeInner<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("NodeInner").field("key", &self.key).field("size", &self.size).finish()
-        }
-    }
-
-    impl<T: MtKey> std::fmt::Debug for ParamBST<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("ParamBST").finish()
-        }
-    }
 
     impl<T: MtKey> std::fmt::Debug for BSTParaMtEphInv<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -2017,6 +2056,9 @@ pub mod BSTParaMtEph {
             write!(f, "BSTParaMtEphInv")
         }
     }
+
+    //		Section 14b. derive impls outside verus!
+
 
     impl<T: MtKey> std::fmt::Debug for Exposed<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -2036,9 +2078,30 @@ pub mod BSTParaMtEph {
         }
     }
 
+    //		Section 14c. derive impls outside verus!
+
+    impl<T: MtKey> std::fmt::Debug for NodeInner<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("NodeInner").field("key", &self.key).field("size", &self.size).finish()
+        }
+    }
+
     impl<T: MtKey> Display for NodeInner<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
             write!(f, "NodeInner(key={}, size={})", self.key, self.size)
+        }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
+    // Ghost<Set<T::V>> contains FnSpec (PhantomData at runtime), which lacks Send/Sync.
+    // ParamBST is safe to send/share: the Ghost field is erased at runtime.
+    unsafe impl<T: MtKey> Send for ParamBST<T> {}
+    unsafe impl<T: MtKey> Sync for ParamBST<T> {}
+
+    impl<T: MtKey> std::fmt::Debug for ParamBST<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ParamBST").finish()
         }
     }
 

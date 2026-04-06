@@ -4,19 +4,32 @@
 //! Chapter 45: Priority Queue implementation using Leftist Heap (Data Structure 45.3)
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
+
+//		Section 1. module
 
 pub mod LeftistHeapPQ {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter, Result};
@@ -32,9 +45,12 @@ pub mod LeftistHeapPQ {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! {
+    verus! 
+{
 
-//  3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::multiset::group_multiset_axioms,
@@ -44,8 +60,9 @@ broadcast use {
     vstd::std_specs::vec::group_vec_axioms,
 };
 
+    //		Section 4a. type definitions
 
-//  4. type definitions
+
         #[verifier::reject_recursive_types(T)]
         pub enum LeftistHeapNode<T: StT + Ord + TotalOrder> {
             Leaf,
@@ -57,136 +74,16 @@ broadcast use {
             },
         }
 
-        /// Priority Queue implemented using Leftist Heap (Data Structure 45.3).
-        #[verifier::reject_recursive_types(T)]
-        pub struct LeftistHeapPQ<T: StT + Ord + TotalOrder> {
-            pub root: LeftistHeapNode<T>,
-        }
+    //		Section 5a. view impls
 
-
-//  5. view impls
 
         impl<T: StT + Ord + TotalOrder> View for LeftistHeapNode<T> {
             type V = Multiset<T>;
             open spec fn view(&self) -> Multiset<T> { self.spec_seq().to_multiset() }
         }
 
-        impl<T: StT + Ord + TotalOrder> View for LeftistHeapPQ<T> {
-            type V = Multiset<T>;
-            open spec fn view(&self) -> Multiset<T> { self.root.spec_seq().to_multiset() }
-        }
+    //		Section 8a. traits
 
-//  7. proof fns/broadcast groups
-
-        proof fn _leftist_heap_pq_verified() {}
-
-        /// Exec comparison with spec ensures connecting to TotalOrder::le.
-        // veracity: no_requires
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
-            ensures le <==> TotalOrder::le(*a, *b)
-        {
-            match TotalOrder::cmp(a, b) {
-                Ordering::Greater => {
-                    proof {
-                        if TotalOrder::le(*a, *b) {
-                            TotalOrder::antisymmetric(*a, *b);
-                        }
-                    }
-                    false
-                }
-                _ => {
-                    proof { TotalOrder::reflexive(*a); }
-                    true
-                }
-            }
-        }
-
-        proof fn lemma_total_size_monotone<T: StT + Ord + TotalOrder>(heaps: Seq<LeftistHeapPQ<T>>, j: int, k: int)
-            requires 0 <= j <= k <= heaps.len(),
-            ensures LeftistHeapPQ::<T>::spec_total_size(heaps, j) <= LeftistHeapPQ::<T>::spec_total_size(heaps, k),
-            decreases k - j,
-        {
-            if j < k {
-                lemma_total_size_monotone(heaps, j, k - 1);
-            }
-        }
-
-        /// Heap invariant implies root is <= all elements in spec_seq.
-        proof fn lemma_heap_root_is_min<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
-            requires node.spec_is_heap(),
-            ensures
-                node.spec_seq().len() > 0 ==>
-                    forall|i: int| 0 <= i < node.spec_seq().len() ==>
-                        #[trigger] TotalOrder::le(node.spec_seq()[0], node.spec_seq()[i]),
-            decreases *node,
-        {
-            match node {
-                LeftistHeapNode::Leaf => {},
-                LeftistHeapNode::Node { key, left, right, .. } => {
-                    let s = node.spec_seq();
-                    let ls = left.spec_seq();
-                    let rs = right.spec_seq();
-                    assert(s =~= Seq::empty().push(*key) + ls + rs);
-                    assert(s[0] == *key);
-                    TotalOrder::reflexive(*key);
-
-                    lemma_heap_root_is_min(&**left);
-                    lemma_heap_root_is_min(&**right);
-
-                    assert forall|i: int| 0 <= i < s.len() implies
-                        #[trigger] TotalOrder::le(s[0], s[i])
-                    by {
-                        if i == 0 {
-                            // s[0] == *key, reflexive
-                        } else if i < 1 + ls.len() {
-                            // Element is in left subtree
-                            let li = i - 1;
-                            assert(s[i] == ls[li]);
-                            match &**left {
-                                LeftistHeapNode::Leaf => {},
-                                LeftistHeapNode::Node { key: lk, left: ll, right: lr, .. } => {
-                                    assert(ls =~= Seq::empty().push(*lk) + ll.spec_seq() + lr.spec_seq());
-                                    assert(ls[0] == *lk);
-                                    assert(TotalOrder::le(*key, *lk));
-                                    assert(TotalOrder::le(ls[0], ls[li]));
-                                    TotalOrder::transitive(*key, *lk, ls[li]);
-                                },
-                            }
-                        } else {
-                            // Element is in right subtree
-                            let ri = i - 1 - ls.len();
-                            assert(s[i] == rs[ri]);
-                            match &**right {
-                                LeftistHeapNode::Leaf => {},
-                                LeftistHeapNode::Node { key: rk, left: rl, right: rr, .. } => {
-                                    assert(rs =~= Seq::empty().push(*rk) + rl.spec_seq() + rr.spec_seq());
-                                    assert(rs[0] == *rk);
-                                    assert(TotalOrder::le(*key, *rk));
-                                    assert(TotalOrder::le(rs[0], rs[ri]));
-                                    TotalOrder::transitive(*key, *rk, rs[ri]);
-                                },
-                            }
-                        }
-                    }
-                },
-            }
-        }
-
-        /// spec_rank_bounded implies spec_rank() <= spec_size().
-        proof fn lemma_rank_le_size<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
-            requires node.spec_rank_bounded(),
-            ensures node.spec_rank() <= node.spec_size(),
-        {
-            match node {
-                LeftistHeapNode::Leaf => {},
-                LeftistHeapNode::Node { rank, left, right, .. } => {
-                    assert(rank as nat <= 1 + left.spec_size() + right.spec_size());
-                },
-            }
-        }
-
-//  8. traits
 
         /// Recursive spec functions on the node enum (spec-only, no exec methods).
         pub trait LeftistHeapNodeSpec<T: StT + Ord + TotalOrder>: Sized {
@@ -264,143 +161,8 @@ broadcast use {
                 ensures v@.len() as nat == self.spec_size();
         }
 
-        /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
-        pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Multiset<T>> {
-            spec fn spec_leftistheappq_wf(&self) -> bool;
-            spec fn spec_size(self) -> nat;
-            spec fn spec_seq(&self) -> Seq<T>;
-            spec fn spec_sorted(s: Seq<T>) -> bool;
+    //		Section 9a. impls
 
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-            fn empty() -> (pq: Self)
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == 0,
-                    pq@ =~= Multiset::empty();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-            fn singleton(element: T) -> (pq: Self)
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == 1,
-                    pq@ =~= Multiset::empty().insert(element);
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-            fn find_min(&self) -> (min_elem: Option<&T>)
-                requires self.spec_leftistheappq_wf(),
-                ensures
-                    self.spec_size() == 0 ==> min_elem.is_none(),
-                    self.spec_size() > 0 ==> min_elem.is_some(),
-                    self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,
-                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
-                        #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
-            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld with singleton
-            fn insert(&self, element: T) -> (pq: Self)
-                requires
-                    self.spec_leftistheappq_wf(),
-                    self.spec_size() + 1 <= usize::MAX as nat,
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == self.spec_size() + 1,
-                    pq@ =~= self@.insert(element);
-            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld children
-            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
-                requires
-                    self.spec_leftistheappq_wf(),
-                    self.spec_size() <= usize::MAX as nat,
-                ensures
-                    min_and_rest.0.spec_leftistheappq_wf(),
-                    self.spec_size() > 0 ==> min_and_rest.1.is_some(),
-                    self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
-                    self.spec_size() == 0 ==> min_and_rest.1.is_none(),
-                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size(),
-                    self.spec_size() > 0 ==> self@ =~=
-                        min_and_rest.0@.insert(min_and_rest.1.unwrap()),
-                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
-                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
-            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg m + lg n), Span O(lg m + lg n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m + lg n), Span O(lg m + lg n) — matches APAS
-            fn meld(&self, other: &Self) -> (pq: Self)
-                requires
-                    self.spec_leftistheappq_wf(),
-                    other.spec_leftistheappq_wf(),
-                    self.spec_size() + other.spec_size() <= usize::MAX as nat,
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == self.spec_size() + other.spec_size(),
-                    pq@ =~= self@.add(other@);
-            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(n), Span O(lg^2 n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential reduce, APAS Span O(lg^2 n) assumes parallel
-            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
-                requires obeys_feq_clone::<T>(),
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == seq@.len();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-            fn size(&self) -> (n: usize)
-                requires self.spec_size() <= usize::MAX as nat,
-                ensures n as nat == self.spec_size();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-            fn is_empty(&self) -> (is_empty: bool)
-                ensures is_empty == (self.spec_size() == 0);
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-            fn extract_all_sorted(&self) -> (sorted: Vec<T>)
-                requires
-                    self.spec_leftistheappq_wf(),
-                    self.spec_size() <= usize::MAX as nat,
-                ensures
-                    sorted@.len() as nat == self.spec_size(),
-                    Self::spec_sorted(sorted@);
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-            fn height(&self) -> (levels: usize)
-                requires self.spec_size() <= usize::MAX as nat,
-                ensures self.spec_size() == 0 ==> levels == 0;
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-            fn root_rank(&self) -> (rank_val: usize)
-                ensures self.spec_size() == 0 ==> rank_val == 0;
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-            fn is_valid_leftist_heap(&self) -> (is_valid: bool)
-                requires self.spec_size() <= usize::MAX as nat,
-                ensures is_valid <==> self.spec_leftistheappq_wf();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-            fn from_vec(vec: Vec<T>) -> (pq: Self)
-                requires obeys_feq_clone::<T>(),
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == vec@.len();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-            fn to_vec(&self) -> (v: Vec<T>)
-                requires self.spec_size() <= usize::MAX as nat,
-                ensures v@.len() as nat == self.spec_size();
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-            fn to_sorted_vec(&self) -> (v: Vec<T>)
-                requires
-                    self.spec_leftistheappq_wf(),
-                    self.spec_size() <= usize::MAX as nat,
-                ensures
-                    v@.len() as nat == self.spec_size(),
-                    Self::spec_sorted(v@);
-            spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
-
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
-            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
-                requires
-                    forall|i: int| 0 <= i < heaps@.len() ==>
-                        (#[trigger] heaps@[i]).spec_leftistheappq_wf(),
-                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
-                ensures
-                    pq.spec_leftistheappq_wf(),
-                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-            fn split(&self, key: &T) -> (parts: (Self, Self))
-                requires self.spec_size() <= usize::MAX as nat,
-                ensures
-                    parts.0.spec_leftistheappq_wf(),
-                    parts.1.spec_leftistheappq_wf();
-        }
-
-
-//  9. impls
 
         impl<T: StT + Ord + TotalOrder> LeftistHeapNodeSpec<T> for LeftistHeapNode<T> {
             open spec fn spec_size(&self) -> nat
@@ -768,6 +530,275 @@ broadcast use {
                         }
                         result
                     }
+                }
+            }
+        }
+
+    //		Section 4b. type definitions
+
+
+        /// Priority Queue implemented using Leftist Heap (Data Structure 45.3).
+        #[verifier::reject_recursive_types(T)]
+        pub struct LeftistHeapPQ<T: StT + Ord + TotalOrder> {
+            pub root: LeftistHeapNode<T>,
+        }
+
+    //		Section 5b. view impls
+
+
+        impl<T: StT + Ord + TotalOrder> View for LeftistHeapPQ<T> {
+            type V = Multiset<T>;
+            open spec fn view(&self) -> Multiset<T> { self.root.spec_seq().to_multiset() }
+        }
+
+    //		Section 7b. proof fns/broadcast groups
+
+
+        proof fn _leftist_heap_pq_verified() {}
+
+        proof fn lemma_total_size_monotone<T: StT + Ord + TotalOrder>(heaps: Seq<LeftistHeapPQ<T>>, j: int, k: int)
+            requires 0 <= j <= k <= heaps.len(),
+            ensures LeftistHeapPQ::<T>::spec_total_size(heaps, j) <= LeftistHeapPQ::<T>::spec_total_size(heaps, k),
+            decreases k - j,
+        {
+            if j < k {
+                lemma_total_size_monotone(heaps, j, k - 1);
+            }
+        }
+
+        /// Heap invariant implies root is <= all elements in spec_seq.
+        proof fn lemma_heap_root_is_min<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
+            requires node.spec_is_heap(),
+            ensures
+                node.spec_seq().len() > 0 ==>
+                    forall|i: int| 0 <= i < node.spec_seq().len() ==>
+                        #[trigger] TotalOrder::le(node.spec_seq()[0], node.spec_seq()[i]),
+            decreases *node,
+        {
+            match node {
+                LeftistHeapNode::Leaf => {},
+                LeftistHeapNode::Node { key, left, right, .. } => {
+                    let s = node.spec_seq();
+                    let ls = left.spec_seq();
+                    let rs = right.spec_seq();
+                    assert(s =~= Seq::empty().push(*key) + ls + rs);
+                    assert(s[0] == *key);
+                    TotalOrder::reflexive(*key);
+
+                    lemma_heap_root_is_min(&**left);
+                    lemma_heap_root_is_min(&**right);
+
+                    assert forall|i: int| 0 <= i < s.len() implies
+                        #[trigger] TotalOrder::le(s[0], s[i])
+                    by {
+                        if i == 0 {
+                            // s[0] == *key, reflexive
+                        } else if i < 1 + ls.len() {
+                            // Element is in left subtree
+                            let li = i - 1;
+                            assert(s[i] == ls[li]);
+                            match &**left {
+                                LeftistHeapNode::Leaf => {},
+                                LeftistHeapNode::Node { key: lk, left: ll, right: lr, .. } => {
+                                    assert(ls =~= Seq::empty().push(*lk) + ll.spec_seq() + lr.spec_seq());
+                                    assert(ls[0] == *lk);
+                                    assert(TotalOrder::le(*key, *lk));
+                                    assert(TotalOrder::le(ls[0], ls[li]));
+                                    TotalOrder::transitive(*key, *lk, ls[li]);
+                                },
+                            }
+                        } else {
+                            // Element is in right subtree
+                            let ri = i - 1 - ls.len();
+                            assert(s[i] == rs[ri]);
+                            match &**right {
+                                LeftistHeapNode::Leaf => {},
+                                LeftistHeapNode::Node { key: rk, left: rl, right: rr, .. } => {
+                                    assert(rs =~= Seq::empty().push(*rk) + rl.spec_seq() + rr.spec_seq());
+                                    assert(rs[0] == *rk);
+                                    assert(TotalOrder::le(*key, *rk));
+                                    assert(TotalOrder::le(rs[0], rs[ri]));
+                                    TotalOrder::transitive(*key, *rk, rs[ri]);
+                                },
+                            }
+                        }
+                    }
+                },
+            }
+        }
+
+        /// spec_rank_bounded implies spec_rank() <= spec_size().
+        proof fn lemma_rank_le_size<T: StT + Ord + TotalOrder>(node: &LeftistHeapNode<T>)
+            requires node.spec_rank_bounded(),
+            ensures node.spec_rank() <= node.spec_size(),
+        {
+            match node {
+                LeftistHeapNode::Leaf => {},
+                LeftistHeapNode::Node { rank, left, right, .. } => {
+                    assert(rank as nat <= 1 + left.spec_size() + right.spec_size());
+                },
+            }
+        }
+
+    //		Section 8b. traits
+
+
+        /// Meldable Priority Queue ADT (Data Type 45.1) using leftist heap.
+        pub trait LeftistHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Multiset<T>> {
+            spec fn spec_leftistheappq_wf(&self) -> bool;
+            spec fn spec_size(self) -> nat;
+            spec fn spec_seq(&self) -> Seq<T>;
+            spec fn spec_sorted(s: Seq<T>) -> bool;
+
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            fn empty() -> (pq: Self)
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == 0,
+                    pq@ =~= Multiset::empty();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            fn singleton(element: T) -> (pq: Self)
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == 1,
+                    pq@ =~= Multiset::empty().insert(element);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            fn find_min(&self) -> (min_elem: Option<&T>)
+                requires self.spec_leftistheappq_wf(),
+                ensures
+                    self.spec_size() == 0 ==> min_elem.is_none(),
+                    self.spec_size() > 0 ==> min_elem.is_some(),
+                    self.spec_size() > 0 ==> self@.count(*min_elem.unwrap()) > 0,
+                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
+                        #[trigger] TotalOrder::le(*min_elem.unwrap(), e);
+            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld with singleton
+            fn insert(&self, element: T) -> (pq: Self)
+                requires
+                    self.spec_leftistheappq_wf(),
+                    self.spec_size() + 1 <= usize::MAX as nat,
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == self.spec_size() + 1,
+                    pq@ =~= self@.insert(element);
+            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg n), Span O(lg n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) — matches APAS: meld children
+            fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
+                requires
+                    self.spec_leftistheappq_wf(),
+                    self.spec_size() <= usize::MAX as nat,
+                ensures
+                    min_and_rest.0.spec_leftistheappq_wf(),
+                    self.spec_size() > 0 ==> min_and_rest.1.is_some(),
+                    self.spec_size() > 0 ==> min_and_rest.0.spec_size() == self.spec_size() - 1,
+                    self.spec_size() == 0 ==> min_and_rest.1.is_none(),
+                    self.spec_size() == 0 ==> min_and_rest.0.spec_size() == self.spec_size(),
+                    self.spec_size() > 0 ==> self@ =~=
+                        min_and_rest.0@.insert(min_and_rest.1.unwrap()),
+                    self.spec_size() > 0 ==> forall|e: T| self@.count(e) > 0 ==>
+                        #[trigger] TotalOrder::le(min_and_rest.1.unwrap(), e);
+            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(lg m + lg n), Span O(lg m + lg n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m + lg n), Span O(lg m + lg n) — matches APAS
+            fn meld(&self, other: &Self) -> (pq: Self)
+                requires
+                    self.spec_leftistheappq_wf(),
+                    other.spec_leftistheappq_wf(),
+                    self.spec_size() + other.spec_size() <= usize::MAX as nat,
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == self.spec_size() + other.spec_size(),
+                    pq@ =~= self@.add(other@);
+            /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(n), Span O(lg^2 n)
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential reduce, APAS Span O(lg^2 n) assumes parallel
+            fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == seq@.len();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            fn size(&self) -> (n: usize)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures n as nat == self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            fn is_empty(&self) -> (is_empty: bool)
+                ensures is_empty == (self.spec_size() == 0);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            fn extract_all_sorted(&self) -> (sorted: Vec<T>)
+                requires
+                    self.spec_leftistheappq_wf(),
+                    self.spec_size() <= usize::MAX as nat,
+                ensures
+                    sorted@.len() as nat == self.spec_size(),
+                    Self::spec_sorted(sorted@);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            fn height(&self) -> (levels: usize)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures self.spec_size() == 0 ==> levels == 0;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+            fn root_rank(&self) -> (rank_val: usize)
+                ensures self.spec_size() == 0 ==> rank_val == 0;
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            fn is_valid_leftist_heap(&self) -> (is_valid: bool)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures is_valid <==> self.spec_leftistheappq_wf();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            fn from_vec(vec: Vec<T>) -> (pq: Self)
+                requires obeys_feq_clone::<T>(),
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == vec@.len();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+            fn to_vec(&self) -> (v: Vec<T>)
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures v@.len() as nat == self.spec_size();
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            fn to_sorted_vec(&self) -> (v: Vec<T>)
+                requires
+                    self.spec_leftistheappq_wf(),
+                    self.spec_size() <= usize::MAX as nat,
+                ensures
+                    v@.len() as nat == self.spec_size(),
+                    Self::spec_sorted(v@);
+            spec fn spec_total_size(heaps: Seq<Self>, n: int) -> nat;
+
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * lg(n)), Span O(k * lg(n))
+            fn meld_multiple(heaps: &Vec<Self>) -> (pq: Self)
+                requires
+                    forall|i: int| 0 <= i < heaps@.len() ==>
+                        (#[trigger] heaps@[i]).spec_leftistheappq_wf(),
+                    Self::spec_total_size(heaps@, heaps@.len() as int) <= usize::MAX as nat,
+                ensures
+                    pq.spec_leftistheappq_wf(),
+                    pq.spec_size() == Self::spec_total_size(heaps@, heaps@.len() as int);
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+            fn split(&self, key: &T) -> (parts: (Self, Self))
+                requires self.spec_size() <= usize::MAX as nat,
+                ensures
+                    parts.0.spec_leftistheappq_wf(),
+                    parts.1.spec_leftistheappq_wf();
+        }
+
+    //		Section 9b. impls
+
+
+        /// Exec comparison with spec ensures connecting to TotalOrder::le.
+        // veracity: no_requires
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn total_order_le<T: StT + Ord + TotalOrder>(a: &T, b: &T) -> (le: bool)
+            ensures le <==> TotalOrder::le(*a, *b)
+        {
+            match TotalOrder::cmp(a, b) {
+                Ordering::Greater => {
+                    proof {
+                        if TotalOrder::le(*a, *b) {
+                            TotalOrder::antisymmetric(*a, *b);
+                        }
+                    }
+                    false
+                }
+                _ => {
+                    proof { TotalOrder::reflexive(*a); }
+                    true
                 }
             }
         }
@@ -1149,22 +1180,13 @@ broadcast use {
             }
         }
 
-//  11. derive impls in verus!
+    //		Section 12a. derive impls in verus!
+
 
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapNode<T> {
             open spec fn obeys_eq_spec() -> bool { true }
             open spec fn eq_spec(&self, other: &Self) -> bool { self == other }
-        }
-
-        #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapPQ<T> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
-        }
-
-        impl<T: StT + Ord + TotalOrder> Default for LeftistHeapPQ<T> {
-            fn default() -> Self { Self::empty() }
         }
 
 
@@ -1209,6 +1231,19 @@ broadcast use {
 
         impl<T: StT + Ord + TotalOrder> core::cmp::Eq for LeftistHeapNode<T> {}
 
+    //		Section 12b. derive impls in verus!
+
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for LeftistHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self.root == other.root }
+        }
+
+        impl<T: StT + Ord + TotalOrder> Default for LeftistHeapPQ<T> {
+            fn default() -> Self { Self::empty() }
+        }
+
         impl<T: StT + Ord + TotalOrder> Clone for LeftistHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned.root == self.root
@@ -1233,7 +1268,8 @@ broadcast use {
 
     }
 
-//  12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! LeftistHeapPQLit {
@@ -1246,7 +1282,23 @@ broadcast use {
         }};
     }
 
-//  13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
+    /// Efficient multi-way merge using O(log n) meld operations.
+    pub fn efficient_multi_way_merge<T: StT + Ord + TotalOrder>(sequences: Vec<Vec<T>>) -> Vec<T> {
+        let heaps = sequences.into_iter()
+            .map(|seq| LeftistHeapPQ::from_vec(seq))
+            .collect::<Vec<LeftistHeapPQ<T>>>();
+        let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);
+        merged_heap.extract_all_sorted()
+    }
+
+    /// Parallel heap construction using reduce pattern.
+    pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {
+        LeftistHeapPQ::from_vec(elements)
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapNode<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -1276,6 +1328,8 @@ broadcast use {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl<T: StT + Ord + TotalOrder + Debug> Debug for LeftistHeapPQ<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "LeftistHeapPQ({:?})", self.root)
@@ -1300,19 +1354,5 @@ broadcast use {
             writeln!(f, "LeftistHeapPQ:")?;
             format_node(&self.root, f, 0)
         }
-    }
-
-    /// Efficient multi-way merge using O(log n) meld operations.
-    pub fn efficient_multi_way_merge<T: StT + Ord + TotalOrder>(sequences: Vec<Vec<T>>) -> Vec<T> {
-        let heaps = sequences.into_iter()
-            .map(|seq| LeftistHeapPQ::from_vec(seq))
-            .collect::<Vec<LeftistHeapPQ<T>>>();
-        let merged_heap = LeftistHeapPQ::meld_multiple(&heaps);
-        merged_heap.extract_all_sorted()
-    }
-
-    /// Parallel heap construction using reduce pattern.
-    pub fn parallel_heap_construction<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> LeftistHeapPQ<T> {
-        LeftistHeapPQ::from_vec(elements)
     }
 }

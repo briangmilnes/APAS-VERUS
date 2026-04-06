@@ -4,20 +4,27 @@
 //!
 //! reduce_range_parallel() uses verified ParaPair! with named closures for range reductions.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod AugOrderedTableMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 5. view impls
-    // 7. free functions (calculate_reduction, recalculate_reduction)
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-    // 14. macros
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
@@ -46,14 +53,19 @@ pub mod AugOrderedTableMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -67,59 +79,16 @@ broadcast use {
 
     pub type AugOrderedTableMt<K, V, F> = AugOrderedTableMtEph<K, V, F>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> View for AugOrderedTableMtEph<K, V, F> {
         type V = Map<K::V, V::V>;
         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
-    // 7. free functions (calculate_reduction, recalculate_reduction)
+    //		Section 7. proof fns/broadcast groups
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to calculate_reduction
-    pub fn recalculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
-        table: &AugOrderedTableMtEph<K, V, F>,
-    ) -> (reduced: V)
-    requires table.spec_augorderedtablemteph_wf()
-    ensures table@.dom().finite()
-    {
-        let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
-        proof { lemma_aug_view(table); }
-        reduced
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
-    pub fn calculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
-        base: &OrderedTableMtEph<K, V>,
-        reducer: &F,
-        identity: &V,
-    ) -> (reduced: V)
-    requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
-    ensures base@.dom().finite()
-    {
-        let pairs = base.collect();
-        let sz = pairs.length();
-        if sz == 0 {
-            return identity.clone();
-        }
-        let mut reduced = pairs.nth(0).1.clone();
-        let mut i: usize = 1;
-        while i < sz
-            invariant
-                1 <= i <= pairs@.len(),
-                sz as nat == pairs@.len(),
-                pairs.spec_avltreeseqstper_wf(),
-                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-            decreases pairs@.len() - i,
-        {
-            let pair = pairs.nth(i);
-            reduced = reducer(&reduced, &pair.1);
-            i = i + 1;
-        }
-        reduced
-    }
-
-    // 7b. proof fns
 
     proof fn lemma_aug_view<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
         t: &AugOrderedTableMtEph<K, V, F>,
@@ -127,7 +96,8 @@ broadcast use {
         ensures t@ =~= t.base_table@
     {}
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Trait defining all augmented ordered table operations (ADT 43.3) with multi-threaded ephemeral semantics
     /// Extends ordered table operations with efficient reduction and thread-safe operations
@@ -435,7 +405,54 @@ broadcast use {
                 iter_invariant(&it);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    // 7. free functions (calculate_reduction, recalculate_reduction)
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to calculate_reduction
+    pub fn recalculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
+        table: &AugOrderedTableMtEph<K, V, F>,
+    ) -> (reduced: V)
+    requires table.spec_augorderedtablemteph_wf()
+    ensures table@.dom().finite()
+    {
+        let reduced = calculate_reduction(&table.base_table, &table.reducer, &table.identity);
+        proof { lemma_aug_view(table); }
+        reduced
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
+    pub fn calculate_reduction<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>>(
+        base: &OrderedTableMtEph<K, V>,
+        reducer: &F,
+        identity: &V,
+    ) -> (reduced: V)
+    requires forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2))
+    ensures base@.dom().finite()
+    {
+        let pairs = base.collect();
+        let sz = pairs.length();
+        if sz == 0 {
+            return identity.clone();
+        }
+        let mut reduced = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < sz
+            invariant
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
+                pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            decreases pairs@.len() - i,
+        {
+            let pair = pairs.nth(i);
+            reduced = reducer(&reduced, &pair.1);
+            i = i + 1;
+        }
+        reduced
+    }
+
 
     impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> AugOrderedTableMtEphTrait<K, V, F> for AugOrderedTableMtEph<K, V, F> {
         open spec fn spec_augorderedtablemteph_wf(&self) -> bool {
@@ -854,7 +871,8 @@ broadcast use {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
 
     impl<'a, K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> IntoIterator for &'a AugOrderedTableMtEph<K, V, F> {
         type Item = Pair<K, V>;
@@ -870,7 +888,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> Clone for AugOrderedTableMtEph<K, V, F> {
         fn clone(&self) -> (cloned: Self)
@@ -889,7 +908,25 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    // Macro for creating augmented ordered table literals
+    #[macro_export]
+    macro_rules! AugOrderedTableMtEphLit {
+        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
+            let mut table = $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::empty($reducer, $identity);
+            $(
+                $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::insert(&mut table, $k, $v, |_old, new| new.clone());
+            )*
+            table
+        }};
+        (reducer: $reducer:expr, identity: $identity:expr) => {{
+            $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::empty($reducer, $identity)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<K: MtKey, V: MtVal + Ord, F: MtReduceFn<V>> PartialEq for AugOrderedTableMtEph<K, V, F> {
         fn eq(&self, other: &Self) -> bool {
@@ -916,20 +953,5 @@ broadcast use {
                 .field("cached_reduction", &self.cached_reduction)
                 .finish()
         }
-    }
-
-    // Macro for creating augmented ordered table literals
-    #[macro_export]
-    macro_rules! AugOrderedTableMtEphLit {
-        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
-            let mut table = $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::empty($reducer, $identity);
-            $(
-                $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::insert(&mut table, $k, $v, |_old, new| new.clone());
-            )*
-            table
-        }};
-        (reducer: $reducer:expr, identity: $identity:expr) => {{
-            $crate::Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait::empty($reducer, $identity)
-        }};
     }
 }

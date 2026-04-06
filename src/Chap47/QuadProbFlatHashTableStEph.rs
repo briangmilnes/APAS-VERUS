@@ -5,19 +5,22 @@
 //! Probe sequence: h_i(k) = (h(k) + i*(i+1)/2) mod m, where m = 2^k.
 //! When m is a power of two, the first m probes are a complete permutation of {0..m-1}.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod QuadProbFlatHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!: spec_is_power_of_two, spec_tri_probe, spec_quadprobflathashsteph_wf, spec_count_empties)
-    // 7. proof fns (inside verus!: lemma_triangular_injective, lemma_empty_slot_reachable, lemma_*_empties)
-    // 9. impls (inside verus!)
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -32,19 +35,24 @@ pub mod QuadProbFlatHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
+
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Quadratic Probing Flat Hash Table implementation.
     /// Uses triangular-number probe sequence h_i(k) = (h(k) + i*(i+1)/2) mod m
     /// with m a power of two, guaranteeing a complete permutation of all slots.
     pub struct QuadProbFlatHashTableStEph;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Whether m is a power of two (m = 2^k for some k >= 1).
     pub open spec fn spec_is_power_of_two(m: int) -> bool {
@@ -90,7 +98,19 @@ pub mod QuadProbFlatHashTableStEph {
             })
     }
 
-    // 7. proof fns
+    /// Counts the number of Empty entries in a flat hash table sequence.
+    pub open spec fn spec_count_empties<Key, Value>(
+        table: Seq<FlatEntry<Key, Value>>,
+    ) -> int
+        decreases table.len(),
+    {
+        if table.len() == 0 { 0 }
+        else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
+        else { spec_count_empties(table.drop_last()) }
+    }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     /// n*(n+1) is always even since exactly one of n, n+1 is even.
     proof fn lemma_consecutive_even(a: int)
@@ -449,17 +469,6 @@ pub mod QuadProbFlatHashTableStEph {
         // Yet table.table@[s] is Empty. Contradiction.
     }
 
-    /// Counts the number of Empty entries in a flat hash table sequence.
-    pub open spec fn spec_count_empties<Key, Value>(
-        table: Seq<FlatEntry<Key, Value>>,
-    ) -> int
-        decreases table.len(),
-    {
-        if table.len() == 0 { 0 }
-        else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
-        else { spec_count_empties(table.drop_last()) }
-    }
-
     /// An all-Empty sequence has empties count equal to its length.
     pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
         requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,
@@ -534,7 +543,8 @@ pub mod QuadProbFlatHashTableStEph {
         }
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>
         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
@@ -1321,7 +1331,8 @@ pub mod QuadProbFlatHashTableStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for QuadProbFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

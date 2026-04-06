@@ -3,22 +3,27 @@
 //! Chained Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses separate chaining for collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+
+
+//		Section 1. module
+
 pub mod ChainedHashTable {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 7. proof fns (inside verus!: lemma_seq_pairs_*)
-    // 8. traits (inside verus!: ChainedHashTable)
-
-    // 2. imports
+    //		Section 2. imports
     use vstd::prelude::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-        // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
         /// Removing a pair at position i (where pairs[i].0 != k) does not affect the map for key k.
         pub proof fn lemma_seq_pairs_to_map_remove_preserves_other_keys<Key, Value>(
@@ -151,7 +156,8 @@ pub mod ChainedHashTable {
             }
         }
 
-        // 8. traits
+    //		Section 8. traits
+
 
         /// Chained Hash Table trait - extends ParaHashTableStEphTrait.
         /// Uses separate chaining (linked lists or sequences) for collision resolution.

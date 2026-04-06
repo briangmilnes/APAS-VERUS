@@ -6,20 +6,24 @@
 //! Bypasses vstd::hash_set::HashSetWithView to avoid pub m dependency.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod hash_set_with_view_plus {
+
+
+//		Section 2. imports
 
 use vstd::prelude::*;
 use std::collections::HashSet;
@@ -29,9 +33,11 @@ use vstd::std_specs::hash::obeys_key_model;
 use core::hash::Hash;
 use crate::vstdplus::feq::feq::*;
 
-verus! {
+verus! 
+{
 
-//		3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -39,8 +45,8 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
+    //		Section 4. type definitions
 
-//		4. type definitions
 
 // Direct wrapper around std::collections::HashSet
 // View gives Set<Key::V> (mapped view)
@@ -49,20 +55,20 @@ pub struct HashSetWithViewPlus<Key: View + Eq + Hash> {
     pub inner: HashSet<Key>,
 }
 
+    //		Section 5. view impls
 
-//		5. view impls
 
 impl<Key: View + Eq + Hash> View for HashSetWithViewPlus<Key> {
     type V = Set<<Key as View>::V>;
-    
+
     // Map the raw HashSet view (Set<Key>) to Set<Key::V>
     open spec fn view(&self) -> Self::V { 
         self.inner@.map(|k: Key| k@)
     }
 }
 
+    //		Section 7. proof fns/broadcast groups
 
-//		7. proof fns/broadcast groups
 
 /// A HashSetWithViewPlus is always finite (it's backed by a finite HashSet)
 pub broadcast proof fn axiom_hash_set_with_view_plus_finite<Key: View + Eq + Hash>(s: &HashSetWithViewPlus<Key>)
@@ -76,8 +82,8 @@ pub broadcast group group_hash_set_with_view_plus_axioms {
     axiom_hash_set_with_view_plus_finite,
 }
 
+    //		Section 8. traits
 
-//		8. traits
 
 pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as View>::V>> {
     fn iter(&self) -> (r: HashSetWithViewPlusIter<'_, Key>)
@@ -91,8 +97,8 @@ pub trait HashSetWithViewPlusTrait<Key: View + Eq + Hash>: View<V = Set<<Key as 
             };
 }
 
+    //		Section 9. impls
 
-//		9. impls
 
 impl<Key: View + Eq + Hash + Clone> HashSetWithViewPlus<Key> {
     #[verifier::external_body]
@@ -154,8 +160,8 @@ impl<Key: View + Eq + Hash> HashSetWithViewPlusTrait<Key> for HashSetWithViewPlu
     { HashSetWithViewPlusIter { inner: self.inner.iter() } }
 }
 
+    //		Section 10. iterators
 
-//		10. iterators
 
 #[verifier::reject_recursive_types(Key)]
 pub struct HashSetWithViewPlusIter<'a, Key: View + Eq + Hash> {
@@ -261,8 +267,8 @@ impl<'a, Key: View + Eq + Hash> View for HashSetWithViewPlusGhostIterator<'a, Ke
     }
 }
 
+    //		Section 12. derive impls in verus!
 
-//		11. derive impls in verus!
 
 impl<Key: View + Eq + Hash + Clone> Clone for HashSetWithViewPlus<Key> {
     #[verifier::external_body]

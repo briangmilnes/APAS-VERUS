@@ -3,29 +3,32 @@
 //! Ephemeral Set built on `std::collections::HashSet` as wrapped by vstd and vstdplus.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod SetStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
@@ -44,7 +47,8 @@ verus! {
     use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         // Set groups
@@ -66,21 +70,24 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEph<T: StT + Hash> { 
         pub elements: HashSetWithViewPlus<T>  // Public for open spec fn view()
     }
 
-    //		5. view impls
+    //		Section 5. view impls
+
 
     impl<T: StT + Hash> View for SetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.elements@ }
     }
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>()
@@ -93,7 +100,8 @@ verus! {
         s@.finite() && valid_key_type::<V>()
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Singleton choose: if len == 1 and contains(a), then choose() == a.
     pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
@@ -111,7 +119,8 @@ verus! {
         lemma_singleton_choose,
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait SetStEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
@@ -298,7 +307,8 @@ verus! {
                 self@.contains(element@);
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     impl<T: StT + Hash> SetStEphTrait<T> for SetStEph<T> {
 
@@ -317,7 +327,7 @@ verus! {
                       assert(obeys_feq_full_trigger::<T>());
             let mut s: SetStEph<T> = SetStEph::empty();
             let ghost v_seq: Seq<T> = v@;
-            
+
             for x in iter: v
                 invariant
                     valid_key_type::<T>(),
@@ -350,7 +360,7 @@ verus! {
             let mut seq: Vec<T> = Vec::new();
             let it = self.iter();
             let ghost iter_seq = it@.1;
-            
+
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -418,11 +428,11 @@ verus! {
             let mut union: SetStEph<T> = SetStEph { 
                 elements: HashSetWithViewPlus::with_capacity(capacity) 
             };
-            
+
             // Insert all elements from self.
             let it1 = self.iter();
             let ghost it1_seq = it1@.1;
-            
+
             for x in iter1: it1
                 invariant
                     valid_key_type::<T>(),
@@ -433,13 +443,13 @@ verus! {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
                 let _ = union.insert(x.clone_plus());
             }
-            
+
             // Insert all elements from s2 (guaranteed no duplicates due to disjointness).
             let it2 = s2.iter();
             let ghost it2_seq = it2@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
-            
+
             for x in iter2: it2
                 invariant
                     valid_key_type::<T>(),
@@ -486,10 +496,10 @@ verus! {
                     let _ = intersection.insert(s1mem_clone);
                 } 
             }
-            
+
             intersection
         }
-        
+
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — iterates self, calls elt_cross_set (O(|b|)) + union for each.
         fn cartesian_product<U: StT + Hash + Clone>(&self, s2: &SetStEph<U>) -> (product: SetStEph<Pair<T, U>>)
         {
@@ -498,7 +508,7 @@ verus! {
             let ghost s1_seq = it@.1;
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
-            
+
             for a in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -526,7 +536,7 @@ verus! {
             let ghost s2_seq = it@.1;
             let ghost s2_view = s2@;
             let ghost a_view = a@;
-            
+
             for b in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -545,7 +555,7 @@ verus! {
                 let b_clone = b.clone_plus();
                 let _ = product.insert(Pair(a_clone, b_clone));
             }
-            
+
             product
         }
 
@@ -653,7 +663,7 @@ verus! {
             if !Self::all_nonempty(parts) {
                 return false;
             }
-            
+
             let s1_iter = self.iter();
             let mut s1_it = s1_iter;
             let ghost s1_seq = s1_it@.1;
@@ -702,7 +712,7 @@ verus! {
             let it = self.iter();
             let ghost iter_seq = it@.1;
             let ghost self_view = self@;
-            
+
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -746,10 +756,10 @@ verus! {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates iterator, takes first element.
         fn choose(&self) -> (element: T) {
             use crate::vstdplus::feq::feq::*;
-            
+
             let mut it = self.elements.iter();
             let ghost s: Seq<T> = it@.1;
-            
+
             proof {
                 // s.len() > 0 because self@.len() > 0 and iter ensures bijection
                 assert(s.len() > 0) by {
@@ -758,10 +768,10 @@ verus! {
                     }
                 }
             }
-            
+
             let opt = it.next();
             let element_ref: &T = opt.unwrap();
-            
+
             proof {
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
@@ -772,7 +782,7 @@ verus! {
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)
                 assert(self@.contains(element_ref@));
             }
-            
+
             let result = element_ref.clone_plus();
             proof {
                 lemma_cloned_view_eq(*element_ref, result);
@@ -781,13 +791,8 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT + Hash> PartialEqSpecImpl for SetStEph<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-    //		10. iterators
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetStEphIter<'a, T: StT + Hash> {
@@ -910,7 +915,15 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Hash> PartialEqSpecImpl for SetStEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: StT + Hash> Clone for SetStEph<T> {
         fn clone(&self) -> (clone: Self)
@@ -937,7 +950,8 @@ verus! {
 
   } // verus!
 
-    //		12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! SetLit {
@@ -951,7 +965,7 @@ verus! {
         }};
     }
 
-     //		13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
      impl<T: StT + Hash> std::fmt::Display for SetStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

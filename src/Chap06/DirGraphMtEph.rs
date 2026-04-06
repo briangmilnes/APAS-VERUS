@@ -7,24 +7,34 @@
 //! Arc filtering (n_plus, n_minus) and vertex map-reduce (ng_of_vertices, etc.) are parallel.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. top level coarse locking
-//	12. derive impls in verus!
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 6a. spec fns
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 10a. iterators
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod DirGraphMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -39,9 +49,9 @@ pub mod DirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -52,8 +62,8 @@ pub mod DirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -63,8 +73,8 @@ pub mod DirGraphMtEph {
         vstd::set_lib::group_set_lib_default,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphMtEph<V: StTInMtT + Hash + 'static> {
@@ -72,8 +82,8 @@ pub mod DirGraphMtEph {
         pub A: SetStEph<Edge<V>>,
     }
 
+    //		Section 5a. view impls
 
-    //		5. view impls
 
     impl<V: StTInMtT + Hash + 'static> View for DirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
@@ -82,15 +92,15 @@ pub mod DirGraphMtEph {
         }
     }
 
+    //		Section 6a. spec fns
 
-    //		6. spec fns
 
     pub open spec fn valid_key_type_for_graph<V: StTInMtT + Hash>() -> bool {
         valid_key_type_Edge::<V>()
     }
 
+    //		Section 8a. traits
 
-    //		8. traits
 
     pub trait DirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
 
@@ -408,8 +418,8 @@ pub mod DirGraphMtEph {
             decreases verts@.len();
     }
 
+    //		Section 9a. impls
 
-    //		9. impls
 
     impl<V: StTInMtT + Hash + 'static> DirGraphMtEphTrait<V> for DirGraphMtEph<V> {
 
@@ -709,13 +719,8 @@ pub mod DirGraphMtEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10a. iterators
 
-    //		10. iterators
 
     /// Iterator wrapper for DirGraphMtEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -835,15 +840,13 @@ pub mod DirGraphMtEph {
         }
     }
 
-    //		11. top level coarse locking
+    //		Section 4b. type definitions
+
 
     pub struct DirGraphMtEphInv;
 
-    impl<V: StTInMtT + Hash + 'static> RwLockPredicate<DirGraphMtEph<V>> for DirGraphMtEphInv {
-        open spec fn inv(self, v: DirGraphMtEph<V>) -> bool {
-            spec_graphview_wf(v@) && valid_key_type_for_graph::<V>()
-        }
-    }
+    //		Section 4c. type definitions
+
 
     #[verifier::reject_recursive_types(V)]
     pub struct LockedDirGraphMtEph<V: StTInMtT + Hash + 'static> {
@@ -851,21 +854,16 @@ pub mod DirGraphMtEph {
         pub(crate) ghost_locked_graph: Ghost<GraphView<<V as View>::V>>,
     }
 
-    impl<V: StTInMtT + Hash + 'static> LockedDirGraphMtEph<V> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            spec_graphview_wf(self.ghost_locked_graph@)
-        }
+    //		Section 5c. view impls
 
-        pub closed spec fn spec_ghost_locked_graph(self) -> GraphView<<V as View>::V> {
-            self.ghost_locked_graph@
-        }
-    }
 
     impl<V: StTInMtT + Hash + 'static> View for LockedDirGraphMtEph<V> {
         type V = GraphView<<V as View>::V>;
         open spec fn view(&self) -> Self::V { self.spec_ghost_locked_graph() }
     }
+
+    //		Section 8c. traits
+
 
     pub trait LockedDirGraphMtEphTrait<V: StTInMtT + Hash + 'static> : View<V = GraphView<<V as View>::V>> + Sized {
         spec fn spec_dirgraphmteph_wf(&self) -> bool;
@@ -996,6 +994,20 @@ pub mod DirGraphMtEph {
                 neighbors@ <= self@.V;
     }
 
+    //		Section 9c. impls
+
+
+    impl<V: StTInMtT + Hash + 'static> LockedDirGraphMtEph<V> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            spec_graphview_wf(self.ghost_locked_graph@)
+        }
+
+        pub closed spec fn spec_ghost_locked_graph(self) -> GraphView<<V as View>::V> {
+            self.ghost_locked_graph@
+        }
+    }
+
     impl<V: StTInMtT + Hash + 'static> LockedDirGraphMtEphTrait<V> for LockedDirGraphMtEph<V> {
         open spec fn spec_dirgraphmteph_wf(&self) -> bool {
             spec_graphview_wf(self@)
@@ -1122,7 +1134,24 @@ pub mod DirGraphMtEph {
         }
     }
 
-    //		12. derive impls in verus!
+    //		Section 11b. top level coarse locking
+
+
+    impl<V: StTInMtT + Hash + 'static> RwLockPredicate<DirGraphMtEph<V>> for DirGraphMtEphInv {
+        open spec fn inv(self, v: DirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(v@) && valid_key_type_for_graph::<V>()
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StTInMtT + Hash + 'static> PartialEqSpecImpl for DirGraphMtEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<V: StTInMtT + Hash + 'static> Clone for DirGraphMtEph<V> {
         fn clone(&self) -> (cloned: Self)
@@ -1151,8 +1180,8 @@ pub mod DirGraphMtEph {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. macros
 
     #[macro_export]
     macro_rules! DirGraphMtEphLit {
@@ -1172,8 +1201,7 @@ pub mod DirGraphMtEph {
         }}
     }
 
-
-    //		14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + 'static> Debug for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -1204,6 +1232,8 @@ pub mod DirGraphMtEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphGhostIterator") }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl Debug for DirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }
     }
@@ -1211,6 +1241,8 @@ pub mod DirGraphMtEph {
     impl Display for DirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + 'static> Debug for LockedDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedDirGraphMtEph") }

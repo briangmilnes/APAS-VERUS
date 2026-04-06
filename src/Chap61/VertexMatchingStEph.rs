@@ -6,7 +6,21 @@
 //! - Algorithm 61.3: Greedy Vertex Matching (sequential)
 //! - Baseline sequential version of parallel matching algorithm
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod VertexMatchingStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -19,14 +33,17 @@ pub mod VertexMatchingStEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::rand::rand::{seeded_rng, random_bool_seeded};
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct VertexMatchingStEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait VertexMatchingStEphTrait {
         /// Well-formedness for vertex matching algorithm input.
@@ -46,6 +63,9 @@ pub mod VertexMatchingStEph {
         fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingsteph_wf(graph);
     }
+
+    //		Section 9. impls
+
 
     /// Algorithm 61.3: Greedy Vertex Matching
     ///
@@ -174,7 +194,8 @@ pub mod VertexMatchingStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for VertexMatchingStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

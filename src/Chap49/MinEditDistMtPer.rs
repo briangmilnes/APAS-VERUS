@@ -2,20 +2,27 @@
 //! REVIEWED: NO
 //! Chapter 49: Minimum Edit Distance - persistent, multi-threaded.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 6a. spec fns
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod MinEditDistMtPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -33,9 +40,11 @@ pub mod MinEditDistMtPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -43,23 +52,13 @@ pub mod MinEditDistMtPer {
         vstd::std_specs::hash::group_hash_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct MinEditDistMtPerMemoInv;
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MinEditDistMtPerMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            v@.dom().finite()
-        }
-    }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct MinEditDistMtPerS<T: MtVal> {
-        pub source: ArraySeqMtPerS<T>,
-        pub target: ArraySeqMtPerS<T>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
-    }
+    //		Section 6a. spec fns
 
-    // 6. spec fns
 
     /// Recursive specification of minimum edit distance.
     /// Returns the minimum number of insert/delete operations to transform s[0..i) into t[0..j).
@@ -77,7 +76,8 @@ pub mod MinEditDistMtPer {
         }
     }
 
-    // 8. traits
+    //		Section 8a. traits
+
 
     /// Trait for parallel minimum edit distance operations.
     pub trait MinEditDistMtPerTrait<T: MtVal>: Sized {
@@ -139,7 +139,8 @@ pub mod MinEditDistMtPer {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9a. impls
+
 
     /// Create Arc-wrapped memo lock.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
@@ -257,6 +258,19 @@ pub mod MinEditDistMtPer {
         dist
     }
 
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct MinEditDistMtPerS<T: MtVal> {
+        pub source: ArraySeqMtPerS<T>,
+        pub target: ArraySeqMtPerS<T>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
+    }
+
+    //		Section 9b. impls
+
+
     impl<T: MtVal> MinEditDistMtPerTrait<T> for MinEditDistMtPerS<T> {
         open spec fn spec_source_len(&self) -> nat { self.source.spec_len() }
 
@@ -322,7 +336,17 @@ pub mod MinEditDistMtPer {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 11a. top level coarse locking
+
+
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MinEditDistMtPerMemoInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
+            v@.dom().finite()
+        }
+    }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl<T: MtVal> Clone for MinEditDistMtPerS<T> {
         fn clone(&self) -> (cloned: Self) {
@@ -336,7 +360,8 @@ pub mod MinEditDistMtPer {
 
     } // verus!
 
-    // 13a. derive impls outside verus! — struct MinEditDistMtPerMemoInv
+    //		Section 14a. derive impls outside verus!
+
 
     impl Debug for MinEditDistMtPerMemoInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -350,7 +375,7 @@ pub mod MinEditDistMtPer {
         }
     }
 
-    // 13b. derive impls outside verus! — struct MinEditDistMtPerS
+    //		Section 14b. derive impls outside verus!
 
     impl<T: MtVal> PartialEq for MinEditDistMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }

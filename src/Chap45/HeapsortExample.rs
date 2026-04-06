@@ -4,18 +4,21 @@
 //! Chapter 45: Heapsort Example - Algorithm 45.2 using all Priority Queue implementations
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
 
 pub mod HeapsortExample {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -35,9 +38,12 @@ pub mod HeapsortExample {
     use crate::Chap45::UnsortedListPQ::UnsortedListPQ::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
@@ -45,7 +51,9 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-// 4. type definitions
+    //		Section 4. type definitions
+
+
         #[verifier::reject_recursive_types(T)]
         pub struct HeapsortComparison<T: StT + Ord + TotalOrder> {
             pub input: Vec<T>,
@@ -55,6 +63,9 @@ broadcast use {
             pub binary_heap_result: Vec<T>,
             pub leftist_heap_result: Vec<T>,
         }
+
+    //		Section 5. view impls
+
 
         impl<T: StT + Ord + TotalOrder> View for HeapsortComparison<T> {
             type V = (
@@ -76,6 +87,9 @@ broadcast use {
                 )
             }
         }
+
+    //		Section 12. derive impls in verus!
+
 
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for HeapsortComparison<T> {
@@ -118,14 +132,12 @@ broadcast use {
         impl<T: StT + Ord + TotalOrder> core::cmp::Eq for HeapsortComparison<T> {}
     }
 
+    //		Section 14. derive impls outside verus!
+
+
     verus! {
 
-// 5. view impls
-
-// 7. proof fns
         proof fn _heapsort_example_verified() {}
-
-// 8. traits
 
         /// Check if a Vec is sorted in non-decreasing order using element-wise comparison.
         fn is_vec_sorted_exec<T: StT + Ord + TotalOrder>(v: &Vec<T>) -> (sorted: bool)
@@ -154,7 +166,6 @@ broadcast use {
             fn all_results_sorted(&self) -> (sorted: bool);
         }
 
-// 9. impls
         impl<T: StT + Ord + TotalOrder> HeapsortComparisonTrait<T> for HeapsortComparison<T> {
             fn all_results_match(&self) -> (matches: bool) {
                 let expected = &self.binary_heap_result;

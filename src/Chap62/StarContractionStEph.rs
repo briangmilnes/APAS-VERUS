@@ -5,7 +5,22 @@
 //! Implements Algorithm 62.5: Star Contraction (sequential version)
 //! A higher-order function that recursively contracts a graph using star partitions.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod StarContractionStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -21,18 +36,24 @@ pub mod StarContractionStEph {
     use crate::Chap62::StarPartitionStEph::StarPartitionStEph::spec_valid_partition_map;
     use crate::SetLit;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct StarContractionStEph;
 
-    // 8. traits
+    pub type T<V> = UnDirGraphStEph<V>;
+
+    //		Section 8. traits
+
 
     pub trait StarContractionStEphTrait {
         /// Well-formedness for star contraction algorithm input.
@@ -73,7 +94,8 @@ pub mod StarContractionStEph {
                 valid_key_type_Edge::<V>();
     }
 
-    pub type T<V> = UnDirGraphStEph<V>;
+    //		Section 9. impls
+
 
     /// Inner recursive star contraction with fuel for termination.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — recursive: O(n + m) per level × O(lg n) levels; St sequential.
@@ -339,7 +361,8 @@ pub mod StarContractionStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for StarContractionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

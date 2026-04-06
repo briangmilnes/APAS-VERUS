@@ -4,10 +4,29 @@
 //!
 //! Not optimized - O(n) dequeue. But fully verifiable.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod VecQueue {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -16,13 +35,22 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
+    //		Section 4. type definitions
+
+
     pub struct VecQueue<T> { pub data: Vec<T> }
+
+    //		Section 5. view impls
+
 
     impl<T> View for VecQueue<T> {
         type V = Seq<T>;
 
         open spec fn view(&self) -> Seq<T> { self.data@ }
     }
+
+    //		Section 8. traits
+
 
     pub trait VecQueueTrait<T>: Sized + View<V = Seq<T>> {
         fn new() -> (vq: Self)
@@ -42,6 +70,9 @@ broadcast use {
                 old(self)@.len() == 0 ==> dequeued.is_none() && self@ == old(self)@,
                 old(self)@.len() > 0 ==> dequeued == Some(old(self)@[0]) && self@ == old(self)@.subrange(1, old(self)@.len() as int);
     }
+
+    //		Section 9. impls
+
 
     impl<T> VecQueueTrait<T> for VecQueue<T> {
 

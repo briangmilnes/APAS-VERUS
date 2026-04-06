@@ -5,35 +5,45 @@
 //! Uses HFSchedulerMtEph for bounded parallel cartesian_product.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. top level coarse locking
-//	12. derive impls in verus!
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 6a. spec fns
+//	Section 7a. proof fns/broadcast groups
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 10a. iterators
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 // Verus requires parentheses around closures with ensures clauses in function arguments
 #[allow(unused_parens)]
 pub mod SetMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Concurrency::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
     use crate::vstdplus::accept::accept;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
@@ -55,7 +65,8 @@ verus! {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         // Set groups
@@ -77,19 +88,22 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		4. type definitions
+    //		Section 4a. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct SetMtEph<T: StT + Hash> { pub elements: HashSetWithViewPlus<T> }
 
-    //		5. view impls
+    //		Section 5a. view impls
+
 
     impl<T: StT + Hash> View for SetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.elements@ }
     }
 
-    //		6. spec fns
+    //		Section 6a. spec fns
+
 
     pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
         &&& obeys_key_model::<T>()
@@ -102,7 +116,8 @@ verus! {
         s@.finite() && valid_key_type::<V>()
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 7a. proof fns/broadcast groups
+
 
     /// Singleton choose: if len == 1 and contains(a), then choose() == a.
     pub broadcast proof fn lemma_singleton_choose<A>(s: Set<A>, a: A)
@@ -120,7 +135,8 @@ verus! {
         lemma_singleton_choose,
     }
 
-    //		8. traits
+    //		Section 8a. traits
+
 
     pub trait SetMtEphTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
@@ -312,7 +328,8 @@ verus! {
                 self@.contains(element@);
     }
 
-    //		9. impls
+    //		Section 9a. impls
+
 
     impl<T: StT + Hash> SetMtEphTrait<T> for SetMtEph<T> {
 
@@ -363,7 +380,7 @@ verus! {
             let mut seq: Vec<T> = Vec::new();
             let it: SetMtEphIter<T> = self.iter();
             let ghost iter_seq: Seq<T> = it@.1;
-            
+
             for x in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -432,10 +449,10 @@ verus! {
             let mut union: SetMtEph<T> = SetMtEph { 
                 elements: HashSetWithViewPlus::with_capacity(capacity) 
             };
-            
+
             let it1: SetMtEphIter<T> = self.iter();
             let ghost it1_seq: Seq<T> = it1@.1;
-            
+
             for x in iter1: it1
                 invariant
                     valid_key_type::<T>(),
@@ -447,12 +464,12 @@ verus! {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(it1_seq, iter1.pos); }
                 let _ = union.insert(x.clone_plus());
             }
-            
+
             let it2: SetMtEphIter<T> = s2.iter();
             let ghost it2_seq: Seq<T> = it2@.1;
             let ghost s1_view: Set<T::V> = self@;
             let ghost s2_view: Set<T::V> = s2@;
-            
+
             for x in iter2: it2
                 invariant
                     valid_key_type::<T>(),
@@ -469,7 +486,7 @@ verus! {
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(self@, s2@);
             }
-            
+
             union
         }
 
@@ -492,12 +509,12 @@ verus! {
                     intersection@ == s1_seq.take(iter.pos).map(|i: int, k: T| k@).to_set().intersect(s2_view),
             {
                 proof { lemma_take_one_more_intersect(s1_seq, s2_view, iter.pos); }
-                
+
                 if s2.mem(s1mem) {
                     let _ = intersection.insert(s1mem.clone_plus());
                 } 
             }
-            
+
             intersection
         }
 
@@ -509,7 +526,7 @@ verus! {
             let ghost s2_seq: Seq<U> = it@.1;
             let ghost s2_view: Set<U::V> = s2@;
             let ghost a_view: T::V = a@;
-            
+
             for b in iter: it
                 invariant
                     valid_key_type::<T>(),
@@ -526,23 +543,23 @@ verus! {
                 proof { lemma_take_one_more_extends_the_seq_set_with_view(s2_seq, iter.pos); }
                 let _ = product.insert(Pair(a.clone_plus(), b.clone_plus()));
             }
-            
+
             product
         }
-        
+
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| x |b|), Span O(|a| x |b|) — spawns |a| parallel elt_cross_set tasks (each O(|b|)), but sequential disjoint_union join phase dominates span.
         fn cartesian_product<U: StT + Hash + Clone + Send + Sync + 'static>(&self, s2: &SetMtEph<U>) -> (product: SetMtEph<Pair<T, U>>)
             where T: Send + Sync + 'static, Pair<T, U>: StT + Hash + View<V = (T::V, U::V)>,
         {
             let ghost s1_view = self@;
             let ghost s2_view = s2@;
-            
+
             // Phase 1: Spawn one task per element in s1
             let mut it = self.iter();
             let ghost it_seq = it@.1;
             let mut handles: Vec<TaskState<SetMtEph<Pair<T, U>>>> = Vec::new();
             let ghost mut spawned_views: Seq<T::V> = Seq::empty();
-            
+
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
@@ -568,15 +585,15 @@ verus! {
                     Some(a) => {
                         let ghost a_view = a@;
                         let ghost idx = it@.0 - 1;
-                        
+
                         // Clone for the task
                         let a_clone = a.clone_plus();
                         let s2_clone = s2.clone();
-                        
+
                         proof {
                             lemma_cloned_view_eq(*a, a_clone);
                         }
-                        
+
                         let handle = spawn(
                             (move || -> (r: SetMtEph<Pair<T, U>>)
                                 requires
@@ -590,20 +607,20 @@ verus! {
                                 Self::elt_cross_set(&a_clone, &s2_clone)
                             })
                         );
-                        
+
                         handles.push(handle);
                         proof { spawned_views = spawned_views.push(a_view); }
                     },
                     None => break,
                 }
             }
-            
+
             // Phase 2: Wait for tasks and disjoint_union results
             // Process in reverse order since we'll pop from the end
             let mut product: SetMtEph<Pair<T, U>> = SetMtEph::empty();
             let ghost mut joined_views: Set<T::V> = Set::empty();
             let ghost n = handles.len();
-            
+
             #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
             loop
                 invariant
@@ -632,20 +649,20 @@ verus! {
                 if handles.len() == 0 {
                     break;
                 }
-                
+
                 let ghost idx = handles.len() - 1;
                 let ghost a_view = spawned_views[idx as int];
                 let handle: TaskState<SetMtEph<Pair<T, U>>> = handles.pop().unwrap();
-                
+
                 let thread_result: SetMtEph<Pair<T, U>> = wait(handle);
-                
+
                 proof {
                     // From wait's ensures: handle.predicate(thread_result)
                     // From spawn loop invariant: handle.predicate(ret) ==> (ret@.finite() && forall av, bv: ...)
                     // Therefore: thread_result@.finite() && forall av, bv: ret@.contains((av, bv)) <==> ...
                     assert(thread_result@.finite());
                     assert(forall |av: T::V, bv: U::V| thread_result@.contains((av, bv)) <==> (av == a_view && s2_view.contains(bv)));
-                    
+
                     // Prove a_view is not in the joined_views.
                     assert(!joined_views.contains(a_view)) by {
                         lemma_reveal_view_injective::<T>();
@@ -655,7 +672,7 @@ verus! {
                             // This contradicts no_duplicates since it_seq[idx]@ == it_seq[j]@ for j != idx
                         }
                     }
-                    
+
                     assert(product@.disjoint(thread_result@)) by {
                         assert forall |p: (T::V, U::V)| !(product@.contains(p) && thread_result@.contains(p)) by {
                             if product@.contains(p) && thread_result@.contains(p) {
@@ -670,14 +687,14 @@ verus! {
                         }
                     }
                 }
-                
+
                 product = product.disjoint_union(&thread_result);
-                
+
                 proof {
                     joined_views = joined_views.insert(a_view);
                 }
             }
-            
+
             proof {
                 // Prove joined_views == s1_view
                 // At loop end: handles@.len() == 0, so joined_views contains spawned_views[0..n]
@@ -695,7 +712,7 @@ verus! {
                     }
                 }
             }
-            
+
             product
         }
 
@@ -802,7 +819,7 @@ verus! {
             if !Self::all_nonempty(parts) {
                 return false;
             }
-            
+
             let s1_iter = self.iter();
             let mut s1_it = s1_iter;
             let ghost s1_seq = s1_it@.1;
@@ -910,10 +927,10 @@ verus! {
                     }
                 }
             }
-            
+
             let opt = it.next();
             let element_ref: &T = opt.unwrap();
-            
+
             proof {
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
@@ -924,7 +941,7 @@ verus! {
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)
                 assert(self@.contains(element_ref@));
             }
-            
+
             let result = element_ref.clone_plus();
             proof {
                 lemma_cloned_view_eq(*element_ref, result);
@@ -933,13 +950,8 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT + Hash> PartialEqSpecImpl for SetMtEph<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10a. iterators
 
-    //		10. iterators
 
     /// Iterator wrapper to hide std::collections::hash_set::Iter.
     #[verifier::reject_recursive_types(T)]
@@ -1058,15 +1070,13 @@ verus! {
         }
     }
 
-    //		11. top level coarse locking
+    //		Section 4b. type definitions
+
 
     pub struct SetMtEphInv;
 
-    impl<T: StT + Hash> RwLockPredicate<SetMtEph<T>> for SetMtEphInv {
-        open spec fn inv(self, v: SetMtEph<T>) -> bool {
-            v@.finite() && valid_key_type::<T>()
-        }
-    }
+    //		Section 4c. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct LockedSetMtEph<T: StT + Hash> {
@@ -1074,16 +1084,8 @@ verus! {
         pub(crate) ghost_locked_set: Ghost<Set<<T as View>::V>>,
     }
 
-    impl<T: StT + Hash> LockedSetMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            self.ghost_locked_set@.finite()
-        }
+    //		Section 5c. view impls
 
-        pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
-            self.ghost_locked_set@
-        }
-    }
 
     impl<T: StT + Hash> View for LockedSetMtEph<T> {
         type V = Set<<T as View>::V>;
@@ -1091,6 +1093,9 @@ verus! {
             self.spec_ghost_locked_set()
         }
     }
+
+    //		Section 8c. traits
+
 
     pub trait LockedSetMtEphTrait<T: StT + Hash>
         : View<V = Set<<T as View>::V>> + Sized
@@ -1119,6 +1124,20 @@ verus! {
         fn choose(&self) -> (element: T)
             requires self@.len() > 0
             ensures self@.contains(element@);
+    }
+
+    //		Section 9c. impls
+
+
+    impl<T: StT + Hash> LockedSetMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_set@.finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
+            self.ghost_locked_set@
+        }
     }
 
     impl<T: StT + Hash> LockedSetMtEphTrait<T> for LockedSetMtEph<T> {
@@ -1175,7 +1194,24 @@ verus! {
         }
     }
 
-    //		12. derive impls in verus!
+    //		Section 11b. top level coarse locking
+
+
+    impl<T: StT + Hash> RwLockPredicate<SetMtEph<T>> for SetMtEphInv {
+        open spec fn inv(self, v: SetMtEph<T>) -> bool {
+            v@.finite() && valid_key_type::<T>()
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT + Hash> PartialEqSpecImpl for SetMtEph<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: StT + Hash> Clone for SetMtEph<T> {
         fn clone(&self) -> (clone: Self)
@@ -1201,7 +1237,8 @@ verus! {
 
   } // verus!
 
-    //		13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! SetMtLit {
@@ -1215,14 +1252,14 @@ verus! {
         }};
     }
 
-    //		14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMt({})", self.elements.len())
         }
     }
-    
+
     impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMtEph({})", self.elements.len())
@@ -1253,6 +1290,8 @@ verus! {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl std::fmt::Debug for SetMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
             write!(f, "SetMtEphInv")
@@ -1264,6 +1303,8 @@ verus! {
             write!(f, "SetMtEphInv")
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<T: StT + Hash> std::fmt::Debug for LockedSetMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

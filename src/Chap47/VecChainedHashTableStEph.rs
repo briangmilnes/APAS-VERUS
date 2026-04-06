@@ -3,18 +3,21 @@
 //! Vec Chained Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses Vec for separate chaining collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod VecChainedHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions (inside verus!)
-    // 7. proof fns (inside verus!)
-    // 9. impls (inside verus!: EntryTrait for Vec, ParaHashTableStEphTrait, ChainedHashTable)
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -25,20 +28,27 @@ pub mod VecChainedHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-        // 3. broadcast use
+    //		Section 3. broadcast use
+
 
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-        // 4. type definitions
+    //		Section 4. type definitions
+
 
         /// Vec Chained Hash Table implementation.
         pub struct VecChainedHashTableStEph;
 
-        // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
         proof fn _vec_chained_hash_table_verified() {}
+
+    //		Section 9. impls
+
 
         /// Clones a Vec<(Key, Value)> with sequence equality ensures.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all pairs.
@@ -68,7 +78,6 @@ pub mod VecChainedHashTableStEph {
             new_vec
         }
 
-        // 9. impls
 
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for Vec<(Key, Value)> {
             open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
@@ -163,7 +172,6 @@ pub mod VecChainedHashTableStEph {
             }
         }
 
-        // 9. impls (ParaHashTableStEphTrait, ChainedHashTable)
 
         impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>
             ParaHashTableStEphTrait<Key, Value, Vec<(Key, Value)>, Metrics, H>
@@ -609,7 +617,8 @@ pub mod VecChainedHashTableStEph {
         }
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for VecChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

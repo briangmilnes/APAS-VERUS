@@ -4,22 +4,25 @@
 //! Chapter 18 persistent sequence implementation for array-backed sequences. Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod ArraySeqStPer {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -28,9 +31,9 @@ pub mod ArraySeqStPer {
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -42,10 +45,12 @@ pub mod ArraySeqStPer {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
+
+    //		Section 3. broadcast use
+
+
     #[cfg(verus_keep_ghost)]
 
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -55,16 +60,16 @@ pub mod ArraySeqStPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStPerS<T> {
         pub seq: Vec<T>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<T: View> View for ArraySeqStPerS<T> {
         type V = Seq<T::V>;
@@ -74,8 +79,8 @@ pub mod ArraySeqStPer {
         }
     }
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
@@ -97,7 +102,8 @@ pub mod ArraySeqStPer {
         }
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     /// - Base trait for single-threaded persistent array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
@@ -343,8 +349,8 @@ pub mod ArraySeqStPer {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten();
     }
 
+    //		Section 9. impls
 
-    //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqStPerBaseTrait<T> for ArraySeqStPerS<T> {
         open spec fn spec_arrayseqstper_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
@@ -437,7 +443,6 @@ pub mod ArraySeqStPer {
         }
     }
 
-    //		9. impl RedefinableTrait for Struct
 
     impl<T> ArraySeqStPerRedefinableTrait<T> for ArraySeqStPerS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -889,7 +894,6 @@ pub mod ArraySeqStPer {
         }
     }
 
-    //		9. bare impl (lemmas and iterators not in any trait)
 
     impl<T> ArraySeqStPerS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
@@ -908,16 +912,9 @@ pub mod ArraySeqStPer {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStPerS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
 
-    //		10. iterators
-
-    
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqStPerIter<'a, T> {
         pub inner: std::slice::Iter<'a, T>,
@@ -1016,11 +1013,18 @@ pub mod ArraySeqStPer {
         }
     }
 
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqStPerS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
     // IntoIterator impls moved outside verus! — Verus hits ill-typed AIR on
     // proj%%core!iter.traits.collect.IntoIterator./Item for ArraySeqStPerS.
 
-
-    //		11. derive impls in verus!
 
     impl<T: Clone> Clone for ArraySeqStPerS<T> {
         fn clone(&self) -> (res: Self)
@@ -1047,6 +1051,8 @@ pub mod ArraySeqStPer {
 
     } // verus!
 
+    //		Section 14. derive impls outside verus!
+
 
     // IntoIterator outside verus! — Verus ill-typed AIR on IntoIterator./Item.
     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
@@ -1061,8 +1067,6 @@ pub mod ArraySeqStPer {
         fn into_iter(self) -> Self::IntoIter { self.seq.into_iter() }
     }
 
-
-    //		13. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqStPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

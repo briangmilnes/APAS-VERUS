@@ -10,13 +10,28 @@
 //!
 //! Trust boundary: two external_body functions for the entire project.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod arc_rwlock {
+
+    //		Section 2. imports
+
     use std::sync::Arc;
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 9. impls
+
 
     /// Wrap RwLock::new in Arc, preserving pred() in ensures.
     #[verifier::external_body]

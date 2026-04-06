@@ -4,7 +4,24 @@
 //! Chapter 52: Adjacency Table Graph representation (persistent, single-threaded).
 //! G = (V × V set) table - maps vertices to sets of their out-neighbors.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AdjTableGraphStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -32,7 +49,11 @@ pub mod AdjTableGraphStPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_view_eq_trigger;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -41,31 +62,24 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 14. derive impls outside verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStPer<V: StT + Ord> {
         pub adj: TableStPer<V, AVLTreeSetStPer<V>>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<V: StT + Ord> View for AdjTableGraphStPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: StPer and StEph spec_entries_to_map are identical (same open spec body).
     proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
@@ -98,7 +112,8 @@ broadcast use {
         crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::lemma_sum_entry_sizes_eq::<VV>(entries, n);
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AdjTableGraphStPerTrait<V: StT + Ord>: Sized {
         spec fn spec_adjtablegraphstper_wf(&self) -> bool;
@@ -194,7 +209,8 @@ broadcast use {
                     || !updated.spec_adj()[u@].contains(v@);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
         open spec fn spec_adjtablegraphstper_wf(&self) -> bool {
@@ -833,7 +849,8 @@ broadcast use {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StT + Ord + Clone> Clone for AdjTableGraphStPer<V> {
         fn clone(&self) -> Self {

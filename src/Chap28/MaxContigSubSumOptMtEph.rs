@@ -2,7 +2,19 @@
 //! REVIEWED: NO
 //! Maximum Contiguous Subsequence Sum — Parallel Optimal (Chapter 28, Algorithm 28.16).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod MaxContigSubSumOptMtEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
@@ -12,7 +24,11 @@ pub mod MaxContigSubSumOptMtEph {
 
     pub type T = ArraySeqMtEphS<i32>;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 8. traits
+
 
     pub trait MaxContigSubSumOptMtTrait {
         /// Compute MCSS using parallel optimal scan-based algorithm (Algorithm 28.16).
@@ -29,6 +45,9 @@ pub mod MaxContigSubSumOptMtEph {
                 a.seq@.len() > 0 ==> mcss.is_some(),
                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
+
+    //		Section 9. impls
+
 
     impl MaxContigSubSumOptMtTrait for ArraySeqMtEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; sequential despite Mt module (no join).

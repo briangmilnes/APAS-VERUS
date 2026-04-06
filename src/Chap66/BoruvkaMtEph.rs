@@ -5,7 +5,27 @@
 //! Implements parallel versions of Algorithm 66.2 and 66.3 using ParaPair! macro.
 //! Achieves Work O(m log n), Span O(log² n).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 6b. spec fns
+//	Section 9b. impls
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BoruvkaMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
@@ -26,69 +46,25 @@ pub mod BoruvkaMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::set::group_set_axioms,
         crate::vstdplus::float::float::group_float_finite_total_order,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct BoruvkaMtEph;
 
-    /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
-    pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+    //		Section 8a. traits
 
-    impl<V: Copy> Copy for LabeledEdge<V> {}
-
-    impl<V: Copy> Clone for LabeledEdge<V> {
-        fn clone(&self) -> (s: Self) {
-            *self
-        }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<V: PartialEq + Copy> PartialEqSpecImpl for LabeledEdge<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-    impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
-        {
-            let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
-            proof { assume(equal == (self@ == other@)); }
-            equal
-        }
-    }
-
-    impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
-
-    // 5. view impls
-
-    impl<V: Copy> View for LabeledEdge<V> {
-        type V = Self;
-        open spec fn view(&self) -> Self { *self }
-    }
-
-    // 6. spec fns
-
-    /// All edge weights are finite (Set version).
-    pub open spec fn spec_all_weights_finite<V: Copy>(edges: Set<LabeledEdge<V>>) -> bool {
-        forall|e: LabeledEdge<V>| #[trigger] edges.contains(e) ==> e.2.spec_is_finite()
-    }
-
-    /// All edge weights are finite (Seq version for Vec-based parallel functions).
-    pub open spec fn spec_all_weights_finite_seq<V: Copy>(edges: Seq<LabeledEdge<V>>) -> bool {
-        forall|i: int| 0 <= i < edges.len() ==> (#[trigger] edges[i]).2.spec_is_finite()
-    }
-
-    // 8. traits
 
     pub trait BoruvkaMtEphTrait {
         /// Well-formedness for parallel Borůvka MST algorithm input.
@@ -179,7 +155,38 @@ pub mod BoruvkaMtEph {
                 mst_labels.spec_setsteph_wf();
     }
 
-    // 9. impls
+    //		Section 4b. type definitions
+
+
+    /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
+    pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
+
+    //		Section 5b. view impls
+
+
+    impl<V: Copy> View for LabeledEdge<V> {
+        type V = Self;
+        open spec fn view(&self) -> Self { *self }
+    }
+
+    //		Section 6b. spec fns
+
+
+    /// All edge weights are finite (Set version).
+    pub open spec fn spec_all_weights_finite<V: Copy>(edges: Set<LabeledEdge<V>>) -> bool {
+        forall|e: LabeledEdge<V>| #[trigger] edges.contains(e) ==> e.2.spec_is_finite()
+    }
+
+    /// All edge weights are finite (Seq version for Vec-based parallel functions).
+    pub open spec fn spec_all_weights_finite_seq<V: Copy>(edges: Seq<LabeledEdge<V>>) -> bool {
+        forall|i: int| 0 <= i < edges.len() ==> (#[trigger] edges[i]).2.spec_is_finite()
+    }
+
+    //		Section 9b. impls
+
+
+    impl<V: Copy> Copy for LabeledEdge<V> {}
+
 
     // Hash-based coin flip: deterministic from (seed, round, vertex index).
     // Replaces sequential StdRng coin flips with a parallelizable hash function.
@@ -1090,9 +1097,50 @@ pub mod BoruvkaMtEph {
         total
     }
 
+    //		Section 12b. derive impls in verus!
+
+
+    impl<V: Copy> Clone for LabeledEdge<V> {
+        fn clone(&self) -> (s: Self) {
+            *self
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: PartialEq + Copy> PartialEqSpecImpl for LabeledEdge<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<V: PartialEq + Copy> PartialEq for LabeledEdge<V> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.0 == other.0 && self.1 == other.1 && self.2.eq(&other.2) && self.3 == other.3;
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<V: Eq + Copy> Eq for LabeledEdge<V> {}
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
+
+    impl std::fmt::Debug for BoruvkaMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BoruvkaMtEph")
+        }
+    }
+
+    impl std::fmt::Display for BoruvkaMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BoruvkaMtEph")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<V: Clone + Copy + PartialEq + Eq + PartialOrd + Ord + std::hash::Hash> PartialOrd for LabeledEdge<V> {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
@@ -1123,20 +1171,6 @@ pub mod BoruvkaMtEph {
     impl<V: std::fmt::Display> std::fmt::Display for LabeledEdge<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
-        }
-    }
-
-    // 14b. derive impls outside verus! — struct BoruvkaMtEph
-
-    impl std::fmt::Debug for BoruvkaMtEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BoruvkaMtEph")
-        }
-    }
-
-    impl std::fmt::Display for BoruvkaMtEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BoruvkaMtEph")
         }
     }
 }

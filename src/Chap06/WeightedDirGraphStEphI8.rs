@@ -3,7 +3,22 @@
 //! Chapter 6 Weighted Directed Graph (ephemeral) with i8 weights - Single-threaded version.
 //! Uses CheckedI8 for overflow-safe weight summation.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 13. macros
+
+//		Section 1. module
+
 pub mod WeightedDirGraphStEphI8 {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -17,7 +32,11 @@ pub mod WeightedDirGraphStEphI8 {
     use crate::vstdplus::checked_int::checked_int::*;
     use crate::vstdplus::seq_set::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -30,8 +49,13 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+    //		Section 4. type definitions
+
 
     pub type WeightedDirGraphStEphI8<V> = LabDirGraphStEph<V, i8>;
+
+    //		Section 8. traits
+
 
     pub trait WeightedDirGraphStEphI8Trait<V: StT + Hash>: 
         View<V = LabGraphView<<V as View>::V, i8>> + Sized {
@@ -111,6 +135,9 @@ verus! {
                 forall |t: (V::V, V::V, i8)| #[trigger] edges_below@.contains(t) ==
                     (self@.A.contains(t) && t.2 < threshold);
     }
+
+    //		Section 9. impls
+
 
     impl<V: StT + Hash> WeightedDirGraphStEphI8Trait<V> for WeightedDirGraphStEphI8<V> {
 
@@ -439,6 +466,9 @@ assert forall |t: (V::V, V::V, i8)| #[trigger] wa_view.contains(t) && t.2 < thre
     }
 
 } // verus!
+
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! WeightedDirGraphStEphI8Lit {

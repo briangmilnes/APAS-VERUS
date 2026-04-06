@@ -4,21 +4,25 @@
 //! Chapter 42 multi-threaded ephemeral table implementation using ArraySeqMtEph as backing store.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod TableMtEph {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering;
     use std::sync::Arc;
@@ -41,9 +45,11 @@ pub mod TableMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_fulls;
 
-    verus! {
+    verus! 
+{
 
-//		3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -54,22 +60,8 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-//		4. type definitions
+    //		Section 4. type definitions
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 3. broadcast use (above)
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
-
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -79,7 +71,8 @@ broadcast use {
 
     pub type TableS<K, V> = TableMtEph<K, V>;
 
-//		5. view impls
+    //		Section 5. view impls
+
 
     impl<K: MtKey, V: MtVal> View for TableMtEph<K, V> {
         type V = Map<K::V, V::V>;
@@ -88,9 +81,8 @@ broadcast use {
         }
     }
 
-//		6. spec fns
+    //		Section 6. spec fns
 
-    // 5. view impls
 
     pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
         decreases entries.len()
@@ -103,7 +95,6 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
 
     // Keys in the entry sequence are unique.
     pub open spec fn spec_keys_no_dups<KV, VV>(entries: Seq<(KV, VV)>) -> bool {
@@ -111,7 +102,8 @@ broadcast use {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-//		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
         ensures spec_entries_to_map(entries).dom().finite()
@@ -533,6 +525,191 @@ broadcast use {
         }
     }
 
+    //		Section 8. traits
+
+
+    /// Trait defining the Table ADT operations from Chapter 42.
+    pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
+        spec fn spec_tablemteph_wf(&self) -> bool;
+
+        /// Returns the concrete stored value for a given key.
+        spec fn spec_stored_value(&self, key: K::V) -> V;
+
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn size(&self) -> (count: usize)
+            requires self.spec_tablemteph_wf()
+            ensures count == self@.dom().len();
+        /// - APAS Cost Spec 42.5: Work 1, Span 1
+        /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS. — matches APAS
+        fn empty() -> (empty: Self)
+            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn singleton(key: K, value: V) -> (tree: Self)
+            requires obeys_feq_clone::<Pair<K, V>>()
+            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential key extraction
+        fn domain(&self) -> (domain: ArraySetStEph<K>)
+            requires obeys_feq_clone::<K>()
+            ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|·W(f)), Span O(lg |s| + S(f)) — parallel D&C tabulate via join
+        fn tabulate<F: Fn(&K) -> V + Clone + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
+            requires
+                keys.spec_arraysetsteph_wf(),
+                forall|k: &K| f.requires((k,)),
+                obeys_feq_full::<K>(),
+            ensures
+                tabulated@.dom() =~= keys@,
+                tabulated.spec_tablemteph_wf(),
+                forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
+                    (exists|key_arg: K, result: V|
+                        key_arg@ == k && f.ensures((&key_arg,), result)
+                        && tabulated@[k] == result@);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·W(f)), Span O(lg n + max W(f)) — parallel D&C map via join
+        fn map<F: Fn(&V) -> V + Clone + Send + Sync + 'static>(&mut self, f: F)
+            requires
+                old(self).spec_tablemteph_wf(),
+                forall|v: &V| f.requires((v,)),
+                obeys_feq_clone::<K>(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() == old(self)@.dom(),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+                    (exists|old_val: V, result: V|
+                        old_val@ == old(self)@[k]
+                        && f.ensures((&old_val,), result)
+                        && self@[k] == result@);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(k,v))), Span O(n + Σ W(f(k,v))) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential loop; D&C no-dup proof pending
+        fn filter<F: Fn(&K, &V) -> bool + Clone + Send + Sync + 'static>(
+            &mut self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        )
+            requires
+                old(self).spec_tablemteph_wf(),
+                forall|k: &K, v: &V| f.requires((k, v)),
+                forall|k: K, v: V, keep: bool|
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom().subset_of(old(self)@.dom()),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
+                forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
+                    ==> #[trigger] self@.dom().contains(k);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
+            requires
+                old(self).spec_tablemteph_wf(),
+                other.spec_tablemteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && self@[k] == r@);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
+            requires
+                old(self).spec_tablemteph_wf(),
+                other.spec_tablemteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_feq_clone::<K>(),
+                obeys_view_eq::<K>(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() =~= old(self)@.dom().union(other@.dom()),
+                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
+                    ==> self@[k] == old(self)@[k],
+                forall|k: K::V| #[trigger] other@.contains_key(k) && !old(self)@.contains_key(k)
+                    ==> self@[k] == other@[k],
+                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old(self)@[k] && v2@ == other@[k]
+                        && combine.ensures((&v1, &v2), r)
+                        && self@[k] == r@);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        fn difference(&mut self, other: &Self)
+            requires
+                old(self).spec_tablemteph_wf(),
+                obeys_view_eq::<K>(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() =~= old(self)@.dom().difference(other@.dom()),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
+        fn find(&self, key: &K) -> (found: Option<V>)
+            requires self.spec_tablemteph_wf(), obeys_view_eq::<K>()
+            ensures
+                match found {
+                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
+                    None => !self@.contains_key(key@),
+                };
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
+        fn delete(&mut self, key: &K)
+            requires old(self).spec_tablemteph_wf(), obeys_view_eq::<K>()
+            ensures self@ =~= old(self)@.remove(key@), self.spec_tablemteph_wf();
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
+        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
+            requires
+                old(self).spec_tablemteph_wf(),
+                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
+                obeys_view_eq::<K>(),
+                obeys_feq_clone::<K>(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.contains_key(key@),
+                self@.dom() =~= old(self)@.dom().insert(key@),
+                forall|k: K::V| k != key@ && #[trigger] old(self)@.contains_key(k) ==> self@[k] == old(self)@[k],
+                !old(self)@.contains_key(key@) ==> self@[key@] == value@,
+                old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
+                    old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
+                    && self@[key@] == r@);
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        fn restrict(&mut self, keys: &ArraySetStEph<K>)
+            requires
+                old(self).spec_tablemteph_wf(),
+                keys@.finite(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() =~= old(self)@.dom().intersect(keys@),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
+        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
+        fn subtract(&mut self, keys: &ArraySetStEph<K>)
+            requires
+                old(self).spec_tablemteph_wf(),
+                keys@.finite(),
+            ensures
+                self.spec_tablemteph_wf(),
+                self@.dom() =~= old(self)@.dom().difference(keys@),
+                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone of backing array.
+        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
+            ensures spec_entries_to_map(entries@) == self@;
+    }
+
+    //		Section 9. impls
+
+
 //		7b. parallel D&C helpers
 
     /// Parallel D&C map for table entries: clone keys, apply f to values.
@@ -767,190 +944,6 @@ broadcast use {
         }
     }
 
-//		8. traits
-
-    // 8. traits
-
-    /// Trait defining the Table ADT operations from Chapter 42.
-    pub trait TableMtEphTrait<K: MtKey, V: MtVal>: Sized + View<V = Map<K::V, V::V>> {
-        spec fn spec_tablemteph_wf(&self) -> bool;
-
-        /// Returns the concrete stored value for a given key.
-        spec fn spec_stored_value(&self, key: K::V) -> V;
-
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn size(&self) -> (count: usize)
-            requires self.spec_tablemteph_wf()
-            ensures count == self@.dom().len();
-        /// - APAS Cost Spec 42.5: Work 1, Span 1
-        /// - Alg Analysis: APAS (Ch42 ref): Work O(1), Span O(1) -- agrees with APAS.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- agrees with APAS. — matches APAS
-        fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_tablemteph_wf();
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn singleton(key: K, value: V) -> (tree: Self)
-            requires obeys_feq_clone::<Pair<K, V>>()
-            ensures tree@ == Map::<K::V, V::V>::empty().insert(key@, value@), tree.spec_tablemteph_wf();
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential key extraction
-        fn domain(&self) -> (domain: ArraySetStEph<K>)
-            requires obeys_feq_clone::<K>()
-            ensures domain@ =~= self@.dom(), domain.spec_arraysetsteph_wf();
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(|s| * W(f)), Span O(lg |s| + S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|·W(f)), Span O(lg |s| + S(f)) — parallel D&C tabulate via join
-        fn tabulate<F: Fn(&K) -> V + Clone + Send + Sync + 'static>(f: F, keys: &ArraySetStEph<K>) -> (tabulated: Self)
-            requires
-                keys.spec_arraysetsteph_wf(),
-                forall|k: &K| f.requires((k,)),
-                obeys_feq_full::<K>(),
-            ensures
-                tabulated@.dom() =~= keys@,
-                tabulated.spec_tablemteph_wf(),
-                forall|k: K::V| #[trigger] tabulated@.contains_key(k) ==>
-                    (exists|key_arg: K, result: V|
-                        key_arg@ == k && f.ensures((&key_arg,), result)
-                        && tabulated@[k] == result@);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·W(f)), Span O(lg n + max W(f)) — parallel D&C map via join
-        fn map<F: Fn(&V) -> V + Clone + Send + Sync + 'static>(&mut self, f: F)
-            requires
-                old(self).spec_tablemteph_wf(),
-                forall|v: &V| f.requires((v,)),
-                obeys_feq_clone::<K>(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() == old(self)@.dom(),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
-                    (exists|old_val: V, result: V|
-                        old_val@ == old(self)@[k]
-                        && f.ensures((&old_val,), result)
-                        && self@[k] == result@);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(Σ W(f(.))), Span O(lg |a| + max S(f(.)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + Σ W(f(k,v))), Span O(n + Σ W(f(k,v))) — ACCEPTED DIFFERENCE: array-backed unordered table; sequential loop; D&C no-dup proof pending
-        fn filter<F: Fn(&K, &V) -> bool + Clone + Send + Sync + 'static>(
-            &mut self,
-            f: F,
-            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
-        )
-            requires
-                old(self).spec_tablemteph_wf(),
-                forall|k: &K, v: &V| f.requires((k, v)),
-                forall|k: K, v: V, keep: bool|
-                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom().subset_of(old(self)@.dom()),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k],
-                forall|k: K::V| old(self)@.dom().contains(k) && spec_pred(k, old(self)@[k])
-                    ==> #[trigger] self@.dom().contains(k);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
-        fn intersection<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
-            requires
-                old(self).spec_tablemteph_wf(),
-                other.spec_tablemteph_wf(),
-                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-                obeys_feq_clone::<K>(),
-                obeys_view_eq::<K>(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() =~= old(self)@.dom().intersect(other@.dom()),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==>
-                    (exists|v1: V, v2: V, r: V|
-                        v1@ == old(self)@[k] && v2@ == other@[k]
-                        && combine.ensures((&v1, &v2), r)
-                        && self@[k] == r@);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
-        fn union<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, other: &Self, combine: F)
-            requires
-                old(self).spec_tablemteph_wf(),
-                other.spec_tablemteph_wf(),
-                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-                obeys_feq_clone::<K>(),
-                obeys_view_eq::<K>(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() =~= old(self)@.dom().union(other@.dom()),
-                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && !other@.contains_key(k)
-                    ==> self@[k] == old(self)@[k],
-                forall|k: K::V| #[trigger] other@.contains_key(k) && !old(self)@.contains_key(k)
-                    ==> self@[k] == other@[k],
-                forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
-                    (exists|v1: V, v2: V, r: V|
-                        v1@ == old(self)@[k] && v2@ == other@[k]
-                        && combine.ensures((&v1, &v2), r)
-                        && self@[k] == r@);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
-        fn difference(&mut self, other: &Self)
-            requires
-                old(self).spec_tablemteph_wf(),
-                obeys_view_eq::<K>(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() =~= old(self)@.dom().difference(other@.dom()),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan on flat array
-        fn find(&self, key: &K) -> (found: Option<V>)
-            requires self.spec_tablemteph_wf(), obeys_view_eq::<K>()
-            ensures
-                match found {
-                    Some(v) => self@.contains_key(key@) && self@[key@] == v@,
-                    None => !self@.contains_key(key@),
-                };
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
-        fn delete(&mut self, key: &K)
-            requires old(self).spec_tablemteph_wf(), obeys_view_eq::<K>()
-            ensures self@ =~= old(self)@.remove(key@), self.spec_tablemteph_wf();
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(lg |a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: array-backed unordered table; linear scan + copy
-        fn insert<F: Fn(&V, &V) -> V + Send + Sync + 'static>(&mut self, key: K, value: V, combine: F)
-            requires
-                old(self).spec_tablemteph_wf(),
-                forall|v1: &V, v2: &V| combine.requires((v1, v2)),
-                obeys_view_eq::<K>(),
-                obeys_feq_clone::<K>(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.contains_key(key@),
-                self@.dom() =~= old(self)@.dom().insert(key@),
-                forall|k: K::V| k != key@ && #[trigger] old(self)@.contains_key(k) ==> self@[k] == old(self)@[k],
-                !old(self)@.contains_key(key@) ==> self@[key@] == value@,
-                old(self)@.contains_key(key@) ==> (exists|old_v: V, r: V|
-                    old_v@ == old(self)@[key@] && combine.ensures((&old_v, &value), r)
-                    && self@[key@] == r@);
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
-        fn restrict(&mut self, keys: &ArraySetStEph<K>)
-            requires
-                old(self).spec_tablemteph_wf(),
-                keys@.finite(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() =~= old(self)@.dom().intersect(keys@),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-        /// - Alg Analysis: APAS (Ch42 CS 42.5): Work O(m * lg(1+n/m)), Span O(lg(n+m))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n·m), Span O(n·m) — ACCEPTED DIFFERENCE: array-backed unordered table; nested linear scans on array
-        fn subtract(&mut self, keys: &ArraySetStEph<K>)
-            requires
-                old(self).spec_tablemteph_wf(),
-                keys@.finite(),
-            ensures
-                self.spec_tablemteph_wf(),
-                self@.dom() =~= old(self)@.dom().difference(keys@),
-                forall|k: K::V| #[trigger] self@.contains_key(k) ==> self@[k] == old(self)@[k];
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone of backing array.
-        fn entries(&self) -> (entries: ArraySeqMtEphS<Pair<K, V>>)
-            ensures spec_entries_to_map(entries@) == self@;
-    }
-
-//		9. impls
 
     impl<K: MtKey, V: MtVal> TableMtEphTrait<K, V> for TableMtEph<K, V> {
         open spec fn spec_tablemteph_wf(&self) -> bool {
@@ -2692,7 +2685,8 @@ broadcast use {
         TableMtEph { entries: seq }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     #[cfg(verus_keep_ghost)]
     impl<K: MtKey, V: MtVal> PartialEqSpecImpl for TableMtEph<K, V> {
@@ -2726,9 +2720,23 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
+
+    /// Macro for creating multi-threaded ephemeral table literals
+    #[macro_export]
+    macro_rules! TableMtEphLit {
+        () => {
+            $crate::Chap42::TableMtEph::TableMtEph::TableMtEph::empty()
+        };
+        ($($key:expr => $value:expr),+ $(,)?) => {{
+            let mut entries = vec![$($crate::Types::Types::Pair($key, $value)),+];
+            entries.sort_by(|a, b| a.0.cmp(&b.0));
+            $crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries(entries)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<K: MtKey, V: MtVal> std::fmt::Debug for TableMtEph<K, V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -2742,22 +2750,5 @@ broadcast use {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "TableMtEph(len={})", self.entries.length())
         }
-    }
-
-    // 12. macros
-
-    //		12. macros
-
-    /// Macro for creating multi-threaded ephemeral table literals
-    #[macro_export]
-    macro_rules! TableMtEphLit {
-        () => {
-            $crate::Chap42::TableMtEph::TableMtEph::TableMtEph::empty()
-        };
-        ($($key:expr => $value:expr),+ $(,)?) => {{
-            let mut entries = vec![$($crate::Types::Types::Pair($key, $value)),+];
-            entries.sort_by(|a, b| a.0.cmp(&b.0));
-            $crate::Chap42::TableMtEph::TableMtEph::from_sorted_entries(entries)
-        }};
     }
 }

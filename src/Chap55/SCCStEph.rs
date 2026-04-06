@@ -4,7 +4,23 @@
 //! Finds all strongly connected components using ephemeral structures.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SCCStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -20,7 +36,11 @@ pub mod SCCStEph {
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -28,19 +48,16 @@ pub mod SCCStEph {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+
+
     pub struct SCCStEph;
 
-    // 6. spec fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
@@ -70,7 +87,8 @@ pub mod SCCStEph {
     {
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SCCStEphTrait {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18).
@@ -86,7 +104,8 @@ pub mod SCCStEph {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Computes the finish order for SCC (decreasing finish times).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — full DFS producing finish-time ordering; St sequential.
@@ -575,7 +594,8 @@ pub mod SCCStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SCCStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

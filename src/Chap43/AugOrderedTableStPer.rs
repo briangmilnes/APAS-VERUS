@@ -2,21 +2,27 @@
 //! REVIEWED: NO
 //! Single-threaded persistent reducer-augmented ordered table implementation.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod AugOrderedTableStPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 7. proof fns, helper fns
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -37,14 +43,19 @@ pub mod AugOrderedTableStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -61,7 +72,8 @@ broadcast use {
 
     pub type AugOrderedTablePer<K, V, F> = AugOrderedTableStPer<K, V, F>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<K: StT + Ord, V: StT + Ord, F> View for AugOrderedTableStPer<K, V, F>
     where
@@ -71,43 +83,8 @@ broadcast use {
         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
-    // 7. free functions (calculate_reduction)
+    //		Section 7. proof fns/broadcast groups
 
-    /// Fold all values in `base` through `reducer`, returning `identity` for empty tables.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
-    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
-        base: &OrderedTableStPer<K, V>,
-        reducer: &F,
-        identity: &V,
-    ) -> (reduced: V)
-    where
-        F: Fn(&V, &V) -> V + Clone,
-        requires base.spec_orderedtablestper_wf(), forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-        ensures base@.dom().finite(),
-    {
-        let pairs = base.collect();
-        let sz = pairs.length();
-        if sz == 0 {
-            return identity.clone();
-        }
-        let mut reduced = pairs.nth(0).1.clone();
-        let mut i: usize = 1;
-        while i < sz
-            invariant
-                1 <= i <= pairs@.len(),
-                sz as nat == pairs@.len(),
-                pairs.spec_avltreeseqstper_wf(),
-                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-            decreases pairs@.len() - i,
-        {
-            let pair = pairs.nth(i);
-            reduced = reducer(&reduced, &pair.1);
-            i += 1;
-        }
-        reduced
-    }
-
-    // 7b. proof fns
 
     proof fn lemma_aug_view<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
         t: &AugOrderedTableStPer<K, V, F>,
@@ -115,7 +92,8 @@ broadcast use {
         ensures t@ =~= t.base_table@
     {}
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Trait defining all augmented ordered table operations (ADT 43.3)
     /// Extends ordered table operations with efficient reduction
@@ -474,7 +452,45 @@ broadcast use {
             ensures self@.dom().finite();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    // 7. free functions (calculate_reduction)
+
+    /// Fold all values in `base` through `reducer`, returning `identity` for empty tables.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
+    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
+        base: &OrderedTableStPer<K, V>,
+        reducer: &F,
+        identity: &V,
+    ) -> (reduced: V)
+    where
+        F: Fn(&V, &V) -> V + Clone,
+        requires base.spec_orderedtablestper_wf(), forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+        ensures base@.dom().finite(),
+    {
+        let pairs = base.collect();
+        let sz = pairs.length();
+        if sz == 0 {
+            return identity.clone();
+        }
+        let mut reduced = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < sz
+            invariant
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
+                pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            decreases pairs@.len() - i,
+        {
+            let pair = pairs.nth(i);
+            reduced = reducer(&reduced, &pair.1);
+            i += 1;
+        }
+        reduced
+    }
+
 
     impl<K: StT + Ord, V: StT + Ord, F> AugOrderedTableStPerTrait<K, V, F> for AugOrderedTableStPer<K, V, F>
     where
@@ -965,7 +981,6 @@ broadcast use {
         }
     }
 
-    // 10. iterators
 
     impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStPer<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
@@ -979,6 +994,9 @@ broadcast use {
             self.base_table.iter()
         }
     }
+
+    //		Section 10. iterators
+
 
     impl<'a, K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStPer<K, V, F> {
         type Item = Pair<K, V>;
@@ -994,7 +1012,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     #[cfg(verus_keep_ghost)]
     impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> PartialEqSpecImpl for AugOrderedTableStPer<K, V, F> {
@@ -1033,7 +1052,25 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    // Macro for creating augmented ordered table literals
+    #[macro_export]
+    macro_rules! AugOrderedTableStPerLit {
+        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
+            let mut table = $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::empty($reducer, $identity);
+            $(
+                table = $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::insert(&table, $k, $v);
+            )*
+            table
+        }};
+        (reducer: $reducer:expr, identity: $identity:expr) => {{
+            $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::empty($reducer, $identity)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<K: StT + Ord, V: StT + Ord, F> Display for AugOrderedTableStPer<K, V, F>
     where
@@ -1059,20 +1096,5 @@ broadcast use {
                 .field("cached_reduction", &self.cached_reduction)
                 .finish()
         }
-    }
-
-    // Macro for creating augmented ordered table literals
-    #[macro_export]
-    macro_rules! AugOrderedTableStPerLit {
-        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
-            let mut table = $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::empty($reducer, $identity);
-            $(
-                table = $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::insert(&table, $k, $v);
-            )*
-            table
-        }};
-        (reducer: $reducer:expr, identity: $identity:expr) => {{
-            $crate::Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait::empty($reducer, $identity)
-        }};
     }
 }

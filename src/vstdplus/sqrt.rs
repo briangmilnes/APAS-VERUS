@@ -4,11 +4,26 @@
 //! - ensures root * root <= n
 //! - ensures (root + 1) * (root + 1) > n
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod sqrt {
+
+
+//		Section 2. imports
 
 use vstd::prelude::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 9. impls
+
 
 pub assume_specification [<usize>::isqrt] (n: usize) -> (root: usize)
     ensures

@@ -6,37 +6,34 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod DivConReduceMtPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -46,10 +43,8 @@ pub mod DivConReduceMtPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
-
-    //		4. spec fns
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
     pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
@@ -75,10 +70,8 @@ pub mod DivConReduceMtPer {
 
     pub open spec fn spec_max_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| if x >= y { x } else { y } }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		9. impls
 
     /// Helper: establish fold_left one-step decomposition via lemma_fold_left_split.
     proof fn lemma_fold_left_step(s: Seq<usize>, acc: usize)
@@ -146,10 +139,8 @@ pub mod DivConReduceMtPer {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
-
-    //		7. proof fns
 
     pub trait DivConReduceMtTrait {
         /// Find maximum element via parallel reduce.
@@ -217,6 +208,8 @@ pub mod DivConReduceMtPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);
     }
 
+    //		Section 9. impls
+
 
     //		9. bridge fns (named closures with ensures per standard 8)
 
@@ -280,7 +273,6 @@ pub mod DivConReduceMtPer {
         ArraySeqMtPerS::reduce(a, &f, Ghost(spec_and_fn()), true)
     }
 
-    //		9. impls
 
     impl DivConReduceMtTrait for ArraySeqMtPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C reduce via call_reduce_max; Mt parallel.

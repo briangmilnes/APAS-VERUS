@@ -12,17 +12,47 @@
 //! For compound types (Edge<V>, Pair<K, V>), `clone_view` delegates to component
 //! `clone_view` calls, which chain ensures without assumes.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod clone_view {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 8. traits
+
 
     /// Trait for types whose clone preserves the view.
     pub trait ClonePreservesView: Clone + View + Sized {
         fn clone_view(&self) -> (result: Self)
             ensures result@ == self@;
     }
+
+    /// Trait for types whose clone preserves well-formedness.
+    /// Same category as the eq/clone workaround — Clone preserves structural
+    /// invariants (sorted, balanced, no-dup) that Verus cannot derive generically.
+    pub trait ClonePreservesWf: Clone + View + Sized {
+        spec fn spec_wf(&self) -> bool;
+
+        fn clone_wf(&self) -> (result: Self)
+            requires self.spec_wf(),
+            ensures result.spec_wf(), result@ == self@;
+    }
+
+    //		Section 9. impls
+
 
     impl ClonePreservesView for usize {
         fn clone_view(&self) -> (result: Self)
@@ -87,18 +117,6 @@ pub mod clone_view {
             *self
         }
     }
-
-    /// Trait for types whose clone preserves well-formedness.
-    /// Same category as the eq/clone workaround — Clone preserves structural
-    /// invariants (sorted, balanced, no-dup) that Verus cannot derive generically.
-    pub trait ClonePreservesWf: Clone + View + Sized {
-        spec fn spec_wf(&self) -> bool;
-
-        fn clone_wf(&self) -> (result: Self)
-            requires self.spec_wf(),
-            ensures result.spec_wf(), result@ == self@;
-    }
-
     } // verus!
 }
 

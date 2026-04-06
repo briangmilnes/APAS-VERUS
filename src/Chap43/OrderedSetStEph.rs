@@ -6,21 +6,27 @@
 //! (first, last, previous, next, split, get_range, rank, select, split_rank) now use tree
 //! operations (min_key, max_key, split, expose, size) instead of scanning a flat sequence.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod OrderedSetStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt;
@@ -38,9 +44,11 @@ pub mod OrderedSetStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger};
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -49,7 +57,8 @@ broadcast use {
     vstd::laws_cmp::group_laws_cmp,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct OrderedSetStEph<T: StT + Ord + TotalOrder> {
@@ -58,16 +67,16 @@ broadcast use {
 
     pub type OrderedSetEph<T> = OrderedSetStEph<T>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: StT + Ord + TotalOrder> View for OrderedSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
     }
 
-    // 6. spec fns
+    //		Section 7. proof fns/broadcast groups
 
-    // 7. proof fns
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
@@ -105,120 +114,8 @@ broadcast use {
         assert(a@ == b@);
     }
 
-    /// Maximum key in a ParamBST via right-spine walk.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
-    fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
-        requires
-            tree@.finite(),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-        ensures
-            tree@.len() == 0 <==> maximum.is_none(),
-            maximum.is_some() ==> tree@.contains(maximum.unwrap()@),
-            maximum.is_some() ==> forall|t: T| (#[trigger] tree@.contains(t@)) ==>
-                t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@,
-        decreases tree@.len(),
-    {
-        match tree.expose() {
-            Exposed::Leaf => None,
-            Exposed::Node(left, key, right) => {
-                proof {
-                    // Establish termination: right@.len() < tree@.len().
-                    assert(!left@.contains(key@));
-                    assert(!right@.contains(key@));
-                    assert(!left@.union(right@).contains(key@));
-                    vstd::set_lib::lemma_len_subset(right@, left@.union(right@));
-                    // tree@ =~= union.insert(key@), key@ not in union, so |tree@| = |union| + 1.
-                    // |right@| <= |union| < |union| + 1 = |tree@|.
-                }
-                if right.is_empty() {
-                    proof {
-                        assert forall|t: T| (#[trigger] tree@.contains(t@))
-                            implies t.cmp_spec(&key) == Less || key@ == t@ by {
-                            if left@.contains(t@) {
-                                // expose ensures: left elements have cmp_spec(&key) == Less.
-                            } else {
-                                // t@ not in left@ and right@ empty, so t@ == key@.
-                            }
-                        };
-                    }
-                    Some(key)
-                } else {
-                    let max_right = tree_max_key(&right);
-                    proof {
-                        let mr = max_right.unwrap();
-                        assert(right@.contains(mr@));
-                        assert(tree@.contains(mr@));
-                        // mr ∈ right@, expose ensures mr.cmp_spec(&key) == Greater.
-                        lemma_cmp_antisymmetry(mr, key);
-                        assert forall|t: T| (#[trigger] tree@.contains(t@))
-                            implies t.cmp_spec(&mr) == Less || mr@ == t@ by {
-                            if left@.contains(t@) {
-                                lemma_cmp_transitivity(t, key, mr);
-                            } else if right@.contains(t@) {
-                                // Recursive ensures.
-                            } else {
-                                // t@ == key@. Equal congruence: t.cmp_spec(&mr) == key.cmp_spec(&mr).
-                                lemma_cmp_equal_congruent(t, key, mr);
-                            }
-                        };
-                    }
-                    max_right
-                }
-            }
-        }
-    }
+    //		Section 8. traits
 
-    /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
-    fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
-        requires
-            tree@.finite(),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-        ensures
-            i as nat >= tree@.len() ==> selected.is_none(),
-            (i as nat) < tree@.len() ==> selected.is_some(),
-            selected.is_some() ==> tree@.contains(selected.unwrap()@),
-        decreases tree@.len(),
-    {
-        match tree.expose() {
-            Exposed::Leaf => None,
-            Exposed::Node(left, key, right) => {
-                proof {
-                    assert(!left@.contains(key@));
-                    assert(!right@.contains(key@));
-                    assert(!left@.union(right@).contains(key@));
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                }
-                let left_sz = left.size();
-                if i < left_sz {
-                    let result = tree_select(&left, i);
-                    proof {
-                        if result.is_some() {
-                            assert(left@.contains(result.unwrap()@));
-                            assert(tree@.contains(result.unwrap()@));
-                        }
-                    }
-                    result
-                } else if i as usize == left_sz {
-                    Some(key)
-                } else {
-                    let adjusted = i - left_sz - 1;
-                    let result = tree_select(&right, adjusted);
-                    proof {
-                        if result.is_some() {
-                            assert(right@.contains(result.unwrap()@));
-                            assert(tree@.contains(result.unwrap()@));
-                        }
-                    }
-                    result
-                }
-            }
-        }
-    }
-
-    // 8. traits
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with ephemeral semantics.
     /// Postconditions for ordering operations use cmp_spec (from Ord) rather than TotalOrder::le;
@@ -541,7 +438,122 @@ broadcast use {
                 forall|x| #[trigger] old(self)@.contains(x) ==> split.0@.contains(x) || split.1@.contains(x);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    /// Maximum key in a ParamBST via right-spine walk.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
+    fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
+        requires
+            tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+        ensures
+            tree@.len() == 0 <==> maximum.is_none(),
+            maximum.is_some() ==> tree@.contains(maximum.unwrap()@),
+            maximum.is_some() ==> forall|t: T| (#[trigger] tree@.contains(t@)) ==>
+                t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@,
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            Exposed::Leaf => None,
+            Exposed::Node(left, key, right) => {
+                proof {
+                    // Establish termination: right@.len() < tree@.len().
+                    assert(!left@.contains(key@));
+                    assert(!right@.contains(key@));
+                    assert(!left@.union(right@).contains(key@));
+                    vstd::set_lib::lemma_len_subset(right@, left@.union(right@));
+                    // tree@ =~= union.insert(key@), key@ not in union, so |tree@| = |union| + 1.
+                    // |right@| <= |union| < |union| + 1 = |tree@|.
+                }
+                if right.is_empty() {
+                    proof {
+                        assert forall|t: T| (#[trigger] tree@.contains(t@))
+                            implies t.cmp_spec(&key) == Less || key@ == t@ by {
+                            if left@.contains(t@) {
+                                // expose ensures: left elements have cmp_spec(&key) == Less.
+                            } else {
+                                // t@ not in left@ and right@ empty, so t@ == key@.
+                            }
+                        };
+                    }
+                    Some(key)
+                } else {
+                    let max_right = tree_max_key(&right);
+                    proof {
+                        let mr = max_right.unwrap();
+                        assert(right@.contains(mr@));
+                        assert(tree@.contains(mr@));
+                        // mr ∈ right@, expose ensures mr.cmp_spec(&key) == Greater.
+                        lemma_cmp_antisymmetry(mr, key);
+                        assert forall|t: T| (#[trigger] tree@.contains(t@))
+                            implies t.cmp_spec(&mr) == Less || mr@ == t@ by {
+                            if left@.contains(t@) {
+                                lemma_cmp_transitivity(t, key, mr);
+                            } else if right@.contains(t@) {
+                                // Recursive ensures.
+                            } else {
+                                // t@ == key@. Equal congruence: t.cmp_spec(&mr) == key.cmp_spec(&mr).
+                                lemma_cmp_equal_congruent(t, key, mr);
+                            }
+                        };
+                    }
+                    max_right
+                }
+            }
+        }
+    }
+
+    /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
+    fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
+        requires
+            tree@.finite(),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+        ensures
+            i as nat >= tree@.len() ==> selected.is_none(),
+            (i as nat) < tree@.len() ==> selected.is_some(),
+            selected.is_some() ==> tree@.contains(selected.unwrap()@),
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            Exposed::Leaf => None,
+            Exposed::Node(left, key, right) => {
+                proof {
+                    assert(!left@.contains(key@));
+                    assert(!right@.contains(key@));
+                    assert(!left@.union(right@).contains(key@));
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                }
+                let left_sz = left.size();
+                if i < left_sz {
+                    let result = tree_select(&left, i);
+                    proof {
+                        if result.is_some() {
+                            assert(left@.contains(result.unwrap()@));
+                            assert(tree@.contains(result.unwrap()@));
+                        }
+                    }
+                    result
+                } else if i as usize == left_sz {
+                    Some(key)
+                } else {
+                    let adjusted = i - left_sz - 1;
+                    let result = tree_select(&right, adjusted);
+                    proof {
+                        if result.is_some() {
+                            assert(right@.contains(result.unwrap()@));
+                            assert(tree@.contains(result.unwrap()@));
+                        }
+                    }
+                    result
+                }
+            }
+        }
+    }
+
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEphTrait<T> for OrderedSetStEph<T> {
         open spec fn spec_orderedsetsteph_wf(&self) -> bool {
@@ -984,7 +996,6 @@ broadcast use {
         { self.split_rank_iter(i) }
     }
 
-    // 10. iterators
 
     impl<T: StT + Ord + TotalOrder> OrderedSetStEph<T> {
         /// Returns an iterator over the set elements via in-order traversal.
@@ -1000,6 +1011,22 @@ broadcast use {
             OrderedSetStEphIter { inner: elements.into_iter() }
         }
     }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- from_vec O(n) + n treap inserts
+    pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
+        requires
+            elements@.len() < usize::MAX,
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+        ensures constructed.spec_orderedsetsteph_wf()
+    {
+        assert(obeys_feq_full_trigger::<T>());
+        let seq = AVLTreeSeqStPerS::from_vec(elements);
+        OrderedSetStEph::from_seq(seq)
+    }
+
+    //		Section 10. iterators
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct OrderedSetStEphIter<T: StT + Ord + TotalOrder> {
@@ -1107,7 +1134,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<T: StT + Ord + TotalOrder> Clone for OrderedSetStEph<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1118,23 +1146,10 @@ broadcast use {
             }
         }
     }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- from_vec O(n) + n treap inserts
-    pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStEph<T>)
-        requires
-            elements@.len() < usize::MAX,
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-        ensures constructed.spec_orderedsetsteph_wf()
-    {
-        assert(obeys_feq_full_trigger::<T>());
-        let seq = AVLTreeSeqStPerS::from_vec(elements);
-        OrderedSetStEph::from_seq(seq)
-    }
-
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     /// Macro for creating ephemeral ordered sets from sorted element lists.
     #[macro_export]
@@ -1147,7 +1162,7 @@ broadcast use {
         };
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StT + Ord + TotalOrder> Default for OrderedSetStEph<T> {
         fn default() -> Self { Self::empty() }

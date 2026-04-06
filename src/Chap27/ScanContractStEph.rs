@@ -4,28 +4,32 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	7. proof fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod ScanContractStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -35,7 +39,8 @@ pub mod ScanContractStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
@@ -218,7 +223,8 @@ pub mod ScanContractStEph {
         assert(b_seq.take(half) =~= b_seq);
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait ScanContractStEphTrait<T: StT> {
         /// Exclusive scan using contraction: contract→solve→expand.
@@ -279,7 +285,8 @@ pub mod ScanContractStEph {
             });
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     impl<T: StT + Clone> ScanContractStEphTrait<T> for ArraySeqStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contract/expand; St sequential.

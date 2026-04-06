@@ -5,7 +5,35 @@
 //! Memoized top-down DP with parallel min reduction.
 //! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 8c. traits
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 9d. impls
+//	Section 11c. top level coarse locking
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod MatrixChainMtPer {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
@@ -24,20 +52,12 @@ pub mod MatrixChainMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -47,7 +67,9 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types]
     #[derive(Clone, Copy, PartialEq, Eq, Debug)]
     pub struct MatrixDim {
@@ -55,7 +77,9 @@ broadcast use {
         pub cols: usize,
     }
 
-    // 5. view impls
+    //		Section 5a. view impls
+
+
     impl View for MatrixDim {
         type V = (nat, nat);
         open spec fn view(&self) -> (nat, nat) {
@@ -63,34 +87,23 @@ broadcast use {
         }
     }
 
+    //		Section 4b. type definitions
+
+
     pub ghost struct MatrixChainMtPerV {
         pub dimensions: Seq<MatrixDim>,
     }
 
+    //		Section 4c. type definitions
+
+
     pub struct MatrixChainMtPerMemoInv {
         pub ghost dims: Seq<MatrixDim>,
     }
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtPerMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            &&& v@.dom().finite()
-            &&& spec_memo_correct(self.dims, v@)
-        }
-    }
+
+    //		Section 6c. spec fns
 
 
-    pub struct MatrixChainMtPerS {
-        pub dimensions: Arc<Vec<MatrixDim>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>>,
-    }
-
-    impl View for MatrixChainMtPerS {
-        type V = MatrixChainMtPerV;
-        open spec fn view(&self) -> Self::V {
-            MatrixChainMtPerV { dimensions: self.dimensions@ }
-        }
-    }
-
-    // 6. spec fns
     pub open spec fn spec_multiply_cost(dims: Seq<MatrixDim>, i: int, k: int, j: int) -> nat {
         (dims[i].rows as nat) * (dims[k].cols as nat) * (dims[j].cols as nat)
     }
@@ -138,7 +151,9 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8c. traits
+
+
     pub trait MatrixChainMtPerTrait: Sized + View<V = MatrixChainMtPerV> {
         spec fn spec_matrixchainmtper_wf(&self) -> bool;
 
@@ -207,7 +222,26 @@ broadcast use {
                 forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];
     }
 
-    // 9. impls
+    //		Section 4d. type definitions
+
+
+    pub struct MatrixChainMtPerS {
+        pub dimensions: Arc<Vec<MatrixDim>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtPerMemoInv>>,
+    }
+
+    //		Section 5d. view impls
+
+
+    impl View for MatrixChainMtPerS {
+        type V = MatrixChainMtPerV;
+        open spec fn view(&self) -> Self::V {
+            MatrixChainMtPerV { dimensions: self.dimensions@ }
+        }
+    }
+
+    //		Section 9d. impls
+
 
     impl MatrixChainMtPerTrait for MatrixChainMtPerS {
         open spec fn spec_matrixchainmtper_wf(&self) -> bool {
@@ -417,7 +451,19 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 11c. top level coarse locking
+
+
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtPerMemoInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
+            &&& v@.dom().finite()
+            &&& spec_memo_correct(self.dims, v@)
+        }
+    }
+
+    //		Section 12d. derive impls in verus!
+
+
     impl Clone for MatrixChainMtPerS {
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
@@ -453,7 +499,62 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! MatrixChainMtPerLit {
+        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
+            $crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixChainMtPerS::from_dim_pairs(
+                vec![$($crate::Types::Types::Pair($r, $c)),*]
+            )
+        };
+        () => {
+            $crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixChainMtPerS::new()
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<'a> IntoIterator for &'a MatrixChainMtPerS {
+        type Item = MatrixDim;
+        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
+        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl Display for MatrixDim {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl Debug for MatrixChainMtPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
+    }
+
+    impl Display for MatrixChainMtPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl Debug for MatrixChainMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
+    }
+
+    impl Display for MatrixChainMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
     impl Debug for MatrixChainMtPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(self, f) }
     }
@@ -486,53 +587,5 @@ broadcast use {
                 | Err(arc) => (*arc).clone().into_iter(),
             }
         }
-    }
-
-    impl<'a> IntoIterator for &'a MatrixChainMtPerS {
-        type Item = MatrixDim;
-        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
-        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
-    }
-
-    impl Display for MatrixDim {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
-    }
-
-    // 14b. derive impls outside verus! — struct MatrixChainMtPerV
-
-    impl Debug for MatrixChainMtPerV {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
-    }
-
-    impl Display for MatrixChainMtPerV {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
-    }
-
-    // 14c. derive impls outside verus! — struct MatrixChainMtPerMemoInv
-
-    impl Debug for MatrixChainMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
-    }
-
-    impl Display for MatrixChainMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
-    }
-
-    // 12. macros
-    #[macro_export]
-    macro_rules! MatrixChainMtPerLit {
-        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
-            $crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixChainMtPerS::from_dim_pairs(
-                vec![$($crate::Types::Types::Pair($r, $c)),*]
-            )
-        };
-        () => {
-            $crate::Chap50::MatrixChainMtPer::MatrixChainMtPer::MatrixChainMtPerS::new()
-        };
     }
 }

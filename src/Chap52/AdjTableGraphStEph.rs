@@ -1,7 +1,25 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AdjTableGraphStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -22,7 +40,11 @@ pub mod AdjTableGraphStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_view_eq_trigger;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -31,32 +53,24 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct AdjTableGraphStEph<V: StT + Ord> {
         pub adj: TableStEph<V, AVLTreeSetStEph<V>>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<V: StT + Ord> View for AdjTableGraphStEph<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Sum of f(0) + f(1) + ... + f(n-1).
     pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
@@ -87,7 +101,8 @@ broadcast use {
         else { entries[n - 1].1.len() + spec_sum_entry_sizes(entries, n - 1) }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
     pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)
@@ -195,7 +210,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AdjTableGraphStEphTrait<V: StT + Ord>: Sized {
         spec fn spec_adjtablegraphsteph_wf(&self) -> bool;
@@ -293,7 +309,8 @@ broadcast use {
                     || !self.spec_adj()[u@].contains(v@);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
         open spec fn spec_adjtablegraphsteph_wf(&self) -> bool {
@@ -904,7 +921,8 @@ broadcast use {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StT + Ord> std::fmt::Debug for AdjTableGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

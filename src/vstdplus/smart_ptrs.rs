@@ -3,11 +3,26 @@
 //! smart_ptrs — Specs for smart pointer operations not yet covered by vstd.
 //! Extends `vstd::std_specs::smart_ptrs` with Arc::clone and Arc-deref helpers.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod smart_ptrs {
+
+    //		Section 2. imports
+
     use std::sync::Arc;
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 9. impls
+
 
     /// Spec for Arc::clone: the result equals the original (Arc is transparent).
     /// Fills the gap in vstd::std_specs::smart_ptrs which has Arc::new but not Arc::clone.

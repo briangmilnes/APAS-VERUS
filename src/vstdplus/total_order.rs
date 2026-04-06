@@ -1,7 +1,19 @@
 // Copyright (c) 2025 Brian G. Milnes
 //! REVIEWED: NO
 //! TotalOrder trait connecting executable comparison to spec-level ordering.
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod total_order {
+
+    //		Section 2. imports
+
     use core::cmp::Ordering;
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
@@ -9,7 +21,11 @@ pub mod total_order {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 8. traits
+
 
  pub trait TotalOrder: Sized {
     spec fn le(self, other: Self) -> bool;
@@ -63,6 +79,27 @@ pub mod total_order {
     { assume(TotalOrder::le(b, a)); }
 
 }
+
+/// Axiomatizes strict-less-than transitivity for vstd's `is_lt` spec fn.
+///
+/// For integer types, `is_lt` reduces to `<` and the solver proves transitivity
+/// automatically (empty proof body). For generic code over ordered types, add
+/// this as a trait bound to access the `is_lt_transitive` proof fn.
+pub trait IsLtTransitive: PartialOrd + Sized {
+    proof fn is_lt_transitive(a: Self, b: Self, c: Self)
+        requires a.is_lt(&b), b.is_lt(&c),
+        ensures a.is_lt(&c);
+
+    proof fn is_lt_irreflexive(a: Self)
+        ensures !a.is_lt(&a);
+
+    proof fn is_lt_antisymmetric(a: Self, b: Self)
+        requires !a.is_lt(&b), !b.is_lt(&a),
+        ensures a == b;
+}
+
+    //		Section 9. impls
+
 
 // Note: A blanket impl for all T: Ord would be nice, but Verus has limitations
 // with generic comparison operators in exec code. Individual impls work fine.
@@ -437,24 +474,6 @@ impl TotalOrder for isize {
 
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
-}
-
-/// Axiomatizes strict-less-than transitivity for vstd's `is_lt` spec fn.
-///
-/// For integer types, `is_lt` reduces to `<` and the solver proves transitivity
-/// automatically (empty proof body). For generic code over ordered types, add
-/// this as a trait bound to access the `is_lt_transitive` proof fn.
-pub trait IsLtTransitive: PartialOrd + Sized {
-    proof fn is_lt_transitive(a: Self, b: Self, c: Self)
-        requires a.is_lt(&b), b.is_lt(&c),
-        ensures a.is_lt(&c);
-
-    proof fn is_lt_irreflexive(a: Self)
-        ensures !a.is_lt(&a);
-
-    proof fn is_lt_antisymmetric(a: Self, b: Self)
-        requires !a.is_lt(&b), !b.is_lt(&a),
-        ensures a == b;
 }
 
 impl IsLtTransitive for u8 {

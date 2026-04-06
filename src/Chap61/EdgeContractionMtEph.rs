@@ -5,7 +5,21 @@
 //! Implements:
 //! - Algorithm 61.6: Parallel Edge Contraction (with fork/join parallelism)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod EdgeContractionMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -21,14 +35,17 @@ pub mod EdgeContractionMtEph {
     use crate::Chap61::VertexMatchingMtEph::VertexMatchingMtEph::parallel_matching_mt;
     use crate::{ParaPair, SetLit};
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct EdgeContractionMtEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait EdgeContractionMtEphTrait {
         /// Well-formedness for parallel edge contraction algorithm input.
@@ -54,6 +71,9 @@ pub mod EdgeContractionMtEph {
         ) -> UnDirGraphMtEph<V>
             requires Self::spec_edgecontractionmteph_wf(graph);
     }
+
+    //		Section 9. impls
+
 
     /// Algorithm 61.6: Parallel Edge Contraction
     ///
@@ -236,7 +256,8 @@ pub mod EdgeContractionMtEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for EdgeContractionMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

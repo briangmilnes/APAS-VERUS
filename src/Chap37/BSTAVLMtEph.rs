@@ -6,19 +6,28 @@
 //! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. top level coarse locking
-//  13. macros
-//  14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTAVLMtEph {
+
+
+    //		Section 2. imports
 
     use core::marker::PhantomData;
 
@@ -27,9 +36,9 @@ pub mod BSTAVLMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::{avl_balanced, tree_is_avl};
@@ -39,7 +48,8 @@ pub mod BSTAVLMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // 7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
         requires tree.tree_is_bst(),
@@ -104,10 +114,8 @@ pub mod BSTAVLMtEph {
     {
     }
 
+    //		Section 8. traits
 
-    // 9. impls
-
-    // 8. traits
 
     /// Exec AVL BST operations on BalBinTree nodes (Mt variant).
     pub trait BSTAVLMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
@@ -251,6 +259,9 @@ pub mod BSTAVLMtEph {
                 max.is_some() ==> (*self).tree_contains(*max.unwrap()),
             ;
     }
+
+    //		Section 9. impls
+
 
     impl<T: TotalOrder> BSTAVLMtNodeFns<T> for BalBinTree<T> {
 
@@ -852,21 +863,16 @@ pub mod BSTAVLMtEph {
 
     } // impl BSTAVLMtNodeFns
 
+    //		Section 4a. type definitions
 
-    // 11. top level coarse locking
 
     /// Lock predicate: the inner tree satisfies AVL invariant and fits in usize.
     pub(crate) struct BSTAVLMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTAVLMtEphInv<T> {
-        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree_is_avl::<T>(tree)
-                && tree.spec_size() <= usize::MAX
-                && tree.spec_height() <= usize::MAX
-        }
-    }
+    //		Section 4b. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTAVLMtEph<T: TotalOrder> {
@@ -874,23 +880,16 @@ pub mod BSTAVLMtEph {
         pub(crate) ghost_root: Ghost<BalBinTree<T>>,
     }
 
-    impl<T: TotalOrder> BSTAVLMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            tree_is_avl::<T>(self.ghost_root@)
-            && self.ghost_root@.spec_size() <= usize::MAX
-            && self.ghost_root@.spec_height() <= usize::MAX
-        }
+    //		Section 5b. view impls
 
-        pub closed spec fn spec_ghost_root(self) -> BalBinTree<T> {
-            self.ghost_root@
-        }
-    }
 
     impl<T: TotalOrder> View for BSTAVLMtEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { self.spec_ghost_root() }
     }
+
+    //		Section 8b. traits
+
 
     pub trait BSTAVLMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_bstavlmteph_wf(&self) -> bool;
@@ -956,6 +955,22 @@ pub mod BSTAVLMtEph {
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstavlmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
+    }
+
+    //		Section 9b. impls
+
+
+    impl<T: TotalOrder> BSTAVLMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            tree_is_avl::<T>(self.ghost_root@)
+            && self.ghost_root@.spec_size() <= usize::MAX
+            && self.ghost_root@.spec_height() <= usize::MAX
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> BalBinTree<T> {
+            self.ghost_root@
+        }
     }
 
     impl<T: TotalOrder> BSTAVLMtEphTrait<T> for BSTAVLMtEph<T> {
@@ -1096,9 +1111,34 @@ pub mod BSTAVLMtEph {
         }
     }
 
+    //		Section 11a. top level coarse locking
+
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTAVLMtEphInv<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree_is_avl::<T>(tree)
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
+        }
+    }
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! BSTAVLMtEphLit {
+        () => {
+            < $crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<_> >::new()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __tree = < $crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<_> >::new();
+            $( let _ = __tree.insert($x); )*
+            __tree
+        }};
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl<T> std::fmt::Debug for BSTAVLMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1112,6 +1152,8 @@ pub mod BSTAVLMtEph {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl<T: TotalOrder> std::fmt::Debug for BSTAVLMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTAVLMtEph").finish()
@@ -1122,19 +1164,5 @@ pub mod BSTAVLMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTAVLMtEph(size={})", self.size())
         }
-    }
-
-    // 13. macros
-
-    #[macro_export]
-    macro_rules! BSTAVLMtEphLit {
-        () => {
-            < $crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<_> >::new()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __tree = < $crate::Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEph<_> >::new();
-            $( let _ = __tree.insert($x); )*
-            __tree
-        }};
     }
 } // mod

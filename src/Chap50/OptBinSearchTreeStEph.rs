@@ -5,7 +5,30 @@
 //! Memoized top-down DP for optimal BST cost.
 //! Uses HashMapWithViewPlus for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod OptBinSearchTreeStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
@@ -19,19 +42,12 @@ pub mod OptBinSearchTreeStEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::prob;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -40,22 +56,17 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: StT> {
         pub key: T,
         pub prob: Probability,
     }
 
-    impl<T: StT> Clone for KeyProb<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned == *self,
-        {
-            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-            proof { assume(cloned == *self); }  // accept hole: T::clone external_body
-            cloned
-        }
-    }
+    //		Section 4b. type definitions
+
 
     /// Ephemeral single-threaded optimal binary search tree solver using dynamic programming
     #[verifier::reject_recursive_types(T)]
@@ -64,25 +75,8 @@ broadcast use {
         pub memo: HashMapWithViewPlus<Pair<usize, usize>, Probability>,
     }
 
-    impl<T: StT> Clone for OBSTStEphS<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned@ == self@,
-        {
-            let cloned = OBSTStEphS {
-                keys: self.keys.clone(),
-                memo: self.memo.clone(),
-            };
-            proof { assume(cloned@ == self@); }  // accept hole: Vec::clone external_body
-            cloned
-        }
-    }
+    //		Section 5b. view impls
 
-    // 5. view impls
-    #[verifier::reject_recursive_types(T)]
-    pub ghost struct OBSTStEphV<T: StT> {
-        pub keys: Seq<KeyProb<T>>,
-        pub memo: Map<(usize, usize), Probability>,
-    }
 
     impl<T: StT> View for OBSTStEphS<T> {
         type V = OBSTStEphV<T>;
@@ -94,7 +88,9 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
+
     pub trait OBSTStEphTrait<T: StT>: Sized + View<V = OBSTStEphV<T>> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
@@ -151,76 +147,8 @@ broadcast use {
             ensures count == self@.memo.len();
     }
 
-    // 9. impls
+    //		Section 9b. impls
 
-    /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — DIFFERS: sequential DP table fill, APAS Span O(n lg n) assumes parallel
-    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability)
-        requires
-            i + l <= old(s)@.keys.len(),
-            old(s)@.memo.dom().finite(),
-        ensures
-            s@.keys =~= old(s)@.keys,
-            s@.memo.dom().finite(),
-        decreases l,
-    {
-        let cached = match s.memo.get(&Pair(i, l)) {
-            Some(v) => Some(*v),
-            None => None,
-        };
-        if let Some(cost) = cached {
-            return cost;
-        }
-
-        let cost = if l == 0 {
-            Probability::zero()
-        } else {
-            let n = s.keys.len();
-
-            // Sum probabilities of keys[i..i+l].
-            let mut prob_sum = Probability::zero();
-            let mut k: usize = 0;
-            while k < l
-                invariant
-                    k <= l,
-                    i + l <= n,
-                    n == s@.keys.len(),
-                    s@.keys =~= old(s)@.keys,
-                    s@.memo.dom().finite(),
-                decreases l - k,
-            {
-                prob_sum = prob_sum + s.keys[i + k].prob;
-                k = k + 1;
-            }
-
-            // Find minimum cost over all split points.
-            let mut min_cost = Probability::infinity();
-            let mut k: usize = 0;
-            while k < l
-                invariant
-                    k <= l,
-                    i + l <= n,
-                    n == s@.keys.len(),
-                    i + l <= s@.keys.len(),
-                    s@.keys =~= old(s)@.keys,
-                    s@.memo.dom().finite(),
-                decreases l - k,
-            {
-                let left_cost = obst_rec_st_eph(s, i, k);
-                let right_cost = obst_rec_st_eph(s, i + k + 1, l - k - 1);
-                let split_cost = left_cost + right_cost;
-                if split_cost <= min_cost {
-                    min_cost = split_cost;
-                }
-                k = k + 1;
-            }
-
-            prob_sum + min_cost
-        };
-
-        s.memo.insert(Pair(i, l), cost);
-        cost
-    }
 
     impl<T: StT> OBSTStEphTrait<T> for OBSTStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -302,12 +230,158 @@ broadcast use {
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 
-    // 11. derive impls in verus!
+
+    /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n^3) — DIFFERS: sequential DP table fill, APAS Span O(n lg n) assumes parallel
+    fn obst_rec_st_eph<T: StT>(s: &mut OBSTStEphS<T>, i: usize, l: usize) -> (cost: Probability)
+        requires
+            i + l <= old(s)@.keys.len(),
+            old(s)@.memo.dom().finite(),
+        ensures
+            s@.keys =~= old(s)@.keys,
+            s@.memo.dom().finite(),
+        decreases l,
+    {
+        let cached = match s.memo.get(&Pair(i, l)) {
+            Some(v) => Some(*v),
+            None => None,
+        };
+        if let Some(cost) = cached {
+            return cost;
+        }
+
+        let cost = if l == 0 {
+            Probability::zero()
+        } else {
+            let n = s.keys.len();
+
+            // Sum probabilities of keys[i..i+l].
+            let mut prob_sum = Probability::zero();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    n == s@.keys.len(),
+                    s@.keys =~= old(s)@.keys,
+                    s@.memo.dom().finite(),
+                decreases l - k,
+            {
+                prob_sum = prob_sum + s.keys[i + k].prob;
+                k = k + 1;
+            }
+
+            // Find minimum cost over all split points.
+            let mut min_cost = Probability::infinity();
+            let mut k: usize = 0;
+            while k < l
+                invariant
+                    k <= l,
+                    i + l <= n,
+                    n == s@.keys.len(),
+                    i + l <= s@.keys.len(),
+                    s@.keys =~= old(s)@.keys,
+                    s@.memo.dom().finite(),
+                decreases l - k,
+            {
+                let left_cost = obst_rec_st_eph(s, i, k);
+                let right_cost = obst_rec_st_eph(s, i + k + 1, l - k - 1);
+                let split_cost = left_cost + right_cost;
+                if split_cost <= min_cost {
+                    min_cost = split_cost;
+                }
+                k = k + 1;
+            }
+
+            prob_sum + min_cost
+        };
+
+        s.memo.insert(Pair(i, l), cost);
+        cost
+    }
+
+    //		Section 4c. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub ghost struct OBSTStEphV<T: StT> {
+        pub keys: Seq<KeyProb<T>>,
+        pub memo: Map<(usize, usize), Probability>,
+    }
+
+    //		Section 12a. derive impls in verus!
+
+
+    impl<T: StT> Clone for KeyProb<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self,
+        {
+            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+            proof { assume(cloned == *self); }  // accept hole: T::clone external_body
+            cloned
+        }
+    }
+
     impl<T: StT> Eq for KeyProb<T> {}
 
+    //		Section 12b. derive impls in verus!
+
+
+    impl<T: StT> Clone for OBSTStEphS<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@,
+        {
+            let cloned = OBSTStEphS {
+                keys: self.keys.clone(),
+                memo: self.memo.clone(),
+            };
+            proof { assume(cloned@ == self@); }  // accept hole: Vec::clone external_body
+            cloned
+        }
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
+
+    impl<'a, T: StT> IntoIterator for &'a OBSTStEphS<T> {
+        type Item = KeyProb<T>;
+        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
+    }
+
+    impl<'a, T: StT> IntoIterator for &'a mut OBSTStEphS<T> {
+        type Item = KeyProb<T>;
+        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl<T: StT> Display for KeyProb<T> {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: StT> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: StT + PartialEq> PartialEq for KeyProb<T> {
+        fn eq(&self, other: &Self) -> bool {
+            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
     impl<T: StT> Display for OBSTStEphS<T> {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
@@ -330,40 +404,6 @@ broadcast use {
         fn into_iter(self) -> Self::IntoIter { self.keys.into_iter() }
     }
 
-    impl<'a, T: StT> IntoIterator for &'a OBSTStEphS<T> {
-        type Item = KeyProb<T>;
-        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
-        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
-    }
-
-    impl<'a, T: StT> IntoIterator for &'a mut OBSTStEphS<T> {
-        type Item = KeyProb<T>;
-        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
-        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
-    }
-
-    impl<T: StT> Display for KeyProb<T> {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
-    }
-
-    impl<T: StT> Debug for KeyProb<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
-    }
-
-    impl<T: StT + PartialEq> PartialEq for KeyProb<T> {
-        fn eq(&self, other: &Self) -> bool {
-            self.key == other.key && (self.prob.value() - other.prob.value()).abs() < f64::EPSILON
-        }
-    }
-
     impl<T: StT> Debug for OBSTStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             write!(f, "OBSTStEph(keys: {}, memo_entries: {})", self.keys.len(), self.memo.len())
@@ -376,7 +416,7 @@ broadcast use {
         }
     }
 
-    // 14b. derive impls outside verus! — struct OBSTStEphV
+    //		Section 14c. derive impls outside verus!
 
     impl<T: StT> Debug for OBSTStEphV<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTStEphV") }

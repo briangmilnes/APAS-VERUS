@@ -5,30 +5,34 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. spec fns
-//	7. proof fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod ScanDCMtPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -38,7 +42,8 @@ pub mod ScanDCMtPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		4. spec fns
+    //		Section 6. spec fns
+
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
     pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
@@ -69,7 +74,8 @@ pub mod ScanDCMtPer {
         &&& total == spec_iterate(input, spec_f, id)
     }
 
-    //		7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     // Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f)) for monoids.
     proof fn lemma_fold_left_monoid(s: Seq<usize>, x: usize, f: spec_fn(usize, usize) -> usize, id: usize)
@@ -85,7 +91,8 @@ pub mod ScanDCMtPer {
         }
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait ScanDCMtTrait {
         /// Exclusive prefix sums via parallel divide-and-conquer scan.
@@ -102,7 +109,8 @@ pub mod ScanDCMtPer {
                     sums.1);
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Parallel prefix sums inner recursion. Structural logic verified, recursion parallelized.
     /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n) — parallel recursive calls + O(n)/O(1) combine.

@@ -8,11 +8,27 @@
 //! adds delta." Proving functional correctness would require a tokenized state
 //! machine (TSM) model, which is disproportionate for a CAS-loop exercise.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod Exercise12_2 {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use core::sync::atomic::{AtomicUsize, Ordering};
 
-verus! {
+verus! 
+{
+
+    //		Section 8. traits
+
 
 /// Trait for CAS-based fetch_add extension on AtomicUsize.
 pub trait FetchAddCasTrait {
@@ -22,6 +38,9 @@ pub trait FetchAddCasTrait {
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries under contention).
     fn fetch_add_cas(&self, delta: usize) -> (previous: usize);
 }
+
+    //		Section 9. impls
+
 
 impl FetchAddCasTrait for AtomicUsize {
     /// Note: vstd's std_specs::atomic provides assume_specification for AtomicUsize

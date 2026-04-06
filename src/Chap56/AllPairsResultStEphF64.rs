@@ -5,7 +5,21 @@
 //!
 //! Uses `WrappedF64` from vstdplus::float for distances with ephemeral array sequences.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AllPairsResultStEphF64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -14,16 +28,14 @@ pub mod AllPairsResultStEphF64 {
     use crate::Types::Types::*;
     use crate::vstdplus::float::float::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub const NO_PREDECESSOR: usize = usize::MAX;
+
 
     pub struct AllPairsResultStEphF64 {
         pub distances: ArraySeqStEphS<ArraySeqStEphS<WrappedF64>>,
@@ -31,7 +43,8 @@ pub mod AllPairsResultStEphF64 {
         pub n: usize,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AllPairsResultStEphF64Trait: Sized {
         spec fn spec_allpairsresultstephf64_wf(&self) -> bool;
@@ -89,7 +102,8 @@ pub mod AllPairsResultStEphF64 {
             requires self.spec_allpairsresultstephf64_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl AllPairsResultStEphF64Trait for AllPairsResultStEphF64 {
         open spec fn spec_allpairsresultstephf64_wf(&self) -> bool {
@@ -305,7 +319,8 @@ pub mod AllPairsResultStEphF64 {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for AllPairsResultStEphF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

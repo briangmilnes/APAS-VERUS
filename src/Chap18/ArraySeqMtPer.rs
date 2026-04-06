@@ -5,22 +5,26 @@
 //! Uses global work-stealing pool for parallel operations (map_par, reduce_par).
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod ArraySeqMtPer {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -33,9 +37,9 @@ pub mod ArraySeqMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -48,10 +52,11 @@ pub mod ArraySeqMtPer {
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
 
+    //		Section 3. broadcast use
+
+
     #[cfg(verus_keep_ghost)]
 
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -61,16 +66,16 @@ pub mod ArraySeqMtPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtPerS<T> {
         pub seq: Vec<T>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<T: View> View for ArraySeqMtPerS<T> {
         type V = Seq<T::V>;
@@ -80,8 +85,8 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
@@ -103,7 +108,8 @@ pub mod ArraySeqMtPer {
         }
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     /// - Base trait for multi-threaded persistent array sequences (Chapter 18).
     /// - These methods are never redefined in later chapters.
@@ -350,8 +356,8 @@ pub mod ArraySeqMtPer {
                 flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtPerS<T>| inner.seq@).flatten();
     }
 
+    //		Section 9. impls
 
-    //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqMtPerBaseTrait<T> for ArraySeqMtPerS<T> {
         open spec fn spec_arrayseqmtper_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
@@ -444,7 +450,6 @@ pub mod ArraySeqMtPer {
         }
     }
 
-    //		9. impl RedefinableTrait for Struct
 
     impl<T> ArraySeqMtPerRedefinableTrait<T> for ArraySeqMtPerS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -871,7 +876,6 @@ pub mod ArraySeqMtPer {
         }
     }
 
-    //		9. bare impl (parallel methods, lemmas, iterators)
 
     impl<T> ArraySeqMtPerS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
@@ -1696,16 +1700,9 @@ pub mod ArraySeqMtPer {
         // The sequential flatten in the trait impl is correct and verified.
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtPerS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
 
-    //		10. iterators
-
-    
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtPerIter<'a, T> {
         pub inner: std::slice::Iter<'a, T>,
@@ -1826,8 +1823,15 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    //		Section 12. derive impls in verus!
 
-    //		11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtPerS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: Clone> Clone for ArraySeqMtPerS<T> {
         fn clone(&self) -> (res: Self)
@@ -1854,8 +1858,25 @@ pub mod ArraySeqMtPer {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
+
+    /// Literal constructor macro for ArraySeqMtPerS.
+    #[macro_export]
+    macro_rules! ArraySeqMtPerSLit {
+        () => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$($x),*]) };
+    }
+
+    #[macro_export]
+    macro_rules! ArrayMtPerSLit {
+        () => { $crate::ArraySeqMtPerSLit![] };
+        ($x:expr; $n:expr) => { $crate::ArraySeqMtPerSLit![$x; $n] };
+        ($($x:expr),* $(,)?) => { $crate::ArraySeqMtPerSLit![$($x),*] };
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -1896,20 +1917,5 @@ pub mod ArraySeqMtPer {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
             write!(f, "ArraySeqMtPerGhostIterator")
         }
-    }
-
-    /// Literal constructor macro for ArraySeqMtPerS.
-    #[macro_export]
-    macro_rules! ArraySeqMtPerSLit {
-        () => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(Vec::new()) };
-        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$x; $n]) };
-        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS::from_vec(vec![$($x),*]) };
-    }
-
-    #[macro_export]
-    macro_rules! ArrayMtPerSLit {
-        () => { $crate::ArraySeqMtPerSLit![] };
-        ($x:expr; $n:expr) => { $crate::ArraySeqMtPerSLit![$x; $n] };
-        ($($x:expr),* $(,)?) => { $crate::ArraySeqMtPerSLit![$($x),*] };
     }
 }

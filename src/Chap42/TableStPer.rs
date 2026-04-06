@@ -4,19 +4,20 @@
 //! Chapter 42 single-threaded persistent table implementation using ArraySeq as backing store.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports (above)
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 6. spec fns
 
-//		1. module
+//		Section 1. module
 
 pub mod TableStPer {
 
@@ -36,24 +37,19 @@ pub mod TableStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+    //		Section 2. imports (above)
+    //		Section 3. broadcast use
+    //		Section 4. type definitions
+    //		Section 5. view impls
+    //		Section 7. proof fns
+    //		Section 8. traits
+    //		Section 9. impls
+    //		Section 12. derive impls in verus!
+    //		Section 13. macros
+    //		Section 14. derive impls outside verus!
 
     verus! {
 
-    //		3. broadcast use
-
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
@@ -64,9 +60,6 @@ pub mod TableStPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		4. type definitions
-
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -76,9 +69,6 @@ pub mod TableStPer {
 
     pub type TableS<K, V> = TableStPer<K, V>;
 
-    //		5. view impls
-
-    // 5. view impls
 
     impl<K: StT + Ord, V: StT> View for TableStPer<K, V> {
         type V = Map<K::V, V::V>;
@@ -87,9 +77,8 @@ pub mod TableStPer {
         }
     }
 
-    //		6. spec fns
+    //		Section 6. spec fns
 
-    // 6. spec fns
 
     pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
         decreases entries.len()
@@ -102,7 +91,6 @@ pub mod TableStPer {
         }
     }
 
-    // 6. spec fns
 
     // Keys in the entry sequence are unique.
     pub open spec fn spec_keys_no_dups<KV, VV>(entries: Seq<(KV, VV)>) -> bool {
@@ -110,7 +98,6 @@ pub mod TableStPer {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-    // 6. spec fns
 
     /// Values in `pairs` whose key equals `k`, preserving order.
     pub open spec fn spec_collect_key<KV, VV>(pairs: Seq<(KV, VV)>, k: KV) -> Seq<VV>
@@ -139,9 +126,6 @@ pub mod TableStPer {
         }
     }
 
-    //		7. proof fns/broadcast groups
-
-    // 7. proof fns
 
     pub proof fn lemma_entries_to_map_finite<KV, VV>(entries: Seq<(KV, VV)>)
         ensures spec_entries_to_map(entries).dom().finite()
@@ -152,7 +136,6 @@ pub mod TableStPer {
         }
     }
 
-    // 7. proof fns
 
     // When keys are unique, spec_entries_to_map length equals seq length.
     // If entries[idx] = (k, v) and keys are unique, map contains k with value v.
@@ -367,9 +350,6 @@ pub mod TableStPer {
         }
     }
 
-    //		8. traits
-
-    // 8. traits
 
     /// Trait defining the Table ADT operations from Chapter 42.
     pub trait TableStPerTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
@@ -625,7 +605,6 @@ pub mod TableStPer {
             ensures spec_entries_to_map(collected@) == self@;
     }
 
-    //		9. impls
 
     impl<K: StT + Ord, V: StT> TableStPer<K, V> {
         pub open spec fn spec_tablestper_wf(&self) -> bool {
@@ -657,7 +636,6 @@ pub mod TableStPer {
         }
     }
 
-    // 9. impls
 
     impl<K: StT + Ord, V: StT> TableStPerTrait<K, V> for TableStPer<K, V> {
         open spec fn spec_tablestper_wf(&self) -> bool {
@@ -2784,9 +2762,6 @@ pub mod TableStPer {
         result
     }
 
-    //		11. derive impls in verus!
-
-    // 11. derive impls in verus!
 
     #[cfg(verus_keep_ghost)]
     impl<K: StT + Ord + View + PartialEq, V: StT + View + PartialEq> PartialEqSpecImpl for TableStPer<K, V> {
@@ -2824,9 +2799,6 @@ pub mod TableStPer {
 
     } // verus!
 
-    // 12. macros
-
-    //		12. macros
 
     /// Macro for creating table literals.
     #[macro_export]
@@ -2841,9 +2813,6 @@ pub mod TableStPer {
         }};
     }
 
-    // 13. derive impls outside verus!
-
-    //		13. derive impls outside verus!
 
     impl<K: StT + Ord, V: StT> std::fmt::Debug for TableStPer<K, V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

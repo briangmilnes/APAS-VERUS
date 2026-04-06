@@ -6,20 +6,33 @@
 //! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  4. type definitions
-//  6. spec fns
-//  7. proof fns
-//  8. traits
-//  9. impls
-//  11. top level coarse locking
-//  13. macros
-//  14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 8d. traits
+//	Section 9d. impls
+//	Section 11c. top level coarse locking
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod BSTRBMtEph {
+
+
+    //		Section 2. imports
 
     use std::sync::Arc;
 
@@ -34,20 +47,23 @@ pub mod BSTRBMtEph {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use vstd::slice::slice_subrange;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
+    //		Section 4a. type definitions
 
 
     // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
-    // 4. type definitions
 
     #[derive(Clone, Copy, PartialEq, Eq)]
     pub enum Color {
         Red,
         Black,
     }
+
+    //		Section 4b. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct Node<T: StTInMtT + Ord + TotalOrder> {
@@ -60,7 +76,8 @@ pub mod BSTRBMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    // 6. spec fns
+    //		Section 6b. spec fns
+
 
     /// Structural node count for RB tree links.
     pub open spec fn link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat
@@ -130,7 +147,8 @@ pub mod BSTRBMtEph {
         }
     }
 
-    // 7. proof fns
+    //		Section 7b. proof fns/broadcast groups
+
 
     /// Bridge: link_spec_size == BalBinTree::spec_size after conversion.
     proof fn lemma_link_to_bbt_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
@@ -214,7 +232,8 @@ pub mod BSTRBMtEph {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
 
     /// Trait for RB tree node/link operations (Layer 1).
     pub trait BSTRBMtNodeFns<T: StTInMtT + Ord + TotalOrder>: Sized {
@@ -332,7 +351,8 @@ pub mod BSTRBMtEph {
             ensures n as nat == self.spec_size();
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
 
     // Free functions operating on Node<T> (not Link<T>).
 
@@ -1124,17 +1144,16 @@ pub mod BSTRBMtEph {
         Some(node)
     }
 
-    // 11. top level coarse locking
+    //		Section 4c. type definitions
+
 
     /// Lock predicate: link size fits in usize.
     pub struct BSTRBMtEphInv;
 
-    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            link_spec_size(v) <= usize::MAX
-            && spec_is_bst_link(v)
-        }
-    }
+    pub type BSTreeRB<T> = BSTRBMtEph<T>;
+
+    //		Section 4d. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTRBMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -1142,24 +1161,16 @@ pub mod BSTRBMtEph {
         pub(crate) ghost_root: Ghost<Link<T>>,
     }
 
-    pub type BSTreeRB<T> = BSTRBMtEph<T>;
+    //		Section 5d. view impls
 
-    impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            link_spec_size(self.ghost_root@) <= usize::MAX
-            && spec_is_bst_link(self.ghost_root@)
-        }
-
-        pub closed spec fn spec_ghost_root(self) -> Link<T> {
-            self.ghost_root@
-        }
-    }
 
     impl<T: StTInMtT + Ord + TotalOrder> View for BSTRBMtEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { link_to_bbt(self.spec_ghost_root()) }
     }
+
+    //		Section 8d. traits
+
 
     pub trait BSTRBMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_bstrbmteph_wf(&self) -> bool;
@@ -1242,6 +1253,21 @@ pub mod BSTRBMtEph {
                 self.spec_bstrbmteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
+    }
+
+    //		Section 9d. impls
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            link_spec_size(self.ghost_root@) <= usize::MAX
+            && spec_is_bst_link(self.ghost_root@)
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> Link<T> {
+            self.ghost_root@
+        }
     }
 
     impl<T: StTInMtT + Ord + TotalOrder> BSTRBMtEphTrait<T> for BSTRBMtEph<T> {
@@ -1479,13 +1505,27 @@ pub mod BSTRBMtEph {
         }
     }
 
+    //		Section 11c. top level coarse locking
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTRBMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_spec_size(v) <= usize::MAX
+            && spec_is_bst_link(v)
+        }
+    }
+
+    //		Section 12d. derive impls in verus!
+
+
     impl<T: StTInMtT + Ord + TotalOrder> Default for BSTRBMtEph<T> {
         fn default() -> Self { Self::new() }
     }
 
     } // verus!
 
-    // 13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTRBMtEphLit {
@@ -1499,7 +1539,7 @@ pub mod BSTRBMtEph {
         }};
     }
 
-    // 14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl std::fmt::Debug for Color {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1515,6 +1555,8 @@ pub mod BSTRBMtEph {
             std::fmt::Debug::fmt(self, f)
         }
     }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1532,6 +1574,8 @@ pub mod BSTRBMtEph {
         }
     }
 
+    //		Section 14c. derive impls outside verus!
+
     impl std::fmt::Debug for BSTRBMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTRBMtEphInv").finish()
@@ -1543,6 +1587,8 @@ pub mod BSTRBMtEph {
             write!(f, "BSTRBMtEphInv")
         }
     }
+
+    //		Section 14d. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTRBMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -4,7 +4,21 @@
 //!
 //! Implements Exercise 64.2: Compute spanning tree using star contraction.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SpanTreeStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -22,14 +36,17 @@ pub mod SpanTreeStEph {
 
     pub type T<V> = UnDirGraphStEph<V>;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct SpanTreeStEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SpanTreeStEphTrait {
         /// Well-formedness for sequential spanning tree algorithm input.
@@ -49,6 +66,9 @@ pub mod SpanTreeStEph {
         fn verify_spanning_tree<V: HashOrd>(graph: &UnDirGraphStEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreesteph_wf(graph);
     }
+
+    //		Section 9. impls
+
 
     /// Exercise 64.2: Spanning Tree via Star Contraction.
     ///
@@ -198,7 +218,8 @@ pub mod SpanTreeStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SpanTreeStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

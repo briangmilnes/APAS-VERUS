@@ -11,7 +11,20 @@
 //! - Phase 2 (Reweighting): Work O(m), Span O(m)
 //! - Phase 3 (n Dijkstras): Work O(n * m log n) = O(mn log n), Span O(mn log n) sequential
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod JohnsonStEphI64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -29,16 +42,11 @@ pub mod JohnsonStEphI64 {
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::{bellman_ford, BellmanFordError};
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module (JohnsonStEphI64)
-    // 2. imports
-    // 3. broadcast use
-    // 8. traits
-    // 9. impls
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
@@ -46,7 +54,8 @@ pub mod JohnsonStEphI64 {
         crate::Types::Types::group_WeightedEdge_axioms,
     };
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait JohnsonStEphI64Trait {
         /// Johnson's all-pairs shortest path algorithm.
@@ -65,7 +74,8 @@ pub mod JohnsonStEphI64 {
                 apsp.spec_n() as nat == graph@.V.len();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.

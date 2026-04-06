@@ -4,7 +4,22 @@
 //! Bellman-Ford's Algorithm - Single Source Shortest Path with arbitrary edge weights (integer)
 //! Implements Algorithm 58.2 from the textbook.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BellmanFordStEphI64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -14,32 +29,27 @@ pub mod BellmanFordStEphI64 {
     use crate::Chap56::SSSPResultStEphI64::SSSPResultStEphI64::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module (BellmanFordStEphI64)
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
-    // 14. derive impls outside verus!
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::Types::Types::group_Pair_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub enum BellmanFordError {
         NegativeCycleDetected,
         AlgorithmError,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait BellmanFordStEphI64Trait {
         /// Bellman-Ford single-source shortest path algorithm.
@@ -57,7 +67,8 @@ pub mod BellmanFordStEphI64 {
                 sssp is Ok ==> sssp->Ok_0.spec_source() == source;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Clamp an i128 weight to i64 range.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
@@ -304,7 +315,8 @@ pub mod BellmanFordStEphI64 {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for BellmanFordError {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

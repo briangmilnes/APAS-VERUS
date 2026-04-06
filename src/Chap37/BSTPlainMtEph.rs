@@ -6,18 +6,27 @@
 //! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  8. traits
-//  9. impls
-//  11. top level coarse locking
-//  13. macros
-//  14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTPlainMtEph {
+
+
+    //		Section 2. imports
 
     use core::marker::PhantomData;
 
@@ -26,9 +35,9 @@ pub mod BSTPlainMtEph {
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
@@ -36,7 +45,8 @@ pub mod BSTPlainMtEph {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Exec BST operations on BalBinTree nodes (Layer 1, Mt variant).
     pub trait BSTPlainMtNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
@@ -109,7 +119,8 @@ pub mod BSTPlainMtEph {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder> BSTPlainMtNodeFns<T> for BalBinTree<T> {
         fn insert_node(self, value: T) -> (inserted: Self)
@@ -546,20 +557,16 @@ pub mod BSTPlainMtEph {
         }
     }
 
-    // 11. top level coarse locking
+    //		Section 4a. type definitions
+
 
     /// Lock predicate: the inner tree satisfies BST ordering and fits in usize.
     pub struct BSTPlainMtEphInv<T> {
         _phantom: PhantomData<T>,
     }
 
-    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
-        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
-            tree.tree_is_bst()
-                && tree.spec_size() <= usize::MAX
-                && tree.spec_height() <= usize::MAX
-        }
-    }
+    //		Section 4b. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTPlainMtEph<T: TotalOrder> {
@@ -567,23 +574,16 @@ pub mod BSTPlainMtEph {
         pub(crate) ghost_root: Ghost<BalBinTree<T>>,
     }
 
-    impl<T: TotalOrder> BSTPlainMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            self.ghost_root@.tree_is_bst()
-            && self.ghost_root@.spec_size() <= usize::MAX
-            && self.ghost_root@.spec_height() <= usize::MAX
-        }
+    //		Section 5b. view impls
 
-        pub closed spec fn spec_ghost_root(self) -> BalBinTree<T> {
-            self.ghost_root@
-        }
-    }
 
     impl<T: TotalOrder> View for BSTPlainMtEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { self.spec_ghost_root() }
     }
+
+    //		Section 8b. traits
+
 
     pub trait BSTPlainMtEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_bstplainmteph_wf(&self) -> bool;
@@ -666,6 +666,22 @@ pub mod BSTPlainMtEph {
         fn pre_order(&self) -> (seq: ArraySeqStPerS<T>) where T: Clone + Eq
             requires self.spec_bstplainmteph_wf(), obeys_feq_clone::<T>(),
             ensures true;
+    }
+
+    //		Section 9b. impls
+
+
+    impl<T: TotalOrder> BSTPlainMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_root@.tree_is_bst()
+            && self.ghost_root@.spec_size() <= usize::MAX
+            && self.ghost_root@.spec_height() <= usize::MAX
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> BalBinTree<T> {
+            self.ghost_root@
+        }
     }
 
     impl<T: TotalOrder> BSTPlainMtEphTrait<T> for BSTPlainMtEph<T> {
@@ -827,9 +843,20 @@ pub mod BSTPlainMtEph {
         }
     }
 
+    //		Section 11a. top level coarse locking
+
+
+    impl<T: TotalOrder> RwLockPredicate<BalBinTree<T>> for BSTPlainMtEphInv<T> {
+        open spec fn inv(self, tree: BalBinTree<T>) -> bool {
+            tree.tree_is_bst()
+                && tree.spec_size() <= usize::MAX
+                && tree.spec_height() <= usize::MAX
+        }
+    }
     } // verus!
 
-    // 13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTPlainMtEphLit {
@@ -843,7 +870,7 @@ pub mod BSTPlainMtEph {
         }};
     }
 
-    // 14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<T> std::fmt::Debug for BSTPlainMtEphInv<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -856,6 +883,8 @@ pub mod BSTPlainMtEph {
             write!(f, "BSTPlainMtEphInv")
         }
     }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<T: TotalOrder> std::fmt::Debug for BSTPlainMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

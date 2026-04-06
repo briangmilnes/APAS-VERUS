@@ -4,23 +4,29 @@
 //! Ephemeral Splay Tree (standard BST semantics) with public methods.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	4. type definitions
-//	6. spec fns
-//	7. proof fns
-//	8a. traits — Node
-//	8b. traits — BSTSplayStEph
-//	9a. impls — Node
-//	9b. impls — BSTSplayStEph
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod BSTSplayStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -29,15 +35,19 @@ pub mod BSTSplayStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     type Link<T> = Option<Box<Node<T>>>;
+
+    //		Section 4a. type definitions
+
 
     pub struct Node<T: TotalOrder + Clone> {
         pub key: T,
@@ -46,311 +56,8 @@ pub mod BSTSplayStEph {
         pub right: Link<T>,
     }
 
-    pub struct BSTSplayStEph<T: TotalOrder + Clone> {
-        pub root: Link<T>,
-    }
+    //		Section 9a. impls
 
-    pub type BSTreeSplay<T> = BSTSplayStEph<T>;
-
-
-    //		6. spec fns
-
-    pub open spec fn spec_size_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat {
-        match link {
-            None => 0,
-            Some(node) => node.size as nat,
-        }
-    }
-
-    pub open spec fn spec_height_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => {
-                let lh = spec_height_link(&node.left);
-                let rh = spec_height_link(&node.right);
-                1 + if lh >= rh { lh } else { rh }
-            }
-        }
-    }
-
-    /// Recursive membership predicate for a splay tree link.
-    pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
-        decreases *link,
-    {
-        match link {
-            None => false,
-            Some(node) =>
-                node.key == value
-                || spec_contains_link(&node.left, value)
-                || spec_contains_link(&node.right, value),
-        }
-    }
-
-    /// In-order traversal of a splay tree link as a spec-level sequence.
-    pub open spec fn spec_in_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
-        decreases *link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => {
-                spec_in_order_link(&node.left).push(node.key).add(spec_in_order_link(&node.right))
-            }
-        }
-    }
-
-    /// Pre-order traversal of a splay tree link as a spec-level sequence.
-    pub open spec fn spec_pre_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
-        decreases *link,
-    {
-        match link {
-            None => Seq::empty(),
-            Some(node) => {
-                Seq::empty().push(node.key).add(spec_pre_order_link(&node.left)).add(spec_pre_order_link(&node.right))
-            }
-        }
-    }
-
-    /// BST ordering invariant for a splay tree link.
-    pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
-        decreases *link,
-    {
-        match link {
-            None => true,
-            Some(node) => {
-                spec_is_bst_link(&node.left)
-                && spec_is_bst_link(&node.right)
-                && (forall|x: T| (#[trigger] spec_contains_link(&node.left, x)) ==>
-                    T::le(x, node.key) && x != node.key)
-                && (forall|x: T| (#[trigger] spec_contains_link(&node.right, x)) ==>
-                    T::le(node.key, x) && x != node.key)
-            }
-        }
-    }
-
-
-    //		7. proof fns
-
-    proof fn lemma_bst_deep_link<T: TotalOrder + Clone>(link: &Link<T>)
-        requires spec_is_bst_link(link),
-        ensures
-            match link {
-                None => true,
-                Some(node) =>
-                    spec_is_bst_link(&node.left)
-                    && spec_is_bst_link(&node.right)
-                    && (forall|x: T| (#[trigger] spec_contains_link(&node.left, x)) ==>
-                        T::le(x, node.key) && x != node.key)
-                    && (forall|x: T| (#[trigger] spec_contains_link(&node.right, x)) ==>
-                        T::le(node.key, x) && x != node.key)
-                    && match &node.left {
-                        None => true,
-                        Some(lnode) =>
-                            spec_is_bst_link(&lnode.left)
-                            && spec_is_bst_link(&lnode.right)
-                            && (forall|x: T| (#[trigger] spec_contains_link(&lnode.left, x)) ==>
-                                T::le(x, lnode.key) && x != lnode.key)
-                            && (forall|x: T| (#[trigger] spec_contains_link(&lnode.right, x)) ==>
-                                T::le(lnode.key, x) && x != lnode.key)
-                    }
-                    && match &node.right {
-                        None => true,
-                        Some(rnode) =>
-                            spec_is_bst_link(&rnode.left)
-                            && spec_is_bst_link(&rnode.right)
-                            && (forall|x: T| (#[trigger] spec_contains_link(&rnode.left, x)) ==>
-                                T::le(x, rnode.key) && x != rnode.key)
-                            && (forall|x: T| (#[trigger] spec_contains_link(&rnode.right, x)) ==>
-                                T::le(rnode.key, x) && x != rnode.key)
-                    }
-            },
-    {
-        reveal_with_fuel(spec_is_bst_link, 3);
-        match link {
-            None => {},
-            Some(node) => {
-                match &node.left {
-                    None => {},
-                    Some(_) => {},
-                }
-                match &node.right {
-                    None => {},
-                    Some(_) => {},
-                }
-            }
-        }
-    }
-
-
-    //		8a. traits — Node
-
-    pub trait BSTSplayNodeFns<T: TotalOrder + Clone>: Sized {
-        spec fn spec_key(self) -> T;
-        spec fn spec_left(self) -> Link<T>;
-        spec fn spec_right(self) -> Link<T>;
-        spec fn spec_node_size(self) -> nat;
-
-        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
-        // veracity: no_requires
-        fn new_node(key: T) -> (node: Node<T>)
-            ensures
-                node.key == key,
-                node.size == 1,
-                node.left is None,
-                node.right is None;
-
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        // veracity: no_requires
-        fn update(&mut self)
-            ensures
-                self.spec_key() == old(self).spec_key(),
-                self.spec_left() == old(self).spec_left(),
-                self.spec_right() == old(self).spec_right();
-
-        fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
-            requires spec_is_bst_link(&Some(root)),
-            ensures
-                spec_is_bst_link(&Some(splayed)),
-                forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(root), x);
-    }
-
-    //		8b. traits — Link
-
-    pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
-        spec fn link_is_bst(&self) -> bool;
-        spec fn link_contains(&self, value: T) -> bool;
-        spec fn link_size(&self) -> nat;
-        spec fn link_height(&self) -> nat;
-        spec fn link_in_order(&self) -> Seq<T>;
-        spec fn link_pre_order(&self) -> Seq<T>;
-        spec fn link_is_some(&self) -> bool;
-
-        // veracity: no_requires
-        fn size_link(&self) -> (size: usize)
-            ensures size as nat == self.link_size();
-        fn height_link(&self) -> (height: usize)
-            requires self.link_height() < usize::MAX as nat,
-            ensures height as nat == self.link_height();
-        fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
-            requires spec_is_bst_link(old(link)),
-            ensures
-                spec_is_bst_link(link),
-                spec_contains_link(link, value),
-                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
-                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
-        fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
-            requires spec_is_bst_link(old(link)),
-            ensures
-                spec_is_bst_link(link),
-                spec_contains_link(link, value),
-                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
-                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
-        fn find_link<'a>(&'a self, target: &T) -> (found: Option<&'a T>)
-            requires self.link_is_bst(),
-            ensures
-                found.is_some() <==> self.link_contains(*target),
-                found.is_some() ==> *found.unwrap() == *target;
-        fn min_link(&self) -> (min: Option<&T>)
-            requires self.link_is_bst(),
-            ensures
-                self.link_is_some() ==> min.is_some(),
-                min.is_some() ==> self.link_contains(*min.unwrap()),
-                min.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(*min.unwrap(), x);
-        fn max_link(&self) -> (max: Option<&T>)
-            requires self.link_is_bst(),
-            ensures
-                self.link_is_some() ==> max.is_some(),
-                max.is_some() ==> self.link_contains(*max.unwrap()),
-                max.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(x, *max.unwrap());
-        // veracity: no_requires
-        fn in_order_collect(&self, out: &mut Vec<T>)
-            requires self.link_is_bst(),
-            ensures out@.len() == old(out)@.len() + self.link_in_order().len();
-        // veracity: no_requires
-        fn pre_order_collect(&self, out: &mut Vec<T>)
-            requires self.link_is_bst(),
-            ensures out@.len() == old(out)@.len() + self.link_pre_order().len();
-    }
-
-    //		8c. traits — BSTSplayStEph
-
-    pub trait BSTSplayStEphTrait<T: TotalOrder + Clone> {
-        spec fn spec_size(self) -> nat;
-        spec fn spec_height(self) -> nat;
-        spec fn spec_contains(self, value: T) -> bool;
-        spec fn spec_bstsplaysteph_wf(&self) -> bool;
-        spec fn spec_in_order(self) -> Seq<T>;
-        spec fn spec_pre_order(self) -> Seq<T>;
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn new() -> (tree: Self)
-        where
-            Self: Sized,
-            ensures
-                tree.spec_bstsplaysteph_wf(),
-                tree.spec_size() == 0,
-                forall|x: T| !tree.spec_contains(x);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn size(&self) -> (n: usize)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures n as nat == self.spec_size();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn is_empty(&self) -> (b: bool)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures b == (self.spec_size() == 0);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn height(&self) -> (h: usize)
-            requires
-                self.spec_bstsplaysteph_wf(),
-                self.spec_height() < usize::MAX as nat,
-            ensures h as nat == self.spec_height();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn insert(&mut self, value: T)
-            requires old(self).spec_bstsplaysteph_wf(),
-            ensures
-                self.spec_bstsplaysteph_wf(),
-                self.spec_contains(value),
-                forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
-        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
-        fn find(&self, target: &T) -> (found: Option<&T>)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures
-                found.is_some() <==> self.spec_contains(*target),
-                found.is_some() ==> *found.unwrap() == *target;
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn contains(&self, target: &T) -> (found: bool)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures found == self.spec_contains(*target);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn minimum(&self) -> (min: Option<&T>)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures
-                self.spec_size() > 0 ==> min.is_some(),
-                min.is_some() ==> self.spec_contains(*min.unwrap()),
-                min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
-        fn maximum(&self) -> (max: Option<&T>)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures
-                self.spec_size() > 0 ==> max.is_some(),
-                max.is_some() ==> self.spec_contains(*max.unwrap()),
-                max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures seq.spec_len() == self.spec_in_order().len();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
-            requires self.spec_bstsplaysteph_wf(),
-            ensures seq.spec_len() == self.spec_pre_order().len();
-    }
-
-
-    //		9a. impls — Node
 
     impl<T: TotalOrder + Clone> BSTSplayNodeFns<T> for Node<T> {
         open spec fn spec_key(self) -> T { self.key }
@@ -1363,7 +1070,312 @@ pub mod BSTSplayStEph {
 
     } // impl BSTSplayNodeFns for Node
 
-    //		9b. impls — Link
+    //		Section 4b. type definitions
+
+
+    pub struct BSTSplayStEph<T: TotalOrder + Clone> {
+        pub root: Link<T>,
+    }
+
+    pub type BSTreeSplay<T> = BSTSplayStEph<T>;
+
+    //		Section 6b. spec fns
+
+
+    pub open spec fn spec_size_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat {
+        match link {
+            None => 0,
+            Some(node) => node.size as nat,
+        }
+    }
+
+    pub open spec fn spec_height_link<T: TotalOrder + Clone>(link: &Link<T>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => {
+                let lh = spec_height_link(&node.left);
+                let rh = spec_height_link(&node.right);
+                1 + if lh >= rh { lh } else { rh }
+            }
+        }
+    }
+
+    /// Recursive membership predicate for a splay tree link.
+    pub open spec fn spec_contains_link<T: TotalOrder + Clone>(link: &Link<T>, value: T) -> bool
+        decreases *link,
+    {
+        match link {
+            None => false,
+            Some(node) =>
+                node.key == value
+                || spec_contains_link(&node.left, value)
+                || spec_contains_link(&node.right, value),
+        }
+    }
+
+    /// In-order traversal of a splay tree link as a spec-level sequence.
+    pub open spec fn spec_in_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+        decreases *link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                spec_in_order_link(&node.left).push(node.key).add(spec_in_order_link(&node.right))
+            }
+        }
+    }
+
+    /// Pre-order traversal of a splay tree link as a spec-level sequence.
+    pub open spec fn spec_pre_order_link<T: TotalOrder + Clone>(link: &Link<T>) -> Seq<T>
+        decreases *link,
+    {
+        match link {
+            None => Seq::empty(),
+            Some(node) => {
+                Seq::empty().push(node.key).add(spec_pre_order_link(&node.left)).add(spec_pre_order_link(&node.right))
+            }
+        }
+    }
+
+    /// BST ordering invariant for a splay tree link.
+    pub open spec fn spec_is_bst_link<T: TotalOrder + Clone>(link: &Link<T>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_is_bst_link(&node.left)
+                && spec_is_bst_link(&node.right)
+                && (forall|x: T| (#[trigger] spec_contains_link(&node.left, x)) ==>
+                    T::le(x, node.key) && x != node.key)
+                && (forall|x: T| (#[trigger] spec_contains_link(&node.right, x)) ==>
+                    T::le(node.key, x) && x != node.key)
+            }
+        }
+    }
+
+    //		Section 7b. proof fns/broadcast groups
+
+
+    proof fn lemma_bst_deep_link<T: TotalOrder + Clone>(link: &Link<T>)
+        requires spec_is_bst_link(link),
+        ensures
+            match link {
+                None => true,
+                Some(node) =>
+                    spec_is_bst_link(&node.left)
+                    && spec_is_bst_link(&node.right)
+                    && (forall|x: T| (#[trigger] spec_contains_link(&node.left, x)) ==>
+                        T::le(x, node.key) && x != node.key)
+                    && (forall|x: T| (#[trigger] spec_contains_link(&node.right, x)) ==>
+                        T::le(node.key, x) && x != node.key)
+                    && match &node.left {
+                        None => true,
+                        Some(lnode) =>
+                            spec_is_bst_link(&lnode.left)
+                            && spec_is_bst_link(&lnode.right)
+                            && (forall|x: T| (#[trigger] spec_contains_link(&lnode.left, x)) ==>
+                                T::le(x, lnode.key) && x != lnode.key)
+                            && (forall|x: T| (#[trigger] spec_contains_link(&lnode.right, x)) ==>
+                                T::le(lnode.key, x) && x != lnode.key)
+                    }
+                    && match &node.right {
+                        None => true,
+                        Some(rnode) =>
+                            spec_is_bst_link(&rnode.left)
+                            && spec_is_bst_link(&rnode.right)
+                            && (forall|x: T| (#[trigger] spec_contains_link(&rnode.left, x)) ==>
+                                T::le(x, rnode.key) && x != rnode.key)
+                            && (forall|x: T| (#[trigger] spec_contains_link(&rnode.right, x)) ==>
+                                T::le(rnode.key, x) && x != rnode.key)
+                    }
+            },
+    {
+        reveal_with_fuel(spec_is_bst_link, 3);
+        match link {
+            None => {},
+            Some(node) => {
+                match &node.left {
+                    None => {},
+                    Some(_) => {},
+                }
+                match &node.right {
+                    None => {},
+                    Some(_) => {},
+                }
+            }
+        }
+    }
+
+    //		Section 8b. traits
+
+
+    pub trait BSTSplayNodeFns<T: TotalOrder + Clone>: Sized {
+        spec fn spec_key(self) -> T;
+        spec fn spec_left(self) -> Link<T>;
+        spec fn spec_right(self) -> Link<T>;
+        spec fn spec_node_size(self) -> nat;
+
+        /// - Alg Analysis: APAS: N/A -- Verus-specific scaffolding.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — constant-time allocation.
+        // veracity: no_requires
+        fn new_node(key: T) -> (node: Node<T>)
+            ensures
+                node.key == key,
+                node.size == 1,
+                node.left is None,
+                node.right is None;
+
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        // veracity: no_requires
+        fn update(&mut self)
+            ensures
+                self.spec_key() == old(self).spec_key(),
+                self.spec_left() == old(self).spec_left(),
+                self.spec_right() == old(self).spec_right();
+
+        fn splay(root: Box<Node<T>>, target: &T) -> (splayed: Box<Node<T>>)
+            requires spec_is_bst_link(&Some(root)),
+            ensures
+                spec_is_bst_link(&Some(splayed)),
+                forall|x: T| spec_contains_link(&Some(splayed), x) <==> spec_contains_link(&Some(root), x);
+    }
+
+
+    pub trait BSTSplayLinkFns<T: TotalOrder + Clone> {
+        spec fn link_is_bst(&self) -> bool;
+        spec fn link_contains(&self, value: T) -> bool;
+        spec fn link_size(&self) -> nat;
+        spec fn link_height(&self) -> nat;
+        spec fn link_in_order(&self) -> Seq<T>;
+        spec fn link_pre_order(&self) -> Seq<T>;
+        spec fn link_is_some(&self) -> bool;
+
+        // veracity: no_requires
+        fn size_link(&self) -> (size: usize)
+            ensures size as nat == self.link_size();
+        fn height_link(&self) -> (height: usize)
+            requires self.link_height() < usize::MAX as nat,
+            ensures height as nat == self.link_height();
+        fn bst_insert(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(old(link)),
+            ensures
+                spec_is_bst_link(link),
+                spec_contains_link(link, value),
+                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
+                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
+        fn insert_link(link: &mut Link<T>, value: T) -> (inserted: bool)
+            requires spec_is_bst_link(old(link)),
+            ensures
+                spec_is_bst_link(link),
+                spec_contains_link(link, value),
+                forall|x: T| spec_contains_link(old(link), x) ==> spec_contains_link(link, x),
+                forall|x: T| spec_contains_link(link, x) ==> (spec_contains_link(old(link), x) || x == value);
+        fn find_link<'a>(&'a self, target: &T) -> (found: Option<&'a T>)
+            requires self.link_is_bst(),
+            ensures
+                found.is_some() <==> self.link_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target;
+        fn min_link(&self) -> (min: Option<&T>)
+            requires self.link_is_bst(),
+            ensures
+                self.link_is_some() ==> min.is_some(),
+                min.is_some() ==> self.link_contains(*min.unwrap()),
+                min.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(*min.unwrap(), x);
+        fn max_link(&self) -> (max: Option<&T>)
+            requires self.link_is_bst(),
+            ensures
+                self.link_is_some() ==> max.is_some(),
+                max.is_some() ==> self.link_contains(*max.unwrap()),
+                max.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(x, *max.unwrap());
+        // veracity: no_requires
+        fn in_order_collect(&self, out: &mut Vec<T>)
+            requires self.link_is_bst(),
+            ensures out@.len() == old(out)@.len() + self.link_in_order().len();
+        // veracity: no_requires
+        fn pre_order_collect(&self, out: &mut Vec<T>)
+            requires self.link_is_bst(),
+            ensures out@.len() == old(out)@.len() + self.link_pre_order().len();
+    }
+
+
+    pub trait BSTSplayStEphTrait<T: TotalOrder + Clone> {
+        spec fn spec_size(self) -> nat;
+        spec fn spec_height(self) -> nat;
+        spec fn spec_contains(self, value: T) -> bool;
+        spec fn spec_bstsplaysteph_wf(&self) -> bool;
+        spec fn spec_in_order(self) -> Seq<T>;
+        spec fn spec_pre_order(self) -> Seq<T>;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn new() -> (tree: Self)
+        where
+            Self: Sized,
+            ensures
+                tree.spec_bstsplaysteph_wf(),
+                tree.spec_size() == 0,
+                forall|x: T| !tree.spec_contains(x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn size(&self) -> (n: usize)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures n as nat == self.spec_size();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn is_empty(&self) -> (b: bool)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures b == (self.spec_size() == 0);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn height(&self) -> (h: usize)
+            requires
+                self.spec_bstsplaysteph_wf(),
+                self.spec_height() < usize::MAX as nat,
+            ensures h as nat == self.spec_height();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn insert(&mut self, value: T)
+            requires old(self).spec_bstsplaysteph_wf(),
+            ensures
+                self.spec_bstsplaysteph_wf(),
+                self.spec_contains(value),
+                forall|x: T| old(self).spec_contains(x) ==> self.spec_contains(x);
+        /// - Alg Analysis: APAS (Ch37 Alg 37.4): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — matches APAS
+        fn find(&self, target: &T) -> (found: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures
+                found.is_some() <==> self.spec_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn contains(&self, target: &T) -> (found: bool)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures found == self.spec_contains(*target);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn minimum(&self) -> (min: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures
+                self.spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> self.spec_contains(*min.unwrap()),
+                min.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(*min.unwrap(), x);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T))
+        fn maximum(&self) -> (max: Option<&T>)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures
+                self.spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> self.spec_contains(*max.unwrap()),
+                max.is_some() ==> forall|x: T| self.spec_contains(x) ==> T::le(x, *max.unwrap());
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn in_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures seq.spec_len() == self.spec_in_order().len();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn pre_order(&self) -> (seq: ArraySeqStPerS<T>)
+            requires self.spec_bstsplaysteph_wf(),
+            ensures seq.spec_len() == self.spec_pre_order().len();
+    }
+
+    //		Section 9b. impls
+
 
     impl<T: TotalOrder + Clone> BSTSplayLinkFns<T> for Link<T> {
         open spec fn link_is_bst(&self) -> bool { spec_is_bst_link(self) }
@@ -1715,7 +1727,6 @@ pub mod BSTSplayStEph {
 
     } // impl BSTSplayLinkFns for Link
 
-    //		9d. impls — BSTSplayStEph
 
     impl<T: TotalOrder + Clone> BSTSplayStEphTrait<T> for BSTSplayStEph<T> {
         open spec fn spec_size(self) -> nat { spec_size_link(&self.root) }
@@ -1803,12 +1814,8 @@ pub mod BSTSplayStEph {
         }
     }
 
-    impl<T: TotalOrder + Clone> Default for BSTSplayStEph<T> {
-        fn default() -> Self { Self::new() }
-    }
+    //		Section 12a. derive impls in verus!
 
-
-    //		11. derive impls in verus!
 
     impl<T: TotalOrder + Clone> Clone for Node<T> {
         fn clone(&self) -> (copy: Self)
@@ -1832,6 +1839,13 @@ pub mod BSTSplayStEph {
         }
     }
 
+    //		Section 12b. derive impls in verus!
+
+
+    impl<T: TotalOrder + Clone> Default for BSTSplayStEph<T> {
+        fn default() -> Self { Self::new() }
+    }
+
     impl<T: TotalOrder + Clone> Clone for BSTSplayStEph<T> {
         fn clone(&self) -> (copy: Self)
             ensures true,
@@ -1842,8 +1856,22 @@ pub mod BSTSplayStEph {
 
     }
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
+
+    #[macro_export]
+    macro_rules! BSTSplayStEphLit {
+        () => {
+            < $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEph<_> as $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait<_> >::new()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __tree = < $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEph<_> as $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait<_> >::new();
+            $( __tree.insert($x); )*
+            __tree
+        }};
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl<T: TotalOrder + Clone + fmt::Debug> fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -1856,15 +1884,17 @@ pub mod BSTSplayStEph {
         }
     }
 
-    impl<T: TotalOrder + Clone + fmt::Debug> fmt::Debug for BSTSplayStEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTSplayStEph").field("root", &self.root).finish()
-        }
-    }
-
     impl<T: TotalOrder + Clone + fmt::Display> fmt::Display for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{}", self.key)
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: TotalOrder + Clone + fmt::Debug> fmt::Debug for BSTSplayStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSplayStEph").field("root", &self.root).finish()
         }
     }
 
@@ -1872,20 +1902,5 @@ pub mod BSTSplayStEph {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSplayStEph(size={})", self.size())
         }
-    }
-
-
-    //		12. macros
-
-    #[macro_export]
-    macro_rules! BSTSplayStEphLit {
-        () => {
-            < $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEph<_> as $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait<_> >::new()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __tree = < $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEph<_> as $crate::Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait<_> >::new();
-            $( __tree.insert($x); )*
-            __tree
-        }};
     }
 }

@@ -4,21 +4,35 @@
 //! Key-Value BST (dictionary/table) with ephemeral treap structure.
 
 //  Table of Contents
-//  1. module
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  6. spec fns
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 7c. proof fns/broadcast groups
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod BSTKeyValueStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -33,16 +47,21 @@ pub mod BSTKeyValueStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
+
     broadcast use { vstd::map::group_map_axioms, vstd::map_lib::group_map_union, vstd::set::group_set_axioms };
 
+    //		Section 4. type definitions
 
-
-    // 4. type definitions
 
     pub type Link<K, V> = Option<Box<Node<K, V>>>;
+
+    //		Section 4a. type definitions
+
 
     pub struct Node<K: StT + Ord, V: StT> {
         pub key: K,
@@ -52,314 +71,8 @@ pub mod BSTKeyValueStEph {
         pub right: Link<K, V>,
     }
 
-    pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
-        pub root: Link<K, V>,
-        pub size: usize,
-    }
+    //		Section 8a. traits
 
-    pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
-
-    pub struct Lnk;
-
-    // 5. view impls
-
-    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
-        type V = Map<K, V>;
-        open spec fn view(&self) -> Map<K, V> {
-            spec_content_link(&self.root)
-        }
-    }
-
-    // 6. spec fns
-
-    // Free spec fns: proofs require body unfolding, trait methods are uninterpreted.
-    pub open spec fn spec_content_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Map<K, V>
-        decreases *link,
-    {
-        match link {
-            None => Map::empty(),
-            Some(node) =>
-                spec_content_link(&node.left)
-                    .union_prefer_right(spec_content_link(&node.right))
-                    .insert(node.key, node.value),
-        }
-    }
-
-    pub open spec fn spec_node_count_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
-        decreases *link,
-    {
-        match link {
-            None => 0,
-            Some(node) => 1 + spec_node_count_link(&node.left) + spec_node_count_link(&node.right),
-        }
-    }
-
-    pub open spec fn spec_ordered_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool
-        decreases *link,
-    {
-        match link {
-            None => true,
-            Some(node) => {
-                spec_ordered_link(&node.left)
-                && spec_ordered_link(&node.right)
-                && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
-                    ==> (TotalOrder::le(k, node.key) && k != node.key))
-                && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
-                    ==> (TotalOrder::le(node.key, k) && k != node.key))
-            }
-        }
-    }
-
-    pub open spec fn spec_root_key_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> K {
-        match link {
-            Some(node) => node.key,
-            None => arbitrary(),
-        }
-    }
-
-    pub open spec fn spec_has_left_child_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool {
-        match link {
-            Some(node) => node.left.is_some(),
-            None => false,
-        }
-    }
-
-    pub open spec fn spec_has_right_child_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool {
-        match link {
-            Some(node) => node.right.is_some(),
-            None => false,
-        }
-    }
-
-    // 7. proof fns
-
-    /// Left-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
-    /// Requires xk != yk (distinct keys) and !c.contains_key(xk) (BST ordering disjointness).
-    proof fn lemma_rotate_left_content_eq<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        requires xk != yk, !c.contains_key(xk),
-        ensures
-            a.union_prefer_right(
-                b.union_prefer_right(c).insert(yk, yv)
-            ).insert(xk, xv)
-            =~=
-            a.union_prefer_right(b).insert(xk, xv)
-                .union_prefer_right(c).insert(yk, yv),
-    {
-        // Chain: LHS = a.upr((b.upr(c)).insert(yk,yv)).insert(xk,xv)
-        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
-        assert(a.union_prefer_right(b.union_prefer_right(c).insert(yk, yv))
-            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(yk, yv));
-        // Step 2: upr associativity
-        assert(a.union_prefer_right(b.union_prefer_right(c))
-            =~= a.union_prefer_right(b).union_prefer_right(c));
-        // Step 3: insert commute when xk != yk
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv)
-            =~= a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv));
-        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv)
-            =~= a.union_prefer_right(b).insert(xk, xv).union_prefer_right(c));
-    }
-
-    /// Right-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
-    /// Requires xk != yk (distinct keys) and !c.contains_key(yk) (BST ordering disjointness).
-    proof fn lemma_rotate_right_content_eq<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        requires xk != yk, !c.contains_key(yk),
-        ensures
-            a.union_prefer_right(b).insert(yk, yv)
-                .union_prefer_right(c).insert(xk, xv)
-            =~=
-            a.union_prefer_right(
-                b.union_prefer_right(c).insert(xk, xv)
-            ).insert(yk, yv),
-    {
-        // Chain: RHS = a.upr((b.upr(c)).insert(xk,xv)).insert(yk,yv)
-        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
-        assert(a.union_prefer_right(b.union_prefer_right(c).insert(xk, xv))
-            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(xk, xv));
-        // Step 2: upr associativity
-        assert(a.union_prefer_right(b.union_prefer_right(c))
-            =~= a.union_prefer_right(b).union_prefer_right(c));
-        // Step 3: insert commute when xk != yk
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv)
-            =~= a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv));
-        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv)
-            =~= a.union_prefer_right(b).insert(yk, yv).union_prefer_right(c));
-    }
-
-    /// Insert on left commutes with union_prefer_right + insert on top when keys differ
-    /// and the inserted key is not in the right map.
-    proof fn lemma_insert_left_commutes<K: StT + Ord, V: StT>(
-        left: Map<K, V>, right: Map<K, V>,
-        nk: K, nv: V, ik: K, iv: V,
-    )
-        requires ik != nk, !right.contains_key(ik),
-        ensures
-            left.insert(ik, iv).union_prefer_right(right).insert(nk, nv)
-            =~=
-            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
-    {}
-
-    /// Insert on right commutes with union_prefer_right + insert on top when keys differ
-    /// and the inserted key is not in the left map.
-    proof fn lemma_insert_right_commutes<K: StT + Ord, V: StT>(
-        left: Map<K, V>, right: Map<K, V>,
-        nk: K, nv: V, ik: K, iv: V,
-    )
-        requires ik != nk,
-        ensures
-            left.union_prefer_right(right.insert(ik, iv)).insert(nk, nv)
-            =~=
-            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
-    {}
-
-    proof fn lemma_content_left_contains_key<K: StT + Ord, V: StT>(
-        node: &Box<Node<K, V>>, k: K,
-    )
-        requires spec_content_link(&node.left).contains_key(k),
-        ensures spec_content_link(&Some(*node)).contains_key(k),
-    {
-    }
-
-    proof fn lemma_content_right_contains_key<K: StT + Ord, V: StT>(
-        node: &Box<Node<K, V>>, k: K,
-    )
-        requires spec_content_link(&node.right).contains_key(k),
-        ensures spec_content_link(&Some(*node)).contains_key(k),
-    {
-    }
-
-    /// Left-rotation rearranges subtrees but preserves key membership.
-    proof fn lemma_rotate_left_preserves_keys<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        ensures
-            forall|k: K|
-                #[trigger] a.union_prefer_right(
-                    b.union_prefer_right(c).insert(yk, yv)
-                ).insert(xk, xv).contains_key(k)
-                ==>
-                a.union_prefer_right(b).insert(xk, xv)
-                    .union_prefer_right(c).insert(yk, yv).contains_key(k),
-    {
-    }
-
-    /// Right-rotation rearranges subtrees but preserves key membership.
-    proof fn lemma_rotate_right_preserves_keys<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        ensures
-            forall|k: K|
-                #[trigger] a.union_prefer_right(b).insert(xk, xv)
-                    .union_prefer_right(c).insert(yk, yv).contains_key(k)
-                ==>
-                a.union_prefer_right(
-                    b.union_prefer_right(c).insert(yk, yv)
-                ).insert(xk, xv).contains_key(k),
-    {
-    }
-
-    /// Lift left-child membership to the containing link.
-    proof fn lemma_left_key_in_link<K: StT + Ord, V: StT>(
-        link: &Link<K, V>, k: K,
-    )
-        requires
-            link is Some,
-            match *link {
-                Some(node) => spec_content_link(&node.left).contains_key(k),
-                None => false,
-            },
-        ensures spec_content_link(link).contains_key(k),
-    {
-    }
-
-    /// Lift right-child membership to the containing link.
-    proof fn lemma_right_key_in_link<K: StT + Ord, V: StT>(
-        link: &Link<K, V>, k: K,
-    )
-        requires
-            link is Some,
-            match *link {
-                Some(node) => spec_content_link(&node.right).contains_key(k),
-                None => false,
-            },
-        ensures spec_content_link(link).contains_key(k),
-    {
-    }
-
-    /// The root node's own key is always in the link's content.
-    proof fn lemma_node_key_in_link<K: StT + Ord, V: StT>(
-        link: &Link<K, V>,
-    )
-        requires link is Some,
-        ensures
-            match *link {
-                Some(node) => spec_content_link(link).contains_key(node.key),
-                None => true,
-            },
-    {
-    }
-
-    proof fn lemma_ordered_assemble_kv<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>)
-        requires
-            match link {
-                None => true,
-                Some(node) => {
-                    spec_ordered_link(&node.left)
-                    && spec_ordered_link(&node.right)
-                    && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
-                        ==> (TotalOrder::le(k, node.key) && k != node.key))
-                    && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
-                        ==> (TotalOrder::le(node.key, k) && k != node.key))
-                }
-            }
-        ensures spec_ordered_link(link),
-    {}
-
-
-    /// Strict less-than transitivity: (le(a,b) && a!=b) && (le(b,c) && b!=c) ==> (le(a,c) && a!=c).
-    proof fn lemma_strict_lt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
-        requires
-            TotalOrder::le(a, b), a != b,
-            TotalOrder::le(b, c), b != c,
-        ensures
-            TotalOrder::le(a, c), a != c,
-    {
-        K::transitive(a, b, c);
-        if a == c {
-            K::antisymmetric(a, b);
-        }
-    }
-
-    /// Strict greater-than transitivity: (le(b,a) && a!=b) && (le(c,b) && b!=c) ==> (le(c,a) && a!=c).
-    proof fn lemma_strict_gt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
-        requires
-            TotalOrder::le(b, a), a != b,
-            TotalOrder::le(c, b), b != c,
-        ensures
-            TotalOrder::le(c, a), a != c,
-    {
-        K::transitive(c, b, a);
-        if a == c {
-            K::antisymmetric(b, a);
-        }
-    }
-
-    // 8. traits
-
-    pub trait LinkTrait<K: StT + Ord, V: StT>: Sized {
-        spec fn spec_height_link(link: &Link<K, V>) -> nat;
-        spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>;
-        spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>;
-    }
 
     pub trait NodeTrait<K: StT + Ord, V: StT>: Sized {
         spec fn spec_height(&self) -> nat;
@@ -371,6 +84,88 @@ pub mod BSTKeyValueStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new(key: K, value: V, priority: u64) -> (node: Self);
     }
+
+    //		Section 9a. impls
+
+
+    impl<K: StT + Ord, V: StT> NodeTrait<K, V> for Node<K, V> {
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
+            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_node_count(&self) -> nat
+            decreases *self,
+        {
+            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
+            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
+            1 + l + r
+        }
+
+        open spec fn spec_content(&self) -> Map<K, V>
+            decreases *self,
+        {
+            let l = match self.left { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
+            let r = match self.right { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
+            l.union_prefer_right(r).insert(self.key, self.value)
+        }
+
+        open spec fn spec_min_key(&self) -> Option<K>
+            decreases *self,
+        {
+            match self.left {
+                None => Some(self.key),
+                Some(n) => NodeTrait::spec_min_key(&*n),
+            }
+        }
+
+        open spec fn spec_max_key(&self) -> Option<K>
+            decreases *self,
+        {
+            match self.right {
+                None => Some(self.key),
+                Some(n) => NodeTrait::spec_max_key(&*n),
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn new(key: K, value: V, priority: u64) -> (node: Self)
+            ensures
+                node.key == key,
+                node.value == value,
+                node.priority == priority,
+                node.left is None,
+                node.right is None,
+        {
+            Node { key, value, priority, left: None, right: None }
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
+    pub struct BSTKeyValueStEph<K: StT + Ord, V: StT> {
+        pub root: Link<K, V>,
+        pub size: usize,
+    }
+
+    pub type BSTreeKeyValue<K, V> = BSTKeyValueStEph<K, V>;
+
+    //		Section 5b. view impls
+
+
+    impl<K: StT + Ord, V: StT> View for BSTKeyValueStEph<K, V> {
+        type V = Map<K, V>;
+        open spec fn view(&self) -> Map<K, V> {
+            spec_content_link(&self.root)
+        }
+    }
+
+    //		Section 8b. traits
+
 
     pub trait BSTKeyValueStEphTrait<K: StT + Ord + TotalOrder, V: StT>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
@@ -587,152 +382,8 @@ pub mod BSTKeyValueStEph {
             ensures maximum.len() <= items.len();
     }
 
+    //		Section 9b. impls
 
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn clone_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
-        requires spec_ordered_link(link),
-        ensures
-            spec_content_link(&cloned) == spec_content_link(link),
-            spec_node_count_link(&cloned) == spec_node_count_link(link),
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => {
-                proof { reveal_with_fuel(spec_ordered_link, 2); }
-                let k = node.key.clone();
-                let v = node.value.clone();
-                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
-                Some(Box::new(Node {
-                    key: k,
-                    value: v,
-                    priority: node.priority,
-                    left: clone_link(&node.left),
-                    right: clone_link(&node.right),
-                }))
-            }
-        }
-    }
-
-    // 9. impls
-
-    impl<K: StT + Ord, V: StT> LinkTrait<K, V> for Lnk {
-        open spec fn spec_height_link(link: &Link<K, V>) -> nat
-            decreases *link,
-        {
-            match link {
-                None => 0,
-                Some(node) => {
-                    let l = Self::spec_height_link(&node.left);
-                    let r = Self::spec_height_link(&node.right);
-                    1 + if l >= r { l } else { r }
-                }
-            }
-        }
-
-
-        open spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>
-            decreases *link,
-        {
-            match link {
-                None => None,
-                Some(node) => match node.left {
-                    None => Some(node.key),
-                    Some(_) => Self::spec_min_key_link(&node.left),
-                },
-            }
-        }
-
-        open spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>
-            decreases *link,
-        {
-            match link {
-                None => None,
-                Some(node) => match node.right {
-                    None => Some(node.key),
-                    Some(_) => Self::spec_max_key_link(&node.right),
-                },
-            }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT> NodeTrait<K, V> for Node<K, V> {
-        open spec fn spec_height(&self) -> nat
-            decreases *self,
-        {
-            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
-            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_height(&*n) };
-            1 + if l >= r { l } else { r }
-        }
-
-        open spec fn spec_node_count(&self) -> nat
-            decreases *self,
-        {
-            let l = match self.left { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
-            let r = match self.right { None => 0nat, Some(n) => NodeTrait::spec_node_count(&*n) };
-            1 + l + r
-        }
-
-        open spec fn spec_content(&self) -> Map<K, V>
-            decreases *self,
-        {
-            let l = match self.left { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
-            let r = match self.right { None => Map::empty(), Some(n) => NodeTrait::spec_content(&*n) };
-            l.union_prefer_right(r).insert(self.key, self.value)
-        }
-
-        open spec fn spec_min_key(&self) -> Option<K>
-            decreases *self,
-        {
-            match self.left {
-                None => Some(self.key),
-                Some(n) => NodeTrait::spec_min_key(&*n),
-            }
-        }
-
-        open spec fn spec_max_key(&self) -> Option<K>
-            decreases *self,
-        {
-            match self.right {
-                None => Some(self.key),
-                Some(n) => NodeTrait::spec_max_key(&*n),
-            }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn new(key: K, value: V, priority: u64) -> (node: Self)
-            ensures
-                node.key == key,
-                node.value == value,
-                node.priority == priority,
-                node.left is None,
-                node.right is None,
-        {
-            Node { key, value, priority, left: None, right: None }
-        }
-    }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn compare_kv_links<K: StT + Ord + TotalOrder, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
-        requires spec_ordered_link(a), spec_ordered_link(b),
-        ensures
-            (a is None && b is None) ==> equal,
-            (a is Some && b is None) ==> !equal,
-            (a is None && b is Some) ==> !equal,
-        decreases *a,
-    {
-        match (a, b) {
-            (None, None) => true,
-            (Some(an), Some(bn)) => {
-                proof { reveal_with_fuel(spec_ordered_link, 2); }
-                an.key == bn.key && an.value == bn.value
-                    && compare_kv_links(&an.left, &bn.left)
-                    && compare_kv_links(&an.right, &bn.right)
-            }
-            _ => false,
-        }
-    }
 
     impl<K: StT + Ord + TotalOrder, V: StT> BSTKeyValueStEphTrait<K, V> for BSTKeyValueStEph<K, V> {
         open spec fn spec_size(&self) -> nat { self.size as nat }
@@ -1549,14 +1200,397 @@ pub mod BSTKeyValueStEph {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4c. type definitions
 
-    impl<K: StT + Ord + TotalOrder, V: StT> Default for BSTreeKeyValue<K, V> {
-        fn default() -> (default_val: Self)
-            ensures default_val.spec_size() == 0, default_val@ == Map::<K, V>::empty(),
-        { Self::new() }
+
+    pub struct Lnk;
+
+    //		Section 6c. spec fns
+
+
+    // Free spec fns: proofs require body unfolding, trait methods are uninterpreted.
+    pub open spec fn spec_content_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> Map<K, V>
+        decreases *link,
+    {
+        match link {
+            None => Map::empty(),
+            Some(node) =>
+                spec_content_link(&node.left)
+                    .union_prefer_right(spec_content_link(&node.right))
+                    .insert(node.key, node.value),
+        }
     }
 
+    pub open spec fn spec_node_count_link<K: StT + Ord, V: StT>(link: &Link<K, V>) -> nat
+        decreases *link,
+    {
+        match link {
+            None => 0,
+            Some(node) => 1 + spec_node_count_link(&node.left) + spec_node_count_link(&node.right),
+        }
+    }
+
+    pub open spec fn spec_ordered_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                spec_ordered_link(&node.left)
+                && spec_ordered_link(&node.right)
+                && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
+                    ==> (TotalOrder::le(k, node.key) && k != node.key))
+                && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
+                    ==> (TotalOrder::le(node.key, k) && k != node.key))
+            }
+        }
+    }
+
+    pub open spec fn spec_root_key_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> K {
+        match link {
+            Some(node) => node.key,
+            None => arbitrary(),
+        }
+    }
+
+    pub open spec fn spec_has_left_child_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool {
+        match link {
+            Some(node) => node.left.is_some(),
+            None => false,
+        }
+    }
+
+    pub open spec fn spec_has_right_child_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> bool {
+        match link {
+            Some(node) => node.right.is_some(),
+            None => false,
+        }
+    }
+
+    //		Section 7c. proof fns/broadcast groups
+
+
+    /// Left-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
+    /// Requires xk != yk (distinct keys) and !c.contains_key(xk) (BST ordering disjointness).
+    proof fn lemma_rotate_left_content_eq<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(xk),
+        ensures
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(yk, yv)
+            ).insert(xk, xv)
+            =~=
+            a.union_prefer_right(b).insert(xk, xv)
+                .union_prefer_right(c).insert(yk, yv),
+    {
+        // Chain: LHS = a.upr((b.upr(c)).insert(yk,yv)).insert(xk,xv)
+        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(yk, yv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(yk, yv));
+        // Step 2: upr associativity
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        // Step 3: insert commute when xk != yk
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv));
+        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv)
+            =~= a.union_prefer_right(b).insert(xk, xv).union_prefer_right(c));
+    }
+
+    /// Right-rotation content equality: chain of algebraic identities on Map with union_prefer_right.
+    /// Requires xk != yk (distinct keys) and !c.contains_key(yk) (BST ordering disjointness).
+    proof fn lemma_rotate_right_content_eq<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(yk),
+        ensures
+            a.union_prefer_right(b).insert(yk, yv)
+                .union_prefer_right(c).insert(xk, xv)
+            =~=
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(xk, xv)
+            ).insert(yk, yv),
+    {
+        // Chain: RHS = a.upr((b.upr(c)).insert(xk,xv)).insert(yk,yv)
+        // Step 1: m1.upr(m2.insert(k,v)) =~= m1.upr(m2).insert(k,v) [always true]
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(xk, xv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(xk, xv));
+        // Step 2: upr associativity
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        // Step 3: insert commute when xk != yk
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv));
+        // Step 4: m.insert(k,v).upr(c) =~= m.upr(c).insert(k,v) when k not in c
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv)
+            =~= a.union_prefer_right(b).insert(yk, yv).union_prefer_right(c));
+    }
+
+    /// Insert on left commutes with union_prefer_right + insert on top when keys differ
+    /// and the inserted key is not in the right map.
+    proof fn lemma_insert_left_commutes<K: StT + Ord, V: StT>(
+        left: Map<K, V>, right: Map<K, V>,
+        nk: K, nv: V, ik: K, iv: V,
+    )
+        requires ik != nk, !right.contains_key(ik),
+        ensures
+            left.insert(ik, iv).union_prefer_right(right).insert(nk, nv)
+            =~=
+            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
+    {}
+
+    /// Insert on right commutes with union_prefer_right + insert on top when keys differ
+    /// and the inserted key is not in the left map.
+    proof fn lemma_insert_right_commutes<K: StT + Ord, V: StT>(
+        left: Map<K, V>, right: Map<K, V>,
+        nk: K, nv: V, ik: K, iv: V,
+    )
+        requires ik != nk,
+        ensures
+            left.union_prefer_right(right.insert(ik, iv)).insert(nk, nv)
+            =~=
+            left.union_prefer_right(right).insert(nk, nv).insert(ik, iv),
+    {}
+
+    proof fn lemma_content_left_contains_key<K: StT + Ord, V: StT>(
+        node: &Box<Node<K, V>>, k: K,
+    )
+        requires spec_content_link(&node.left).contains_key(k),
+        ensures spec_content_link(&Some(*node)).contains_key(k),
+    {
+    }
+
+    proof fn lemma_content_right_contains_key<K: StT + Ord, V: StT>(
+        node: &Box<Node<K, V>>, k: K,
+    )
+        requires spec_content_link(&node.right).contains_key(k),
+        ensures spec_content_link(&Some(*node)).contains_key(k),
+    {
+    }
+
+    /// Left-rotation rearranges subtrees but preserves key membership.
+    proof fn lemma_rotate_left_preserves_keys<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        ensures
+            forall|k: K|
+                #[trigger] a.union_prefer_right(
+                    b.union_prefer_right(c).insert(yk, yv)
+                ).insert(xk, xv).contains_key(k)
+                ==>
+                a.union_prefer_right(b).insert(xk, xv)
+                    .union_prefer_right(c).insert(yk, yv).contains_key(k),
+    {
+    }
+
+    /// Right-rotation rearranges subtrees but preserves key membership.
+    proof fn lemma_rotate_right_preserves_keys<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        ensures
+            forall|k: K|
+                #[trigger] a.union_prefer_right(b).insert(xk, xv)
+                    .union_prefer_right(c).insert(yk, yv).contains_key(k)
+                ==>
+                a.union_prefer_right(
+                    b.union_prefer_right(c).insert(yk, yv)
+                ).insert(xk, xv).contains_key(k),
+    {
+    }
+
+    /// Lift left-child membership to the containing link.
+    proof fn lemma_left_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>, k: K,
+    )
+        requires
+            link is Some,
+            match *link {
+                Some(node) => spec_content_link(&node.left).contains_key(k),
+                None => false,
+            },
+        ensures spec_content_link(link).contains_key(k),
+    {
+    }
+
+    /// Lift right-child membership to the containing link.
+    proof fn lemma_right_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>, k: K,
+    )
+        requires
+            link is Some,
+            match *link {
+                Some(node) => spec_content_link(&node.right).contains_key(k),
+                None => false,
+            },
+        ensures spec_content_link(link).contains_key(k),
+    {
+    }
+
+    /// The root node's own key is always in the link's content.
+    proof fn lemma_node_key_in_link<K: StT + Ord, V: StT>(
+        link: &Link<K, V>,
+    )
+        requires link is Some,
+        ensures
+            match *link {
+                Some(node) => spec_content_link(link).contains_key(node.key),
+                None => true,
+            },
+    {
+    }
+
+    proof fn lemma_ordered_assemble_kv<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    spec_ordered_link(&node.left)
+                    && spec_ordered_link(&node.right)
+                    && (forall |k: K| #[trigger] spec_content_link(&node.left).contains_key(k)
+                        ==> (TotalOrder::le(k, node.key) && k != node.key))
+                    && (forall |k: K| #[trigger] spec_content_link(&node.right).contains_key(k)
+                        ==> (TotalOrder::le(node.key, k) && k != node.key))
+                }
+            }
+        ensures spec_ordered_link(link),
+    {}
+
+
+    /// Strict less-than transitivity: (le(a,b) && a!=b) && (le(b,c) && b!=c) ==> (le(a,c) && a!=c).
+    proof fn lemma_strict_lt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
+        requires
+            TotalOrder::le(a, b), a != b,
+            TotalOrder::le(b, c), b != c,
+        ensures
+            TotalOrder::le(a, c), a != c,
+    {
+        K::transitive(a, b, c);
+        if a == c {
+            K::antisymmetric(a, b);
+        }
+    }
+
+    /// Strict greater-than transitivity: (le(b,a) && a!=b) && (le(c,b) && b!=c) ==> (le(c,a) && a!=c).
+    proof fn lemma_strict_gt_transitive<K: StT + Ord + TotalOrder>(a: K, b: K, c: K)
+        requires
+            TotalOrder::le(b, a), a != b,
+            TotalOrder::le(c, b), b != c,
+        ensures
+            TotalOrder::le(c, a), a != c,
+    {
+        K::transitive(c, b, a);
+        if a == c {
+            K::antisymmetric(b, a);
+        }
+    }
+
+    //		Section 8c. traits
+
+
+    pub trait LinkTrait<K: StT + Ord, V: StT>: Sized {
+        spec fn spec_height_link(link: &Link<K, V>) -> nat;
+        spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>;
+        spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>;
+    }
+
+    //		Section 9c. impls
+
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn clone_link<K: StT + Ord + TotalOrder, V: StT>(link: &Link<K, V>) -> (cloned: Link<K, V>)
+        requires spec_ordered_link(link),
+        ensures
+            spec_content_link(&cloned) == spec_content_link(link),
+            spec_node_count_link(&cloned) == spec_node_count_link(link),
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                proof { reveal_with_fuel(spec_ordered_link, 2); }
+                let k = node.key.clone();
+                let v = node.value.clone();
+                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
+                Some(Box::new(Node {
+                    key: k,
+                    value: v,
+                    priority: node.priority,
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                }))
+            }
+        }
+    }
+
+
+    impl<K: StT + Ord, V: StT> LinkTrait<K, V> for Lnk {
+        open spec fn spec_height_link(link: &Link<K, V>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => {
+                    let l = Self::spec_height_link(&node.left);
+                    let r = Self::spec_height_link(&node.right);
+                    1 + if l >= r { l } else { r }
+                }
+            }
+        }
+
+
+        open spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.left {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_min_key_link(&node.left),
+                },
+            }
+        }
+
+        open spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>
+            decreases *link,
+        {
+            match link {
+                None => None,
+                Some(node) => match node.right {
+                    None => Some(node.key),
+                    Some(_) => Self::spec_max_key_link(&node.right),
+                },
+            }
+        }
+    }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn compare_kv_links<K: StT + Ord + TotalOrder, V: StT>(a: &Link<K, V>, b: &Link<K, V>) -> (equal: bool)
+        requires spec_ordered_link(a), spec_ordered_link(b),
+        ensures
+            (a is None && b is None) ==> equal,
+            (a is Some && b is None) ==> !equal,
+            (a is None && b is Some) ==> !equal,
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                proof { reveal_with_fuel(spec_ordered_link, 2); }
+                an.key == bn.key && an.value == bn.value
+                    && compare_kv_links(&an.left, &bn.left)
+                    && compare_kv_links(&an.right, &bn.right)
+            }
+            _ => false,
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
 
 
     impl<K: StT + Ord + TotalOrder, V: StT> Clone for Node<K, V> {
@@ -1571,6 +1605,16 @@ pub mod BSTKeyValueStEph {
             }
         }
     }
+
+
+    impl<K: StT + Ord + TotalOrder, V: StT> Default for BSTreeKeyValue<K, V> {
+        fn default() -> (default_val: Self)
+            ensures default_val.spec_size() == 0, default_val@ == Map::<K, V>::empty(),
+        { Self::new() }
+    }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl<K: StT + Ord + TotalOrder, V: StT> Clone for BSTKeyValueStEph<K, V> {
         fn clone(&self) -> (cloned: Self)
@@ -1607,56 +1651,8 @@ pub mod BSTKeyValueStEph {
 
     }
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
 
-
-
-    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for Node<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Node")
-                .field("key", &self.key)
-                .field("value", &self.value)
-                .field("priority", &self.priority)
-                .field("left", &self.left)
-                .field("right", &self.right)
-                .finish()
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for BSTKeyValueStEph<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTKeyValueStEph")
-                .field("root", &self.root)
-                .field("size", &self.size)
-                .finish()
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for Node<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "({}: {})", self.key, self.value)
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for BSTKeyValueStEph<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "BSTKeyValueStEph(size={})", self.size)
-        }
-    }
-
-    impl fmt::Debug for Lnk {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Lnk")
-        }
-    }
-
-    impl fmt::Display for Lnk {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Lnk")
-        }
-    }
-
-    // 12. macros
 
     #[macro_export]
     macro_rules! BSTKeyValueStEphLit {
@@ -1674,5 +1670,56 @@ pub mod BSTKeyValueStEph {
             } )*
             __tree
         }};
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for Node<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("value", &self.value)
+                .field("priority", &self.priority)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for Node<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "({}: {})", self.key, self.value)
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for BSTKeyValueStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTKeyValueStEph")
+                .field("root", &self.root)
+                .field("size", &self.size)
+                .finish()
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display> fmt::Display for BSTKeyValueStEph<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "BSTKeyValueStEph(size={})", self.size)
+        }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl fmt::Debug for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
+
+    impl fmt::Display for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
     }
 }

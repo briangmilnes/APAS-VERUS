@@ -4,22 +4,26 @@
 //! Chapter 45: Priority Queue implementation using Binary Heap
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//  1. module
+//		Section 1. module
 
 
 pub mod BinaryHeapPQ {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -33,9 +37,9 @@ pub mod BinaryHeapPQ {
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::logarithm::{log, lemma_log0, lemma_log_s, lemma_log_nonnegative};
 
-    verus! {
+    verus! 
+{
 
-//  2. imports
 
         use crate::Types::Types::*;
         use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -45,8 +49,8 @@ pub mod BinaryHeapPQ {
         #[cfg(verus_keep_ghost)]
         use crate::vstdplus::feq::feq::*;
 
+    //		Section 3. broadcast use
 
-//  3. broadcast use
 
         broadcast use {
             crate::vstdplus::feq::feq::group_feq_axioms,
@@ -56,25 +60,33 @@ pub mod BinaryHeapPQ {
             vstd::std_specs::vec::group_vec_axioms,
         };
 
+    //		Section 4. type definitions
 
-//  4. type definitions
 
         #[verifier::reject_recursive_types(T)]
         pub struct BinaryHeapPQ<T: StT + Ord + TotalOrder> {
             pub elements: ArraySeqStPerS<T>,
         }
 
+    //		Section 5. view impls
 
-//  5. view impls
 
         impl<T: StT + Ord + TotalOrder> View for BinaryHeapPQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
+    //		Section 6. spec fns
 
 
-//  7. proof fns/broadcast groups
+        /// Almost-heap: heap property holds at every position except possibly i.
+        spec fn spec_almost_exec_heap<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int) -> bool {
+            forall|k: int| 0 <= k < seq.len() && k != i ==>
+                #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, k)
+        }
+
+    //		Section 7. proof fns/broadcast groups
+
 
         proof fn lemma_log2_bound(n: int, bits: nat)
             requires
@@ -147,14 +159,57 @@ pub mod BinaryHeapPQ {
             }
         }
 
-        /// Almost-heap: heap property holds at every position except possibly i.
-        spec fn spec_almost_exec_heap<T: StT + Ord + TotalOrder>(seq: Seq<T>, i: int) -> bool {
-            forall|k: int| 0 <= k < seq.len() && k != i ==>
-                #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(seq, k)
+        proof fn lemma_swap_preserves_multiset<A>(s: Seq<A>, i: int, j: int)
+            requires 0 <= i < s.len(), 0 <= j < s.len(),
+            ensures s.update(i, s[j]).update(j, s[i]).to_multiset() =~= s.to_multiset(),
+        {
+            let s1 = s.update(i, s[j]);
+            let s2 = s1.update(j, s[i]);
+            vstd::seq_lib::to_multiset_update(s, i, s[j]);
+            // s1.to_multiset() == s.to_multiset().insert(s[j]).remove(s[i])
+            assert(s1[j] == s[j]);  // update at i doesn't affect j (or i==j: updated to s[j])
+            vstd::seq_lib::to_multiset_update(s1, j, s[i]);
+            // s2.to_multiset() == s1.to_multiset().insert(s[i]).remove(s1[j])
+            //                   == s.to_multiset().insert(s[j]).remove(s[i]).insert(s[i]).remove(s[j])
+            let m = s.to_multiset();
+            let a = s[i];
+            let b = s[j];
+            // Need: m.insert(b).remove(a).insert(a).remove(b) == m
+            assert(s.contains(s[i]));
+            vstd::seq_lib::to_multiset_contains(s, s[i]);
+            assert(m.count(a) >= 1nat);
+            assert_multisets_equal!(m.insert(b).remove(a).insert(a).remove(b), m, key => {
+                vstd::multiset::lemma_insert_increases_count_by_1(m, b);
+                vstd::multiset::lemma_insert_other_elements_unchanged(m, b, key);
+                vstd::multiset::lemma_insert_increases_count_by_1(m.insert(b).remove(a), a);
+                vstd::multiset::lemma_insert_other_elements_unchanged(m.insert(b).remove(a), a, key);
+            });
         }
 
+        /// Transfers le(min, a[j]) for all j to le(min, b[i]) for all i
+        /// when a and b have equal multisets.
+        proof fn lemma_le_preserved_by_multiset_eq<T: TotalOrder>(
+            min_elem: T, a: Seq<T>, b: Seq<T>,
+        )
+            requires
+                a.to_multiset() =~= b.to_multiset(),
+                forall|j: int| 0 <= j < a.len() ==>
+                    #[trigger] TotalOrder::le(min_elem, a[j]),
+            ensures
+                forall|i: int| 0 <= i < b.len() ==>
+                    #[trigger] TotalOrder::le(min_elem, b[i]),
+        {
+            assert forall|i: int| 0 <= i < b.len()
+                implies #[trigger] TotalOrder::le(min_elem, b[i]) by {
+                // b[i] appears in b, so it's in b's multiset.
+                vstd::seq_lib::to_multiset_contains(b, b[i]);
+                // Same multiset, so b[i] is in a's multiset, hence in a.
+                vstd::seq_lib::to_multiset_contains(a, b[i]);
+            }
+        }
 
-//  8. traits
+    //		Section 8. traits
+
 
         /// Trait defining the Meldable Priority Queue ADT operations (Data Type 45.1)
         pub trait BinaryHeapPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
@@ -322,14 +377,8 @@ pub mod BinaryHeapPQ {
                     Self::spec_sorted(v@);
         }
 
+    //		Section 9. impls
 
-//  9. impls
-
-        #[cfg(verus_keep_ghost)]
-        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for BinaryHeapPQ<T> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn left_child(i: usize) -> (child_idx: usize)
@@ -353,55 +402,6 @@ pub mod BinaryHeapPQ {
             ensures parent_idx as int == (i as int - 1) / 2,
         {
             (i - 1) / 2
-        }
-
-        proof fn lemma_swap_preserves_multiset<A>(s: Seq<A>, i: int, j: int)
-            requires 0 <= i < s.len(), 0 <= j < s.len(),
-            ensures s.update(i, s[j]).update(j, s[i]).to_multiset() =~= s.to_multiset(),
-        {
-            let s1 = s.update(i, s[j]);
-            let s2 = s1.update(j, s[i]);
-            vstd::seq_lib::to_multiset_update(s, i, s[j]);
-            // s1.to_multiset() == s.to_multiset().insert(s[j]).remove(s[i])
-            assert(s1[j] == s[j]);  // update at i doesn't affect j (or i==j: updated to s[j])
-            vstd::seq_lib::to_multiset_update(s1, j, s[i]);
-            // s2.to_multiset() == s1.to_multiset().insert(s[i]).remove(s1[j])
-            //                   == s.to_multiset().insert(s[j]).remove(s[i]).insert(s[i]).remove(s[j])
-            let m = s.to_multiset();
-            let a = s[i];
-            let b = s[j];
-            // Need: m.insert(b).remove(a).insert(a).remove(b) == m
-            assert(s.contains(s[i]));
-            vstd::seq_lib::to_multiset_contains(s, s[i]);
-            assert(m.count(a) >= 1nat);
-            assert_multisets_equal!(m.insert(b).remove(a).insert(a).remove(b), m, key => {
-                vstd::multiset::lemma_insert_increases_count_by_1(m, b);
-                vstd::multiset::lemma_insert_other_elements_unchanged(m, b, key);
-                vstd::multiset::lemma_insert_increases_count_by_1(m.insert(b).remove(a), a);
-                vstd::multiset::lemma_insert_other_elements_unchanged(m.insert(b).remove(a), a, key);
-            });
-        }
-
-        /// Transfers le(min, a[j]) for all j to le(min, b[i]) for all i
-        /// when a and b have equal multisets.
-        proof fn lemma_le_preserved_by_multiset_eq<T: TotalOrder>(
-            min_elem: T, a: Seq<T>, b: Seq<T>,
-        )
-            requires
-                a.to_multiset() =~= b.to_multiset(),
-                forall|j: int| 0 <= j < a.len() ==>
-                    #[trigger] TotalOrder::le(min_elem, a[j]),
-            ensures
-                forall|i: int| 0 <= i < b.len() ==>
-                    #[trigger] TotalOrder::le(min_elem, b[i]),
-        {
-            assert forall|i: int| 0 <= i < b.len()
-                implies #[trigger] TotalOrder::le(min_elem, b[i]) by {
-                // b[i] appears in b, so it's in b's multiset.
-                vstd::seq_lib::to_multiset_contains(b, b[i]);
-                // Same multiset, so b[i] is in a's multiset, hence in a.
-                vstd::seq_lib::to_multiset_contains(a, b[i]);
-            }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -1789,14 +1789,21 @@ pub mod BinaryHeapPQ {
             }
         }
 
+    //		Section 12. derive impls in verus!
+
+
+        #[cfg(verus_keep_ghost)]
+        impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for BinaryHeapPQ<T> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+        }
+
         impl<T: StT + Ord + TotalOrder> Default for BinaryHeapPQ<T> {
             fn default() -> Self {
                 Self::empty()
             }
         }
 
-
-//  11. derive impls in verus!
 
         impl<T: StT + Ord + TotalOrder> Clone for BinaryHeapPQ<T> {
             fn clone(&self) -> (cloned: Self)
@@ -1838,8 +1845,24 @@ pub mod BinaryHeapPQ {
 
     }
 
+    //		Section 13. macros
 
-//  13. derive impls outside verus!
+
+    #[macro_export]
+    macro_rules! BinaryHeapPQLit {
+        () => {
+            $crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQ::empty()
+        };
+        ($($x:expr),* $(,)?) => {{
+            let mut pq = $crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQ::empty();
+            $(
+                pq = pq.insert($x);
+            )*
+            pq
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BinaryHeapPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1859,22 +1882,4 @@ pub mod BinaryHeapPQ {
             write!(f, "]")
         }
     }
-
-
-//  12. macros
-
-    #[macro_export]
-    macro_rules! BinaryHeapPQLit {
-        () => {
-            $crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQ::empty()
-        };
-        ($($x:expr),* $(,)?) => {{
-            let mut pq = $crate::Chap45::BinaryHeapPQ::BinaryHeapPQ::BinaryHeapPQ::empty();
-            $(
-                pq = pq.insert($x);
-            )*
-            pq
-        }};
-    }
-
 }

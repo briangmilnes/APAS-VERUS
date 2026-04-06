@@ -3,23 +3,35 @@
 //!
 //! All-Pairs Shortest Path Result Structure - Sequential Persistent (Integer Weights)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AllPairsResultStPerI64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
+
 
     pub struct AllPairsResultStPerI64 {
         pub distances: ArraySeqStPerS<ArraySeqStPerS<i64>>,
@@ -27,7 +39,8 @@ pub mod AllPairsResultStPerI64 {
         pub n: usize,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AllPairsResultStPerI64Trait: Sized {
         spec fn spec_allpairsresultstperi64_wf(s: &AllPairsResultStPerI64) -> bool;
@@ -168,7 +181,8 @@ pub mod AllPairsResultStPerI64 {
                         ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors_row_len(u as int);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl AllPairsResultStPerI64Trait for AllPairsResultStPerI64 {
         open spec fn spec_allpairsresultstperi64_wf(s: &AllPairsResultStPerI64) -> bool {
@@ -410,7 +424,8 @@ pub mod AllPairsResultStPerI64 {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for AllPairsResultStPerI64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

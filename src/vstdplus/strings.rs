@@ -6,11 +6,27 @@
 //! vstd already provides: String/str View = Seq<char>, chars() iterator,
 //! String::new/clone/eq/from_str/append/concat, str::len/is_ascii.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod strings {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 6. spec fns
+
 
     // Spec fns for char methods.
 
@@ -30,6 +46,9 @@ pub mod strings {
             c
         }
     }
+
+    //		Section 9. impls
+
 
     // Exec wraps for char methods.
 

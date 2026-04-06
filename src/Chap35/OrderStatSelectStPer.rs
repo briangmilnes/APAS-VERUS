@@ -4,31 +4,35 @@
 //! Randomized contraction-based selection for finding kth order statistic.
 //! Verusified: select and select_inner are proven; rand is external_body in vstdplus.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 6. spec fns
-// 7. proof fns
-// 8. traits
-// 9. impls
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-// 1. module
+//		Section 1. module
 
 pub mod OrderStatSelectStPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use vstd::relations::*;
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -39,7 +43,8 @@ pub mod OrderStatSelectStPer {
         vstd::seq_lib::group_seq_properties,
     };
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec-level leq closure for sort_by and sorted_by.
     pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
@@ -54,7 +59,8 @@ pub mod OrderStatSelectStPer {
         s.sort_by(spec_leq::<T>())[k]
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
     pub proof fn lemma_total_ordering<T: TotalOrder>()
@@ -81,7 +87,8 @@ pub mod OrderStatSelectStPer {
         };
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait OrderStatSelectStPerTrait<T: TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
@@ -95,7 +102,8 @@ pub mod OrderStatSelectStPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder + Copy> OrderStatSelectStPerTrait<T> for ArraySeqStPerS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(n) expected — delegates to select_inner; St sequential.

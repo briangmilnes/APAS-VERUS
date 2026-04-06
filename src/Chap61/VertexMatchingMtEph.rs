@@ -5,7 +5,21 @@
 //! Implements:
 //! - Algorithm 61.4: Parallel Vertex Matching (randomized with fork/join)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod VertexMatchingMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -21,14 +35,17 @@ pub mod VertexMatchingMtEph {
     use std::vec::Vec;
     use crate::{ParaPair, SetLit};
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct VertexMatchingMtEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait VertexMatchingMtEphTrait {
         /// Well-formedness for parallel vertex matching algorithm input.
@@ -42,6 +59,9 @@ pub mod VertexMatchingMtEph {
         fn parallel_matching_mt<V: StT + MtT + Hash + 'static>(graph: &UnDirGraphMtEph<V>, seed: u64) -> SetStEph<Edge<V>>
             requires Self::spec_vertexmatchingmteph_wf(graph);
     }
+
+    //		Section 9. impls
+
 
     /// Algorithm 61.4: Parallel Vertex Matching
     ///
@@ -254,7 +274,8 @@ pub mod VertexMatchingMtEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for VertexMatchingMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -5,21 +5,29 @@
 //! Verusified: structural properties (no fabrication) verified; f64 arithmetic external.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod ETSPStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
 
@@ -31,13 +39,11 @@ pub mod ETSPStEph {
         lemma_small_mod,
     };
 
-    verus! {
+    verus! 
+{
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
 
-    //		2. imports
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -47,10 +53,8 @@ pub mod ETSPStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
-
-    //		4. type definitions
 
     /// A point in the 2-d plane.
     pub struct Point {
@@ -58,16 +62,22 @@ pub mod ETSPStEph {
         pub y: f64,
     }
 
+    //		Section 9a. impls
+
+
+    impl Copy for Point {}
+
+    //		Section 4b. type definitions
+
+
     /// A directed edge between two points.
     pub struct Edge {
         pub from: Point,
         pub to: Point,
     }
 
+    //		Section 6b. spec fns
 
-    //		6. spec fns
-
-    //		5. spec functions
 
     /// Two points are identical (same coordinates).
     pub open spec fn spec_point_eq(a: Point, b: Point) -> bool {
@@ -121,10 +131,8 @@ pub mod ETSPStEph {
             spec_point_eq(tour[i].to, spec_next_edge_from(tour, i))
     }
 
+    //		Section 7b. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		7. proof fns
 
     /// Reveal spec_next_edge_from for a single index. Call this instead of
     /// reveal(spec_next_edge_from) to avoid re-enabling the matching loop.
@@ -311,10 +319,8 @@ pub mod ETSPStEph {
         }
     }
 
+    //		Section 8b. traits
 
-    //		8. traits
-
-    //		8. traits
 
     pub trait ETSPStTrait {
         /// Solve the planar Euclidean TSP using divide-and-conquer heuristic.
@@ -328,10 +334,8 @@ pub mod ETSPStEph {
             ensures spec_etsp(tour@, points@);
     }
 
+    //		Section 9b. impls
 
-    //		9. impls
-
-    impl Copy for Point {}
 
     impl Copy for Edge {}
 
@@ -521,7 +525,6 @@ pub mod ETSPStEph {
         }
     }
 
-    //		10. verified helpers
 
     /// Split points at midpoint. Verified: every output point traces to the input.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n), Span O(n) — linear partition (simplified from sort-based split).
@@ -600,14 +603,17 @@ pub mod ETSPStEph {
         (0, 0)
     }
 
+    //		Section 12a. derive impls in verus!
 
-    //		11. derive impls in verus!
 
     impl Clone for Point {
         fn clone(&self) -> (cloned: Point)
             ensures cloned == *self
         { *self }
     }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl Clone for Edge {
         fn clone(&self) -> (cloned: Edge)
@@ -617,16 +623,11 @@ pub mod ETSPStEph {
 
     } // verus!
 
+    //		Section 14. derive impls outside verus!
+
+
     pub trait ETSPPointTrait {
         fn distance(&self, other: &Point) -> f64;
-    }
-
-    impl ETSPPointTrait for Point {
-        fn distance(&self, other: &Point) -> f64 {
-            let dx = self.x - other.x;
-            let dy = self.y - other.y;
-            (dx * dx + dy * dy).sqrt()
-        }
     }
 
     /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)
@@ -674,7 +675,15 @@ pub mod ETSPStEph {
         (best_li, best_ri)
     }
 
-    //		14a. derive impls outside verus! — struct Point
+    //		Section 14a. derive impls outside verus!
+
+    impl ETSPPointTrait for Point {
+        fn distance(&self, other: &Point) -> f64 {
+            let dx = self.x - other.x;
+            let dy = self.y - other.y;
+            (dx * dx + dy * dy).sqrt()
+        }
+    }
 
     impl Debug for Point {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -688,7 +697,7 @@ pub mod ETSPStEph {
         }
     }
 
-    //		14b. derive impls outside verus! — struct Edge
+    //		Section 14b. derive impls outside verus!
 
     impl Debug for Edge {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {

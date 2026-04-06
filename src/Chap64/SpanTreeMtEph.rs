@@ -4,7 +4,21 @@
 //!
 //! Implements Exercise 64.2: Compute spanning tree using parallel star contraction.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SpanTreeMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -23,14 +37,17 @@ pub mod SpanTreeMtEph {
 
     pub type T<V> = UnDirGraphMtEph<V>;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct SpanTreeMtEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SpanTreeMtEphTrait {
         /// Well-formedness for parallel spanning tree algorithm input.
@@ -52,6 +69,9 @@ pub mod SpanTreeMtEph {
         fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(graph: &UnDirGraphMtEph<V>, tree: &SetStEph<Edge<V>>) -> bool
             requires Self::spec_spantreemteph_wf(graph);
     }
+
+    //		Section 9. impls
+
 
     /// Exercise 64.2: Spanning Tree via Star Contraction (Parallel).
     ///
@@ -204,7 +224,8 @@ pub mod SpanTreeMtEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SpanTreeMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

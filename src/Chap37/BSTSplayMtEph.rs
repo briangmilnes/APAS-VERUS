@@ -6,20 +6,33 @@
 //! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  4. type definitions
-//  6. spec fns
-//  7. proof fns
-//  8. traits — Node
-//  9. impls — Node
-//  11. top level coarse locking
-//  13. macros
-//  14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 6a. spec fns
+//	Section 7a. proof fns/broadcast groups
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 12c. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod BSTSplayMtEph {
+
+
+    //		Section 2. imports
 
     use std::sync::Arc;
 
@@ -34,17 +47,19 @@ pub mod BSTSplayMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use vstd::slice::slice_subrange;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
+    //		Section 4a. type definitions
+
+
     // (Arc kept for filter_parallel/reduce_parallel closure sharing.)
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct Node<T: StTInMtT + Ord + TotalOrder> {
@@ -56,7 +71,8 @@ pub mod BSTSplayMtEph {
 
     type Link<T> = Option<Box<Node<T>>>;
 
-    // 6. spec fns
+    //		Section 6a. spec fns
+
 
     /// Structural node count for splay tree links.
     pub open spec fn link_spec_size<T: StTInMtT + Ord + TotalOrder>(link: Link<T>) -> nat {
@@ -147,7 +163,8 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    // 7. proof fns
+    //		Section 7a. proof fns/broadcast groups
+
 
     /// Height is bounded by structural node count.
     proof fn lemma_height_le_node_count<T: StTInMtT + Ord + TotalOrder>(link: Link<T>)
@@ -163,7 +180,8 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    // 8. traits — Node
+    //		Section 8a. traits
+
 
     pub trait BSTSplayMtNodeFns<T: StTInMtT + Ord + TotalOrder>: Sized {
 
@@ -308,7 +326,8 @@ pub mod BSTSplayMtEph {
             ensures n as nat == link_spec_size(*link);
     }
 
-    // 9. impls — Node
+    //		Section 9a. impls
+
 
     impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtNodeFns<T> for Node<T> {
 
@@ -1859,16 +1878,16 @@ pub mod BSTSplayMtEph {
 
     } // impl BSTSplayMtNodeFns for Node
 
-    // 11. top level coarse locking
+    //		Section 4b. type definitions
+
 
     /// Lock predicate: link size fits in usize.
     pub struct BSTSplayMtEphInv;
 
-    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
-        open spec fn inv(self, v: Link<T>) -> bool {
-            link_node_count(v) <= usize::MAX && spec_is_bst_link(v)
-        }
-    }
+    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
+
+    //		Section 4c. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -1876,23 +1895,16 @@ pub mod BSTSplayMtEph {
         pub(crate) ghost_root: Ghost<Link<T>>,
     }
 
-    pub type BSTreeSplay<T> = BSTSplayMtEph<T>;
+    //		Section 5c. view impls
 
-    impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            link_node_count(self.ghost_root@) <= usize::MAX && spec_is_bst_link(self.ghost_root@)
-        }
-
-        pub closed spec fn spec_ghost_root(self) -> Link<T> {
-            self.ghost_root@
-        }
-    }
 
     impl<T: StTInMtT + Ord + TotalOrder> View for BSTSplayMtEph<T> {
         type V = Link<T>;
         open spec fn view(&self) -> Link<T> { self.spec_ghost_root() }
     }
+
+    //		Section 8c. traits
+
 
     pub trait BSTSplayMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized + View<V = Link<T>> {
         spec fn spec_bstsplaymteph_wf(&self) -> bool;
@@ -1999,6 +2011,20 @@ pub mod BSTSplayMtEph {
                 self.spec_bstsplaymteph_wf(),
                 forall|a: T, b: T| #[trigger] op.requires((a, b)),
             ensures true;
+    }
+
+    //		Section 9c. impls
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> BSTSplayMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            link_node_count(self.ghost_root@) <= usize::MAX && spec_is_bst_link(self.ghost_root@)
+        }
+
+        pub closed spec fn spec_ghost_root(self) -> Link<T> {
+            self.ghost_root@
+        }
     }
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSplayMtEphTrait<T> for BSTSplayMtEph<T> {
@@ -2181,11 +2207,17 @@ pub mod BSTSplayMtEph {
         }
     }
 
-    impl<T: StTInMtT + Ord + TotalOrder + 'static> Default for BSTSplayMtEph<T> {
-        fn default() -> Self { Self::new() }
+    //		Section 11b. top level coarse locking
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> RwLockPredicate<Link<T>> for BSTSplayMtEphInv {
+        open spec fn inv(self, v: Link<T>) -> bool {
+            link_node_count(v) <= usize::MAX && spec_is_bst_link(v)
+        }
     }
 
-    // 12. derive impls in verus!
+    //		Section 12a. derive impls in verus!
+
 
     impl<T: StTInMtT + Ord + TotalOrder> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self)
@@ -2204,9 +2236,16 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    //		Section 12c. derive impls in verus!
+
+
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Default for BSTSplayMtEph<T> {
+        fn default() -> Self { Self::new() }
+    }
     } // verus!
 
-    // 13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSplayMtEphLit {
@@ -2220,7 +2259,7 @@ pub mod BSTSplayMtEph {
         }};
     }
 
-    // 14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -2237,6 +2276,8 @@ pub mod BSTSplayMtEph {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl std::fmt::Debug for BSTSplayMtEphInv {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSplayMtEphInv").finish()
@@ -2248,6 +2289,8 @@ pub mod BSTSplayMtEph {
             write!(f, "BSTSplayMtEphInv")
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder> std::fmt::Debug for BSTSplayMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

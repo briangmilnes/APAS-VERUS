@@ -4,7 +4,23 @@
 //! Finds all strongly connected components using transpose and DFS.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SCCStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -20,7 +36,11 @@ pub mod SCCStPer {
     use crate::Chap55::TopoSortStPer::TopoSortStPer::spec_toposortstper_wf;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -28,19 +48,16 @@ pub mod SCCStPer {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+
+
     pub struct SCCStPer;
 
-    // 6. spec fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
     proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
@@ -63,7 +80,8 @@ pub mod SCCStPer {
     {
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SCCStPerTrait {
         /// Finds strongly connected components in a directed graph (Algorithm 55.18)
@@ -78,7 +96,8 @@ pub mod SCCStPer {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS that appends vertices in finish order.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
@@ -634,7 +653,8 @@ pub mod SCCStPer {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SCCStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -4,19 +4,42 @@
 //! BST with general reduced values augmentation using associative functions.
 
 //  Table of Contents
-//  1. module
-//  4. type definitions
-//  5. view impls
-//  7. proof fns
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 9c. impls
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 8d. traits
+//	Section 9d. impls
+//	Section 4e. type definitions
+//	Section 6e. spec fns
+//	Section 7e. proof fns/broadcast groups
+//	Section 8e. traits
+//	Section 9e. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 12c. derive impls in verus!
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+//	Section 14e. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod BSTReducedStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
     use std::marker::PhantomData;
@@ -33,11 +56,16 @@ pub mod BSTReducedStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub type Link<K, V, R> = Option<Box<Node<K, V, R>>>;
+
+    //		Section 4a. type definitions
+
 
     pub struct Node<K: StT + Ord, V: StT, R: StT> {
         pub key: K,
@@ -49,198 +77,8 @@ pub mod BSTReducedStEph {
         pub right: Link<K, V, R>,
     }
 
-    /// Example: Sum reduction for numeric values
-    pub struct SumOp<T>(PhantomData<T>);
+    //		Section 8a. traits
 
-    /// Example: Count reduction (counts number of elements)
-    pub struct CountOp<T>(PhantomData<T>);
-
-    pub struct BSTReducedStEph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
-        pub root: Link<K, V, R>,
-        pub _op: PhantomData<Op>,
-    }
-
-    pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
-
-    // Type aliases for common reductions
-    pub type BSTSumStEph<K, V> = BSTReducedStEph<K, V, V, SumOp<V>>;
-
-    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, usize, CountOp<V>>;
-
-    pub struct Lnk;
-
-    // 5. view impls
-
-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEph<K, V, R, Op> {
-        type V = Map<K, V>;
-        open spec fn view(&self) -> Map<K, V> {
-            Lnk::spec_content_link(&self.root)
-        }
-    }
-
-
-    // 7. proof fns
-
-    proof fn lemma_ordered_assemble_reduced<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
-        requires
-            match link {
-                None => true,
-                Some(node) => {
-                    Lnk::spec_ordered_link(&node.left)
-                    && Lnk::spec_ordered_link(&node.right)
-                    && (forall |k: K| #[trigger] Lnk::spec_content_link(&node.left).contains_key(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
-                    && (forall |k: K| #[trigger] Lnk::spec_content_link(&node.right).contains_key(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
-                }
-            }
-        ensures Lnk::spec_ordered_link(link),
-    {}
-
-    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    proof fn lemma_cmp_antisymmetry_reduced<K: StT + Ord>(a: K, b: K)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
-        ensures
-            b.cmp_spec(&a) == std::cmp::Ordering::Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    proof fn lemma_cmp_antisymmetry_lt_reduced<K: StT + Ord>(a: K, b: K)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Less,
-        ensures
-            b.cmp_spec(&a) == std::cmp::Ordering::Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
-        requires match link {
-            None => true,
-            Some(n) => {
-                n.size as nat == 1 + Lnk::spec_size_link(&n.left) + Lnk::spec_size_link(&n.right)
-                && Lnk::spec_link_size_wf(&n.left)
-                && Lnk::spec_link_size_wf(&n.right)
-            }
-        },
-        ensures Lnk::spec_link_size_wf(link),
-    {}
-
-    /// cmp_spec transitivity: Less(a,b) && Less(b,c) ==> Less(a,c).
-    proof fn lemma_cmp_transitivity_lt_reduced<K: StT + Ord>(a: K, b: K, c: K)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Less,
-            b.cmp_spec(&c) == std::cmp::Ordering::Less,
-        ensures
-            a.cmp_spec(&c) == std::cmp::Ordering::Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity: Greater(a,b) && Greater(b,c) ==> Greater(a,c).
-    proof fn lemma_cmp_transitivity_gt_reduced<K: StT + Ord>(a: K, b: K, c: K)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
-            b.cmp_spec(&c) == std::cmp::Ordering::Greater,
-        ensures
-            a.cmp_spec(&c) == std::cmp::Ordering::Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Left-rotation content equality for Map with union_prefer_right.
-    proof fn lemma_rotate_left_content_eq_reduced<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        requires xk != yk, !c.contains_key(xk),
-        ensures
-            a.union_prefer_right(
-                b.union_prefer_right(c).insert(yk, yv)
-            ).insert(xk, xv)
-            =~=
-            a.union_prefer_right(b).insert(xk, xv)
-                .union_prefer_right(c).insert(yk, yv),
-    {
-        assert(a.union_prefer_right(b.union_prefer_right(c).insert(yk, yv))
-            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(yk, yv));
-        assert(a.union_prefer_right(b.union_prefer_right(c))
-            =~= a.union_prefer_right(b).union_prefer_right(c));
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv)
-            =~= a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv));
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv)
-            =~= a.union_prefer_right(b).insert(xk, xv).union_prefer_right(c));
-    }
-
-    /// Right-rotation content equality for Map with union_prefer_right.
-    proof fn lemma_rotate_right_content_eq_reduced<K: StT + Ord, V: StT>(
-        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
-        xk: K, xv: V, yk: K, yv: V,
-    )
-        requires xk != yk, !c.contains_key(yk),
-        ensures
-            a.union_prefer_right(b).insert(yk, yv)
-                .union_prefer_right(c).insert(xk, xv)
-            =~=
-            a.union_prefer_right(
-                b.union_prefer_right(c).insert(xk, xv)
-            ).insert(yk, yv),
-    {
-        assert(a.union_prefer_right(b.union_prefer_right(c).insert(xk, xv))
-            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(xk, xv));
-        assert(a.union_prefer_right(b.union_prefer_right(c))
-            =~= a.union_prefer_right(b).union_prefer_right(c));
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv)
-            =~= a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv));
-        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv)
-            =~= a.union_prefer_right(b).insert(yk, yv).union_prefer_right(c));
-    }
-
-
-    // Root key of a link (arbitrary if None).
-    pub open spec fn spec_root_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> K {
-        match link {
-            Some(node) => node.key,
-            None => arbitrary(),
-        }
-    }
-
-    // Whether a link's root has a left child.
-    pub open spec fn spec_has_left_child_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool {
-        match link {
-            Some(node) => node.left.is_some(),
-            None => false,
-        }
-    }
-
-    // Whether a link's root has a right child.
-    pub open spec fn spec_has_right_child_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool {
-        match link {
-            Some(node) => node.right.is_some(),
-            None => false,
-        }
-    }
-
-    // 8. traits
-
-    pub trait LinkTrait<K: StT + Ord, V: StT, R: StT>: Sized {
-        spec fn spec_size_link(link: &Link<K, V, R>) -> nat;
-        spec fn spec_link_size_wf(link: &Link<K, V, R>) -> bool;
-        spec fn spec_height_link(link: &Link<K, V, R>) -> nat;
-        spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>;
-        spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool;
-    }
 
     pub trait NodeTrait<K: StT + Ord, V: StT, R: StT>: Sized {
         spec fn spec_size(&self) -> nat;
@@ -255,22 +93,135 @@ pub mod BSTReducedStEph {
         fn new(key: K, value: V, priority: u64, reduced_value: R) -> (node: Self);
     }
 
-    /// Trait for associative reduction operations
-    pub trait ReduceOp<V: StT, R: StT> {
-        spec fn spec_identity() -> R;
-        spec fn spec_combine(a: R, b: R) -> R;
-        spec fn spec_lift(value: V) -> R;
+    //		Section 9a. impls
+
+
+    impl<K: StT + Ord, V: StT, R: StT> NodeTrait<K, V, R> for Node<K, V, R> {
+        open spec fn spec_size(&self) -> nat {
+            self.size as nat
+        }
+
+        open spec fn spec_bstreducedsteph_size_wf(&self) -> bool
+            decreases *self,
+        {
+            self.size as nat == 1 + Lnk::spec_size_link(&self.left) + Lnk::spec_size_link(&self.right)
+            && Lnk::spec_link_size_wf(&self.left)
+            && Lnk::spec_link_size_wf(&self.right)
+        }
+
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = Lnk::spec_height_link(&self.left);
+            let r = Lnk::spec_height_link(&self.right);
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_content(&self) -> Map<K, V>
+            decreases *self,
+        {
+            let l = Lnk::spec_content_link(&self.left);
+            let r = Lnk::spec_content_link(&self.right);
+            l.union_prefer_right(r).insert(self.key, self.value)
+        }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn identity() -> (id_val: R)
-            ensures id_val == Self::spec_identity();
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn combine(a: R, b: R) -> (combined: R)
-            ensures combined == Self::spec_combine(a, b);
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn lift(value: &V) -> (lifted: R)
-            ensures lifted == Self::spec_lift(*value);
+        fn new(key: K, value: V, priority: u64, reduced_value: R) -> (node: Self)
+            ensures
+                node.key == key,
+                node.value == value,
+                node.priority == priority,
+                node.size == 1,
+                node.reduced_value == reduced_value,
+                node.left is None,
+                node.right is None,
+        {
+            Node {
+                key,
+                value,
+                priority,
+                size: 1,
+                reduced_value,
+                left: None,
+                right: None,
+            }
+        }
     }
+
+    //		Section 4b. type definitions
+
+
+    /// Example: Sum reduction for numeric values
+    pub struct SumOp<T>(PhantomData<T>);
+
+    //		Section 9b. impls
+
+
+    impl<T: StT + Add<Output = T> + Default + Copy> ReduceOp<T, T> for SumOp<T> {
+        uninterp spec fn spec_identity() -> T;
+        uninterp spec fn spec_combine(a: T, b: T) -> T;
+        open spec fn spec_lift(value: T) -> T { value }
+
+        #[verifier::external_body] // accept hole: T::default() not expressible in spec
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn identity() -> (id_val: T) { T::default() }
+        #[verifier::external_body] // accept hole
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn combine(a: T, b: T) -> (combined: T) { a + b }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn lift(value: &T) -> (lifted: T) { *value }
+    }
+
+    //		Section 4c. type definitions
+
+
+    /// Example: Count reduction (counts number of elements)
+    pub struct CountOp<T>(PhantomData<T>);
+
+    //		Section 9c. impls
+
+
+    impl<T: StT> ReduceOp<T, usize> for CountOp<T> {
+        open spec fn spec_identity() -> usize { 0 }
+        open spec fn spec_combine(a: usize, b: usize) -> usize { (a + b) as usize }
+        open spec fn spec_lift(value: T) -> usize { 1 }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn identity() -> (id_val: usize) { 0 }
+        #[verifier::external_body] // accept hole
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn combine(a: usize, b: usize) -> (combined: usize) { a + b }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn lift(_value: &T) -> (lifted: usize) { 1 }
+    }
+
+    //		Section 4d. type definitions
+
+
+    pub struct BSTReducedStEph<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> {
+        pub root: Link<K, V, R>,
+        pub _op: PhantomData<Op>,
+    }
+
+    pub type BSTreeReduced<K, V, R, Op> = BSTReducedStEph<K, V, R, Op>;
+
+    // Type aliases for common reductions
+    pub type BSTSumStEph<K, V> = BSTReducedStEph<K, V, V, SumOp<V>>;
+
+    pub type BSTCountStEph<K, V> = BSTReducedStEph<K, V, usize, CountOp<V>>;
+
+    //		Section 5d. view impls
+
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> View for BSTReducedStEph<K, V, R, Op> {
+        type V = Map<K, V>;
+        open spec fn view(&self) -> Map<K, V> {
+            Lnk::spec_content_link(&self.root)
+        }
+    }
+
+    //		Section 8d. traits
+
 
     pub trait BSTReducedStEphTrait<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>>: Sized + View<V = Map<K, V>> {
         spec fn spec_size(&self) -> nat;
@@ -560,200 +511,8 @@ pub mod BSTReducedStEph {
             decreases *link;
     }
 
+    //		Section 9d. impls
 
-    // 9. impls
-
-    impl<K: StT + Ord, V: StT, R: StT> LinkTrait<K, V, R> for Lnk {
-        open spec fn spec_size_link(link: &Link<K, V, R>) -> nat {
-            match link {
-                None => 0,
-                Some(n) => n.size as nat,
-            }
-        }
-
-        open spec fn spec_link_size_wf(link: &Link<K, V, R>) -> bool
-            decreases *link,
-        {
-            match link {
-                None => true,
-                Some(n) => {
-                    n.size as nat == 1 + Self::spec_size_link(&n.left) + Self::spec_size_link(&n.right)
-                    && Self::spec_link_size_wf(&n.left)
-                    && Self::spec_link_size_wf(&n.right)
-                }
-            }
-        }
-
-        open spec fn spec_height_link(link: &Link<K, V, R>) -> nat
-            decreases *link,
-        {
-            match link {
-                None => 0,
-                Some(n) => {
-                    let l = Self::spec_height_link(&n.left);
-                    let r = Self::spec_height_link(&n.right);
-                    1 + if l >= r { l } else { r }
-                }
-            }
-        }
-
-        open spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>
-            decreases *link,
-        {
-            match link {
-                None => Map::empty(),
-                Some(n) =>
-                    Self::spec_content_link(&n.left)
-                        .union_prefer_right(Self::spec_content_link(&n.right))
-                        .insert(n.key, n.value),
-            }
-        }
-
-        open spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool
-            decreases *link,
-        {
-            match link {
-                None => true,
-                Some(node) => {
-                    Self::spec_ordered_link(&node.left)
-                    && Self::spec_ordered_link(&node.right)
-                    && (forall |k: K| #[trigger] Self::spec_content_link(&node.left).contains_key(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
-                    && (forall |k: K| #[trigger] Self::spec_content_link(&node.right).contains_key(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
-                }
-            }
-        }
-    }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
-        requires Lnk::spec_ordered_link(link),
-        ensures
-            Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
-            Lnk::spec_size_link(&cloned) == Lnk::spec_size_link(link),
-            Lnk::spec_link_size_wf(link) ==> Lnk::spec_link_size_wf(&cloned),
-        decreases *link,
-    {
-        match link {
-            None => None,
-            Some(node) => {
-                let k = node.key.clone();
-                let v = node.value.clone();
-                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
-                Some(Box::new(Node {
-                    key: k,
-                    value: v,
-                    priority: node.priority,
-                    size: node.size,
-                    reduced_value: node.reduced_value.clone(),
-                    left: clone_link(&node.left),
-                    right: clone_link(&node.right),
-                }))
-            }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT, R: StT> NodeTrait<K, V, R> for Node<K, V, R> {
-        open spec fn spec_size(&self) -> nat {
-            self.size as nat
-        }
-
-        open spec fn spec_bstreducedsteph_size_wf(&self) -> bool
-            decreases *self,
-        {
-            self.size as nat == 1 + Lnk::spec_size_link(&self.left) + Lnk::spec_size_link(&self.right)
-            && Lnk::spec_link_size_wf(&self.left)
-            && Lnk::spec_link_size_wf(&self.right)
-        }
-
-        open spec fn spec_height(&self) -> nat
-            decreases *self,
-        {
-            let l = Lnk::spec_height_link(&self.left);
-            let r = Lnk::spec_height_link(&self.right);
-            1 + if l >= r { l } else { r }
-        }
-
-        open spec fn spec_content(&self) -> Map<K, V>
-            decreases *self,
-        {
-            let l = Lnk::spec_content_link(&self.left);
-            let r = Lnk::spec_content_link(&self.right);
-            l.union_prefer_right(r).insert(self.key, self.value)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn new(key: K, value: V, priority: u64, reduced_value: R) -> (node: Self)
-            ensures
-                node.key == key,
-                node.value == value,
-                node.priority == priority,
-                node.size == 1,
-                node.reduced_value == reduced_value,
-                node.left is None,
-                node.right is None,
-        {
-            Node {
-                key,
-                value,
-                priority,
-                size: 1,
-                reduced_value,
-                left: None,
-                right: None,
-            }
-        }
-    }
-
-    impl<T: StT + Add<Output = T> + Default + Copy> ReduceOp<T, T> for SumOp<T> {
-        uninterp spec fn spec_identity() -> T;
-        uninterp spec fn spec_combine(a: T, b: T) -> T;
-        open spec fn spec_lift(value: T) -> T { value }
-
-        #[verifier::external_body] // accept hole: T::default() not expressible in spec
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn identity() -> (id_val: T) { T::default() }
-        #[verifier::external_body] // accept hole
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn combine(a: T, b: T) -> (combined: T) { a + b }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn lift(value: &T) -> (lifted: T) { *value }
-    }
-
-    impl<T: StT> ReduceOp<T, usize> for CountOp<T> {
-        open spec fn spec_identity() -> usize { 0 }
-        open spec fn spec_combine(a: usize, b: usize) -> usize { (a + b) as usize }
-        open spec fn spec_lift(value: T) -> usize { 1 }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn identity() -> (id_val: usize) { 0 }
-        #[verifier::external_body] // accept hole
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn combine(a: usize, b: usize) -> (combined: usize) { a + b }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn lift(_value: &T) -> (lifted: usize) { 1 }
-    }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
-        requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
-        ensures
-            (a is None && b is None) ==> equal,
-            (a is Some && b is None) ==> !equal,
-            (a is None && b is Some) ==> !equal,
-        decreases *a,
-    {
-        match (a, b) {
-            (None, None) => true,
-            (Some(an), Some(bn)) => {
-                an.key == bn.key && an.value == bn.value
-                    && compare_reduced_links(&an.left, &bn.left)
-                    && compare_reduced_links(&an.right, &bn.right)
-            }
-            _ => false,
-        }
-    }
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> BSTReducedStEphTrait<K, V, R, Op>
         for BSTReducedStEph<K, V, R, Op>
@@ -906,7 +665,7 @@ pub mod BSTReducedStEph {
                     let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                     let ghost y_right_sz = Lnk::spec_size_link(&y.right);
                     proof {
-    
+
                         assert(x_right_content =~=
                             b_content.union_prefer_right(c_content).insert(yk, yv));
                         assert(x_right_content.contains_key(yk));
@@ -957,7 +716,7 @@ pub mod BSTReducedStEph {
 
                     // Ordering of new y: left=new_x, right=C, key=yk.
                     proof {
-    
+
                         let ghost new_x_content = Lnk::spec_content_link(&y.left);
                         assert(new_x_content =~=
                             a_content.union_prefer_right(b_content).insert(xk, xv));
@@ -982,7 +741,6 @@ pub mod BSTReducedStEph {
 
                     *link = Some(y);
                     proof {
-
 
 
                         lemma_wf_assemble(link);
@@ -1037,7 +795,7 @@ pub mod BSTReducedStEph {
                     let ghost y_left_sz = Lnk::spec_size_link(&y.left);
                     let ghost y_right_sz = Lnk::spec_size_link(&y.right);
                     proof {
-    
+
                         assert(x_left_content =~=
                             a_content.union_prefer_right(b_content).insert(yk, yv));
                         assert(x_left_content.contains_key(yk));
@@ -1087,7 +845,7 @@ pub mod BSTReducedStEph {
 
                     // Ordering of new y: left=A, right=new_x, key=yk.
                     proof {
-    
+
                         let ghost new_x_content = Lnk::spec_content_link(&y.right);
                         assert(new_x_content =~=
                             b_content.union_prefer_right(c_content).insert(xk, xv));
@@ -1112,7 +870,6 @@ pub mod BSTReducedStEph {
 
                     *link = Some(y);
                     proof {
-
 
 
                         lemma_wf_assemble(link);
@@ -1667,13 +1424,310 @@ pub mod BSTReducedStEph {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4e. type definitions
 
-    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Default for BSTreeReduced<K, V, R, Op> {
-        fn default() -> (default_val: Self)
-            ensures default_val.spec_size() == 0, default_val.spec_bstreducedsteph_wf(), default_val@ == Map::<K, V>::empty(),
-        { Self::new() }
+
+    pub struct Lnk;
+
+    //		Section 6e. spec fns
+
+
+    // Root key of a link (arbitrary if None).
+    pub open spec fn spec_root_key_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> K {
+        match link {
+            Some(node) => node.key,
+            None => arbitrary(),
+        }
     }
+
+    // Whether a link's root has a left child.
+    pub open spec fn spec_has_left_child_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool {
+        match link {
+            Some(node) => node.left.is_some(),
+            None => false,
+        }
+    }
+
+    // Whether a link's root has a right child.
+    pub open spec fn spec_has_right_child_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> bool {
+        match link {
+            Some(node) => node.right.is_some(),
+            None => false,
+        }
+    }
+
+    //		Section 7e. proof fns/broadcast groups
+
+
+    proof fn lemma_ordered_assemble_reduced<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    Lnk::spec_ordered_link(&node.left)
+                    && Lnk::spec_ordered_link(&node.right)
+                    && (forall |k: K| #[trigger] Lnk::spec_content_link(&node.left).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: K| #[trigger] Lnk::spec_content_link(&node.right).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
+            }
+        ensures Lnk::spec_ordered_link(link),
+    {}
+
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    proof fn lemma_cmp_antisymmetry_reduced<K: StT + Ord>(a: K, b: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    proof fn lemma_cmp_antisymmetry_lt_reduced<K: StT + Ord>(a: K, b: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Less,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    proof fn lemma_wf_assemble<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>)
+        requires match link {
+            None => true,
+            Some(n) => {
+                n.size as nat == 1 + Lnk::spec_size_link(&n.left) + Lnk::spec_size_link(&n.right)
+                && Lnk::spec_link_size_wf(&n.left)
+                && Lnk::spec_link_size_wf(&n.right)
+            }
+        },
+        ensures Lnk::spec_link_size_wf(link),
+    {}
+
+    /// cmp_spec transitivity: Less(a,b) && Less(b,c) ==> Less(a,c).
+    proof fn lemma_cmp_transitivity_lt_reduced<K: StT + Ord>(a: K, b: K, c: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Less,
+            b.cmp_spec(&c) == std::cmp::Ordering::Less,
+        ensures
+            a.cmp_spec(&c) == std::cmp::Ordering::Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity: Greater(a,b) && Greater(b,c) ==> Greater(a,c).
+    proof fn lemma_cmp_transitivity_gt_reduced<K: StT + Ord>(a: K, b: K, c: K)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
+            b.cmp_spec(&c) == std::cmp::Ordering::Greater,
+        ensures
+            a.cmp_spec(&c) == std::cmp::Ordering::Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Left-rotation content equality for Map with union_prefer_right.
+    proof fn lemma_rotate_left_content_eq_reduced<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(xk),
+        ensures
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(yk, yv)
+            ).insert(xk, xv)
+            =~=
+            a.union_prefer_right(b).insert(xk, xv)
+                .union_prefer_right(c).insert(yk, yv),
+    {
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(yk, yv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(yk, yv));
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv));
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv)
+            =~= a.union_prefer_right(b).insert(xk, xv).union_prefer_right(c));
+    }
+
+    /// Right-rotation content equality for Map with union_prefer_right.
+    proof fn lemma_rotate_right_content_eq_reduced<K: StT + Ord, V: StT>(
+        a: Map<K, V>, b: Map<K, V>, c: Map<K, V>,
+        xk: K, xv: V, yk: K, yv: V,
+    )
+        requires xk != yk, !c.contains_key(yk),
+        ensures
+            a.union_prefer_right(b).insert(yk, yv)
+                .union_prefer_right(c).insert(xk, xv)
+            =~=
+            a.union_prefer_right(
+                b.union_prefer_right(c).insert(xk, xv)
+            ).insert(yk, yv),
+    {
+        assert(a.union_prefer_right(b.union_prefer_right(c).insert(xk, xv))
+            =~= a.union_prefer_right(b.union_prefer_right(c)).insert(xk, xv));
+        assert(a.union_prefer_right(b.union_prefer_right(c))
+            =~= a.union_prefer_right(b).union_prefer_right(c));
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(xk, xv).insert(yk, yv)
+            =~= a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv).insert(xk, xv));
+        assert(a.union_prefer_right(b).union_prefer_right(c).insert(yk, yv)
+            =~= a.union_prefer_right(b).insert(yk, yv).union_prefer_right(c));
+    }
+
+    //		Section 8e. traits
+
+
+    pub trait LinkTrait<K: StT + Ord, V: StT, R: StT>: Sized {
+        spec fn spec_size_link(link: &Link<K, V, R>) -> nat;
+        spec fn spec_link_size_wf(link: &Link<K, V, R>) -> bool;
+        spec fn spec_height_link(link: &Link<K, V, R>) -> nat;
+        spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>;
+        spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool;
+    }
+
+    /// Trait for associative reduction operations
+    pub trait ReduceOp<V: StT, R: StT> {
+        spec fn spec_identity() -> R;
+        spec fn spec_combine(a: R, b: R) -> R;
+        spec fn spec_lift(value: V) -> R;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn identity() -> (id_val: R)
+            ensures id_val == Self::spec_identity();
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn combine(a: R, b: R) -> (combined: R)
+            ensures combined == Self::spec_combine(a, b);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn lift(value: &V) -> (lifted: R)
+            ensures lifted == Self::spec_lift(*value);
+    }
+
+    //		Section 9e. impls
+
+
+    impl<K: StT + Ord, V: StT, R: StT> LinkTrait<K, V, R> for Lnk {
+        open spec fn spec_size_link(link: &Link<K, V, R>) -> nat {
+            match link {
+                None => 0,
+                Some(n) => n.size as nat,
+            }
+        }
+
+        open spec fn spec_link_size_wf(link: &Link<K, V, R>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(n) => {
+                    n.size as nat == 1 + Self::spec_size_link(&n.left) + Self::spec_size_link(&n.right)
+                    && Self::spec_link_size_wf(&n.left)
+                    && Self::spec_link_size_wf(&n.right)
+                }
+            }
+        }
+
+        open spec fn spec_height_link(link: &Link<K, V, R>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(n) => {
+                    let l = Self::spec_height_link(&n.left);
+                    let r = Self::spec_height_link(&n.right);
+                    1 + if l >= r { l } else { r }
+                }
+            }
+        }
+
+        open spec fn spec_content_link(link: &Link<K, V, R>) -> Map<K, V>
+            decreases *link,
+        {
+            match link {
+                None => Map::empty(),
+                Some(n) =>
+                    Self::spec_content_link(&n.left)
+                        .union_prefer_right(Self::spec_content_link(&n.right))
+                        .insert(n.key, n.value),
+            }
+        }
+
+        open spec fn spec_ordered_link(link: &Link<K, V, R>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    Self::spec_ordered_link(&node.left)
+                    && Self::spec_ordered_link(&node.right)
+                    && (forall |k: K| #[trigger] Self::spec_content_link(&node.left).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: K| #[trigger] Self::spec_content_link(&node.right).contains_key(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
+            }
+        }
+    }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn clone_link<K: StT + Ord, V: StT, R: StT>(link: &Link<K, V, R>) -> (cloned: Link<K, V, R>)
+        requires Lnk::spec_ordered_link(link),
+        ensures
+            Lnk::spec_content_link(&cloned) == Lnk::spec_content_link(link),
+            Lnk::spec_size_link(&cloned) == Lnk::spec_size_link(link),
+            Lnk::spec_link_size_wf(link) ==> Lnk::spec_link_size_wf(&cloned),
+        decreases *link,
+    {
+        match link {
+            None => None,
+            Some(node) => {
+                let k = node.key.clone();
+                let v = node.value.clone();
+                proof { assume(k == node.key && v == node.value); } // accept hole: Clone bridge
+                Some(Box::new(Node {
+                    key: k,
+                    value: v,
+                    priority: node.priority,
+                    size: node.size,
+                    reduced_value: node.reduced_value.clone(),
+                    left: clone_link(&node.left),
+                    right: clone_link(&node.right),
+                }))
+            }
+        }
+    }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn compare_reduced_links<K: StT + Ord, V: StT, R: StT>(a: &Link<K, V, R>, b: &Link<K, V, R>) -> (equal: bool)
+        requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
+        ensures
+            (a is None && b is None) ==> equal,
+            (a is Some && b is None) ==> !equal,
+            (a is None && b is Some) ==> !equal,
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                an.key == bn.key && an.value == bn.value
+                    && compare_reduced_links(&an.left, &bn.left)
+                    && compare_reduced_links(&an.right, &bn.right)
+            }
+            _ => false,
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
 
 
     impl<K: StT + Ord, V: StT, R: StT> Clone for Node<K, V, R> {
@@ -1691,13 +1745,29 @@ pub mod BSTReducedStEph {
         }
     }
 
+
+    impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Default for BSTreeReduced<K, V, R, Op> {
+        fn default() -> (default_val: Self)
+            ensures default_val.spec_size() == 0, default_val.spec_bstreducedsteph_wf(), default_val@ == Map::<K, V>::empty(),
+        { Self::new() }
+    }
+
+    //		Section 12b. derive impls in verus!
+
+
     impl<T> Clone for SumOp<T> {
         fn clone(&self) -> Self { SumOp(PhantomData) }
     }
 
+    //		Section 12c. derive impls in verus!
+
+
     impl<T> Clone for CountOp<T> {
         fn clone(&self) -> Self { CountOp(PhantomData) }
     }
+
+    //		Section 12d. derive impls in verus!
+
 
     impl<K: StT + Ord, V: StT, R: StT, Op: ReduceOp<V, R>> Clone for BSTReducedStEph<K, V, R, Op> {
         fn clone(&self) -> Self {
@@ -1729,87 +1799,8 @@ pub mod BSTReducedStEph {
 
     }
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
 
-    impl<T: fmt::Debug> fmt::Debug for SumOp<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_tuple("SumOp").field(&self.0).finish()
-        }
-    }
-
-    impl<T: fmt::Debug> fmt::Debug for CountOp<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_tuple("CountOp").field(&self.0).finish()
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug, R: StT + fmt::Debug, Op: ReduceOp<V, R> + fmt::Debug> fmt::Debug
-        for BSTReducedStEph<K, V, R, Op>
-    {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTReducedStEph")
-                .field("root", &self.root)
-                .field("_op", &self._op)
-                .finish()
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug, R: StT + fmt::Debug> fmt::Debug for Node<K, V, R> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("Node")
-                .field("key", &self.key)
-                .field("value", &self.value)
-                .field("priority", &self.priority)
-                .field("size", &self.size)
-                .field("reduced_value", &self.reduced_value)
-                .field("left", &self.left)
-                .field("right", &self.right)
-                .finish()
-        }
-    }
-
-    impl<T> fmt::Display for SumOp<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "SumOp")
-        }
-    }
-
-    impl<T> fmt::Display for CountOp<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "CountOp")
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display> fmt::Display for Node<K, V, R> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "({}: {} r={})", self.key, self.value, self.reduced_value)
-        }
-    }
-
-    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display, Op: ReduceOp<V, R>> fmt::Display
-        for BSTReducedStEph<K, V, R, Op>
-    {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            match &self.root {
-                None => write!(f, "BSTReducedStEph(empty)"),
-                Some(_) => write!(f, "BSTReducedStEph(non-empty)"),
-            }
-        }
-    }
-
-    impl fmt::Debug for Lnk {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Lnk")
-        }
-    }
-
-    impl fmt::Display for Lnk {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "Lnk")
-        }
-    }
-
-    // 12. macros
 
     #[macro_export]
     macro_rules! BSTReducedStEphLit {
@@ -1827,5 +1818,93 @@ pub mod BSTReducedStEph {
             } )*
             __tree
         }};
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug, R: StT + fmt::Debug> fmt::Debug for Node<K, V, R> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("Node")
+                .field("key", &self.key)
+                .field("value", &self.value)
+                .field("priority", &self.priority)
+                .field("size", &self.size)
+                .field("reduced_value", &self.reduced_value)
+                .field("left", &self.left)
+                .field("right", &self.right)
+                .finish()
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display> fmt::Display for Node<K, V, R> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "({}: {} r={})", self.key, self.value, self.reduced_value)
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: fmt::Debug> fmt::Debug for SumOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_tuple("SumOp").field(&self.0).finish()
+        }
+    }
+
+    impl<T> fmt::Display for SumOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "SumOp")
+        }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl<T: fmt::Debug> fmt::Debug for CountOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_tuple("CountOp").field(&self.0).finish()
+        }
+    }
+
+    impl<T> fmt::Display for CountOp<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "CountOp")
+        }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
+    impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug, R: StT + fmt::Debug, Op: ReduceOp<V, R> + fmt::Debug> fmt::Debug
+        for BSTReducedStEph<K, V, R, Op>
+    {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTReducedStEph")
+                .field("root", &self.root)
+                .field("_op", &self._op)
+                .finish()
+        }
+    }
+
+    impl<K: StT + Ord + fmt::Display, V: StT + fmt::Display, R: StT + fmt::Display, Op: ReduceOp<V, R>> fmt::Display
+        for BSTReducedStEph<K, V, R, Op>
+    {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match &self.root {
+                None => write!(f, "BSTReducedStEph(empty)"),
+                Some(_) => write!(f, "BSTReducedStEph(non-empty)"),
+            }
+        }
+    }
+
+    //		Section 14e. derive impls outside verus!
+
+    impl fmt::Debug for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
+
+    impl fmt::Display for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
     }
 }

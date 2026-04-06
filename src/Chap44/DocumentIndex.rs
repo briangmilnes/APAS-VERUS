@@ -2,24 +2,28 @@
 //! REVIEWED: NO
 //! Chapter 44: Document Indexing and Searching implementation.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 4a. type definitions — struct DocumentIndex
-// 6a. spec fns — struct DocumentIndex
-// 8a. traits — struct DocumentIndex
-// 9a. impls — struct DocumentIndex
-// 4b. type definitions — struct QueryBuilder
-// 8b. traits — struct QueryBuilder
-// 9b. impls — struct QueryBuilder
-// 10. free functions
-// 12a. derive impls in verus! — struct DocumentIndex
-// 13. macros
-// 14a. derive impls outside verus! — struct DocumentIndex
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 6a. spec fns
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
 
 pub mod DocumentIndex {
 
-    // 2. imports
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -46,16 +50,19 @@ pub mod DocumentIndex {
     /// Document collection type - sequence of (id, contents) pairs.
     pub type DocumentCollection = ArraySeqStPerS<Pair<DocumentId, Contents>>;
 
-    verus! {
+    verus! 
+{
 
-    // 4a. type definitions — struct DocumentIndex
+    //		Section 4a. type definitions
+
 
     /// Document Index structure implementing Data Type 44.1.
     pub struct DocumentIndex {
         pub word_to_docs: TableStPer<Word, DocumentSet>,
     }
 
-    // 6a. spec fns — struct DocumentIndex
+    //		Section 6a. spec fns
+
 
     /// Well-formedness predicate for DocumentIndex.
     /// Requires the table to be well-formed and all stored DocumentSets
@@ -70,7 +77,8 @@ pub mod DocumentIndex {
                 }
     }
 
-    // 8a. traits — struct DocumentIndex
+    //		Section 8a. traits
+
 
     /// Trait defining the Document Index ADT (Data Type 44.1).
     pub trait DocumentIndexTrait: Sized {
@@ -169,7 +177,8 @@ pub mod DocumentIndex {
             requires self.spec_documentindex_wf();
     }
 
-    // 9a. impls — struct DocumentIndex
+    //		Section 9a. impls
+
 
     impl DocumentIndexTrait for DocumentIndex {
         open spec fn spec_documentindex_wf(&self) -> bool {
@@ -431,14 +440,16 @@ pub mod DocumentIndex {
         }
     }
 
-    // 4b. type definitions — struct QueryBuilder
+    //		Section 4b. type definitions
+
 
     /// Complex query builder for chaining operations.
     pub struct QueryBuilder<'a> {
         pub index: &'a DocumentIndex,
     }
 
-    // 8b. traits — struct QueryBuilder
+    //		Section 8b. traits
+
 
     pub trait QueryBuilderTrait<'a>: Sized {
         /// Spec: whether the underlying index is well-formed.
@@ -514,7 +525,8 @@ pub mod DocumentIndex {
         ;
     }
 
-    // 9b. impls — struct QueryBuilder
+    //		Section 9b. impls
+
 
     impl<'a> QueryBuilderTrait<'a> for QueryBuilder<'a> {
         open spec fn spec_index_wf(&self) -> bool {
@@ -606,7 +618,8 @@ pub mod DocumentIndex {
         ArraySeqStPerS::from_vec(result)
     }
 
-    // 12a. derive impls in verus! — struct DocumentIndex
+    //		Section 12a. derive impls in verus!
+
 
     impl Clone for DocumentIndex {
         fn clone(&self) -> (cloned: Self)
@@ -629,14 +642,8 @@ pub mod DocumentIndex {
 
     } // verus!
 
-    /// Convenience function for staged computation pattern (Example 44.2).
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — closure capture only
-    pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
-        move |word: &Word| index.find(word)
-    }
+    //		Section 13. macros
 
-    // 13. macros
 
     /// Macro for creating document collections.
     #[macro_export]
@@ -660,7 +667,16 @@ pub mod DocumentIndex {
         }};
     }
 
-    // 14a. derive impls outside verus! — struct DocumentIndex
+    //		Section 14. derive impls outside verus!
+
+    /// Convenience function for staged computation pattern (Example 44.2).
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — closure capture only
+    pub fn create_finder(index: &DocumentIndex) -> impl Fn(&Word) -> DocumentSet + '_ {
+        move |word: &Word| index.find(word)
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl Display for DocumentIndex {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -682,7 +698,7 @@ pub mod DocumentIndex {
         }
     }
 
-    // 14b. derive impls outside verus! — struct QueryBuilder
+    //		Section 14b. derive impls outside verus!
 
     impl<'a> Debug for QueryBuilder<'a> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {

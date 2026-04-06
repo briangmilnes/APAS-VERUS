@@ -8,7 +8,21 @@
 //! - Exercise 63.1: count_components using star_contract
 //! - Exercise 63.2: connected_components using star_contract
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod ConnectivityStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -26,14 +40,19 @@ pub mod ConnectivityStEph {
     use crate::Chap62::StarContractionStEph::StarContractionStEph::star_contract;
     use crate::SetLit;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct ConnectivityStEph;
 
-    // 8. traits
+    pub type T<V> = UnDirGraphStEph<V>;
+
+    //		Section 8. traits
+
 
     pub trait ConnectivityStEphTrait {
         /// Well-formedness for connectivity algorithm input.
@@ -66,7 +85,8 @@ pub mod ConnectivityStEph {
             requires Self::spec_connectivitysteph_wf(graph), valid_key_type_Edge::<V>();
     }
 
-    pub type T<V> = UnDirGraphStEph<V>;
+    //		Section 9. impls
+
 
     /// Algorithm 63.2: Count Connected Components
     ///
@@ -254,7 +274,8 @@ pub mod ConnectivityStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for ConnectivityStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

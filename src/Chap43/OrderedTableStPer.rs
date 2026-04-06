@@ -2,7 +2,28 @@
 //! REVIEWED: NO
 //! Single-threaded persistent ordered table backed by ParamBST<Pair<K,V>>.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod OrderedTableStPer {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::vec::IntoIter;
@@ -25,31 +46,20 @@ pub mod OrderedTableStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
     vstd::set::group_set_axioms,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 3. broadcast use (above)
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 12. derive impls in verus!
-    // 13. macros
-    // 14. derive impls outside verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -59,7 +69,8 @@ broadcast use {
 
     pub type OrderedTablePer<K, V> = OrderedTableStPer<K, V>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
         type V = Map<K::V, V::V>;
@@ -67,7 +78,8 @@ broadcast use {
         open spec fn view(&self) -> Self::V { spec_pair_set_to_map(self.tree@) }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Convert a set of (key, value) pairs to a map.
     /// With key uniqueness, each key maps to a unique value via `choose`.
@@ -102,7 +114,8 @@ broadcast use {
         exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// The domain of spec_pair_set_to_map is finite when the source set is finite.
     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
@@ -398,152 +411,8 @@ broadcast use {
     {
     }
 
-    /// Find by key in a ParamBST of pairs via recursive BST descent.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST search by key
-    fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
-        tree: &ParamBST<Pair<K, V>>,
-        k: &K,
-    ) -> (found: Option<V>)
-        requires
-            tree.spec_bstparasteph_wf(),
-            spec_key_unique_pairs_set(tree@),
-            spec_set_pair_view_generated::<K, V>(tree@),
-            view_ord_consistent::<K>(),
-            obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            spec_pair_key_determines_order::<K, V>(),
-            view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-        ensures
-            match found {
-                Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
-                    && v@ == spec_pair_set_to_map(tree@)[k@],
-                None => !spec_pair_set_to_map(tree@).contains_key(k@),
-            }
-        decreases tree@.len(),
-    {
-        match tree.expose() {
-            Exposed::Leaf => {
-                proof {
-                    if spec_pair_set_to_map(tree@).contains_key(k@) {
-                        lemma_map_contains_pair_in_set(tree@, k@);
-                    }
-                }
-                None
-            },
-            Exposed::Node(left, root_pair, right) => {
-                proof {
-                    reveal(vstd::laws_cmp::obeys_cmp_ord);
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
-                    assert(spec_key_unique_pairs_set(left@)) by {
-                        assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
-                            implies forall|vv2: V::V| left@.contains((kv, vv2)) ==> vv == vv2 by {
-                            assert(tree@.contains((kv, vv)));
-                            assert forall|vv2: V::V| left@.contains((kv, vv2)) implies vv == vv2 by {
-                                assert(tree@.contains((kv, vv2)));
-                            };
-                        };
-                    };
-                    assert(spec_key_unique_pairs_set(right@)) by {
-                        assert forall|kv: K::V, vv: V::V| #[trigger] right@.contains((kv, vv))
-                            implies forall|vv2: V::V| right@.contains((kv, vv2)) ==> vv == vv2 by {
-                            assert(tree@.contains((kv, vv)));
-                            assert forall|vv2: V::V| right@.contains((kv, vv2)) implies vv == vv2 by {
-                                assert(tree@.contains((kv, vv2)));
-                            };
-                        };
-                    };
-                    assert(spec_set_pair_view_generated::<K, V>(left@)) by {
-                        assert forall|elem: (K::V, V::V)| left@.contains(elem)
-                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                            assert(tree@.contains(elem));
-                        };
-                    };
-                    assert(spec_set_pair_view_generated::<K, V>(right@)) by {
-                        assert forall|elem: (K::V, V::V)| right@.contains(elem)
-                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-                            assert(tree@.contains(elem));
-                        };
-                    };
-                }
-                let c = k.cmp(&root_pair.0);
-                proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
-                match c {
-                    Equal => {
-                        let v_clone = root_pair.1.clone_plus();
-                        proof {
-                            lemma_cloned_view_eq(root_pair.1, v_clone);
-                            assert(k.cmp_spec(&root_pair.0) == Equal);
-                            assert(k@ == root_pair.0@);
-                            assert(tree@.contains(root_pair@));
-                            assert(tree@.contains((k@, root_pair.1@)));
-                            lemma_pair_in_set_map_contains(tree@, k@, root_pair.1@);
-                        }
-                        Some(v_clone)
-                    },
-                    Less => {
-                        let result = bst_find_by_key(&left, k);
-                        proof {
-                            assert(k.cmp_spec(&root_pair.0) == Less);
-                            assert(k@ != root_pair.0@);
-                            if result is Some {
-                                lemma_map_contains_pair_in_set(left@, k@);
-                                let vv: V::V = choose|vv: V::V| left@.contains((k@, vv));
-                                assert(tree@.contains((k@, vv)));
-                                lemma_pair_in_set_map_contains(tree@, k@, vv);
-                            } else {
-                                if spec_pair_set_to_map(tree@).contains_key(k@) {
-                                    lemma_map_contains_pair_in_set(tree@, k@);
-                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    assert(!left@.contains((k@, vv)));
-                                    assert(root_pair@.0 != k@);
-                                    assert(right@.contains((k@, vv)));
-                                    // right@ is View-generated: (k@, vv) has a Pair preimage.
-                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    assert(right@.contains(p_wit@));
-                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
-                                    assert(false);
-                                }
-                            }
-                        }
-                        result
-                    },
-                    Greater => {
-                        let result = bst_find_by_key(&right, k);
-                        proof {
-                            assert(k.cmp_spec(&root_pair.0) == Greater);
-                            assert(k@ != root_pair.0@);
-                            if result is Some {
-                                lemma_map_contains_pair_in_set(right@, k@);
-                                let vv: V::V = choose|vv: V::V| right@.contains((k@, vv));
-                                assert(tree@.contains((k@, vv)));
-                                lemma_pair_in_set_map_contains(tree@, k@, vv);
-                            } else {
-                                if spec_pair_set_to_map(tree@).contains_key(k@) {
-                                    lemma_map_contains_pair_in_set(tree@, k@);
-                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
-                                    assert(!right@.contains((k@, vv)));
-                                    assert(root_pair@.0 != k@);
-                                    assert(left@.contains((k@, vv)));
-                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
-                                    assert(left@.contains(p_wit@));
-                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
-                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
-                                    assert(false);
-                                }
-                            }
-                        }
-                        result
-                    },
-                }
-            }
-        }
-    }
+    //		Section 8. traits
 
-    // 8. traits
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
     pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
@@ -970,6 +839,154 @@ broadcast use {
                 forall|key| #[trigger] self@.dom().contains(key) ==> parts.0@.dom().contains(key) || parts.1@.dom().contains(key),
                 parts.0.spec_orderedtablestper_wf(),
                 parts.1.spec_orderedtablestper_wf();
+    }
+
+    //		Section 9. impls
+
+
+    /// Find by key in a ParamBST of pairs via recursive BST descent.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST search by key
+    fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
+        tree: &ParamBST<Pair<K, V>>,
+        k: &K,
+    ) -> (found: Option<V>)
+        requires
+            tree.spec_bstparasteph_wf(),
+            spec_key_unique_pairs_set(tree@),
+            spec_set_pair_view_generated::<K, V>(tree@),
+            view_ord_consistent::<K>(),
+            obeys_feq_fulls::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            spec_pair_key_determines_order::<K, V>(),
+            view_ord_consistent::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+        ensures
+            match found {
+                Some(v) => spec_pair_set_to_map(tree@).contains_key(k@)
+                    && v@ == spec_pair_set_to_map(tree@)[k@],
+                None => !spec_pair_set_to_map(tree@).contains_key(k@),
+            }
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            Exposed::Leaf => {
+                proof {
+                    if spec_pair_set_to_map(tree@).contains_key(k@) {
+                        lemma_map_contains_pair_in_set(tree@, k@);
+                    }
+                }
+                None
+            },
+            Exposed::Node(left, root_pair, right) => {
+                proof {
+                    reveal(vstd::laws_cmp::obeys_cmp_ord);
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                    assert(spec_key_unique_pairs_set(left@)) by {
+                        assert forall|kv: K::V, vv: V::V| #[trigger] left@.contains((kv, vv))
+                            implies forall|vv2: V::V| left@.contains((kv, vv2)) ==> vv == vv2 by {
+                            assert(tree@.contains((kv, vv)));
+                            assert forall|vv2: V::V| left@.contains((kv, vv2)) implies vv == vv2 by {
+                                assert(tree@.contains((kv, vv2)));
+                            };
+                        };
+                    };
+                    assert(spec_key_unique_pairs_set(right@)) by {
+                        assert forall|kv: K::V, vv: V::V| #[trigger] right@.contains((kv, vv))
+                            implies forall|vv2: V::V| right@.contains((kv, vv2)) ==> vv == vv2 by {
+                            assert(tree@.contains((kv, vv)));
+                            assert forall|vv2: V::V| right@.contains((kv, vv2)) implies vv == vv2 by {
+                                assert(tree@.contains((kv, vv2)));
+                            };
+                        };
+                    };
+                    assert(spec_set_pair_view_generated::<K, V>(left@)) by {
+                        assert forall|elem: (K::V, V::V)| left@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                            assert(tree@.contains(elem));
+                        };
+                    };
+                    assert(spec_set_pair_view_generated::<K, V>(right@)) by {
+                        assert forall|elem: (K::V, V::V)| right@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                            assert(tree@.contains(elem));
+                        };
+                    };
+                }
+                let c = k.cmp(&root_pair.0);
+                proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
+                match c {
+                    Equal => {
+                        let v_clone = root_pair.1.clone_plus();
+                        proof {
+                            lemma_cloned_view_eq(root_pair.1, v_clone);
+                            assert(k.cmp_spec(&root_pair.0) == Equal);
+                            assert(k@ == root_pair.0@);
+                            assert(tree@.contains(root_pair@));
+                            assert(tree@.contains((k@, root_pair.1@)));
+                            lemma_pair_in_set_map_contains(tree@, k@, root_pair.1@);
+                        }
+                        Some(v_clone)
+                    },
+                    Less => {
+                        let result = bst_find_by_key(&left, k);
+                        proof {
+                            assert(k.cmp_spec(&root_pair.0) == Less);
+                            assert(k@ != root_pair.0@);
+                            if result is Some {
+                                lemma_map_contains_pair_in_set(left@, k@);
+                                let vv: V::V = choose|vv: V::V| left@.contains((k@, vv));
+                                assert(tree@.contains((k@, vv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, vv);
+                            } else {
+                                if spec_pair_set_to_map(tree@).contains_key(k@) {
+                                    lemma_map_contains_pair_in_set(tree@, k@);
+                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
+                                    assert(!left@.contains((k@, vv)));
+                                    assert(root_pair@.0 != k@);
+                                    assert(right@.contains((k@, vv)));
+                                    // right@ is View-generated: (k@, vv) has a Pair preimage.
+                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
+                                    assert(right@.contains(p_wit@));
+                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
+                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Less);
+                                    assert(false);
+                                }
+                            }
+                        }
+                        result
+                    },
+                    Greater => {
+                        let result = bst_find_by_key(&right, k);
+                        proof {
+                            assert(k.cmp_spec(&root_pair.0) == Greater);
+                            assert(k@ != root_pair.0@);
+                            if result is Some {
+                                lemma_map_contains_pair_in_set(right@, k@);
+                                let vv: V::V = choose|vv: V::V| right@.contains((k@, vv));
+                                assert(tree@.contains((k@, vv)));
+                                lemma_pair_in_set_map_contains(tree@, k@, vv);
+                            } else {
+                                if spec_pair_set_to_map(tree@).contains_key(k@) {
+                                    lemma_map_contains_pair_in_set(tree@, k@);
+                                    let vv: V::V = choose|vv: V::V| tree@.contains((k@, vv));
+                                    assert(!right@.contains((k@, vv)));
+                                    assert(root_pair@.0 != k@);
+                                    assert(left@.contains((k@, vv)));
+                                    let ghost p_wit: Pair<K, V> = choose|p: Pair<K, V>| p@ == (k@, vv);
+                                    assert(left@.contains(p_wit@));
+                                    lemma_cmp_equal_congruent(p_wit.0, *k, root_pair.0);
+                                    assert(p_wit.0.cmp_spec(&root_pair.0) == Greater);
+                                    assert(false);
+                                }
+                            }
+                        }
+                        result
+                    },
+                }
+            }
+        }
     }
 
 
@@ -1666,7 +1683,6 @@ broadcast use {
         }
     }
 
-    // 9. impls
 
     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
@@ -3982,7 +3998,6 @@ broadcast use {
         }
     }
 
-    // 10. iterators
 
     impl<K: StT + Ord, V: StT + Ord> OrderedTableStPer<K, V> {
         /// Returns an iterator over the table entries via in-order traversal.
@@ -3996,148 +4011,6 @@ broadcast use {
         {
             let sorted = self.tree.in_order();
             OrderedTableStPerIter { inner: sorted.seq.into_iter() }
-        }
-    }
-
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerIter<K: StT + Ord, V: StT + Ord> {
-        pub inner: IntoIter<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
-        type V = (int, Seq<Pair<K, V>>);
-        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
-    }
-
-    pub open spec fn iter_invariant<K: StT + Ord, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
-        type Item = Pair<K, V>;
-
-        fn next(&mut self) -> (next: Option<Pair<K, V>>)
-            ensures ({
-                let (old_index, old_seq) = old(self)@;
-                match next {
-                    None => {
-                        &&& self@ == old(self)@
-                        &&& old_index >= old_seq.len()
-                    },
-                    Some(element) => {
-                        let (new_index, new_seq) = self@;
-                        &&& 0 <= old_index < old_seq.len()
-                        &&& new_seq == old_seq
-                        &&& new_index == old_index + 1
-                        &&& element == old_seq[old_index]
-                    },
-                }
-            })
-        {
-            self.inner.next()
-        }
-    }
-
-    /// Ghost iterator for ForLoopGhostIterator support.
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerGhostIterator<K: StT + Ord, V: StT + Ord> {
-        pub pos: int,
-        pub elements: Seq<Pair<K, V>>,
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerGhostIterator<K, V> {
-        type V = Seq<Pair<K, V>>;
-        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStPerIter<K, V> {
-        type GhostIter = OrderedTableStPerGhostIterator<K, V>;
-        open spec fn ghost_iter(&self) -> OrderedTableStPerGhostIterator<K, V> {
-            OrderedTableStPerGhostIterator { pos: self@.0, elements: self@.1 }
-        }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStPerGhostIterator<K, V> {
-        type ExecIter = OrderedTableStPerIter<K, V>;
-        type Item = Pair<K, V>;
-        type Decrease = int;
-
-        open spec fn exec_invariant(&self, exec_iter: &OrderedTableStPerIter<K, V>) -> bool {
-            &&& self.pos == exec_iter@.0
-            &&& self.elements == exec_iter@.1
-        }
-
-        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
-            init matches Some(init) ==> {
-                &&& init.pos == 0
-                &&& init.elements == self.elements
-                &&& 0 <= self.pos <= self.elements.len()
-            }
-        }
-
-        open spec fn ghost_ensures(&self) -> bool {
-            self.pos == self.elements.len()
-        }
-
-        open spec fn ghost_decrease(&self) -> Option<int> {
-            Some(self.elements.len() - self.pos)
-        }
-
-        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
-            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
-        }
-
-        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableStPerIter<K, V>) -> OrderedTableStPerGhostIterator<K, V> {
-            Self { pos: self.pos + 1, ..*self }
-        }
-    }
-
-    impl<'a, K: StT + Ord, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStPer<K, V> {
-        type Item = Pair<K, V>;
-        type IntoIter = OrderedTableStPerIter<K, V>;
-        fn into_iter(self) -> (it: Self::IntoIter)
-            requires
-                self.spec_orderedtablestper_wf(),
-            ensures
-                it@.0 == 0,
-                it@.1.len() == self.tree@.len(),
-                iter_invariant(&it),
-        {
-            self.iter()
-        }
-    }
-
-    // 12. derive impls in verus!
-
-    #[cfg(verus_keep_ghost)]
-    impl<K: StT + Ord, V: StT + Ord> PartialEqSpecImpl for OrderedTableStPer<K, V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> Eq for OrderedTableStPer<K, V> {}
-
-    impl<K: StT + Ord, V: StT + Ord> PartialEq for OrderedTableStPer<K, V> {
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@)
-        {
-            let equal = self.tree.size() == other.tree.size();
-            proof { assume(equal == (self@ == other@)); }
-            equal
-        }
-    }
-
-    impl<K: StT + Ord, V: StT + Ord> Clone for OrderedTableStPer<K, V> {
-        fn clone(&self) -> (copy: Self)
-            ensures copy@ == self@
-        {
-            let copy = OrderedTableStPer {
-                tree: self.tree.clone(),
-            };
-            proof { assume(copy@ == self@); }
-            copy
         }
     }
 
@@ -4261,9 +4134,155 @@ broadcast use {
         table
     }
 
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableStPerIter<K: StT + Ord, V: StT + Ord> {
+        pub inner: IntoIter<Pair<K, V>>,
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
+        type V = (int, Seq<Pair<K, V>>);
+        open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
+    }
+
+    pub open spec fn iter_invariant<K: StT + Ord, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
+        type Item = Pair<K, V>;
+
+        fn next(&mut self) -> (next: Option<Pair<K, V>>)
+            ensures ({
+                let (old_index, old_seq) = old(self)@;
+                match next {
+                    None => {
+                        &&& self@ == old(self)@
+                        &&& old_index >= old_seq.len()
+                    },
+                    Some(element) => {
+                        let (new_index, new_seq) = self@;
+                        &&& 0 <= old_index < old_seq.len()
+                        &&& new_seq == old_seq
+                        &&& new_index == old_index + 1
+                        &&& element == old_seq[old_index]
+                    },
+                }
+            })
+        {
+            self.inner.next()
+        }
+    }
+
+    /// Ghost iterator for ForLoopGhostIterator support.
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableStPerGhostIterator<K: StT + Ord, V: StT + Ord> {
+        pub pos: int,
+        pub elements: Seq<Pair<K, V>>,
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerGhostIterator<K, V> {
+        type V = Seq<Pair<K, V>>;
+        open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStPerIter<K, V> {
+        type GhostIter = OrderedTableStPerGhostIterator<K, V>;
+        open spec fn ghost_iter(&self) -> OrderedTableStPerGhostIterator<K, V> {
+            OrderedTableStPerGhostIterator { pos: self@.0, elements: self@.1 }
+        }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStPerGhostIterator<K, V> {
+        type ExecIter = OrderedTableStPerIter<K, V>;
+        type Item = Pair<K, V>;
+        type Decrease = int;
+
+        open spec fn exec_invariant(&self, exec_iter: &OrderedTableStPerIter<K, V>) -> bool {
+            &&& self.pos == exec_iter@.0
+            &&& self.elements == exec_iter@.1
+        }
+
+        open spec fn ghost_invariant(&self, init: Option<&Self>) -> bool {
+            init matches Some(init) ==> {
+                &&& init.pos == 0
+                &&& init.elements == self.elements
+                &&& 0 <= self.pos <= self.elements.len()
+            }
+        }
+
+        open spec fn ghost_ensures(&self) -> bool {
+            self.pos == self.elements.len()
+        }
+
+        open spec fn ghost_decrease(&self) -> Option<int> {
+            Some(self.elements.len() - self.pos)
+        }
+
+        open spec fn ghost_peek_next(&self) -> Option<Pair<K, V>> {
+            if 0 <= self.pos < self.elements.len() { Some(self.elements[self.pos]) } else { None }
+        }
+
+        open spec fn ghost_advance(&self, _exec_iter: &OrderedTableStPerIter<K, V>) -> OrderedTableStPerGhostIterator<K, V> {
+            Self { pos: self.pos + 1, ..*self }
+        }
+    }
+
+    impl<'a, K: StT + Ord, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStPer<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableStPerIter<K, V>;
+        fn into_iter(self) -> (it: Self::IntoIter)
+            requires
+                self.spec_orderedtablestper_wf(),
+            ensures
+                it@.0 == 0,
+                it@.1.len() == self.tree@.len(),
+                iter_invariant(&it),
+        {
+            self.iter()
+        }
+    }
+
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<K: StT + Ord, V: StT + Ord> PartialEqSpecImpl for OrderedTableStPer<K, V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> Eq for OrderedTableStPer<K, V> {}
+
+    impl<K: StT + Ord, V: StT + Ord> PartialEq for OrderedTableStPer<K, V> {
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
+        {
+            let equal = self.tree.size() == other.tree.size();
+            proof { assume(equal == (self@ == other@)); }
+            equal
+        }
+    }
+
+    impl<K: StT + Ord, V: StT + Ord> Clone for OrderedTableStPer<K, V> {
+        fn clone(&self) -> (copy: Self)
+            ensures copy@ == self@
+        {
+            let copy = OrderedTableStPer {
+                tree: self.tree.clone(),
+            };
+            proof { assume(copy@ == self@); }
+            copy
+        }
+    }
     } // verus!
 
-    // 13. macros
+    //		Section 13. macros
+
 
     /// Macro for creating ordered tables from sorted key-value pairs.
     #[macro_export]
@@ -4278,7 +4297,7 @@ broadcast use {
         }};
     }
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     use std::fmt;
 

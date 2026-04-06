@@ -8,28 +8,27 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod MergeSortMtPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
@@ -37,10 +36,8 @@ pub mod MergeSortMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::seq_lib::lemma_multiset_commutative;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -51,10 +48,8 @@ pub mod MergeSortMtPer {
         vstd::seq_lib::group_seq_properties,
     };
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
-
-    //		4. spec fns
 
     /// Spec function: result is a sorted permutation of the input.
     pub open spec fn spec_sorted(s: Seq<usize>) -> bool {
@@ -80,10 +75,8 @@ pub mod MergeSortMtPer {
         &&& spec_is_permutation(input, sorted)
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		7. proof fns
 
     /// If s.to_multiset().count(x) > 0, then x appears somewhere in s.
     proof fn lemma_multiset_count_positive_implies_exists(s: Seq<usize>, x: usize)
@@ -167,10 +160,8 @@ pub mod MergeSortMtPer {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
-
-    //		8. traits
 
     pub trait MergeSortMtTrait {
         /// Merge two sorted sequences using parallel binary-search divide and conquer.
@@ -198,10 +189,8 @@ pub mod MergeSortMtPer {
                     Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));
     }
 
+    //		Section 9. impls
 
-    //		9. impls
-
-    //		9. impls
 
     /// Binary search in a sorted array: find the count of elements <= pivot.
     /// - Alg Analysis: APAS (Ch26 ref): Work O(lg n), Span O(lg n) — binary search for merge.

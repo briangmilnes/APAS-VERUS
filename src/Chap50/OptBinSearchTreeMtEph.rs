@@ -5,7 +5,38 @@
 //! Memoized top-down DP with parallel min reduction.
 //! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 9d. impls
+//	Section 4e. type definitions
+//	Section 11b. top level coarse locking
+//	Section 11c. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+//	Section 14e. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod OptBinSearchTreeMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
@@ -23,19 +54,12 @@ pub mod OptBinSearchTreeMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -44,62 +68,31 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: MtVal> {
         pub key: T,
         pub prob: Probability,
     }
 
-    impl<T: MtVal> Clone for KeyProb<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned == *self
-        {
-            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-            proof { assume(cloned == *self); }
-            cloned
-        }
-    }
+    //		Section 4b. type definitions
+
 
         #[verifier::reject_recursive_types(T)]
         pub struct OptBSTMtEphKeysInv<T: MtVal> {
             pub ghost expected_keys: Seq<KeyProb<T>>,
         }
-        impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for OptBSTMtEphKeysInv<T> {
-            open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
-                v@ =~= self.expected_keys
-            }
-        }
+
+    //		Section 4c. type definitions
+
 
         pub struct OptBSTMtEphMemoInv;
-        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
-            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
-                v@.dom().finite()
-            }
-        }
 
-    /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
-    #[verifier::reject_recursive_types(T)]
-    pub struct OBSTMtEphS<T: MtVal> {
-        pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv<T>>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
-        pub ghost_keys: Ghost<Seq<KeyProb<T>>>,
-    }
+    //		Section 8c. traits
 
-    // 5. view impls
-    #[verifier::reject_recursive_types(T)]
-    pub ghost struct OBSTMtEphV<T: MtVal> {
-        pub keys: Seq<KeyProb<T>>,
-    }
 
-    impl<T: MtVal> View for OBSTMtEphS<T> {
-        type V = OBSTMtEphV<T>;
-        open spec fn view(&self) -> Self::V {
-            OBSTMtEphV { keys: self.ghost_keys@ }
-        }
-    }
-
-    // 8. traits
     pub trait OBSTMtEphTrait<T: MtVal>: Sized + View<V = OBSTMtEphV<T>> {
         spec fn spec_optbinsearchtreemteph_wf(&self) -> bool;
 
@@ -153,7 +146,8 @@ broadcast use {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9c. impls
+
 
     /// Clone Arc<Vec<Probability>> preserving the view.
     #[verifier::external_body]
@@ -278,6 +272,30 @@ broadcast use {
             if left_min <= right_min { left_min } else { right_min }
         }
     }
+
+    //		Section 4d. type definitions
+
+
+    /// Ephemeral multi-threaded optimal binary search tree solver using parallel dynamic programming
+    #[verifier::reject_recursive_types(T)]
+    pub struct OBSTMtEphS<T: MtVal> {
+        pub keys: Arc<RwLock<Vec<KeyProb<T>>, OptBSTMtEphKeysInv<T>>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtEphMemoInv>>,
+        pub ghost_keys: Ghost<Seq<KeyProb<T>>>,
+    }
+
+    //		Section 5d. view impls
+
+
+    impl<T: MtVal> View for OBSTMtEphS<T> {
+        type V = OBSTMtEphV<T>;
+        open spec fn view(&self) -> Self::V {
+            OBSTMtEphV { keys: self.ghost_keys@ }
+        }
+    }
+
+    //		Section 9d. impls
+
 
     impl<T: MtVal> OBSTMtEphTrait<T> for OBSTMtEphS<T> {
         open spec fn spec_optbinsearchtreemteph_wf(&self) -> bool {
@@ -453,7 +471,50 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4e. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub ghost struct OBSTMtEphV<T: MtVal> {
+        pub keys: Seq<KeyProb<T>>,
+    }
+
+    //		Section 11b. top level coarse locking
+
+
+        impl<T: MtVal> RwLockPredicate<Vec<KeyProb<T>>> for OptBSTMtEphKeysInv<T> {
+            open spec fn inv(self, v: Vec<KeyProb<T>>) -> bool {
+                v@ =~= self.expected_keys
+            }
+        }
+
+    //		Section 11c. top level coarse locking
+
+
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtEphMemoInv {
+            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
+                v@.dom().finite()
+            }
+        }
+
+    //		Section 12a. derive impls in verus!
+
+
+    impl<T: MtVal> Clone for KeyProb<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+            proof { assume(cloned == *self); }
+            cloned
+        }
+    }
+
+    impl<T: MtVal> Eq for KeyProb<T> {}
+
+    //		Section 12d. derive impls in verus!
+
+
     impl<T: MtVal> Clone for OBSTMtEphS<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -491,10 +552,55 @@ broadcast use {
     }
 
     impl<T: MtVal> Eq for OBSTMtEphS<T> {}
-
-    impl<T: MtVal> Eq for KeyProb<T> {}
-
     } // verus!
+
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! OBSTMtEphLit {
+        (keys: [$($k:expr),* $(,)?], probs: [$($p:expr),* $(,)?]) => {
+            $crate::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::OBSTMtEphS::from_keys_probs(
+                vec![$($k),*],
+                vec![$(<$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($p)),*]
+            )
+        };
+        () => {
+            $crate::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::OBSTMtEphS::new()
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<T: MtVal> IntoIterator for &OBSTMtEphS<T> {
+        type Item = KeyProb<T>;
+        type IntoIter = IntoIter<KeyProb<T>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+        fn into_iter(self) -> Self::IntoIter {
+            let handle = self.keys.acquire_read();
+            let keys = handle.borrow().clone();
+            handle.release_read();
+            keys.into_iter()
+        }
+    }
+
+    impl<T: MtVal> IntoIterator for &mut OBSTMtEphS<T> {
+        type Item = KeyProb<T>;
+        type IntoIter = IntoIter<KeyProb<T>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+        fn into_iter(self) -> Self::IntoIter {
+            let handle = self.keys.acquire_read();
+            let keys = handle.borrow().clone();
+            handle.release_read();
+            keys.into_iter()
+        }
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
         fn eq(&self, other: &Self) -> bool {
@@ -502,7 +608,38 @@ broadcast use {
         }
     }
 
-    // 13. derive impls outside verus!
+    impl<T: MtVal + Display> Display for KeyProb<T> {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: MtVal> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: MtVal> Debug for OptBSTMtEphKeysInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
+    }
+
+    impl<T: MtVal> Display for OptBSTMtEphKeysInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl Debug for OptBSTMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
+    }
+
+    impl Display for OptBSTMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
     impl<T: MtVal> Debug for OBSTMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(self, f) }
     }
@@ -535,65 +672,7 @@ broadcast use {
         }
     }
 
-    impl<T: MtVal> IntoIterator for &OBSTMtEphS<T> {
-        type Item = KeyProb<T>;
-        type IntoIter = IntoIter<KeyProb<T>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
-        fn into_iter(self) -> Self::IntoIter {
-            let handle = self.keys.acquire_read();
-            let keys = handle.borrow().clone();
-            handle.release_read();
-            keys.into_iter()
-        }
-    }
-
-    impl<T: MtVal> IntoIterator for &mut OBSTMtEphS<T> {
-        type Item = KeyProb<T>;
-        type IntoIter = IntoIter<KeyProb<T>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
-        fn into_iter(self) -> Self::IntoIter {
-            let handle = self.keys.acquire_read();
-            let keys = handle.borrow().clone();
-            handle.release_read();
-            keys.into_iter()
-        }
-    }
-
-    impl<T: MtVal + Display> Display for KeyProb<T> {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
-    }
-
-    impl<T: MtVal> Debug for KeyProb<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
-    }
-
-    // 14b. derive impls outside verus! — struct OptBSTMtEphKeysInv
-
-    impl<T: MtVal> Debug for OptBSTMtEphKeysInv<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
-    }
-
-    impl<T: MtVal> Display for OptBSTMtEphKeysInv<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
-    }
-
-    // 14c. derive impls outside verus! — struct OptBSTMtEphMemoInv
-
-    impl Debug for OptBSTMtEphMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
-    }
-
-    impl Display for OptBSTMtEphMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
-    }
-
-    // 14d. derive impls outside verus! — struct OBSTMtEphV
+    //		Section 14e. derive impls outside verus!
 
     impl<T: MtVal> Debug for OBSTMtEphV<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtEphV") }
@@ -601,19 +680,5 @@ broadcast use {
 
     impl<T: MtVal> Display for OBSTMtEphV<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtEphV") }
-    }
-
-    // 12. macros
-    #[macro_export]
-    macro_rules! OBSTMtEphLit {
-        (keys: [$($k:expr),* $(,)?], probs: [$($p:expr),* $(,)?]) => {
-            $crate::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::OBSTMtEphS::from_keys_probs(
-                vec![$($k),*],
-                vec![$(<$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($p)),*]
-            )
-        };
-        () => {
-            $crate::Chap50::OptBinSearchTreeMtEph::OptBinSearchTreeMtEph::OBSTMtEphS::new()
-        };
     }
 }

@@ -7,29 +7,35 @@
 //! `subseq_copy()` are O(1) (just an Arc ref-count bump + window adjust).
 //! Iterators wrap vstd's `std::slice::Iter` following the iterator standard.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 10. iterators
-// 13. derive impls outside verus!
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod ArraySeqMtEphSlice {
+
+
+    //		Section 2. imports
 
     use std::sync::Arc;
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::{arc_deref, arc_vec_as_slice};
@@ -43,7 +49,8 @@ pub mod ArraySeqMtEphSlice {
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::accept::accept;
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -54,7 +61,8 @@ pub mod ArraySeqMtEphSlice {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphSliceS<T> {
@@ -63,7 +71,8 @@ pub mod ArraySeqMtEphSlice {
         pub len: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: View> View for ArraySeqMtEphSliceS<T> {
         type V = Seq<T::V>;
@@ -74,7 +83,8 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Well-formedness check on a nested ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>.
     /// True when the outer window is valid and every inner window is valid.
@@ -144,7 +154,8 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// spec_inject preserves length.
     proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)
@@ -184,7 +195,136 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    // 8. traits
+    // 9b. free functions — D&C helpers and proof fns
+
+    /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
+    pub(crate) proof fn lemma_monoid_fold_left<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
+            requires spec_monoid(f, id)
+            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
+            decreases s.len()
+        {
+            if s.len() > 0 {
+                let n = (s.len() - 1) as int;
+                let s1 = s.subrange(0, n);
+                let tail = s.subrange(n, s.len() as int);
+                let a_last = s[n];
+
+                s.lemma_fold_left_split(id, f, n);
+                s.lemma_fold_left_split(x, f, n);
+
+                assert(tail =~= seq![a_last]);
+                reveal_with_fuel(Seq::fold_left, 2);
+                let lid = s1.fold_left(id, f);
+                let lx = s1.fold_left(x, f);
+                lemma_monoid_fold_left(s1, f, id, x);
+
+                assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
+            }
+        }
+
+
+    pub(crate) proof fn lemma_prefix_fold_matching<T>(
+        f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,
+        spec_f: spec_fn(T, T) -> T, id: T, n: int,
+    )
+            requires
+                0 <= n,
+                forall|k: int| 0 <= k < n ==> #[trigger] f1(k) == f2(k),
+            ensures
+                spec_prefix_fold(f1, spec_f, id, n) == spec_prefix_fold(f2, spec_f, id, n),
+            decreases n,
+        {
+            if n > 0 {
+                lemma_prefix_fold_matching(f1, f2, spec_f, id, n - 1);
+            }
+        }
+
+    /// Monoid split: prefix_fold(a, f, id, m+k) = f(prefix_fold(a, f, id, m), prefix_fold(shifted_a, f, id, k)).
+    pub(crate) proof fn lemma_prefix_fold_split<T>(
+        a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,
+    )
+            requires
+                spec_monoid(spec_f, id),
+                m >= 0, k >= 0,
+            ensures
+                spec_prefix_fold(a_fn, spec_f, id, m + k)
+                    == spec_f(
+                        spec_prefix_fold(a_fn, spec_f, id, m),
+                        spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k),
+                    ),
+            decreases k,
+        {
+            if k == 0 {
+                // RHS = f(prefix_fold(m), id) = prefix_fold(m) by right identity.
+            } else {
+                lemma_prefix_fold_split(a_fn, spec_f, id, m, k - 1);
+                // prefix_fold(a, f, id, m + k)
+                // = f(prefix_fold(a, f, id, m + k - 1), a(m + k - 1))
+                // = f(f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k-1)), a(m + k - 1))   [by IH]
+                // = f(prefix_fold(a, f, id, m), f(prefix_fold(shifted, f, id, k-1), a(m + k - 1)))    [by assoc]
+                // = f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k))
+                // since shifted(k-1) = a(m + k - 1)
+                let left = spec_prefix_fold(a_fn, spec_f, id, m);
+                let right_prev = spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k - 1);
+                let elem = a_fn(m + k - 1);
+                assert(spec_prefix_fold(a_fn, spec_f, id, m + k) == spec_f(spec_f(left, right_prev), elem));
+                // shifted_a(k-1) == a_fn(m + (k-1)) == a_fn(m + k - 1) == elem
+                assert((|j: int| a_fn(m + j))(k - 1) == elem);
+                assert(spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k) == spec_f(right_prev, elem));
+            }
+        }
+
+    /// Connect spec_prefix_fold to spec_backing_seq().take(n).fold_left(id, f).
+    pub(crate) proof fn lemma_prefix_fold_eq_fold_left<T>(
+        s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
+    )
+            requires
+                0 <= n <= s.len(),
+                forall|k: int| 0 <= k < s.len() ==> #[trigger] seq_fn(k) == s[k],
+            ensures
+                spec_prefix_fold(seq_fn, spec_f, id, n) == s.take(n).fold_left(id, spec_f),
+            decreases n,
+        {
+            reveal(Seq::fold_left);
+            if n > 0 {
+                lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
+                assert(s.take(n).drop_last() =~= s.take(n - 1));
+            }
+        }
+
+
+    /// Split lemma: spec_sum_inner_lens over a contiguous window equals the
+    /// sum of the left half plus the right half.
+    pub(crate) proof fn lemma_sum_inner_lens_split<T>(
+        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
+        mid: usize,
+    )
+        requires
+            mid <= a.len,
+            a.start + a.len <= (*a.data)@.len(),
+            a.start + a.len <= usize::MAX,
+        ensures ({
+            let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: a.start, len: mid,
+            };
+            let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: (a.start + mid) as usize, len: (a.len - mid) as usize,
+            };
+            spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
+        }),
+        decreases mid,
+    {
+        if mid > 0 {
+            // Peel first element from both a and left.
+            let a_rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
+                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
+            };
+            lemma_sum_inner_lens_split(&a_rest, (mid - 1) as usize);
+        }
+    }
+
+    //		Section 8. traits
+
 
     pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
         spec fn spec_arrayseqmtephslice_wf(&self) -> bool;
@@ -460,7 +600,8 @@ pub mod ArraySeqMtEphSlice {
 
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
         open spec fn spec_arrayseqmtephslice_wf(&self) -> bool {
@@ -845,103 +986,6 @@ pub mod ArraySeqMtEphSlice {
         }
 
     }
-
-    // 9b. free functions — D&C helpers and proof fns
-
-    /// For a monoid (f, id): f(x, s.fold_left(id, f)) == s.fold_left(x, f).
-    pub(crate) proof fn lemma_monoid_fold_left<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, x: T)
-            requires spec_monoid(f, id)
-            ensures f(x, s.fold_left(id, f)) == s.fold_left(x, f)
-            decreases s.len()
-        {
-            if s.len() > 0 {
-                let n = (s.len() - 1) as int;
-                let s1 = s.subrange(0, n);
-                let tail = s.subrange(n, s.len() as int);
-                let a_last = s[n];
-
-                s.lemma_fold_left_split(id, f, n);
-                s.lemma_fold_left_split(x, f, n);
-
-                assert(tail =~= seq![a_last]);
-                reveal_with_fuel(Seq::fold_left, 2);
-                let lid = s1.fold_left(id, f);
-                let lx = s1.fold_left(x, f);
-                lemma_monoid_fold_left(s1, f, id, x);
-
-                assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
-            }
-        }
-
-
-    pub(crate) proof fn lemma_prefix_fold_matching<T>(
-        f1: spec_fn(int) -> T, f2: spec_fn(int) -> T,
-        spec_f: spec_fn(T, T) -> T, id: T, n: int,
-    )
-            requires
-                0 <= n,
-                forall|k: int| 0 <= k < n ==> #[trigger] f1(k) == f2(k),
-            ensures
-                spec_prefix_fold(f1, spec_f, id, n) == spec_prefix_fold(f2, spec_f, id, n),
-            decreases n,
-        {
-            if n > 0 {
-                lemma_prefix_fold_matching(f1, f2, spec_f, id, n - 1);
-            }
-        }
-
-    /// Monoid split: prefix_fold(a, f, id, m+k) = f(prefix_fold(a, f, id, m), prefix_fold(shifted_a, f, id, k)).
-    pub(crate) proof fn lemma_prefix_fold_split<T>(
-        a_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, m: int, k: int,
-    )
-            requires
-                spec_monoid(spec_f, id),
-                m >= 0, k >= 0,
-            ensures
-                spec_prefix_fold(a_fn, spec_f, id, m + k)
-                    == spec_f(
-                        spec_prefix_fold(a_fn, spec_f, id, m),
-                        spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k),
-                    ),
-            decreases k,
-        {
-            if k == 0 {
-                // RHS = f(prefix_fold(m), id) = prefix_fold(m) by right identity.
-            } else {
-                lemma_prefix_fold_split(a_fn, spec_f, id, m, k - 1);
-                // prefix_fold(a, f, id, m + k)
-                // = f(prefix_fold(a, f, id, m + k - 1), a(m + k - 1))
-                // = f(f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k-1)), a(m + k - 1))   [by IH]
-                // = f(prefix_fold(a, f, id, m), f(prefix_fold(shifted, f, id, k-1), a(m + k - 1)))    [by assoc]
-                // = f(prefix_fold(a, f, id, m), prefix_fold(shifted, f, id, k))
-                // since shifted(k-1) = a(m + k - 1)
-                let left = spec_prefix_fold(a_fn, spec_f, id, m);
-                let right_prev = spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k - 1);
-                let elem = a_fn(m + k - 1);
-                assert(spec_prefix_fold(a_fn, spec_f, id, m + k) == spec_f(spec_f(left, right_prev), elem));
-                // shifted_a(k-1) == a_fn(m + (k-1)) == a_fn(m + k - 1) == elem
-                assert((|j: int| a_fn(m + j))(k - 1) == elem);
-                assert(spec_prefix_fold(|j: int| a_fn(m + j), spec_f, id, k) == spec_f(right_prev, elem));
-            }
-        }
-
-    /// Connect spec_prefix_fold to spec_backing_seq().take(n).fold_left(id, f).
-    pub(crate) proof fn lemma_prefix_fold_eq_fold_left<T>(
-        s: Seq<T>, seq_fn: spec_fn(int) -> T, spec_f: spec_fn(T, T) -> T, id: T, n: int,
-    )
-            requires
-                0 <= n <= s.len(),
-                forall|k: int| 0 <= k < s.len() ==> #[trigger] seq_fn(k) == s[k],
-            ensures
-                spec_prefix_fold(seq_fn, spec_f, id, n) == s.take(n).fold_left(id, spec_f),
-            decreases n,
-        {
-            reveal(Seq::fold_left);
-            if n > 0 {
-                lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
-                assert(s.take(n).drop_last() =~= s.take(n - 1));
-            }
-        }
 
     /// D&C reduce on O(1) slices. Called by trait reduce for non-empty sequences.
     pub(crate) fn reduce_dc<T: Eq + Clone + Send + Sync + 'static, F: MtReduceFn<T>>(
@@ -1469,38 +1513,6 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
-    // 9c. proof fns — flatten
-
-    /// Split lemma: spec_sum_inner_lens over a contiguous window equals the
-    /// sum of the left half plus the right half.
-    pub(crate) proof fn lemma_sum_inner_lens_split<T>(
-        a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
-        mid: usize,
-    )
-        requires
-            mid <= a.len,
-            a.start + a.len <= (*a.data)@.len(),
-            a.start + a.len <= usize::MAX,
-        ensures ({
-            let left = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: a.start, len: mid,
-            };
-            let right = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: (a.start + mid) as usize, len: (a.len - mid) as usize,
-            };
-            spec_sum_inner_lens(a) == spec_sum_inner_lens(&left) + spec_sum_inner_lens(&right)
-        }),
-        decreases mid,
-    {
-        if mid > 0 {
-            // Peel first element from both a and left.
-            let a_rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
-                data: a.data, start: (a.start + 1) as usize, len: (a.len - 1) as usize,
-            };
-            lemma_sum_inner_lens_split(&a_rest, (mid - 1) as usize);
-        }
-    }
-
     // 9d. free functions — flatten
 
     /// Parallel flatten via D&C on O(1) slices.
@@ -1635,7 +1647,8 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphSliceIter<'a, T> {
@@ -1749,6 +1762,9 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
+    //		Section 12. derive impls in verus!
+
+
     // 9c. PartialEqSpecImpl — struct ArraySeqMtEphSliceS
 
     #[cfg(verus_keep_ghost)]
@@ -1757,7 +1773,6 @@ pub mod ArraySeqMtEphSlice {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    // 12. derive impls in verus! — struct ArraySeqMtEphSliceS
 
     impl<T: Clone> Clone for ArraySeqMtEphSliceS<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1788,7 +1803,29 @@ pub mod ArraySeqMtEphSlice {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! ArraySeqMtEphSliceSLit {
+        () => {
+            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
+                Vec::new(),
+            )
+        };
+        ($x:expr; $n:expr) => {
+            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
+                vec![$x; $n],
+            )
+        };
+        ($($x:expr),* $(,)?) => {
+            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
+                vec![$($x),*],
+            )
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1835,24 +1872,5 @@ pub mod ArraySeqMtEphSlice {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "ArraySeqMtEphSliceGhostIterator")
         }
-    }
-
-    #[macro_export]
-    macro_rules! ArraySeqMtEphSliceSLit {
-        () => {
-            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
-                Vec::new(),
-            )
-        };
-        ($x:expr; $n:expr) => {
-            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
-                vec![$x; $n],
-            )
-        };
-        ($($x:expr),* $(,)?) => {
-            $crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS::from_vec(
-                vec![$($x),*],
-            )
-        };
     }
 }

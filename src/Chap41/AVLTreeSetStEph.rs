@@ -8,21 +8,27 @@
 //! BSTParaStEph (BST with recursive split/join, O(log n) operations).
 //! Default names are now recursive (via BST); `_iter` variants delegate to defaults.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod AVLTreeSetStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -39,9 +45,11 @@ pub mod AVLTreeSetStEph {
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -51,7 +59,8 @@ broadcast use {
     vstd::laws_cmp::group_laws_cmp,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetStEph<T: StT + Ord> {
@@ -60,19 +69,16 @@ broadcast use {
 
     pub type AVLTreeSetS<T> = AVLTreeSetStEph<T>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
 
-    impl<T: StT + Ord> AVLTreeSetStEph<T> {
-        /// Backward-compatible spec alias for view.
-        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> { self@ }
-    }
+    //		Section 6. spec fns
 
-    // 6. spec fns
 
     /// In-order traversal returning actual values (Seq<T>), not views.
     /// Kept for compatibility with external callers (uses AVLTreeSeqStEph Link<T>).
@@ -91,7 +97,8 @@ broadcast use {
             ==> (#[trigger] TotalOrder::le(s[i], s[j]))
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Under wf, cached size equals inorder length, both < usize::MAX.
     /// Kept for from_seq capacity proof (operates on AVLTreeSeqStEphS input).
@@ -184,7 +191,8 @@ broadcast use {
         };
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AVLTreeSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_avltreesetsteph_wf(&self) -> bool;
@@ -505,7 +513,14 @@ broadcast use {
                 combined.spec_elements_sorted();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    impl<T: StT + Ord> AVLTreeSetStEph<T> {
+        /// Backward-compatible spec alias for view.
+        pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> { self@ }
+    }
+
 
     impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
         open spec fn spec_avltreesetsteph_wf(&self) -> bool {
@@ -756,7 +771,6 @@ broadcast use {
         }
     }
 
-    // 9. impls (TotalOrder-gated trait impl)
 
     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTotalOrderTrait<T> for AVLTreeSetStEph<T> {
         /// With BST backing, sorted is always true by construction.
@@ -810,7 +824,25 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
+        open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn clone_wf(&self) -> (cloned: Self) {
+            let r = AVLTreeSetStEph { tree: self.tree.clone() };
+            proof {
+                assert(r.tree@ == self.tree@);
+                assert(obeys_feq_full_trigger::<T>());
+                assert(r.tree@.finite());
+                assert(r.tree.spec_bstparasteph_wf());
+                assert(r@.len() < usize::MAX as nat);
+            }
+            r
+        }
+    }
+
+    //		Section 12. derive impls in verus!
+
 
     impl<T: StT + Ord> Default for AVLTreeSetStEph<T> {
         fn default() -> Self { Self::empty() }
@@ -847,27 +879,10 @@ broadcast use {
             AVLTreeSetStEph { tree: self.tree.clone() }
         }
     }
-
-    impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
-        open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn clone_wf(&self) -> (cloned: Self) {
-            let r = AVLTreeSetStEph { tree: self.tree.clone() };
-            proof {
-                assert(r.tree@ == self.tree@);
-                assert(obeys_feq_full_trigger::<T>());
-                assert(r.tree@.finite());
-                assert(r.tree.spec_bstparasteph_wf());
-                assert(r@.len() < usize::MAX as nat);
-            }
-            r
-        }
-    }
-
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! AVLTreeSetStEphLit {
@@ -881,7 +896,7 @@ broadcast use {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StT + Ord> fmt::Debug for AVLTreeSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

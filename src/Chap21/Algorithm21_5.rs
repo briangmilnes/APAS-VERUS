@@ -4,38 +4,44 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Algorithm21_5 {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap21::Exercise21_8::Exercise21_8::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     pub type T = usize;
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Algorithm 21.5 (Brute Force Solution to the Primes Problem)
     /// primesBF n = { i in 2..n : isPrime(i) }

@@ -3,21 +3,39 @@
 //! Parametric single-threaded BST built around a joinMid interface.
 //! Coarse lock (vstd RwLock) for thread-safe access.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 6d. spec fns
+//	Section 7d. proof fns/broadcast groups
+//	Section 8d. traits
+//	Section 9d. impls
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 12c. derive impls in verus!
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod BSTParaStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt::{Debug, Display, Formatter};
@@ -38,63 +56,26 @@ pub mod BSTParaStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::set::group_set_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct BSTParaStEphInv<T: StT + Ord> {
         pub ghost contents: Set<<T as View>::V>,
     }
 
-    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaStEphInv<T> {
-        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
-            match v {
-                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
-                Option::Some(box_node) => {
-                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
-                    && (*box_node).size >= 1
-                    && (*box_node).left@.finite() && (*box_node).right@.finite()
-                    && (*box_node).left@.disjoint((*box_node).right@)
-                    && !(*box_node).left@.contains((*box_node).key@)
-                    && !(*box_node).right@.contains((*box_node).key@)
-                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
-                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
-                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
-                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
-                }
-            }
-        }
-    }
+    //		Section 9a. impls
 
-    #[verifier::reject_recursive_types(T)]
-    #[derive(Debug, Default)]
-    pub enum Exposed<T: StT + Ord> {
-        #[default]
-        Leaf,
-        Node(ParamBST<T>, T, ParamBST<T>),
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    #[derive(Debug)]
-    pub struct NodeInner<T: StT + Ord> {
-        pub key: T,
-        pub size: usize,
-        pub left: ParamBST<T>,
-        pub right: ParamBST<T>,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct ParamBST<T: StT + Ord> {
-        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>,
-        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
-    }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty BST.
     fn new_param_bst<T: StT + Ord>(
@@ -115,45 +96,6 @@ pub mod BSTParaStEph {
         }
     }
 
-    // 5. view impls
-
-    impl<T: StT + Ord> ParamBST<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            self.ghost_locked_root@.finite()
-            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
-            && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
-                ==> exists|t: T| t@ == v)
-        }
-
-        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
-            self.ghost_locked_root@
-        }
-    }
-
-    impl<T: StT + Ord> View for ParamBST<T> {
-        type V = Set<<T as View>::V>;
-        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
-    }
-
-    impl<T: StT + Ord> View for Exposed<T> {
-        type V = ();
-        open spec fn view(&self) -> () { () }
-    }
-
-    impl<T: StT + Ord> View for NodeInner<T> {
-        type V = ();
-        open spec fn view(&self) -> () { () }
-    }
-
-    // 6. spec fns
-
-    /// View-consistent ordering: elements with the same view compare Equal.
-    pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
-        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
-    }
-
-    // 7. proof fns
 
     /// Exposes the BST type invariant: every view in the set has a backing element.
     /// Enables callers to instantiate forall-over-T quantifiers from view-level containment.
@@ -174,6 +116,179 @@ pub mod BSTParaStEph {
         assert(cloned(*x, c));  // strictly_cloned(*x,c) from call_ensures; triggers axiom
         c
     }
+
+    // 10. free fns
+
+    /// Algorithm 38.9 — sequential filter recursive helper (takes &F for recursion).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
+        tree: &ParamBST<T>,
+        predicate: &F,
+        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+    ) -> (filtered: ParamBST<T>)
+        requires
+            tree@.finite(),
+            forall|t: &T| predicate.requires((t,)),
+            forall|x: T, keep: bool|
+                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+        ensures
+            filtered@.subset_of(tree@),
+            filtered@.finite(),
+            forall|v: T::V| #[trigger] filtered@.contains(v)
+                ==> tree@.contains(v) && spec_pred(v),
+            forall|v: T::V| tree@.contains(v) && spec_pred(v)
+                ==> #[trigger] filtered@.contains(v),
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            | Exposed::Leaf => ParamBST::new(),
+            | Exposed::Node(left, key, right) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
+                let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
+                let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
+                if predicate(&key) {
+                    proof {
+                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
+                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                        // Disjointness: subsets of disjoint sets.
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
+                            if left_filtered@.contains(x) && right_filtered@.contains(x) {
+                                assert(left@.contains(x) && right@.contains(x));
+                            }
+                        };
+                        // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
+                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {
+                            assert(left@.contains(t@));
+                        };
+                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {
+                            assert(right@.contains(t@));
+                        };
+                    }
+                    ParamBST::join_m(left_filtered, key, right_filtered)
+                } else {
+                    proof {
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
+                            if right_filtered@.contains(x) { assert(right@.contains(x)); }
+                        };
+                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
+                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
+                        // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
+                        assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
+                            left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
+                            s.cmp_spec(&o) == Less by {
+                            assert(left@.contains(s@));
+                            assert(right@.contains(o@));
+                            lemma_cmp_antisymmetry(o, key);
+                            lemma_cmp_transitivity(s, key, o);
+                        };
+                    }
+                    left_filtered.join_pair(right_filtered)
+                }
+            }
+        }
+    }
+
+    /// Algorithm 38.10 — sequential reduce recursive helper (takes &F for recursion).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(
+        tree: &ParamBST<T>,
+        op: &F,
+        identity: T,
+    ) -> (reduced: T)
+        requires
+            tree@.finite(),
+            forall|a: T, b: T| op.requires((a, b)),
+        ensures tree@.len() == 0 ==> reduced@ == identity@,
+        decreases tree@.len(),
+    {
+        match tree.expose() {
+            | Exposed::Leaf => identity,
+            | Exposed::Node(left, key, right) => {
+                proof {
+                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    assert(!left@.union(right@).contains(key@));
+                    assert(tree@.len() == left@.len() + right@.len() + 1);
+                }
+                let left_acc = reduce_inner(&left, op, identity.clone());
+                let right_acc = reduce_inner(&right, op, identity);
+                let right_with_key = op(key, right_acc);
+                op(left_acc, right_with_key)
+            }
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Debug, Default)]
+    pub enum Exposed<T: StT + Ord> {
+        #[default]
+        Leaf,
+        Node(ParamBST<T>, T, ParamBST<T>),
+    }
+
+    //		Section 5b. view impls
+
+
+    impl<T: StT + Ord> View for Exposed<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    //		Section 4c. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    #[derive(Debug)]
+    pub struct NodeInner<T: StT + Ord> {
+        pub key: T,
+        pub size: usize,
+        pub left: ParamBST<T>,
+        pub right: ParamBST<T>,
+    }
+
+    //		Section 5c. view impls
+
+
+    impl<T: StT + Ord> View for NodeInner<T> {
+        type V = ();
+        open spec fn view(&self) -> () { () }
+    }
+
+    //		Section 4d. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct ParamBST<T: StT + Ord> {
+        pub(crate) locked_root: RwLock<Option<Box<NodeInner<T>>>, BSTParaStEphInv<T>>,
+        pub(crate) ghost_locked_root: Ghost<Set<<T as View>::V>>,
+    }
+
+    //		Section 5d. view impls
+
+
+    impl<T: StT + Ord> View for ParamBST<T> {
+        type V = Set<<T as View>::V>;
+        open spec fn view(&self) -> Set<<T as View>::V> { self.spec_ghost_locked_root() }
+    }
+
+    //		Section 6d. spec fns
+
+
+    /// View-consistent ordering: elements with the same view compare Equal.
+    pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+    }
+
+    //		Section 7d. proof fns/broadcast groups
+
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
@@ -252,7 +367,8 @@ pub mod BSTParaStEph {
         assert(b@ == c@);
     }
 
-    // 8. traits
+    //		Section 8d. traits
+
 
     pub trait ParamBSTTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_bstparasteph_wf(&self) -> bool;
@@ -471,7 +587,23 @@ pub mod BSTParaStEph {
                 seq@.no_duplicates();
     }
 
-    // 9. impls
+    //		Section 9d. impls
+
+
+    impl<T: StT + Ord> ParamBST<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_root@.finite()
+            && self.ghost_locked_root@ =~= self.locked_root.pred().contents
+            && (forall|v: <T as View>::V| self.ghost_locked_root@.contains(v)
+                ==> exists|t: T| t@ == v)
+        }
+
+        pub closed spec fn spec_ghost_locked_root(self) -> Set<<T as View>::V> {
+            self.ghost_locked_root@
+        }
+    }
+
 
     impl<T: StT + Ord> ParamBSTTrait<T> for ParamBST<T> {
         open spec fn spec_bstparasteph_wf(&self) -> bool {
@@ -1633,113 +1765,31 @@ pub mod BSTParaStEph {
         }
     }
 
-    // 10. free fns
+    //		Section 11a. top level coarse locking
 
-    /// Algorithm 38.9 — sequential filter recursive helper (takes &F for recursion).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
-    fn filter_inner<T: StT + Ord, F: Fn(&T) -> bool>(
-        tree: &ParamBST<T>,
-        predicate: &F,
-        Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-    ) -> (filtered: ParamBST<T>)
-        requires
-            tree@.finite(),
-            forall|t: &T| predicate.requires((t,)),
-            forall|x: T, keep: bool|
-                predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-        ensures
-            filtered@.subset_of(tree@),
-            filtered@.finite(),
-            forall|v: T::V| #[trigger] filtered@.contains(v)
-                ==> tree@.contains(v) && spec_pred(v),
-            forall|v: T::V| tree@.contains(v) && spec_pred(v)
-                ==> #[trigger] filtered@.contains(v),
-        decreases tree@.len(),
-    {
-        match tree.expose() {
-            | Exposed::Leaf => ParamBST::new(),
-            | Exposed::Node(left, key, right) => {
-                proof {
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(!left@.union(right@).contains(key@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
-                }
-                let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
-                let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
-                if predicate(&key) {
-                    proof {
-                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
-                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
-                        // Disjointness: subsets of disjoint sets.
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
-                            if left_filtered@.contains(x) && right_filtered@.contains(x) {
-                                assert(left@.contains(x) && right@.contains(x));
-                            }
-                        };
-                        // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
-                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {
-                            assert(left@.contains(t@));
-                        };
-                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {
-                            assert(right@.contains(t@));
-                        };
-                    }
-                    ParamBST::join_m(left_filtered, key, right_filtered)
-                } else {
-                    proof {
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
-                            if right_filtered@.contains(x) { assert(right@.contains(x)); }
-                        };
-                        vstd::set_lib::lemma_len_subset(left_filtered@, left@);
-                        vstd::set_lib::lemma_len_subset(right_filtered@, right@);
-                        // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
-                        assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
-                            left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
-                            s.cmp_spec(&o) == Less by {
-                            assert(left@.contains(s@));
-                            assert(right@.contains(o@));
-                            lemma_cmp_antisymmetry(o, key);
-                            lemma_cmp_transitivity(s, key, o);
-                        };
-                    }
-                    left_filtered.join_pair(right_filtered)
+
+    impl<T: StT + Ord> RwLockPredicate<Option<Box<NodeInner<T>>>> for BSTParaStEphInv<T> {
+        open spec fn inv(self, v: Option<Box<NodeInner<T>>>) -> bool {
+            match v {
+                Option::None => self.contents =~= Set::<<T as View>::V>::empty(),
+                Option::Some(box_node) => {
+                    self.contents =~= (*box_node).left@.union((*box_node).right@).insert((*box_node).key@)
+                    && (*box_node).size >= 1
+                    && (*box_node).left@.finite() && (*box_node).right@.finite()
+                    && (*box_node).left@.disjoint((*box_node).right@)
+                    && !(*box_node).left@.contains((*box_node).key@)
+                    && !(*box_node).right@.contains((*box_node).key@)
+                    && (*box_node).left@.len() + (*box_node).right@.len() < usize::MAX as nat
+                    && (*box_node).size as nat == (*box_node).left@.len() + (*box_node).right@.len() + 1
+                    && (forall|t: T| (#[trigger] (*box_node).left@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Less)
+                    && (forall|t: T| (#[trigger] (*box_node).right@.contains(t@)) ==> t.cmp_spec(&(*box_node).key) == Greater)
                 }
             }
         }
     }
 
-    /// Algorithm 38.10 — sequential reduce recursive helper (takes &F for recursion).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn reduce_inner<T: StT + Ord, F: Fn(T, T) -> T>(
-        tree: &ParamBST<T>,
-        op: &F,
-        identity: T,
-    ) -> (reduced: T)
-        requires
-            tree@.finite(),
-            forall|a: T, b: T| op.requires((a, b)),
-        ensures tree@.len() == 0 ==> reduced@ == identity@,
-        decreases tree@.len(),
-    {
-        match tree.expose() {
-            | Exposed::Leaf => identity,
-            | Exposed::Node(left, key, right) => {
-                proof {
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(!left@.union(right@).contains(key@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
-                }
-                let left_acc = reduce_inner(&left, op, identity.clone());
-                let right_acc = reduce_inner(&right, op, identity);
-                let right_with_key = op(key, right_acc);
-                op(left_acc, right_with_key)
-            }
-        }
-    }
+    //		Section 12b. derive impls in verus!
 
-    // 11. derive impls in verus!
 
     impl<T: StT + Ord + Clone> Clone for Exposed<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1751,6 +1801,9 @@ pub mod BSTParaStEph {
             }
         }
     }
+
+    //		Section 12c. derive impls in verus!
+
 
     impl<T: StT + Ord + Clone> Clone for NodeInner<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1764,6 +1817,9 @@ pub mod BSTParaStEph {
             }
         }
     }
+
+    //		Section 12d. derive impls in verus!
+
 
     impl<T: StT + Ord> Clone for ParamBST<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1788,7 +1844,8 @@ pub mod BSTParaStEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! ParamBSTLit {
@@ -1803,13 +1860,7 @@ pub mod BSTParaStEph {
         }};
     }
 
-    // 13. derive impls outside verus!
-
-    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBST<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("ParamBST").finish()
-        }
-    }
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StT + Ord> Debug for BSTParaStEphInv<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -1823,6 +1874,8 @@ pub mod BSTParaStEph {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl<T: StT + Ord + Display> Display for Exposed<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
             match self {
@@ -1832,9 +1885,19 @@ pub mod BSTParaStEph {
         }
     }
 
+    //		Section 14c. derive impls outside verus!
+
     impl<T: StT + Ord + Display> Display for NodeInner<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
             write!(f, "NodeInner(key={}, size={})", self.key, self.size)
+        }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
+    impl<T: StT + Ord + std::fmt::Debug> std::fmt::Debug for ParamBST<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("ParamBST").finish()
         }
     }
 

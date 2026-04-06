@@ -5,34 +5,39 @@
 //! - Fully verified: no proof holes.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Exercise21_8 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::multiset::multiset::spec_filter_len;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap18::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use vstd::std_specs::vec::group_vec_axioms;
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     // Spec: n is prime iff n >= 2 and no i in [2, sqrt(n)] divides n.
     pub open spec fn spec_is_prime(n: int) -> bool {
@@ -48,7 +53,8 @@ pub mod Exercise21_8 {
         else { spec_divisor_count(n, from + 1, to) }
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     // Lemma: if divisor count is 0 in [from, to), then no element in that range divides n.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
@@ -158,7 +164,8 @@ pub mod Exercise21_8 {
         }
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// - Alg Analysis: APAS (Ch21 Alg 21.4): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)

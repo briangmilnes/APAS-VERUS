@@ -5,24 +5,27 @@
 //! Each applies its pivot strategy at every recursive level.
 //! Parallel D&C three-way partition via join; parallel recursion via ParaPair!.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 6. spec fns
-// 7. proof fns
-// 8. traits
-// 9. impls
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-// 1. module
+//		Section 1. module
 
 pub mod QuickSortMtEphSlice {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
     use crate::Types::Types::Pair;
@@ -34,7 +37,8 @@ pub mod QuickSortMtEphSlice {
     use vstd::multiset::Multiset;
     use vstd::relations::*;
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -44,7 +48,8 @@ pub mod QuickSortMtEphSlice {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec-level leq closure for sort_by and sorted_by.
     pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
@@ -69,7 +74,8 @@ pub mod QuickSortMtEphSlice {
         }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
     proof fn lemma_total_ordering<T: TotalOrder>()
@@ -203,6 +209,88 @@ pub mod QuickSortMtEphSlice {
             assert(elements(a)[i] == a.spec_index(i));
         };
     }
+
+    //		Section 8. traits
+
+
+    pub trait QuickSortMtEphSliceTrait<T: TotalOrder + Eq + Clone> {
+        /// Quicksort with first-element pivot. ParaPair! recursion.
+        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition via join + parallel recursion via ParaPair
+        fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
+            requires
+                old(a).spec_arrayseqmtephslice_wf(),
+                old(a).spec_len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures
+                a.spec_arrayseqmtephslice_wf(),
+                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
+
+        /// Quicksort with median-of-three pivot. ParaPair! recursion.
+        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
+        fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
+            requires
+                old(a).spec_arrayseqmtephslice_wf(),
+                old(a).spec_len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures
+                a.spec_arrayseqmtephslice_wf(),
+                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
+
+        /// Quicksort with random pivot. ParaPair! recursion.
+        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
+        fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
+            requires
+                old(a).spec_arrayseqmtephslice_wf(),
+                old(a).spec_len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures
+                a.spec_arrayseqmtephslice_wf(),
+                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
+                a.spec_len() == old(a).spec_len(),
+            decreases old(a).spec_len();
+
+        /// Compute the median of three values.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
+        fn median_of_three(a: T, b: T, c: T) -> (median: T)
+            ensures
+                median == a || median == b || median == c,
+                median == spec_median_of_three(a, b, c);
+
+        /// Returns index of median among a[0], a[n/2], a[n-1].
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
+        fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize)
+            requires
+                n >= 2, n == a.spec_len(),
+                a.spec_arrayseqmtephslice_wf(),
+                obeys_feq_clone::<T>(),
+            ensures
+                idx < n,
+                idx == 0 || idx == n / 2 || idx == n - 1,
+                a.spec_index(idx as int) == spec_median_of_three(
+                    a.spec_index(0), a.spec_index((n / 2) as int), a.spec_index((n - 1) as int));
+
+        /// Concatenate three Vecs.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three Vecs into one.
+        fn concat_three_vecs(
+            left: &Vec<T>,
+            mid: &Vec<T>,
+            right: &Vec<T>,
+        ) -> (out: Vec<T>)
+            requires
+                left@.len() + mid@.len() + right@.len() <= usize::MAX,
+                obeys_feq_clone::<T>(),
+            ensures out@ =~= left@ + mid@ + right@;
+    }
+
+    //		Section 9. impls
+
 
     /// Append all elements of `b` onto the end of `a`.
     fn append_vec<T: Eq + Clone>(a: &mut Vec<T>, b: &Vec<T>)
@@ -390,85 +478,6 @@ pub mod QuickSortMtEphSlice {
         }
     }
 
-    // 8. traits
-
-    pub trait QuickSortMtEphSliceTrait<T: TotalOrder + Eq + Clone> {
-        /// Quicksort with first-element pivot. ParaPair! recursion.
-        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition via join + parallel recursion via ParaPair
-        fn quick_sort_first(a: &mut ArraySeqMtEphSliceS<T>)
-            requires
-                old(a).spec_arrayseqmtephslice_wf(),
-                old(a).spec_len() <= usize::MAX,
-                obeys_feq_clone::<T>(),
-            ensures
-                a.spec_arrayseqmtephslice_wf(),
-                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
-                a.spec_len() == old(a).spec_len(),
-            decreases old(a).spec_len();
-
-        /// Quicksort with median-of-three pivot. ParaPair! recursion.
-        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(lg^2 n) — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
-        fn quick_sort_median3(a: &mut ArraySeqMtEphSliceS<T>)
-            requires
-                old(a).spec_arrayseqmtephslice_wf(),
-                old(a).spec_len() <= usize::MAX,
-                obeys_feq_clone::<T>(),
-            ensures
-                a.spec_arrayseqmtephslice_wf(),
-                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
-                a.spec_len() == old(a).spec_len(),
-            decreases old(a).spec_len();
-
-        /// Quicksort with random pivot. ParaPair! recursion.
-        /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per level + parallel recursion via ParaPair
-        fn quick_sort_random(a: &mut ArraySeqMtEphSliceS<T>)
-            requires
-                old(a).spec_arrayseqmtephslice_wf(),
-                old(a).spec_len() <= usize::MAX,
-                obeys_feq_clone::<T>(),
-            ensures
-                a.spec_arrayseqmtephslice_wf(),
-                elements(*a) =~= elements(*old(a)).sort_by(spec_leq::<T>()),
-                a.spec_len() == old(a).spec_len(),
-            decreases old(a).spec_len();
-
-        /// Compute the median of three values.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.
-        fn median_of_three(a: T, b: T, c: T) -> (median: T)
-            ensures
-                median == a || median == b || median == c,
-                median == spec_median_of_three(a, b, c);
-
-        /// Returns index of median among a[0], a[n/2], a[n-1].
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three element reads + median comparison.
-        fn median3_pivot_idx(a: &ArraySeqMtEphSliceS<T>, n: usize) -> (idx: usize)
-            requires
-                n >= 2, n == a.spec_len(),
-                a.spec_arrayseqmtephslice_wf(),
-                obeys_feq_clone::<T>(),
-            ensures
-                idx < n,
-                idx == 0 || idx == n / 2 || idx == n - 1,
-                a.spec_index(idx as int) == spec_median_of_three(
-                    a.spec_index(0), a.spec_index((n / 2) as int), a.spec_index((n - 1) as int));
-
-        /// Concatenate three Vecs.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies three Vecs into one.
-        fn concat_three_vecs(
-            left: &Vec<T>,
-            mid: &Vec<T>,
-            right: &Vec<T>,
-        ) -> (out: Vec<T>)
-            requires
-                left@.len() + mid@.len() + right@.len() <= usize::MAX,
-                obeys_feq_clone::<T>(),
-            ensures out@ =~= left@ + mid@ + right@;
-    }
-
-    // 9. impls
 
     impl<T: TotalOrder + Eq + Clone + Send + Sync + 'static> QuickSortMtEphSliceTrait<T>
         for ArraySeqMtEphSliceS<T>

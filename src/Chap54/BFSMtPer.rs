@@ -5,36 +5,85 @@
 //! Algorithm 54.5: distances. Algorithm 54.6: shortest-path tree + BFS-order iteration.
 //! Work: O(|V| + |E|), Span: O(d·lg n) where d is diameter.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BFSMtPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
+
     pub type T<N> = ArraySeqMtPerS<ArraySeqMtPerS<N>>;
 
     pub const UNREACHABLE: usize = usize::MAX;
     pub const NO_PARENT: usize = usize::MAX;
+
+    //		Section 4a. type definitions
+
 
     pub struct BFSTreeS {
         pub parents: ArraySeqMtPerS<usize>,
         pub order: ArraySeqMtPerS<usize>,
     }
 
+    //		Section 9a. impls
+
+
+    impl BFSTreeMtPerTrait for BFSTreeS {
+        open spec fn spec_order(&self) -> ArraySeqMtPerS<usize> {
+            self.order
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>) {
+            &self.order
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>) {
+            let n = self.order.length();
+            ArraySeqMtPerS::tabulate(
+                &|i: usize| -> (r: usize)
+                    requires i < n, n == self.order.spec_len()
+                    ensures r == self.order.spec_index((n - 1 - i) as int)
+                { *self.order.nth(n - 1 - i) },
+                n,
+            )
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
     pub struct BFSMtPer;
 
-    // 6. spec fns
+    //		Section 6b. spec fns
+
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
     pub open spec fn spec_bfsmtper_wf(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> bool {
@@ -55,7 +104,8 @@ pub mod BFSMtPer {
             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
-    // 7. proof fns
+    //		Section 7b. proof fns/broadcast groups
+
 
     proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqMtPerS<usize>, n: int)
         requires
@@ -158,60 +208,6 @@ pub mod BFSMtPer {
         }
     }
 
-    // Builds an owned copy of the distances array with proven spec equality.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — tabulate copies all elements.
-    fn copy_distances(distances: &ArraySeqMtPerS<usize>) -> (copied: ArraySeqMtPerS<usize>)
-        requires distances.spec_len() <= usize::MAX,
-        ensures
-            copied.spec_len() == distances.spec_len(),
-            forall|i: int| 0 <= i < distances.spec_len() ==>
-                #[trigger] copied.spec_index(i) == distances.spec_index(i),
-    {
-        let n = distances.length();
-        ArraySeqMtPerS::tabulate(
-            &|idx: usize| -> (r: usize)
-                requires idx < n, n == distances.spec_len()
-                ensures r == distances.spec_index(idx as int)
-            { *distances.nth(idx) },
-            n,
-        )
-    }
-
-    // Builds an owned copy of the graph with proven spec equality.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — deep copies all adjacency lists.
-    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<usize>>)
-        requires graph.spec_len() <= usize::MAX,
-        ensures
-            copied.spec_len() == graph.spec_len(),
-            forall|u: int| 0 <= u < graph.spec_len() ==>
-                #[trigger] copied.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
-            forall|u: int, i: int|
-                0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>
-                #[trigger] copied.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
-    {
-        let n = graph.length();
-        ArraySeqMtPerS::tabulate(
-            &|u_idx: usize| -> (r: ArraySeqMtPerS<usize>)
-                requires u_idx < n, n == graph.spec_len()
-                ensures
-                    r.spec_len() == graph.spec_index(u_idx as int).spec_len(),
-                    forall|k: int| 0 <= k < r.spec_len() ==>
-                        #[trigger] r.spec_index(k) == graph.spec_index(u_idx as int).spec_index(k),
-            {
-                let adj = graph.nth(u_idx);
-                let adj_len = adj.length();
-                ArraySeqMtPerS::tabulate(
-                    &|k: usize| -> (r: usize)
-                        requires k < adj_len, adj_len == adj.spec_len()
-                        ensures r == adj.spec_index(k as int)
-                    { *adj.nth(k) },
-                    adj_len,
-                )
-            },
-            n,
-        )
-    }
-
     // Proves that spec_bfsmtper_wf holds for a graph copy with matching spec values.
     proof fn lemma_copy_preserves_wf(
         original: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>,
@@ -260,7 +256,9 @@ pub mod BFSMtPer {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
+
     pub trait BFSTreeMtPerTrait {
         spec fn spec_order(&self) -> ArraySeqMtPerS<usize>;
 
@@ -327,7 +325,63 @@ pub mod BFSMtPer {
         ;
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
+
+    // Builds an owned copy of the distances array with proven spec equality.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|) — tabulate copies all elements.
+    fn copy_distances(distances: &ArraySeqMtPerS<usize>) -> (copied: ArraySeqMtPerS<usize>)
+        requires distances.spec_len() <= usize::MAX,
+        ensures
+            copied.spec_len() == distances.spec_len(),
+            forall|i: int| 0 <= i < distances.spec_len() ==>
+                #[trigger] copied.spec_index(i) == distances.spec_index(i),
+    {
+        let n = distances.length();
+        ArraySeqMtPerS::tabulate(
+            &|idx: usize| -> (r: usize)
+                requires idx < n, n == distances.spec_len()
+                ensures r == distances.spec_index(idx as int)
+            { *distances.nth(idx) },
+            n,
+        )
+    }
+
+    // Builds an owned copy of the graph with proven spec equality.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — deep copies all adjacency lists.
+    fn copy_graph(graph: &ArraySeqMtPerS<ArraySeqMtPerS<usize>>) -> (copied: ArraySeqMtPerS<ArraySeqMtPerS<usize>>)
+        requires graph.spec_len() <= usize::MAX,
+        ensures
+            copied.spec_len() == graph.spec_len(),
+            forall|u: int| 0 <= u < graph.spec_len() ==>
+                #[trigger] copied.spec_index(u).spec_len() == graph.spec_index(u).spec_len(),
+            forall|u: int, i: int|
+                0 <= u < graph.spec_len() && 0 <= i < graph.spec_index(u).spec_len() ==>
+                #[trigger] copied.spec_index(u).spec_index(i) == graph.spec_index(u).spec_index(i),
+    {
+        let n = graph.length();
+        ArraySeqMtPerS::tabulate(
+            &|u_idx: usize| -> (r: ArraySeqMtPerS<usize>)
+                requires u_idx < n, n == graph.spec_len()
+                ensures
+                    r.spec_len() == graph.spec_index(u_idx as int).spec_len(),
+                    forall|k: int| 0 <= k < r.spec_len() ==>
+                        #[trigger] r.spec_index(k) == graph.spec_index(u_idx as int).spec_index(k),
+            {
+                let adj = graph.nth(u_idx);
+                let adj_len = adj.length();
+                ArraySeqMtPerS::tabulate(
+                    &|k: usize| -> (r: usize)
+                        requires k < adj_len, adj_len == adj.spec_len()
+                        ensures r == adj.spec_index(k as int)
+                    { *adj.nth(k) },
+                    adj_len,
+                )
+            },
+            n,
+        )
+    }
+
 
     // Parallel frontier processing via fork-join divide-and-conquer.
     // Splits the frontier in half, processes each half in parallel via join().
@@ -901,33 +955,10 @@ pub mod BFSMtPer {
     }
 
     } // impl BFSMtPerTrait
-
-    impl BFSTreeMtPerTrait for BFSTreeS {
-        open spec fn spec_order(&self) -> ArraySeqMtPerS<usize> {
-            self.order
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
-        fn top_down_order(&self) -> (order: &ArraySeqMtPerS<usize>) {
-            &self.order
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
-        fn bottom_up_order(&self) -> (order: ArraySeqMtPerS<usize>) {
-            let n = self.order.length();
-            ArraySeqMtPerS::tabulate(
-                &|i: usize| -> (r: usize)
-                    requires i < n, n == self.order.spec_len()
-                    ensures r == self.order.spec_index((n - 1 - i) as int)
-                { *self.order.nth(n - 1 - i) },
-                n,
-            )
-        }
-    }
-
     } // verus!
 
-    // 14a. derive impls outside verus! — struct BFSTreeS
+    //		Section 14a. derive impls outside verus!
+
 
     impl std::fmt::Debug for BFSTreeS {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -944,7 +975,7 @@ pub mod BFSMtPer {
         }
     }
 
-    // 14b. derive impls outside verus! — struct BFSMtPer
+    //		Section 14b. derive impls outside verus!
 
     impl std::fmt::Debug for BFSMtPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

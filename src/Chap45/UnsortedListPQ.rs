@@ -3,19 +3,25 @@
 //! Chapter 45: Priority Queue implementation using Unsorted List
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
 
 pub mod UnsortedListPQ {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -29,9 +35,12 @@ pub mod UnsortedListPQ {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::multiset::group_multiset_axioms,
@@ -41,22 +50,30 @@ broadcast use {
     vstd::std_specs::vec::group_vec_axioms,
 };
 
-// 4. type definitions
+    //		Section 4. type definitions
+
+
         #[verifier::reject_recursive_types(T)]
         pub struct UnsortedListPQ<T: StT + Ord + TotalOrder> {
             pub elements: ArraySeqStPerS<T>,
         }
 
-// 5. view impls
+    //		Section 5. view impls
+
+
         impl<T: StT + Ord + TotalOrder> View for UnsortedListPQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
-// 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
+
         proof fn _unsorted_list_pq_verified() {}
 
-// 8. traits
+    //		Section 8. traits
+
+
         /// Meldable Priority Queue ADT (Data Type 45.1) using unsorted list.
         pub trait UnsortedListPQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_unsortedlistpq_wf(&self) -> bool;
@@ -187,7 +204,9 @@ broadcast use {
                     Self::spec_sorted(v@);
         }
 
-// 9. impls
+    //		Section 9. impls
+
+
         impl<T: StT + Ord + TotalOrder> UnsortedListPQTrait<T> for UnsortedListPQ<T> {
             open spec fn spec_unsortedlistpq_wf(&self) -> bool {
                 self@.len() <= usize::MAX as int
@@ -659,11 +678,13 @@ broadcast use {
             }
         }
 
+    //		Section 12. derive impls in verus!
+
+
         impl<T: StT + Ord + TotalOrder> Default for UnsortedListPQ<T> {
             fn default() -> Self { Self::empty() }
         }
 
-// 11. derive impls in verus!
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for UnsortedListPQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
@@ -699,7 +720,9 @@ broadcast use {
         impl<T: StT + Ord + TotalOrder> core::cmp::Eq for UnsortedListPQ<T> {}
     }
 
-// 12. macros
+    //		Section 13. macros
+
+
     #[macro_export]
     macro_rules! UnsortedListPQLit {
         () => {
@@ -714,7 +737,8 @@ broadcast use {
         }};
     }
 
-// 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for UnsortedListPQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("UnsortedListPQ").field("elements", &self.elements).finish()

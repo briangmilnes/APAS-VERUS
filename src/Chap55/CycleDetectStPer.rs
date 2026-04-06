@@ -4,7 +4,24 @@
 //! Detects cycles in directed graphs using ancestor tracking.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod CycleDetectStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -16,25 +33,24 @@ pub mod CycleDetectStPer {
     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::spec_in_path;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use vstd::seq::group_seq_axioms;
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+
+
     pub struct CycleDetectStPer;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Well-formed adjacency list for persistent graph representation.
     pub open spec fn spec_cycledetectstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> bool {
@@ -77,6 +93,9 @@ broadcast use vstd::seq::group_seq_axioms;
             && n >= prev_next
     }
 
+    //		Section 7. proof fns/broadcast groups
+
+
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
     proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
@@ -98,7 +117,6 @@ broadcast use vstd::seq::group_seq_axioms;
     {
     }
 
-    // 7. proof fns
 
     /// If a path has a repeated vertex, the graph (persistent) is not a DAG.
     proof fn lemma_cycle_not_dag_per(
@@ -248,7 +266,8 @@ broadcast use vstd::seq::group_seq_axioms;
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait CycleDetectStPerTrait {
         /// Detects if a directed graph contains a cycle (Algorithm 55.10)
@@ -262,7 +281,8 @@ broadcast use vstd::seq::group_seq_axioms;
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS cycle detection using Vec<bool> ancestor tracking.
     /// Ghost parameters: dfs_path for cycle witness, ord/next_time for completeness ordering.
@@ -706,7 +726,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for CycleDetectStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -12,23 +12,29 @@
 //! 3. exec functions
 
 //  Table of Contents
-//	1. module
-//	6. spec fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 
 pub mod MaxContigSubSumReducedMcsseStEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
-    verus! {
+    verus! 
+{
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     // ─── 2. spec definitions ───
 
@@ -41,8 +47,8 @@ pub mod MaxContigSubSumReducedMcsseStEph {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait MaxContigSubSumReducedMcsseTrait {
         /// Compute MCSS by enumerating all MCSSE instances (Algorithm 28.14).
@@ -58,8 +64,8 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     // ─── 3. exec functions ───
 

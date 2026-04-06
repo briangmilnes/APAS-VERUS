@@ -1,7 +1,20 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 3 insertion sort over mutable slices - Generic version using TotalOrder trait.
 //! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod InsertionSortStEph {
+
+
+    //		Section 2. imports
 
     use vstd::multiset::*;
     use vstd::prelude::*;
@@ -9,7 +22,11 @@ pub mod InsertionSortStEph {
     use crate::vstdplus::total_order::total_order::*;
     use core::cmp::Ordering;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
@@ -17,6 +34,9 @@ broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_seq_properties,
 };
+
+    //		Section 6. spec fns
+
 
 pub open spec fn sorted_prefix<T: TotalOrder>(v: &[T], i: int) -> bool {
     forall|k: int, l: int| 0 <= k < l < i ==> T::le(#[trigger] v[k], #[trigger] v[l])
@@ -30,6 +50,9 @@ pub open spec fn cross_sorted<T: TotalOrder>(v: Seq<T>, mid: int, hi: int) -> bo
 pub open spec fn is_sorted<T: TotalOrder>(v: &[T]) -> bool {
     forall|i: int, j: int| 0 <= i < j < v.len() ==> T::le(#[trigger] v[i], #[trigger] v[j])
 }
+
+    //		Section 9. impls
+
 
 /// - Alg Analysis: APAS (Ch03 Ex 3.1): Work O(n²), Span O(n²) — sequential insertion sort
 /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n²), Span O(n²) — matches APAS; iterative in-place variant, same cost as prose

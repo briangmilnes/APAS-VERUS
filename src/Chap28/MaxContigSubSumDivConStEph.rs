@@ -14,22 +14,31 @@
 //! 4. proof functions
 
 //  Table of Contents
-//	1. module
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 
 pub mod MaxContigSubSumDivConStEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -38,7 +47,8 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     // ─── 2. spec definitions ───
 
@@ -51,8 +61,8 @@ broadcast use {
         }
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
 
     // ─── 4. proof functions ───
 
@@ -141,8 +151,8 @@ broadcast use {
         };
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     /// Trait for divide-and-conquer MCSS.
     pub trait MaxContigSubSumDivConTrait {
@@ -159,8 +169,8 @@ broadcast use {
                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     // ─── 3. exec functions ───
 

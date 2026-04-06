@@ -3,10 +3,24 @@
 //! Checked signed integer types that track overflow and underflow.
 //! Weaker guarantees than unsigned: both overflow and underflow possible.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod checked_int {
 
 #[allow(unused_imports)]
+
+//		Section 2. imports
+
 use vstd::prelude::*;
 #[allow(unused_imports)]
 use vstd::view::View;
@@ -14,7 +28,11 @@ use vstd::view::View;
 #[cfg(verus_keep_ghost)]
 use vstd::arithmetic::mul::{lemma_mul_by_zero_is_zero, lemma_mul_inequality, lemma_mul_is_commutative};
 
-verus! {
+verus! 
+{
+
+    //		Section 6. spec fns
+
 
 // Spec functions for folding operations on int
 pub open spec fn spec_add(a: int, b: int) -> int { a + b }
@@ -40,6 +58,9 @@ pub open spec fn spec_is_mul_associative() -> bool {
 pub open spec fn spec_mul_distributes_over_add() -> bool {
     forall |a: int, b: int, c: int| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c))
 }
+
+    //		Section 8. traits
+
 
 // Proofs that these properties hold are in the macro-generated impl blocks below.
 
@@ -94,6 +115,8 @@ pub trait CheckedIntTrait: View<V = int> + Sized + Clone {
 }
 
 } // verus!
+
+    //		Section 13. macros
 
 macro_rules! checked_int_gen {
     ($ity:ty, $cty:ident, $min:expr, $max:expr) => {
@@ -461,6 +484,8 @@ macro_rules! checked_int_gen {
         }
     };
 }
+
+    //		Section 14. derive impls outside verus!
 
 // Signed types only
 checked_int_gen!(i8, CheckedI8, i8::MIN, i8::MAX);

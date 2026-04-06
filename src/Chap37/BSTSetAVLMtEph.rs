@@ -4,19 +4,22 @@
 //! Set interface built atop the AVL multi-threaded BST implementation.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//	1. module
+//		Section 1. module
 
 pub mod BSTSetAVLMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -29,9 +32,11 @@ pub mod BSTSetAVLMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    verus! {
+    verus! 
+{
 
-    //	4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetAVLMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -40,39 +45,15 @@ pub mod BSTSetAVLMtEph {
 
     pub type BSTSetAVLMt<T> = BSTSetAVLMtEph<T>;
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetAVLMtEphIter<T: StTInMtT + Ord + TotalOrder> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
+    //		Section 6. spec fns
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetAVLMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphGhostIter<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    // 6. spec fns
 
     pub open spec fn bstsetavlmteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetAVLMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    //	8. traits
+    //		Section 8. traits
+
 
     pub trait BSTSetAVLMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetavlmteph_wf(&self) -> bool;
@@ -171,7 +152,8 @@ pub mod BSTSetAVLMtEph {
             ensures out.spec_bstsetavlmteph_wf();
     }
 
-    //	9. impls
+    //		Section 9. impls
+
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTAVLMtEph<T>) -> (values: Vec<T>)
@@ -558,7 +540,34 @@ pub mod BSTSetAVLMtEph {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetAVLMtEphIter<T: StTInMtT + Ord + TotalOrder> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetAVLMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetAVLMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
 
     impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetAVLMtEphIter<T> {
         type Item = T;
@@ -658,7 +667,8 @@ pub mod BSTSetAVLMtEph {
 
     } // verus!
 
-    //	13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSetAVLMtEphLit {
@@ -672,7 +682,7 @@ pub mod BSTSetAVLMtEph {
         }};
     }
 
-    //	14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetAVLMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

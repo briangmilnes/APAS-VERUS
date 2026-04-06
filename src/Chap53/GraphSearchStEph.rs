@@ -2,7 +2,29 @@
 //! REVIEWED: NO
 //! Chapter 53: Generic Graph Search (ephemeral, single-threaded).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 12a. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod GraphSearchStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
@@ -13,21 +35,64 @@ pub mod GraphSearchStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types(V)]
     pub struct SearchResult<V: StT + Ord> {
         pub visited: AVLTreeSetStEph<V>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
     }
 
+    //		Section 9a. impls
+
+
+    impl<V: StT + Ord> GraphSearchStEphTrait<V> for SearchResult<V> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
+        fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
+        where G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>,
+        { graph_search(graph, source, strategy, Ghost(vertex_universe)) }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
+        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
+        where G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>,
+        { graph_search_multi(graph, sources, strategy, Ghost(vertex_universe)) }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
+        fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStEph<V>)
+        where G: Fn(&V) -> AVLTreeSetStEph<V>,
+        { reachable(graph, source, Ghost(vertex_universe)) }
+    }
+
+    //		Section 4b. type definitions
+
+
     pub struct SelectAll;
+
+    //		Section 9b. impls
+
+
+    impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
+        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) { (frontier.clone(), false) }
+    }
+
+    //		Section 4c. type definitions
+
+
     pub struct SelectOne;
 
-    // 8. traits
+    //		Section 8c. traits
+
+
     pub trait SelectionStrategy<V: StT + Ord> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool))
@@ -93,11 +158,8 @@ pub mod GraphSearchStEph {
             ensures reachable_set@.contains(source@);
     }
 
-    // 9. impls
-    impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
-        fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) { (frontier.clone(), false) }
-    }
+    //		Section 9c. impls
+
 
     impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element via to_seq + nth.
@@ -287,23 +349,6 @@ pub mod GraphSearchStEph {
         SearchResult { visited, parent: None }
     }
 
-    impl<V: StT + Ord> GraphSearchStEphTrait<V> for SearchResult<V> {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
-        fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
-        where G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>,
-        { graph_search(graph, source, strategy, Ghost(vertex_universe)) }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
-        fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
-        where G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>,
-        { graph_search_multi(graph, sources, strategy, Ghost(vertex_universe)) }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
-        fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStEph<V>)
-        where G: Fn(&V) -> AVLTreeSetStEph<V>,
-        { reachable(graph, source, Ghost(vertex_universe)) }
-    }
-
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
@@ -329,7 +374,8 @@ pub mod GraphSearchStEph {
         result.visited
     }
 
-    // 11. derive impls in verus!
+    //		Section 12a. derive impls in verus!
+
 
     impl<V: StT + Ord> Clone for SearchResult<V> {
         fn clone(&self) -> (out: Self) {
@@ -342,7 +388,8 @@ pub mod GraphSearchStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
 
     impl<V: StT + Ord> std::fmt::Debug for SearchResult<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -359,6 +406,8 @@ pub mod GraphSearchStEph {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl std::fmt::Debug for SelectAll {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "SelectAll")
@@ -370,6 +419,8 @@ pub mod GraphSearchStEph {
             write!(f, "SelectAll")
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl std::fmt::Debug for SelectOne {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

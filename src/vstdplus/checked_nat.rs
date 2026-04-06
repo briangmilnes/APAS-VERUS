@@ -3,10 +3,24 @@
 //! Checked natural (unsigned) integer types that track overflow.
 //! Stronger guarantees than signed: if final sum fits, all partial sums fit.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod checked_nat {
 
     #[allow(unused_imports)]
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     #[allow(unused_imports)]
     use vstd::view::View;
@@ -14,7 +28,11 @@ pub mod checked_nat {
     #[cfg(verus_keep_ghost)]
     use vstd::arithmetic::mul::{lemma_mul_by_zero_is_zero, lemma_mul_inequality, lemma_mul_is_commutative};
 
-verus! {
+verus! 
+{
+
+    //		Section 6. spec fns
+
 
         // Spec functions for folding operations on nat
     pub open spec fn spec_add(a: nat, b: nat) -> nat { a + b }
@@ -40,6 +58,9 @@ verus! {
     pub open spec fn spec_mul_distributes_over_add() -> bool {
         forall |a: nat, b: nat, c: nat| #[trigger] spec_mul(a, spec_add(b, c)) == spec_add(spec_mul(a, b), spec_mul(a, c))
     }
+
+    //		Section 8. traits
+
 
         // Proofs that these properties hold are in the macro-generated impl blocks below.
 
@@ -102,6 +123,8 @@ verus! {
     }
 
  } // verus!
+
+    //		Section 13. macros
 
 macro_rules! checked_nat_gen {
         ($uty:ty, $cty:ident, $max:expr) => {
@@ -386,6 +409,8 @@ verus! {
 }
 };
 }
+
+    //		Section 14. derive impls outside verus!
 
 checked_nat_gen!(u8, CheckedU8, u8::MAX);
 checked_nat_gen!(u16, CheckedU16, u16::MAX);

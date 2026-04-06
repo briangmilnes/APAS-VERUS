@@ -4,28 +4,31 @@
 //! Chapter 5.5 ephemeral Mapping (Function) built on `RelationStEph<A,B>`.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod MappingStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
@@ -46,7 +49,8 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         // Set groups
@@ -70,7 +74,8 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]
@@ -78,11 +83,12 @@ verus! {
         pub mapping: RelationStEph<A, B>,
     }
 
-    //		5. view impls
+    //		Section 5. view impls
+
 
     impl<A: StT + Hash, B: StT + Hash> View for MappingStEph<A, B> {
         type V = Map<A::V, B::V>;
-        
+
         open spec fn view(&self) -> Self::V {
             Map::new(
                 |x: A::V| exists |y: B::V| self.mapping@.contains((x, y)),
@@ -91,7 +97,8 @@ verus! {
         }
     }
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn is_functional_set<X, Y>(s: Set<(X, Y)>) -> bool {
         forall |x: X, y1: Y, y2: Y| 
@@ -116,7 +123,8 @@ verus! {
         forall |q: (X, Y)| #![trigger s.contains(q)] s.contains(q) && q.0 == p.0 ==> q.1 == p.1
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait MappingStEphTrait<X: StT + Hash, Y: StT + Hash> :
         View<V = Map<X::V, Y::V>> + Sized {
@@ -230,7 +238,8 @@ verus! {
                 iter_invariant(&it);
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     impl<X: StT + Hash, Y: StT + Hash>
         MappingStEphTrait<X, Y> for MappingStEph<X, Y> {
@@ -475,13 +484,8 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for MappingStEph<A, B> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-    //		10. iterators
 
     /// Iterator wrapper to hide RelationStEphIter<X, Y>.
     #[verifier::reject_recursive_types(X)]
@@ -603,7 +607,15 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for MappingStEph<A, B> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<A: StT + Hash, B: StT + Hash> Clone for MappingStEph<A, B> {
         fn clone(&self) -> (clone: Self)
@@ -636,7 +648,8 @@ verus! {
 
   } // verus!
 
-    //		12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! MappingLit {
@@ -660,7 +673,7 @@ verus! {
         }};
     }
 
-    //		13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<A: StT + Hash, B: StT + Hash> Debug for MappingStEph<A, B> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Debug::fmt(&self.mapping, f) }

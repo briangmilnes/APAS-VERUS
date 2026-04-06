@@ -6,23 +6,26 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	7. proof fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod ReduceContractMtEph {
+
+
+    //		Section 2. imports
 
     use std::sync::Arc;
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Concurrency::Concurrency::StTInMtT;
@@ -31,7 +34,8 @@ pub mod ReduceContractMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -41,8 +45,8 @@ pub mod ReduceContractMtEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
@@ -144,6 +148,9 @@ pub mod ReduceContractMtEph {
         }
     }
 
+    //		Section 8. traits
+
+
     pub trait ReduceContractMtEphTrait<T: StTInMtT> {
         /// Reduce a sequence using parallel contraction: contract→solve→expand.
         /// Subsumes Example 27.1 (Maximal Element): call with max and 0 identity.
@@ -165,8 +172,8 @@ pub mod ReduceContractMtEph {
                 reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     /// Parallel contraction: build b[j] = f(a[2j], a[2j+1]) using fork-join.
     /// Parallelism via the help-first scheduler's join.

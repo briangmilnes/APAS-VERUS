@@ -3,48 +3,54 @@
 //! Ephemeral AVL-balanced binary search tree.
 //! Verusified: functional-style AVL with BST invariant + balance specs.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 7. proof fns
-// 8. traits
-// 9. impls
-// 12. macros
-// 13. derive impls outside verus!
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTAVLStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTAVLStEph<T> {
         pub root: BalBinTree<T>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T> View for BSTAVLStEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { self.root }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// AVL balance: for every node, |height(left) - height(right)| <= 1.
     pub open spec fn avl_balanced<T>(tree: BalBinTree<T>) -> bool
@@ -68,7 +74,8 @@ pub mod BSTAVLStEph {
         tree.tree_is_bst() && avl_balanced(tree)
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Decomposes tree_is_bst two levels deep, exposing children and grandchildren BST
     /// facts plus all ordering quantifiers. Used by rotation proofs.
@@ -128,7 +135,8 @@ pub mod BSTAVLStEph {
     {
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait BSTAVLStEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_root(self) -> BalBinTree<T>;
@@ -328,7 +336,8 @@ pub mod BSTAVLStEph {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder> BSTAVLNodeFns<T> for BalBinTree<T> {
 
@@ -1136,7 +1145,8 @@ pub mod BSTAVLStEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTAVLStEphLit {
@@ -1149,7 +1159,7 @@ pub mod BSTAVLStEph {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BSTAVLStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

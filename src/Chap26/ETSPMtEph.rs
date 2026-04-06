@@ -6,22 +6,28 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod ETSPMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
 
@@ -33,11 +39,9 @@ pub mod ETSPMtEph {
         lemma_small_mod,
     };
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
@@ -50,10 +54,8 @@ pub mod ETSPMtEph {
         f64_add_spec, f64_sub_spec, f64_mul_spec, f64_sqrt_spec,
     };
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -63,10 +65,8 @@ pub mod ETSPMtEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
-
-    //		4. type definitions
 
     /// A point in the 2-d plane.
     pub struct Point {
@@ -74,16 +74,29 @@ pub mod ETSPMtEph {
         pub y: f64,
     }
 
+    //		Section 9a. impls
+
+
+    impl Copy for Point {}
+
+    impl ETSPPointTrait for Point {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
+        fn distance(&self, other: &Point) -> (d: f64) {
+            point_distance(self, other)
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
     /// A directed edge between two points.
     pub struct Edge {
         pub from: Point,
         pub to: Point,
     }
 
+    //		Section 6b. spec fns
 
-    //		6. spec fns
-
-    //		5. spec fns
 
     /// Euclidean distance between two points: sqrt((ax-bx)^2 + (ay-by)^2).
     pub open spec fn spec_point_distance(a: Point, b: Point) -> f64 {
@@ -140,10 +153,8 @@ pub mod ETSPMtEph {
             spec_point_eq(tour[i].to, tour[((i + 1) % (tour.len() as int))].from)
     }
 
+    //		Section 7b. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		7. proof fns
 
     /// If point p is in sub, and every element of sub is in sup, then p is in sup.
     pub proof fn lemma_point_in_seq_transitive(p: Point, sub: Seq<Point>, sup: Seq<Point>)
@@ -316,10 +327,8 @@ pub mod ETSPMtEph {
         }
     }
 
+    //		Section 8b. traits
 
-    //		8. traits
-
-    //		8. traits
 
     pub trait ETSPMtTrait {
         /// Solve the planar Euclidean TSP using parallel divide-and-conquer heuristic.
@@ -335,14 +344,16 @@ pub mod ETSPMtEph {
             ensures spec_etsp(tour@, points@);
     }
 
+    pub trait ETSPPointTrait {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
+        fn distance(&self, other: &Point) -> (d: f64);
+    }
 
-    //		9. impls
+    //		Section 9b. impls
 
-    impl Copy for Point {}
 
     impl Copy for Edge {}
 
-    //		9. impls
 
     /// Parallel eTSP inner recursion. Structural logic verified; threading via join().
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n) — parallel recur + parallel minVal.
@@ -529,7 +540,6 @@ pub mod ETSPMtEph {
         }
     }
 
-    //		10. verified helpers
 
     /// Split points at midpoint. Verified: every output point traces to the input.
     /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n), Span O(n) — linear partition (simplified from sort-based split).
@@ -608,28 +618,6 @@ pub mod ETSPMtEph {
         (0, 0)
     }
 
-
-    //		11. derive impls in verus!
-
-    impl Clone for Point {
-        fn clone(&self) -> (cloned: Point)
-            ensures cloned == *self
-        { *self }
-    }
-
-    impl Clone for Edge {
-        fn clone(&self) -> (cloned: Edge)
-            ensures cloned == *self
-        { *self }
-    }
-
-    use std::sync::Arc;
-
-    pub trait ETSPPointTrait {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
-        fn distance(&self, other: &Point) -> (d: f64);
-    }
-
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 arithmetic: dx^2 + dy^2 + sqrt.
     // veracity: no_requires
     fn point_distance(a: &Point, b: &Point) -> (d: f64)
@@ -641,13 +629,6 @@ pub mod ETSPMtEph {
         let dy2 = f64_mul(dy, dy);
         let sum = f64_add(dx2, dy2);
         f64_sqrt(sum)
-    }
-
-    impl ETSPPointTrait for Point {
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to point_distance.
-        fn distance(&self, other: &Point) -> (d: f64) {
-            point_distance(self, other)
-        }
     }
 
     /// Sort points by longest-spread dimension and split at median. (f64 arithmetic.)
@@ -817,9 +798,29 @@ pub mod ETSPMtEph {
         }
     }
 
+    //		Section 12a. derive impls in verus!
+
+
+    impl Clone for Point {
+        fn clone(&self) -> (cloned: Point)
+            ensures cloned == *self
+        { *self }
+    }
+
+    //		Section 12b. derive impls in verus!
+
+
+    impl Clone for Edge {
+        fn clone(&self) -> (cloned: Edge)
+            ensures cloned == *self
+        { *self }
+    }
+
+    use std::sync::Arc;
     } // verus!
 
-    //		14a. derive impls outside verus! — struct Point
+    //		Section 14a. derive impls outside verus!
+
 
     impl Debug for Point {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -833,7 +834,7 @@ pub mod ETSPMtEph {
         }
     }
 
-    //		14b. derive impls outside verus! — struct Edge
+    //		Section 14b. derive impls outside verus!
 
     impl Debug for Edge {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {

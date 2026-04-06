@@ -4,28 +4,32 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	7. proof fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod ReduceContractStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -35,7 +39,8 @@ pub mod ReduceContractStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
@@ -158,7 +163,8 @@ pub mod ReduceContractStEph {
         }
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait ReduceContractStEphTrait<T: StT> {
         /// Reduce a sequence using contraction: contract→solve→expand.
@@ -180,7 +186,8 @@ pub mod ReduceContractStEph {
                 reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     impl<T: StT + Clone> ReduceContractStEphTrait<T> for ArraySeqStEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive contraction halving n each step; St sequential.

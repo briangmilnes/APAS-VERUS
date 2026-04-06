@@ -9,9 +9,21 @@
 //! Veracity will use `// accept hole` comments after the attribute to
 //! indicate accepted holes, rather than an attribute macro.
 
+
+//  Table of Contents
+//	Section 2. imports
+//	Section 7. proof fns/broadcast groups
+//	Section 14. derive impls outside verus!
+
+//		Section 2. imports
+
 use vstd::prelude::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 7. proof fns/broadcast groups
+
 
 /// Intentional proof hole. Use instead of `assume()` for accepted workarounds.
 /// Veracity: info, not error or warning.
@@ -22,6 +34,8 @@ pub proof fn accept(b: bool)
 }
 
 } // verus!
+
+    //		Section 14. derive impls outside verus!
 
 // Re-export for cargo/runtime builds where proof fn may not be available.
 #[cfg(not(verus_keep_ghost))]

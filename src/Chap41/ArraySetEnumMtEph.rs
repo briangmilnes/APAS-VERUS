@@ -5,21 +5,27 @@
 //! Uses `Vec<u64>` for verified 1-bit-per-element storage.
 //! Memory: ⌈universe_size / 64⌉ × 8 bytes. Only filter() uses parallelism.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod ArraySetEnumMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -52,9 +58,11 @@ pub mod ArraySetEnumMtEph {
         ($($a:tt)*) => { verus_proof_macro_exprs!(set_bit64_macro!($($a)*)) };
     }
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -62,14 +70,16 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub struct ArraySetEnumMtEph {
         pub bits: Vec<u64>,
         pub universe_size: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl View for ArraySetEnumMtEph {
         type V = Set<usize>;
@@ -81,7 +91,8 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn u64_view(u: u64) -> Seq<bool> {
         Seq::new(64, |i: int| get_bit64!(u, i as u64))
@@ -91,13 +102,8 @@ broadcast use {
         if universe_size <= 0 { 0 } else { (universe_size - 1) / 64 + 1 }
     }
 
-    impl ArraySetEnumMtEph {
-        pub open spec fn spec_arraysetenummteph_wf(&self) -> bool {
-            self.bits@.len() == num_words(self.universe_size as int)
-        }
-    }
+    //		Section 7. proof fns/broadcast groups
 
-    // 7. proof fns
 
     #[verifier::bit_vector]
     proof fn zero_bit_false(i: u64)
@@ -169,7 +175,8 @@ broadcast use {
         // range_set is finite, our_set is a subset — lemma_set_subset_finite fires.
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait ArraySetEnumMtEphTrait: Sized + View<V = Set<usize>> {
         spec fn spec_arraysetenummteph_wf(&self) -> bool;
@@ -306,7 +313,15 @@ broadcast use {
                 self.spec_universe_size() == old(self).spec_universe_size();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    impl ArraySetEnumMtEph {
+        pub open spec fn spec_arraysetenummteph_wf(&self) -> bool {
+            self.bits@.len() == num_words(self.universe_size as int)
+        }
+    }
+
 
     impl ArraySetEnumMtEphTrait for ArraySetEnumMtEph {
 
@@ -944,7 +959,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for ArraySetEnumMtEph {
@@ -979,7 +995,8 @@ broadcast use {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! ArraySetEnumMtEphLit {
@@ -993,7 +1010,7 @@ broadcast use {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl fmt::Debug for ArraySetEnumMtEph {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

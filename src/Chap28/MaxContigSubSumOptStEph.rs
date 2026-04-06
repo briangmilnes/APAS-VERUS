@@ -8,13 +8,31 @@
 //! 2. spec definitions
 //! 3. exec functions
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod MaxContigSubSumOptStEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap28::MCSSSpec::MCSSSpec::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -22,6 +40,9 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
+
+    //		Section 7. proof fns/broadcast groups
+
 
     // ─── 3. exec functions ───
 
@@ -71,6 +92,9 @@ broadcast use {
         };
     }
 
+    //		Section 8. traits
+
+
     pub trait MaxContigSubSumOptTrait {
         /// Compute MCSS using optimal prefix-sum algorithm (Algorithm 28.16).
         /// Returns None for empty sequence (representing -infinity).
@@ -85,6 +109,9 @@ broadcast use {
                 a.seq@.len() > 0 ==> mcss.is_some(),
                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
+
+    //		Section 9. impls
+
 
     impl MaxContigSubSumOptTrait for ArraySeqStEphS<i32> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — prefix sums + single pass; St sequential.

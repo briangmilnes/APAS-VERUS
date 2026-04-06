@@ -5,7 +5,34 @@
 //! Memoized top-down DP with parallel min reduction.
 //! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 9c. impls
+//	Section 4d. type definitions
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 12c. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod OptBinSearchTreeMtPer {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
@@ -25,19 +52,12 @@ pub mod OptBinSearchTreeMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -46,51 +66,23 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types(T)]
     pub struct KeyProb<T: MtVal> {
         pub key: T,
         pub prob: Probability,
     }
 
-    impl<T: MtVal> Clone for KeyProb<T> {
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned == *self
-        {
-            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
-            proof { assume(cloned == *self); }
-            cloned
-        }
-    }
+    //		Section 4b. type definitions
+
 
         pub struct OptBSTMtPerMemoInv;
-        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtPerMemoInv {
-            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
-                v@.dom().finite()
-            }
-        }
 
-    /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
-    #[verifier::reject_recursive_types(T)]
-    pub struct OBSTMtPerS<T: MtVal> {
-        pub keys: Arc<Vec<KeyProb<T>>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
-    }
+    //		Section 8b. traits
 
-    // 5. view impls
-    #[verifier::reject_recursive_types(T)]
-    pub ghost struct OBSTMtPerV<T: MtVal> {
-        pub keys: Seq<KeyProb<T>>,
-    }
 
-    impl<T: MtVal> View for OBSTMtPerS<T> {
-        type V = OBSTMtPerV<T>;
-        open spec fn view(&self) -> Self::V {
-            OBSTMtPerV { keys: self.keys@ }
-        }
-    }
-
-    // 8. traits
     pub trait OBSTMtPerTrait<T: MtVal>: Sized + View<V = OBSTMtPerV<T>> {
         spec fn spec_optbinsearchtreemtper_wf(&self) -> bool;
 
@@ -123,7 +115,8 @@ broadcast use {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
 
     /// Clone Arc<Vec<Probability>> preserving the view.
     #[verifier::external_body]
@@ -249,6 +242,29 @@ broadcast use {
         }
     }
 
+    //		Section 4c. type definitions
+
+
+    /// Persistent multi-threaded optimal binary search tree solver using parallel dynamic programming
+    #[verifier::reject_recursive_types(T)]
+    pub struct OBSTMtPerS<T: MtVal> {
+        pub keys: Arc<Vec<KeyProb<T>>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, Probability>, OptBSTMtPerMemoInv>>,
+    }
+
+    //		Section 5c. view impls
+
+
+    impl<T: MtVal> View for OBSTMtPerS<T> {
+        type V = OBSTMtPerV<T>;
+        open spec fn view(&self) -> Self::V {
+            OBSTMtPerV { keys: self.keys@ }
+        }
+    }
+
+    //		Section 9c. impls
+
+
     impl<T: MtVal> OBSTMtPerTrait<T> for OBSTMtPerS<T> {
         open spec fn spec_optbinsearchtreemtper_wf(&self) -> bool {
             self.memo.pred() == (OptBSTMtPerMemoInv)
@@ -348,7 +364,41 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4d. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub ghost struct OBSTMtPerV<T: MtVal> {
+        pub keys: Seq<KeyProb<T>>,
+    }
+
+    //		Section 11b. top level coarse locking
+
+
+        impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, Probability>> for OptBSTMtPerMemoInv {
+            open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, Probability>) -> bool {
+                v@.dom().finite()
+            }
+        }
+
+    //		Section 12a. derive impls in verus!
+
+
+    impl<T: MtVal> Clone for KeyProb<T> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            let cloned = KeyProb { key: self.key.clone(), prob: self.prob };
+            proof { assume(cloned == *self); }
+            cloned
+        }
+    }
+
+    impl<T: MtVal> Eq for KeyProb<T> {}
+
+    //		Section 12c. derive impls in verus!
+
+
     impl<T: MtVal> Clone for OBSTMtPerS<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
@@ -381,10 +431,21 @@ broadcast use {
     }
 
     impl<T: MtVal> Eq for OBSTMtPerS<T> {}
-
-    impl<T: MtVal> Eq for KeyProb<T> {}
-
     } // verus!
+
+    //		Section 14. derive impls outside verus!
+
+
+    impl<'a, T: MtVal> IntoIterator for &'a OBSTMtPerS<T> {
+        type Item = KeyProb<T>;
+        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
+        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
+    }
+
+    //		Section 14a. derive impls outside verus!
 
     impl<T: MtVal + PartialEq> PartialEq for KeyProb<T> {
         fn eq(&self, other: &Self) -> bool {
@@ -392,7 +453,28 @@ broadcast use {
         }
     }
 
-    // 13. derive impls outside verus!
+    impl<T: MtVal + Display> Display for KeyProb<T> {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
+    }
+
+    impl<T: MtVal> Debug for KeyProb<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl Debug for OptBSTMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
+    }
+
+    impl Display for OptBSTMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
     impl<T: MtVal> Debug for OBSTMtPerS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(self, f) }
     }
@@ -422,36 +504,7 @@ broadcast use {
         }
     }
 
-    impl<'a, T: MtVal> IntoIterator for &'a OBSTMtPerS<T> {
-        type Item = KeyProb<T>;
-        type IntoIter = Cloned<Iter<'a, KeyProb<T>>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter over Arc<Vec>
-        fn into_iter(self) -> Self::IntoIter { self.keys.iter().cloned() }
-    }
-
-    impl<T: MtVal + Display> Display for KeyProb<T> {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format key and probability
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "({}: {:.3})", self.key, self.prob) }
-    }
-
-    impl<T: MtVal> Debug for KeyProb<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
-    }
-
-    // 14b. derive impls outside verus! — struct OptBSTMtPerMemoInv
-
-    impl Debug for OptBSTMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
-    }
-
-    impl Display for OptBSTMtPerMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
-    }
-
-    // 14c. derive impls outside verus! — struct OBSTMtPerV
+    //		Section 14d. derive impls outside verus!
 
     impl<T: MtVal> Debug for OBSTMtPerV<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtPerV") }

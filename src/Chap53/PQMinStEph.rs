@@ -2,7 +2,24 @@
 //! REVIEWED: NO
 //! Chapter 53: Min-Priority Queue Search - ephemeral, single-threaded.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod PQMinStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
@@ -16,11 +33,17 @@ pub mod PQMinStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
+
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(P)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
@@ -29,7 +52,8 @@ pub mod PQMinStEph {
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn spec_pqminsteph_wf_generic<V: StT + Ord, P: StT + Ord>(
         s: &PQMinResult<V, P>,
@@ -37,7 +61,9 @@ pub mod PQMinStEph {
         s.visited@.finite() && s.priorities@.finite()
     }
 
-    // 8. traits
+    //		Section 8. traits
+
+
     pub trait PQMinStEphTrait<V: StT + Ord, P: StT + Ord> {
         spec fn spec_pqminsteph_wf(&self) -> bool;
 
@@ -104,7 +130,8 @@ pub mod PQMinStEph {
                 sources@.subset_of(search.visited@);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StT + Ord, P: StT + Ord> PQMinStEphTrait<V, P> for PQMinResult<V, P> {
         open spec fn spec_pqminsteph_wf(&self) -> bool {
@@ -626,7 +653,8 @@ pub mod PQMinStEph {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
         fn clone(&self) -> (out: Self) {
@@ -640,7 +668,8 @@ pub mod PQMinStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StT + Ord, P: StT + Ord> std::fmt::Debug for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

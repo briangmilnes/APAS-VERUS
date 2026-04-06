@@ -4,35 +4,40 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. spec functions
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod DivConReduceStPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         vstd::seq::group_seq_axioms,
     };
 
-    //		4. spec functions
+    //		Section 6. spec fns
+
 
     /// Wrapping addition for usize — matches vstd wrapping_add spec with in-range casts.
     pub open spec fn spec_wrapping_add(x: usize, y: usize) -> usize {
@@ -54,7 +59,8 @@ pub mod DivConReduceStPer {
     pub open spec fn spec_and_fn() -> spec_fn(bool, bool) -> bool { |x: bool, y: bool| x && y }
     pub open spec fn spec_max_fn() -> spec_fn(usize, usize) -> usize { |x: usize, y: usize| if x >= y { x } else { y } }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     pub trait DivConReduceStTrait {
         /// Find maximum element via reduce.
@@ -122,7 +128,8 @@ pub mod DivConReduceStPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_and_fn(), true);
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     impl DivConReduceStTrait for ArraySeqStPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — single-pass max scan; St sequential.

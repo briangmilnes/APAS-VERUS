@@ -6,21 +6,28 @@
 //! This module implements the top-down (memoization) approach to dynamic programming
 //! using concurrent HashMapWithViewPlus for thread-safe subproblem caching.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod TopDownDPMtPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
     use std::fmt::{Formatter, Debug, Display};
     use std::sync::Arc;
     use vstd::rwlock::*;
@@ -35,8 +42,12 @@ pub mod TopDownDPMtPer {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
 
-    verus! {
-    // 3. broadcast use
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
+
     broadcast use {
         crate::Types::Types::group_Pair_axioms,
         vstd::map::group_map_axioms,
@@ -44,11 +55,76 @@ pub mod TopDownDPMtPer {
         vstd::std_specs::hash::group_hash_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     pub struct TopDownDPMtPerS {
         pub seq_s: ArraySeqMtPerS<char>,
         pub seq_t: ArraySeqMtPerS<char>,
     }
+
+    //		Section 9a. impls
+
+
+    impl TopDownDPMtPerTrait for TopDownDPMtPerS {
+        open spec fn spec_s(&self) -> Seq<char> { self.seq_s@ }
+        open spec fn spec_t(&self) -> Seq<char> { self.seq_t@ }
+        open spec fn spec_s_len(&self) -> nat { self.seq_s.spec_len() }
+        open spec fn spec_t_len(&self) -> nat { self.seq_t.spec_len() }
+
+        open spec fn spec_med(&self, i: nat, j: nat) -> nat {
+            spec_med_fn(self.seq_s@, self.seq_t@, i, j)
+        }
+
+        open spec fn spec_topdowndpmtper_wf(&self) -> bool { true }
+
+        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat) {
+            lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
+        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self) {
+            TopDownDPMtPerS { seq_s: s, seq_t: t }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        fn s_length(&self) -> (len: usize) { self.seq_s.length() }
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
+        fn t_length(&self) -> (len: usize) { self.seq_t.length() }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
+        fn is_empty(&self) -> (empty: bool) {
+            let s_empty = self.seq_s.length() == 0;
+            let t_empty = self.seq_t.length() == 0;
+            s_empty && t_empty
+        }
+
+        /// Compute MED using sequential top-down memoization (Algorithm 51.4).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
+        fn med_memoized_concurrent(&self) -> (distance: usize) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            let s_len = self.seq_s.length();
+            let t_len = self.seq_t.length();
+            let mut memo = HashMapWithViewPlus::new();
+            med_recursive_sequential(&self.seq_s, &self.seq_t, &mut memo, s_len, t_len)
+        }
+
+        /// Compute MED with parallel subproblem exploration.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
+        fn med_memoized_parallel(&self) -> (distance: usize) {
+            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
+            let s_len = self.seq_s.length();
+            let t_len = self.seq_t.length();
+            let memo = new_arc_rwlock(
+                HashMapWithViewPlus::new(),
+                Ghost(TopDownDPMtPerInv { seq_s: self.seq_s@, seq_t: self.seq_t@ }),
+            );
+            med_recursive_parallel(&self.seq_s, &self.seq_t, &memo, s_len, t_len)
+        }
+    }
+
+    //		Section 4b. type definitions
+
 
     /// RwLock predicate for parallel memo table. Ghost sequences enable
     /// content correctness: every cached value equals spec_med_fn.
@@ -57,14 +133,9 @@ pub mod TopDownDPMtPer {
         pub ghost seq_t: Seq<char>,
     }
 
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for TopDownDPMtPerInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            &&& v@.dom().finite()
-            &&& spec_memo_correct(v@, self.seq_s, self.seq_t)
-        }
-    }
+    //		Section 6b. spec fns
 
-    // 6. spec fns
+
     pub open spec fn spec_min(a: nat, b: nat) -> nat {
         if a <= b { a } else { b }
     }
@@ -94,7 +165,9 @@ pub mod TopDownDPMtPer {
             memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
     }
 
-    // 7. proof fns
+    //		Section 7b. proof fns/broadcast groups
+
+
     pub proof fn lemma_spec_med_fn_bounded(s: Seq<char>, t: Seq<char>, i: nat, j: nat)
         ensures spec_med_fn(s, t, i, j) <= i + j,
         decreases i + j,
@@ -108,7 +181,9 @@ pub mod TopDownDPMtPer {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
+
     pub trait TopDownDPMtPerTrait: Sized {
         spec fn spec_s(&self) -> Seq<char>;
         spec fn spec_t(&self) -> Seq<char>;
@@ -159,7 +234,8 @@ pub mod TopDownDPMtPer {
             ensures distance as nat == self.spec_med(self.spec_s_len(), self.spec_t_len());
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
 
     /// Sequential recursive MED with verified memoization.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential recursion with memo.
@@ -366,62 +442,18 @@ pub mod TopDownDPMtPer {
         dist
     }
 
-    impl TopDownDPMtPerTrait for TopDownDPMtPerS {
-        open spec fn spec_s(&self) -> Seq<char> { self.seq_s@ }
-        open spec fn spec_t(&self) -> Seq<char> { self.seq_t@ }
-        open spec fn spec_s_len(&self) -> nat { self.seq_s.spec_len() }
-        open spec fn spec_t_len(&self) -> nat { self.seq_t.spec_len() }
+    //		Section 11b. top level coarse locking
 
-        open spec fn spec_med(&self, i: nat, j: nat) -> nat {
-            spec_med_fn(self.seq_s@, self.seq_t@, i, j)
-        }
 
-        open spec fn spec_topdowndpmtper_wf(&self) -> bool { true }
-
-        proof fn lemma_spec_med_bounded(&self, i: nat, j: nat) {
-            lemma_spec_med_fn_bounded(self.seq_s@, self.seq_t@, i, j);
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
-        fn new(s: ArraySeqMtPerS<char>, t: ArraySeqMtPerS<char>) -> (dp: Self) {
-            TopDownDPMtPerS { seq_s: s, seq_t: t }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
-        fn s_length(&self) -> (len: usize) { self.seq_s.length() }
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — length access.
-        fn t_length(&self) -> (len: usize) { self.seq_t.length() }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two length checks.
-        fn is_empty(&self) -> (empty: bool) {
-            let s_empty = self.seq_s.length() == 0;
-            let t_empty = self.seq_t.length() == 0;
-            s_empty && t_empty
-        }
-
-        /// Compute MED using sequential top-down memoization (Algorithm 51.4).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
-        fn med_memoized_concurrent(&self) -> (distance: usize) {
-            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
-            let s_len = self.seq_s.length();
-            let t_len = self.seq_t.length();
-            let mut memo = HashMapWithViewPlus::new();
-            med_recursive_sequential(&self.seq_s, &self.seq_t, &mut memo, s_len, t_len)
-        }
-
-        /// Compute MED with parallel subproblem exploration.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
-        fn med_memoized_parallel(&self) -> (distance: usize) {
-            proof { let _ = Pair_feq_trigger::<usize, usize>(); }
-            let s_len = self.seq_s.length();
-            let t_len = self.seq_t.length();
-            let memo = new_arc_rwlock(
-                HashMapWithViewPlus::new(),
-                Ghost(TopDownDPMtPerInv { seq_s: self.seq_s@, seq_t: self.seq_t@ }),
-            );
-            med_recursive_parallel(&self.seq_s, &self.seq_t, &memo, s_len, t_len)
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for TopDownDPMtPerInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
+            &&& v@.dom().finite()
+            &&& spec_memo_correct(v@, self.seq_s, self.seq_t)
         }
     }
+
+    //		Section 12a. derive impls in verus!
+
 
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for TopDownDPMtPerS {
@@ -444,7 +476,6 @@ pub mod TopDownDPMtPer {
         }
     }
 
-    // 11. derive impls in verus!
     impl Clone for TopDownDPMtPerS {
         fn clone(&self) -> (cloned: Self)
             ensures
@@ -472,18 +503,8 @@ pub mod TopDownDPMtPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
-    impl Debug for TopDownDPMtPerInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            f.debug_struct("TopDownDPMtPerInv").finish()
-        }
-    }
+    //		Section 14a. derive impls outside verus!
 
-    impl Display for TopDownDPMtPerInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            write!(f, "TopDownDPMtPerInv")
-        }
-    }
 
     impl Debug for TopDownDPMtPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -502,6 +523,20 @@ pub mod TopDownDPMtPer {
                 self.s_length(),
                 self.t_length()
             )
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl Debug for TopDownDPMtPerInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("TopDownDPMtPerInv").finish()
+        }
+    }
+
+    impl Display for TopDownDPMtPerInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TopDownDPMtPerInv")
         }
     }
 }

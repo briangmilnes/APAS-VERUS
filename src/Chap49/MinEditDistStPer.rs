@@ -2,20 +2,23 @@
 //! REVIEWED: NO
 //! Chapter 49: Minimum Edit Distance - persistent, single-threaded.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod MinEditDistStPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -31,9 +34,11 @@ pub mod MinEditDistStPer {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStPerSLit;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -41,7 +46,8 @@ pub mod MinEditDistStPer {
         vstd::std_specs::hash::group_hash_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct MinEditDistStPerS<T: StT> {
@@ -50,7 +56,8 @@ pub mod MinEditDistStPer {
         pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Recursive specification of minimum edit distance.
     /// Returns the minimum number of insert/delete operations to transform s[0..i) into t[0..j).
@@ -74,7 +81,8 @@ pub mod MinEditDistStPer {
             (memo_view[k] as int) <= (k.0 + k.1) as int
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Trait for minimum edit distance operations.
     pub trait MinEditDistStPerTrait<T: StT>: Sized {
@@ -125,7 +133,8 @@ pub mod MinEditDistStPer {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive memoized minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
@@ -230,7 +239,8 @@ pub mod MinEditDistStPer {
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<T: StT> Clone for MinEditDistStPerS<T> {
         fn clone(&self) -> (cloned: Self) {
@@ -244,7 +254,8 @@ pub mod MinEditDistStPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<T: StT> PartialEq for MinEditDistStPerS<T> {
         fn eq(&self, other: &Self) -> bool {

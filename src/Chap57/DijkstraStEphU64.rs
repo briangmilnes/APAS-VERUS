@@ -8,7 +8,24 @@
 //! **Algorithmic Analysis:**
 //! - Dijkstra: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod DijkstraStEphU64 {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter};
@@ -29,19 +46,11 @@ pub mod DijkstraStEphU64 {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module (DijkstraStEphU64)
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 13. derive impls outside verus!
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
@@ -49,7 +58,8 @@ pub mod DijkstraStEphU64 {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Priority queue entry: (distance, vertex)
     /// Ordered by distance (min-heap)
@@ -59,28 +69,16 @@ pub mod DijkstraStEphU64 {
         pub vertex: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl View for PQEntry {
         type V = Self;
         open spec fn view(&self) -> Self { *self }
     }
 
-    impl Clone for PQEntry {
-        fn clone(&self) -> (cloned: PQEntry)
-            ensures cloned@ == self@
-        {
-            PQEntry { dist: self.dist, vertex: self.vertex }
-        }
-    }
+    //		Section 8. traits
 
-    #[cfg(verus_keep_ghost)]
-    impl PartialEqSpecImpl for PQEntry {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
-
-    // 8. traits
 
     pub trait DijkstraStEphU64Trait {
         /// Dijkstra's single source shortest path algorithm.
@@ -98,7 +96,8 @@ pub mod DijkstraStEphU64 {
                 sssp.spec_source() == source;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
     /// - Claude-Opus-4.6: Work O(1), Span O(1).
@@ -314,9 +313,26 @@ pub mod DijkstraStEphU64 {
         sssp
     }
 
+    //		Section 12. derive impls in verus!
+
+
+    impl Clone for PQEntry {
+        fn clone(&self) -> (cloned: PQEntry)
+            ensures cloned@ == self@
+        {
+            PQEntry { dist: self.dist, vertex: self.vertex }
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl PartialEqSpecImpl for PQEntry {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl Debug for PQEntry {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

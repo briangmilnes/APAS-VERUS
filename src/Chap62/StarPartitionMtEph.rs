@@ -5,7 +5,23 @@
 //! Implements Algorithm 62.3: Parallel Star Partition using randomized coin flips.
 //! Uses Seq.inject for efficient parallel updates.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod StarPartitionMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -26,42 +42,27 @@ pub mod StarPartitionMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct StarPartitionMtEph;
 
-    // 8. traits
-
-    pub trait StarPartitionMtEphTrait {
-        /// Well-formedness for parallel star partition algorithm input.
-        open spec fn spec_starpartitionmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
-            spec_graphview_wf(graph@)
-        }
-
-        /// Parallel star partition using randomized coin flips.
-        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
-        /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
-        fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
-            graph: &UnDirGraphMtEph<V>,
-            seed: u64,
-        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-            requires Self::spec_starpartitionmteph_wf(graph), valid_key_type_Edge::<V>();
-    }
-
     pub type T<V> = UnDirGraphMtEph<V>;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Partition map validity: every graph vertex is mapped and every value is a center.
     pub open spec fn spec_valid_partition_map<V: View>(
@@ -95,7 +96,28 @@ pub mod StarPartitionMtEph {
         &&& (vi[entry.1@] as usize) < nv
     }
 
-    // 9. impls — parallel helpers
+    //		Section 8. traits
+
+
+    pub trait StarPartitionMtEphTrait {
+        /// Well-formedness for parallel star partition algorithm input.
+        open spec fn spec_starpartitionmteph_wf<V: StT + MtT + Hash>(graph: &UnDirGraphMtEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
+        /// Parallel star partition using randomized coin flips.
+        /// APAS: Work O(|V| + |E|), Span O(lg |V|)
+        /// - Alg Analysis: APAS (Ch62 Thm 62.1): Work O(n + m), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg(n + m)), Span O(lg(n + m)) — all 6 loops parallel D&C
+        fn parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
+            graph: &UnDirGraphMtEph<V>,
+            seed: u64,
+        ) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+            requires Self::spec_starpartitionmteph_wf(graph), valid_key_type_Edge::<V>();
+    }
+
+    //		Section 9. impls
+
 
     // Arc clone helpers: vstd has no ensures on Arc::clone, so we add
     // type-specific helpers that preserve the view across clone.
@@ -1816,7 +1838,8 @@ pub mod StarPartitionMtEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for StarPartitionMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

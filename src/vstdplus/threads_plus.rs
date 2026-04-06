@@ -3,17 +3,41 @@
 //! Thread utilities - self-contained copy of vstd::thread with is_finished added.
 //! We copy rather than extend because vstd::thread doesn't expose is_finished.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 7c. proof fns/broadcast groups
+//	Section 9c. impls
+//	Section 14c. derive impls outside verus!
+
 #![allow(unused_imports)]
 
+
+//		Section 1. module
+
 pub mod threads_plus {
+
+    //		Section 2. imports
+
     use core::marker;
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 4a. type definitions
+
 
     #[verifier::external_body]
     #[verifier::reject_recursive_types(Ret)]
     pub struct JoinHandlePlus<Ret> { handle: std::thread::JoinHandle<Ret> }
+
+    //		Section 9a. impls
+
 
     impl<Ret> JoinHandlePlus<Ret> {
         pub uninterp spec fn predicate(&self, ret: Ret) -> bool;
@@ -53,20 +77,34 @@ verus! {
         }
     }
 
+    //		Section 4b. type definitions
+
+
     #[verifier::external_body]
     pub struct ThreadIdPlus { thread_id: std::thread::ThreadId }
 
+    //		Section 4c. type definitions
+
+
     #[cfg(verus_keep_ghost)]
     pub tracked struct IsThreadPlus {}
+
+    #[cfg(not(verus_keep_ghost))]
+    pub tracked struct IsThreadPlus { _no_send_sync: core::marker::PhantomData<*const ()> }
+
+    //		Section 7c. proof fns/broadcast groups
+
+
+    pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
+
+    //		Section 9c. impls
+
 
     #[cfg(verus_keep_ghost)]
     impl !Sync for IsThreadPlus {}
 
     #[cfg(verus_keep_ghost)]
     impl !Send for IsThreadPlus {}
-
-    #[cfg(not(verus_keep_ghost))]
-    pub tracked struct IsThreadPlus { _no_send_sync: core::marker::PhantomData<*const ()> }
 
     impl IsThreadPlus {
         pub uninterp spec fn view(&self) -> ThreadIdPlus;
@@ -84,10 +122,10 @@ verus! {
         let id = ThreadIdPlus { thread_id: std::thread::current().id() };
         (id, Tracked::assume_new())
     }
-
-    pub axiom fn ghost_thread_id_plus() -> (tracked res: IsThreadPlus);
-
 } // verus!
+
+    //		Section 14c. derive impls outside verus!
+
 
 impl Clone for IsThreadPlus {
     #[cfg(verus_keep_ghost)]

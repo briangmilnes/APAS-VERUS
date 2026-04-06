@@ -4,35 +4,39 @@
 //! Ephemeral balanced binary tree utilities (Chapter 23). Verusified.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  6. spec fns
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  10. iterators
-//  11. derive impls in verus!
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 9b. impls
+//	Section 10b. iterators
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod BalBinTreeStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -43,7 +47,8 @@ pub mod BalBinTreeStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -53,8 +58,8 @@ pub mod BalBinTreeStEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub enum BalBinTree<T> {
@@ -62,123 +67,8 @@ pub mod BalBinTreeStEph {
         Node(Box<BalBinNode<T>>),
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BalBinNode<T> {
-        pub left: BalBinTree<T>,
-        pub value: T,
-        pub right: BalBinTree<T>,
-    }
+    //		Section 8a. traits
 
-
-    //		6. spec fns
-
-    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
-        0 <= it@.0 <= it@.1.len()
-    }
-
-
-    // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
-    // are defined in impl BalBinTree (section 9); trait impl delegates to them.
-
-    //		7. proof fns/broadcast groups
-
-    /// The in-order and pre-order traversals of a tree are permutations of each other.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
-    pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
-        ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
-        decreases tree,
-    {
-        match tree {
-            BalBinTree::Leaf => {},
-            BalBinTree::Node(node) => {
-                let l_in = node.left.spec_in_order();
-                let r_in = node.right.spec_in_order();
-                let l_pre = node.left.spec_pre_order();
-                let r_pre = node.right.spec_pre_order();
-                let v = seq![node.value];
-
-                lemma_in_order_pre_order_permutation(node.left);
-                lemma_in_order_pre_order_permutation(node.right);
-
-                // in_order  = l_in + v + r_in  = (l_in + v) + r_in
-                // pre_order = v + l_pre + r_pre = (v + l_pre) + r_pre
-
-                // Seq concatenation is associative
-                assert(tree.spec_in_order() =~= (l_in + v) + r_in);
-                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
-
-                // Decompose each concatenation into multiset additions
-                vstd::seq_lib::lemma_multiset_commutative(l_in + v, r_in);
-                vstd::seq_lib::lemma_multiset_commutative(l_in, v);
-                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
-                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
-
-                // Now use commutativity of Multiset::add
-                assert(tree.spec_in_order().to_multiset()
-                    =~= l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset()));
-                assert(tree.spec_pre_order().to_multiset()
-                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
-
-                // By IH + commutativity of add, these are equal
-                assert(l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset())
-                    =~= v.to_multiset().add(l_in.to_multiset()).add(r_in.to_multiset()));
-            },
-        }
-    }
-
-    /// The pre-order and post-order traversals of a tree are permutations of each other.
-    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
-    pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
-        ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
-        decreases tree,
-    {
-        match tree {
-            BalBinTree::Leaf => {},
-            BalBinTree::Node(node) => {
-                let l_pre = node.left.spec_pre_order();
-                let r_pre = node.right.spec_pre_order();
-                let l_post = node.left.spec_post_order();
-                let r_post = node.right.spec_post_order();
-                let v = seq![node.value];
-
-                lemma_pre_order_post_order_permutation(node.left);
-                lemma_pre_order_post_order_permutation(node.right);
-
-                // pre_order  = v + l_pre + r_pre  = (v + l_pre) + r_pre
-                // post_order = l_post + r_post + v = (l_post + r_post) + v
-
-                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
-                assert(tree.spec_post_order() =~= (l_post + r_post) + v);
-
-                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
-                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
-                vstd::seq_lib::lemma_multiset_commutative(l_post + r_post, v);
-                vstd::seq_lib::lemma_multiset_commutative(l_post, r_post);
-
-                assert(tree.spec_pre_order().to_multiset()
-                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
-                assert(tree.spec_post_order().to_multiset()
-                    =~= l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset()));
-
-                // By IH: l_pre.to_multiset() =~= l_post.to_multiset() (and same for right)
-                // Multiset add is commutative and associative
-                assert(l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset())
-                    =~= v.to_multiset().add(l_post.to_multiset()).add(r_post.to_multiset()));
-            },
-        }
-    }
-
-    //		8. traits
 
     pub trait BalBinTreeTrait<T>: Sized {
         spec fn spec_balbintreesteph_wf(&self) -> bool;
@@ -261,8 +151,8 @@ pub mod BalBinTreeStEph {
             ensures traversal@ =~= self.spec_post_order();
     }
 
+    //		Section 9a. impls
 
-    //		9. impls
 
     // Inherent impl: recursive spec fn bodies with `decreases self`.
     // Verus cannot unfold `open spec fn` through trait dispatch when the
@@ -444,7 +334,6 @@ pub mod BalBinTreeStEph {
         }
     }
 
-    //  10. iterators
 
     impl<T: Clone + Eq> BalBinTree<T> {
         /// Returns an in-order iterator.
@@ -489,6 +378,151 @@ pub mod BalBinTreeStEph {
             PostOrderIter { inner: self.post_order().into_iter() }
         }
     }
+
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BalBinNode<T> {
+        pub left: BalBinTree<T>,
+        pub value: T,
+        pub right: BalBinTree<T>,
+    }
+
+    //		Section 6b. spec fns
+
+
+    pub open spec fn in_order_iter_invariant<T>(it: &InOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    pub open spec fn pre_order_iter_invariant<T>(it: &PreOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    pub open spec fn post_order_iter_invariant<T>(it: &PostOrderIter<T>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    //		Section 7b. proof fns/broadcast groups
+
+
+    // spec_size, spec_height, spec_in_order, spec_pre_order, spec_post_order
+    // are defined in impl BalBinTree (section 9); trait impl delegates to them.
+
+
+    /// The in-order and pre-order traversals of a tree are permutations of each other.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    pub proof fn lemma_in_order_pre_order_permutation<T>(tree: BalBinTree<T>)
+        ensures tree.spec_in_order().to_multiset() =~= tree.spec_pre_order().to_multiset()
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => {},
+            BalBinTree::Node(node) => {
+                let l_in = node.left.spec_in_order();
+                let r_in = node.right.spec_in_order();
+                let l_pre = node.left.spec_pre_order();
+                let r_pre = node.right.spec_pre_order();
+                let v = seq![node.value];
+
+                lemma_in_order_pre_order_permutation(node.left);
+                lemma_in_order_pre_order_permutation(node.right);
+
+                // in_order  = l_in + v + r_in  = (l_in + v) + r_in
+                // pre_order = v + l_pre + r_pre = (v + l_pre) + r_pre
+
+                // Seq concatenation is associative
+                assert(tree.spec_in_order() =~= (l_in + v) + r_in);
+                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
+
+                // Decompose each concatenation into multiset additions
+                vstd::seq_lib::lemma_multiset_commutative(l_in + v, r_in);
+                vstd::seq_lib::lemma_multiset_commutative(l_in, v);
+                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
+                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
+
+                // Now use commutativity of Multiset::add
+                assert(tree.spec_in_order().to_multiset()
+                    =~= l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset()));
+                assert(tree.spec_pre_order().to_multiset()
+                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
+
+                // By IH + commutativity of add, these are equal
+                assert(l_in.to_multiset().add(v.to_multiset()).add(r_in.to_multiset())
+                    =~= v.to_multiset().add(l_in.to_multiset()).add(r_in.to_multiset()));
+            },
+        }
+    }
+
+    /// The pre-order and post-order traversals of a tree are permutations of each other.
+    /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A — proof function, no runtime cost.
+    pub proof fn lemma_pre_order_post_order_permutation<T>(tree: BalBinTree<T>)
+        ensures tree.spec_pre_order().to_multiset() =~= tree.spec_post_order().to_multiset()
+        decreases tree,
+    {
+        match tree {
+            BalBinTree::Leaf => {},
+            BalBinTree::Node(node) => {
+                let l_pre = node.left.spec_pre_order();
+                let r_pre = node.right.spec_pre_order();
+                let l_post = node.left.spec_post_order();
+                let r_post = node.right.spec_post_order();
+                let v = seq![node.value];
+
+                lemma_pre_order_post_order_permutation(node.left);
+                lemma_pre_order_post_order_permutation(node.right);
+
+                // pre_order  = v + l_pre + r_pre  = (v + l_pre) + r_pre
+                // post_order = l_post + r_post + v = (l_post + r_post) + v
+
+                assert(tree.spec_pre_order() =~= (v + l_pre) + r_pre);
+                assert(tree.spec_post_order() =~= (l_post + r_post) + v);
+
+                vstd::seq_lib::lemma_multiset_commutative(v + l_pre, r_pre);
+                vstd::seq_lib::lemma_multiset_commutative(v, l_pre);
+                vstd::seq_lib::lemma_multiset_commutative(l_post + r_post, v);
+                vstd::seq_lib::lemma_multiset_commutative(l_post, r_post);
+
+                assert(tree.spec_pre_order().to_multiset()
+                    =~= v.to_multiset().add(l_pre.to_multiset()).add(r_pre.to_multiset()));
+                assert(tree.spec_post_order().to_multiset()
+                    =~= l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset()));
+
+                // By IH: l_pre.to_multiset() =~= l_post.to_multiset() (and same for right)
+                // Multiset add is commutative and associative
+                assert(l_post.to_multiset().add(r_post.to_multiset()).add(v.to_multiset())
+                    =~= v.to_multiset().add(l_post.to_multiset()).add(r_post.to_multiset()));
+            },
+        }
+    }
+
+    //		Section 9b. impls
+
+
+    /// - Alg Analysis: APAS: N/A — derive scaffolding.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive deep clone.
+    // veracity: no_requires
+    fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
+        ensures c == *t
+        decreases t,
+    {
+        let c = match t {
+            BalBinTree::Leaf => BalBinTree::Leaf,
+            BalBinTree::Node(node) => BalBinTree::Node(Box::new(BalBinNode {
+                left: clone_tree(&node.left),
+                value: node.value.clone(),
+                right: clone_tree(&node.right),
+            })),
+        };
+        proof { assume(c == *t); }
+        c
+    }
+
+    //		Section 10b. iterators
+
 
     /// Iterator over in-order traversal of a BalBinTree.
     #[verifier::reject_recursive_types(T)]
@@ -772,16 +806,11 @@ pub mod BalBinTreeStEph {
         }
     }
 
-    //  11. derive impls in verus!
+    //		Section 12a. derive impls in verus!
+
 
     #[cfg(verus_keep_ghost)]
     impl<T: PartialEq> PartialEqSpecImpl for BalBinTree<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
     }
@@ -807,6 +836,25 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    impl<T: Clone> Clone for BalBinTree<T> {
+        /// - Alg Analysis: APAS: N/A — derive scaffolding.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to clone_tree.
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned == *self
+        {
+            clone_tree(self)
+        }
+    }
+
+    //		Section 12b. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: PartialEq> PartialEqSpecImpl for BalBinNode<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+    }
+
     impl<T: Eq> Eq for BalBinNode<T> {}
 
     impl<T: PartialEq> PartialEq for BalBinNode<T> {
@@ -818,36 +866,6 @@ pub mod BalBinTreeStEph {
             let equal = self.left == other.left && self.value == other.value && self.right == other.right;
             proof { assume(equal == (*self == *other)); }
             equal
-        }
-    }
-
-
-    /// - Alg Analysis: APAS: N/A — derive scaffolding.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — recursive deep clone.
-    // veracity: no_requires
-    fn clone_tree<T: Clone>(t: &BalBinTree<T>) -> (c: BalBinTree<T>)
-        ensures c == *t
-        decreases t,
-    {
-        let c = match t {
-            BalBinTree::Leaf => BalBinTree::Leaf,
-            BalBinTree::Node(node) => BalBinTree::Node(Box::new(BalBinNode {
-                left: clone_tree(&node.left),
-                value: node.value.clone(),
-                right: clone_tree(&node.right),
-            })),
-        };
-        proof { assume(c == *t); }
-        c
-    }
-
-    impl<T: Clone> Clone for BalBinTree<T> {
-        /// - Alg Analysis: APAS: N/A — derive scaffolding.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — delegates to clone_tree.
-        fn clone(&self) -> (cloned: Self)
-            ensures cloned == *self
-        {
-            clone_tree(self)
         }
     }
 
@@ -869,40 +887,8 @@ pub mod BalBinTreeStEph {
 
     } // verus!
 
+    //		Section 14. derive impls outside verus!
 
-    //		13. derive impls outside verus!
-
-    impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            match self {
-                BalBinTree::Leaf => write!(f, "Leaf"),
-                BalBinTree::Node(node) =>
-                    write!(f, "Node({:?}, {:?}, {:?})", node.left, node.value, node.right),
-            }
-        }
-    }
-
-    impl<T: std::fmt::Debug> std::fmt::Debug for BalBinNode<T> {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "BalBinNode {{ left: {:?}, value: {:?}, right: {:?} }}", self.left, self.value, self.right)
-        }
-    }
-
-    impl<T: Display> Display for BalBinTree<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            match self {
-                BalBinTree::Leaf => write!(f, "Leaf"),
-                BalBinTree::Node(node) =>
-                    write!(f, "({}, {}, {})", node.left, node.value, node.right),
-            }
-        }
-    }
-
-    impl<T: Display> Display for BalBinNode<T> {
-        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
-            write!(f, "({}, {}, {})", self.left, self.value, self.right)
-        }
-    }
 
     impl<T: Debug> Debug for InOrderIter<T> {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -976,4 +962,39 @@ pub mod BalBinTreeStEph {
         }
     }
 
+    //		Section 14a. derive impls outside verus!
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for BalBinTree<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            match self {
+                BalBinTree::Leaf => write!(f, "Leaf"),
+                BalBinTree::Node(node) =>
+                    write!(f, "Node({:?}, {:?}, {:?})", node.left, node.value, node.right),
+            }
+        }
+    }
+
+    impl<T: Display> Display for BalBinTree<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            match self {
+                BalBinTree::Leaf => write!(f, "Leaf"),
+                BalBinTree::Node(node) =>
+                    write!(f, "({}, {}, {})", node.left, node.value, node.right),
+            }
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for BalBinNode<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BalBinNode {{ left: {:?}, value: {:?}, right: {:?} }}", self.left, self.value, self.right)
+        }
+    }
+
+    impl<T: Display> Display for BalBinNode<T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "({}, {}, {})", self.left, self.value, self.right)
+        }
+    }
 } // mod

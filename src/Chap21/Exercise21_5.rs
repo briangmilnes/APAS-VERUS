@@ -4,30 +4,34 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	7. proof fns/broadcast groups
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Exercise21_5 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq::seq::{spec_inner_lens_sum, lemma_flatten_len_is_inner_lens_sum};
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -37,7 +41,8 @@ pub mod Exercise21_5 {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     /// The sum of inner lengths for a descending pattern ss[i].len() == n-i
     /// equals the n-th triangular number: n*(n+1)/2.
@@ -64,7 +69,8 @@ pub mod Exercise21_5 {
         }
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Exercise 21.5: Generate all contiguous subsequences using nested tabulate + flatten.
     /// - Alg Analysis: APAS (Ch21 Ex 21.5): Work O(n²), Span O(lg n)

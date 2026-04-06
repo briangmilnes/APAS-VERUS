@@ -3,10 +3,22 @@
 //! Concurrency types and traits for multi-threaded code.
 //! Based on Verus counting-to-2 example: https://verus-lang.github.io/verus/state_machines/examples/counting-to-2.html
 
+
+//  Table of Contents
+//	Section 2. imports
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 2. imports
+
 use vstd::prelude::*;
 use crate::Types::Types::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 9. impls
+
 
 /// Diverges. Use with `assume(false)` or `crate::vstdplus::accept::accept(false)` in
 /// unreachable error branches (e.g. `JoinHandle::join()` Err arm). The `accept` variant
@@ -18,6 +30,8 @@ pub fn diverge<A>() -> A {
 }
 
 } // verus!
+
+    //		Section 14. derive impls outside verus!
 
 pub mod Concurrency {
     use vstd::prelude::*;

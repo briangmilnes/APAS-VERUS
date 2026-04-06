@@ -2,20 +2,28 @@
 //! REVIEWED: NO
 //! Chapter 49: Subset Sum - ephemeral, multi-threaded.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 6a. spec fns
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod SubsetSumMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -34,9 +42,11 @@ pub mod SubsetSumMtEph {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqMtEphChap19SLit;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -44,22 +54,13 @@ pub mod SubsetSumMtEph {
         vstd::std_specs::hash::group_hash_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct SubsetSumMtEphMemoInv;
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, i32>, bool>> for SubsetSumMtEphMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, i32>, bool>) -> bool {
-            v@.dom().finite()
-        }
-    }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct SubsetSumMtEphS<T: MtVal> {
-        pub multiset: ArraySeqMtEphS<T>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>,
-    }
+    //		Section 6a. spec fns
 
-    // 6. spec fns
 
     /// Recursive specification of the subset sum problem.
     /// Returns true iff some subset of s[0..i) sums to j.
@@ -79,7 +80,8 @@ pub mod SubsetSumMtEph {
         }
     }
 
-    // 8. traits
+    //		Section 8a. traits
+
 
     /// Trait for parallel subset sum operations.
     pub trait SubsetSumMtEphTrait<T: MtVal>: Sized {
@@ -145,7 +147,8 @@ pub mod SubsetSumMtEph {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9a. impls
+
 
     /// Create Arc-wrapped memo lock with empty map.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — Arc/memo operations.
@@ -243,6 +246,18 @@ pub mod SubsetSumMtEph {
         result
     }
 
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct SubsetSumMtEphS<T: MtVal> {
+        pub multiset: ArraySeqMtEphS<T>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>,
+    }
+
+    //		Section 9b. impls
+
+
     impl<T: MtVal> SubsetSumMtEphTrait<T> for SubsetSumMtEphS<T> {
         open spec fn spec_multiset_len(&self) -> nat { self.multiset.spec_len() }
 
@@ -318,7 +333,17 @@ pub mod SubsetSumMtEph {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 11a. top level coarse locking
+
+
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, i32>, bool>> for SubsetSumMtEphMemoInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, i32>, bool>) -> bool {
+            v@.dom().finite()
+        }
+    }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl<T: MtVal> Clone for SubsetSumMtEphS<T> {
         fn clone(&self) -> (cloned: Self) {
@@ -331,6 +356,9 @@ pub mod SubsetSumMtEph {
 
     } // verus!
 
+    //		Section 14. derive impls outside verus!
+
+
     // 12. traits outside verus!
 
     /// Trait for methods returning &mut (not supported inside verus!).
@@ -341,11 +369,7 @@ pub mod SubsetSumMtEph {
         fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
     }
 
-    impl<T: MtVal> SubsetSumMtEphMutTrait<T> for SubsetSumMtEphS<T> {
-        fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T> { &mut self.multiset }
-    }
-
-    // 13a. derive impls outside verus! — struct SubsetSumMtEphMemoInv
+    //		Section 14a. derive impls outside verus!
 
     impl Debug for SubsetSumMtEphMemoInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -359,7 +383,11 @@ pub mod SubsetSumMtEph {
         }
     }
 
-    // 13b. derive impls outside verus! — struct SubsetSumMtEphS
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: MtVal> SubsetSumMtEphMutTrait<T> for SubsetSumMtEphS<T> {
+        fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T> { &mut self.multiset }
+    }
 
     impl<T: MtVal> PartialEq for SubsetSumMtEphS<T> {
         fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }

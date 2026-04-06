@@ -6,7 +6,21 @@
 //! - Algorithm 61.6: Parallel Edge Contraction (Sequential version)
 //! - One round of contraction using greedy matching
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod EdgeContractionStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -20,14 +34,19 @@ pub mod EdgeContractionStEph {
     use crate::Chap61::VertexMatchingStEph::VertexMatchingStEph::greedy_matching;
     use crate::SetLit;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct EdgeContractionStEph;
 
-    // 8. traits
+    pub type T<V> = UnDirGraphStEph<V>;
+
+    //		Section 8. traits
+
 
     pub trait EdgeContractionStEphTrait {
         /// Well-formedness for edge contraction algorithm input.
@@ -52,7 +71,8 @@ pub mod EdgeContractionStEph {
             requires Self::spec_edgecontractionsteph_wf(graph);
     }
 
-    pub type T<V> = UnDirGraphStEph<V>;
+    //		Section 9. impls
+
 
     /// Algorithm 61.6: Sequential Edge Contraction
     ///
@@ -165,7 +185,8 @@ pub mod EdgeContractionStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for EdgeContractionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

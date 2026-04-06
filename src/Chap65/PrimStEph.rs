@@ -5,7 +5,26 @@
 //! Implements Algorithm 65.1: Prim's algorithm for computing Minimum Spanning Trees.
 //! Uses priority-first search similar to Dijkstra's algorithm.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 6b. spec fns
+//	Section 9b. impls
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod PrimStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -26,12 +45,44 @@ pub mod PrimStEph {
 
     pub type T<V> = PQEntry<V>;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct PrimStEph;
+
+    //		Section 8a. traits
+
+
+    pub trait PrimStEphTrait {
+        /// Well-formedness for sequential Prim MST algorithm input.
+        open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, u64>) -> bool {
+            spec_labgraphview_wf(graph@)
+        }
+
+        /// Prim's MST algorithm.
+        /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
+        fn prim_mst<V: HashOrd + TotalOrder>(
+            graph: &LabUnDirGraphStEph<V, u64>,
+            start: V,
+        ) -> (mst: SetStEph<LabEdge<V, u64>>)
+            requires Self::spec_primsteph_wf(graph),
+            ensures mst.spec_setsteph_wf();
+
+        /// Compute total weight of MST.
+        /// APAS: Work O(m), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over all MST edges; St sequential.
+        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
+            requires mst.spec_setsteph_wf(),
+            ensures mst@.len() == 0 ==> total == 0;
+    }
+
+    //		Section 4b. type definitions
+
 
     /// Priority queue entry for Prim's algorithm.
     #[derive(PartialEq, Eq)]
@@ -41,14 +92,16 @@ pub mod PrimStEph {
         pub parent: Option<V>,
     }
 
-    // 5. view impls
+    //		Section 5b. view impls
+
 
     impl<V: StT + Ord> View for PQEntry<V> {
         type V = Self;
         open spec fn view(&self) -> Self { *self }
     }
 
-    // 6. spec fns
+    //		Section 6b. spec fns
+
 
     /// Lexicographic ordering on Option<V> for PQEntry total order.
     pub open spec fn spec_option_le<V: StT + Ord + TotalOrder>(a: Option<V>, b: Option<V>) -> bool {
@@ -60,6 +113,9 @@ pub mod PrimStEph {
             },
         }
     }
+
+    //		Section 9b. impls
+
 
     // 6a. TotalOrder for PQEntry — lexicographic on (priority, vertex, parent).
 
@@ -161,32 +217,6 @@ pub mod PrimStEph {
                 }
             }
         }
-    }
-
-    // 8. traits
-
-    pub trait PrimStEphTrait {
-        /// Well-formedness for sequential Prim MST algorithm input.
-        open spec fn spec_primsteph_wf<V: HashOrd>(graph: &LabUnDirGraphStEph<V, u64>) -> bool {
-            spec_labgraphview_wf(graph@)
-        }
-
-        /// Prim's MST algorithm.
-        /// APAS: Work O(m log n), Span O(m log n) where m = |E|, n = |V|
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log n), Span O(m log n) — priority queue with n extract-min + m decrease-key; St sequential.
-        fn prim_mst<V: HashOrd + TotalOrder>(
-            graph: &LabUnDirGraphStEph<V, u64>,
-            start: V,
-        ) -> (mst: SetStEph<LabEdge<V, u64>>)
-            requires Self::spec_primsteph_wf(graph),
-            ensures mst.spec_setsteph_wf();
-
-        /// Compute total weight of MST.
-        /// APAS: Work O(m), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — iterates over all MST edges; St sequential.
-        fn mst_weight<V: StT + Hash>(mst: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
-            requires mst.spec_setsteph_wf(),
-            ensures mst@.len() == 0 ==> total == 0;
     }
 
     /// Module-level function to create a new PQEntry.
@@ -452,7 +482,8 @@ pub mod PrimStEph {
         }
     }
 
-    // 12. derive impls in verus!
+    //		Section 12b. derive impls in verus!
+
 
     impl<V: StT + Ord + Clone> Clone for PQEntry<V> {
         fn clone(&self) -> (cloned: Self)
@@ -465,6 +496,23 @@ pub mod PrimStEph {
     }
 
     } // verus!
+
+    //		Section 14a. derive impls outside verus!
+
+
+    impl std::fmt::Debug for PrimStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PrimStEph")
+        }
+    }
+
+    impl Display for PrimStEph {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "PrimStEph")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
@@ -493,20 +541,6 @@ pub mod PrimStEph {
                 .field("vertex", &self.vertex)
                 .field("parent", &self.parent)
                 .finish()
-        }
-    }
-
-    // 14a. derive impls outside verus! — struct PrimStEph
-
-    impl std::fmt::Debug for PrimStEph {
-        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-            write!(f, "PrimStEph")
-        }
-    }
-
-    impl Display for PrimStEph {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "PrimStEph")
         }
     }
 }

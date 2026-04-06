@@ -18,9 +18,28 @@
 //! clean specifications without recursive spec functions. Path compression changes
 //! concrete parent pointers but preserves the logical partition (roots).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 7c. proof fns/broadcast groups
+//	Section 9c. impls
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod UnionFindStEph {
 
-    // 2. imports
+    //		Section 2. imports
     use vstd::prelude::*;
 
     use crate::Types::Types::*;
@@ -38,12 +57,15 @@ pub mod UnionFindStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::pervasive::strictly_cloned;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 4a. type definitions
+
 
     // feq broadcast moved from module-level to per-function to avoid
     // matching loop with spec_elements_distinct in union/equals.
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct UnionFindStEph<V: StT + Hash> {
@@ -53,21 +75,8 @@ pub mod UnionFindStEph {
         pub roots: Ghost<Map<<V as View>::V, <V as View>::V>>,
     }
 
-    /// Ghost info returned by union_merge_exec for the proof coordination step.
-    pub ghost struct UnionMergeInfo<V: View> {
-        pub winner_view: <V as View>::V,
-        pub loser_view: <V as View>::V,
-        pub winner_val: V,
-    }
+    //		Section 5a. view impls
 
-    // 5. view impls
-
-    pub ghost struct UnionFindStEphV<V: View> {
-        pub parent: Map<<V as View>::V, V>,
-        pub rank: Map<<V as View>::V, usize>,
-        pub elements: Seq<V>,
-        pub roots: Map<<V as View>::V, <V as View>::V>,
-    }
 
     impl<V: StT + Hash> View for UnionFindStEph<V> {
         type V = UnionFindStEphV<V>;
@@ -81,7 +90,278 @@ pub mod UnionFindStEph {
         }
     }
 
-    // 6. spec fns
+    //		Section 8a. traits
+
+
+    // Path compression commented out — correct but exceeds solver budget.
+    // Uncomment when compression sub-lemmas are restored.
+    // fn compress_path<V: StT + Hash>(uf: &mut UnionFindStEph<V>, v: &V, root: &V)
+    //     requires
+    //         old(uf).spec_unionfindsteph_wf(),
+    //         old(uf)@.parent.contains_key(v@),
+    //         root@ == old(uf)@.roots[v@],
+    //         old(uf)@.roots[root@] == root@,
+    //         old(uf)@.parent.contains_key(root@),
+    //     ensures
+    //         uf.spec_unionfindsteph_wf(),
+    //         uf@.roots =~= old(uf)@.roots,
+    //         uf@.parent.dom() =~= old(uf)@.parent.dom(),
+    //         uf@.rank =~= old(uf)@.rank,
+    //         uf@.elements =~= old(uf)@.elements,
+    // { ... }
+
+
+    pub trait UnionFindStEphTrait<V: StT + Hash>: Sized + View<V = UnionFindStEphV<V>> {
+        spec fn spec_unionfindsteph_wf(&self) -> bool;
+
+        /// Create a new empty Union-Find structure.
+        /// APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty HashMap allocation.
+        fn new() -> (uf: Self)
+            requires
+                obeys_key_model::<V>(),
+                obeys_feq_full::<V>(),
+                obeys_feq_view_injective::<V>(),
+            ensures
+                uf.spec_unionfindsteph_wf(),
+                uf@.parent =~= Map::<<V as View>::V, V>::empty(),
+                uf@.rank =~= Map::<<V as View>::V, usize>::empty(),
+                uf@.elements =~= Seq::<V>::empty(),
+                uf@.roots =~= Map::<<V as View>::V, <V as View>::V>::empty();
+
+        /// Insert a new element as a singleton set.
+        /// APAS: Work Theta(1), Span Theta(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three HashMap inserts + Vec push.
+        fn insert(&mut self, v: V)
+            requires
+                old(self).spec_unionfindsteph_wf(),
+            ensures
+                self.spec_unionfindsteph_wf(),
+                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,
+                !old(self)@.parent.contains_key(v@) ==> {
+                    &&& self@.parent =~= old(self)@.parent.insert(v@, v)
+                    &&& self@.rank =~= old(self)@.rank.insert(v@, 0usize)
+                    &&& self@.roots =~= old(self)@.roots.insert(v@, v@)
+                    &&& self@.elements.len() == old(self)@.elements.len() + 1
+                };
+
+        /// Find the root representative with path compression.
+        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized (inverse Ackermann)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — path compression via find_root_loop + parent updates.
+        fn find(&mut self, v: &V) -> (root: V)
+            requires
+                old(self).spec_unionfindsteph_wf(),
+                old(self)@.parent.contains_key(v@),
+            ensures
+                self.spec_unionfindsteph_wf(),
+                root@ == old(self)@.roots[v@],
+                self@.roots =~= old(self)@.roots,
+                self@.parent.dom() =~= old(self)@.parent.dom(),
+                self@.rank =~= old(self)@.rank,
+                self@.elements =~= old(self)@.elements;
+
+        /// Union two sets by rank.
+        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — two finds O(alpha(n)) + union_merge updates roots for all elements.
+        fn union(&mut self, u: &V, v: &V)
+            requires
+                old(self).spec_unionfindsteph_wf(),
+                old(self)@.parent.contains_key(u@),
+                old(self)@.parent.contains_key(v@),
+            ensures
+                self.spec_unionfindsteph_wf(),
+                self@.parent.dom() =~= old(self)@.parent.dom(),
+                self@.elements =~= old(self)@.elements,
+                // Opaque roots change predicate. Callers use reveal(spec_union_result)
+                // to access the quantified form.
+                spec_union_result(self@.roots, old(self)@.roots, u@, v@);
+
+        /// Check if two elements are in the same set.
+        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — two find_root_loop calls + comparison.
+        fn equals(&mut self, u: &V, v: &V) -> (same: bool)
+            requires
+                old(self).spec_unionfindsteph_wf(),
+                old(self)@.parent.contains_key(u@),
+                old(self)@.parent.contains_key(v@),
+            ensures
+                self.spec_unionfindsteph_wf(),
+                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),
+                self@.roots =~= old(self)@.roots,
+                self@.parent.dom() =~= old(self)@.parent.dom();
+
+        /// Count distinct sets.
+        /// APAS: Work O(n alpha(n)), Span O(n alpha(n))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — find root for each element + set insertion; St sequential.
+        fn num_sets(&mut self) -> (count: usize)
+            requires
+                old(self).spec_unionfindsteph_wf(),
+            ensures
+                self.spec_unionfindsteph_wf(),
+                self@.roots =~= old(self)@.roots,
+                self@.parent.dom() =~= old(self)@.parent.dom();
+    }
+
+    //		Section 9a. impls
+
+
+    impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
+        /// Well-formedness invariant for the Union-Find structure.
+        /// Delegates to closed spec_unionfindsteph_wf so wf unfolds to one opaque boolean
+        /// in exec contexts. Proof functions use `reveal(spec_unionfindsteph_wf)` to
+        /// access the sub-predicate conjunction.
+        open spec fn spec_unionfindsteph_wf(&self) -> bool {
+            spec_unionfindsteph_wf(self)
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn new() -> (uf: Self) {
+            let uf = UnionFindStEph {
+                parent: HashMapWithViewPlus::new(),
+                rank: HashMapWithViewPlus::new(),
+                elements: Vec::new(),
+                roots: Ghost(Map::empty()),
+            };
+            proof {
+                // Reveal spec_unionfindsteph_wf then sub-predicates — all vacuously true on empty maps.
+                reveal(spec_unionfindsteph_wf);
+                reveal(spec_roots_idempotent);
+                reveal(spec_parent_closed);
+                reveal(spec_roots_in_dom);
+                reveal(spec_elements_forward);
+                reveal(spec_elements_backward);
+                reveal(spec_elements_distinct);
+                reveal(spec_self_parent_is_root);
+                reveal(spec_parent_preserves_root);
+                reveal(spec_rank_increases);
+                reveal(spec_rank_bounded);
+            }
+            uf
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn insert(&mut self, v: V) {
+            if !self.parent.contains_key(&v) {
+                // Capture v@ before v is consumed by push.
+                let ghost v_view = v@;
+
+                // 3 clones for parent key, parent value, rank key.
+                let v1 = v.clone();
+                let v2 = v.clone();
+                let v3 = v.clone();
+
+                proof { lemma_three_clones_eq(v, v1, v2, v3); }
+
+                self.parent.insert(v1, v2);
+                self.rank.insert(v3, 0usize);
+                // Use original v for push — no 4th clone needed.
+                self.elements.push(v);
+                self.roots = Ghost(self.roots@.insert(v_view, v_view));
+
+                proof { lemma_insert_preserves_wf(*self, *old(self), v); }
+            }
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
+        /// Without path compression for now (correct but O(log n) per call).
+        fn find(&mut self, v: &V) -> (root: V) {
+            find_root_loop(self, v)
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
+        #[verifier::rlimit(30)]
+        fn union(&mut self, u: &V, v: &V) {
+            proof { lemma_wf_type_axioms(&*old(self)); }
+            let root_u = find_root_loop(self, u);
+            let root_v = find_root_loop(self, v);
+            if !feq(&root_u, &root_v) {
+                proof {
+                    lemma_root_rank_lt_elements(self, root_u@);
+                    lemma_root_rank_lt_elements(self, root_v@);
+                }
+                let ghost mid_uf = *self;
+                let info = union_merge(self, root_u, root_v);
+                proof {
+                    lemma_prove_union_result(
+                        &*self, &mid_uf,
+                        root_u@, root_v@,
+                        u@, v@,
+                        info@.winner_view,
+                    );
+                }
+            } else {
+                proof {
+                    lemma_wf_parent_dom_eq_roots_dom(self);
+                    lemma_union_result_identity(self.roots@, u@, v@);
+                }
+            }
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
+        #[verifier::rlimit(20)]
+        fn equals(&mut self, u: &V, v: &V) -> (same: bool) {
+            let root_u = find_root_loop(self, u);
+            let root_v = find_root_loop(self, v);
+            feq(&root_u, &root_v)
+        }
+
+        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(n alpha(n)), Span O(n alpha(n))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — matches APAS
+        #[verifier::rlimit(30)]
+        fn num_sets(&mut self) -> (count: usize) {
+            broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+            proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
+            let mut roots_set = HashSetWithViewPlus::<V>::new();
+            let mut i: usize = 0;
+            while i < self.elements.len()
+                invariant
+                    self.spec_unionfindsteph_wf(),
+                    self@ == old(self)@,
+                    0 <= i <= self.elements@.len(),
+                decreases self.elements@.len() - i,
+            {
+                let v = self.elements[i].clone();
+                proof {
+                    assert(strictly_cloned(self.elements@[i as int], v));
+                    assert(obeys_feq_full::<V>());
+                    assert(v@ == self.elements@[i as int]@);
+                    assert(self@.parent.contains_key(v@));
+                }
+                let root = find_root_loop(self, &v);
+                let _ = roots_set.insert(root);
+                i = i + 1;
+            }
+            roots_set.len()
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
+    /// Ghost info returned by union_merge_exec for the proof coordination step.
+    pub ghost struct UnionMergeInfo<V: View> {
+        pub winner_view: <V as View>::V,
+        pub loser_view: <V as View>::V,
+        pub winner_val: V,
+    }
+
+    //		Section 4c. type definitions
+
+
+    pub ghost struct UnionFindStEphV<V: View> {
+        pub parent: Map<<V as View>::V, V>,
+        pub rank: Map<<V as View>::V, usize>,
+        pub elements: Seq<V>,
+        pub roots: Map<<V as View>::V, <V as View>::V>,
+    }
+
+    //		Section 6c. spec fns
+
 
     // Named wf sub-predicates. Each is one conjunct of spec_unionfindsteph_wf.
     // Factored so compression lemmas can target only the conjuncts that change.
@@ -249,7 +529,64 @@ pub mod UnionFindStEph {
         &&& spec_rank_lt_elements(uf)
     }
 
-    // 7. proof fns
+    // Common requires for both union wf lemma halves.
+    // Factored as a spec fn to reduce requires duplication.
+    pub closed spec fn spec_union_lemma_pre<V: StT + Hash>(
+        uf: &UnionFindStEph<V>,
+        mid: &UnionFindStEph<V>,
+        winner_val: V,
+        root_u_view: <V as View>::V,
+        root_v_view: <V as View>::V,
+        winner_view: <V as View>::V,
+        loser_view: <V as View>::V,
+    ) -> bool {
+        &&& spec_key_model::<V>()
+        &&& spec_feq_full::<V>()
+        &&& spec_parent_rank_same_dom(mid)
+        &&& spec_roots_parent_same_dom(mid)
+        &&& spec_roots_idempotent(mid)
+        &&& spec_parent_closed(mid)
+        &&& spec_roots_in_dom(mid)
+        &&& spec_elements_forward(mid)
+        &&& spec_elements_backward(mid)
+        &&& spec_elements_distinct(mid)
+        &&& spec_self_parent_is_root(mid)
+        &&& spec_parent_preserves_root(mid)
+        &&& spec_rank_increases(mid)
+        &&& spec_rank_bounded(mid)
+        &&& spec_rank_has_predecessor(mid)
+        &&& root_u_view != root_v_view
+        &&& mid.roots@.contains_key(root_u_view)
+        &&& mid.roots@.contains_key(root_v_view)
+        &&& mid.roots@[root_u_view] == root_u_view
+        &&& mid.roots@[root_v_view] == root_v_view
+        &&& mid.parent@[root_u_view]@ == root_u_view
+        &&& mid.parent@[root_v_view]@ == root_v_view
+        &&& ((winner_view == root_u_view && loser_view == root_v_view) ||
+             (winner_view == root_v_view && loser_view == root_u_view))
+        &&& winner_val@ == winner_view
+        &&& uf.parent@ =~= mid.parent@.insert(loser_view, winner_val)
+        &&& uf.rank@.dom() =~= mid.rank@.dom()
+        &&& forall|k: <V as View>::V| mid.rank@.contains_key(k) && k != winner_view ==>
+            #[trigger] uf.rank@[k] == mid.rank@[k]
+        &&& uf.rank@[winner_view] >= mid.rank@[winner_view]
+        &&& uf.rank@[winner_view] >= mid.rank@[loser_view]
+        &&& mid.rank@[loser_view] < uf.rank@[winner_view]
+        &&& uf.elements@ =~= mid.elements@
+        &&& uf.roots@.dom() =~= mid.roots@.dom()
+        &&& forall|k: <V as View>::V| mid.roots@.contains_key(k) ==> (
+            #[trigger] uf.roots@[k] == (
+                if mid.roots@[k] == root_u_view || mid.roots@[k] == root_v_view {
+                    winner_view
+                } else {
+                    mid.roots@[k]
+                }
+            )
+        )
+    }
+
+    //		Section 7c. proof fns/broadcast groups
+
 
     /// Helper: prove that 3 cloned values are spec-equal to the original.
     /// Isolated from the wf context to keep solver budget low.
@@ -394,62 +731,6 @@ pub mod UnionFindStEph {
             assert(uf.rank@.contains_key(uf.parent@[rv]@));
             assert(uf.rank@[uf.parent@[rv]@] <= uf.rank@[uf.roots@[uf.parent@[rv]@]]);
         }
-    }
-
-    // Common requires for both union wf lemma halves.
-    // Factored as a spec fn to reduce requires duplication.
-    pub closed spec fn spec_union_lemma_pre<V: StT + Hash>(
-        uf: &UnionFindStEph<V>,
-        mid: &UnionFindStEph<V>,
-        winner_val: V,
-        root_u_view: <V as View>::V,
-        root_v_view: <V as View>::V,
-        winner_view: <V as View>::V,
-        loser_view: <V as View>::V,
-    ) -> bool {
-        &&& spec_key_model::<V>()
-        &&& spec_feq_full::<V>()
-        &&& spec_parent_rank_same_dom(mid)
-        &&& spec_roots_parent_same_dom(mid)
-        &&& spec_roots_idempotent(mid)
-        &&& spec_parent_closed(mid)
-        &&& spec_roots_in_dom(mid)
-        &&& spec_elements_forward(mid)
-        &&& spec_elements_backward(mid)
-        &&& spec_elements_distinct(mid)
-        &&& spec_self_parent_is_root(mid)
-        &&& spec_parent_preserves_root(mid)
-        &&& spec_rank_increases(mid)
-        &&& spec_rank_bounded(mid)
-        &&& spec_rank_has_predecessor(mid)
-        &&& root_u_view != root_v_view
-        &&& mid.roots@.contains_key(root_u_view)
-        &&& mid.roots@.contains_key(root_v_view)
-        &&& mid.roots@[root_u_view] == root_u_view
-        &&& mid.roots@[root_v_view] == root_v_view
-        &&& mid.parent@[root_u_view]@ == root_u_view
-        &&& mid.parent@[root_v_view]@ == root_v_view
-        &&& ((winner_view == root_u_view && loser_view == root_v_view) ||
-             (winner_view == root_v_view && loser_view == root_u_view))
-        &&& winner_val@ == winner_view
-        &&& uf.parent@ =~= mid.parent@.insert(loser_view, winner_val)
-        &&& uf.rank@.dom() =~= mid.rank@.dom()
-        &&& forall|k: <V as View>::V| mid.rank@.contains_key(k) && k != winner_view ==>
-            #[trigger] uf.rank@[k] == mid.rank@[k]
-        &&& uf.rank@[winner_view] >= mid.rank@[winner_view]
-        &&& uf.rank@[winner_view] >= mid.rank@[loser_view]
-        &&& mid.rank@[loser_view] < uf.rank@[winner_view]
-        &&& uf.elements@ =~= mid.elements@
-        &&& uf.roots@.dom() =~= mid.roots@.dom()
-        &&& forall|k: <V as View>::V| mid.roots@.contains_key(k) ==> (
-            #[trigger] uf.roots@[k] == (
-                if mid.roots@[k] == root_u_view || mid.roots@[k] == root_v_view {
-                    winner_view
-                } else {
-                    mid.roots@[k]
-                }
-            )
-        )
     }
 
     /// Part 1a: roots wf conjuncts after union (idempotent, in dom).
@@ -851,83 +1132,6 @@ pub mod UnionFindStEph {
         reveal(spec_unionfindsteph_wf);
     }
 
-    /// Chase parent pointers to the root (no mutation).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(depth), Span O(depth) — follows parent chain to root; depth bounded by O(lg n) with union-by-rank.
-    #[verifier::rlimit(30)]
-    fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
-        requires
-            uf.spec_unionfindsteph_wf(),
-            uf@.parent.contains_key(v@),
-        ensures
-            root@ == uf@.roots[v@],
-            uf@.parent.contains_key(root@),
-            uf@.roots.contains_key(root@),
-            uf@.roots[root@] == root@,
-    {
-        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
-        proof {
-            reveal(spec_unionfindsteph_wf);
-            reveal(spec_parent_closed);
-            reveal(spec_rank_increases);
-            reveal(spec_rank_bounded);
-            reveal(spec_parent_preserves_root);
-            reveal(spec_self_parent_is_root);
-        }
-        let mut current = v.clone();
-        proof {
-            assert(strictly_cloned(*v, current));
-            assert(obeys_feq_full::<V>());
-            assert(current@ == v@);
-        }
-
-        // Read first parent for the while condition.
-        let mut p = uf.parent.get(&current).unwrap().clone();
-        proof {
-            let ghost pv = uf.parent@[current@];
-            assert(strictly_cloned(pv, p));
-            assert(p@ == uf@.parent[current@]@);
-        }
-
-        while !feq(&p, &current)
-            invariant
-                uf.spec_unionfindsteph_wf(),
-                uf@.parent.contains_key(current@),
-                uf@.roots.contains_key(current@),
-                uf@.roots.contains_key(v@),
-                uf@.rank.contains_key(current@),
-                uf@.roots[current@] == uf@.roots[v@],
-                p@ == uf@.parent[current@]@,
-                uf@.parent.contains_key(p@),
-            decreases uf@.rank[uf@.roots[v@]] - uf@.rank[current@],
-        {
-            proof {
-                // p@ != current@, so non-root.
-                assert(uf@.parent[current@]@ != current@);
-                assert(uf@.rank[current@] < uf@.rank[uf@.parent[current@]@]);
-                assert(uf@.roots[p@] == uf@.roots[current@]);
-            }
-
-            current = p;
-            p = uf.parent.get(&current).unwrap().clone();
-            proof {
-                let ghost pv = uf.parent@[current@];
-                assert(strictly_cloned(pv, p));
-                assert(p@ == uf@.parent[current@]@);
-            }
-        }
-
-        // After loop: feq(&p, &current) is true, so p@ == current@.
-        // Invariant: p@ == parent[current@]@. So parent[current@]@ == current@.
-        // wf self-parent: roots[current@] == current@. Invariant: roots[current@] == roots[v@].
-        // Therefore current@ == roots[v@].
-        proof {
-            assert(uf@.parent[current@]@ == current@);
-            assert(uf@.roots[current@] == current@);
-        }
-
-        current
-    }
-
     /// Assemble spec_union_lemma_pre from individual facts.
     /// Reveals spec_union_lemma_pre internally so union_merge stays opaque.
     proof fn lemma_establish_union_pre<V: StT + Hash>(
@@ -1051,112 +1255,6 @@ pub mod UnionFindStEph {
         reveal(spec_elements_forward);
         reveal(spec_elements_backward);
         reveal(spec_elements_distinct);
-    }
-
-    /// Execute the mutations for union merge. No wf sub-predicates in scope —
-    /// only structural requires/ensures. This isolates HashMap/Map axioms from
-    /// the quantified wf proof, keeping Z3 under 4 GB.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two HashMap updates (parent + rank).
-    #[verifier::rlimit(30)]
-    fn union_merge_exec<V: StT + Hash>(
-        uf: &mut UnionFindStEph<V>,
-        root_u: V,
-        root_v: V,
-    ) -> (info: Ghost<UnionMergeInfo<V>>)
-        requires
-            old(uf).spec_unionfindsteph_wf(),
-            spec_key_model::<V>(),
-            spec_feq_full::<V>(),
-            old(uf)@.parent.dom() =~= old(uf)@.rank.dom(),
-            old(uf)@.roots.dom() =~= old(uf)@.parent.dom(),
-            root_u@ != root_v@,
-            old(uf)@.roots.contains_key(root_u@),
-            old(uf)@.roots.contains_key(root_v@),
-            old(uf)@.roots[root_u@] == root_u@,
-            old(uf)@.roots[root_v@] == root_v@,
-            old(uf)@.parent[root_u@]@ == root_u@,
-            old(uf)@.parent[root_v@]@ == root_v@,
-            // Rank bounded by elements length — prevents overflow on rank increment.
-            // True invariant of union-by-rank: 2^rank <= component_size <= elements.len().
-            old(uf).rank@[root_u@] < old(uf).elements@.len(),
-            old(uf).rank@[root_v@] < old(uf).elements@.len(),
-        ensures
-            ((info@.winner_view == root_u@ && info@.loser_view == root_v@) ||
-             (info@.winner_view == root_v@ && info@.loser_view == root_u@)),
-            info@.winner_val@ == info@.winner_view,
-            uf.parent@.dom() =~= old(uf).parent@.dom(),
-            uf.parent@[info@.loser_view] == info@.winner_val,
-            forall|k: <V as View>::V| old(uf).parent@.contains_key(k) && k != info@.loser_view ==>
-                #[trigger] uf.parent@[k] == old(uf).parent@[k],
-            uf.rank@.dom() =~= old(uf).rank@.dom(),
-            forall|k: <V as View>::V| old(uf).rank@.contains_key(k) && k != info@.winner_view ==>
-                #[trigger] uf.rank@[k] == old(uf).rank@[k],
-            uf.rank@[info@.winner_view] >= old(uf).rank@[info@.winner_view],
-            uf.rank@[info@.winner_view] >= old(uf).rank@[info@.loser_view],
-            old(uf).rank@[info@.loser_view] < uf.rank@[info@.winner_view],
-            uf.elements@ == old(uf).elements@,
-            uf.roots@.dom() =~= old(uf).roots@.dom(),
-            forall|k: <V as View>::V| old(uf).roots@.contains_key(k) ==> (
-                #[trigger] uf.roots@[k] == (
-                    if old(uf).roots@[k] == root_u@ || old(uf).roots@[k] == root_v@ {
-                        info@.winner_view
-                    } else {
-                        old(uf).roots@[k]
-                    }
-                )
-            ),
-    {
-        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
-        let ghost root_u_view = root_u@;
-        let ghost root_v_view = root_v@;
-        let ghost mid_roots = uf.roots@;
-
-        let rank_u = *uf.rank.get(&root_u).unwrap();
-        let rank_v = *uf.rank.get(&root_v).unwrap();
-
-        let ru1 = root_u.clone();
-        let rv1 = root_v.clone();
-        proof {
-            assert(strictly_cloned(root_u, ru1));
-            assert(strictly_cloned(root_v, rv1));
-        }
-
-        let ghost winner_view: <V as View>::V;
-        let ghost loser_view: <V as View>::V;
-        let ghost winner_v: V;
-
-        if rank_u < rank_v {
-            proof { winner_view = root_v_view; loser_view = root_u_view; winner_v = rv1; }
-            uf.parent.insert(ru1, rv1);
-        } else {
-            proof { winner_view = root_u_view; loser_view = root_v_view; winner_v = ru1; }
-            uf.parent.insert(rv1, ru1);
-            if rank_u == rank_v {
-                let ru2 = root_u.clone();
-                let ghost elem_len = uf.elements.len();
-                proof {
-                    assert(strictly_cloned(root_u, ru2));
-                    // rank_u < elements.len() (from requires). elements.len() is usize,
-                    // so rank_u < usize::MAX, and rank_u + 1 <= usize::MAX.
-                    assert(rank_u < old(uf).elements@.len());
-                    assert(elem_len <= usize::MAX);
-                    assert(old(uf).elements@.len() == elem_len as nat);
-                }
-                uf.rank.insert(ru2, rank_u + 1);
-            }
-        }
-
-        uf.roots = Ghost(Map::new(
-            |x: <V as View>::V| mid_roots.contains_key(x),
-            |x: <V as View>::V|
-                if mid_roots[x] == root_u_view || mid_roots[x] == root_v_view {
-                    winner_view
-                } else {
-                    mid_roots[x]
-                },
-        ));
-
-        Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
     }
 
     /// Coordinate all sub-lemmas to prove wf after union merge.
@@ -1534,6 +1632,192 @@ pub mod UnionFindStEph {
         // Trivial: all ensures are direct forwards from requires.
     }
 
+    //		Section 9c. impls
+
+
+    /// Chase parent pointers to the root (no mutation).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(depth), Span O(depth) — follows parent chain to root; depth bounded by O(lg n) with union-by-rank.
+    #[verifier::rlimit(30)]
+    fn find_root_loop<V: StT + Hash>(uf: &UnionFindStEph<V>, v: &V) -> (root: V)
+        requires
+            uf.spec_unionfindsteph_wf(),
+            uf@.parent.contains_key(v@),
+        ensures
+            root@ == uf@.roots[v@],
+            uf@.parent.contains_key(root@),
+            uf@.roots.contains_key(root@),
+            uf@.roots[root@] == root@,
+    {
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+        proof {
+            reveal(spec_unionfindsteph_wf);
+            reveal(spec_parent_closed);
+            reveal(spec_rank_increases);
+            reveal(spec_rank_bounded);
+            reveal(spec_parent_preserves_root);
+            reveal(spec_self_parent_is_root);
+        }
+        let mut current = v.clone();
+        proof {
+            assert(strictly_cloned(*v, current));
+            assert(obeys_feq_full::<V>());
+            assert(current@ == v@);
+        }
+
+        // Read first parent for the while condition.
+        let mut p = uf.parent.get(&current).unwrap().clone();
+        proof {
+            let ghost pv = uf.parent@[current@];
+            assert(strictly_cloned(pv, p));
+            assert(p@ == uf@.parent[current@]@);
+        }
+
+        while !feq(&p, &current)
+            invariant
+                uf.spec_unionfindsteph_wf(),
+                uf@.parent.contains_key(current@),
+                uf@.roots.contains_key(current@),
+                uf@.roots.contains_key(v@),
+                uf@.rank.contains_key(current@),
+                uf@.roots[current@] == uf@.roots[v@],
+                p@ == uf@.parent[current@]@,
+                uf@.parent.contains_key(p@),
+            decreases uf@.rank[uf@.roots[v@]] - uf@.rank[current@],
+        {
+            proof {
+                // p@ != current@, so non-root.
+                assert(uf@.parent[current@]@ != current@);
+                assert(uf@.rank[current@] < uf@.rank[uf@.parent[current@]@]);
+                assert(uf@.roots[p@] == uf@.roots[current@]);
+            }
+
+            current = p;
+            p = uf.parent.get(&current).unwrap().clone();
+            proof {
+                let ghost pv = uf.parent@[current@];
+                assert(strictly_cloned(pv, p));
+                assert(p@ == uf@.parent[current@]@);
+            }
+        }
+
+        // After loop: feq(&p, &current) is true, so p@ == current@.
+        // Invariant: p@ == parent[current@]@. So parent[current@]@ == current@.
+        // wf self-parent: roots[current@] == current@. Invariant: roots[current@] == roots[v@].
+        // Therefore current@ == roots[v@].
+        proof {
+            assert(uf@.parent[current@]@ == current@);
+            assert(uf@.roots[current@] == current@);
+        }
+
+        current
+    }
+
+    /// Execute the mutations for union merge. No wf sub-predicates in scope —
+    /// only structural requires/ensures. This isolates HashMap/Map axioms from
+    /// the quantified wf proof, keeping Z3 under 4 GB.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two HashMap updates (parent + rank).
+    #[verifier::rlimit(30)]
+    fn union_merge_exec<V: StT + Hash>(
+        uf: &mut UnionFindStEph<V>,
+        root_u: V,
+        root_v: V,
+    ) -> (info: Ghost<UnionMergeInfo<V>>)
+        requires
+            old(uf).spec_unionfindsteph_wf(),
+            spec_key_model::<V>(),
+            spec_feq_full::<V>(),
+            old(uf)@.parent.dom() =~= old(uf)@.rank.dom(),
+            old(uf)@.roots.dom() =~= old(uf)@.parent.dom(),
+            root_u@ != root_v@,
+            old(uf)@.roots.contains_key(root_u@),
+            old(uf)@.roots.contains_key(root_v@),
+            old(uf)@.roots[root_u@] == root_u@,
+            old(uf)@.roots[root_v@] == root_v@,
+            old(uf)@.parent[root_u@]@ == root_u@,
+            old(uf)@.parent[root_v@]@ == root_v@,
+            // Rank bounded by elements length — prevents overflow on rank increment.
+            // True invariant of union-by-rank: 2^rank <= component_size <= elements.len().
+            old(uf).rank@[root_u@] < old(uf).elements@.len(),
+            old(uf).rank@[root_v@] < old(uf).elements@.len(),
+        ensures
+            ((info@.winner_view == root_u@ && info@.loser_view == root_v@) ||
+             (info@.winner_view == root_v@ && info@.loser_view == root_u@)),
+            info@.winner_val@ == info@.winner_view,
+            uf.parent@.dom() =~= old(uf).parent@.dom(),
+            uf.parent@[info@.loser_view] == info@.winner_val,
+            forall|k: <V as View>::V| old(uf).parent@.contains_key(k) && k != info@.loser_view ==>
+                #[trigger] uf.parent@[k] == old(uf).parent@[k],
+            uf.rank@.dom() =~= old(uf).rank@.dom(),
+            forall|k: <V as View>::V| old(uf).rank@.contains_key(k) && k != info@.winner_view ==>
+                #[trigger] uf.rank@[k] == old(uf).rank@[k],
+            uf.rank@[info@.winner_view] >= old(uf).rank@[info@.winner_view],
+            uf.rank@[info@.winner_view] >= old(uf).rank@[info@.loser_view],
+            old(uf).rank@[info@.loser_view] < uf.rank@[info@.winner_view],
+            uf.elements@ == old(uf).elements@,
+            uf.roots@.dom() =~= old(uf).roots@.dom(),
+            forall|k: <V as View>::V| old(uf).roots@.contains_key(k) ==> (
+                #[trigger] uf.roots@[k] == (
+                    if old(uf).roots@[k] == root_u@ || old(uf).roots@[k] == root_v@ {
+                        info@.winner_view
+                    } else {
+                        old(uf).roots@[k]
+                    }
+                )
+            ),
+    {
+        broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+        let ghost root_u_view = root_u@;
+        let ghost root_v_view = root_v@;
+        let ghost mid_roots = uf.roots@;
+
+        let rank_u = *uf.rank.get(&root_u).unwrap();
+        let rank_v = *uf.rank.get(&root_v).unwrap();
+
+        let ru1 = root_u.clone();
+        let rv1 = root_v.clone();
+        proof {
+            assert(strictly_cloned(root_u, ru1));
+            assert(strictly_cloned(root_v, rv1));
+        }
+
+        let ghost winner_view: <V as View>::V;
+        let ghost loser_view: <V as View>::V;
+        let ghost winner_v: V;
+
+        if rank_u < rank_v {
+            proof { winner_view = root_v_view; loser_view = root_u_view; winner_v = rv1; }
+            uf.parent.insert(ru1, rv1);
+        } else {
+            proof { winner_view = root_u_view; loser_view = root_v_view; winner_v = ru1; }
+            uf.parent.insert(rv1, ru1);
+            if rank_u == rank_v {
+                let ru2 = root_u.clone();
+                let ghost elem_len = uf.elements.len();
+                proof {
+                    assert(strictly_cloned(root_u, ru2));
+                    // rank_u < elements.len() (from requires). elements.len() is usize,
+                    // so rank_u < usize::MAX, and rank_u + 1 <= usize::MAX.
+                    assert(rank_u < old(uf).elements@.len());
+                    assert(elem_len <= usize::MAX);
+                    assert(old(uf).elements@.len() == elem_len as nat);
+                }
+                uf.rank.insert(ru2, rank_u + 1);
+            }
+        }
+
+        uf.roots = Ghost(Map::new(
+            |x: <V as View>::V| mid_roots.contains_key(x),
+            |x: <V as View>::V|
+                if mid_roots[x] == root_u_view || mid_roots[x] == root_v_view {
+                    winner_view
+                } else {
+                    mid_roots[x]
+                },
+        ));
+
+        Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v })
+    }
+
     /// Merge two components: mutate parent/rank/roots, prove wf.
     /// Returns Ghost info for caller to derive structural ensures.
     /// Exec does mutations via union_merge_exec; proof delegates to
@@ -1639,253 +1923,6 @@ pub mod UnionFindStEph {
         info
     }
 
-    // Path compression commented out — correct but exceeds solver budget.
-    // Uncomment when compression sub-lemmas are restored.
-    // fn compress_path<V: StT + Hash>(uf: &mut UnionFindStEph<V>, v: &V, root: &V)
-    //     requires
-    //         old(uf).spec_unionfindsteph_wf(),
-    //         old(uf)@.parent.contains_key(v@),
-    //         root@ == old(uf)@.roots[v@],
-    //         old(uf)@.roots[root@] == root@,
-    //         old(uf)@.parent.contains_key(root@),
-    //     ensures
-    //         uf.spec_unionfindsteph_wf(),
-    //         uf@.roots =~= old(uf)@.roots,
-    //         uf@.parent.dom() =~= old(uf)@.parent.dom(),
-    //         uf@.rank =~= old(uf)@.rank,
-    //         uf@.elements =~= old(uf)@.elements,
-    // { ... }
-
-    // 8. traits
-
-    pub trait UnionFindStEphTrait<V: StT + Hash>: Sized + View<V = UnionFindStEphV<V>> {
-        spec fn spec_unionfindsteph_wf(&self) -> bool;
-
-        /// Create a new empty Union-Find structure.
-        /// APAS: Work Theta(1), Span Theta(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty HashMap allocation.
-        fn new() -> (uf: Self)
-            requires
-                obeys_key_model::<V>(),
-                obeys_feq_full::<V>(),
-                obeys_feq_view_injective::<V>(),
-            ensures
-                uf.spec_unionfindsteph_wf(),
-                uf@.parent =~= Map::<<V as View>::V, V>::empty(),
-                uf@.rank =~= Map::<<V as View>::V, usize>::empty(),
-                uf@.elements =~= Seq::<V>::empty(),
-                uf@.roots =~= Map::<<V as View>::V, <V as View>::V>::empty();
-
-        /// Insert a new element as a singleton set.
-        /// APAS: Work Theta(1), Span Theta(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three HashMap inserts + Vec push.
-        fn insert(&mut self, v: V)
-            requires
-                old(self).spec_unionfindsteph_wf(),
-            ensures
-                self.spec_unionfindsteph_wf(),
-                old(self)@.parent.contains_key(v@) ==> self@ == old(self)@,
-                !old(self)@.parent.contains_key(v@) ==> {
-                    &&& self@.parent =~= old(self)@.parent.insert(v@, v)
-                    &&& self@.rank =~= old(self)@.rank.insert(v@, 0usize)
-                    &&& self@.roots =~= old(self)@.roots.insert(v@, v@)
-                    &&& self@.elements.len() == old(self)@.elements.len() + 1
-                };
-
-        /// Find the root representative with path compression.
-        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized (inverse Ackermann)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — path compression via find_root_loop + parent updates.
-        fn find(&mut self, v: &V) -> (root: V)
-            requires
-                old(self).spec_unionfindsteph_wf(),
-                old(self)@.parent.contains_key(v@),
-            ensures
-                self.spec_unionfindsteph_wf(),
-                root@ == old(self)@.roots[v@],
-                self@.roots =~= old(self)@.roots,
-                self@.parent.dom() =~= old(self)@.parent.dom(),
-                self@.rank =~= old(self)@.rank,
-                self@.elements =~= old(self)@.elements;
-
-        /// Union two sets by rank.
-        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — two finds O(alpha(n)) + union_merge updates roots for all elements.
-        fn union(&mut self, u: &V, v: &V)
-            requires
-                old(self).spec_unionfindsteph_wf(),
-                old(self)@.parent.contains_key(u@),
-                old(self)@.parent.contains_key(v@),
-            ensures
-                self.spec_unionfindsteph_wf(),
-                self@.parent.dom() =~= old(self)@.parent.dom(),
-                self@.elements =~= old(self)@.elements,
-                // Opaque roots change predicate. Callers use reveal(spec_union_result)
-                // to access the quantified form.
-                spec_union_result(self@.roots, old(self)@.roots, u@, v@);
-
-        /// Check if two elements are in the same set.
-        /// APAS: Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)) amortized, Span O(alpha(n)) amortized — two find_root_loop calls + comparison.
-        fn equals(&mut self, u: &V, v: &V) -> (same: bool)
-            requires
-                old(self).spec_unionfindsteph_wf(),
-                old(self)@.parent.contains_key(u@),
-                old(self)@.parent.contains_key(v@),
-            ensures
-                self.spec_unionfindsteph_wf(),
-                same == (old(self)@.roots[u@] == old(self)@.roots[v@]),
-                self@.roots =~= old(self)@.roots,
-                self@.parent.dom() =~= old(self)@.parent.dom();
-
-        /// Count distinct sets.
-        /// APAS: Work O(n alpha(n)), Span O(n alpha(n))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — find root for each element + set insertion; St sequential.
-        fn num_sets(&mut self) -> (count: usize)
-            requires
-                old(self).spec_unionfindsteph_wf(),
-            ensures
-                self.spec_unionfindsteph_wf(),
-                self@.roots =~= old(self)@.roots,
-                self@.parent.dom() =~= old(self)@.parent.dom();
-    }
-
-    // 9. impls
-
-    impl<V: StT + Hash> UnionFindStEphTrait<V> for UnionFindStEph<V> {
-        /// Well-formedness invariant for the Union-Find structure.
-        /// Delegates to closed spec_unionfindsteph_wf so wf unfolds to one opaque boolean
-        /// in exec contexts. Proof functions use `reveal(spec_unionfindsteph_wf)` to
-        /// access the sub-predicate conjunction.
-        open spec fn spec_unionfindsteph_wf(&self) -> bool {
-            spec_unionfindsteph_wf(self)
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn new() -> (uf: Self) {
-            let uf = UnionFindStEph {
-                parent: HashMapWithViewPlus::new(),
-                rank: HashMapWithViewPlus::new(),
-                elements: Vec::new(),
-                roots: Ghost(Map::empty()),
-            };
-            proof {
-                // Reveal spec_unionfindsteph_wf then sub-predicates — all vacuously true on empty maps.
-                reveal(spec_unionfindsteph_wf);
-                reveal(spec_roots_idempotent);
-                reveal(spec_parent_closed);
-                reveal(spec_roots_in_dom);
-                reveal(spec_elements_forward);
-                reveal(spec_elements_backward);
-                reveal(spec_elements_distinct);
-                reveal(spec_self_parent_is_root);
-                reveal(spec_parent_preserves_root);
-                reveal(spec_rank_increases);
-                reveal(spec_rank_bounded);
-            }
-            uf
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn insert(&mut self, v: V) {
-            if !self.parent.contains_key(&v) {
-                // Capture v@ before v is consumed by push.
-                let ghost v_view = v@;
-
-                // 3 clones for parent key, parent value, rank key.
-                let v1 = v.clone();
-                let v2 = v.clone();
-                let v3 = v.clone();
-
-                proof { lemma_three_clones_eq(v, v1, v2, v3); }
-
-                self.parent.insert(v1, v2);
-                self.rank.insert(v3, 0usize);
-                // Use original v for push — no 4th clone needed.
-                self.elements.push(v);
-                self.roots = Ghost(self.roots@.insert(v_view, v_view));
-
-                proof { lemma_insert_preserves_wf(*self, *old(self), v); }
-            }
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
-        /// Without path compression for now (correct but O(log n) per call).
-        fn find(&mut self, v: &V) -> (root: V) {
-            find_root_loop(self, v)
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
-        #[verifier::rlimit(30)]
-        fn union(&mut self, u: &V, v: &V) {
-            proof { lemma_wf_type_axioms(&*old(self)); }
-            let root_u = find_root_loop(self, u);
-            let root_v = find_root_loop(self, v);
-            if !feq(&root_u, &root_v) {
-                proof {
-                    lemma_root_rank_lt_elements(self, root_u@);
-                    lemma_root_rank_lt_elements(self, root_v@);
-                }
-                let ghost mid_uf = *self;
-                let info = union_merge(self, root_u, root_v);
-                proof {
-                    lemma_prove_union_result(
-                        &*self, &mid_uf,
-                        root_u@, root_v@,
-                        u@, v@,
-                        info@.winner_view,
-                    );
-                }
-            } else {
-                proof {
-                    lemma_wf_parent_dom_eq_roots_dom(self);
-                    lemma_union_result_identity(self.roots@, u@, v@);
-                }
-            }
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(alpha(n)), Span O(alpha(n)) amortized
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
-        #[verifier::rlimit(20)]
-        fn equals(&mut self, u: &V, v: &V) -> (same: bool) {
-            let root_u = find_root_loop(self, u);
-            let root_v = find_root_loop(self, v);
-            feq(&root_u, &root_v)
-        }
-
-        /// - Alg Analysis: APAS (Ch65 Sec 2): Work O(n alpha(n)), Span O(n alpha(n))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n alpha(n)), Span O(n alpha(n)) — matches APAS
-        #[verifier::rlimit(30)]
-        fn num_sets(&mut self) -> (count: usize) {
-            broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
-            proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
-            let mut roots_set = HashSetWithViewPlus::<V>::new();
-            let mut i: usize = 0;
-            while i < self.elements.len()
-                invariant
-                    self.spec_unionfindsteph_wf(),
-                    self@ == old(self)@,
-                    0 <= i <= self.elements@.len(),
-                decreases self.elements@.len() - i,
-            {
-                let v = self.elements[i].clone();
-                proof {
-                    assert(strictly_cloned(self.elements@[i as int], v));
-                    assert(obeys_feq_full::<V>());
-                    assert(v@ == self.elements@[i as int]@);
-                    assert(self@.parent.contains_key(v@));
-                }
-                let root = find_root_loop(self, &v);
-                let _ = roots_set.insert(root);
-                i = i + 1;
-            }
-            roots_set.len()
-        }
-    }
-
     // R115 EXPERIMENT: isolate the merge-branch proof to find the matching loop source.
     // Test 1: just find + feq (no merge). Does spec_elements_distinct fire?
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — two find_root_loop calls + feq; experimental.
@@ -1969,7 +2006,8 @@ pub mod UnionFindStEph {
 
     } // verus!
 
-    // 14a. derive impls outside verus! — struct UnionFindStEph
+    //		Section 14a. derive impls outside verus!
+
 
     impl<V: StT + Hash> std::fmt::Debug for UnionFindStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1987,7 +2025,7 @@ pub mod UnionFindStEph {
         }
     }
 
-    // 14b. derive impls outside verus! — struct UnionMergeInfo
+    //		Section 14b. derive impls outside verus!
 
     impl<V: View> std::fmt::Debug for UnionMergeInfo<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -2001,7 +2039,7 @@ pub mod UnionFindStEph {
         }
     }
 
-    // 14c. derive impls outside verus! — struct UnionFindStEphV
+    //		Section 14c. derive impls outside verus!
 
     impl<V: View> std::fmt::Debug for UnionFindStEphV<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

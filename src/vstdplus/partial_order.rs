@@ -5,11 +5,38 @@
 //! Unlike TotalOrder, PartialOrder allows incomparable elements (e.g., NaN in floats).
 //! The partial_cmp method returns Option<Ordering>, where None indicates incomparability.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod partial_order {
+
+    //		Section 2. imports
+
     use core::cmp::Ordering;
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 6. spec fns
+
+
+    // Float implementations using uninterpreted specs (following vstd::std_specs::cmp pattern)
+    // Note: We do not assume obeys_partial_cmp_spec() for floats because Rust floating point
+    // operations are not guaranteed to be deterministic (see RFC 3514).
+    // Instead, we use uninterpreted functions that users can axiomatize.
+
+    pub uninterp spec fn partial_order_ensures<T>(x: T, y: T, o: Option<Ordering>) -> bool;
+
+    //		Section 8. traits
+
 
     pub trait PartialOrder: Sized {
         spec fn le(self, other: Self) -> bool;
@@ -45,6 +72,9 @@ pub mod partial_order {
                 }),
         ;
     }
+
+    //		Section 9. impls
+
 
     // Implementations for integer types (they're totally ordered, but we can implement PartialOrder)
     impl PartialOrder for u8 {
@@ -346,13 +376,6 @@ pub mod partial_order {
             }
         }
     }
-
-    // Float implementations using uninterpreted specs (following vstd::std_specs::cmp pattern)
-    // Note: We do not assume obeys_partial_cmp_spec() for floats because Rust floating point
-    // operations are not guaranteed to be deterministic (see RFC 3514).
-    // Instead, we use uninterpreted functions that users can axiomatize.
-
-    pub uninterp spec fn partial_order_ensures<T>(x: T, y: T, o: Option<Ordering>) -> bool;
 
     impl PartialOrder for f32 {
         open spec fn le(self, other: Self) -> bool {

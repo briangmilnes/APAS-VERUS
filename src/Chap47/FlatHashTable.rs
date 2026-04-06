@@ -3,29 +3,35 @@
 //! Flat Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses open addressing for collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod FlatHashTable {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions (inside verus!: FlatEntry)
-    // 6. spec fns (inside verus!: spec_flat_has_key)
-    // 8. traits (inside verus!: FlatHashTable — probe, find_slot abstract)
-    // 9. impls (inside verus!: EntryTrait for FlatEntry)
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
     //
     // Note: spec_count_empties and lemma_*_empties live in LinProbFlatHashTableStEph.rs
     // and DoubleHashFlatHashTableStEph.rs — the only two implementations that use them.
 
-    // 2. imports
+    //		Section 2. imports
     use vstd::prelude::*;
     use crate::Chap47::ParaHashTableStEph::ParaHashTableStEph::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Entry type for flat hash tables using open addressing.
     /// Represents the three states a slot can be in.
@@ -39,7 +45,8 @@ pub mod FlatHashTable {
         Deleted,
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Whether a flat entry slot contains the given key.
     /// Avoids EntryTrait bounds so wf specs can use it with unconstrained type params.
@@ -50,7 +57,8 @@ pub mod FlatHashTable {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Flat Hash Table trait - extends ParaHashTableStEphTrait.
     /// Uses open addressing (linear probing, quadratic probing, double hashing).
@@ -81,7 +89,8 @@ pub mod FlatHashTable {
 
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for FlatEntry<Key, Value> {
         open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
@@ -149,7 +158,8 @@ pub mod FlatHashTable {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<Key: Clone, Value: Clone> Clone for FlatEntry<Key, Value> {
         fn clone(&self) -> (cloned: Self)
@@ -167,7 +177,8 @@ pub mod FlatHashTable {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for FlatEntry<Key, Value> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

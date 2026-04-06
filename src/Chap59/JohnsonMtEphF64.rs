@@ -12,7 +12,21 @@
 //! - Phase 3 (n Dijkstras in parallel): Work O(n * m log n) = O(mn log n), Span O(m log n)
 //! - Parallelism in Phase 3: Theta(n) - n independent Dijkstra runs
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod JohnsonMtEphF64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -31,16 +45,11 @@ pub mod JohnsonMtEphF64 {
     use crate::Chap57::DijkstraStEphF64::DijkstraStEphF64::dijkstra;
     use crate::Chap58::BellmanFordStEphF64::BellmanFordStEphF64::{bellman_ford, BellmanFordError};
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module (JohnsonMtEphF64)
-    // 2. imports
-    // 3. broadcast use
-    // 8. traits
-    // 9. impls
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
@@ -50,7 +59,13 @@ pub mod JohnsonMtEphF64 {
         crate::vstdplus::float::float::group_float_arithmetic,
     };
 
-    // 8. traits
+    //		Section 4. type definitions
+
+
+    pub type T = WeightedDirGraphStEphF64<usize>;
+
+    //		Section 8. traits
+
 
     pub trait JohnsonMtEphF64Trait {
         /// Parallel Johnson's all-pairs shortest path algorithm.
@@ -71,9 +86,8 @@ pub mod JohnsonMtEphF64 {
                 apsp.spec_n() as nat == graph@.V.len();
     }
 
-    // 9. impls
+    //		Section 9. impls
 
-    pub type T = WeightedDirGraphStEphF64<usize>;
 
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using float arithmetic directly.

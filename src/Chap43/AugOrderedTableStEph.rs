@@ -2,20 +2,27 @@
 //! REVIEWED: NO
 //! Single-threaded ephemeral reducer-augmented ordered table implementation.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod AugOrderedTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 5. view impls
-    // 7. free functions (calculate_reduction)
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -34,14 +41,19 @@ pub mod AugOrderedTableStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -58,7 +70,8 @@ broadcast use {
 
     pub type AugOrderedTableEph<K, V, F> = AugOrderedTableStEph<K, V, F>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<K: StT + Ord, V: StT + Ord, F> View for AugOrderedTableStEph<K, V, F>
     where
@@ -68,44 +81,8 @@ broadcast use {
         open spec fn view(&self) -> Map<K::V, V::V> { self.base_table@ }
     }
 
-    // 7. free functions (calculate_reduction)
+    //		Section 7. proof fns/broadcast groups
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
-    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
-        base: &OrderedTableStEph<K, V>,
-        reducer: &F,
-        identity: &V,
-    ) -> (reduced: V)
-    where
-        F: Fn(&V, &V) -> V + Clone,
-        requires
-            forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-            base.spec_orderedtablesteph_wf(),
-        ensures base@.dom().finite(),
-    {
-        let pairs = base.collect();
-        let sz = pairs.length();
-        if sz == 0 {
-            return identity.clone();
-        }
-        let mut reduced = pairs.nth(0).1.clone();
-        let mut i: usize = 1;
-        while i < sz
-            invariant
-                1 <= i <= pairs@.len(),
-                sz as nat == pairs@.len(),
-                pairs.spec_avltreeseqstper_wf(),
-                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
-            decreases pairs@.len() - i,
-        {
-            let pair = pairs.nth(i);
-            reduced = reducer(&reduced, &pair.1);
-            i += 1;
-        }
-        reduced
-    }
-
-    // 7b. proof fns
 
     proof fn lemma_aug_view<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
         t: &AugOrderedTableStEph<K, V, F>,
@@ -113,7 +90,8 @@ broadcast use {
         ensures t@ =~= t.base_table@
     {}
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Trait defining all augmented ordered table operations (ADT 43.3) with ephemeral semantics
     /// Extends ordered table operations with efficient reduction and in-place mutations
@@ -465,7 +443,46 @@ broadcast use {
             ensures self@.dom().finite();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    // 7. free functions (calculate_reduction)
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
+    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
+        base: &OrderedTableStEph<K, V>,
+        reducer: &F,
+        identity: &V,
+    ) -> (reduced: V)
+    where
+        F: Fn(&V, &V) -> V + Clone,
+        requires
+            forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            base.spec_orderedtablesteph_wf(),
+        ensures base@.dom().finite(),
+    {
+        let pairs = base.collect();
+        let sz = pairs.length();
+        if sz == 0 {
+            return identity.clone();
+        }
+        let mut reduced = pairs.nth(0).1.clone();
+        let mut i: usize = 1;
+        while i < sz
+            invariant
+                1 <= i <= pairs@.len(),
+                sz as nat == pairs@.len(),
+                pairs.spec_avltreeseqstper_wf(),
+                forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
+            decreases pairs@.len() - i,
+        {
+            let pair = pairs.nth(i);
+            reduced = reducer(&reduced, &pair.1);
+            i += 1;
+        }
+        reduced
+    }
+
 
     impl<K: StT + Ord, V: StT + Ord, F> AugOrderedTableStEphTrait<K, V, F> for AugOrderedTableStEph<K, V, F>
     where
@@ -900,7 +917,6 @@ broadcast use {
         }
     }
 
-    // 10. iterators
 
     impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStEph<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
@@ -914,6 +930,9 @@ broadcast use {
             self.base_table.iter()
         }
     }
+
+    //		Section 10. iterators
+
 
     impl<'a, K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStEph<K, V, F> {
         type Item = Pair<K, V>;
@@ -929,7 +948,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<K: StT + Ord, V: StT + Ord, F> Clone for AugOrderedTableStEph<K, V, F>
     where
@@ -951,7 +971,25 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus! (Debug/Display must stay outside per Verus limitation)
+    //		Section 13. macros
+
+
+    // Macro for creating augmented ordered table literals
+    #[macro_export]
+    macro_rules! AugOrderedTableStEphLit {
+        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
+            let mut table = $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::empty($reducer, $identity);
+            $(
+                $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::insert(&mut table, $k, $v, |_old, new| new.clone());
+            )*
+            table
+        }};
+        (reducer: $reducer:expr, identity: $identity:expr) => {{
+            $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::empty($reducer, $identity)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<K: StT + Ord, V: StT + Ord, F> PartialEq for AugOrderedTableStEph<K, V, F>
     where
@@ -987,20 +1025,5 @@ broadcast use {
                 .field("cached_reduction", &self.cached_reduction)
                 .finish()
         }
-    }
-
-    // Macro for creating augmented ordered table literals
-    #[macro_export]
-    macro_rules! AugOrderedTableStEphLit {
-        (reducer: $reducer:expr, identity: $identity:expr, $($k:expr => $v:expr),* $(,)?) => {{
-            let mut table = $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::empty($reducer, $identity);
-            $(
-                $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::insert(&mut table, $k, $v, |_old, new| new.clone());
-            )*
-            table
-        }};
-        (reducer: $reducer:expr, identity: $identity:expr) => {{
-            $crate::Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait::empty($reducer, $identity)
-        }};
     }
 }

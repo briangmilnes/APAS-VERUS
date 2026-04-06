@@ -7,20 +7,26 @@
 //! parallel diagonal pebbling for multi-threaded computation.
 
 //  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
 
 pub mod BottomUpDPMtPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
+    //		Section 1. module
+    //		Section 2. imports
+    //		Section 4. type definitions
+    //		Section 6. spec fns
+    //		Section 8. traits
+    //		Section 9. impls
+    //		Section 12. derive impls in verus!
+    //		Section 14. derive impls outside verus!
 
-    // 2. imports
     use std::fmt::{Formatter, Debug, Display};
 
     use vstd::prelude::*;
@@ -30,18 +36,19 @@ pub mod BottomUpDPMtPer {
     use crate::Types::Types::*;
 
     verus! {
-    // 4. type definitions
+
+
     pub struct BottomUpDPMtPerS {
         pub seq_s: ArraySeqMtPerS<char>,
         pub seq_t: ArraySeqMtPerS<char>,
     }
 
-    // 6. spec fns
+
     pub open spec fn spec_min(a: nat, b: nat) -> nat {
         if a <= b { a } else { b }
     }
 
-    // 8. traits
+
     pub trait BottomUpDPMtPerTrait: Sized {
         spec fn spec_s(&self) -> Seq<char>;
         spec fn spec_t(&self) -> Seq<char>;
@@ -132,7 +139,7 @@ pub mod BottomUpDPMtPer {
                 val as nat == self.spec_med(i as nat, j as nat);
     }
 
-    // 9. impls
+
     impl BottomUpDPMtPerTrait for BottomUpDPMtPerS {
         open spec fn spec_s(&self) -> Seq<char> { self.seq_s@ }
         open spec fn spec_t(&self) -> Seq<char> { self.seq_t@ }
@@ -410,6 +417,7 @@ pub mod BottomUpDPMtPer {
         }
     }
 
+
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for BottomUpDPMtPerS {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -431,7 +439,6 @@ pub mod BottomUpDPMtPer {
         }
     }
 
-    // 11. derive impls in verus!
     impl Clone for BottomUpDPMtPerS {
         fn clone(&self) -> (cloned: Self)
             ensures
@@ -459,7 +466,7 @@ pub mod BottomUpDPMtPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+
     impl Debug for BottomUpDPMtPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BottomUpDPMtPerS")

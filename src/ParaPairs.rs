@@ -1,11 +1,27 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Parallel pair abstractions for fork-join parallelism using the global work-stealing pool.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod ParaPairs {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -14,6 +30,9 @@ broadcast use {
 };
 
     use crate::Types::Types::*;
+
+    //		Section 9. impls
+
 
     /// - Verified parallel pair with closure spec propagation using the global pool.
     /// - Uses help-first strategy: spawns in parallel if capacity available, otherwise sequential.

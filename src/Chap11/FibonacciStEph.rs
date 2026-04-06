@@ -5,17 +5,21 @@
 //! Verified specification and implementation of the Fibonacci sequence.
 
 //  Table of Contents
-//	1. module
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 
 pub mod FibonacciStEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
-    
+
     #[cfg(verus_keep_ghost)]
     use {
         vstd::arithmetic::power::pow,
@@ -24,9 +28,11 @@ pub mod FibonacciStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::arithmetic::power2_plus::power2_plus::*;
 
-    verus! {
+    verus! 
+{
 
-        //		6. spec fns
+    //		Section 6. spec fns
+
 
         /// - Specification of Fibonacci sequence.
         /// - fib(0) = 0, fib(1) = 1, fib(n) = fib(n-1) + fib(n-2) for n >= 2
@@ -42,8 +48,8 @@ pub mod FibonacciStEph {
             }
         }
 
+    //		Section 7. proof fns/broadcast groups
 
-        //		7. proof fns/broadcast groups
 
         /// Fibonacci is bounded by 2^n
         proof fn lemma_fib_bound(n: nat)
@@ -81,8 +87,8 @@ pub mod FibonacciStEph {
             lemma_fib_fits_u64(n);
         }
 
+    //		Section 9. impls
 
-        //		9. impls
 
         /// Iterative Fibonacci implementation.
         /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(n), Span O(n) — sequential, no parallelism

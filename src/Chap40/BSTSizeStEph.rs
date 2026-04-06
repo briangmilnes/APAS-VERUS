@@ -4,28 +4,41 @@
 //! Size-augmented BST with O(1) size queries and rank/select operations.
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  4. type definitions
-//  5. view impls
-//  7. proof fns
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 7c. proof fns/broadcast groups
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod BSTSizeStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
@@ -42,7 +55,8 @@ pub mod BSTSizeStEph {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct Node<T: StT + Ord> {
         pub key: T,
@@ -54,178 +68,8 @@ pub mod BSTSizeStEph {
 
     pub type Link<T> = Option<Box<Node<T>>>;
 
-    pub struct BSTSizeStEph<T: StT + Ord> {
-        pub root: Link<T>,
-    }
+    //		Section 8a. traits
 
-    pub type BSTreeSize<T> = BSTSizeStEph<T>;
-
-    pub struct Lnk;
-
-    // 5. view impls
-
-    impl<T: StT + Ord> View for BSTSizeStEph<T> {
-        type V = Set<T>;
-        open spec fn view(&self) -> Set<T> {
-            Lnk::spec_content_link(&self.root)
-        }
-    }
-
-
-    // 7. proof fns
-
-    proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)
-        requires
-            Lnk::spec_link_size_wf(link),
-            Lnk::spec_size_link(link) < usize::MAX as nat,
-        ensures Lnk::spec_height_link(link) <= Lnk::spec_size_link(link),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_size_wf_child_bounded(link);
-                lemma_height_le_size(&node.left);
-                lemma_height_le_size(&node.right);
-            }
-        }
-    }
-
-    proof fn lemma_size_wf_child_bounded<T: StT + Ord>(link: &Link<T>)
-        requires
-            Lnk::spec_link_size_wf(link),
-            Lnk::spec_size_link(link) > 0,
-            Lnk::spec_size_link(link) < usize::MAX as nat,
-        ensures
-            match link {
-                None => true,
-                Some(node) => {
-                    Lnk::spec_size_link(&node.left) < usize::MAX as nat
-                    && Lnk::spec_size_link(&node.right) < usize::MAX as nat
-                },
-            },
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                assert(node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right));
-            }
-        }
-    }
-
-    proof fn lemma_wf_assemble<T: StT + Ord>(link: &Link<T>)
-        requires
-            match link {
-                None => true,
-                Some(node) => {
-                    node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right)
-                    && Lnk::spec_link_size_wf(&node.left)
-                    && Lnk::spec_link_size_wf(&node.right)
-                }
-            }
-        ensures Lnk::spec_link_size_wf(link),
-    {}
-
-    proof fn lemma_ordered_assemble<T: StT + Ord>(link: &Link<T>)
-        requires
-            match link {
-                None => true,
-                Some(node) => {
-                    Lnk::spec_ordered_link(&node.left)
-                    && Lnk::spec_ordered_link(&node.right)
-                    && (forall |k: T| #[trigger] Lnk::spec_content_link(&node.left).contains(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
-                    && (forall |k: T| #[trigger] Lnk::spec_content_link(&node.right).contains(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
-                }
-            }
-        ensures Lnk::spec_ordered_link(link),
-    {}
-
-    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
-        ensures
-            b.cmp_spec(&a) == std::cmp::Ordering::Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    proof fn lemma_cmp_antisymmetry_lt<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Less,
-        ensures
-            b.cmp_spec(&a) == std::cmp::Ordering::Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity for Less: Less(a,b) and Less(b,c) implies Less(a,c).
-    proof fn lemma_cmp_transitivity_lt<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Less,
-            b.cmp_spec(&c) == std::cmp::Ordering::Less,
-        ensures
-            a.cmp_spec(&c) == std::cmp::Ordering::Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity for Greater: Greater(a,b) and Greater(b,c) implies Greater(a,c).
-    proof fn lemma_cmp_transitivity_gt<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
-            b.cmp_spec(&c) == std::cmp::Ordering::Greater,
-        ensures
-            a.cmp_spec(&c) == std::cmp::Ordering::Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    // Root key of a link (arbitrary if None).
-    pub open spec fn spec_root_key_link<T: StT + Ord>(link: &Link<T>) -> T {
-        match link {
-            Some(node) => node.key,
-            None => arbitrary(),
-        }
-    }
-
-    // Whether a link's root has a left child.
-    pub open spec fn spec_has_left_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
-        match link {
-            Some(node) => node.left.is_some(),
-            None => false,
-        }
-    }
-
-    // Whether a link's root has a right child.
-    pub open spec fn spec_has_right_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
-        match link {
-            Some(node) => node.right.is_some(),
-            None => false,
-        }
-    }
-
-    // 8. traits
-
-    pub trait LinkTrait<T: StT + Ord>: Sized {
-        spec fn spec_size_link(link: &Link<T>) -> nat;
-        spec fn spec_link_size_wf(link: &Link<T>) -> bool;
-        spec fn spec_height_link(link: &Link<T>) -> nat;
-        spec fn spec_content_link(link: &Link<T>) -> Set<T>;
-        spec fn spec_ordered_link(link: &Link<T>) -> bool;
-    }
 
     pub trait NodeTrait<T: StT + Ord>: Sized {
         spec fn spec_size(&self) -> nat;
@@ -239,6 +83,79 @@ pub mod BSTSizeStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new(key: T, priority: u64) -> (node: Self);
     }
+
+    //		Section 9a. impls
+
+
+    impl<T: StT + Ord> NodeTrait<T> for Node<T> {
+        open spec fn spec_size(&self) -> nat {
+            self.size as nat
+        }
+
+        open spec fn spec_bstsizesteph_size_wf(&self) -> bool
+            decreases *self,
+        {
+            self.size as nat == 1 + Lnk::spec_size_link(&self.left) + Lnk::spec_size_link(&self.right)
+            && Lnk::spec_link_size_wf(&self.left)
+            && Lnk::spec_link_size_wf(&self.right)
+        }
+
+        open spec fn spec_height(&self) -> nat
+            decreases *self,
+        {
+            let l = Lnk::spec_height_link(&self.left);
+            let r = Lnk::spec_height_link(&self.right);
+            1 + if l >= r { l } else { r }
+        }
+
+        open spec fn spec_content(&self) -> Set<T>
+            decreases *self,
+        {
+            Lnk::spec_content_link(&self.left)
+                .union(Lnk::spec_content_link(&self.right))
+                .insert(self.key)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn new(key: T, priority: u64) -> (node: Self)
+            ensures
+                node.key == key,
+                node.priority == priority,
+                node.size == 1,
+                node.left is None,
+                node.right is None,
+        {
+            Node {
+                key,
+                priority,
+                size: 1,
+                left: None,
+                right: None,
+            }
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
+    pub struct BSTSizeStEph<T: StT + Ord> {
+        pub root: Link<T>,
+    }
+
+    pub type BSTreeSize<T> = BSTSizeStEph<T>;
+
+    //		Section 5b. view impls
+
+
+    impl<T: StT + Ord> View for BSTSizeStEph<T> {
+        type V = Set<T>;
+        open spec fn view(&self) -> Set<T> {
+            Lnk::spec_content_link(&self.root)
+        }
+    }
+
+    //		Section 8b. traits
+
 
     pub trait BSTSizeStEphTrait<T: StT + Ord>: Sized + View<V = Set<T>> {
         spec fn spec_size(&self) -> nat;
@@ -505,143 +422,8 @@ pub mod BSTSizeStEph {
             decreases *link;
     }
 
+    //		Section 9b. impls
 
-    // 9. impls
-
-    impl<T: StT + Ord> LinkTrait<T> for Lnk {
-        open spec fn spec_size_link(link: &Link<T>) -> nat
-            decreases *link,
-        {
-            match link {
-                None => 0,
-                Some(node) => node.size as nat,
-            }
-        }
-
-        open spec fn spec_link_size_wf(link: &Link<T>) -> bool
-            decreases *link,
-        {
-            match link {
-                None => true,
-                Some(node) => {
-                    node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
-                        && Self::spec_link_size_wf(&node.left)
-                        && Self::spec_link_size_wf(&node.right)
-                }
-            }
-        }
-
-        open spec fn spec_height_link(link: &Link<T>) -> nat
-            decreases *link,
-        {
-            match link {
-                None => 0,
-                Some(node) => {
-                    let lh = Self::spec_height_link(&node.left);
-                    let rh = Self::spec_height_link(&node.right);
-                    1 + if lh >= rh { lh } else { rh }
-                }
-            }
-        }
-
-        open spec fn spec_content_link(link: &Link<T>) -> Set<T>
-            decreases *link,
-        {
-            match link {
-                None => Set::empty(),
-                Some(node) =>
-                    Self::spec_content_link(&node.left)
-                        .union(Self::spec_content_link(&node.right))
-                        .insert(node.key),
-            }
-        }
-
-        open spec fn spec_ordered_link(link: &Link<T>) -> bool
-            decreases *link,
-        {
-            match link {
-                None => true,
-                Some(node) => {
-                    Self::spec_ordered_link(&node.left)
-                    && Self::spec_ordered_link(&node.right)
-                    && (forall |k: T| #[trigger] Self::spec_content_link(&node.left).contains(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
-                    && (forall |k: T| #[trigger] Self::spec_content_link(&node.right).contains(k)
-                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
-                }
-            }
-        }
-    }
-
-    impl<T: StT + Ord> NodeTrait<T> for Node<T> {
-        open spec fn spec_size(&self) -> nat {
-            self.size as nat
-        }
-
-        open spec fn spec_bstsizesteph_size_wf(&self) -> bool
-            decreases *self,
-        {
-            self.size as nat == 1 + Lnk::spec_size_link(&self.left) + Lnk::spec_size_link(&self.right)
-            && Lnk::spec_link_size_wf(&self.left)
-            && Lnk::spec_link_size_wf(&self.right)
-        }
-
-        open spec fn spec_height(&self) -> nat
-            decreases *self,
-        {
-            let l = Lnk::spec_height_link(&self.left);
-            let r = Lnk::spec_height_link(&self.right);
-            1 + if l >= r { l } else { r }
-        }
-
-        open spec fn spec_content(&self) -> Set<T>
-            decreases *self,
-        {
-            Lnk::spec_content_link(&self.left)
-                .union(Lnk::spec_content_link(&self.right))
-                .insert(self.key)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn new(key: T, priority: u64) -> (node: Self)
-            ensures
-                node.key == key,
-                node.priority == priority,
-                node.size == 1,
-                node.left is None,
-                node.right is None,
-        {
-            Node {
-                key,
-                priority,
-                size: 1,
-                left: None,
-                right: None,
-            }
-        }
-    }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
-        requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
-        ensures
-            (a is None && b is None) ==> equal,
-            (a is Some && b is None) ==> !equal,
-            (a is None && b is Some) ==> !equal,
-        decreases *a,
-    {
-        match (a, b) {
-            (None, None) => true,
-            (Some(an), Some(bn)) => {
-                if an.key != bn.key {
-                    false
-                } else {
-                    compare_links(&an.left, &bn.left) && compare_links(&an.right, &bn.right)
-                }
-            }
-            _ => false,
-        }
-    }
 
     impl<T: StT + Ord> BSTSizeStEphTrait<T> for BSTSizeStEph<T> {
         open spec fn spec_size(&self) -> nat { Lnk::spec_size_link(&self.root) }
@@ -1467,7 +1249,261 @@ pub mod BSTSizeStEph {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4c. type definitions
+
+
+    pub struct Lnk;
+
+    //		Section 6c. spec fns
+
+
+    // Root key of a link (arbitrary if None).
+    pub open spec fn spec_root_key_link<T: StT + Ord>(link: &Link<T>) -> T {
+        match link {
+            Some(node) => node.key,
+            None => arbitrary(),
+        }
+    }
+
+    // Whether a link's root has a left child.
+    pub open spec fn spec_has_left_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
+        match link {
+            Some(node) => node.left.is_some(),
+            None => false,
+        }
+    }
+
+    // Whether a link's root has a right child.
+    pub open spec fn spec_has_right_child_link<T: StT + Ord>(link: &Link<T>) -> bool {
+        match link {
+            Some(node) => node.right.is_some(),
+            None => false,
+        }
+    }
+
+    //		Section 7c. proof fns/broadcast groups
+
+
+    proof fn lemma_height_le_size<T: StT + Ord>(link: &Link<T>)
+        requires
+            Lnk::spec_link_size_wf(link),
+            Lnk::spec_size_link(link) < usize::MAX as nat,
+        ensures Lnk::spec_height_link(link) <= Lnk::spec_size_link(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_size_wf_child_bounded(link);
+                lemma_height_le_size(&node.left);
+                lemma_height_le_size(&node.right);
+            }
+        }
+    }
+
+    proof fn lemma_size_wf_child_bounded<T: StT + Ord>(link: &Link<T>)
+        requires
+            Lnk::spec_link_size_wf(link),
+            Lnk::spec_size_link(link) > 0,
+            Lnk::spec_size_link(link) < usize::MAX as nat,
+        ensures
+            match link {
+                None => true,
+                Some(node) => {
+                    Lnk::spec_size_link(&node.left) < usize::MAX as nat
+                    && Lnk::spec_size_link(&node.right) < usize::MAX as nat
+                },
+            },
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                assert(node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right));
+            }
+        }
+    }
+
+    proof fn lemma_wf_assemble<T: StT + Ord>(link: &Link<T>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    node.size as nat == 1 + Lnk::spec_size_link(&node.left) + Lnk::spec_size_link(&node.right)
+                    && Lnk::spec_link_size_wf(&node.left)
+                    && Lnk::spec_link_size_wf(&node.right)
+                }
+            }
+        ensures Lnk::spec_link_size_wf(link),
+    {}
+
+    proof fn lemma_ordered_assemble<T: StT + Ord>(link: &Link<T>)
+        requires
+            match link {
+                None => true,
+                Some(node) => {
+                    Lnk::spec_ordered_link(&node.left)
+                    && Lnk::spec_ordered_link(&node.right)
+                    && (forall |k: T| #[trigger] Lnk::spec_content_link(&node.left).contains(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: T| #[trigger] Lnk::spec_content_link(&node.right).contains(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
+            }
+        ensures Lnk::spec_ordered_link(link),
+    {}
+
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    proof fn lemma_cmp_antisymmetry_lt<T: StT + Ord>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Less,
+        ensures
+            b.cmp_spec(&a) == std::cmp::Ordering::Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity for Less: Less(a,b) and Less(b,c) implies Less(a,c).
+    proof fn lemma_cmp_transitivity_lt<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Less,
+            b.cmp_spec(&c) == std::cmp::Ordering::Less,
+        ensures
+            a.cmp_spec(&c) == std::cmp::Ordering::Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity for Greater: Greater(a,b) and Greater(b,c) implies Greater(a,c).
+    proof fn lemma_cmp_transitivity_gt<T: StT + Ord>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == std::cmp::Ordering::Greater,
+            b.cmp_spec(&c) == std::cmp::Ordering::Greater,
+        ensures
+            a.cmp_spec(&c) == std::cmp::Ordering::Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    //		Section 8c. traits
+
+
+    pub trait LinkTrait<T: StT + Ord>: Sized {
+        spec fn spec_size_link(link: &Link<T>) -> nat;
+        spec fn spec_link_size_wf(link: &Link<T>) -> bool;
+        spec fn spec_height_link(link: &Link<T>) -> nat;
+        spec fn spec_content_link(link: &Link<T>) -> Set<T>;
+        spec fn spec_ordered_link(link: &Link<T>) -> bool;
+    }
+
+    //		Section 9c. impls
+
+
+    impl<T: StT + Ord> LinkTrait<T> for Lnk {
+        open spec fn spec_size_link(link: &Link<T>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => node.size as nat,
+            }
+        }
+
+        open spec fn spec_link_size_wf(link: &Link<T>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    node.size as nat == 1 + Self::spec_size_link(&node.left) + Self::spec_size_link(&node.right)
+                        && Self::spec_link_size_wf(&node.left)
+                        && Self::spec_link_size_wf(&node.right)
+                }
+            }
+        }
+
+        open spec fn spec_height_link(link: &Link<T>) -> nat
+            decreases *link,
+        {
+            match link {
+                None => 0,
+                Some(node) => {
+                    let lh = Self::spec_height_link(&node.left);
+                    let rh = Self::spec_height_link(&node.right);
+                    1 + if lh >= rh { lh } else { rh }
+                }
+            }
+        }
+
+        open spec fn spec_content_link(link: &Link<T>) -> Set<T>
+            decreases *link,
+        {
+            match link {
+                None => Set::empty(),
+                Some(node) =>
+                    Self::spec_content_link(&node.left)
+                        .union(Self::spec_content_link(&node.right))
+                        .insert(node.key),
+            }
+        }
+
+        open spec fn spec_ordered_link(link: &Link<T>) -> bool
+            decreases *link,
+        {
+            match link {
+                None => true,
+                Some(node) => {
+                    Self::spec_ordered_link(&node.left)
+                    && Self::spec_ordered_link(&node.right)
+                    && (forall |k: T| #[trigger] Self::spec_content_link(&node.left).contains(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Less)
+                    && (forall |k: T| #[trigger] Self::spec_content_link(&node.right).contains(k)
+                        ==> k.cmp_spec(&node.key) == std::cmp::Ordering::Greater)
+                }
+            }
+        }
+    }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+    fn compare_links<T: StT + Ord>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
+        requires Lnk::spec_ordered_link(a), Lnk::spec_ordered_link(b),
+        ensures
+            (a is None && b is None) ==> equal,
+            (a is Some && b is None) ==> !equal,
+            (a is None && b is Some) ==> !equal,
+        decreases *a,
+    {
+        match (a, b) {
+            (None, None) => true,
+            (Some(an), Some(bn)) => {
+                if an.key != bn.key {
+                    false
+                } else {
+                    compare_links(&an.left, &bn.left) && compare_links(&an.right, &bn.right)
+                }
+            }
+            _ => false,
+        }
+    }
+
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn clone_link<T: StT + Ord>(link: &Link<T>) -> (c: Link<T>)
@@ -1494,11 +1530,7 @@ pub mod BSTSizeStEph {
         }
     }
 
-    impl<T: StT + Ord> Default for BSTreeSize<T> {
-        fn default() -> (default_val: Self)
-            ensures default_val.spec_size() == 0, default_val.spec_bstsizesteph_wf(), default_val@ == Set::<T>::empty(),
-        { Self::new() }
-    }
+    //		Section 12a. derive impls in verus!
 
 
     impl<T: StT + Ord> Clone for Node<T> {
@@ -1513,6 +1545,15 @@ pub mod BSTSizeStEph {
             }
         }
     }
+
+    impl<T: StT + Ord> Default for BSTreeSize<T> {
+        fn default() -> (default_val: Self)
+            ensures default_val.spec_size() == 0, default_val.spec_bstsizesteph_wf(), default_val@ == Set::<T>::empty(),
+        { Self::new() }
+    }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl<T: StT + Ord> Clone for BSTSizeStEph<T> {
         fn clone(&self) -> (cloned: Self)
@@ -1547,7 +1588,8 @@ pub mod BSTSizeStEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSizeStEphLit {
@@ -1567,7 +1609,7 @@ pub mod BSTSizeStEph {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StT + Ord + fmt::Debug> fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -1581,15 +1623,17 @@ pub mod BSTSizeStEph {
         }
     }
 
-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSizeStEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTSizeStEph").field("root", &self.root).finish()
-        }
-    }
-
     impl<T: StT + Ord + fmt::Display> fmt::Display for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "({})", self.key)
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: StT + Ord + fmt::Debug> fmt::Debug for BSTSizeStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTSizeStEph").field("root", &self.root).finish()
         }
     }
 
@@ -1601,6 +1645,8 @@ pub mod BSTSizeStEph {
             }
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl fmt::Debug for Lnk {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

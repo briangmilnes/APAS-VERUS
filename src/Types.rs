@@ -2,7 +2,44 @@
 //! REVIEWED: NO
 //! Common types used across the crate.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 6a. spec fns
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 9c. impls
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 9d. impls
+//	Section 4e. type definitions
+//	Section 5e. view impls
+//	Section 9e. impls
+//	Section 4f. type definitions
+//	Section 5f. view impls
+//	Section 6f. spec fns
+//	Section 7f. proof fns/broadcast groups
+//	Section 9f. impls
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+//	Section 14e. derive impls outside verus!
+//	Section 14f. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod Types {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Formatter, Debug, Display};
     use std::hash::Hash;
@@ -11,7 +48,11 @@ pub mod Types {
 
     // Note: bool already implements Display, Debug, Not, etc.
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -22,12 +63,18 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
+    //		Section 4a. type definitions
+
+
     /// Graph view struct: vertices and arcs/edges as spec sets.
     #[verifier::reject_recursive_types(V)]
     pub ghost struct GraphView<V> {
         pub V: Set<V>,
         pub A: Set<(V, V)>,
     }
+
+    //		Section 6a. spec fns
+
 
     /// Well-formedness for unlabeled graph views: finite sets and arc endpoints in V.
     pub open spec fn spec_graphview_wf<V>(gv: GraphView<V>) -> bool {
@@ -38,6 +85,9 @@ broadcast use {
                     gv.V.contains(u) && gv.V.contains(w)
     }
 
+    //		Section 4b. type definitions
+
+
     /// Labeled graph view struct: vertices and labeled arcs/edges.
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -45,6 +95,9 @@ broadcast use {
         pub V: Set<V>,
         pub A: Set<(V, V, L)>,
     }
+
+    //		Section 6b. spec fns
+
 
     /// Well-formedness for labeled graph views: finite sets and arc endpoints in V.
     pub open spec fn spec_labgraphview_wf<V, L>(gv: LabGraphView<V, L>) -> bool {
@@ -55,30 +108,88 @@ broadcast use {
                     gv.V.contains(u) && gv.V.contains(w)
     }
 
+    //		Section 8b. traits
+
+
     /// Single-threaded friendly elements: Eq + Clone + Display + Debug + Sized + View.
     pub trait StT: Eq + PartialEq + Clone + Display + Debug + Sized + vstd::prelude::View {}
-    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
 
     /// Single-threaded predicate function (boolean function).
     pub trait PredSt<T>: Fn(&T) -> bool {}
-    impl<F, T> PredSt<T> for F where F: Fn(&T) -> bool {}
-
-    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
     /// Type that can be hashed and ordered (for graph vertices).
     pub trait HashOrd: StT + Hash + Ord + ClonePreservesView {}
+
+    //		Section 9b. impls
+
+
+    impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    impl<F, T> PredSt<T> for F where F: Fn(&T) -> bool {}
+
+    use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     impl<T> HashOrd for T where T: StT + Hash + Ord + ClonePreservesView {}
+
+    //		Section 4c. type definitions
+
 
     /// Edge wrapper to enable Display/Debug for pairs (V,V) under baseline bounds.
     #[verifier::reject_recursive_types(V)]
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct Edge<V: StT>(pub V, pub V);
 
+    //		Section 5c. view impls
+
+
+    impl<V: StT> vstd::prelude::View for Edge<V> {
+        type V = (V::V, V::V);
+
+        open spec fn view(&self) -> (V::V, V::V) {(self.0@, self.1@)}
+    }
+
+    //		Section 9c. impls
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView> ClonePreservesView for Edge<V> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            Edge(self.0.clone_view(), self.1.clone_view())
+        }
+    }
+
+    //		Section 4d. type definitions
+
+
     /// Labeled Edge wrapper to enable edges with labels.
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct LabEdge<V: StT, L: StT + Hash>(pub V, pub V, pub L);
+
+    //		Section 5d. view impls
+
+
+    impl<V: StT, L: StT + Hash> vstd::prelude::View for LabEdge<V, L> {
+        type V = (V::V, V::V, L::V);
+
+        open spec fn view(&self) -> (V::V, V::V, L::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    //		Section 9d. impls
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView, L: StT + Hash + ClonePreservesView> ClonePreservesView for LabEdge<V, L> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            LabEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
+        }
+    }
+
+    //		Section 4e. type definitions
+
 
     /// - Weighted Edge wrapper to enable edges with weights.
     /// - Structurally identical to LabEdge but semantically distinct.
@@ -87,9 +198,36 @@ broadcast use {
     #[derive(Copy, PartialEq, Eq, Hash, Debug)]
     pub struct WeightedEdge<V: StT, W: StT + Hash>(pub V, pub V, pub W);
 
+    //		Section 5e. view impls
+
+
+    impl<V: StT, W: StT + Hash> vstd::prelude::View for WeightedEdge<V, W> {
+        type V = (V::V, V::V, W::V);
+
+        open spec fn view(&self) -> (V::V, V::V, W::V) {(self.0@, self.1@, self.2@)}
+    }
+
+    //		Section 9e. impls
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash + ClonePreservesView, W: StT + Hash + ClonePreservesView> ClonePreservesView for WeightedEdge<V, W> {
+        fn clone_view(&self) -> (result: Self)
+            ensures result@ == self@,
+        {
+            WeightedEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
+        }
+    }
+
+    //		Section 4f. type definitions
+
+
     /// Newtype wrapper for key-value pairs with better Display than tuples
     #[derive(Debug, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
     pub struct Pair<K, V>(pub K, pub V);
+
+    //		Section 5f. view impls
+
 
     impl<K: vstd::prelude::View, V: vstd::prelude::View> vstd::prelude::View for Pair<K, V> {
         type V = (K::V, V::V);
@@ -97,23 +235,53 @@ broadcast use {
         open spec fn view(&self) -> (K::V, V::V) {(self.0@, self.1@)}
     }
 
-    impl<V: StT> vstd::prelude::View for Edge<V> {
-        type V = (V::V, V::V);
+    //		Section 6f. spec fns
 
-        open spec fn view(&self) -> (V::V, V::V) {(self.0@, self.1@)}
+
+    pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
+
+    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
+        &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
+        &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
     }
 
-    impl<V: StT, L: StT + Hash> vstd::prelude::View for LabEdge<V, L> {
-        type V = (V::V, V::V, L::V);
-
-        open spec fn view(&self) -> (V::V, V::V, L::V) {(self.0@, self.1@, self.2@)}
+    pub open spec fn obeys_feq_full_Pair<K: Eq + View + Clone + Sized, V: Eq + View + Clone + Sized>() -> bool {
+        obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
     }
 
-    impl<V: StT, W: StT + Hash> vstd::prelude::View for WeightedEdge<V, W> {
-        type V = (V::V, V::V, W::V);
+    pub open spec fn Edge_feq_trigger<V>() -> bool { true }
 
-        open spec fn view(&self) -> (V::V, V::V, W::V) {(self.0@, self.1@, self.2@)}
+    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
+    pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
     }
+
+    pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
+        obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
+    }
+
+    pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
+
+    pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
+    }
+
+    pub open spec fn WeightedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
+
+    pub open spec fn valid_key_type_WeightedEdge<V: StT + Hash, W: StT + Hash>() -> bool {
+        &&& obeys_key_model::<V>() && obeys_key_model::<W>() && obeys_key_model::<WeightedEdge<V, W>>()
+        &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedEdge<V, W>>()
+        // Also require LabEdge since WeightedGraph implementations use LabDirGraph internally
+        &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
+        // Also require Pair for neighbor results
+        &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
+    }
+
+    //		Section 7f. proof fns/broadcast groups
+
 
     /// - Axiom that Pair's view is injective (needed for hash collections)
     /// - If two pairs have the same view, they are equal
@@ -131,8 +299,6 @@ broadcast use {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::hash::obeys_key_model;
 
-    pub open spec fn Pair_feq_trigger<K, V>() -> bool { true }
-
     pub broadcast proof fn axiom_Pair_feq<K: Eq + vstd::prelude::View + Clone + Sized, V: Eq + vstd::prelude::View + Clone + Sized>()
         requires #[trigger] Pair_feq_trigger::<K, V>()
         ensures obeys_feq_full::<Pair<K, V>>()
@@ -149,18 +315,6 @@ broadcast use {
         axiom_Pair_key_model,
     }
 
-    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
-    pub open spec fn valid_key_type_Pair<K: Eq + View + Clone + Sized + Hash, V: Eq + View + Clone + Sized + Hash>() -> bool {
-        &&& obeys_key_model::<K>() && obeys_key_model::<V>() && obeys_key_model::<Pair<K, V>>()
-        &&& obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
-    }
-
-    pub open spec fn obeys_feq_full_Pair<K: Eq + View + Clone + Sized, V: Eq + View + Clone + Sized>() -> bool {
-        obeys_feq_full::<K>() && obeys_feq_full::<V>() && obeys_feq_full::<Pair<K, V>>()
-    }
-
-    pub open spec fn Edge_feq_trigger<V>() -> bool { true }
-
     pub broadcast proof fn axiom_Edge_feq<V: StT>()
         requires #[trigger] Edge_feq_trigger::<V>()
         ensures obeys_feq_full::<Edge<V>>()
@@ -175,18 +329,6 @@ broadcast use {
         axiom_Edge_feq,
         axiom_Edge_key_model,
     }
-
-    /// For Verus wrapped hash tables we need obeys_key_model and for full equality we need obeys_feq_full.
-    pub open spec fn valid_key_type_Edge<V: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<Edge<V>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
-    }
-
-    pub open spec fn obeys_feq_full_Edge<V: StT>() -> bool {
-        obeys_feq_full::<V>() && obeys_feq_full::<Edge<V>>()
-    }
-
-    pub open spec fn LabEdge_feq_trigger<V: StT + Hash, L: StT + Hash>() -> bool { true }
 
     pub broadcast proof fn axiom_LabEdge_feq<V: StT + Hash, L: StT + Hash>()
         requires #[trigger] LabEdge_feq_trigger::<V, L>()
@@ -203,13 +345,6 @@ broadcast use {
         axiom_LabEdge_key_model,
     }
 
-    pub open spec fn valid_key_type_LabEdge<V: StT + Hash, L: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<L>() && obeys_key_model::<LabEdge<V, L>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<L>() && obeys_feq_full::<LabEdge<V, L>>()
-    }
-
-    pub open spec fn WeightedEdge_feq_trigger<V: StT + Hash, W: StT + Hash>() -> bool { true }
-
     pub broadcast proof fn axiom_WeightedEdge_feq<V: StT + Hash, W: StT + Hash>()
         requires #[trigger] WeightedEdge_feq_trigger::<V, W>()
         ensures obeys_feq_full::<WeightedEdge<V, W>>()
@@ -225,43 +360,8 @@ broadcast use {
         axiom_WeightedEdge_key_model,
     }
 
-    pub open spec fn valid_key_type_WeightedEdge<V: StT + Hash, W: StT + Hash>() -> bool {
-        &&& obeys_key_model::<V>() && obeys_key_model::<W>() && obeys_key_model::<WeightedEdge<V, W>>()
-        &&& obeys_feq_full::<V>() && obeys_feq_full::<W>() && obeys_feq_full::<WeightedEdge<V, W>>()
-        // Also require LabEdge since WeightedGraph implementations use LabDirGraph internally
-        &&& obeys_key_model::<LabEdge<V, W>>() && obeys_feq_full::<LabEdge<V, W>>()
-        // Also require Pair for neighbor results
-        &&& obeys_key_model::<Pair<V, W>>() && obeys_feq_full::<Pair<V, W>>()
-    }
+    //		Section 9f. impls
 
-    //      12. derive impls in verus!
-
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash + ClonePreservesView> ClonePreservesView for Edge<V> {
-        fn clone_view(&self) -> (result: Self)
-            ensures result@ == self@,
-        {
-            Edge(self.0.clone_view(), self.1.clone_view())
-        }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash + ClonePreservesView, L: StT + Hash + ClonePreservesView> ClonePreservesView for LabEdge<V, L> {
-        fn clone_view(&self) -> (result: Self)
-            ensures result@ == self@,
-        {
-            LabEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
-        }
-    }
-
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash + ClonePreservesView, W: StT + Hash + ClonePreservesView> ClonePreservesView for WeightedEdge<V, W> {
-        fn clone_view(&self) -> (result: Self)
-            ensures result@ == self@,
-        {
-            WeightedEdge(self.0.clone_view(), self.1.clone_view(), self.2.clone_view())
-        }
-    }
 
     #[cfg(verus_keep_ghost)]
     impl<K: vstd::prelude::View + Clone + ClonePreservesView, V: vstd::prelude::View + Clone + ClonePreservesView> ClonePreservesView for Pair<K, V> {
@@ -274,11 +374,42 @@ broadcast use {
 
     } // verus!
 
+    //		Section 13. macros
+
+
+    // Macros are defined outside verus! blocks to allow importing via `use crate::MacroName;` from other modules.
+    #[macro_export]
+    macro_rules! PairLit {
+        ($a:expr, $b:expr) => {
+            $crate::Types::Types::Pair($a, $b)
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+
     // Re-export MT traits from Concurrency (canonical definitions)
     pub use crate::Concurrency::Concurrency::{
         StTInMtT, MtT, MtKey, MtVal, MtReduceFn, Pred,
     };
 
+    impl<V: StT> From<Edge<V>> for (V, V) {
+        fn from(e: Edge<V>) -> (V, V) { (e.0, e.1) }
+    }
+
+    impl<V: StT, L: StT + Hash> From<LabEdge<V, L>> for (V, V, L) {
+        fn from(e: LabEdge<V, L>) -> (V, V, L) { (e.0, e.1, e.2) }
+    }
+
+    impl<V: StT, W: StT + Hash> From<WeightedEdge<V, W>> for (V, V, W) {
+        fn from(e: WeightedEdge<V, W>) -> (V, V, W) { (e.0, e.1, e.2) }
+    }
+
+    impl<A, B> From<Pair<A, B>> for (A, B) {
+        fn from(p: Pair<A, B>) -> Self { (p.0, p.1) }
+    }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<V: StT> Display for Edge<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {})", self.0, self.1) }
@@ -288,9 +419,13 @@ broadcast use {
         fn from(t: (V, V)) -> Self { Edge(t.0, t.1) }
     }
 
-    impl<V: StT> From<Edge<V>> for (V, V) {
-        fn from(e: Edge<V>) -> (V, V) { (e.0, e.1) }
+    impl<V: StT> Clone for Edge<V> {
+        fn clone(&self) -> Self {
+            Edge(self.0.clone(), self.1.clone())
+        }
     }
+
+    //		Section 14d. derive impls outside verus!
 
     impl<V: StT, L: StT + Hash> Display for LabEdge<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
@@ -300,9 +435,13 @@ broadcast use {
         fn from(t: (V, V, L)) -> Self { LabEdge(t.0, t.1, t.2) }
     }
 
-    impl<V: StT, L: StT + Hash> From<LabEdge<V, L>> for (V, V, L) {
-        fn from(e: LabEdge<V, L>) -> (V, V, L) { (e.0, e.1, e.2) }
+    impl<V: StT, L: StT + Hash> Clone for LabEdge<V, L> {
+        fn clone(&self) -> Self {
+            LabEdge(self.0.clone(), self.1.clone(), self.2.clone())
+        }
     }
+
+    //		Section 14e. derive impls outside verus!
 
     impl<V: StT, W: StT + Hash> Display for WeightedEdge<V, W> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result { write!(f, "({}, {}, {})", self.0, self.1, self.2) }
@@ -312,35 +451,16 @@ broadcast use {
         fn from(t: (V, V, W)) -> Self { WeightedEdge(t.0, t.1, t.2) }
     }
 
-    impl<V: StT, W: StT + Hash> From<WeightedEdge<V, W>> for (V, V, W) {
-        fn from(e: WeightedEdge<V, W>) -> (V, V, W) { (e.0, e.1, e.2) }
-    }
-
-
-    impl<A, B> From<(A, B)> for Pair<A, B> {
-        fn from(t: (A, B)) -> Self { Pair(t.0, t.1) }
-    }
-
-    impl<A, B> From<Pair<A, B>> for (A, B) {
-        fn from(p: Pair<A, B>) -> Self { (p.0, p.1) }
-    }
-
-    impl<V: StT> Clone for Edge<V> {
-        fn clone(&self) -> Self {
-            Edge(self.0.clone(), self.1.clone())
-        }
-    }
-
-    impl<V: StT, L: StT + Hash> Clone for LabEdge<V, L> {
-        fn clone(&self) -> Self {
-            LabEdge(self.0.clone(), self.1.clone(), self.2.clone())
-        }
-    }
-
     impl<V: StT, W: StT + Hash> Clone for WeightedEdge<V, W> {
         fn clone(&self) -> Self {
             WeightedEdge(self.0.clone(), self.1.clone(), self.2.clone())
         }
+    }
+
+    //		Section 14f. derive impls outside verus!
+
+    impl<A, B> From<(A, B)> for Pair<A, B> {
+        fn from(t: (A, B)) -> Self { Pair(t.0, t.1) }
     }
 
     impl<K: Clone, V: Clone> Clone for Pair<K, V> {
@@ -354,13 +474,5 @@ broadcast use {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "({} -> {})", self.0, self.1)
         }
-    }
-
-    // Macros are defined outside verus! blocks to allow importing via `use crate::MacroName;` from other modules.
-    #[macro_export]
-    macro_rules! PairLit {
-        ($a:expr, $b:expr) => {
-            $crate::Types::Types::Pair($a, $b)
-        };
     }
 }

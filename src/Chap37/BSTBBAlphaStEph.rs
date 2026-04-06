@@ -4,28 +4,31 @@
 //! Verusified: functional-style BB[α] with BST ordering invariant.
 //! Weight-balance (α = 3/4) modeled as a spec; rebuild omitted from verified core.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 12. macros
-// 13. derive impls outside verus!
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTBBAlphaStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use vstd::pervasive::unreached;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
@@ -33,21 +36,24 @@ pub mod BSTBBAlphaStEph {
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTBBAlphaStEph<T> {
         pub root: BalBinTree<T>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T> View for BSTBBAlphaStEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { self.root }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Weight-balance at every node: neither child exceeds 3/4 of total size.
     /// Models ALPHA = 0.75 with integer arithmetic to avoid f64.
@@ -71,7 +77,8 @@ pub mod BSTBBAlphaStEph {
         tree.tree_is_bst() && weight_balanced(tree)
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait BSTBBAlphaStEphTrait<T: TotalOrder>: Sized + View<V = BalBinTree<T>> {
         spec fn spec_root(self) -> BalBinTree<T>;
@@ -228,7 +235,8 @@ pub mod BSTBBAlphaStEph {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder> BSTBBAlphaStEphTrait<T> for BSTBBAlphaStEph<T> {
         open spec fn spec_root(self) -> BalBinTree<T> { self.root }
@@ -799,7 +807,8 @@ pub mod BSTBBAlphaStEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTBBAlphaStEphLit {
@@ -814,7 +823,8 @@ pub mod BSTBBAlphaStEph {
             tree
         }};
     }
-// 13. derive impls outside verus!
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BSTBBAlphaStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

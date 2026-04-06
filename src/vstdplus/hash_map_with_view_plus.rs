@@ -5,19 +5,23 @@
 //! Provides Clone, PartialEq, Eq, and iter() with Verus specs.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod hash_map_with_view_plus {
+
+
+//		Section 2. imports
 
 use vstd::prelude::*;
 use std::collections::HashMap;
@@ -30,14 +34,16 @@ use vstd::std_specs::hash::HashMapAdditionalSpecFns;
 #[cfg(verus_keep_ghost)]
 use crate::vstdplus::feq::feq::obeys_feq_view_injective;
 
-verus! {
+verus! 
+{
 
-//		3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use vstd::map::group_map_axioms;
 
+    //		Section 4. type definitions
 
-//		4. type definitions
 
 #[verifier::reject_recursive_types(Key)]
 #[verifier::reject_recursive_types(Value)]
@@ -45,14 +51,16 @@ pub struct HashMapWithViewPlus<Key: View + Eq + Hash, Value> {
     pub inner: HashMap<Key, Value>,
 }
 
-//		5. view impls
+    //		Section 5. view impls
+
 
 impl<Key: View + Eq + Hash, Value> View for HashMapWithViewPlus<Key, Value> {
     type V = Map<<Key as View>::V, Value>;
     uninterp spec fn view(&self) -> Self::V;
 }
 
-//		8. traits
+    //		Section 8. traits
+
 
 pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V = Map<<Key as View>::V, Value>> {
     fn new() -> (empty: Self)
@@ -106,7 +114,8 @@ pub trait HashMapWithViewPlusTrait<Key: View + Eq + Hash, Value>: Sized + View<V
             };
 }
 
-//		9. impls
+    //		Section 9. impls
+
 
 impl<Key: View + Eq + Hash, Value> HashMapWithViewPlusTrait<Key, Value> for HashMapWithViewPlus<Key, Value> {
     #[verifier::external_body]
@@ -155,7 +164,8 @@ impl<Key: View + Eq + Hash, Value> HashMapWithViewPlusTrait<Key, Value> for Hash
     }
 }
 
-//		10. iterators
+    //		Section 10. iterators
+
 
 /// Iterator wrapper with closed View for encapsulation.
 #[verifier::reject_recursive_types(Key)]
@@ -267,7 +277,8 @@ impl<'a, Key: View + Eq + Hash, Value> View for HashMapWithViewPlusGhostIterator
     }
 }
 
-//		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
 impl<Key: View + Eq + Hash + Clone, Value: Clone> Clone for HashMapWithViewPlus<Key, Value> {
     #[verifier::external_body]

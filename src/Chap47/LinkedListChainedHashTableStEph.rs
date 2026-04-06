@@ -3,17 +3,21 @@
 //! LinkedList Chained Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses LinkedListStEphS (Chap18) for separate chaining collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod LinkedListChainedHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions (inside verus!)
-    // 7. proof fns (inside verus!)
-    // 9. impls (inside verus!: EntryTrait for LinkedListStEphS, ParaHashTableStEphTrait, ChainedHashTable)
-
-    // 2. imports
+    //		Section 2. imports
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -25,20 +29,27 @@ pub mod LinkedListChainedHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-        // 3. broadcast use
+    //		Section 3. broadcast use
+
 
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-        // 4. type definitions
+    //		Section 4. type definitions
+
 
         /// LinkedList Chained Hash Table implementation.
         pub struct LinkedListChainedHashTableStEph;
 
-        // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
         proof fn _linked_list_chained_hash_table_verified() {}
+
+    //		Section 9. impls
+
 
         /// Clones a LinkedListStEphS<(Key, Value)> with sequence equality ensures.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear copy of all list elements.
@@ -70,7 +81,6 @@ pub mod LinkedListChainedHashTableStEph {
             LinkedListStEphS { seq: new_seq }
         }
 
-        // 9. impls
 
         impl<Key: PartialEq + Clone, Value: Clone> EntryTrait<Key, Value> for LinkedListStEphS<(Key, Value)> {
             open spec fn spec_entry_to_map(&self) -> Map<Key, Value> {
@@ -607,7 +617,8 @@ pub mod LinkedListChainedHashTableStEph {
         }
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for LinkedListChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -4,14 +4,17 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Algorithm21_2 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -20,14 +23,15 @@ pub mod Algorithm21_2 {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq::seq::lemma_flatten_uniform_len;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -37,7 +41,8 @@ pub mod Algorithm21_2 {
         crate::Types::Types::group_Pair_axioms,
     };
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Algorithm 21.2 (3D Points) using ArraySeqPer: flatten of nested tabulates.
     /// - Comprehension form: 〈(x,y,z): 0 ≤ x < n, 1 ≤ y ≤ n, 2 ≤ z ≤ n+1〉

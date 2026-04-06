@@ -2,7 +2,24 @@
 //! REVIEWED: NO
 //! Set interface built atop the Plain multi-threaded BST implementation.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BSTSetPlainMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -12,10 +29,14 @@ pub mod BSTSetPlainMtEph {
     use crate::Chap37::BSTPlainMtEph::BSTPlainMtEph::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
+
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetPlainMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -24,39 +45,15 @@ pub mod BSTSetPlainMtEph {
 
     pub type BSTSetPlainMt<T> = BSTSetPlainMtEph<T>;
 
-    // 4. type definitions
+    //		Section 6. spec fns
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetPlainMtEphIter<T: StTInMtT + Ord + TotalOrder> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetPlainMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetPlainMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetPlainMtEphGhostIter<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    // 6. spec fns
 
     pub open spec fn bstsetplainmteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetPlainMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
+
+    //		Section 8. traits
+
 
     pub trait BSTSetPlainMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetplainmteph_wf(&self) -> bool;
@@ -154,6 +151,9 @@ pub mod BSTSetPlainMtEph {
             requires self.spec_bstsetplainmteph_wf()
             ensures out.spec_bstsetplainmteph_wf();
     }
+
+    //		Section 9. impls
+
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTPlainMtEph<T>) -> (values: Vec<T>)
@@ -493,7 +493,34 @@ pub mod BSTSetPlainMtEph {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetPlainMtEphIter<T: StTInMtT + Ord + TotalOrder> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetPlainMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetPlainMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetPlainMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
 
     impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetPlainMtEphIter<T> {
         type Item = T;
@@ -592,6 +619,23 @@ pub mod BSTSetPlainMtEph {
 
     } // verus!
 
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! BSTSetPlainMtEphLit {
+        () => {
+            < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty()
+        };
+        ( $( $x:expr ),* $(,)? ) => {{
+            let mut __set = < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty();
+            $( let _ = __set.insert($x); )*
+            __set
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
+
     impl<T: StTInMtT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BSTSetPlainMtEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BSTSetPlainMtEph").field("tree", &self.tree).finish()
@@ -626,17 +670,5 @@ pub mod BSTSetPlainMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "BSTSetPlainMtEphGhostIter")
         }
-    }
-
-    #[macro_export]
-    macro_rules! BSTSetPlainMtEphLit {
-        () => {
-            < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty()
-        };
-        ( $( $x:expr ),* $(,)? ) => {{
-            let mut __set = < $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEph<_> as $crate::Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait<_> >::empty();
-            $( let _ = __set.insert($x); )*
-            __set
-        }};
     }
 }

@@ -13,12 +13,33 @@
 //! - `is_empty`: Work O(1), Span O(1)
 //! - `size`: Work O(1), Span O(1)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod StackStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -27,28 +48,19 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // Table of Contents
-    // 1. module (StackStEph)
-    // 2. imports
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::clone::*;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub struct StackStEph<T: StT> {
         pub elements: Vec<T>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: StT> View for StackStEph<T> {
         type V = Seq<T>;
@@ -57,7 +69,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait StackStEphTrait<T: StT>: View<V = Seq<T>> + Sized {
         spec fn spec_stacksteph_wf(&self) -> bool;
@@ -97,7 +110,8 @@ broadcast use {
             requires self.spec_stacksteph_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: StT> StackStEphTrait<T> for StackStEph<T> {
         open spec fn spec_stacksteph_wf(&self) -> bool {
@@ -140,7 +154,8 @@ broadcast use {
         { self.elements.len() }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<T: StT> Clone for StackStEph<T> {
         fn clone(&self) -> (res: Self)
@@ -162,7 +177,8 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<T: StT> std::fmt::Debug for StackStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

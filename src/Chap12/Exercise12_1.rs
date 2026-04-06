@@ -8,7 +8,22 @@
 //! meaningful requires/ensures would require a concurrency logic (e.g., TSM)
 //! that is disproportionate for a ticket-lock exercise.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod Exercise12_1 {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use std::hint::spin_loop;
     use std::sync::Arc;
@@ -16,13 +31,20 @@ pub mod Exercise12_1 {
 
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::{spawn, wait};
 
-verus! {
+verus! 
+{
+
+    //		Section 4. type definitions
+
 
     #[verifier::external_body] // accept hole
     pub struct SpinLock {
         ticket: AtomicUsize,
         turn: AtomicUsize,
     }
+
+    //		Section 8. traits
+
 
     pub trait SpinLockTrait: Sized {
         /// Spec: is the lock currently held?
@@ -54,6 +76,9 @@ verus! {
         /// equals action()" for a generic FnOnce — the closure's spec is opaque.
         fn with_lock<T, F: FnOnce() -> T>(&self, action: F) -> T;
     }
+
+    //		Section 9. impls
+
 
     impl SpinLockTrait for SpinLock {
         uninterp spec fn spec_locked(&self) -> bool;
@@ -122,11 +147,17 @@ verus! {
         shared.load(Ordering::Relaxed)
     }
 
+    //		Section 12. derive impls in verus!
+
+
 impl Default for SpinLock {
     fn default() -> Self { SpinLock::new() }
 }
 
 } // verus!
+
+    //		Section 14. derive impls outside verus!
+
 
 impl std::fmt::Debug for SpinLock {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

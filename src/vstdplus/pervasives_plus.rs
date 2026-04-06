@@ -2,10 +2,26 @@
 //! REVIEWED: NO
 //! Additional pervasive utilities beyond vstd::pervasive.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod pervasives_plus {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 6. spec fns
+
 
     /// A spec function for documenting claims in code without proving them.
     /// Always returns true regardless of the claim - use for documentation only.
@@ -19,6 +35,9 @@ pub mod pervasives_plus {
     pub open spec fn comment(description: &str, claim: bool) -> bool {
         true  // Always returns true, ignoring the claim
     }
+
+    //		Section 9. impls
+
 
     /// Swap two elements in a Vec without cloning.
     /// Wraps std Vec::swap, preserving T-level element identity.

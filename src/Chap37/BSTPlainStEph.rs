@@ -3,47 +3,53 @@
 //! Ephemeral binary search tree built on `BBTEph` primitives.
 //! Verusified: functional-style BST with recursive containment specs.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 4. type definitions
-// 5. view impls
-// 7. proof fns
-// 8. traits
-// 9. impls
-// 12. macros
-// 13. derive impls outside verus!
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 #[allow(non_shorthand_field_patterns)]
 pub mod BSTPlainStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use vstd::pervasive::unreached;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTPlainStEph<T> {
         pub root: BalBinTree<T>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T> View for BSTPlainStEph<T> {
         type V = BalBinTree<T>;
         open spec fn view(&self) -> BalBinTree<T> { self.root }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Decomposes tree_contains through the two-level BalBinTree/BalBinNode trait dispatch.
     pub proof fn lemma_node_contains<T: TotalOrder>(
@@ -81,7 +87,8 @@ pub mod BSTPlainStEph {
             x != val,
     {}
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Recursive BST spec functions dispatched through BalBinTree/BalBinNode pair.
     pub trait BSTSpecFns<T: TotalOrder>: Sized {
@@ -244,7 +251,8 @@ pub mod BSTPlainStEph {
                 max.is_some() ==> self.spec_root().tree_contains(*max.unwrap());
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder> BSTSpecFns<T> for BalBinTree<T> {
         open spec fn tree_contains(self, value: T) -> bool
@@ -872,7 +880,8 @@ pub mod BSTPlainStEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTPlainStEphLit {
@@ -888,7 +897,7 @@ pub mod BSTPlainStEph {
         }};
     }
 
-// 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: std::fmt::Debug> std::fmt::Debug for BSTPlainStEph<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

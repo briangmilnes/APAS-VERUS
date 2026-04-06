@@ -7,19 +7,25 @@
 //! diagonal pebbling strategy with in-place mutations for efficiency.
 
 //  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 6. spec fns
 
 pub mod BottomUpDPStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
+    //		Section 1. module
+    //		Section 2. imports
+    //		Section 4. type definitions
+    //		Section 8. traits
+    //		Section 9. impls
+    //		Section 12. derive impls in verus!
+    //		Section 14. derive impls outside verus!
 
-    // 2. imports
     use std::fmt::{Formatter, Debug, Display};
 
     use vstd::prelude::*;
@@ -29,18 +35,21 @@ pub mod BottomUpDPStEph {
     use crate::Types::Types::*;
 
     verus! {
-    // 4. type definitions
+
+
     pub struct BottomUpDPStEphS {
         pub seq_s: ArraySeqStEphS<char>,
         pub seq_t: ArraySeqStEphS<char>,
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
+
     pub open spec fn spec_min(a: nat, b: nat) -> nat {
         if a <= b { a } else { b }
     }
 
-    // 8. traits
+
     pub trait BottomUpDPStEphTrait: Sized {
         spec fn spec_s(&self) -> Seq<char>;
         spec fn spec_t(&self) -> Seq<char>;
@@ -159,7 +168,7 @@ pub mod BottomUpDPStEph {
                 val as nat == self.spec_med(i as nat, j as nat);
     }
 
-    // 9. impls
+
     impl BottomUpDPStEphTrait for BottomUpDPStEphS {
         open spec fn spec_s(&self) -> Seq<char> { self.seq_s@ }
         open spec fn spec_t(&self) -> Seq<char> { self.seq_t@ }
@@ -464,6 +473,7 @@ pub mod BottomUpDPStEph {
         }
     }
 
+
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for BottomUpDPStEphS {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -485,7 +495,6 @@ pub mod BottomUpDPStEph {
         }
     }
 
-    // 11. derive impls in verus!
     impl Clone for BottomUpDPStEphS {
         fn clone(&self) -> (cloned: Self)
             ensures
@@ -513,7 +522,7 @@ pub mod BottomUpDPStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+
     impl Debug for BottomUpDPStEphS {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BottomUpDPStEphS")

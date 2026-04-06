@@ -10,20 +10,26 @@
 //! correctness follows directly from vstd seq/set lemmas without needing
 //! spec-level ordering (TotalOrder). The backing ArraySeq is unordered.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod ArraySetStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -38,9 +44,11 @@ pub mod ArraySetStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_clone, lemma_cloned_view_eq, lemma_seq_map_cloned_view_eq};
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -53,7 +61,8 @@ pub mod ArraySetStEph {
         vstd::set_lib::group_set_lib_default,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySetStEph<T: StT + Ord> {
@@ -62,7 +71,8 @@ pub mod ArraySetStEph {
 
     pub type ArraySetS<T> = ArraySetStEph<T>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: StT + Ord> View for ArraySetStEph<T> {
         type V = Set<<T as View>::V>;
@@ -71,7 +81,8 @@ pub mod ArraySetStEph {
         }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Filtering out a value from a no-dup seq produces to_set().remove(v).
     proof fn lemma_filter_remove<V>(s: Seq<V>, v: V)
@@ -297,7 +308,8 @@ pub mod ArraySetStEph {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait ArraySetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_arraysetsteph_wf(&self) -> bool;
@@ -429,7 +441,8 @@ pub mod ArraySetStEph {
                 self.spec_arraysetsteph_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: StT + Ord> ArraySetStEph<T> {
         pub open spec fn spec_arraysetsteph_wf(&self) -> bool {
@@ -439,7 +452,6 @@ pub mod ArraySetStEph {
         }
     }
 
-    // 9. impls
 
     impl<T: StT + Ord> ArraySetStEphTrait<T> for ArraySetStEph<T> {
         open spec fn spec_arraysetsteph_wf(&self) -> bool {
@@ -1231,6 +1243,9 @@ pub mod ArraySetStEph {
         }
     }
 
+    //		Section 12. derive impls in verus!
+
+
     impl<T: StT + Ord> Default for ArraySetStEph<T> {
         fn default() -> Self { Self::empty() }
     }
@@ -1296,7 +1311,8 @@ pub mod ArraySetStEph {
 
     } 
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! ArraySetStEphLit {
@@ -1310,7 +1326,7 @@ pub mod ArraySetStEph {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StT + Ord> fmt::Debug for ArraySetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

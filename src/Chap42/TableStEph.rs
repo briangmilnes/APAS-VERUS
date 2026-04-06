@@ -4,19 +4,20 @@
 //! Chapter 42 single-threaded ephemeral table implementation using ArraySeq as backing store.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports (above)
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod TableStEph {
 
@@ -36,25 +37,20 @@ pub mod TableStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+    //		Section 2. imports (above)
+    //		Section 3. broadcast use
+    //		Section 4. type definitions
+    //		Section 5. view impls
+    //		Section 6. spec fns
+    //		Section 7. proof fns
+    //		Section 8. traits
+    //		Section 9. impls
+    //		Section 12. derive impls in verus!
+    //		Section 13. macros
+    //		Section 14. derive impls outside verus!
 
     verus! {
 
-    //		3. broadcast use
-
-    // 3. broadcast use
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -65,9 +61,6 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    //		4. type definitions
-
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -77,7 +70,6 @@ broadcast use {
 
     pub type TableS<K, V> = TableStEph<K, V>;
 
-    //		5. view impls
 
     impl<K: StT + Ord, V: StT> View for TableStEph<K, V> {
         type V = Map<K::V, V::V>;
@@ -86,9 +78,6 @@ broadcast use {
         }
     }
 
-    //		6. spec fns
-
-    // 5. view impls
 
     // Converts a sorted sequence of (key, value) pairs to a Map.
     // Later entries win on duplicate keys (irrelevant when keys are unique).
@@ -103,7 +92,6 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
 
     // Keys in the entry sequence are unique.
     pub open spec fn spec_keys_no_dups<KV, VV>(entries: Seq<(KV, VV)>) -> bool {
@@ -111,9 +99,6 @@ broadcast use {
             0 <= i < j < entries.len() ==> (#[trigger] entries[i]).0 != (#[trigger] entries[j]).0
     }
 
-    //		7. proof fns/broadcast groups
-
-    // 7. proof fns
 
     // If a key is in spec_entries_to_map, it appears in the seq.
     pub proof fn lemma_entries_to_map_key_in_seq<KV, VV>(entries: Seq<(KV, VV)>, k: KV)
@@ -282,9 +267,6 @@ broadcast use {
         }
     }
 
-    //		8. traits
-
-    // 8. traits
 
     /// Trait defining the Table ADT operations from Chapter 42
     pub trait TableStEphTrait<K: StT + Ord, V: StT>: Sized + View<V = Map<K::V, V::V>> {
@@ -535,7 +517,6 @@ broadcast use {
             ensures spec_entries_to_map(entries@) == self@;
     }
 
-    //		9. impls
 
     impl<K: StT + Ord, V: StT> TableStEph<K, V> {
         pub open spec fn spec_tablesteph_wf(&self) -> bool {
@@ -575,7 +556,6 @@ broadcast use {
         }
     }
 
-    // 9. impls
 
     impl<K: StT + Ord, V: StT> TableStEphTrait<K, V> for TableStEph<K, V> {
         open spec fn spec_tablesteph_wf(&self) -> bool {
@@ -2726,7 +2706,6 @@ broadcast use {
         TableStEph { entries: seq }
     }
 
-    // 11. derive impls in verus!
 
     impl<K: StT + Ord, V: StT> Default for TableStEph<K, V> {
         fn default() -> Self {
@@ -2762,9 +2741,6 @@ broadcast use {
 
     } // verus!
 
-    // 12. macros
-
-    //		12. macros
 
     #[macro_export]
     macro_rules! TableStEphLit {
@@ -2778,7 +2754,6 @@ broadcast use {
         }};
     }
 
-    //		13. derive impls outside verus!
 
     impl<K: StT + Ord + fmt::Debug, V: StT + fmt::Debug> fmt::Debug for TableStEph<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -9,21 +9,27 @@
 //! - difference: Work O(m·lg(1+n/m)), Span O(lg² n) via PARALLEL divide-and-conquer
 //! - filter: Work O(Σ W(f(x))), Span O(n + max S(f(x))) — sequential (spec_fn not Send)
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod AVLTreeSetMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -39,9 +45,11 @@ pub mod AVLTreeSetMtEph {
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -50,51 +58,31 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
         pub tree: ParamBST<T>,
     }
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtEphIter<T: StTInMtT + Ord + 'static> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
+    //		Section 5. view impls
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + 'static> {
-        pub pos: int,
-        pub elements: Seq<T::V>,
-    }
-
-    // 5. view impls
 
     impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
-        type V = (int, Seq<T::V>);
-        open spec fn view(&self) -> (int, Seq<T::V>) {
-            (self.pos as int, self.snapshot@.map_values(|t: T| t@))
-        }
-    }
+    //		Section 6. spec fns
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphGhostIter<T> {
-        type V = Seq<T::V>;
-        open spec fn view(&self) -> Seq<T::V> { self.elements.take(self.pos) }
-    }
-
-    // 6. spec fns
 
     pub open spec fn avltreesetmteph_iter_invariant<T: StTInMtT + Ord + 'static>(it: &AVLTreeSetMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
         /// Well-formedness: backing BST is well-formed.
@@ -251,7 +239,8 @@ broadcast use {
             ensures it@.0 == 0, avltreesetmteph_iter_invariant(&it);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Parallel D&C set construction from Vec: split in half, recurse via join(), union.
     /// Work O(n lg n), Span O(lg^2 n) — matches APAS Ex 41.3 parallel fromSeq.
@@ -545,8 +534,31 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
-        fn default() -> Self { Self::empty() }
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetMtEphIter<T: StTInMtT + Ord + 'static> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + 'static> {
+        pub pos: int,
+        pub elements: Seq<T::V>,
+    }
+
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
+        type V = (int, Seq<T::V>);
+        open spec fn view(&self) -> (int, Seq<T::V>) {
+            (self.pos as int, self.snapshot@.map_values(|t: T| t@))
+        }
+    }
+
+    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphGhostIter<T> {
+        type V = Seq<T::V>;
+        open spec fn view(&self) -> Seq<T::V> { self.elements.take(self.pos) }
     }
 
     impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
@@ -634,7 +646,13 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
+        fn default() -> Self { Self::empty() }
+    }
+
 
     impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
         fn clone(&self) -> (cloned: Self)
@@ -646,11 +664,8 @@ broadcast use {
 
     } // verus!
 
-    // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
-    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+    //		Section 13. macros
 
-    // 12. macros
 
     #[macro_export]
     macro_rules! AVLTreeSetMtEphLit {
@@ -664,7 +679,11 @@ broadcast use {
         }};
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
+    // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
+    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
+    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
 
     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -4,21 +4,25 @@
 //! Chapter 6.1 Undirected Graph (ephemeral) using Set for vertices and edges.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod UnDirGraphStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -33,9 +37,11 @@ pub mod UnDirGraphStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-verus! {
+verus! 
+{
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -48,8 +54,8 @@ verus! {
         vstd::set::group_set_axioms,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct UnDirGraphStEph<V: StT + Hash> {
@@ -57,19 +63,19 @@ verus! {
         pub E: SetStEph<Edge<V>>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<V: StT + Hash> View for UnDirGraphStEph<V> {
         type V = GraphView<<V as View>::V>;
-        
+
         open spec fn view(&self) -> Self::V {
             GraphView { V: self.V@, A: self.E@ }
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait UnDirGraphStEphTrait<V: StT + Hash>:
     View<V = GraphView<<V as View>::V>> + Sized {
@@ -186,8 +192,8 @@ verus! {
             ensures n == self.spec_degree(v@);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl<V: StT + Hash> UnDirGraphStEphTrait<V> for UnDirGraphStEph<V> {
 
@@ -351,13 +357,8 @@ verus! {
         fn degree(&self, v: &V) -> (n: usize) { self.ng(v).size() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-    //		10. iterators
 
     /// Iterator wrapper for UnDirGraphStEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -477,7 +478,15 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash> PartialEqSpecImpl for UnDirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<V: StT + Hash> Clone for UnDirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
@@ -506,24 +515,8 @@ verus! {
 
 } // verus!
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
-
-    impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            f.debug_struct("UnDirGraphStEph")
-                .field("V", &self.V)
-                .field("E", &self.E)
-                .finish()
-        }
-    }
-
-    impl<V: StT + Hash> Display for UnDirGraphStEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
-    }
-
-
-    //		12. macros
 
     #[macro_export]
     macro_rules! UnDirGraphStEphLit {
@@ -541,6 +534,21 @@ verus! {
             };
             < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::from_sets(__V, __E)
         }};
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("UnDirGraphStEph")
+                .field("V", &self.V)
+                .field("E", &self.E)
+                .finish()
+        }
+    }
+
+    impl<V: StT + Hash> Display for UnDirGraphStEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
 
     impl<'a, V: StT + Hash> Debug for UnDirGraphStEphIter<'a, V> {

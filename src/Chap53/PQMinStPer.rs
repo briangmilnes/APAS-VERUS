@@ -5,7 +5,24 @@
 //! Implements Algorithm 53.7 - Priority Queue Search framework.
 //! Selects minimum priority vertices first (lower priority = higher urgency).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod PQMinStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
@@ -21,11 +38,17 @@ pub mod PQMinStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::relations::injective_on;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
+
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(P)]
     pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
@@ -34,7 +57,8 @@ pub mod PQMinStPer {
         pub parent: Option<AVLTreeSetStPer<Pair<V, V>>>, // (child, parent)
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn spec_pqminstper_wf_generic<V: StT + Ord, P: StT + Ord>(
         s: &PQMinResult<V, P>,
@@ -42,7 +66,9 @@ pub mod PQMinStPer {
         s.visited@.finite() && s.priorities@.finite()
     }
 
-    // 8. traits
+    //		Section 8. traits
+
+
     pub trait PQMinStPerTrait<V: StT + Ord, P: StT + Ord> {
         spec fn spec_pqminstper_wf(&self) -> bool;
 
@@ -100,7 +126,8 @@ pub mod PQMinStPer {
                 sources@.subset_of(search.visited@);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StT + Ord, P: StT + Ord> PQMinStPerTrait<V, P> for PQMinResult<V, P> {
         open spec fn spec_pqminstper_wf(&self) -> bool {
@@ -560,7 +587,8 @@ pub mod PQMinStPer {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
         fn clone(&self) -> (out: Self) {
@@ -574,7 +602,8 @@ pub mod PQMinStPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StT + Ord, P: StT + Ord> std::fmt::Debug for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

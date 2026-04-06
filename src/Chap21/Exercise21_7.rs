@@ -4,30 +4,34 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Exercise21_7 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::seq::seq::lemma_flatten_uniform_len;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -35,12 +39,20 @@ pub mod Exercise21_7 {
         crate::Types::Types::group_Pair_axioms,
     };
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec: x is even.
     pub open spec fn spec_is_even(x: int) -> bool { x % 2 == 0     }
 
-    //		9. impls
+    /// Spec: c is a vowel.
+    pub open spec fn spec_is_vowel(c: char) -> bool {
+        c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'
+        || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U'
+    }
+
+    //		Section 9. impls
+
 
     /// Check if a number is even.
     /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(1), Span O(1)
@@ -49,12 +61,6 @@ pub mod Exercise21_7 {
     pub fn is_even(x: &usize) -> (r: bool)
         ensures r == spec_is_even(*x as int)
     { *x % 2 == 0 }
-
-    /// Spec: c is a vowel.
-    pub open spec fn spec_is_vowel(c: char) -> bool {
-        c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u'
-        || c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U'
-    }
 
     /// Check if a character is a vowel (case-insensitive).
     /// - Alg Analysis: APAS (Ch21 Ex 21.7): Work O(1), Span O(1)

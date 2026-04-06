@@ -4,22 +4,25 @@
 //! Chapter 6.1 Directed Graph (ephemeral) using Set for vertices and arcs.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod DirGraphStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -32,15 +35,15 @@ pub mod DirGraphStEph {
     use crate::vstdplus::feq::feq::feq;
     use crate::vstdplus::seq_set::*;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     // Broadcast groups for hash collections, sets, and our custom axioms
     broadcast use {
@@ -53,14 +56,14 @@ verus! {
         vstd::set::group_set_axioms,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct DirGraphStEph<V: StT + Hash> { pub V: SetStEph<V>, pub A: SetStEph<Edge<V>> }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     // View implementation: GraphView with named V and A fields
     impl<V: StT + Hash> View for DirGraphStEph<V> {
@@ -69,8 +72,8 @@ verus! {
         open spec fn view(&self) -> Self::V { GraphView { V: self.V@, A: self.A@ } }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait DirGraphStEphTrait<V: StT + Hash>:
          View<V = GraphView<<V as View>::V>> + Sized {
@@ -223,8 +226,8 @@ verus! {
             ensures n == self.spec_n_plus(v@).len();
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl<V: StT + Hash> DirGraphStEph<V> {
         /// Returns an iterator over the vertices
@@ -569,14 +572,8 @@ verus! {
         { self.n_plus(v).size() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-
-    //		10. iterators
 
     /// Iterator wrapper for DirGraphStEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -696,7 +693,15 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Hash> PartialEqSpecImpl for DirGraphStEph<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<V: StT + Hash> Clone for DirGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
@@ -725,24 +730,8 @@ verus! {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
-
-    impl<V: StT + Hash> Debug for DirGraphStEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            f.debug_struct("DirGraphStEph")
-            .field("V", &self.V)
-            .field("A", &self.A)
-            .finish()
-        }
-    }
-
-    impl<V: StT + Hash> Display for DirGraphStEph<V> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
-    }
-
-
-    //		12. macros
 
     // Macro defined outside verus! block
     #[macro_export]
@@ -763,7 +752,20 @@ verus! {
         }}
     }
 
-    //		14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
+    impl<V: StT + Hash> Debug for DirGraphStEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("DirGraphStEph")
+            .field("V", &self.V)
+            .field("A", &self.A)
+            .finish()
+        }
+    }
+
+    impl<V: StT + Hash> Display for DirGraphStEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
+    }
 
     impl<'a, V: StT + Hash> Debug for DirGraphStEphIter<'a, V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphIter") }

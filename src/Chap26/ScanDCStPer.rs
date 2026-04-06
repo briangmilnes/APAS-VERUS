@@ -5,28 +5,27 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod ScanDCStPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
@@ -34,10 +33,8 @@ pub mod ScanDCStPer {
     use crate::vstdplus::monoid::monoid::*;
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -47,10 +44,8 @@ pub mod ScanDCStPer {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
-
-    //		4. spec functions
 
     /// Spec function: exclusive prefix scan result at position i is the fold of elements [0..i).
     pub open spec fn spec_scan_at(s: Seq<usize>, spec_f: spec_fn(usize, usize) -> usize, id: usize, i: int) -> usize
@@ -70,10 +65,8 @@ pub mod ScanDCStPer {
         &&& total == spec_iterate(input, spec_f, id)
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		9. impls
 
     /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
     /// when (f, id) is a monoid.
@@ -90,10 +83,8 @@ pub mod ScanDCStPer {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
-
-    //		8. traits
 
     pub trait ScanDCStTrait {
         /// Algorithm 26.5: Exclusive prefix scan via divide and conquer.
@@ -127,8 +118,8 @@ pub mod ScanDCStPer {
                     sums.1);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl ScanDCStTrait for ArraySeqStPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — recursive D&C scan halving n; St sequential.

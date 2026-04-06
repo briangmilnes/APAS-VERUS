@@ -4,7 +4,24 @@
 //! Sorts DAG vertices in topological order using ephemeral structures.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod TopoSortStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -12,7 +29,11 @@ pub mod TopoSortStEph {
     use crate::Chap55::CycleDetectStEph::CycleDetectStEph::{CycleDetectStEph, CycleDetectStEphTrait};
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -21,21 +42,16 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+
+
     pub struct TopoSortStEph;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Counts false entries in a boolean sequence (termination measure for DFS).
     pub open spec fn spec_num_false(s: Seq<bool>) -> nat
@@ -151,6 +167,9 @@ broadcast use {
             ==> b < a
     }
 
+    //		Section 7. proof fns/broadcast groups
+
+
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
         ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
@@ -179,7 +198,6 @@ broadcast use {
     {
     }
 
-    // 7. proof fns
 
     /// Setting a false entry to true strictly decreases the count of false entries.
     pub proof fn lemma_set_true_decreases_num_false(s: Seq<bool>, idx: int)
@@ -387,7 +405,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait TopoSortStEphTrait {
         /// Computes topological sort of a DAG (Algorithm 55.13).
@@ -404,7 +423,8 @@ broadcast use {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS that appends vertices in finish order.
     /// Also used by SCCStEph::compute_finish_order.
@@ -1053,7 +1073,8 @@ broadcast use {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for TopoSortStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

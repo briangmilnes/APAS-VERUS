@@ -2,20 +2,23 @@
 //! REVIEWED: NO
 //! Chapter 49: Subset Sum - ephemeral, single-threaded.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod SubsetSumStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -29,9 +32,11 @@ pub mod SubsetSumStEph {
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::ArraySeqStEphSLit;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::seq::group_seq_axioms,
@@ -39,7 +44,8 @@ pub mod SubsetSumStEph {
         vstd::std_specs::hash::group_hash_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct SubsetSumStEphS<T: StT> {
@@ -47,7 +53,8 @@ pub mod SubsetSumStEph {
         pub memo: HashMapWithViewPlus<Pair<usize, i32>, bool>,
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Recursive specification of the subset sum problem.
     /// Returns true iff some subset of s[0..i) sums to j.
@@ -67,7 +74,8 @@ pub mod SubsetSumStEph {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     /// Trait for subset sum operations.
     pub trait SubsetSumStEphTrait<T: StT>: Sized {
@@ -122,7 +130,8 @@ pub mod SubsetSumStEph {
         fn memo_size(&self) -> (count: usize);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
@@ -216,7 +225,8 @@ pub mod SubsetSumStEph {
         fn memo_size(&self) -> (count: usize) { self.memo.len() }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<T: StT> Clone for SubsetSumStEphS<T> {
         fn clone(&self) -> (cloned: Self) {
@@ -228,6 +238,9 @@ pub mod SubsetSumStEph {
     }
 
     } // verus!
+
+    //		Section 14. derive impls outside verus!
+
 
     // 12. traits outside verus!
 
@@ -242,8 +255,6 @@ pub mod SubsetSumStEph {
     impl<T: StT> SubsetSumStEphMutTrait<T> for SubsetSumStEphS<T> {
         fn multiset_mut(&mut self) -> &mut ArraySeqStEphS<T> { &mut self.multiset }
     }
-
-    // 13. derive impls outside verus!
 
     impl<T: StT> Debug for SubsetSumStEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

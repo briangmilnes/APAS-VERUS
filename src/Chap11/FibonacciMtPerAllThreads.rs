@@ -5,15 +5,30 @@
 //! Implements Example 11.10 using verified parallel pair abstraction.
 //! This is a FULLY VERIFIED parallel recursive algorithm!
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 9. impls
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod FibonacciMtPerAllThreads {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::ParaPair;
     use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 9. impls
+
 
         /// Parallel Fibonacci using ParaPair! for symmetric binary parallelism.
         /// Implements Ex 11.10. Exponential work; demonstrates parallel recursion patterns.

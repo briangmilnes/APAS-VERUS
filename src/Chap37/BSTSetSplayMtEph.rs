@@ -4,21 +4,22 @@
 //! Set interface built atop the Splay multi-threaded BST implementation.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9a. traits — BSTSetSplayMtEphHelperFns
-//	9b. impls — BSTSetSplayMtEphHelperFns
-//	9c. impls — BSTSetSplayMtEphTrait
-//	10. iterators
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//	1. module
+//		Section 1. module
 
 pub mod BSTSetSplayMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -31,9 +32,11 @@ pub mod BSTSetSplayMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    verus! {
+    verus! 
+{
 
-    //	4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetSplayMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -42,39 +45,15 @@ pub mod BSTSetSplayMtEph {
 
     pub type BSTSetSplayMt<T> = BSTSetSplayMtEph<T>;
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetSplayMtEphIter<T: StTInMtT + Ord + TotalOrder> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
+    //		Section 6. spec fns
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetSplayMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphGhostIter<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    // 6. spec fns
 
     pub open spec fn bstsetsplaymteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetSplayMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    //	8. traits
+    //		Section 8. traits
+
 
     pub trait BSTSetSplayMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetsplaymteph_wf(&self) -> bool;
@@ -169,7 +148,6 @@ pub mod BSTSetSplayMtEph {
             ensures it@.0 == 0, bstsetsplaymteph_iter_invariant(&it);
     }
 
-    //	9a. traits — BSTSetSplayMtEphHelperFns
 
     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized + BSTSetSplayMtEphTrait<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -190,7 +168,8 @@ pub mod BSTSetSplayMtEph {
             ensures out.spec_bstsetsplaymteph_wf();
     }
 
-    //	9b. impls — BSTSetSplayMtEphHelperFns
+    //		Section 9. impls
+
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphHelperFns<T> for BSTSetSplayMtEph<T> {
 
@@ -247,7 +226,6 @@ pub mod BSTSetSplayMtEph {
 
     } // impl BSTSetSplayMtEphHelperFns for BSTSetSplayMtEph
 
-    //	9c. impls — BSTSetSplayMtEphTrait
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetSplayMtEphTrait<T> for BSTSetSplayMtEph<T> {
         open spec fn spec_bstsetsplaymteph_wf(&self) -> bool {
@@ -579,7 +557,34 @@ pub mod BSTSetSplayMtEph {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetSplayMtEphIter<T: StTInMtT + Ord + TotalOrder> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetSplayMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetSplayMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
 
     impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetSplayMtEphIter<T> {
         type Item = T;
@@ -679,7 +684,8 @@ pub mod BSTSetSplayMtEph {
 
     } // verus!
 
-    //	13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSetSplayMtEphLit {
@@ -693,7 +699,7 @@ pub mod BSTSetSplayMtEph {
         }};
     }
 
-    //	14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetSplayMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

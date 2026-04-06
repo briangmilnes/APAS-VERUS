@@ -3,9 +3,24 @@
 //! Hash, Eq, Display, Debug implementations for the macro-generated CheckedU32
 //! Also adds the axioms needed for use in hash collections (obeys_key_model, obeys_feq_full)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod hash_checked_u32 {
 
 #[cfg(verus_keep_ghost)]
+
+//		Section 2. imports
+
 use {
     vstd::prelude::*,
     vstd::std_specs::hash::obeys_key_model,
@@ -22,9 +37,45 @@ use {
 };
 
 #[cfg(verus_keep_ghost)]
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+
+    //		Section 6. spec fns
+
+
+// Axioms for CheckedU32 to work in hash collections
+pub open spec fn CheckedU32_feq_trigger() -> bool { true }
+
+pub open spec fn valid_key_type_CheckedU32() -> bool {
+    &&& obeys_key_model::<CheckedU32>()
+    &&& obeys_feq_full::<CheckedU32>()
+}
+
+    //		Section 7. proof fns/broadcast groups
+
+
+pub broadcast proof fn axiom_CheckedU32_feq()
+    requires #[trigger] CheckedU32_feq_trigger()
+    ensures obeys_feq_full::<CheckedU32>()
+{ admit(); }
+
+pub broadcast proof fn axiom_CheckedU32_key_model()
+    requires #[trigger] CheckedU32_feq_trigger()
+    ensures obeys_key_model::<CheckedU32>()
+{ admit(); }
+
+pub broadcast group group_CheckedU32_axioms {
+    axiom_CheckedU32_feq,
+    axiom_CheckedU32_key_model,
+}
+
+    //		Section 12. derive impls in verus!
+
 
 // Hash implementation - external_body since Hash trait isn't spec'd
 impl Hash for CheckedU32 {
@@ -43,31 +94,10 @@ impl PartialEq for CheckedU32 {
 }
 
 impl Eq for CheckedU32 {}
-
-// Axioms for CheckedU32 to work in hash collections
-pub open spec fn CheckedU32_feq_trigger() -> bool { true }
-
-pub broadcast proof fn axiom_CheckedU32_feq()
-    requires #[trigger] CheckedU32_feq_trigger()
-    ensures obeys_feq_full::<CheckedU32>()
-{ admit(); }
-
-pub broadcast proof fn axiom_CheckedU32_key_model()
-    requires #[trigger] CheckedU32_feq_trigger()
-    ensures obeys_key_model::<CheckedU32>()
-{ admit(); }
-
-pub broadcast group group_CheckedU32_axioms {
-    axiom_CheckedU32_feq,
-    axiom_CheckedU32_key_model,
-}
-
-pub open spec fn valid_key_type_CheckedU32() -> bool {
-    &&& obeys_key_model::<CheckedU32>()
-    &&& obeys_feq_full::<CheckedU32>()
-}
-
 } // verus!
+
+    //		Section 14. derive impls outside verus!
+
 
 // Display and Debug outside verus! since they're pure Rust traits
 #[cfg(verus_keep_ghost)]

@@ -5,7 +5,23 @@
 //! Implements Algorithm 62.5: Star Contraction (parallel version)
 //! Uses parallel star partition and parallel edge routing for quotient graph construction.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod StarContractionMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -22,18 +38,43 @@ pub mod StarContractionMtEph {
     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
     use crate::{ParaPair, SetLit};
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct StarContractionMtEph;
 
-    // 8. traits
+    pub type T<V> = UnDirGraphMtEph<V>;
+
+    //		Section 6. spec fns
+
+
+    /// Partition map validity: every graph vertex is mapped and every value is a center.
+    pub open spec fn spec_valid_partition_map<V: View>(
+        graph_vertices: Set<V::V>,
+        centers: Set<V::V>,
+        partition_map: Map<V::V, V>,
+    ) -> bool {
+        // Every graph vertex is in the partition map.
+        &&& forall |v_view: V::V|
+                #[trigger] graph_vertices.contains(v_view) ==>
+                    partition_map.contains_key(v_view)
+        // Every partition map value is a center.
+        &&& forall |v_view: V::V|
+                #[trigger] partition_map.contains_key(v_view) ==>
+                    centers.contains(partition_map[v_view]@)
+    }
+
+    //		Section 8. traits
+
 
     pub trait StarContractionMtEphTrait {
         /// Well-formedness for parallel star contraction algorithm input.
@@ -73,25 +114,8 @@ pub mod StarContractionMtEph {
                 valid_key_type_Edge::<V>();
     }
 
-    pub type T<V> = UnDirGraphMtEph<V>;
+    //		Section 9. impls
 
-    // 6. spec fns
-
-    /// Partition map validity: every graph vertex is mapped and every value is a center.
-    pub open spec fn spec_valid_partition_map<V: View>(
-        graph_vertices: Set<V::V>,
-        centers: Set<V::V>,
-        partition_map: Map<V::V, V>,
-    ) -> bool {
-        // Every graph vertex is in the partition map.
-        &&& forall |v_view: V::V|
-                #[trigger] graph_vertices.contains(v_view) ==>
-                    partition_map.contains_key(v_view)
-        // Every partition map value is a center.
-        &&& forall |v_view: V::V|
-                #[trigger] partition_map.contains_key(v_view) ==>
-                    centers.contains(partition_map[v_view]@)
-    }
 
     /// Inner recursive star contraction with fuel for termination (parallel version).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n) — recursive: O(n + m) work per level, O(lg n) span per level × O(lg n) levels; Mt parallel.
@@ -443,7 +467,8 @@ pub mod StarContractionMtEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for StarContractionMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

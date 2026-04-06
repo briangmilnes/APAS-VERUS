@@ -5,7 +5,38 @@
 //! Memoized top-down DP with parallel min reduction.
 //! Uses Arc<RwLock<HashMapWithViewPlus>> for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 8c. traits
+//	Section 4d. type definitions
+//	Section 5d. view impls
+//	Section 9d. impls
+//	Section 4e. type definitions
+//	Section 11b. top level coarse locking
+//	Section 11c. top level coarse locking
+//	Section 12d. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+//	Section 14d. derive impls outside verus!
+//	Section 14e. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod MatrixChainMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::sync::Arc;
@@ -22,20 +53,12 @@ pub mod MatrixChainMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -45,7 +68,9 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types]
     #[derive(Clone, Copy, PartialEq, Eq, Debug)]
     pub struct MatrixDim {
@@ -53,7 +78,9 @@ broadcast use {
         pub cols: usize,
     }
 
-    // 5. view impls
+    //		Section 5a. view impls
+
+
     impl View for MatrixDim {
         type V = (nat, nat);
         open spec fn view(&self) -> (nat, nat) {
@@ -61,44 +88,23 @@ broadcast use {
         }
     }
 
+    //		Section 4b. type definitions
+
+
     pub struct MatrixChainMtEphDimInv {
         pub ghost expected_dims: Seq<MatrixDim>,
     }
-    impl RwLockPredicate<Vec<MatrixDim>> for MatrixChainMtEphDimInv {
-        open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
-            v@ =~= self.expected_dims
-        }
-    }
+
+    //		Section 4c. type definitions
+
 
     pub struct MatrixChainMtEphMemoInv {
         pub ghost dims: Seq<MatrixDim>,
     }
-    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtEphMemoInv {
-        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
-            &&& v@.dom().finite()
-            &&& spec_memo_correct(self.dims, v@)
-        }
-    }
+
+    //		Section 6c. spec fns
 
 
-    pub struct MatrixChainMtEphS {
-        pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
-        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
-        pub ghost_dimensions: Ghost<Seq<MatrixDim>>,
-    }
-
-    pub ghost struct MatrixChainMtEphV {
-        pub dimensions: Seq<MatrixDim>,
-    }
-
-    impl View for MatrixChainMtEphS {
-        type V = MatrixChainMtEphV;
-        open spec fn view(&self) -> Self::V {
-            MatrixChainMtEphV { dimensions: self.ghost_dimensions@ }
-        }
-    }
-
-    // 6. spec fns
     pub open spec fn spec_multiply_cost(dims: Seq<MatrixDim>, i: int, k: int, j: int) -> nat {
         (dims[i].rows as nat) * (dims[k].cols as nat) * (dims[j].cols as nat)
     }
@@ -146,7 +152,9 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8c. traits
+
+
     pub trait MatrixChainMtEphTrait: Sized + View<V = MatrixChainMtEphV> {
         spec fn spec_matrixchainmteph_wf(&self) -> bool;
 
@@ -240,7 +248,27 @@ broadcast use {
                 forall|i: int| 0 <= i < costs@.len() ==> min <= costs@[i];
     }
 
-    // 9. impls
+    //		Section 4d. type definitions
+
+
+    pub struct MatrixChainMtEphS {
+        pub dimensions: Arc<RwLock<Vec<MatrixDim>, MatrixChainMtEphDimInv>>,
+        pub memo: Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MatrixChainMtEphMemoInv>>,
+        pub ghost_dimensions: Ghost<Seq<MatrixDim>>,
+    }
+
+    //		Section 5d. view impls
+
+
+    impl View for MatrixChainMtEphS {
+        type V = MatrixChainMtEphV;
+        open spec fn view(&self) -> Self::V {
+            MatrixChainMtEphV { dimensions: self.ghost_dimensions@ }
+        }
+    }
+
+    //		Section 9d. impls
+
 
     impl MatrixChainMtEphTrait for MatrixChainMtEphS {
         open spec fn spec_matrixchainmteph_wf(&self) -> bool {
@@ -518,7 +546,35 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 4e. type definitions
+
+
+    pub ghost struct MatrixChainMtEphV {
+        pub dimensions: Seq<MatrixDim>,
+    }
+
+    //		Section 11b. top level coarse locking
+
+
+    impl RwLockPredicate<Vec<MatrixDim>> for MatrixChainMtEphDimInv {
+        open spec fn inv(self, v: Vec<MatrixDim>) -> bool {
+            v@ =~= self.expected_dims
+        }
+    }
+
+    //		Section 11c. top level coarse locking
+
+
+    impl RwLockPredicate<HashMapWithViewPlus<Pair<usize, usize>, usize>> for MatrixChainMtEphMemoInv {
+        open spec fn inv(self, v: HashMapWithViewPlus<Pair<usize, usize>, usize>) -> bool {
+            &&& v@.dom().finite()
+            &&& spec_memo_correct(self.dims, v@)
+        }
+    }
+
+    //		Section 12d. derive impls in verus!
+
+
     impl Clone for MatrixChainMtEphS {
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
@@ -559,7 +615,81 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! MatrixChainMtEphLit {
+        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
+            $crate::Chap50::MatrixChainMtEph::MatrixChainMtEph::MatrixChainMtEphS::from_dim_pairs(
+                vec![$($crate::Types::Types::Pair($r, $c)),*]
+            )
+        };
+        () => {
+            $crate::Chap50::MatrixChainMtEph::MatrixChainMtEph::MatrixChainMtEphS::new()
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl IntoIterator for &MatrixChainMtEphS {
+        type Item = MatrixDim;
+        type IntoIter = IntoIter<MatrixDim>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+        fn into_iter(self) -> Self::IntoIter {
+            let handle = self.dimensions.acquire_read();
+            let dims = handle.borrow().clone();
+            handle.release_read();
+            dims.into_iter()
+        }
+    }
+
+    impl IntoIterator for &mut MatrixChainMtEphS {
+        type Item = MatrixDim;
+        type IntoIter = IntoIter<MatrixDim>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
+        fn into_iter(self) -> Self::IntoIter {
+            let handle = self.dimensions.acquire_read();
+            let dims = handle.borrow().clone();
+            handle.release_read();
+            dims.into_iter()
+        }
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl Display for MatrixDim {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl Debug for MatrixChainMtEphDimInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
+    }
+
+    impl Display for MatrixChainMtEphDimInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
+    impl Debug for MatrixChainMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
+    }
+
+    impl Display for MatrixChainMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
+    }
+
+    //		Section 14d. derive impls outside verus!
+
     impl Debug for MatrixChainMtEphS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(self, f) }
     }
@@ -595,61 +725,7 @@ broadcast use {
         }
     }
 
-    impl IntoIterator for &MatrixChainMtEphS {
-        type Item = MatrixDim;
-        type IntoIter = IntoIter<MatrixDim>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
-        fn into_iter(self) -> Self::IntoIter {
-            let handle = self.dimensions.acquire_read();
-            let dims = handle.borrow().clone();
-            handle.release_read();
-            dims.into_iter()
-        }
-    }
-
-    impl IntoIterator for &mut MatrixChainMtEphS {
-        type Item = MatrixDim;
-        type IntoIter = IntoIter<MatrixDim>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(n), Span O(n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clone Vec under read lock
-        fn into_iter(self) -> Self::IntoIter {
-            let handle = self.dimensions.acquire_read();
-            let dims = handle.borrow().clone();
-            handle.release_read();
-            dims.into_iter()
-        }
-    }
-
-    impl Display for MatrixDim {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
-    }
-
-    // 14b. derive impls outside verus! — struct MatrixChainMtEphDimInv
-
-    impl Debug for MatrixChainMtEphDimInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
-    }
-
-    impl Display for MatrixChainMtEphDimInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
-    }
-
-    // 14c. derive impls outside verus! — struct MatrixChainMtEphMemoInv
-
-    impl Debug for MatrixChainMtEphMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
-    }
-
-    impl Display for MatrixChainMtEphMemoInv {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
-    }
-
-    // 14d. derive impls outside verus! — struct MatrixChainMtEphV
+    //		Section 14e. derive impls outside verus!
 
     impl Debug for MatrixChainMtEphV {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphV") }
@@ -657,18 +733,5 @@ broadcast use {
 
     impl Display for MatrixChainMtEphV {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphV") }
-    }
-
-    // 12. macros
-    #[macro_export]
-    macro_rules! MatrixChainMtEphLit {
-        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
-            $crate::Chap50::MatrixChainMtEph::MatrixChainMtEph::MatrixChainMtEphS::from_dim_pairs(
-                vec![$($crate::Types::Types::Pair($r, $c)),*]
-            )
-        };
-        () => {
-            $crate::Chap50::MatrixChainMtEph::MatrixChainMtEph::MatrixChainMtEphS::new()
-        };
     }
 }

@@ -2,7 +2,26 @@
 //! REVIEWED: NO
 //! Chapter 6 Labeled Directed Graph (ephemeral) using Set for vertices and labeled arcs.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod LabDirGraphStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -14,7 +33,11 @@ pub mod LabDirGraphStEph {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -28,6 +51,9 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+    //		Section 4. type definitions
+
+
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     pub struct LabDirGraphStEph<V: StT + Hash, L: StT + Hash> {
@@ -35,13 +61,19 @@ verus! {
         pub labeled_arcs: SetStEph<LabEdge<V, L>>,
     }
 
+    //		Section 5. view impls
+
+
     impl<V: StT + Hash, L: StT + Hash> View for LabDirGraphStEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
-        
+
         open spec fn view(&self) -> Self::V {
             LabGraphView { V: self.vertices@, A: self.labeled_arcs@ }
         }
     }
+
+    //		Section 8. traits
+
 
     pub trait LabDirGraphStEphTrait<V: StT + Hash, L: StT + Hash>:
     View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized {
@@ -149,6 +181,9 @@ verus! {
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures n_minus@.finite(), n_minus@ == self.spec_n_minus(v@);
     }
+
+    //		Section 9. impls
+
 
     impl<V: StT + Hash, L: StT + Hash> LabDirGraphStEphTrait<V, L> for LabDirGraphStEph<V, L> {
 
@@ -421,7 +456,8 @@ verus! {
         }
     }
 
-    //		10. iterators
+    //		Section 10. iterators
+
 
     /// Iterator wrapper for LabDirGraphStEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -541,7 +577,8 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<V: StT + Hash, L: StT + Hash> Clone for LabDirGraphStEph<V, L> {
         fn clone(&self) -> (cloned: Self)
@@ -553,17 +590,8 @@ verus! {
 
 } // verus!
 
-    impl<V: StT + Hash, L: StT + Hash> Display for LabDirGraphStEph<V, L> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(f, "LabDirGraph(V: {}, A: {})", self.vertices, self.labeled_arcs)
-        }
-    }
+    //		Section 13. macros
 
-    impl<V: StT + Hash, L: StT + Hash> Debug for LabDirGraphStEph<V, L> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(f, "LabDirGraph {{ vertices: {:?}, labeled_arcs: {:?} }}", self.vertices, self.labeled_arcs)
-        }
-    }
 
     #[macro_export]
     macro_rules! LabDirGraphStEphLit {
@@ -575,6 +603,20 @@ verus! {
             let labeled_arcs = $crate::SetLit![ $( $crate::Types::Types::LabEdge($from, $to, $label) ),* ];
             < $crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEph<_, _> as $crate::Chap06::LabDirGraphStEph::LabDirGraphStEph::LabDirGraphStEphTrait<_, _> >::from_vertices_and_labeled_arcs(vertices, labeled_arcs)
         }};
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<V: StT + Hash, L: StT + Hash> Display for LabDirGraphStEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "LabDirGraph(V: {}, A: {})", self.vertices, self.labeled_arcs)
+        }
+    }
+
+    impl<V: StT + Hash, L: StT + Hash> Debug for LabDirGraphStEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "LabDirGraph {{ vertices: {:?}, labeled_arcs: {:?} }}", self.vertices, self.labeled_arcs)
+        }
     }
 
     impl<'a, V: StT + Hash> Debug for LabDirGraphStEphIter<'a, V> {

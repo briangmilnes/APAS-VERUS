@@ -7,7 +7,20 @@
 //! parallel pool.
 //! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod HFSchedulerMtEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use crate::vstdplus::threads_plus::threads_plus::*;
     use crate::Concurrency::*;
@@ -77,12 +90,19 @@ pub mod HFSchedulerMtEph {
         POOL.task_freed.notify_one();
     }
 
-    verus! {
+    verus! 
+{
+
+    //		Section 4. type definitions
+
 
     #[verifier::external_type_specification] // accept hole
     #[verifier::external_body] // accept hole
     #[verifier::reject_recursive_types(T)]
     pub struct ExTaskState<T>(TaskState<T>);
+
+    //		Section 9. impls
+
 
     impl<T> TaskState<T> {
         pub uninterp spec fn predicate(&self, ret: T) -> bool;
@@ -203,7 +223,7 @@ pub mod HFSchedulerMtEph {
 
     } // verus!
 
-    //		14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl std::fmt::Debug for PoolState {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

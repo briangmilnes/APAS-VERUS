@@ -2,7 +2,26 @@
 //! REVIEWED: NO
 //! Chapter 52: Adjacency Sequence Graph (ephemeral, multi-threaded).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AdjSeqGraphMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
@@ -10,7 +29,11 @@ pub mod AdjSeqGraphMtEph {
 
     const SEQUENTIAL_CUTOFF: usize = 1;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -19,22 +42,16 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // Table of Contents
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub struct AdjSeqGraphMtEph {
         pub adj: ArraySeqMtEphS<ArraySeqMtEphS<usize>>,
         pub num_edges: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl View for AdjSeqGraphMtEph {
         type V = Seq<Seq<int>>;
@@ -47,7 +64,8 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     pub open spec fn spec_sum_of(n: int, f: spec_fn(int) -> nat) -> nat
         decreases n
@@ -56,7 +74,8 @@ broadcast use {
         else { f(n - 1) + spec_sum_of(n - 1, f) }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     proof fn lemma_sum_of_monotone(i: int, n: int, f: spec_fn(int) -> nat)
         requires 0 <= i <= n
@@ -147,7 +166,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AdjSeqGraphMtEphTrait: Sized {
         spec fn spec_adjseqgraphmteph_wf(&self) -> bool;
@@ -279,7 +299,8 @@ broadcast use {
                     ==> #[trigger] self.spec_neighbor(u as int, j) != v;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl AdjSeqGraphMtEphTrait for AdjSeqGraphMtEph {
 
@@ -585,7 +606,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl Clone for AdjSeqGraphMtEph {
         fn clone(&self) -> (out: Self) {
@@ -595,7 +617,8 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for AdjSeqGraphMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

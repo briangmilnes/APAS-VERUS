@@ -4,7 +4,24 @@
 //! Detects cycles in directed graphs using ephemeral ancestor tracking.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod CycleDetectStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -12,25 +29,24 @@ pub mod CycleDetectStEph {
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use vstd::seq::group_seq_axioms;
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+
+
     pub struct CycleDetectStEph;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Whether a value appears in a ghost integer sequence.
     pub open spec fn spec_in_path(path: Seq<int>, v: int) -> bool {
@@ -52,6 +68,30 @@ broadcast use vstd::seq::group_seq_axioms;
                 && 0 <= v < graph@.len()
             ==> ord.contains_key(v) && ord[u] > ord[v])
     }
+
+    /// Whether an ordering map is a valid DFS completion witness.
+    /// Wrapping in a spec fn gives choose a usable trigger on the map argument.
+    pub open spec fn spec_is_valid_ord(
+        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
+        visited: Seq<bool>,
+        ancestors: Seq<bool>,
+        prev_ord: Map<int, nat>,
+        prev_next: nat,
+        o: Map<int, nat>,
+    ) -> bool {
+        exists|n: nat| (#[trigger] spec_acyclic_ord(graph, o, n))
+            && (forall|v: int| 0 <= v < visited.len()
+                && #[trigger] visited[v] && !ancestors[v]
+                ==> o.contains_key(v))
+            && (forall|v: int| #[trigger] o.contains_key(v)
+                ==> visited[v] && !ancestors[v])
+            && (forall|v: int| #[trigger] prev_ord.contains_key(v)
+                ==> o.contains_key(v) && o[v] == prev_ord[v])
+            && n >= prev_next
+    }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
@@ -81,7 +121,6 @@ broadcast use vstd::seq::group_seq_axioms;
     {
     }
 
-    // 7. proof fns
 
     /// If a path has a repeated vertex, the graph is not a DAG.
     proof fn lemma_cycle_not_dag(
@@ -177,27 +216,6 @@ broadcast use vstd::seq::group_seq_axioms;
         }
     }
 
-    /// Whether an ordering map is a valid DFS completion witness.
-    /// Wrapping in a spec fn gives choose a usable trigger on the map argument.
-    pub open spec fn spec_is_valid_ord(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
-        visited: Seq<bool>,
-        ancestors: Seq<bool>,
-        prev_ord: Map<int, nat>,
-        prev_next: nat,
-        o: Map<int, nat>,
-    ) -> bool {
-        exists|n: nat| (#[trigger] spec_acyclic_ord(graph, o, n))
-            && (forall|v: int| 0 <= v < visited.len()
-                && #[trigger] visited[v] && !ancestors[v]
-                ==> o.contains_key(v))
-            && (forall|v: int| #[trigger] o.contains_key(v)
-                ==> visited[v] && !ancestors[v])
-            && (forall|v: int| #[trigger] prev_ord.contains_key(v)
-                ==> o.contains_key(v) && o[v] == prev_ord[v])
-            && n >= prev_next
-    }
-
     /// Extract a concrete ordering witness from an existential.
     proof fn lemma_extract_ord(
         graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
@@ -259,7 +277,8 @@ broadcast use vstd::seq::group_seq_axioms;
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait CycleDetectStEphTrait {
         /// Detects if a directed graph contains a cycle (Algorithm 55.10).
@@ -274,7 +293,8 @@ broadcast use vstd::seq::group_seq_axioms;
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS cycle detection using an ancestor array.
     /// Returns true if a cycle is found.
@@ -885,7 +905,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for CycleDetectStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

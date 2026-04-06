@@ -3,7 +3,25 @@
 
 //! Chapter 52: Edge Set Graph representation (ephemeral, single-threaded).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod EdgeSetGraphStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait;
@@ -15,7 +33,11 @@ pub mod EdgeSetGraphStEph {
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -23,17 +45,8 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 7. proof fns
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
+    //		Section 7. proof fns/broadcast groups
 
-    // 7. proof fns
 
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
     proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord>()
@@ -47,7 +60,8 @@ broadcast use {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
     }
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphStEph<V: StT + Ord + ClonePreservesView> {
@@ -55,14 +69,16 @@ broadcast use {
         pub edges: AVLTreeSetStEph<Pair<V, V>>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<V: StT + Ord + ClonePreservesView> View for EdgeSetGraphStEph<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait EdgeSetGraphStEphTrait<V: StT + Ord + ClonePreservesView>: Sized {
         spec fn spec_edgesetgraphsteph_wf(&self) -> bool;
@@ -157,7 +173,8 @@ broadcast use {
             ensures self.spec_edgesetgraphsteph_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StT + Ord + ClonePreservesView> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
         open spec fn spec_edgesetgraphsteph_wf(&self) -> bool {
@@ -414,7 +431,8 @@ broadcast use {
         }
     }
 
-    // 12. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
@@ -431,7 +449,8 @@ broadcast use {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StT + Ord + ClonePreservesView + std::fmt::Debug> std::fmt::Debug for EdgeSetGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -7,22 +7,30 @@
 //! using HashMapWithViewPlus for efficient subproblem caching.
 
 //  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
 
 pub mod TopDownDPStPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
+    //		Section 1. module
+    //		Section 2. imports
+    //		Section 3. broadcast use
+    //		Section 4. type definitions
+    //		Section 6. spec fns
+    //		Section 7. proof fns
+    //		Section 8. traits
+    //		Section 9. impls
+    //		Section 12. derive impls in verus!
+    //		Section 14. derive impls outside verus!
 
-    // 2. imports
     use std::fmt::{Formatter, Debug, Display};
 
     use vstd::prelude::*;
@@ -33,21 +41,22 @@ pub mod TopDownDPStPer {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
     verus! {
-    // 3. broadcast use
+
+
     broadcast use {
         crate::Types::Types::group_Pair_axioms,
         vstd::map::group_map_axioms,
         vstd::seq::group_seq_axioms,
     };
 
-    // 4. type definitions
+
     pub struct TopDownDPStPerS {
         pub seq_s: ArraySeqStPerS<char>,
         pub seq_t: ArraySeqStPerS<char>,
         pub memo_table: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     }
 
-    // 6. spec fns
+
     pub open spec fn spec_min(a: nat, b: nat) -> nat {
         if a <= b { a } else { b }
     }
@@ -67,7 +76,7 @@ pub mod TopDownDPStPer {
         }
     }
 
-    // 7. proof fns
+
     pub proof fn lemma_spec_med_fn_bounded(s: Seq<char>, t: Seq<char>, i: nat, j: nat)
         ensures spec_med_fn(s, t, i, j) <= i + j,
         decreases i + j,
@@ -81,7 +90,7 @@ pub mod TopDownDPStPer {
         }
     }
 
-    // 8. traits
+
     pub trait TopDownDPStPerTrait: Sized {
         spec fn spec_s(&self) -> Seq<char>;
         spec fn spec_t(&self) -> Seq<char>;
@@ -177,7 +186,7 @@ pub mod TopDownDPStPer {
             decreases i + j;
     }
 
-    // 9. impls
+
     impl TopDownDPStPerTrait for TopDownDPStPerS {
         open spec fn spec_s(&self) -> Seq<char> { self.seq_s@ }
         open spec fn spec_t(&self) -> Seq<char> { self.seq_t@ }
@@ -325,6 +334,7 @@ pub mod TopDownDPStPer {
         }
     }
 
+
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for TopDownDPStPerS {
         open spec fn obeys_eq_spec() -> bool { true }
@@ -346,7 +356,6 @@ pub mod TopDownDPStPer {
         }
     }
 
-    // 11. derive impls in verus!
     impl Clone for TopDownDPStPerS {
         fn clone(&self) -> (cloned: Self)
             ensures
@@ -375,7 +384,7 @@ pub mod TopDownDPStPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+
     impl Debug for TopDownDPStPerS {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("TopDownDPStPerS")

@@ -5,6 +5,10 @@
 //! Each fib(n) spawns two threads and uses a TSM to track completion.
 //! Exponential work, maximum parallelism, TSM per fork-join.
 
+//  Table of Contents
+//	Section 4. type definitions
+//	Section 9. impls
+
 #![cfg(verus_keep_ghost)]
 
 use vstd::prelude::*;
@@ -17,33 +21,36 @@ verus! {
 
 use crate::Chap11::FibonacciStEph::FibonacciStEph::*;
 
+    //		Section 4. type definitions
+
+
 // TSM for tracking one fork-join pair at each recursive level
 tokenized_state_machine!{
     FibFork {
         fields {
             #[sharding(constant)]
             pub n: nat,
-            
+
             #[sharding(constant)]
             pub expected_left: nat,
-            
+
             #[sharding(constant)]
             pub expected_right: nat,
-            
+
             #[sharding(variable)]
             pub left_done: bool,
-            
+
             #[sharding(variable)]
             pub right_done: bool,
         }
-        
+
         #[invariant]
         pub fn main_inv(&self) -> bool {
             self.expected_left == spec_fib((self.n - 1) as nat)
             && self.expected_right == spec_fib((self.n - 2) as nat)
             && self.n >= 2
         }
-        
+
         init!{
             initialize(n: nat) {
                 require(n >= 2);
@@ -54,38 +61,41 @@ tokenized_state_machine!{
                 init right_done = false;
             }
         }
-        
+
         transition!{
             complete_left() {
                 require(!pre.left_done);
                 update left_done = true;
             }
         }
-        
+
         transition!{
             complete_right() {
                 require(!pre.right_done);
                 update right_done = true;
             }
         }
-        
+
         property!{
             finalize() {
                 require(pre.left_done);
                 require(pre.right_done);
             }
         }
-        
+
         #[inductive(initialize)]
         fn initialize_inductive(post: Self, n: nat) { }
-        
+
         #[inductive(complete_left)]
         fn complete_left_inductive(pre: Self, post: Self) { }
-        
+
         #[inductive(complete_right)]
         fn complete_right_inductive(pre: Self, post: Self) { }
     }
 }
+
+    //		Section 9. impls
+
 
 /// Fully parallel Fibonacci with TSM at each fork-join level.
 /// - Alg Analysis: APAS (Ch11 Ex 11.10): Work O(φⁿ), Span O(n) — full recursive parallelism
@@ -104,10 +114,10 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
             Tracked(left_done_token),
             Tracked(right_done_token),
         ) = FibFork::Instance::initialize(n as nat);
-        
+
         let tracked instance1 = instance.clone();
         let tracked instance2 = instance.clone();
-        
+
         // Spawn left thread for fib(n-1)
         let left_handle = spawn(
             (move || -> (out: (u64, Tracked<FibFork::left_done>))
@@ -126,7 +136,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
                 (val, Tracked(token))
             })
         );
-        
+
         // Spawn right thread for fib(n-2)
         let right_handle = spawn(
             (move || -> (out: (u64, Tracked<FibFork::right_done>))
@@ -145,7 +155,7 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
                 (val, Tracked(token))
             })
         );
-        
+
         // Join left
         let left_out = match left_handle.join() {
             Result::Ok(out) => out,
@@ -161,13 +171,13 @@ pub fn fib_recomputes(n: u64) -> (fibonacci: u64)
         };
         let right_val = right_out.0;
         let tracked right_token = right_out.1.get();
-        
+
         // Use finalize to prove left + right == fib(n)
         proof {
             instance.finalize(&left_token, &right_token);
             lemma_fib_sum_fits_u64(n as nat);
         }
-        
+
         left_val + right_val
     }
 }

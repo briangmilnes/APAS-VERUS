@@ -2,7 +2,28 @@
 //! REVIEWED: NO
 //! Single-threaded ephemeral ordered table backed by ParamBST<Pair<K,V>>.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod OrderedTableStEph {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::vec::IntoIter;
@@ -23,31 +44,20 @@ pub mod OrderedTableStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
     vstd::set::group_set_axioms,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 3. broadcast use (above)
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. derive impls in verus!
-    // 12. macros
-    // 13. derive impls outside verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -57,7 +67,8 @@ broadcast use {
 
     pub type OrderedTableEph<K, V> = OrderedTableStEph<K, V>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStEph<K, V> {
         type V = Map<K::V, V::V>;
@@ -65,7 +76,8 @@ broadcast use {
         open spec fn view(&self) -> Self::V { spec_pair_set_to_map(self.tree@) }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Convert a set of (key, value) pairs to a map.
     /// With key uniqueness, each key maps to a unique value via `choose`.
@@ -111,7 +123,8 @@ broadcast use {
         &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Subset of a View-generated set is View-generated.
     proof fn lemma_view_gen_subset<K: View, V: View>(
@@ -613,7 +626,21 @@ broadcast use {
     {
     }
 
-    // 8. traits
+    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+            a.cmp_spec(&b) == Less,
+        ensures
+            b.cmp_spec(&a) == Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    //		Section 8. traits
+
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with ephemeral semantics.
     pub trait OrderedTableStEphTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
@@ -1103,7 +1130,8 @@ broadcast use {
                 split.1.spec_orderedtablesteph_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Find by key in a ParamBST of pairs via recursive BST descent.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST search by key
@@ -3068,19 +3096,6 @@ broadcast use {
                 }
             }
         }
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Less,
-        ensures
-            b.cmp_spec(&a) == Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
     }
 
     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
@@ -5236,7 +5251,6 @@ broadcast use {
         }
     }
 
-    // 10. iterators
 
     impl<K: StT + Ord, V: StT + Ord> OrderedTableStEph<K, V> {
         /// Returns an iterator over the table entries via in-order traversal.
@@ -5252,6 +5266,122 @@ broadcast use {
             OrderedTableStEphIter { inner: sorted.seq.into_iter() }
         }
     }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
+    #[verifier::loop_isolation(false)]
+    pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
+        entries: AVLTreeSeqStPerS<Pair<K, V>>,
+    ) -> (table: OrderedTableStEph<K, V>)
+        requires
+            entries.spec_avltreeseqstper_wf(),
+            obeys_feq_clone::<Pair<K, V>>(),
+            obeys_feq_full::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            view_ord_consistent::<Pair<K, V>>(),
+            spec_pair_key_determines_order::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            view_ord_consistent::<K>(),
+            obeys_feq_fulls::<K, V>(),
+            entries@.len() < usize::MAX as nat,
+            // Entries must have unique keys.
+            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
+        ensures
+            table@.dom().finite(),
+            table.spec_orderedtablesteph_wf(),
+    {
+        proof {
+            assert(obeys_feq_full_trigger::<K>());
+            assert(obeys_feq_full_trigger::<V>());
+            assert(obeys_feq_full_trigger::<Pair<K, V>>());
+            lemma_key_unique_empty::<K::V, V::V>();
+        }
+        let len = entries.length();
+        let mut tree = ParamBST::<Pair<K, V>>::new();
+        let mut i: usize = 0;
+        while i < len
+            invariant
+                i <= len,
+                len as nat == entries@.len(),
+                entries@.len() < usize::MAX as nat,
+                entries.spec_avltreeseqstper_wf(),
+                tree.spec_bstparasteph_wf(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                tree@.len() <= i as nat,
+                tree@.len() < usize::MAX as nat,
+                spec_key_unique_pairs_set(tree@),
+                // Provenance: every element in the tree came from entries[0..i].
+                forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv)) ==>
+                    exists|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv),
+                spec_set_pair_view_generated::<K, V>(tree@),
+                // Entries have unique keys (from requires).
+                forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                    ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
+            decreases len - i,
+        {
+            let ghost old_tree = tree@;
+            let elem = entries.nth(i);
+            let cloned = elem.clone_plus();
+            proof { lemma_cloned_view_eq(*elem, cloned); }
+            tree.insert(cloned);
+            proof {
+                assert(tree@.len() <= i as nat + 1);
+                assert(i as nat + 1 <= len as nat);
+                assert(tree@.len() < usize::MAX as nat);
+                // Prove provenance for the new tree.
+                assert forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv))
+                    implies exists|j: int| #![trigger entries@[j]] 0 <= j < i as int + 1 && entries@[j] == (kv, vv) by {
+                    if old_tree.contains((kv, vv)) {
+                        let j = choose|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv);
+                        assert(entries@[j] == (kv, vv) && j < i as int + 1);
+                    } else {
+                        // Must be the newly inserted element.
+                        assert((kv, vv) == cloned@);
+                        assert(entries@[i as int] == cloned@);
+                    }
+                };
+                // Prove key uniqueness is maintained.
+                assert(spec_key_unique_pairs_set(tree@)) by {
+
+                    assert forall|k: K::V, v1: V::V, v2: V::V|
+                        tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
+                        if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {
+                            // Both in old tree: follows from old invariant.
+                        } else if !old_tree.contains((k, v1)) && !old_tree.contains((k, v2)) {
+                            // Both are the new element.
+                            assert((k, v1) == cloned@ && (k, v2) == cloned@);
+                        } else {
+                            // One old, one new: contradiction via unique keys.
+                            if old_tree.contains((k, v1)) {
+                                // (k, v2) == cloned@, so k == cloned@.0 == entries@[i].0.
+                                let j1 = choose|j: int| #![trigger entries@[j]]
+                                    0 <= j < i as int && entries@[j] == (k, v1);
+                                // entries@[j1].0 == k == entries@[i].0, but j1 < i.
+                                assert(entries@[j1].0 == entries@[i as int].0);
+                                assert(j1 < i as int);
+                                assert(false); // contradicts unique keys
+                            } else {
+                                // (k, v1) == cloned@
+                                let j2 = choose|j: int| #![trigger entries@[j]]
+                                    0 <= j < i as int && entries@[j] == (k, v2);
+                                assert(entries@[j2].0 == entries@[i as int].0);
+                                assert(j2 < i as int);
+                                assert(false);
+                            }
+                        }
+                    };
+                };
+            }
+            i = i + 1;
+        }
+        let table = OrderedTableStEph { tree };
+        proof { lemma_pair_set_to_map_dom_finite(tree@); }
+        table
+    }
+
+    //		Section 10. iterators
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -5363,7 +5493,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<K: StT + Ord, V: StT + Ord> Clone for OrderedTableStEph<K, V> {
         fn clone(&self) -> (cloned: Self) {
@@ -5372,123 +5503,25 @@ broadcast use {
             }
         }
     }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
-    #[verifier::loop_isolation(false)]
-    pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
-        entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> (table: OrderedTableStEph<K, V>)
-        requires
-            entries.spec_avltreeseqstper_wf(),
-            obeys_feq_clone::<Pair<K, V>>(),
-            obeys_feq_full::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-            view_ord_consistent::<Pair<K, V>>(),
-            spec_pair_key_determines_order::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            view_ord_consistent::<K>(),
-            obeys_feq_fulls::<K, V>(),
-            entries@.len() < usize::MAX as nat,
-            // Entries must have unique keys.
-            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
-                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
-        ensures
-            table@.dom().finite(),
-            table.spec_orderedtablesteph_wf(),
-    {
-        proof {
-            assert(obeys_feq_full_trigger::<K>());
-            assert(obeys_feq_full_trigger::<V>());
-            assert(obeys_feq_full_trigger::<Pair<K, V>>());
-            lemma_key_unique_empty::<K::V, V::V>();
-        }
-        let len = entries.length();
-        let mut tree = ParamBST::<Pair<K, V>>::new();
-        let mut i: usize = 0;
-        while i < len
-            invariant
-                i <= len,
-                len as nat == entries@.len(),
-                entries@.len() < usize::MAX as nat,
-                entries.spec_avltreeseqstper_wf(),
-                tree.spec_bstparasteph_wf(),
-                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-                view_ord_consistent::<Pair<K, V>>(),
-                tree@.len() <= i as nat,
-                tree@.len() < usize::MAX as nat,
-                spec_key_unique_pairs_set(tree@),
-                // Provenance: every element in the tree came from entries[0..i].
-                forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv)) ==>
-                    exists|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv),
-                spec_set_pair_view_generated::<K, V>(tree@),
-                // Entries have unique keys (from requires).
-                forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
-                    ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
-            decreases len - i,
-        {
-            let ghost old_tree = tree@;
-            let elem = entries.nth(i);
-            let cloned = elem.clone_plus();
-            proof { lemma_cloned_view_eq(*elem, cloned); }
-            tree.insert(cloned);
-            proof {
-                assert(tree@.len() <= i as nat + 1);
-                assert(i as nat + 1 <= len as nat);
-                assert(tree@.len() < usize::MAX as nat);
-                // Prove provenance for the new tree.
-                assert forall|kv: K::V, vv: V::V| #[trigger] tree@.contains((kv, vv))
-                    implies exists|j: int| #![trigger entries@[j]] 0 <= j < i as int + 1 && entries@[j] == (kv, vv) by {
-                    if old_tree.contains((kv, vv)) {
-                        let j = choose|j: int| #![trigger entries@[j]] 0 <= j < i as int && entries@[j] == (kv, vv);
-                        assert(entries@[j] == (kv, vv) && j < i as int + 1);
-                    } else {
-                        // Must be the newly inserted element.
-                        assert((kv, vv) == cloned@);
-                        assert(entries@[i as int] == cloned@);
-                    }
-                };
-                // Prove key uniqueness is maintained.
-                assert(spec_key_unique_pairs_set(tree@)) by {
-            
-                    assert forall|k: K::V, v1: V::V, v2: V::V|
-                        tree@.contains((k, v1)) && tree@.contains((k, v2)) implies v1 == v2 by {
-                        if old_tree.contains((k, v1)) && old_tree.contains((k, v2)) {
-                            // Both in old tree: follows from old invariant.
-                        } else if !old_tree.contains((k, v1)) && !old_tree.contains((k, v2)) {
-                            // Both are the new element.
-                            assert((k, v1) == cloned@ && (k, v2) == cloned@);
-                        } else {
-                            // One old, one new: contradiction via unique keys.
-                            if old_tree.contains((k, v1)) {
-                                // (k, v2) == cloned@, so k == cloned@.0 == entries@[i].0.
-                                let j1 = choose|j: int| #![trigger entries@[j]]
-                                    0 <= j < i as int && entries@[j] == (k, v1);
-                                // entries@[j1].0 == k == entries@[i].0, but j1 < i.
-                                assert(entries@[j1].0 == entries@[i as int].0);
-                                assert(j1 < i as int);
-                                assert(false); // contradicts unique keys
-                            } else {
-                                // (k, v1) == cloned@
-                                let j2 = choose|j: int| #![trigger entries@[j]]
-                                    0 <= j < i as int && entries@[j] == (k, v2);
-                                assert(entries@[j2].0 == entries@[i as int].0);
-                                assert(j2 < i as int);
-                                assert(false);
-                            }
-                        }
-                    };
-                };
-            }
-            i = i + 1;
-        }
-        let table = OrderedTableStEph { tree };
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
-        table
-    }
-
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    /// Macro for creating ephemeral ordered tables from sorted key-value pairs.
+    #[macro_export]
+    macro_rules! OrderedTableStEphLit {
+        () => {
+            $crate::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph::empty()
+        };
+        ($($key:expr => $val:expr),+ $(,)?) => {{
+            let pairs = vec![$($crate::Types::Types::Pair($key, $val)),+];
+            let seq = $crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerS::from_vec(pairs);
+            $crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(seq)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     use std::fmt;
 
@@ -5532,20 +5565,5 @@ broadcast use {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStEphGhostIterator")
         }
-    }
-
-    // 12. macros
-
-    /// Macro for creating ephemeral ordered tables from sorted key-value pairs.
-    #[macro_export]
-    macro_rules! OrderedTableStEphLit {
-        () => {
-            $crate::Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph::empty()
-        };
-        ($($key:expr => $val:expr),+ $(,)?) => {{
-            let pairs = vec![$($crate::Types::Types::Pair($key, $val)),+];
-            let seq = $crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerS::from_vec(pairs);
-            $crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(seq)
-        }};
     }
 }

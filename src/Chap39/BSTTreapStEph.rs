@@ -4,21 +4,33 @@
 //! Ephemeral Treap (randomized heap-ordered BST) with full parametric BST interface.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 7c. proof fns/broadcast groups
+//	Section 9c. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod BSTTreapStEph {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Equal, Greater, Less};
     use std::fmt;
@@ -40,11 +52,25 @@ pub mod BSTTreapStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger};
 
-    verus! {
+    verus! 
+{
 
-    //		4. type definitions
+    //		Section 3. broadcast use
+
+
+    broadcast use {
+        vstd::set::group_set_axioms,
+        vstd::set_lib::group_set_properties,
+        crate::vstdplus::feq::feq::group_feq_axioms,
+    };
+
+    //		Section 4. type definitions
+
 
     type Link<T> = Option<Box<Node<T>>>;
+
+    //		Section 4a. type definitions
+
 
     pub struct Node<T: StT + Ord + IsLtTransitive> {
         pub key: T,
@@ -54,365 +80,25 @@ pub mod BSTTreapStEph {
         pub right: Link<T>,
     }
 
+    //		Section 4b. type definitions
+
+
     pub struct BSTTreapStEph<T: StT + Ord + IsLtTransitive> {
         pub root: Link<T>,
     }
 
     pub type BSTreeTreap<T> = BSTTreapStEph<T>;
 
-    #[verifier::reject_recursive_types(T)]
-    pub enum ExposedTreap<T: StT + Ord + IsLtTransitive> {
-        Leaf,
-        Node(BSTTreapStEph<T>, T, BSTTreapStEph<T>),
-    }
+    //		Section 5b. view impls
 
-    // 3. broadcast use
-
-    broadcast use {
-        vstd::set::group_set_axioms,
-        vstd::set_lib::group_set_properties,
-        crate::vstdplus::feq::feq::group_feq_axioms,
-    };
-
-    // 5. view impls
-
-    /// Recursive set computation from a Link.
-    pub open spec fn spec_set_view_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Set<<T as View>::V>
-        decreases *link,
-    {
-        match link {
-            None => Set::<<T as View>::V>::empty(),
-            Some(node) => {
-                spec_set_view_link(&node.left).union(spec_set_view_link(&node.right)).insert(node.key@)
-            }
-        }
-    }
 
     impl<T: StT + Ord + IsLtTransitive> View for BSTTreapStEph<T> {
         type V = Set<T::V>;
         open spec fn view(&self) -> Set<T::V> { spec_set_view_link(&self.root) }
     }
 
-    // 6. spec fns
+    //		Section 8b. traits
 
-    // Free spec fn: reveal_with_fuel cannot reference trait methods with generic params.
-    pub open spec fn spec_contains_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>, target: T) -> bool
-        decreases *link,
-    {
-        match link {
-            None => false,
-            Some(node) => {
-                node.key == target
-                    || spec_contains_link(&node.left, target)
-                    || spec_contains_link(&node.right, target)
-            }
-        }
-    }
-
-    /// View-consistent ordering: elements with equal views compare Equal.
-    pub open spec fn view_ord_consistent_st<T: StT + Ord + IsLtTransitive>() -> bool {
-        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
-    }
-
-    /// Recursive well-formedness invariant for the parametric interface.
-    /// Mirrors the RwLockPredicate invariant from BSTParaTreapMtEph.
-    pub open spec fn spec_param_wf_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
-        decreases *link,
-    {
-        match link {
-            None => true,
-            Some(node) => {
-                let lv = spec_set_view_link(&node.left);
-                let rv = spec_set_view_link(&node.right);
-                let kv = node.key@;
-                &&& spec_param_wf_link(&node.left)
-                &&& spec_param_wf_link(&node.right)
-                &&& node.size >= 1
-                &&& lv.finite() && rv.finite()
-                &&& lv.disjoint(rv)
-                &&& !lv.contains(kv) && !rv.contains(kv)
-                &&& lv.len() + rv.len() < usize::MAX as nat
-                &&& node.size as nat == lv.len() + rv.len() + 1
-                &&& (forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&node.key) == Less)
-                &&& (forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&node.key) == Greater)
-            }
-        }
-    }
-
-    // 7. proof fns/broadcast groups
-
-    /// Clone a StT element with a cmp_spec-preserving postcondition.
-    // veracity: no_requires
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
-        ensures c@ == x@,
-    {
-        let c = x.clone();
-        proof { accept(c@ == x@); } // eq/clone workaround: structural copy preserves view.
-        c
-    }
-
-    /// Clone a BSTTreapStEph with view preservation.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
-        requires spec_param_wf_link(&tree.root), tree.spec_bsttreapsteph_wf(),
-        ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root), cloned.spec_bsttreapsteph_wf(),
-    {
-        let cloned = tree.clone();
-        proof {
-            accept(cloned@ =~= tree@ && spec_param_wf_link(&cloned.root)); // eq/clone workaround.
-            lemma_param_wf_implies_size_wf::<T>(&cloned.root);
-        }
-        cloned
-    }
-
-    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    pub proof fn lemma_cmp_antisymmetry_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Greater,
-        ensures b.cmp_spec(&a) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    pub proof fn lemma_cmp_antisymmetry_less_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Less,
-        ensures b.cmp_spec(&a) == Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
-    pub proof fn lemma_cmp_transitivity_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Less,
-        ensures a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
-    pub proof fn lemma_cmp_eq_subst_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent_st::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Equal,
-        ensures a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
-    pub proof fn lemma_cmp_equal_congruent_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent_st::<T>(),
-            a.cmp_spec(&b) == Equal,
-        ensures a.cmp_spec(&c) == b.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
-    }
-
-    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
-    pub proof fn lemma_cmp_equal_congruent_right_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent_st::<T>(),
-            b.cmp_spec(&c) == Equal,
-        ensures a.cmp_spec(&b) == a.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(b@ == c@);
-    }
-
-    /// After join(lr, key, right), every element is greater than lk.
-    proof fn lemma_joined_right_gt_lk_st<T: StT + Ord + IsLtTransitive>(
-        lrv: Set<T::V>,
-        right_v: Set<T::V>,
-        key: T,
-        joined_v: Set<T::V>,
-        lk: T,
-        left_v: Set<T::V>,
-    )
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent_st::<T>(),
-            joined_v =~= lrv.union(right_v).insert(key@),
-            forall|t: T| (#[trigger] lrv.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
-            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
-            left_v.contains(lk@),
-            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
-        ensures
-            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
-    {
-        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&lk) == Greater by {
-            if lrv.contains(t@) {
-            } else if right_v.contains(t@) {
-                lemma_cmp_antisymmetry_st(t, key);
-                lemma_cmp_transitivity_st(lk, key, t);
-                lemma_cmp_antisymmetry_less_st(lk, t);
-            } else {
-                assert(t@ == key@);
-                lemma_cmp_equal_congruent_right_st(lk, t, key);
-                lemma_cmp_antisymmetry_less_st(lk, t);
-            }
-        }
-    }
-
-    /// After join(left, key, rl), every element is less than rk.
-    proof fn lemma_joined_left_lt_rk_st<T: StT + Ord + IsLtTransitive>(
-        left_v: Set<T::V>,
-        rlv: Set<T::V>,
-        key: T,
-        joined_v: Set<T::V>,
-        rk: T,
-        right_v: Set<T::V>,
-    )
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent_st::<T>(),
-            joined_v =~= left_v.union(rlv).insert(key@),
-            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
-            forall|t: T| (#[trigger] rlv.contains(t@)) ==> t.cmp_spec(&rk) == Less,
-            right_v.contains(rk@),
-            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
-        ensures
-            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
-    {
-        assert(rk.cmp_spec(&key) == Greater);
-        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
-            if left_v.contains(t@) {
-                lemma_cmp_antisymmetry_st(rk, key);
-                lemma_cmp_transitivity_st(t, key, rk);
-            } else if rlv.contains(t@) {
-            } else {
-                assert(t@ == key@);
-                lemma_cmp_antisymmetry_st(rk, key);
-                lemma_cmp_equal_congruent_st(t, key, rk);
-            }
-        }
-    }
-
-    /// Every element in a well-formed tree's set view has a T witness.
-    /// This is the St analog of the witness accessibility that type_invariant
-    /// provides in the Mt version.
-    pub proof fn lemma_wf_view_inhabited_st<T: StT + Ord + IsLtTransitive>(
-        link: &Link<T>, x: <T as View>::V,
-    )
-        requires spec_param_wf_link(link), spec_set_view_link(link).contains(x),
-        ensures exists|t: T| #[trigger] t@ == x,
-        decreases *link,
-    {
-        match link {
-            None => {}
-            Some(node) => {
-                let kv = node.key@;
-                let lv = spec_set_view_link(&node.left);
-                let rv = spec_set_view_link(&node.right);
-                if kv == x {
-                    assert(node.key@ == x);
-                } else if lv.contains(x) {
-                    lemma_wf_view_inhabited_st::<T>(&node.left, x);
-                } else {
-                    assert(rv.contains(x));
-                    lemma_wf_view_inhabited_st::<T>(&node.right, x);
-                }
-            }
-        }
-    }
-
-    /// Universal version: every value in a well-formed tree's view has a T witness.
-    pub proof fn lemma_wf_view_all_inhabited_st<T: StT + Ord + IsLtTransitive>(
-        link: &Link<T>,
-    )
-        requires spec_param_wf_link(link),
-        ensures forall|x: <T as View>::V| #[trigger] spec_set_view_link(link).contains(x)
-            ==> (exists|t: T| t@ == x),
-    {
-        assert forall|x: <T as View>::V| #[trigger] spec_set_view_link(link).contains(x)
-            implies (exists|t: T| t@ == x) by {
-            lemma_wf_view_inhabited_st::<T>(link, x);
-        };
-    }
-
-    /// Well-formed link implies the set view is finite.
-    pub proof fn lemma_wf_implies_finite<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires spec_param_wf_link(link),
-        ensures spec_set_view_link(link).finite(),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_wf_implies_finite(&node.left);
-                lemma_wf_implies_finite(&node.right);
-            }
-        }
-    }
-
-    /// Well-formed link implies size_link == view.len().
-    pub proof fn lemma_wf_size_eq_view_len<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires spec_param_wf_link(link),
-        ensures BSTTreapStEph::<T>::spec_size_link(link) == spec_set_view_link(link).len(),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_wf_size_eq_view_len(&node.left);
-                lemma_wf_size_eq_view_len(&node.right);
-                let lv = spec_set_view_link(&node.left);
-                let rv = spec_set_view_link(&node.right);
-                let kv = node.key@;
-                vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-                assert(!lv.union(rv).contains(kv));
-            }
-        }
-    }
-
-    /// spec_param_wf_link implies spec_link_size_wf (the module-level wf predicate).
-    pub proof fn lemma_param_wf_implies_size_wf<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
-        requires spec_param_wf_link(link),
-        ensures BSTTreapStEph::<T>::spec_link_size_wf(link),
-        decreases *link,
-    {
-        match link {
-            None => {},
-            Some(node) => {
-                lemma_param_wf_implies_size_wf(&node.left);
-                lemma_param_wf_implies_size_wf(&node.right);
-                lemma_wf_size_eq_view_len(&node.left);
-                lemma_wf_size_eq_view_len(&node.right);
-            }
-        }
-    }
-
-    /// Hash-based priority for treap heap ordering.
-    #[verifier::external_body]
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn priority_for_st<T: StT + Ord + IsLtTransitive>(key: &T) -> (p: u64) {
-        let mut hasher = std::collections::hash_map::DefaultHasher::new();
-        let mut buf = String::new();
-        let _ = std::fmt::Write::write_fmt(&mut buf, format_args!("{key:?}"));
-        Hash::hash(&buf, &mut hasher);
-        hasher.finish()
-    }
-
-    //		8. traits
 
     pub trait BSTTreapStEphTrait<T: StT + Ord + IsLtTransitive> {
         spec fn spec_size_link(link: &Link<T>) -> nat;
@@ -705,8 +391,248 @@ pub mod BSTTreapStEph {
 
     }
 
+    // 8b. parametric trait
 
-    //		9. impls
+    pub trait ParamBSTTreapStEphTrait<T: StT + Ord + IsLtTransitive>:
+        Sized + View<V = Set<<T as View>::V>>
+    {
+        spec fn spec_parambsttreapsteph_wf(&self) -> bool;
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn param_new() -> (tree: Self)
+            ensures tree@.finite(), tree@.len() == 0, tree.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn singleton(key: T) -> (tree: Self)
+            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
+            ensures
+                tree@.finite(),
+                tree@ =~= Set::<<T as View>::V>::empty().insert(key@),
+                tree.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn expose(&self) -> (exposed: ExposedTreap<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+            ensures
+                self@.len() == 0 ==> exposed is Leaf,
+                exposed is Leaf ==> self@ =~= Set::<T::V>::empty(),
+                exposed matches ExposedTreap::Node(l, k, r) ==> (
+                    self@ =~= l@.union(r@).insert(k@)
+                    && self@.finite()
+                    && l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                    && spec_param_wf_link(&l.root)
+                    && spec_param_wf_link(&r.root)
+                );
+
+        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
+        fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                exposed matches ExposedTreap::Node(l, k, r) ==> (
+                    l@.finite() && r@.finite()
+                    && l@.disjoint(r@)
+                    && !l@.contains(k@)
+                    && !r@.contains(k@)
+                    && l@.len() + r@.len() < usize::MAX as nat
+                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
+                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+                    && spec_param_wf_link(&l.root)
+                    && spec_param_wf_link(&r.root)
+                ),
+            ensures
+                tree@.finite(),
+                tree.spec_parambsttreapsteph_wf(),
+                exposed is Leaf ==> tree@ =~= Set::<T::V>::empty(),
+                exposed matches ExposedTreap::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@);
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn param_size(&self) -> (count: usize)
+            requires self.spec_parambsttreapsteph_wf(),
+            ensures self@.finite(), count == self@.len();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn param_is_empty(&self) -> (empty: bool)
+            requires self.spec_parambsttreapsteph_wf(),
+            ensures self@.finite(), empty == (self@.len() == 0);
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        fn param_insert(&mut self, key: T)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
+                old(self).spec_parambsttreapsteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
+            ensures
+                self@.finite(),
+                self@ =~= old(self)@.insert(key@),
+                self.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        fn param_delete(&mut self, key: &T)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                old(self).spec_parambsttreapsteph_wf(),
+                old(self)@.len() < usize::MAX as nat,
+            ensures
+                self@.finite(),
+                self@ =~= old(self)@.remove(key@),
+                self.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        fn param_find(&self, key: &T) -> (found: Option<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+            ensures
+                found matches Some(v) ==> v@ == key@ && self@.contains(v@),
+                found is None ==> !self@.contains(key@);
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
+        fn param_split(&self, key: &T) -> (parts: (Self, bool, Self))
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+            ensures
+                parts.0@.finite(), parts.2@.finite(),
+                parts.1 == self@.contains(key@),
+                self@.finite(),
+                parts.0@.union(parts.2@) =~= self@.remove(key@),
+                parts.0@.disjoint(parts.2@),
+                !parts.0@.contains(key@) && !parts.2@.contains(key@),
+                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(key) == Less,
+                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(key) == Greater,
+                parts.0.spec_parambsttreapsteph_wf(),
+                parts.2.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|)) — matches APAS
+        fn param_join_pair(&self, other: Self) -> (joined: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
+                self@.disjoint(other@),
+                self@.finite(), other@.finite(),
+                self@.len() + other@.len() < usize::MAX as nat,
+                forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)]
+                    self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
+            ensures
+                joined@.finite(),
+                joined@ =~= self@.union(other@),
+                joined.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        fn param_union(&self, other: &Self) -> (combined: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
+                self@.len() + other@.len() < usize::MAX as nat,
+            ensures
+                combined@.finite(),
+                combined@ == self@.union(other@),
+                combined.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        fn param_intersect(&self, other: &Self) -> (common: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
+                self@.len() < usize::MAX as nat,
+            ensures
+                common@.finite(),
+                common@ == self@.intersect(other@),
+                common.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
+        fn param_difference(&self, other: &Self) -> (diff: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                other.spec_parambsttreapsteph_wf(),
+                self@.len() < usize::MAX as nat,
+            ensures
+                diff@.finite(),
+                diff@ == self@.difference(other@),
+                diff.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
+        fn param_filter<F: Fn(&T) -> bool>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                forall|t: &T| #[trigger] predicate.requires((t,)),
+                forall|x: T, keep: bool|
+                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
+                self@.len() < usize::MAX as nat,
+            ensures
+                filtered@.finite(),
+                filtered@.subset_of(self@),
+                forall|v: T::V| #[trigger] filtered@.contains(v)
+                    ==> self@.contains(v) && spec_pred(v),
+                forall|v: T::V| self@.contains(v) && spec_pred(v)
+                    ==> #[trigger] filtered@.contains(v),
+                filtered.spec_parambsttreapsteph_wf();
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
+        fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                obeys_feq_clone::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+                forall|a: T, b: T| #[trigger] op.requires((a, b)),
+            ensures true;
+
+        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(|t|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — matches APAS
+        fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
+            requires
+                vstd::laws_cmp::obeys_cmp_spec::<T>(),
+                view_ord_consistent_st::<T>(),
+                self.spec_parambsttreapsteph_wf(),
+            ensures self@.finite(), ordered.spec_len() == self@.len();
+    }
+
+    //		Section 9b. impls
+
 
     impl<T: StT + Ord + IsLtTransitive> BSTTreapStEphTrait<T> for BSTTreapStEph<T> {
         open spec fn spec_size_link(link: &Link<T>) -> nat
@@ -1547,10 +1473,622 @@ pub mod BSTTreapStEph {
         }
     }
 
-    impl<T: StT + Ord + IsLtTransitive> Default for BSTreeTreap<T> {
-        fn default() -> (d: Self)
-            ensures d.spec_size() == 0, d.spec_bsttreapsteph_wf(), d.spec_bst(),
-        { Self::new() }
+    // 9c. parametric trait impl
+
+    impl<T: StT + Ord + IsLtTransitive> ParamBSTTreapStEphTrait<T> for BSTTreapStEph<T> {
+        open spec fn spec_parambsttreapsteph_wf(&self) -> bool {
+            spec_param_wf_link(&self.root)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn param_new() -> (tree: Self) {
+            BSTTreapStEph { root: None }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn singleton(key: T) -> (tree: Self) {
+            let priority = priority_for_st(&key);
+            make_node_treap_st(
+                BSTTreapStEph { root: None },
+                key,
+                priority,
+                BSTTreapStEph { root: None },
+            )
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn expose(&self) -> (exposed: ExposedTreap<T>) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            match expose_to_parts_st(cloned) {
+                None => ExposedTreap::Leaf,
+                Some((l, k, _, r)) => ExposedTreap::Node(l, k, r),
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
+            match exposed {
+                ExposedTreap::Leaf => BSTTreapStEph { root: None },
+                ExposedTreap::Node(left, key, right) => {
+                    proof {
+                        lemma_param_wf_implies_size_wf::<T>(&left.root);
+                        lemma_param_wf_implies_size_wf::<T>(&right.root);
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                    }
+                    let priority = priority_for_st(&key);
+                    join_with_priority_st(left, key, priority, right)
+                }
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn param_size(&self) -> (count: usize) {
+            proof {
+                lemma_wf_implies_finite(&self.root);
+                lemma_wf_size_eq_view_len(&self.root);
+            }
+            BSTTreapStEph::<T>::size_link(&self.root)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn param_is_empty(&self) -> (empty: bool) {
+            self.param_size() == 0
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn param_insert(&mut self, key: T) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let ghost old_view = self@;
+            let cloned = clone_with_view(&*self);
+            let (left, _, right) = split_inner_st(cloned, &key);
+            let ghost kv = key@;
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                assert(left@.union(right@) =~= old_view.remove(kv));
+                assert(old_view.remove(kv).subset_of(old_view));
+                vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
+                assert(left@.len() + right@.len() < usize::MAX as nat);
+            }
+            let priority = priority_for_st(&key);
+            let new_tree = join_with_priority_st(left, key, priority, right);
+            *self = new_tree;
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn param_delete(&mut self, key: &T) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let ghost old_view = self@;
+            let ghost kref = *key;
+            let cloned = clone_with_view(&*self);
+            let (left, _, right) = split_inner_st(cloned, key);
+            proof {
+                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                assert(left@.union(right@) =~= old_view.remove(kref@));
+                assert(old_view.remove(kref@).subset_of(old_view));
+                vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
+                assert(left@.len() + right@.len() < usize::MAX as nat);
+                assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
+                    left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
+                    lemma_cmp_antisymmetry_st(o, kref);
+                    lemma_cmp_transitivity_st(s, kref, o);
+                };
+            }
+            let new_tree = join_pair_inner_st(left, right);
+            *self = new_tree;
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn param_find(&self, key: &T) -> (found: Option<T>)
+            decreases self@.len(),
+        {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            match expose_to_parts_st(cloned) {
+                | None => None,
+                | Some((left, root_key, _, right)) => {
+                    proof {
+                        reveal(vstd::laws_cmp::obeys_cmp_ord);
+                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
+                        assert(!left@.union(right@).contains(root_key@));
+                        assert(self@.len() == left@.len() + right@.len() + 1);
+                    }
+                    match key.cmp(&root_key) {
+                        | Equal => {
+                            proof {
+                                assert(root_key@ == key@);
+                                assert(self@.contains(root_key@));
+                            }
+                            Some(root_key)
+                        }
+                        | Less => {
+                            let result = left.param_find(key);
+                            proof {
+                                match &result {
+                                    Some(v) => {
+                                        assert(left@.contains(v@));
+                                        assert(self@.contains(v@));
+                                    }
+                                    None => {
+                                        assert(!left@.contains(key@));
+                                        // key < root_key, so key@ ≠ root_key@.
+                                        assert(key.cmp_spec(&root_key) == Less);
+                                        // If key@ were in right@, then root_key < key (from ordering),
+                                        // contradicting key < root_key.
+                                        assert forall|t: T| #[trigger] right@.contains(t@) implies
+                                            t.cmp_spec(&root_key) == Greater by {};
+                                        // key@ ∉ right@ (if it were, key > root_key, contradiction).
+                                        if right@.contains(key@) {
+                                            let ghost tk = choose|t: T| #[trigger] t@ == key@ && right@.contains(t@);
+                                            assert(tk.cmp_spec(&root_key) == Greater);
+                                            lemma_cmp_equal_congruent_st(*key, tk, root_key);
+                                            assert(false);
+                                        }
+                                        assert(!right@.contains(key@));
+                                        assert(key@ != root_key@);
+                                        assert(!self@.contains(key@));
+                                    }
+                                }
+                            }
+                            result
+                        }
+                        | Greater => {
+                            let result = right.param_find(key);
+                            proof {
+                                match &result {
+                                    Some(v) => {
+                                        assert(right@.contains(v@));
+                                        assert(self@.contains(v@));
+                                    }
+                                    None => {
+                                        assert(!right@.contains(key@));
+                                        assert(key.cmp_spec(&root_key) == Greater);
+                                        if left@.contains(key@) {
+                                            let ghost tk = choose|t: T| #[trigger] t@ == key@ && left@.contains(t@);
+                                            assert(tk.cmp_spec(&root_key) == Less);
+                                            lemma_cmp_equal_congruent_st(*key, tk, root_key);
+                                            assert(false);
+                                        }
+                                        assert(!left@.contains(key@));
+                                        assert(key@ != root_key@);
+                                        assert(!self@.contains(key@));
+                                    }
+                                }
+                            }
+                            result
+                        }
+                    }
+                }
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            split_inner_st(cloned, key)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
+        fn param_join_pair(&self, other: Self) -> (joined: Self) {
+            proof {
+                lemma_param_wf_implies_size_wf::<T>(&self.root);
+                lemma_param_wf_implies_size_wf::<T>(&other.root);
+            }
+            let cloned = clone_with_view(self);
+            join_pair_inner_st(cloned, other)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        fn param_union(&self, other: &Self) -> (combined: Self) {
+            proof {
+                lemma_param_wf_implies_size_wf::<T>(&self.root);
+                lemma_param_wf_implies_size_wf::<T>(&other.root);
+            }
+            let a = clone_with_view(self);
+            let b = clone_with_view(other);
+            union_inner_st(a, b)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        fn param_intersect(&self, other: &Self) -> (common: Self) {
+            proof {
+                lemma_param_wf_implies_size_wf::<T>(&self.root);
+                lemma_param_wf_implies_size_wf::<T>(&other.root);
+            }
+            let a = clone_with_view(self);
+            let b = clone_with_view(other);
+            intersect_inner_st(a, b)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        fn param_difference(&self, other: &Self) -> (diff: Self) {
+            proof {
+                lemma_param_wf_implies_size_wf::<T>(&self.root);
+                lemma_param_wf_implies_size_wf::<T>(&other.root);
+            }
+            let a = clone_with_view(self);
+            let b = clone_with_view(other);
+            difference_inner_st(a, b)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
+        fn param_filter<F: Fn(&T) -> bool>(
+            &self,
+            predicate: F,
+            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
+        ) -> (filtered: Self) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            filter_inner_st(cloned, &predicate, Ghost(spec_pred))
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            proof { lemma_wf_implies_finite(&cloned.root); }
+            reduce_inner_st(cloned, &op, base)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
+            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
+            let cloned = clone_with_view(self);
+            proof {
+                lemma_wf_implies_finite(&cloned.root);
+                lemma_wf_implies_finite(&self.root);
+            }
+            let mut out = Vec::new();
+            collect_in_order_st(cloned, &mut out);
+            ArraySeqStPerS::from_vec(out)
+        }
+    }
+
+    //		Section 4c. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub enum ExposedTreap<T: StT + Ord + IsLtTransitive> {
+        Leaf,
+        Node(BSTTreapStEph<T>, T, BSTTreapStEph<T>),
+    }
+
+    //		Section 6c. spec fns
+
+
+    /// Recursive set computation from a Link.
+    pub open spec fn spec_set_view_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> Set<<T as View>::V>
+        decreases *link,
+    {
+        match link {
+            None => Set::<<T as View>::V>::empty(),
+            Some(node) => {
+                spec_set_view_link(&node.left).union(spec_set_view_link(&node.right)).insert(node.key@)
+            }
+        }
+    }
+
+
+    // Free spec fn: reveal_with_fuel cannot reference trait methods with generic params.
+    pub open spec fn spec_contains_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>, target: T) -> bool
+        decreases *link,
+    {
+        match link {
+            None => false,
+            Some(node) => {
+                node.key == target
+                    || spec_contains_link(&node.left, target)
+                    || spec_contains_link(&node.right, target)
+            }
+        }
+    }
+
+    /// View-consistent ordering: elements with equal views compare Equal.
+    pub open spec fn view_ord_consistent_st<T: StT + Ord + IsLtTransitive>() -> bool {
+        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+    }
+
+    /// Recursive well-formedness invariant for the parametric interface.
+    /// Mirrors the RwLockPredicate invariant from BSTParaTreapMtEph.
+    pub open spec fn spec_param_wf_link<T: StT + Ord + IsLtTransitive>(link: &Link<T>) -> bool
+        decreases *link,
+    {
+        match link {
+            None => true,
+            Some(node) => {
+                let lv = spec_set_view_link(&node.left);
+                let rv = spec_set_view_link(&node.right);
+                let kv = node.key@;
+                &&& spec_param_wf_link(&node.left)
+                &&& spec_param_wf_link(&node.right)
+                &&& node.size >= 1
+                &&& lv.finite() && rv.finite()
+                &&& lv.disjoint(rv)
+                &&& !lv.contains(kv) && !rv.contains(kv)
+                &&& lv.len() + rv.len() < usize::MAX as nat
+                &&& node.size as nat == lv.len() + rv.len() + 1
+                &&& (forall|t: T| (#[trigger] lv.contains(t@)) ==> t.cmp_spec(&node.key) == Less)
+                &&& (forall|t: T| (#[trigger] rv.contains(t@)) ==> t.cmp_spec(&node.key) == Greater)
+            }
+        }
+    }
+
+    //		Section 7c. proof fns/broadcast groups
+
+
+    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
+    pub proof fn lemma_cmp_antisymmetry_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Greater,
+        ensures b.cmp_spec(&a) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    pub proof fn lemma_cmp_antisymmetry_less_st<T: StT + Ord + IsLtTransitive>(a: T, b: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Less,
+        ensures b.cmp_spec(&a) == Greater,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
+    pub proof fn lemma_cmp_transitivity_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Less,
+        ensures a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
+    pub proof fn lemma_cmp_eq_subst_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent_st::<T>(),
+            a.cmp_spec(&b) == Less,
+            b.cmp_spec(&c) == Equal,
+        ensures a.cmp_spec(&c) == Less,
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+    }
+
+    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
+    pub proof fn lemma_cmp_equal_congruent_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent_st::<T>(),
+            a.cmp_spec(&b) == Equal,
+        ensures a.cmp_spec(&c) == b.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        assert(a@ == b@);
+    }
+
+    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
+    pub proof fn lemma_cmp_equal_congruent_right_st<T: StT + Ord + IsLtTransitive>(a: T, b: T, c: T)
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent_st::<T>(),
+            b.cmp_spec(&c) == Equal,
+        ensures a.cmp_spec(&b) == a.cmp_spec(&c),
+    {
+        reveal(vstd::laws_cmp::obeys_cmp_ord);
+        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
+        assert(b@ == c@);
+    }
+
+    /// After join(lr, key, right), every element is greater than lk.
+    proof fn lemma_joined_right_gt_lk_st<T: StT + Ord + IsLtTransitive>(
+        lrv: Set<T::V>,
+        right_v: Set<T::V>,
+        key: T,
+        joined_v: Set<T::V>,
+        lk: T,
+        left_v: Set<T::V>,
+    )
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent_st::<T>(),
+            joined_v =~= lrv.union(right_v).insert(key@),
+            forall|t: T| (#[trigger] lrv.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
+            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+            left_v.contains(lk@),
+            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
+        ensures
+            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
+    {
+        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&lk) == Greater by {
+            if lrv.contains(t@) {
+            } else if right_v.contains(t@) {
+                lemma_cmp_antisymmetry_st(t, key);
+                lemma_cmp_transitivity_st(lk, key, t);
+                lemma_cmp_antisymmetry_less_st(lk, t);
+            } else {
+                assert(t@ == key@);
+                lemma_cmp_equal_congruent_right_st(lk, t, key);
+                lemma_cmp_antisymmetry_less_st(lk, t);
+            }
+        }
+    }
+
+    /// After join(left, key, rl), every element is less than rk.
+    proof fn lemma_joined_left_lt_rk_st<T: StT + Ord + IsLtTransitive>(
+        left_v: Set<T::V>,
+        rlv: Set<T::V>,
+        key: T,
+        joined_v: Set<T::V>,
+        rk: T,
+        right_v: Set<T::V>,
+    )
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent_st::<T>(),
+            joined_v =~= left_v.union(rlv).insert(key@),
+            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
+            forall|t: T| (#[trigger] rlv.contains(t@)) ==> t.cmp_spec(&rk) == Less,
+            right_v.contains(rk@),
+            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+        ensures
+            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
+    {
+        assert(rk.cmp_spec(&key) == Greater);
+        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
+            if left_v.contains(t@) {
+                lemma_cmp_antisymmetry_st(rk, key);
+                lemma_cmp_transitivity_st(t, key, rk);
+            } else if rlv.contains(t@) {
+            } else {
+                assert(t@ == key@);
+                lemma_cmp_antisymmetry_st(rk, key);
+                lemma_cmp_equal_congruent_st(t, key, rk);
+            }
+        }
+    }
+
+    /// Every element in a well-formed tree's set view has a T witness.
+    /// This is the St analog of the witness accessibility that type_invariant
+    /// provides in the Mt version.
+    pub proof fn lemma_wf_view_inhabited_st<T: StT + Ord + IsLtTransitive>(
+        link: &Link<T>, x: <T as View>::V,
+    )
+        requires spec_param_wf_link(link), spec_set_view_link(link).contains(x),
+        ensures exists|t: T| #[trigger] t@ == x,
+        decreases *link,
+    {
+        match link {
+            None => {}
+            Some(node) => {
+                let kv = node.key@;
+                let lv = spec_set_view_link(&node.left);
+                let rv = spec_set_view_link(&node.right);
+                if kv == x {
+                    assert(node.key@ == x);
+                } else if lv.contains(x) {
+                    lemma_wf_view_inhabited_st::<T>(&node.left, x);
+                } else {
+                    assert(rv.contains(x));
+                    lemma_wf_view_inhabited_st::<T>(&node.right, x);
+                }
+            }
+        }
+    }
+
+    /// Universal version: every value in a well-formed tree's view has a T witness.
+    pub proof fn lemma_wf_view_all_inhabited_st<T: StT + Ord + IsLtTransitive>(
+        link: &Link<T>,
+    )
+        requires spec_param_wf_link(link),
+        ensures forall|x: <T as View>::V| #[trigger] spec_set_view_link(link).contains(x)
+            ==> (exists|t: T| t@ == x),
+    {
+        assert forall|x: <T as View>::V| #[trigger] spec_set_view_link(link).contains(x)
+            implies (exists|t: T| t@ == x) by {
+            lemma_wf_view_inhabited_st::<T>(link, x);
+        };
+    }
+
+    /// Well-formed link implies the set view is finite.
+    pub proof fn lemma_wf_implies_finite<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
+        requires spec_param_wf_link(link),
+        ensures spec_set_view_link(link).finite(),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_wf_implies_finite(&node.left);
+                lemma_wf_implies_finite(&node.right);
+            }
+        }
+    }
+
+    /// Well-formed link implies size_link == view.len().
+    pub proof fn lemma_wf_size_eq_view_len<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
+        requires spec_param_wf_link(link),
+        ensures BSTTreapStEph::<T>::spec_size_link(link) == spec_set_view_link(link).len(),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_wf_size_eq_view_len(&node.left);
+                lemma_wf_size_eq_view_len(&node.right);
+                let lv = spec_set_view_link(&node.left);
+                let rv = spec_set_view_link(&node.right);
+                let kv = node.key@;
+                vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
+                assert(!lv.union(rv).contains(kv));
+            }
+        }
+    }
+
+    /// spec_param_wf_link implies spec_link_size_wf (the module-level wf predicate).
+    pub proof fn lemma_param_wf_implies_size_wf<T: StT + Ord + IsLtTransitive>(link: &Link<T>)
+        requires spec_param_wf_link(link),
+        ensures BSTTreapStEph::<T>::spec_link_size_wf(link),
+        decreases *link,
+    {
+        match link {
+            None => {},
+            Some(node) => {
+                lemma_param_wf_implies_size_wf(&node.left);
+                lemma_param_wf_implies_size_wf(&node.right);
+                lemma_wf_size_eq_view_len(&node.left);
+                lemma_wf_size_eq_view_len(&node.right);
+            }
+        }
+    }
+
+    //		Section 9c. impls
+
+
+    /// Clone a StT element with a cmp_spec-preserving postcondition.
+    // veracity: no_requires
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn clone_elem_st<T: StT + Ord + IsLtTransitive>(x: &T) -> (c: T)
+        ensures c@ == x@,
+    {
+        let c = x.clone();
+        proof { accept(c@ == x@); } // eq/clone workaround: structural copy preserves view.
+        c
+    }
+
+    /// Clone a BSTTreapStEph with view preservation.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn clone_with_view<T: StT + Ord + IsLtTransitive>(tree: &BSTTreapStEph<T>) -> (cloned: BSTTreapStEph<T>)
+        requires spec_param_wf_link(&tree.root), tree.spec_bsttreapsteph_wf(),
+        ensures cloned@ =~= tree@, spec_param_wf_link(&cloned.root), cloned.spec_bsttreapsteph_wf(),
+    {
+        let cloned = tree.clone();
+        proof {
+            accept(cloned@ =~= tree@ && spec_param_wf_link(&cloned.root)); // eq/clone workaround.
+            lemma_param_wf_implies_size_wf::<T>(&cloned.root);
+        }
+        cloned
+    }
+
+    /// Hash-based priority for treap heap ordering.
+    #[verifier::external_body]
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn priority_for_st<T: StT + Ord + IsLtTransitive>(key: &T) -> (p: u64) {
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        let mut buf = String::new();
+        let _ = std::fmt::Write::write_fmt(&mut buf, format_args!("{key:?}"));
+        Hash::hash(&buf, &mut hasher);
+        hasher.finish()
     }
 
     // 9b. parametric internal functions
@@ -2790,520 +3328,8 @@ pub mod BSTTreapStEph {
         }
     }
 
-    // 8b. parametric trait
+    //		Section 12a. derive impls in verus!
 
-    pub trait ParamBSTTreapStEphTrait<T: StT + Ord + IsLtTransitive>:
-        Sized + View<V = Set<<T as View>::V>>
-    {
-        spec fn spec_parambsttreapsteph_wf(&self) -> bool;
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn param_new() -> (tree: Self)
-            ensures tree@.finite(), tree@.len() == 0, tree.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn singleton(key: T) -> (tree: Self)
-            requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
-            ensures
-                tree@.finite(),
-                tree@ =~= Set::<<T as View>::V>::empty().insert(key@),
-                tree.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn expose(&self) -> (exposed: ExposedTreap<T>)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-            ensures
-                self@.len() == 0 ==> exposed is Leaf,
-                exposed is Leaf ==> self@ =~= Set::<T::V>::empty(),
-                exposed matches ExposedTreap::Node(l, k, r) ==> (
-                    self@ =~= l@.union(r@).insert(k@)
-                    && self@.finite()
-                    && l@.finite() && r@.finite()
-                    && l@.disjoint(r@)
-                    && !l@.contains(k@)
-                    && !r@.contains(k@)
-                    && l@.len() + r@.len() < usize::MAX as nat
-                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
-                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
-                    && spec_param_wf_link(&l.root)
-                    && spec_param_wf_link(&r.root)
-                );
-
-        /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
-        fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                exposed matches ExposedTreap::Node(l, k, r) ==> (
-                    l@.finite() && r@.finite()
-                    && l@.disjoint(r@)
-                    && !l@.contains(k@)
-                    && !r@.contains(k@)
-                    && l@.len() + r@.len() < usize::MAX as nat
-                    && (forall|t: T| (#[trigger] l@.contains(t@)) ==> t.cmp_spec(&k) == Less)
-                    && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
-                    && spec_param_wf_link(&l.root)
-                    && spec_param_wf_link(&r.root)
-                ),
-            ensures
-                tree@.finite(),
-                tree.spec_parambsttreapsteph_wf(),
-                exposed is Leaf ==> tree@ =~= Set::<T::V>::empty(),
-                exposed matches ExposedTreap::Node(l, k, r) ==> tree@ =~= l@.union(r@).insert(k@);
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn param_size(&self) -> (count: usize)
-            requires self.spec_parambsttreapsteph_wf(),
-            ensures self@.finite(), count == self@.len();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn param_is_empty(&self) -> (empty: bool)
-            requires self.spec_parambsttreapsteph_wf(),
-            ensures self@.finite(), empty == (self@.len() == 0);
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
-        fn param_insert(&mut self, key: T)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent_st::<T>(),
-                old(self).spec_parambsttreapsteph_wf(),
-                old(self)@.len() < usize::MAX as nat,
-            ensures
-                self@.finite(),
-                self@ =~= old(self)@.insert(key@),
-                self.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
-        fn param_delete(&mut self, key: &T)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                old(self).spec_parambsttreapsteph_wf(),
-                old(self)@.len() < usize::MAX as nat,
-            ensures
-                self@.finite(),
-                self@ =~= old(self)@.remove(key@),
-                self.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
-        fn param_find(&self, key: &T) -> (found: Option<T>)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-            ensures
-                found matches Some(v) ==> v@ == key@ && self@.contains(v@),
-                found is None ==> !self@.contains(key@);
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg |t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg |t|), Span O(lg |t|) — matches APAS
-        fn param_split(&self, key: &T) -> (parts: (Self, bool, Self))
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-            ensures
-                parts.0@.finite(), parts.2@.finite(),
-                parts.1 == self@.contains(key@),
-                self@.finite(),
-                parts.0@.union(parts.2@) =~= self@.remove(key@),
-                parts.0@.disjoint(parts.2@),
-                !parts.0@.contains(key@) && !parts.2@.contains(key@),
-                forall|t: T| (#[trigger] parts.0@.contains(t@)) ==> t.cmp_spec(key) == Less,
-                forall|t: T| (#[trigger] parts.2@.contains(t@)) ==> t.cmp_spec(key) == Greater,
-                parts.0.spec_parambsttreapsteph_wf(),
-                parts.2.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t_1| + |t_2|)), Span O(lg(|t_1| + |t_2|)) — matches APAS
-        fn param_join_pair(&self, other: Self) -> (joined: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                other.spec_parambsttreapsteph_wf(),
-                self@.disjoint(other@),
-                self@.finite(), other@.finite(),
-                self@.len() + other@.len() < usize::MAX as nat,
-                forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)]
-                    self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
-            ensures
-                joined@.finite(),
-                joined@ =~= self@.union(other@),
-                joined.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
-        fn param_union(&self, other: &Self) -> (combined: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                other.spec_parambsttreapsteph_wf(),
-                self@.len() + other@.len() < usize::MAX as nat,
-            ensures
-                combined@.finite(),
-                combined@ == self@.union(other@),
-                combined.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
-        fn param_intersect(&self, other: &Self) -> (common: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                other.spec_parambsttreapsteph_wf(),
-                self@.len() < usize::MAX as nat,
-            ensures
-                common@.finite(),
-                common@ == self@.intersect(other@),
-                common.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(m · lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m · lg(n/m)) — DIFFERS: St sequential, APAS parallel
-        fn param_difference(&self, other: &Self) -> (diff: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                other.spec_parambsttreapsteph_wf(),
-                self@.len() < usize::MAX as nat,
-            ensures
-                diff@.finite(),
-                diff@ == self@.difference(other@),
-                diff.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
-        fn param_filter<F: Fn(&T) -> bool>(
-            &self,
-            predicate: F,
-            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-        ) -> (filtered: Self)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                forall|t: &T| #[trigger] predicate.requires((t,)),
-                forall|x: T, keep: bool|
-                    predicate.ensures((&x,), keep) ==> keep == spec_pred(x@),
-                self@.len() < usize::MAX as nat,
-            ensures
-                filtered@.finite(),
-                filtered@.subset_of(self@),
-                forall|v: T::V| #[trigger] filtered@.contains(v)
-                    ==> self@.contains(v) && spec_pred(v),
-                forall|v: T::V| self@.contains(v) && spec_pred(v)
-                    ==> #[trigger] filtered@.contains(v),
-                filtered.spec_parambsttreapsteph_wf();
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(lg |t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|) — DIFFERS: St sequential, APAS parallel
-        fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                obeys_feq_clone::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-                forall|a: T, b: T| #[trigger] op.requires((a, b)),
-            ensures true;
-
-        /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(|t|), Span O(|t|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|t|), Span O(|t|) — matches APAS
-        fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>)
-            requires
-                vstd::laws_cmp::obeys_cmp_spec::<T>(),
-                view_ord_consistent_st::<T>(),
-                self.spec_parambsttreapsteph_wf(),
-            ensures self@.finite(), ordered.spec_len() == self@.len();
-    }
-
-    // 9c. parametric trait impl
-
-    impl<T: StT + Ord + IsLtTransitive> ParamBSTTreapStEphTrait<T> for BSTTreapStEph<T> {
-        open spec fn spec_parambsttreapsteph_wf(&self) -> bool {
-            spec_param_wf_link(&self.root)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn param_new() -> (tree: Self) {
-            BSTTreapStEph { root: None }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn singleton(key: T) -> (tree: Self) {
-            let priority = priority_for_st(&key);
-            make_node_treap_st(
-                BSTTreapStEph { root: None },
-                key,
-                priority,
-                BSTTreapStEph { root: None },
-            )
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn expose(&self) -> (exposed: ExposedTreap<T>) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            match expose_to_parts_st(cloned) {
-                None => ExposedTreap::Leaf,
-                Some((l, k, _, r)) => ExposedTreap::Node(l, k, r),
-            }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn join_mid(exposed: ExposedTreap<T>) -> (tree: Self) {
-            match exposed {
-                ExposedTreap::Leaf => BSTTreapStEph { root: None },
-                ExposedTreap::Node(left, key, right) => {
-                    proof {
-                        lemma_param_wf_implies_size_wf::<T>(&left.root);
-                        lemma_param_wf_implies_size_wf::<T>(&right.root);
-                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    }
-                    let priority = priority_for_st(&key);
-                    join_with_priority_st(left, key, priority, right)
-                }
-            }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn param_size(&self) -> (count: usize) {
-            proof {
-                lemma_wf_implies_finite(&self.root);
-                lemma_wf_size_eq_view_len(&self.root);
-            }
-            BSTTreapStEph::<T>::size_link(&self.root)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        fn param_is_empty(&self) -> (empty: bool) {
-            self.param_size() == 0
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn param_insert(&mut self, key: T) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let ghost old_view = self@;
-            let cloned = clone_with_view(&*self);
-            let (left, _, right) = split_inner_st(cloned, &key);
-            let ghost kv = key@;
-            proof {
-                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kv));
-                assert(old_view.remove(kv).subset_of(old_view));
-                vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
-            }
-            let priority = priority_for_st(&key);
-            let new_tree = join_with_priority_st(left, key, priority, right);
-            *self = new_tree;
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn param_delete(&mut self, key: &T) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let ghost old_view = self@;
-            let ghost kref = *key;
-            let cloned = clone_with_view(&*self);
-            let (left, _, right) = split_inner_st(cloned, key);
-            proof {
-                vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kref@));
-                assert(old_view.remove(kref@).subset_of(old_view));
-                vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
-                assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
-                    left@.contains(s@) && right@.contains(o@) implies s.cmp_spec(&o) == Less by {
-                    lemma_cmp_antisymmetry_st(o, kref);
-                    lemma_cmp_transitivity_st(s, kref, o);
-                };
-            }
-            let new_tree = join_pair_inner_st(left, right);
-            *self = new_tree;
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn param_find(&self, key: &T) -> (found: Option<T>)
-            decreases self@.len(),
-        {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            match expose_to_parts_st(cloned) {
-                | None => None,
-                | Some((left, root_key, _, right)) => {
-                    proof {
-                        reveal(vstd::laws_cmp::obeys_cmp_ord);
-                        vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(root_key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
-                    }
-                    match key.cmp(&root_key) {
-                        | Equal => {
-                            proof {
-                                assert(root_key@ == key@);
-                                assert(self@.contains(root_key@));
-                            }
-                            Some(root_key)
-                        }
-                        | Less => {
-                            let result = left.param_find(key);
-                            proof {
-                                match &result {
-                                    Some(v) => {
-                                        assert(left@.contains(v@));
-                                        assert(self@.contains(v@));
-                                    }
-                                    None => {
-                                        assert(!left@.contains(key@));
-                                        // key < root_key, so key@ ≠ root_key@.
-                                        assert(key.cmp_spec(&root_key) == Less);
-                                        // If key@ were in right@, then root_key < key (from ordering),
-                                        // contradicting key < root_key.
-                                        assert forall|t: T| #[trigger] right@.contains(t@) implies
-                                            t.cmp_spec(&root_key) == Greater by {};
-                                        // key@ ∉ right@ (if it were, key > root_key, contradiction).
-                                        if right@.contains(key@) {
-                                            let ghost tk = choose|t: T| #[trigger] t@ == key@ && right@.contains(t@);
-                                            assert(tk.cmp_spec(&root_key) == Greater);
-                                            lemma_cmp_equal_congruent_st(*key, tk, root_key);
-                                            assert(false);
-                                        }
-                                        assert(!right@.contains(key@));
-                                        assert(key@ != root_key@);
-                                        assert(!self@.contains(key@));
-                                    }
-                                }
-                            }
-                            result
-                        }
-                        | Greater => {
-                            let result = right.param_find(key);
-                            proof {
-                                match &result {
-                                    Some(v) => {
-                                        assert(right@.contains(v@));
-                                        assert(self@.contains(v@));
-                                    }
-                                    None => {
-                                        assert(!right@.contains(key@));
-                                        assert(key.cmp_spec(&root_key) == Greater);
-                                        if left@.contains(key@) {
-                                            let ghost tk = choose|t: T| #[trigger] t@ == key@ && left@.contains(t@);
-                                            assert(tk.cmp_spec(&root_key) == Less);
-                                            lemma_cmp_equal_congruent_st(*key, tk, root_key);
-                                            assert(false);
-                                        }
-                                        assert(!left@.contains(key@));
-                                        assert(key@ != root_key@);
-                                        assert(!self@.contains(key@));
-                                    }
-                                }
-                            }
-                            result
-                        }
-                    }
-                }
-            }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn param_split(&self, key: &T) -> (parts: (Self, bool, Self)) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            split_inner_st(cloned, key)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case
-        fn param_join_pair(&self, other: Self) -> (joined: Self) {
-            proof {
-                lemma_param_wf_implies_size_wf::<T>(&self.root);
-                lemma_param_wf_implies_size_wf::<T>(&other.root);
-            }
-            let cloned = clone_with_view(self);
-            join_pair_inner_st(cloned, other)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
-        fn param_union(&self, other: &Self) -> (combined: Self) {
-            proof {
-                lemma_param_wf_implies_size_wf::<T>(&self.root);
-                lemma_param_wf_implies_size_wf::<T>(&other.root);
-            }
-            let a = clone_with_view(self);
-            let b = clone_with_view(other);
-            union_inner_st(a, b)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
-        fn param_intersect(&self, other: &Self) -> (common: Self) {
-            proof {
-                lemma_param_wf_implies_size_wf::<T>(&self.root);
-                lemma_param_wf_implies_size_wf::<T>(&other.root);
-            }
-            let a = clone_with_view(self);
-            let b = clone_with_view(other);
-            intersect_inner_st(a, b)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
-        fn param_difference(&self, other: &Self) -> (diff: Self) {
-            proof {
-                lemma_param_wf_implies_size_wf::<T>(&self.root);
-                lemma_param_wf_implies_size_wf::<T>(&other.root);
-            }
-            let a = clone_with_view(self);
-            let b = clone_with_view(other);
-            difference_inner_st(a, b)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected — DIFFERS: St sequential, APAS parallel
-        fn param_filter<F: Fn(&T) -> bool>(
-            &self,
-            predicate: F,
-            Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
-        ) -> (filtered: Self) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            filter_inner_st(cloned, &predicate, Ghost(spec_pred))
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn param_reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            proof { lemma_wf_implies_finite(&cloned.root); }
-            reduce_inner_st(cloned, &op, base)
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        fn param_in_order(&self) -> (ordered: ArraySeqStPerS<T>) {
-            proof { lemma_param_wf_implies_size_wf::<T>(&self.root); }
-            let cloned = clone_with_view(self);
-            proof {
-                lemma_wf_implies_finite(&cloned.root);
-                lemma_wf_implies_finite(&self.root);
-            }
-            let mut out = Vec::new();
-            collect_in_order_st(cloned, &mut out);
-            ArraySeqStPerS::from_vec(out)
-        }
-    }
-
-
-    //		11. derive impls in verus!
 
     impl<T: StT + Ord + IsLtTransitive> Clone for Node<T> {
         fn clone(&self) -> (cloned: Self)
@@ -3321,6 +3347,15 @@ pub mod BSTTreapStEph {
         }
     }
 
+    impl<T: StT + Ord + IsLtTransitive> Default for BSTreeTreap<T> {
+        fn default() -> (d: Self)
+            ensures d.spec_size() == 0, d.spec_bsttreapsteph_wf(), d.spec_bst(),
+        { Self::new() }
+    }
+
+    //		Section 12b. derive impls in verus!
+
+
     impl<T: StT + Ord + IsLtTransitive> Clone for BSTTreapStEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures
@@ -3333,8 +3368,8 @@ pub mod BSTTreapStEph {
 
     }
 
+    //		Section 13. macros
 
-    //		12. macros
 
     #[macro_export]
     macro_rules! BSTTreapStEphLit {
@@ -3354,8 +3389,7 @@ pub mod BSTTreapStEph {
         }};
     }
 
-
-    //		13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -3369,15 +3403,17 @@ pub mod BSTTreapStEph {
         }
     }
 
-    impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for BSTTreapStEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            f.debug_struct("BSTTreapStEph").field("root", &self.root).finish()
-        }
-    }
-
     impl<T: StT + Ord + IsLtTransitive + fmt::Display> fmt::Display for Node<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "Node(key={}, priority={}, size={})", self.key, self.priority, self.size)
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for BSTTreapStEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.debug_struct("BSTTreapStEph").field("root", &self.root).finish()
         }
     }
 
@@ -3386,6 +3422,8 @@ pub mod BSTTreapStEph {
             write!(f, "BSTTreapStEph(size: {})", self.size())
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for ExposedTreap<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -4,27 +4,31 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Algorithm21_1 {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -34,7 +38,8 @@ pub mod Algorithm21_1 {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec function: sum of lengths of first k inner sequences.
     pub open spec fn sum_inner_lens<T>(ss: Seq<ArraySeqStPerS<T>>, k: int) -> int
@@ -44,7 +49,8 @@ pub mod Algorithm21_1 {
         else { sum_inner_lens(ss, k - 1) + ss[k - 1].seq@.len() as int }
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Lemma: sum_inner_lens is monotonically increasing.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
@@ -84,7 +90,8 @@ pub mod Algorithm21_1 {
         }
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Flatten a sequence of sequences into a single sequence.
     /// - Alg Analysis: APAS (Ch21 Alg 21.1): Work O(m), Span O(lg k) where m = total elements, k = number of inner sequences.

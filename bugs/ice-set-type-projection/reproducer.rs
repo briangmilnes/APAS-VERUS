@@ -5,20 +5,35 @@
 //
 // Testing progressively richer type bounds to find ICE trigger.
 
+//  Table of Contents
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+
 use vstd::prelude::*;
 use std::hash::Hash;
 
 verus! {
+
+    //		Section 4. type definitions
+
 
 // Graph struct wrapping a concrete table-like field.
 pub struct Graph<V: View + Clone + Eq + PartialEq + Ord + Hash + Sized> {
     pub adj_view: Map<V::V, Set<V::V>>,
 }
 
+    //		Section 5. view impls
+
+
 impl<V: View + Clone + Eq + PartialEq + Ord + Hash + Sized> View for Graph<V> {
     type V = Map<V::V, Set<V::V>>;
     open spec fn view(&self) -> Map<V::V, Set<V::V>> { self.adj_view }
 }
+
+    //		Section 6. spec fns
+
 
 pub open spec fn graph_closure<V: View + Clone + Eq + PartialEq + Ord + Hash + Sized>(
     g: &Graph<V>
@@ -35,6 +50,9 @@ pub open spec fn stored_value_wf<V: View + Clone + Eq + PartialEq + Ord + Hash +
     forall|u: V::V| g@.dom().contains(u) ==>
         #[trigger] g@[u].finite()
 }
+
+    //		Section 7. proof fns/broadcast groups
+
 
 // Test 1: Simple graph closure proof — does this crash?
 proof fn test1_closure<V: View + Clone + Eq + PartialEq + Ord + Hash + Sized>(

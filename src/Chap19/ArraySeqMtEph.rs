@@ -7,22 +7,26 @@
 //! Multi-threaded: parallel methods (map_par, filter_par, reduce_par) use fork-join via `join`.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod ArraySeqMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -31,9 +35,9 @@ pub mod ArraySeqMtEph {
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -51,8 +55,8 @@ pub mod ArraySeqMtEph {
         crate::vstdplus::multiset::multiset::*,
     };
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -62,16 +66,16 @@ pub mod ArraySeqMtEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphS<T> {
         pub seq: Vec<T>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<T: View> View for ArraySeqMtEphS<T> {
         type V = Seq<T::V>;
@@ -81,8 +85,8 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
@@ -116,8 +120,8 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns
 
     /// Each element of `spec_inject(s, u)` is either the original `s[i]` or some update value.
     proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
@@ -171,7 +175,41 @@ pub mod ArraySeqMtEph {
     }
 
 
-    //		8. traits
+    /// If every inner sequence has length <= 1, flatten has length <= the outer length.
+    proof fn lemma_flatten_bounded_by_outer_len<T>(ss: Seq<Seq<T>>)
+        requires forall|i: int| #![trigger ss[i]] 0 <= i < ss.len() ==> ss[i].len() <= 1
+        ensures ss.flatten().len() <= ss.len()
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            let prefix = ss.drop_last();
+            lemma_flatten_bounded_by_outer_len::<T>(prefix);
+            prefix.lemma_flatten_push(ss.last());
+            assert(ss =~= prefix.push(ss.last()));
+            assert(ss.flatten() =~= prefix.flatten() + ss.last());
+        }
+    }
+
+    /// Every element of flatten(ss) satisfies p, if every element of every inner sequence does.
+    proof fn lemma_flatten_all_satisfy<T>(ss: Seq<Seq<T>>, p: spec_fn(T) -> bool)
+        requires
+            forall|j: int, k: int| #![trigger ss[j][k]] 0 <= j < ss.len() && 0 <= k < ss[j].len() ==> p(ss[j][k])
+        ensures
+            forall|i: int| #![trigger ss.flatten()[i]] 0 <= i < ss.flatten().len() ==> p(ss.flatten()[i])
+        decreases ss.len()
+    {
+        if ss.len() > 0 {
+            let prefix = ss.drop_last();
+            let last = ss.last();
+            lemma_flatten_all_satisfy::<T>(prefix, p);
+            prefix.lemma_flatten_push(last);
+            assert(ss =~= prefix.push(last));
+            assert(ss.flatten() =~= prefix.flatten() + last);
+        }
+    }
+
+    //		Section 8. traits
+
 
     /// Chapter 19 multi-threaded ephemeral array sequence trait.
     /// Specifications match Chapter 18; algorithms from Chapter 19.
@@ -477,8 +515,8 @@ pub mod ArraySeqMtEph {
                 deflated.spec_len() == 0 ==> pred.ensures((x,), false);
     }
 
+    //		Section 9. impls
 
-    //		9. impl Trait for Struct
 
     impl<T> ArraySeqMtEphTrait<T> for ArraySeqMtEphS<T> {
         open spec fn spec_arrayseqmteph_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
@@ -1062,41 +1100,6 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    //		9. bare impl (flatten lemmas, parallel methods, iterators)
-
-    /// If every inner sequence has length <= 1, flatten has length <= the outer length.
-    proof fn lemma_flatten_bounded_by_outer_len<T>(ss: Seq<Seq<T>>)
-        requires forall|i: int| #![trigger ss[i]] 0 <= i < ss.len() ==> ss[i].len() <= 1
-        ensures ss.flatten().len() <= ss.len()
-        decreases ss.len()
-    {
-        if ss.len() > 0 {
-            let prefix = ss.drop_last();
-            lemma_flatten_bounded_by_outer_len::<T>(prefix);
-            prefix.lemma_flatten_push(ss.last());
-            assert(ss =~= prefix.push(ss.last()));
-            assert(ss.flatten() =~= prefix.flatten() + ss.last());
-        }
-    }
-
-    /// Every element of flatten(ss) satisfies p, if every element of every inner sequence does.
-    proof fn lemma_flatten_all_satisfy<T>(ss: Seq<Seq<T>>, p: spec_fn(T) -> bool)
-        requires
-            forall|j: int, k: int| #![trigger ss[j][k]] 0 <= j < ss.len() && 0 <= k < ss[j].len() ==> p(ss[j][k])
-        ensures
-            forall|i: int| #![trigger ss.flatten()[i]] 0 <= i < ss.flatten().len() ==> p(ss.flatten()[i])
-        decreases ss.len()
-    {
-        if ss.len() > 0 {
-            let prefix = ss.drop_last();
-            let last = ss.last();
-            lemma_flatten_all_satisfy::<T>(prefix, p);
-            prefix.lemma_flatten_push(last);
-            assert(ss =~= prefix.push(last));
-            assert(ss.flatten() =~= prefix.flatten() + last);
-        }
-    }
-
     impl<T> ArraySeqMtEphS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
             requires 0 <= i < self.spec_len()
@@ -1654,16 +1657,9 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
 
-    //		10. iterators
-
-    
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphIter<'a, T> {
         pub inner: std::slice::Iter<'a, T>,
@@ -1784,8 +1780,15 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    //		Section 12. derive impls in verus!
 
-    //		11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: Clone> Clone for ArraySeqMtEphS<T> {
         fn clone(&self) -> (res: Self)
@@ -1812,8 +1815,18 @@ pub mod ArraySeqMtEph {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
+
+    /// Literal constructor macro for Chap19 ArraySeqMtEphS.
+    #[macro_export]
+    macro_rules! ArraySeqMtEphChap19SLit {
+        () => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqMtEphS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -1855,13 +1868,4 @@ pub mod ArraySeqMtEph {
             write!(f, "ArraySeqMtEphGhostIterator")
         }
     }
-
-    /// Literal constructor macro for Chap19 ArraySeqMtEphS.
-    #[macro_export]
-    macro_rules! ArraySeqMtEphChap19SLit {
-        () => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
-        ($x:expr; $n:expr) => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
-        ($($x:expr),* $(,)?) => { $crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
-    }
-
 }

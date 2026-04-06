@@ -3,24 +3,33 @@
 //! Verified wrapper around rand crate primitives.
 //! The external_body trust boundary: rand returns a value in the requested range.
 
-// Table of Contents
-// 1. module
-// 9. impls
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
 
-// 1. module
+//		Section 1. module
 
 pub mod rand {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::external_type_specification]
     pub struct ExSeededRng(SeededRng);
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Returns a uniformly random usize in [lo, hi).
     #[verifier::external_body]
@@ -46,6 +55,8 @@ pub mod rand {
     }
 
     } // verus!
+
+    //		Section 14. derive impls outside verus!
 
     /// Opaque wrapper around a seeded RNG.
     pub struct SeededRng {

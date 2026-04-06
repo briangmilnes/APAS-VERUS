@@ -6,7 +6,23 @@
 //! A star partition divides a graph into blocks where each block is a
 //! vertex-induced subgraph with respect to a star graph.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod StarPartitionStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -18,35 +34,24 @@ pub mod StarPartitionStEph {
     use crate::SetLit;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct StarPartitionStEph;
 
-    // 8. traits
-
-    pub trait StarPartitionStEphTrait {
-        /// Well-formedness for star partition algorithm input.
-        open spec fn spec_starpartitionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
-            spec_graphview_wf(graph@)
-        }
-
-        /// Sequential star partition using greedy selection.
-        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
-        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
-            requires Self::spec_starpartitionsteph_wf(graph);
-    }
-
     pub type T<V> = UnDirGraphStEph<V>;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Partition map validity: every graph vertex is mapped and every value is a center.
     pub open spec fn spec_valid_partition_map<V: View>(
@@ -63,6 +68,25 @@ pub mod StarPartitionStEph {
                 #[trigger] partition_map.contains_key(v_view) ==>
                     centers.contains(partition_map[v_view]@)
     }
+
+    //		Section 8. traits
+
+
+    pub trait StarPartitionStEphTrait {
+        /// Well-formedness for star partition algorithm input.
+        open spec fn spec_starpartitionsteph_wf<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> bool {
+            spec_graphview_wf(graph@)
+        }
+
+        /// Sequential star partition using greedy selection.
+        /// APAS: Work O(|V| + |E|), Span O(|V| + |E|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — single pass over vertices + edges; St sequential.
+        fn sequential_star_partition<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (SetStEph<V>, HashMapWithViewPlus<V, V>)
+            requires Self::spec_starpartitionsteph_wf(graph);
+    }
+
+    //		Section 9. impls
+
 
     /// Sequential Star Partition using greedy selection.
     ///
@@ -325,7 +349,8 @@ pub mod StarPartitionStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for StarPartitionStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

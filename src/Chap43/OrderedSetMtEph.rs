@@ -2,20 +2,28 @@
 //! REVIEWED: NO
 //! Multi-threaded ephemeral ordered set using coarse RwLock over OrderedSetStEph.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod OrderedSetMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 13. derive impls outside verus!
-    // 12. macros
-
-    // 2. imports
+    //		Section 2. imports
 
     use std::cmp::Ordering::{Less, Greater};
 
@@ -34,9 +42,11 @@ pub mod OrderedSetMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
@@ -45,34 +55,15 @@ pub mod OrderedSetMtEph {
         vstd::laws_cmp::group_laws_cmp,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct OrderedSetMtEphInv;
 
-    impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
-        open spec fn inv(self, v: OrderedSetStEph<T>) -> bool {
-            v.spec_orderedsetsteph_wf()
-        }
-    }
-
-    #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
-        pub(crate) locked_set: RwLock<OrderedSetStEph<T>, OrderedSetMtEphInv>,
-        pub(crate) ghost_locked_set: Ghost<Set<<T as View>::V>>,
-    }
-
     pub type OrderedSetMt<T> = OrderedSetMtEph<T>;
 
-    impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEph<T> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            self.ghost_locked_set@.finite()
-        }
+    //		Section 9a. impls
 
-        pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
-            self.ghost_locked_set@
-        }
-    }
 
     // Helper: construct Mt wrapper from St set (used by split/get_range/split_rank/from_seq).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
@@ -88,7 +79,17 @@ pub mod OrderedSetMtEph {
         }
     }
 
-    // 5. view impls
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
+        pub(crate) locked_set: RwLock<OrderedSetStEph<T>, OrderedSetMtEphInv>,
+        pub(crate) ghost_locked_set: Ghost<Set<<T as View>::V>>,
+    }
+
+    //		Section 5b. view impls
+
 
     impl<T: MtKey + TotalOrder + 'static> View for OrderedSetMtEph<T> {
         type V = Set<<T as View>::V>;
@@ -97,7 +98,8 @@ pub mod OrderedSetMtEph {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
 
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with multi-threaded ephemeral semantics.
     pub trait OrderedSetMtEphTrait<T: MtKey + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
@@ -289,7 +291,20 @@ pub mod OrderedSetMtEph {
             ensures self@.finite();
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
+
+    impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEph<T> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            self.ghost_locked_set@.finite()
+        }
+
+        pub closed spec fn spec_ghost_locked_set(self) -> Set<<T as View>::V> {
+            self.ghost_locked_set@
+        }
+    }
+
 
     impl<T: MtKey + TotalOrder + 'static> OrderedSetMtEphTrait<T> for OrderedSetMtEph<T> {
         open spec fn spec_orderedsetmteph_wf(&self) -> bool {
@@ -619,37 +634,18 @@ pub mod OrderedSetMtEph {
         }
     }
 
+    //		Section 11a. top level coarse locking
+
+
+    impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
+        open spec fn inv(self, v: OrderedSetStEph<T>) -> bool {
+            v.spec_orderedsetsteph_wf()
+        }
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
 
-    use std::fmt;
-
-    impl<T: MtKey + TotalOrder + 'static> fmt::Debug for OrderedSetMtEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedSetMtEph(size: {})", self.size())
-        }
-    }
-
-    impl<T: MtKey + TotalOrder + 'static> fmt::Display for OrderedSetMtEph<T> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedSetMtEph(size: {})", self.size())
-        }
-    }
-
-    impl fmt::Debug for OrderedSetMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedSetMtEphInv")
-        }
-    }
-
-    impl fmt::Display for OrderedSetMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedSetMtEphInv")
-        }
-    }
-
-    // 12. macros
 
     /// Macro for creating ordered sets from literals.
     #[macro_export]
@@ -663,5 +659,37 @@ pub mod OrderedSetMtEph {
                 set
             }
         };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    use std::fmt;
+
+    //		Section 14a. derive impls outside verus!
+
+    impl fmt::Debug for OrderedSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEphInv")
+        }
+    }
+
+    impl fmt::Display for OrderedSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEphInv")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T: MtKey + TotalOrder + 'static> fmt::Debug for OrderedSetMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEph(size: {})", self.size())
+        }
+    }
+
+    impl<T: MtKey + TotalOrder + 'static> fmt::Display for OrderedSetMtEph<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEph(size: {})", self.size())
+        }
     }
 }

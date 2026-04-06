@@ -4,35 +4,40 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	7. proof fns/broadcast groups
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 pub mod Algorithm21_6 {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap21::Exercise21_8::Exercise21_8::spec_is_prime;
     use crate::Types::Types::*;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     /// A product of two integers >= 2 is not prime.
     proof fn lemma_product_not_prime(a: int, b: int)
@@ -51,7 +56,8 @@ pub mod Algorithm21_6 {
         }
     }
 
-    //		9. impls
+    //		Section 9. impls
+
 
     /// Algorithm 21.6 (Prime Sieve) using ninject-based boolean sieve.
     /// 1. Generate composite numbers via nested tabulate + flatten.

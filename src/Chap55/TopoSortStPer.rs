@@ -4,7 +4,23 @@
 //! Sorts DAG vertices in topological order using decreasing finish times.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod TopoSortStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -16,22 +32,19 @@ pub mod TopoSortStPer {
     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::spec_cycledetectstper_wf;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+
+
     pub struct TopoSortStPer;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Well-formed adjacency list for persistent graph representation.
     pub open spec fn spec_toposortstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> bool {
@@ -137,6 +150,9 @@ pub mod TopoSortStPer {
             && spec_has_edge_per(graph, finish_order[a] as int, finish_order[b] as int)
             ==> b < a
     }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
     proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
@@ -259,7 +275,8 @@ pub mod TopoSortStPer {
         assert(spec_is_path_per(graph, cycle) && cycle.len() >= 2 && cycle[0] == cycle.last());
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait TopoSortStPerTrait {
         /// Computes topological sort of a DAG (Algorithm 55.13)
@@ -275,7 +292,8 @@ pub mod TopoSortStPer {
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS that appends vertices in finish order.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|+|E|), Span O(|V|+|E|) — DFS appending vertices at finish time; St sequential.
@@ -843,7 +861,8 @@ pub mod TopoSortStPer {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for TopoSortStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

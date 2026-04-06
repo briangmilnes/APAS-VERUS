@@ -6,7 +6,24 @@
 //!
 //! Uses AVLTreeSetMtPer with Arc-based backing for PARALLEL operations.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod EdgeSetGraphMtPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait;
@@ -18,26 +35,20 @@ pub mod EdgeSetGraphMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
+
     broadcast use {
         vstd::set::group_set_axioms,
         vstd::set_lib::group_set_lib_default,
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 4. type definitions
-    // 5. view impls
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + ClonePreservesView + 'static> {
@@ -45,14 +56,16 @@ pub mod EdgeSetGraphMtPer {
         pub edges: AVLTreeSetMtPer<Pair<V, V>>,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<V: StTInMtT + Ord + ClonePreservesView + 'static> View for EdgeSetGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
     proof fn lemma_eq_spec_iff_view_eq<V: StTInMtT + Ord>()
@@ -66,7 +79,8 @@ pub mod EdgeSetGraphMtPer {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static>: Sized {
         spec fn spec_edgesetgraphmtper_wf(&self) -> bool;
@@ -169,7 +183,8 @@ pub mod EdgeSetGraphMtPer {
             ensures updated.spec_edgesetgraphmtper_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<V: StTInMtT + Ord + ClonePreservesView + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
         open spec fn spec_edgesetgraphmtper_wf(&self) -> bool {
@@ -404,7 +419,8 @@ pub mod EdgeSetGraphMtPer {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Debug + 'static> std::fmt::Debug for EdgeSetGraphMtPer<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -2,12 +2,27 @@
 //! REVIEWED: NO
 //! Extensions to vstd::arithmetic::power2 for powers of 2.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 7. proof fns/broadcast groups
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod power2_plus {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use vstd::arithmetic::power2::{pow2, lemma_pow2_pos, lemma_pow2_strictly_increases, lemma2_to64_rest};
 
-    verus! {
+    verus! 
+{
+
+    //		Section 7. proof fns/broadcast groups
+
 
         /// pow2 is monotonic: if a <= b then pow2(a) <= pow2(b)
         pub proof fn lemma_pow2_mono(a: nat, b: nat)

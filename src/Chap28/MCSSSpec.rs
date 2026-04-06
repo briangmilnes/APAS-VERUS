@@ -9,17 +9,26 @@
 //! - `is_mcss_of`: predicate asserting a value is the MCSS of a sequence
 
 //  Table of Contents
-//	1. module
-//	6. spec fns
-//	7. proof fns/broadcast groups
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
 
-//		1. module
+//		Section 1. module
 
 
 pub mod MCSSSpec {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -28,7 +37,8 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     // ─── 1. spec definitions ───
 
@@ -134,8 +144,8 @@ broadcast use {
         )
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
 
     // ─── 2. lemmas ───
 

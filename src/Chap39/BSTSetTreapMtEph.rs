@@ -4,19 +4,23 @@
 //! All set algebra delegates to ParamTreap's split/join-based parallel algorithms.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//	1. module
+//		Section 1. module
 
 
 pub mod BSTSetTreapMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -30,9 +34,11 @@ pub mod BSTSetTreapMtEph {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetTreapMtEph<T: MtKey> {
@@ -41,7 +47,8 @@ pub mod BSTSetTreapMtEph {
 
     pub type BSTSetTreapMt<T> = BSTSetTreapMtEph<T>;
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<T: MtKey> View for BSTSetTreapMtEph<T> {
         type V = Set<T::V>;
@@ -51,7 +58,8 @@ pub mod BSTSetTreapMtEph {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait BSTSetTreapMtEphTrait<T: MtKey>: Sized + View<V = Set<T::V>> {
         spec fn spec_bstsettreapmteph_wf(&self) -> bool;
@@ -224,7 +232,8 @@ pub mod BSTSetTreapMtEph {
             ensures tree@ == self@;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     #[verifier::exec_allows_no_decreases_clause]
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
@@ -413,7 +422,8 @@ pub mod BSTSetTreapMtEph {
         fn as_tree(&self) -> (tree: &ParamTreap<T>) { &self.tree }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<T: MtKey + ClonePreservesView + 'static> Clone for BSTSetTreapMtEph<T> {
         fn clone(&self) -> (cloned: Self)
@@ -427,7 +437,8 @@ pub mod BSTSetTreapMtEph {
 
     } // verus!
 
-    // 12. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSetTreapMtEphLit {
@@ -441,8 +452,7 @@ pub mod BSTSetTreapMtEph {
         }};
     }
 
-
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: MtKey + ClonePreservesView + 'static + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

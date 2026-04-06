@@ -6,7 +6,22 @@
 //! Uses `WrappedF64` from vstdplus::float for distances, giving Verus a View impl
 //! over f64 values stored in ArraySeq containers.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SSSPResultStEphF64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -15,21 +30,19 @@ pub mod SSSPResultStEphF64 {
     use crate::Types::Types::*;
     use crate::vstdplus::float::float::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 3. broadcast use
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use crate::vstdplus::float::float::axiom_f64_unreachable_not_finite;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub const NO_PREDECESSOR: usize = usize::MAX;
+
 
     pub struct SSSPResultStEphF64 {
         pub distances: ArraySeqStEphS<WrappedF64>,
@@ -37,7 +50,8 @@ pub mod SSSPResultStEphF64 {
         pub source: usize,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SSSPResultStEphF64Trait: Sized {
         spec fn spec_ssspresultstephf64_wf(&self) -> bool;
@@ -120,7 +134,8 @@ pub mod SSSPResultStEphF64 {
             requires self.spec_ssspresultstephf64_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl SSSPResultStEphF64Trait for SSSPResultStEphF64 {
         open spec fn spec_ssspresultstephf64_wf(&self) -> bool {
@@ -246,7 +261,8 @@ pub mod SSSPResultStEphF64 {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SSSPResultStEphF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

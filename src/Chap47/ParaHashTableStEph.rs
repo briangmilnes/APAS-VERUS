@@ -5,25 +5,32 @@
 //! Work: insert O(1), lookup O(1), delete O(1) expected with constant load factor.
 //! Span: O(1) (sequential).
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod ParaHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions (inside verus!: LoadAndSize, HashTable)
-    // 6. spec fns (inside verus!: spec_hashtable_wf, spec_seq_pairs_to_map, spec_table_to_map, spec_other_slots_preserved)
-    // 7. proof fns (inside verus!: clone_elem, lemma_table_to_map_*)
-    // 7a. helpers (inside verus!: call_hash_fn)
-    // 8. traits (inside verus!: EntryTrait, ParaHashTableStEphTrait)
-    // 9. impls (inside verus!: View for HashTable)
-    // 13. derive impls outside verus!
     //
     // Note: spec_seq_pairs_to_map lives here because both Flat and Chained impls use it.
     // The lemma_seq_pairs_* proofs (chained-family only) live in ChainedHashTable.rs.
     // spec_hashtable_wf lives here because the Para default spec_parahashtablesteph_wf references it;
     // moving it to Chained would create a circular import.
 
-    // 2. imports
+    //		Section 2. imports
     use std::fmt::Display;
     use std::marker::PhantomData;
 
@@ -32,19 +39,25 @@ pub mod ParaHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     #[derive(Clone, Copy, PartialEq)]
     pub struct LoadAndSize {
         pub load: usize,
         pub size: usize,
     }
+
+    //		Section 4b. type definitions
+
 
     /// Parametric nested hash table structure.
     /// Generic `H` is the hash function type: takes (&Key, usize) and returns an index.
@@ -60,7 +73,18 @@ pub mod ParaHashTableStEph {
         pub _phantom: PhantomData<(Key, Value)>,
     }
 
-    // 6. spec fns
+    //		Section 5b. view impls
+
+
+    impl<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H> View for HashTable<Key, Value, Entry, Metrics, H> {
+        type V = Map<Key, Value>;
+        open spec fn view(&self) -> Map<Key, Value> {
+            spec_table_to_map(self.table@)
+        }
+    }
+
+    //		Section 6b. spec fns
+
 
     pub open spec fn spec_hashtable_wf<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H: Fn(&Key, usize) -> usize>(table: &HashTable<Key, Value, Entry, Metrics, H>) -> bool {
         table.table@.len() == table.current_size as int
@@ -121,18 +145,8 @@ pub mod ParaHashTableStEph {
                 ==> idx < ts && idx as nat == spec_hash(*k) % (ts as nat))
     }
 
-    // 7. proof fns
+    //		Section 7b. proof fns/broadcast groups
 
-    /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single element clone.
-    pub fn clone_elem<T: Eq + Clone>(x: &T) -> (c: T)
-        requires obeys_feq_clone::<T>(),
-        ensures c == *x,
-    {
-        let c = x.clone();
-        assert(cloned(*x, c));
-        c
-    }
 
     /// All-empty entries produce an empty map when composed by spec_table_to_map.
     pub proof fn lemma_table_to_map_push_empty<Key, Value, Entry: EntryTrait<Key, Value>>(
@@ -348,23 +362,8 @@ pub mod ParaHashTableStEph {
         }
     }
 
-    // 7a. helpers
+    //		Section 8b. traits
 
-    /// Calls the hash function and returns a bucket index.
-    /// Closure specs bridge the exec hash_fn to the ghost spec_hash via spec_hash_fn_valid.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash function call.
-    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
-        requires
-            table_size > 0,
-            spec_hash_fn_valid::<Key, H>(spec_hash@),
-        ensures
-            index < table_size,
-            index as nat == (spec_hash@)(*key) % (table_size as nat),
-    {
-        (hash_fn)(key, table_size)
-    }
-
-    // 8. traits
 
     /// Trait for parametric nested hash tables.
     /// Entry type must implement this trait to define how Key and Value are stored.
@@ -390,15 +389,6 @@ pub mod ParaHashTableStEph {
         /// Element-wise clone that avoids Verus tuple-Clone limitation.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — copies all chain entries.
         fn clone_entry(&self) -> (cloned: Self);
-    }
-
-    // 9. impls
-
-    impl<Key, Value, Entry: EntryTrait<Key, Value>, Metrics, H> View for HashTable<Key, Value, Entry, Metrics, H> {
-        type V = Map<Key, Value>;
-        open spec fn view(&self) -> Map<Key, Value> {
-            spec_table_to_map(self.table@)
-        }
     }
 
     /// Trait for parametric nested hash tables.
@@ -568,9 +558,39 @@ pub mod ParaHashTableStEph {
                 resized.spec_hash == table.spec_hash;
     }
 
+    //		Section 9b. impls
+
+
+    /// Clone bridge for generic element: requires obeys_feq_clone so axiom_cloned_implies_eq fires.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single element clone.
+    pub fn clone_elem<T: Eq + Clone>(x: &T) -> (c: T)
+        requires obeys_feq_clone::<T>(),
+        ensures c == *x,
+    {
+        let c = x.clone();
+        assert(cloned(*x, c));
+        c
+    }
+
+    // 7a. helpers
+
+    /// Calls the hash function and returns a bucket index.
+    /// Closure specs bridge the exec hash_fn to the ghost spec_hash via spec_hash_fn_valid.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single hash function call.
+    pub fn call_hash_fn<Key, H: Fn(&Key, usize) -> usize>(hash_fn: &H, key: &Key, table_size: usize, spec_hash: Ghost<spec_fn(Key) -> nat>) -> (index: usize)
+        requires
+            table_size > 0,
+            spec_hash_fn_valid::<Key, H>(spec_hash@),
+        ensures
+            index < table_size,
+            index as nat == (spec_hash@)(*key) % (table_size as nat),
+    {
+        (hash_fn)(key, table_size)
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
 
     impl std::fmt::Debug for LoadAndSize {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -587,6 +607,8 @@ pub mod ParaHashTableStEph {
                 if self.size == 0 { 0.0 } else { self.load as f64 / self.size as f64 })
         }
     }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<Key, Value, Entry: std::fmt::Debug, Metrics: std::fmt::Debug, H> std::fmt::Debug
         for HashTable<Key, Value, Entry, Metrics, H>

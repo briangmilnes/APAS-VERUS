@@ -7,21 +7,26 @@
 //! using vertex bridges and graph contraction with randomized star contraction.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 6a. spec fns
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12a. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod BoruvkaStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::vstdplus::float::float::{WrappedF64, zero_dist};
@@ -39,9 +44,11 @@ pub mod BoruvkaStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -49,43 +56,22 @@ pub mod BoruvkaStEph {
         crate::vstdplus::float::float::group_float_finite_total_order,
     };
 
-    //		4. type definitions
+    //		Section 4a. type definitions
+
 
     /// Edge with label: (u, v, weight, label). Vertices u,v change during contraction.
     pub struct LabeledEdge<V>(pub V, pub V, pub WrappedF64, pub usize);
 
-    /// Namespace struct for trait impl.
-    pub struct BoruvkaStEph;
+    //		Section 5a. view impls
 
-    impl<V: Copy> Copy for LabeledEdge<V> {}
-
-    impl<V: Copy> Clone for LabeledEdge<V> {
-        fn clone(&self) -> (s: Self)
-            ensures s == *self,
-        {
-            *self
-        }
-    }
-
-    impl<V: StT + Ord + Copy> PartialEq for LabeledEdge<V> {
-        #[verifier::external_body]
-        fn eq(&self, other: &Self) -> (equal: bool)
-            ensures equal == (self@ == other@),
-        {
-            self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3
-        }
-    }
-
-    impl<V: StT + Ord + Copy> Eq for LabeledEdge<V> {}
-
-    //		5. view impls
 
     impl<V: StT + Ord> View for LabeledEdge<V> {
         type V = Self;
         open spec fn view(&self) -> Self { *self }
     }
 
-    //		6. spec fns
+    //		Section 6a. spec fns
+
 
     /// A bridge entry (neighbor, weight, label) is valid for vertex v given edges.
     pub open spec fn spec_valid_bridge<V: Copy>(
@@ -101,7 +87,11 @@ pub mod BoruvkaStEph {
         forall|e: LabeledEdge<V>| #[trigger] edges.contains(e) ==> e.2.spec_is_finite()
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 9a. impls
+
+
+    impl<V: Copy> Copy for LabeledEdge<V> {}
+
 
     /// Deterministic coin flip from seed and vertex iteration index.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — single XOR + mask.
@@ -112,7 +102,14 @@ pub mod BoruvkaStEph {
         ((seed ^ (index as u64)) & 1) == 1
     }
 
-    //		8. traits
+    //		Section 4b. type definitions
+
+
+    /// Namespace struct for trait impl.
+    pub struct BoruvkaStEph;
+
+    //		Section 8b. traits
+
 
     pub trait BoruvkaStEphTrait {
         /// Well-formedness for sequential Borůvka MST algorithm input.
@@ -205,13 +202,8 @@ pub mod BoruvkaStEph {
                 mst_labels.spec_setsteph_wf();
     }
 
-    //		9. impls
+    //		Section 9b. impls
 
-    #[cfg(verus_keep_ghost)]
-    impl<V: StT + Ord + Copy> PartialEqSpecImpl for LabeledEdge<V> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
 
     impl BoruvkaStEphTrait for BoruvkaStEph {
         /// Algorithm 66.3: Find vertex bridges.
@@ -548,11 +540,38 @@ pub mod BoruvkaStEph {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12a. derive impls in verus!
 
+
+    impl<V: Copy> Clone for LabeledEdge<V> {
+        fn clone(&self) -> (s: Self)
+            ensures s == *self,
+        {
+            *self
+        }
+    }
+
+    impl<V: StT + Ord + Copy> PartialEq for LabeledEdge<V> {
+        #[verifier::external_body]
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@),
+        {
+            self.0 == other.0 && self.1 == other.1 && self.2 == other.2 && self.3 == other.3
+        }
+    }
+
+    impl<V: StT + Ord + Copy> Eq for LabeledEdge<V> {}
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<V: StT + Ord + Copy> PartialEqSpecImpl for LabeledEdge<V> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
     } // verus!
 
-    //		13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
 
     impl<V: StT + Ord + Copy + std::hash::Hash> PartialOrd for LabeledEdge<V> {
         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
@@ -586,7 +605,7 @@ pub mod BoruvkaStEph {
         }
     }
 
-    // 14b. derive impls outside verus! — struct BoruvkaStEph
+    //		Section 14b. derive impls outside verus!
 
     impl std::fmt::Debug for BoruvkaStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

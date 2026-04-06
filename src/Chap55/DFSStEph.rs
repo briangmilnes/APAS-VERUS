@@ -4,7 +4,23 @@
 //! Recursive DFS using ephemeral arrays for efficient visited tracking.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod DFSStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
@@ -13,25 +29,24 @@ pub mod DFSStEph {
     use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use vstd::seq::group_seq_axioms;
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
+
+
     pub struct DFSStEph;
 
-    // 6. spec fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
     proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
@@ -61,7 +76,6 @@ broadcast use vstd::seq::group_seq_axioms;
     {
     }
 
-    // 7. proof fns
 
     /// A vertex is trivially reachable from itself.
     proof fn lemma_reachable_self(graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>, v: int)
@@ -192,7 +206,8 @@ broadcast use vstd::seq::group_seq_axioms;
         lemma_neighbor_closed_path(graph, visited, path);
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait DFSStEphTrait {
         /// Performs DFS from source vertex s on adjacency list graph G.
@@ -213,7 +228,8 @@ broadcast use vstd::seq::group_seq_axioms;
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS helper that marks visited vertices and inserts them into the result set.
     /// Ghost parameter `gray` tracks vertices on the recursion stack (visited but not yet
@@ -516,7 +532,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for DFSStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

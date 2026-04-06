@@ -3,19 +3,22 @@
 //! Set interface built atop the Red-Black multi-threaded BST implementation.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//	1. module
+//		Section 1. module
 
 pub mod BSTSetRBMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt;
 
@@ -28,9 +31,11 @@ pub mod BSTSetRBMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_clone;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct BSTSetRBMtEph<T: StTInMtT + Ord + TotalOrder> {
@@ -39,39 +44,15 @@ pub mod BSTSetRBMtEph {
 
     pub type BSTSetRBMt<T> = BSTSetRBMtEph<T>;
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetRBMtEphIter<T: StTInMtT + Ord + TotalOrder> {
-        pub snapshot: Vec<T>,
-        pub pos: usize,
-    }
+    //		Section 6. spec fns
 
-    #[verifier::reject_recursive_types(T)]
-    pub struct BSTSetRBMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
-        pub pos: int,
-        pub elements: Seq<T>,
-    }
-
-    // 5. view impls
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetRBMtEphIter<T> {
-        type V = (int, Seq<T>);
-        open spec fn view(&self) -> (int, Seq<T>) {
-            (self.pos as int, self.snapshot@)
-        }
-    }
-
-    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetRBMtEphGhostIter<T> {
-        type V = Seq<T>;
-        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
-    }
-
-    // 6. spec fns
 
     pub open spec fn bstsetrbmteph_iter_invariant<T: StTInMtT + Ord + TotalOrder>(it: &BSTSetRBMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    //	8. traits
+    //		Section 8. traits
+
 
     pub trait BSTSetRBMtEphTrait<T: StTInMtT + Ord + TotalOrder>: Sized {
         spec fn spec_bstsetrbmteph_wf(&self) -> bool;
@@ -170,7 +151,8 @@ pub mod BSTSetRBMtEph {
             ensures out.spec_bstsetrbmteph_wf();
     }
 
-    //	9. impls
+    //		Section 9. impls
+
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     fn values_vec<T: StTInMtT + Ord + TotalOrder>(tree: &BSTRBMtEph<T>) -> (values: Vec<T>)
@@ -557,7 +539,34 @@ pub mod BSTSetRBMtEph {
         }
     }
 
-    // 10. iterators
+    //		Section 10. iterators
+
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetRBMtEphIter<T: StTInMtT + Ord + TotalOrder> {
+        pub snapshot: Vec<T>,
+        pub pos: usize,
+    }
+
+    #[verifier::reject_recursive_types(T)]
+    pub struct BSTSetRBMtEphGhostIter<T: StTInMtT + Ord + TotalOrder> {
+        pub pos: int,
+        pub elements: Seq<T>,
+    }
+
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetRBMtEphIter<T> {
+        type V = (int, Seq<T>);
+        open spec fn view(&self) -> (int, Seq<T>) {
+            (self.pos as int, self.snapshot@)
+        }
+    }
+
+    impl<T: StTInMtT + Ord + TotalOrder> View for BSTSetRBMtEphGhostIter<T> {
+        type V = Seq<T>;
+        open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
+    }
+
 
     impl<T: StTInMtT + Ord + TotalOrder> std::iter::Iterator for BSTSetRBMtEphIter<T> {
         type Item = T;
@@ -657,7 +666,8 @@ pub mod BSTSetRBMtEph {
 
     } // verus!
 
-    //	13. macros
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! BSTSetRBMtEphLit {
@@ -671,7 +681,7 @@ pub mod BSTSetRBMtEph {
         }};
     }
 
-    //	14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<T: StTInMtT + Ord + TotalOrder + fmt::Debug> fmt::Debug for BSTSetRBMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

@@ -2,7 +2,26 @@
 //! REVIEWED: NO
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod LabUnDirGraphStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -14,7 +33,11 @@ pub mod LabUnDirGraphStEph {
     use crate::vstdplus::feq::feq::*;
     use crate::vstdplus::seq_set::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -28,6 +51,9 @@ verus! {
         vstd::set::group_set_axioms,
     };
 
+    //		Section 4. type definitions
+
+
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
     pub struct LabUnDirGraphStEph<V: HashOrd, L: StT + Hash> {
@@ -35,13 +61,19 @@ verus! {
         pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
+    //		Section 5. view impls
+
+
     impl<V: HashOrd, L: StT + Hash> View for LabUnDirGraphStEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
-        
+
         open spec fn view(&self) -> Self::V {
             LabGraphView { V: self.vertices@, A: self.labeled_edges@ }
         }
     }
+
+    //		Section 8. traits
+
 
     pub trait LabUnDirGraphStEphTrait<V: HashOrd, L: StT + Hash>:
     View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized {
@@ -141,6 +173,9 @@ verus! {
             requires spec_labgraphview_wf(self@), valid_key_type_LabEdge::<V, L>()
             ensures ng@ == self.spec_ng(v@), ng.spec_setsteph_wf();
     }
+
+    //		Section 9. impls
+
 
     impl<V: HashOrd, L: StT + Hash> LabUnDirGraphStEphTrait<V, L> for LabUnDirGraphStEph<V, L> {
 
@@ -390,7 +425,8 @@ verus! {
         }
     }
 
-    //		10. iterators
+    //		Section 10. iterators
+
 
     /// Iterator wrapper for LabUnDirGraphStEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -510,7 +546,8 @@ verus! {
         }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl<V: HashOrd, L: StT + Hash> Clone for LabUnDirGraphStEph<V, L> {
         fn clone(&self) -> (cloned: Self)
@@ -522,17 +559,8 @@ verus! {
 
 } // verus!
 
-    impl<V: HashOrd, L: StT + Hash> Display for LabUnDirGraphStEph<V, L> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(f, "LabUnDirGraph(V: {}, E: {})", self.vertices, self.labeled_edges)
-        }
-    }
+    //		Section 13. macros
 
-    impl<V: HashOrd, L: StT + Hash> Debug for LabUnDirGraphStEph<V, L> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-            write!(f, "LabUnDirGraph {{ vertices: {:?}, labeled_edges: {:?} }}", self.vertices, self.labeled_edges)
-        }
-    }
 
     #[macro_export]
     macro_rules! LabUnDirGraphStEphLit {
@@ -555,6 +583,20 @@ verus! {
             };
             < $crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEph<_, _> as $crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEphTrait<_, _> >::from_vertices_and_labeled_edges(vertices, labeled_edges)
         }};
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<V: HashOrd, L: StT + Hash> Display for LabUnDirGraphStEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "LabUnDirGraph(V: {}, E: {})", self.vertices, self.labeled_edges)
+        }
+    }
+
+    impl<V: HashOrd, L: StT + Hash> Debug for LabUnDirGraphStEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "LabUnDirGraph {{ vertices: {:?}, labeled_edges: {:?} }}", self.vertices, self.labeled_edges)
+        }
     }
 
     impl<'a, V: HashOrd> Debug for LabUnDirGraphStEphIter<'a, V> {

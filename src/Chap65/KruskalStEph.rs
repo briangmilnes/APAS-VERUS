@@ -9,7 +9,20 @@
 //! - opaque_spec_unionfindsteph_wf: removed opaque (R130 — wf is already closed, double opacity unnecessary).
 //! - kruskal_process_edge: PROVED (R130, agent1 — union now proved, wf propagation is automatic).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod KruskalStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -39,12 +52,19 @@ pub mod KruskalStEph {
         use crate::Chap65::UnionFindStEph::UnionFindStEph::*;
         use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
-        verus! {
+        verus! 
+{
+
+    //		Section 6. spec fns
+
 
         /// Wrapper for UF well-formedness. Delegates to the closed spec_unionfindsteph_wf.
         pub open spec fn opaque_spec_unionfindsteph_wf<V: HashOrd>(uf: &UnionFindStEph<V>) -> bool {
             uf.spec_unionfindsteph_wf()
         }
+
+    //		Section 9. impls
+
 
         /// Process one edge: if endpoints are in different components, add to MST and union.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — two finds + conditional union; amortized.
@@ -72,6 +92,9 @@ pub mod KruskalStEph {
         }
 
         } // verus!
+
+    //		Section 14. derive impls outside verus!
+
     }
 
     use uf_opaque_wrappers::*;
@@ -81,8 +104,6 @@ pub mod KruskalStEph {
     broadcast use {
         crate::Types::Types::group_LabEdge_axioms,
     };
-
-    // 3a. proof fns
 
     /// Prove that a sorted edge's endpoints are in the UF domain.
     /// Chains: sort provenance -> pre_sort view -> edge_seq view -> mapped_es -> labeled -> graph@.A -> graph wf -> UF.
@@ -124,12 +145,8 @@ pub mod KruskalStEph {
         assert(graph_V.contains(edge_seq[j]@.1));
     }
 
-    // 4. type definitions
-
     /// Namespace struct for trait impl.
     pub struct KruskalStEph;
-
-    // 8. traits
 
     /// Greedy edge-adding phase of Kruskal's algorithm.
     fn kruskal_greedy_phase<V: HashOrd>(

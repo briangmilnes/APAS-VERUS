@@ -3,19 +3,25 @@
 //! Chapter 45: Priority Queue implementation using Balanced Trees (AVL Tree).
 
 //  Table of Contents
-//  1. module
-//  2. imports
-//  3. broadcast use
-//  4. type definitions
-//  5. view impls
-//  7. proof fns/broadcast groups
-//  8. traits
-//  9. impls
-//  11. derive impls in verus!
-//  12. macros
-//  13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
 
 pub mod BalancedTreePQ {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
 
@@ -31,9 +37,12 @@ pub mod BalancedTreePQ {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
-    verus! {
+    verus! 
+{
 
-// 3. broadcast use
+    //		Section 3. broadcast use
+
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
@@ -41,22 +50,30 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-// 4. type definitions
+    //		Section 4. type definitions
+
+
         #[verifier::reject_recursive_types(T)]
         pub struct BalancedTreePQ<T: StT + Ord + TotalOrder> {
             pub elements: AVLTreeSeqStPerS<T>,
         }
 
-// 5. view impls
+    //		Section 5. view impls
+
+
         impl<T: StT + Ord + TotalOrder> View for BalancedTreePQ<T> {
             type V = Seq<T::V>;
             open spec fn view(&self) -> Seq<T::V> { self.elements@ }
         }
 
-// 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
+
         proof fn _balanced_tree_pq_verified() {}
 
-// 8. traits
+    //		Section 8. traits
+
+
         /// Meldable Priority Queue ADT (Data Type 45.1) using balanced tree (AVL).
         pub trait BalancedTreePQTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Seq<T::V>> {
             spec fn spec_balancedtreepq_wf(&self) -> bool;
@@ -236,7 +253,9 @@ broadcast use {
                 ensures mapped.spec_balancedtreepq_wf();
         }
 
-// 9. impls
+    //		Section 9. impls
+
+
         impl<T: StT + Ord + TotalOrder> BalancedTreePQTrait<T> for BalancedTreePQ<T> {
             open spec fn spec_balancedtreepq_wf(&self) -> bool {
                 self.elements.spec_avltreeseqstper_wf()
@@ -723,14 +742,6 @@ broadcast use {
             fn join(left: &Self, right: &Self) -> Self { left.meld(right) }
         }
 
-        impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
-            fn default() -> (d: Self)
-                ensures d@.len() == 0, d.spec_balancedtreepq_wf()
-            {
-            assert(obeys_feq_full_trigger::<T>());
-             Self::empty() }
-        }
-
         impl<T: StT + Ord + TotalOrder> BalancedTreePQExtTrait<T> for BalancedTreePQ<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn filter<F: Fn(&T) -> bool>(&self, predicate: F) -> (filtered: Self)
@@ -800,7 +811,17 @@ broadcast use {
             }
         }
 
-// 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+        impl<T: StT + Ord + TotalOrder> Default for BalancedTreePQ<T> {
+            fn default() -> (d: Self)
+                ensures d@.len() == 0, d.spec_balancedtreepq_wf()
+            {
+            assert(obeys_feq_full_trigger::<T>());
+             Self::empty() }
+        }
+
         #[cfg(verus_keep_ghost)]
         impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for BalancedTreePQ<T> {
             open spec fn obeys_eq_spec() -> bool { true }
@@ -829,7 +850,9 @@ broadcast use {
 
     }
 
-// 12. macros
+    //		Section 13. macros
+
+
     #[macro_export]
     macro_rules! BalancedTreePQLit {
         () => {
@@ -844,7 +867,8 @@ broadcast use {
         }};
     }
 
-// 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("BalancedTreePQ").field("elements", &self.elements).finish()

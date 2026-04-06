@@ -3,23 +3,35 @@
 //!
 //! Single-Source Shortest Path Result Structure - Sequential Persistent (Integer Weights)
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SSSPResultStPerI64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub const UNREACHABLE: i64 = i64::MAX;
     pub const NO_PREDECESSOR: usize = usize::MAX;
+
 
     pub struct SSSPResultStPerI64 {
         pub distances: ArraySeqStPerS<i64>,
@@ -27,7 +39,8 @@ pub mod SSSPResultStPerI64 {
         pub source: usize,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SSSPResultStPerI64Trait: Sized {
         spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool;
@@ -114,7 +127,8 @@ pub mod SSSPResultStPerI64 {
                         ==> (path->Some_0.spec_index(j) as int) < self.spec_predecessors().len();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl SSSPResultStPerI64Trait for SSSPResultStPerI64 {
         open spec fn spec_ssspresultstperi64_wf(s: &SSSPResultStPerI64) -> bool {
@@ -258,7 +272,8 @@ pub mod SSSPResultStPerI64 {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SSSPResultStPerI64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

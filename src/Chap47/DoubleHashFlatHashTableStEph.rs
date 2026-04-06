@@ -3,18 +3,22 @@
 //! Double Hashing Flat Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses double hashing for open addressing collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod DoubleHashFlatHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!: spec_second_hash, spec_doublehashflathashsteph_wf)
-    // 7. proof fns (inside verus!: spec_count_empties, lemma_*_empties, lemma_spec_second_hash_value, lemma_probe_mod_identity)
-    // 9. impls (inside verus!)
-
-    // 2. imports
+    //		Section 2. imports
     use std::hash::Hash;
     use std::marker::PhantomData;
 
@@ -27,19 +31,24 @@ pub mod DoubleHashFlatHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
+
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Double Hashing Flat Hash Table implementation.
     /// Probe sequence: h_i(k) = (h(k) + i·hh(k)) mod m
     /// Uses two hash functions to avoid both primary and secondary clustering.
     pub struct DoubleHashFlatHashTableStEph;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Abstract second hash value for double hashing.
     /// Closed so body is hidden from SMT; `second_hash` links via ensures.
@@ -76,7 +85,6 @@ pub mod DoubleHashFlatHashTableStEph {
             })
     }
 
-    // 7. proof fns
 
     /// Counts the number of Empty entries in a flat hash table sequence.
     pub open spec fn spec_count_empties<Key, Value>(
@@ -88,6 +96,9 @@ pub mod DoubleHashFlatHashTableStEph {
         else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
         else { spec_count_empties(table.drop_last()) }
     }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     /// An all-Empty sequence has empties count equal to its length.
     pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
@@ -185,7 +196,8 @@ pub mod DoubleHashFlatHashTableStEph {
         }
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl DoubleHashFlatHashTableStEph {
         /// Computes a second hash value for double hashing.
@@ -1008,7 +1020,8 @@ pub mod DoubleHashFlatHashTableStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for DoubleHashFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

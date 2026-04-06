@@ -7,7 +7,21 @@
 //! - Shortcut to avoid revisiting vertices
 //! - 2-approximation guarantee
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod TSPApproxStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -26,14 +40,17 @@ pub mod TSPApproxStEph {
 
     pub type T<V> = LabUnDirGraphStEph<V, WrappedF64>;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Namespace struct for trait impl.
     pub struct TSPApproxStEph;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait TSPApproxStEphTrait {
         /// Well-formedness for sequential TSP approximation algorithm input.
@@ -84,6 +101,9 @@ pub mod TSPApproxStEph {
                 valid_key_type_LabEdge::<V, WrappedF64>(),
                 spanning_tree.spec_setsteph_wf();
     }
+
+    //		Section 9. impls
+
 
     /// Linear scan for edge pair in visited-edges vector.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — linear scan over vec; St sequential.
@@ -409,7 +429,8 @@ pub mod TSPApproxStEph {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for TSPApproxStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

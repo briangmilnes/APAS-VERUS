@@ -4,7 +4,25 @@
 //! Chapter 52: Adjacency Table Graph representation (persistent, multi-threaded with TRUE parallelism).
 //! G = (V, A:) where the graph is represented as a table mapping vertices to their out-neighbor sets.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AdjTableGraphMtPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
@@ -20,7 +38,11 @@ pub mod AdjTableGraphMtPer {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -29,18 +51,8 @@ broadcast use {
     vstd::set_lib::group_set_lib_default,
 };
 
-    // Table of Contents
-    // 1. module (above)
-    // 2. imports (above)
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 14. derive impls outside verus!
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     // This implementation requires V: Ord for BOTH keys and values because:
     // - OrderedTableMtPer is backed by BSTParaTreapMtEph<Pair<K,V>>
@@ -54,14 +66,16 @@ broadcast use {
         pub num_edges: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> View for AdjTableGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Sum of all neighbor set sizes across all vertices in the adjacency map.
     /// Local copy — standalone rule forbids importing from StEph.
@@ -77,7 +91,8 @@ broadcast use {
         }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
     /// Local copy — standalone rule forbids importing from StEph.
@@ -125,102 +140,8 @@ broadcast use {
         }
     }
 
-    /// Count all edges in a table that satisfies the graph closure property.
-    /// Used by operations that cannot cheaply compute the new edge count incrementally.
-    fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>(
-        table: &OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
-    ) -> (count: usize)
-        where V: TotalOrder
-        requires
-            table.spec_orderedtablemtper_wf(),
-            forall|u: <V as View>::V, w: <V as View>::V|
-                table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
-                ==> table@.dom().contains(w),
-            spec_sum_adj_sizes(table@) <= usize::MAX as nat,
-        ensures
-            count as nat == spec_sum_adj_sizes(table@)
-    {
-        proof { reveal(spec_sum_adj_sizes); }
-        let mut remaining = table.clone();
-        let mut count: usize = 0;
-        let mut n = remaining.size();
-        while n > 0
-            invariant
-                remaining.spec_orderedtablemtper_wf(),
-                n as nat == remaining@.dom().len(),
-                count as nat + spec_sum_adj_sizes(remaining@) == spec_sum_adj_sizes(table@),
-                remaining@.dom().subset_of(table@.dom()),
-                forall|k: <V as View>::V| #[trigger] remaining@.dom().contains(k)
-                    ==> remaining@[k] == table@[k],
-                forall|u: <V as View>::V, w: <V as View>::V|
-                    table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
-                    ==> table@.dom().contains(w),
-                table@.dom().finite(),
-                spec_sum_adj_sizes(table@) <= usize::MAX as nat,
-                count as nat <= spec_sum_adj_sizes(table@),
-            decreases n,
-        {
-            let first = remaining.first_key();
-            match first {
-                None => {
-                    proof { assert(false); }
-                }
-                Some(v_key) => {
-                    let ghost old_remaining_view = remaining@;
-                    match remaining.find(&v_key) {
-                        None => {
-                            proof { assert(false); }
-                        }
-                        Some(neighbors) => {
-                            proof {
-                                assert(remaining@.dom().contains(v_key@));
-                                assert(neighbors@ == table@[v_key@]);
-                                let dom = table@.dom();
-                                assert(neighbors@.subset_of(dom)) by {
-                                    assert forall|w: <V as View>::V|
-                                        #[trigger] neighbors@.contains(w)
-                                        implies dom.contains(w)
-                                    by {
-                                        assert(table@.index(v_key@).contains(w));
-                                    };
-                                };
-                                vstd::set_lib::lemma_len_subset(neighbors@, dom);
-                                lemma_sum_adj_remove(remaining@, v_key@);
-                            }
-                            let neighbor_count = neighbors.size();
-                            count = count + neighbor_count;
-                            remaining = remaining.delete(&v_key);
-                            n = remaining.size();
-                            proof {
-                                assert(remaining@ == old_remaining_view.remove(v_key@));
-                                assert(remaining@.dom().subset_of(table@.dom())) by {
-                                    assert forall|k: <V as View>::V|
-                                        #[trigger] remaining@.dom().contains(k)
-                                        implies table@.dom().contains(k)
-                                    by {
-                                        assert(old_remaining_view.dom().contains(k));
-                                    };
-                                };
-                                assert forall|k: <V as View>::V|
-                                    #[trigger] remaining@.dom().contains(k)
-                                    implies remaining@[k] == table@[k]
-                                by {
-                                    assert(old_remaining_view.dom().contains(k));
-                                    assert(k != v_key@);
-                                };
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        proof {
-            assert(remaining@.dom().is_empty());
-        }
-        count
-    }
+    //		Section 8. traits
 
-    // 8. traits
 
     pub trait AdjTableGraphMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static>: Sized {
         spec fn spec_adjtablegraphmtper_wf(&self) -> bool;
@@ -320,7 +241,104 @@ broadcast use {
                 updated.spec_num_edges() == spec_sum_adj_sizes(updated.spec_adj());
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
+    /// Count all edges in a table that satisfies the graph closure property.
+    /// Used by operations that cannot cheaply compute the new edge count incrementally.
+    fn count_table_edges<V: StTInMtT + Ord + TotalOrder + 'static>(
+        table: &OrderedTableMtPer<V, AVLTreeSetMtPer<V>>,
+    ) -> (count: usize)
+        where V: TotalOrder
+        requires
+            table.spec_orderedtablemtper_wf(),
+            forall|u: <V as View>::V, w: <V as View>::V|
+                table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
+                ==> table@.dom().contains(w),
+            spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+        ensures
+            count as nat == spec_sum_adj_sizes(table@)
+    {
+        proof { reveal(spec_sum_adj_sizes); }
+        let mut remaining = table.clone();
+        let mut count: usize = 0;
+        let mut n = remaining.size();
+        while n > 0
+            invariant
+                remaining.spec_orderedtablemtper_wf(),
+                n as nat == remaining@.dom().len(),
+                count as nat + spec_sum_adj_sizes(remaining@) == spec_sum_adj_sizes(table@),
+                remaining@.dom().subset_of(table@.dom()),
+                forall|k: <V as View>::V| #[trigger] remaining@.dom().contains(k)
+                    ==> remaining@[k] == table@[k],
+                forall|u: <V as View>::V, w: <V as View>::V|
+                    table@.dom().contains(u) && #[trigger] table@.index(u).contains(w)
+                    ==> table@.dom().contains(w),
+                table@.dom().finite(),
+                spec_sum_adj_sizes(table@) <= usize::MAX as nat,
+                count as nat <= spec_sum_adj_sizes(table@),
+            decreases n,
+        {
+            let first = remaining.first_key();
+            match first {
+                None => {
+                    proof { assert(false); }
+                }
+                Some(v_key) => {
+                    let ghost old_remaining_view = remaining@;
+                    match remaining.find(&v_key) {
+                        None => {
+                            proof { assert(false); }
+                        }
+                        Some(neighbors) => {
+                            proof {
+                                assert(remaining@.dom().contains(v_key@));
+                                assert(neighbors@ == table@[v_key@]);
+                                let dom = table@.dom();
+                                assert(neighbors@.subset_of(dom)) by {
+                                    assert forall|w: <V as View>::V|
+                                        #[trigger] neighbors@.contains(w)
+                                        implies dom.contains(w)
+                                    by {
+                                        assert(table@.index(v_key@).contains(w));
+                                    };
+                                };
+                                vstd::set_lib::lemma_len_subset(neighbors@, dom);
+                                lemma_sum_adj_remove(remaining@, v_key@);
+                            }
+                            let neighbor_count = neighbors.size();
+                            count = count + neighbor_count;
+                            remaining = remaining.delete(&v_key);
+                            n = remaining.size();
+                            proof {
+                                assert(remaining@ == old_remaining_view.remove(v_key@));
+                                assert(remaining@.dom().subset_of(table@.dom())) by {
+                                    assert forall|k: <V as View>::V|
+                                        #[trigger] remaining@.dom().contains(k)
+                                        implies table@.dom().contains(k)
+                                    by {
+                                        assert(old_remaining_view.dom().contains(k));
+                                    };
+                                };
+                                assert forall|k: <V as View>::V|
+                                    #[trigger] remaining@.dom().contains(k)
+                                    implies remaining@[k] == table@[k]
+                                by {
+                                    assert(old_remaining_view.dom().contains(k));
+                                    assert(k != v_key@);
+                                };
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        proof {
+            assert(remaining@.dom().is_empty());
+        }
+        count
+    }
+
 
     impl<V: StTInMtT + Ord + TotalOrder + 'static> AdjTableGraphMtPerTrait<V> for AdjTableGraphMtPer<V> {
         open spec fn spec_adjtablegraphmtper_wf(&self) -> bool {
@@ -931,7 +949,8 @@ broadcast use {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<V: StTInMtT + Ord + TotalOrder + Clone + 'static> Clone for AdjTableGraphMtPer<V> {
         fn clone(&self) -> Self {

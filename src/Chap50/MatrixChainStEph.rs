@@ -5,7 +5,32 @@
 //! Memoized top-down DP for optimal matrix chain parenthesization.
 //! Uses HashMapWithViewPlus for the memo table.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 6c. spec fns
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 12c. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod MatrixChainStEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::iter::Cloned;
@@ -19,20 +44,12 @@ pub mod MatrixChainStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 4. type definitions
-// 5. view impls
-// 6. spec fns
-// 8. traits
-// 9. impls
-// 11. derive impls in verus!
+    //		Section 3. broadcast use
 
-// 3. broadcast use
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::Types::Types::group_Pair_axioms,
@@ -42,7 +59,9 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
+
     #[verifier::reject_recursive_types]
     #[derive(Clone, Copy, PartialEq, Eq, Debug)]
     pub struct MatrixDim {
@@ -50,7 +69,9 @@ broadcast use {
         pub cols: usize,
     }
 
-    // 5. view impls
+    //		Section 5a. view impls
+
+
     impl View for MatrixDim {
         type V = (nat, nat);
         open spec fn view(&self) -> (nat, nat) {
@@ -58,15 +79,24 @@ broadcast use {
         }
     }
 
+    //		Section 4b. type definitions
+
+
     pub ghost struct MatrixChainStEphV {
         pub dimensions: Seq<MatrixDim>,
         pub memo: Map<(usize, usize), usize>,
     }
 
+    //		Section 4c. type definitions
+
+
     pub struct MatrixChainStEphS {
         pub dimensions: Vec<MatrixDim>,
         pub memo: HashMapWithViewPlus<Pair<usize, usize>, usize>,
     }
+
+    //		Section 5c. view impls
+
 
     impl View for MatrixChainStEphS {
         type V = MatrixChainStEphV;
@@ -78,7 +108,9 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
+    //		Section 6c. spec fns
+
+
     pub open spec fn spec_multiply_cost(dims: Seq<MatrixDim>, i: int, k: int, j: int) -> nat {
         (dims[i].rows as nat) * (dims[k].cols as nat) * (dims[j].cols as nat)
     }
@@ -131,7 +163,9 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8c. traits
+
+
     pub trait MatrixChainStEphTrait: Sized + View<V = MatrixChainStEphV> {
         spec fn spec_matrixchainsteph_wf(&self) -> bool;
 
@@ -231,7 +265,8 @@ broadcast use {
             decreases j - i;
     }
 
-    // 9. impls
+    //		Section 9c. impls
+
 
     impl MatrixChainStEphTrait for MatrixChainStEphS {
         open spec fn spec_matrixchainsteph_wf(&self) -> bool {
@@ -397,7 +432,9 @@ broadcast use {
         { self.memo.len() }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12c. derive impls in verus!
+
+
     impl Clone for MatrixChainStEphS {
         fn clone(&self) -> (mc: Self)
             ensures mc@ == self@
@@ -431,7 +468,61 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! MatrixChainStEphLit {
+        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
+            $crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixChainStEphS::from_dim_pairs(
+                vec![$($crate::Types::Types::Pair($r, $c)),*]
+            )
+        };
+        () => {
+            $crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixChainStEphS::new()
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
+    impl<'a> IntoIterator for &'a MatrixChainStEphS {
+        type Item = MatrixDim;
+        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
+    }
+
+    impl<'a> IntoIterator for &'a mut MatrixChainStEphS {
+        type Item = MatrixDim;
+        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
+
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
+        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
+    }
+
+    //		Section 14a. derive impls outside verus!
+
+    impl Display for MatrixDim {
+        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl Debug for MatrixChainStEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
+    }
+
+    impl Display for MatrixChainStEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
+    }
+
+    //		Section 14c. derive impls outside verus!
+
     impl Display for MatrixChainStEphS {
         /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
@@ -454,42 +545,6 @@ broadcast use {
         fn into_iter(self) -> Self::IntoIter { self.dimensions.into_iter() }
     }
 
-    impl<'a> IntoIterator for &'a MatrixChainStEphS {
-        type Item = MatrixDim;
-        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
-        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
-    }
-
-    impl<'a> IntoIterator for &'a mut MatrixChainStEphS {
-        type Item = MatrixDim;
-        type IntoIter = Cloned<Iter<'a, MatrixDim>>;
-
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — create cloned iterator adapter
-        fn into_iter(self) -> Self::IntoIter { self.dimensions.iter().cloned() }
-    }
-
-    impl Display for MatrixDim {
-        /// - Alg Analysis: APAS (Ch50 ref): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
-    }
-
-    // 14b. derive impls outside verus! — struct MatrixChainStEphV
-
-    impl Debug for MatrixChainStEphV {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
-    }
-
-    impl Display for MatrixChainStEphV {
-        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
-    }
-
-    // 14c. derive impls outside verus! — struct MatrixChainStEphS
-
     impl Debug for MatrixChainStEphS {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
             f.debug_struct("MatrixChainStEphS")
@@ -497,18 +552,5 @@ broadcast use {
                 .field("memo_len", &self.memo.len())
                 .finish()
         }
-    }
-
-    // 12. macros
-    #[macro_export]
-    macro_rules! MatrixChainStEphLit {
-        (dims: [$(($r:expr, $c:expr)),* $(,)?]) => {
-            $crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixChainStEphS::from_dim_pairs(
-                vec![$($crate::Types::Types::Pair($r, $c)),*]
-            )
-        };
-        () => {
-            $crate::Chap50::MatrixChainStEph::MatrixChainStEph::MatrixChainStEphS::new()
-        };
     }
 }

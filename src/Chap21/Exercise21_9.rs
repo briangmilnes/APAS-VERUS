@@ -4,26 +4,33 @@
 //! Proves that it suffices to consider multiples of numbers up to sqrt(n).
 
 //  Table of Contents
-//	1. module
-//	6. spec fns
-//	7. proof fns/broadcast groups
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
 
-//		1. module
+//		Section 1. module
 
 pub mod Exercise21_9 {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		6. spec fns
+    //		Section 6. spec fns
+
 
     /// A number m > 1 is composite iff it has a divisor d with 2 <= d < m.
     pub open spec fn spec_is_composite(m: int) -> bool {
         m > 1 && exists|d: int| 2 <= d < m && #[trigger] (m % d) == 0
     }
 
-    //		7. proof fns/broadcast groups
+    //		Section 7. proof fns/broadcast groups
+
 
     /// If d divides m (m % d == 0) and d > 0, then m == d * (m / d).
     proof fn lemma_div_exact(m: int, d: int)

@@ -4,28 +4,31 @@
 //! Chapter 5.2 ephemeral Relation built on `SetStEph<Pair<A,B>>`.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod RelationStEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     use std::fmt::{Formatter, Result, Debug, Display};
     use std::hash::Hash;
@@ -42,8 +45,8 @@ verus! {
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         // Set groups
@@ -66,8 +69,8 @@ verus! {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(A)]
     #[verifier::reject_recursive_types(B)]
@@ -75,16 +78,16 @@ verus! {
         pub pairs: SetStEph<Pair<A, B>>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<A: StT + Hash, B: StT + Hash> View for RelationStEph<A, B> {
         type V = Set<(<A as View>::V, <B as View>::V)>;
         open spec fn view(&self) -> Self::V { self.pairs@ }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait RelationStEphTrait<X: StT + Hash, Y: StT + Hash> :
         View<V = Set<(<X as View>::V, <Y as View>::V)>> + Sized {
@@ -156,8 +159,8 @@ verus! {
                 iter_invariant(&it);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl<X: StT + Hash, Y: StT + Hash>
         RelationStEphTrait<X, Y> for RelationStEph<X, Y> {
@@ -282,14 +285,8 @@ verus! {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for RelationStEph<A, B> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-
-    //		10. iterators
 
     /// Iterator wrapper to hide SetStEphIter<Pair<X, Y>>.
     #[verifier::reject_recursive_types(X)]
@@ -410,8 +407,15 @@ verus! {
         }
     }
 
+    //		Section 12. derive impls in verus!
 
-    //		11. derive impls in verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<A: StT + Hash, B: StT + Hash> PartialEqSpecImpl for RelationStEph<A, B> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<A: StT + Hash, B: StT + Hash> Clone for RelationStEph<A, B> {
         fn clone(&self) -> (clone: Self)
@@ -433,8 +437,8 @@ verus! {
 
   } // verus!
 
+    //		Section 13. macros
 
-    //		12. macros
 
     #[macro_export]
     macro_rules! RelationLit {
@@ -448,8 +452,7 @@ verus! {
         }};
     }
 
-
-    //		13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
 
     impl<A: StT + Hash, B: StT + Hash> Debug for RelationStEph<A, B> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Debug::fmt(&self.pairs, f) }

@@ -2,7 +2,20 @@
 //! Parallel Fibonacci demonstrating bounded parallelism with global pool.
 //! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod FibonacciHFScheduler {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
 
@@ -12,7 +25,11 @@ pub mod FibonacciHFScheduler {
         vstd::arithmetic::power2::{pow2, lemma_pow2_unfold, lemma_pow2_strictly_increases, lemma2_to64_rest},
     };
 
-verus! {
+verus! 
+{
+
+    //		Section 6. spec fns
+
 
     pub open spec fn spec_fib(n: nat) -> nat
         decreases n
@@ -20,6 +37,9 @@ verus! {
         if n <= 1 { n }
         else { spec_fib((n - 1) as nat) + spec_fib((n - 2) as nat) }
     }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     proof fn lemma_pow2_mono(a: nat, b: nat)
         requires a <= b,
@@ -66,6 +86,9 @@ verus! {
     {
         lemma_fib_fits_u64(n);
     }
+
+    //		Section 9. impls
+
 
     /// - Alg Analysis: APAS (Ch11 Ex 11.1): Work O(φⁿ), Span O(φⁿ)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(φⁿ), Span O(φⁿ) — matches APAS; sequential, work = span

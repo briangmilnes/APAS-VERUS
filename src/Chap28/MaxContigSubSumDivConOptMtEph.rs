@@ -4,16 +4,20 @@
 //! Maximum Contiguous Subsequence Sum — Parallel Strengthened D&C (Chapter 28, Algorithm 28.19).
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	6. spec fns
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
+//		Section 1. module
 
 
 pub mod MaxContigSubSumDivConOptMtEph {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
@@ -25,14 +29,16 @@ pub mod MaxContigSubSumDivConOptMtEph {
 
     pub type T = ArraySeqMtEphS<i32>;
 
-    verus! {
+    verus! 
+{
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     type StrengthResult = (Option<i32>, i32, i32, i32);
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
 
     pub open spec fn spec_max_opt_i32(a: Option<i32>, b: Option<i32>) -> Option<i32> {
         match (a, b) {
@@ -43,8 +49,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait MaxContigSubSumDivConOptMtTrait {
         /// Compute MCSS using parallel strengthened D&C (Algorithm 28.19).
@@ -62,8 +68,8 @@ pub mod MaxContigSubSumDivConOptMtEph {
                 mcss.is_some() ==> is_mcss_of(a.seq@, mcss.unwrap() as int);
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     /// - Alg Analysis: APAS (Ch28 Alg 28.19): Work O(1), Span O(1)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)

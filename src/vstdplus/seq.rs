@@ -3,12 +3,30 @@
 //! Sequence utilities for Verus
 //! Includes conversion functions and fold helpers
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod seq {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::vstdplus::checked_nat::checked_nat::CheckedU32;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -16,6 +34,9 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
+
+    //		Section 6. spec fns
+
 
     // Spec function: sum of u32 values in a sequence as nat
     pub open spec fn spec_sum_u32_seq(s: Seq<u32>) -> nat 
@@ -33,64 +54,6 @@ broadcast use {
         s.fold_left(0nat, |acc: nat, v: u32| acc + v as nat)
     }
 
-    // Lemma: the two spec functions are equivalent
-
-    // Lemma: sum of s.push(v) = sum(s) + v
-
-    pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
-        ensures 
-            sum.is_normal() ==> sum@ == spec_sum_u32_seq(s@) as int
-    {
-        let mut sum = CheckedU32::new(0);
-        let mut i: usize = 0;
-        let ghost s_spec = s@;
-
-        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
-        while i < s.len()
-            invariant
-                i <= s.len(),
-                s@ == s_spec,
-                sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as int,
-            decreases s.len() - i
-        {
-            let ghost old_i = i as int;
-            let ghost old_sum = sum@;
-            
-            let v = s[i];
-            sum = sum.add_value(v);
-            i = i + 1;
-            
-            proof {
-                // Lemma: spec_sum_u32_seq(take(old_i + 1)) == spec_sum_u32_seq(take(old_i)) + s[old_i]
-                lemma_sum_u32_unfold_take(s_spec, old_i);
-                
-                // add_value ensures: sum@ == old_sum + v as int
-                // If old sum was normal: old_sum == spec_sum_u32_seq(take(old_i)) as int
-                // From lemma: spec_sum_u32_seq(take(old_i + 1)) == spec_sum_u32_seq(take(old_i)) + s[old_i]
-                // So: sum@ == spec_sum_u32_seq(take(old_i)) as int + v as int
-                //          == spec_sum_u32_seq(take(old_i + 1)) as int
-                //          == spec_sum_u32_seq(take(i)) as int
-                
-                // FIXME: SMT has trouble connecting recursive spec function unfolding
-                assume(sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as int);
-            }
-        }
-        proof {
-            assert(s_spec.take(s.len() as int) =~= s_spec);
-        }
-        sum
-    }
-
-    // Unfolds sum_u32 by one element at take(i+1) for the loop invariant
-    proof fn lemma_sum_u32_unfold_take(s: Seq<u32>, i: int)
-        requires 0 <= i < s.len()
-        ensures spec_sum_u32_seq(s.take(i + 1)) == spec_sum_u32_seq(s.take(i)) + s[i] as nat
-    {
-        let take_new = s.take(i + 1);
-        let take_old = s.take(i);
-        assert(take_new.drop_last() =~= take_old);
-    }
-
     // Abstract version: sum of int values (for CheckedU32@ which is int)
     // Spec function: sum of int values in a sequence
     pub open spec fn spec_sum_int_seq(s: Seq<int>) -> int 
@@ -106,6 +69,34 @@ broadcast use {
     // Spec function: sum using fold_left
     pub open spec fn spec_sum_int_fold(s: Seq<int>) -> int {
         s.fold_left(0int, |acc: int, v: int| acc + v)
+    }
+
+    // For Seq<CheckedU32>: map to Seq<int> via view, then sum
+
+    // Spec: sum of CheckedU32 views in a sequence
+    pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
+        spec_sum_int_seq(s.map(|i: int, c: CheckedU32| c@))
+    }
+
+    /// Sum of inner sequence lengths.
+    pub open spec fn spec_inner_lens_sum<A>(ss: Seq<Seq<A>>) -> int
+        decreases ss.len()
+    {
+        if ss.len() == 0 { 0 }
+        else { ss.first().len() + spec_inner_lens_sum(ss.drop_first()) }
+    }
+
+    //		Section 7. proof fns/broadcast groups
+
+
+    // Unfolds sum_u32 by one element at take(i+1) for the loop invariant
+    proof fn lemma_sum_u32_unfold_take(s: Seq<u32>, i: int)
+        requires 0 <= i < s.len()
+        ensures spec_sum_u32_seq(s.take(i + 1)) == spec_sum_u32_seq(s.take(i)) + s[i] as nat
+    {
+        let take_new = s.take(i + 1);
+        let take_old = s.take(i);
+        assert(take_new.drop_last() =~= take_old);
     }
 
     // Lemma: the two spec functions are equivalent
@@ -136,13 +127,6 @@ broadcast use {
         assert(take_new.drop_last() =~= take_old);
     }
 
-    // For Seq<CheckedU32>: map to Seq<int> via view, then sum
-
-    // Spec: sum of CheckedU32 views in a sequence
-    pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
-        spec_sum_int_seq(s.map(|i: int, c: CheckedU32| c@))
-    }
-
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]@ for CheckedU32 sequences
     pub proof fn lemma_sum_checked_u32_unfold_take(s: Seq<CheckedU32>, i: int)
         requires 0 <= i < s.len()
@@ -151,11 +135,11 @@ broadcast use {
         let views = s.map(|j: int, c: CheckedU32| c@);
         let take_new_views = s.take(i + 1).map(|j: int, c: CheckedU32| c@);
         let take_old_views = s.take(i).map(|j: int, c: CheckedU32| c@);
-        
+
         // Show: s.take(i+1).map(f) == views.take(i+1)
         assert(take_new_views =~= views.take(i + 1));
         assert(take_old_views =~= views.take(i));
-        
+
         // Now use the int lemma
         lemma_sum_int_unfold_take(views, i);
     }
@@ -180,14 +164,6 @@ broadcast use {
             assert(m + (ss.len() - 1) * m == ss.len() * m) by (nonlinear_arith)
                 requires ss.len() > 0;
         }
-    }
-
-    /// Sum of inner sequence lengths.
-    pub open spec fn spec_inner_lens_sum<A>(ss: Seq<Seq<A>>) -> int
-        decreases ss.len()
-    {
-        if ss.len() == 0 { 0 }
-        else { ss.first().len() + spec_inner_lens_sum(ss.drop_first()) }
     }
 
     /// General flatten length: equals sum of inner lengths.
@@ -255,6 +231,56 @@ broadcast use {
         }
     }
 
+    //		Section 9. impls
+
+
+    // Lemma: the two spec functions are equivalent
+
+    // Lemma: sum of s.push(v) = sum(s) + v
+
+    pub fn seq_u32_to_CheckedU32(s: &Vec<u32>) -> (sum: CheckedU32)
+        ensures 
+            sum.is_normal() ==> sum@ == spec_sum_u32_seq(s@) as int
+    {
+        let mut sum = CheckedU32::new(0);
+        let mut i: usize = 0;
+        let ghost s_spec = s@;
+
+        #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
+        while i < s.len()
+            invariant
+                i <= s.len(),
+                s@ == s_spec,
+                sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as int,
+            decreases s.len() - i
+        {
+            let ghost old_i = i as int;
+            let ghost old_sum = sum@;
+
+            let v = s[i];
+            sum = sum.add_value(v);
+            i = i + 1;
+
+            proof {
+                // Lemma: spec_sum_u32_seq(take(old_i + 1)) == spec_sum_u32_seq(take(old_i)) + s[old_i]
+                lemma_sum_u32_unfold_take(s_spec, old_i);
+
+                // add_value ensures: sum@ == old_sum + v as int
+                // If old sum was normal: old_sum == spec_sum_u32_seq(take(old_i)) as int
+                // From lemma: spec_sum_u32_seq(take(old_i + 1)) == spec_sum_u32_seq(take(old_i)) + s[old_i]
+                // So: sum@ == spec_sum_u32_seq(take(old_i)) as int + v as int
+                //          == spec_sum_u32_seq(take(old_i + 1)) as int
+                //          == spec_sum_u32_seq(take(i)) as int
+
+                // FIXME: SMT has trouble connecting recursive spec function unfolding
+                assume(sum.is_normal() ==> sum@ == spec_sum_u32_seq(s_spec.take(i as int)) as int);
+            }
+        }
+        proof {
+            assert(s_spec.take(s.len() as int) =~= s_spec);
+        }
+        sum
+    }
 } // verus!
 
 } // mod seq

@@ -4,7 +4,22 @@
 //! Bellman-Ford's Algorithm - Single Source Shortest Path with arbitrary edge weights (float)
 //! Implements Algorithm 58.2 from the textbook.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BellmanFordStEphF64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -15,18 +30,11 @@ pub mod BellmanFordStEphF64 {
     use crate::vstdplus::float::float::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 1. module (BellmanFordStEphF64)
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
-    // 14. derive impls outside verus!
+    //		Section 3. broadcast use
 
-    // 3. broadcast use
 
     broadcast use {
         crate::vstdplus::hash_set_with_view_plus::hash_set_with_view_plus::group_hash_set_with_view_plus_axioms,
@@ -35,14 +43,16 @@ pub mod BellmanFordStEphF64 {
         crate::vstdplus::float::float::group_float_arithmetic,
     };
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     pub enum BellmanFordError {
         NegativeCycleDetected,
         AlgorithmError,
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait BellmanFordStEphF64Trait {
         /// Bellman-Ford single-source shortest path algorithm.
@@ -60,7 +70,8 @@ pub mod BellmanFordStEphF64 {
                 sssp is Ok ==> sssp->Ok_0.spec_source() == source;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Reconstruct predecessor array from converged distances.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
@@ -279,7 +290,8 @@ pub mod BellmanFordStEphF64 {
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for BellmanFordError {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

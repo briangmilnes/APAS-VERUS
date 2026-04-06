@@ -5,23 +5,31 @@
 //! Uses global work-stealing pool for parallel operations (map_par, reduce_par, filter_par).
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns
-//	8. ninject lock predicate and helpers
-//	9. traits
-//	10. impls
-//	11. iterators
-//	12. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 6a. spec fns
+//	Section 7a. proof fns/broadcast groups
+//	Section 9a. impls
+//	Section 10a. iterators
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod ArraySeqMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -32,9 +40,9 @@ pub mod ArraySeqMtEph {
     use vstd::prelude::*;
     use vstd::rwlock::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -50,10 +58,11 @@ pub mod ArraySeqMtEph {
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::multiset::multiset::*;
 
+    //		Section 3. broadcast use
+
+
     #[cfg(verus_keep_ghost)]
 
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -63,16 +72,16 @@ pub mod ArraySeqMtEph {
         vstd::seq_lib::group_to_multiset_ensures,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphS<T> {
         pub seq: Vec<T>,
     }
 
+    //		Section 5a. view impls
 
-    //		5. view impls
 
     impl<T: View> View for ArraySeqMtEphS<T> {
         type V = Seq<T::V>;
@@ -82,8 +91,8 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    //		Section 6a. spec fns
 
-    //		6. spec fns
 
     /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
     pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
@@ -117,7 +126,8 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    //		7. proof fns
+    //		Section 7a. proof fns/broadcast groups
+
 
     /// Each element of `spec_inject(s, u)` is either the original `s[i]` or some update value.
     proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
@@ -170,367 +180,8 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    //		8. ninject lock predicate and helpers
+    //		Section 9a. impls
 
-    /// Ghost state for the ninject lock. The invariant says the buffer is
-    /// always a valid partial ninject result: every element is either the
-    /// original or came from some update.
-    pub struct ArraySeqMtEphInv<T> {
-        pub ghost source: Seq<T>,
-        pub ghost updates: Seq<(usize, T)>,
-    }
-
-    impl<T> RwLockPredicate<Vec<T>> for ArraySeqMtEphInv<T> {
-        open spec fn inv(self, v: Vec<T>) -> bool {
-            v@.len() == self.source.len()
-            && forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> {
-                v@[i] == self.source[i]
-                || exists|j: int| #![trigger self.updates[j]] 0 <= j < self.updates.len()
-                    && self.updates[j].0 == i as usize && v@[i] == self.updates[j].1
-            }
-        }
-    }
-
-    /// Acquire the lock, apply updates, release. Preserves the lock invariant.
-    /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|). — matches APAS
-    fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
-        lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
-        updates: Vec<(usize, T)>,
-        Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,
-    )
-        requires
-            obeys_feq_clone::<T>(),
-            lock.pred() == pred,
-            forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
-                0 <= updates@[k].0 < pred.source.len()
-                && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
-                    && pred.updates[j] == updates@[k]
-            },
-        ensures true,
-    {
-        let (mut buf, write_handle) = lock.acquire_write();
-        let len = buf.len();
-        let mut i: usize = 0;
-        while i < updates.len()
-            invariant
-                i <= updates@.len(),
-                len == buf@.len(),
-                pred.inv(buf),
-                obeys_feq_clone::<T>(),
-                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
-                    0 <= updates@[k].0 < pred.source.len()
-                    && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
-                        && pred.updates[j] == updates@[k]
-                },
-            decreases updates@.len() - i,
-        {
-            let pos = updates[i].0;
-            if pos < len {
-                let val = updates[i].1.clone();
-                proof {
-                    axiom_cloned_implies_eq_owned::<T>(updates@[i as int].1, val);
-                }
-                buf.set(pos, val);
-                proof {
-                    let witness = choose|j: int| #![trigger pred.updates[j]]
-                        0 <= j < pred.updates.len()
-                        && pred.updates[j] == updates@[i as int];
-                    assert forall|p: int| #![trigger buf@[p]] 0 <= p < buf@.len() implies {
-                        buf@[p] == pred.source[p]
-                        || exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
-                            && pred.updates[j].0 == p as usize && buf@[p] == pred.updates[j].1
-                    } by {
-                        if p == pos as int {
-                            assert(pred.updates[witness].0 == pos as usize);
-                            assert(buf@[p] == pred.updates[witness].1);
-                        }
-                    }
-                }
-            }
-            i += 1;
-        }
-        write_handle.release_write(buf);
-    }
-
-    //		9. traits
-
-    /// - Base trait for multi-threaded ephemeral array sequences (Chapter 18).
-    /// - These methods are never redefined in later chapters.
-    pub trait ArraySeqMtEphBaseTrait<T>: Sized {
-        spec fn spec_arrayseqmteph_wf(&self) -> bool;
-
-        spec fn spec_len(&self) -> nat;
-
-        spec fn spec_index(&self, i: int) -> T
-            recommends i < self.spec_len();
-
-        /// - Create a new sequence of length `length` with each element initialized to `init_value`.
-        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
-        fn new(length: usize, init_value: T) -> (new_seq: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-                length <= usize::MAX,
-            ensures
-                new_seq.spec_arrayseqmteph_wf(),
-                new_seq.spec_len() == length as int,
-                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
-
-        /// - Set the element at `index` to `item` in place.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
-        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
-            requires index < old(self).spec_len()
-            ensures
-                success.is_ok() ==> self.spec_len() == old(self).spec_len(),
-                success.is_ok() ==> self.spec_index(index as int) == item,
-                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
-
-        /// - Definition 18.1 (length). Return the number of elements.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn length(&self) -> (len: usize)
-            ensures len as int == self.spec_len();
-
-        /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn nth(&self, index: usize) -> (nth_elem: &T)
-            requires index < self.spec_len()
-            ensures *nth_elem == self.spec_index(index as int);
-
-        /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
-        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-                start + length <= usize::MAX,
-                start + length <= self.spec_len(),
-            ensures
-                subseq.spec_arrayseqmteph_wf(),
-                subseq.spec_len() == length as int,
-                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
-
-        /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: Vec-backed; sequential clone loop, not O(1) slice
-        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-                start + length <= usize::MAX,
-                start + length <= a.spec_len(),
-            ensures
-                subseq.spec_arrayseqmteph_wf(),
-                subseq.spec_len() == length as int,
-                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
-
-        /// - Create sequence from Vec.
-        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
-        fn from_vec(elts: Vec<T>) -> (seq: Self)
-            ensures
-                seq.spec_arrayseqmteph_wf(),
-                seq.spec_len() == elts@.len(),
-                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
-    }
-
-    /// Redefinable trait - may be overridden with better algorithms in later chapters.
-    pub trait ArraySeqMtEphRedefinableTrait<T>: ArraySeqMtEphBaseTrait<T> {
-
-        /// - Definition 18.1 (empty). Construct the empty sequence.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn empty() -> (empty_seq: Self)
-            ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;
-
-        /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn singleton(item: T) -> (singleton: Self)
-            ensures
-                singleton.spec_arrayseqmteph_wf(),
-                singleton.spec_len() == 1,
-                singleton.spec_index(0) == item;
-
-        /// - Definition 18.13 (append). Concatenate two sequences.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; span O(|a|+|b|) not O(1), sequential loops
-        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-                a.seq@.len() + b.seq@.len() <= usize::MAX as int,
-            ensures
-                appended.spec_arrayseqmteph_wf(),
-                appended.spec_len() == a.seq@.len() + b.seq@.len(),
-                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
-                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
-
-        /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C with multiset distribution lemma
-        /// - The multiset postcondition captures predicate satisfaction, provenance,
-        ///   and completeness in a single statement.
-        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
-            where T: Clone + Eq + Send + Sync + 'static
-            requires
-                obeys_feq_clone::<T>(),
-                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
-                // The biconditional bridge ties the exec closure to the spec predicate.
-                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
-            ensures
-                filtered.spec_arrayseqmteph_wf(),
-                filtered.spec_len() <= a.seq@.len(),
-                filtered.spec_len() == spec_filter_len(
-                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
-                // The result multiset equals the input multiset filtered by the spec predicate.
-                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
-                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
-                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
-
-        /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential clone loop
-        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-                index < a.seq@.len(),
-            ensures
-                updated.spec_arrayseqmteph_wf(),
-                updated.spec_len() == a.seq@.len(),
-                updated.spec_index(index as int) == item,
-                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
-
-        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
-        ///   the ordering of `updates` takes effect when positions collide.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; span O(n+m) not O(lg degree), sequential loops
-        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-            ensures
-                injected.spec_arrayseqmteph_wf(),
-                injected.spec_len() == a.spec_len(),
-                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
-                    =~= spec_inject(
-                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                        updates@);
-
-        /// - Definition 18.17 (ninject). Nondeterministic inject: update multiple positions at
-        ///   once; when positions collide, any one of the updates may take effect.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; delegates to inject, span O(n+m) not O(1)
-        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-            ensures
-                injected.spec_arrayseqmteph_wf(),
-                spec_ninject(
-                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
-                    updates@,
-                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
-
-        /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn is_empty(&self) -> (empty: bool)
-            ensures empty <==> self.spec_len() == 0;
-
-        /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
-        fn is_singleton(&self) -> (single: bool)
-            ensures single <==> self.spec_len() == 1;
-
-        /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (iterate is sequential)
-        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)
-            requires
-                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
-                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
-            ensures
-                acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
-
-        /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS (parallel divide-and-conquer via join)
-        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
-            where T: Clone + Eq + Send + Sync + 'static
-            requires
-                obeys_feq_clone::<T>(),
-                spec_monoid(spec_f, id),
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
-            ensures
-                reduced == spec_iterate(
-                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
-
-        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
-        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(lg n), sequential loop
-        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
-            where T: Clone + Eq
-            requires
-                spec_monoid(spec_f, id),
-                obeys_feq_clone::<T>(),
-                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
-                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
-            ensures
-                scanned.0.spec_len() == a.spec_len(),
-                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
-                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
-                scanned.1 == spec_iterate(
-                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
-
-        /// - Algorithm 18.4 (map). Transform each element via `f`.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C via join; O(lg n) from Vec copy overhead
-        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
-            where T: Clone + Eq + Send + Sync + 'static
-            requires
-                obeys_feq_clone::<T>(),
-                obeys_feq_clone::<U>(),
-                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
-            ensures
-                mapped.seq@.len() == a.seq@.len(),
-                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
-
-        /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential loop
-        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
-            requires
-                length <= usize::MAX,
-                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
-            ensures
-                tab_seq.seq@.len() == length,
-                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
-
-        /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
-        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: Vec-backed; span O(Σ|a_i|) not O(lg|a|), sequential nested loops
-        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
-            where T: Clone + Eq
-            requires
-                obeys_feq_clone::<T>(),
-            ensures
-                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten();
-    }
-
-
-    //		9. impl BaseTrait for Struct
 
     impl<T> ArraySeqMtEphBaseTrait<T> for ArraySeqMtEphS<T> {
         open spec fn spec_arrayseqmteph_wf(&self) -> bool { true } // accept hole: Vec-backed, true is correct
@@ -633,7 +284,6 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    //		9. impl RedefinableTrait for Struct
 
     impl<T> ArraySeqMtEphRedefinableTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -1039,7 +689,6 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    //		9. bare impl (parallel methods, lemmas, iterators)
 
     impl<T> ArraySeqMtEphS<T> {
         broadcast proof fn lemma_spec_index(&self, i: int)
@@ -1807,16 +1456,9 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10a. iterators
 
 
-    //		10. iterators
-
-    
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqMtEphIter<'a, T> {
         pub inner: std::slice::Iter<'a, T>,
@@ -1937,8 +1579,382 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    //		Section 4b. type definitions
 
-    //		11. derive impls in verus!
+
+    /// Ghost state for the ninject lock. The invariant says the buffer is
+    /// always a valid partial ninject result: every element is either the
+    /// original or came from some update.
+    pub struct ArraySeqMtEphInv<T> {
+        pub ghost source: Seq<T>,
+        pub ghost updates: Seq<(usize, T)>,
+    }
+
+    //		Section 8b. traits
+
+
+    /// - Base trait for multi-threaded ephemeral array sequences (Chapter 18).
+    /// - These methods are never redefined in later chapters.
+    pub trait ArraySeqMtEphBaseTrait<T>: Sized {
+        spec fn spec_arrayseqmteph_wf(&self) -> bool;
+
+        spec fn spec_len(&self) -> nat;
+
+        spec fn spec_index(&self, i: int) -> T
+            recommends i < self.spec_len();
+
+        /// - Create a new sequence of length `length` with each element initialized to `init_value`.
+        /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
+        fn new(length: usize, init_value: T) -> (new_seq: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                length <= usize::MAX,
+            ensures
+                new_seq.spec_arrayseqmteph_wf(),
+                new_seq.spec_len() == length as int,
+                forall|i: int| #![trigger new_seq.spec_index(i)] 0 <= i < length ==> new_seq.spec_index(i) == init_value;
+
+        /// - Set the element at `index` to `item` in place.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1). — matches APAS
+        fn set(&mut self, index: usize, item: T) -> (success: Result<(), &'static str>)
+            requires index < old(self).spec_len()
+            ensures
+                success.is_ok() ==> self.spec_len() == old(self).spec_len(),
+                success.is_ok() ==> self.spec_index(index as int) == item,
+                success.is_ok() ==> forall|i: int| #![trigger self.spec_index(i), old(self).spec_index(i)] 0 <= i < old(self).spec_len() && i != index ==> self.spec_index(i) == old(self).spec_index(i);
+
+        /// - Definition 18.1 (length). Return the number of elements.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn length(&self) -> (len: usize)
+            ensures len as int == self.spec_len();
+
+        /// - Algorithm 19.11 (Function nth). Return a reference to the element at `index`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn nth(&self, index: usize) -> (nth_elem: &T)
+            requires index < self.spec_len()
+            ensures *nth_elem == self.spec_index(index as int);
+
+        /// - Definition 18.12 (subseq copy). Extract contiguous subsequence with allocation.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(log length). — matches APAS
+        fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                start + length <= usize::MAX,
+                start + length <= self.spec_len(),
+            ensures
+                subseq.spec_arrayseqmteph_wf(),
+                subseq.spec_len() == length as int,
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == self.spec_index(start as int + i);
+
+        /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: Vec-backed; sequential clone loop, not O(1) slice
+        fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                start + length <= usize::MAX,
+                start + length <= a.spec_len(),
+            ensures
+                subseq.spec_arrayseqmteph_wf(),
+                subseq.spec_len() == length as int,
+                forall|i: int| #![trigger subseq.spec_index(i)] 0 <= i < length ==> subseq.spec_index(i) == a.spec_index(start as int + i);
+
+        /// - Create sequence from Vec.
+        /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) worst case, O(1) best case, Span O(1). — matches APAS
+        fn from_vec(elts: Vec<T>) -> (seq: Self)
+            ensures
+                seq.spec_arrayseqmteph_wf(),
+                seq.spec_len() == elts@.len(),
+                forall|i: int| #![trigger seq.spec_index(i)] 0 <= i < elts@.len() ==> seq.spec_index(i) == elts@[i];
+    }
+
+    /// Redefinable trait - may be overridden with better algorithms in later chapters.
+    pub trait ArraySeqMtEphRedefinableTrait<T>: ArraySeqMtEphBaseTrait<T> {
+
+        /// - Definition 18.1 (empty). Construct the empty sequence.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn empty() -> (empty_seq: Self)
+            ensures empty_seq.spec_arrayseqmteph_wf(), empty_seq.spec_len() == 0;
+
+        /// - Definition 18.1 (singleton). Construct a singleton sequence containing `item`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn singleton(item: T) -> (singleton: Self)
+            ensures
+                singleton.spec_arrayseqmteph_wf(),
+                singleton.spec_len() == 1,
+                singleton.spec_index(0) == item;
+
+        /// - Definition 18.13 (append). Concatenate two sequences.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed; span O(|a|+|b|) not O(1), sequential loops
+        fn append(a: &ArraySeqMtEphS<T>, b: &ArraySeqMtEphS<T>) -> (appended: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                a.seq@.len() + b.seq@.len() <= usize::MAX as int,
+            ensures
+                appended.spec_arrayseqmteph_wf(),
+                appended.spec_len() == a.seq@.len() + b.seq@.len(),
+                forall|i: int| #![trigger appended.spec_index(i)] 0 <= i < a.seq@.len() ==> appended.spec_index(i) == a.seq@[i],
+                forall|i: int| #![trigger b.seq@[i]] 0 <= i < b.seq@.len() ==> appended.spec_index(a.seq@.len() as int + i) == b.seq@[i];
+
+        /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C with multiset distribution lemma
+        /// - The multiset postcondition captures predicate satisfaction, provenance,
+        ///   and completeness in a single statement.
+        fn filter<F: Fn(&T) -> bool + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] pred.requires((&a.seq@[i],)),
+                // The biconditional bridge ties the exec closure to the spec predicate.
+                forall|v: T, keep: bool| pred.ensures((&v,), keep) ==> spec_pred(v) == keep,
+            ensures
+                filtered.spec_arrayseqmteph_wf(),
+                filtered.spec_len() <= a.seq@.len(),
+                filtered.spec_len() == spec_filter_len(
+                    Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+                // The result multiset equals the input multiset filtered by the spec predicate.
+                Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+                    =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+                forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len() ==> pred.ensures((&filtered.spec_index(i),), true);
+
+        /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential clone loop
+        fn update(a: &ArraySeqMtEphS<T>, index: usize, item: T) -> (updated: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+                index < a.seq@.len(),
+            ensures
+                updated.spec_arrayseqmteph_wf(),
+                updated.spec_len() == a.seq@.len(),
+                updated.spec_index(index as int) == item,
+                forall|i: int| #![trigger updated.spec_index(i)] 0 <= i < a.seq@.len() && i != index as int ==> updated.spec_index(i) == a.seq@[i];
+
+        /// - Definition 18.16 (inject). Update multiple positions at once; the first update in
+        ///   the ordering of `updates` takes effect when positions collide.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; span O(n+m) not O(lg degree), sequential loops
+        fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_arrayseqmteph_wf(),
+                injected.spec_len() == a.spec_len(),
+                Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+                    =~= spec_inject(
+                        Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                        updates@);
+
+        /// - Definition 18.17 (ninject). Nondeterministic inject: update multiple positions at
+        ///   once; when positions collide, any one of the updates may take effect.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: Vec-backed; delegates to inject, span O(n+m) not O(1)
+        fn ninject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                injected.spec_arrayseqmteph_wf(),
+                spec_ninject(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+                    updates@,
+                    Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)));
+
+        /// - Definition 18.5 (isEmpty). true iff the sequence has length zero.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn is_empty(&self) -> (empty: bool)
+            ensures empty <==> self.spec_len() == 0;
+
+        /// - Definition 18.5 (isSingleton). true iff the sequence has length one.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
+        fn is_singleton(&self) -> (single: bool)
+            ensures single <==> self.spec_len() == 1;
+
+        /// - Definition 18.7 (iterate). Fold with accumulator `seed`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.3): Work O(1 + Sigma W(f)), Span O(1 + Sigma S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — matches APAS (iterate is sequential)
+        fn iterate<A, F: Fn(&A, &T) -> A>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(A, T) -> A>, seed: A) -> (acc: A)
+            requires
+                forall|x: &A, y: &T| #[trigger] f.requires((x, y)),
+                forall|a: A, t: T, ret: A| f.ensures((&a, &t), ret) <==> ret == spec_f(a, t),
+            ensures
+                acc == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, seed);
+
+        /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — matches APAS (parallel divide-and-conquer via join)
+        fn reduce<F: Fn(&T, &T) -> T + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                spec_monoid(spec_f, id),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                reduced == spec_iterate(
+                    Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id);
+
+        /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
+        /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(lg n), sequential loop
+        fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqMtEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqMtEphS<T>, T))
+            where T: Clone + Eq
+            requires
+                spec_monoid(spec_f, id),
+                obeys_feq_clone::<T>(),
+                forall|x: &T, y: &T| #[trigger] f.requires((x, y)),
+                forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) <==> ret == spec_f(x, y),
+            ensures
+                scanned.0.spec_len() == a.spec_len(),
+                forall|i: int| #![trigger scanned.0.spec_index(i)] 0 <= i < a.spec_len() ==>
+                    scanned.0.spec_index(i) == Seq::new(a.spec_len(), |j: int| a.spec_index(j)).take(i + 1).fold_left(id, spec_f),
+                scanned.1 == spec_iterate(
+                    Seq::new(a.spec_len(), |j: int| a.spec_index(j)), spec_f, id);
+
+        /// - Algorithm 18.4 (map). Transform each element via `f`.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n + max S(f)) — ACCEPTED DIFFERENCE: Vec-backed; parallel D&C via join; O(lg n) from Vec copy overhead
+        fn map<U: Clone + Eq + Send + Sync + 'static, F: Fn(&T) -> U + Clone + Send + Sync + 'static>(a: &ArraySeqMtEphS<T>, f: &F) -> (mapped: ArraySeqMtEphS<U>)
+            where T: Clone + Eq + Send + Sync + 'static
+            requires
+                obeys_feq_clone::<T>(),
+                obeys_feq_clone::<U>(),
+                forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
+            ensures
+                mapped.seq@.len() == a.seq@.len(),
+                forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
+
+        /// - Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: Vec-backed; span O(n) not O(1), sequential loop
+        fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqMtEphS<T>)
+            requires
+                length <= usize::MAX,
+                forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
+            ensures
+                tab_seq.seq@.len() == length,
+                forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length ==> f.ensures((i as usize,), tab_seq.seq@[i]);
+
+        /// - Definition 18.15 (flatten). Concatenate a sequence of sequences.
+        /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: Vec-backed; span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+        fn flatten(a: &ArraySeqMtEphS<ArraySeqMtEphS<T>>) -> (flattened: ArraySeqMtEphS<T>)
+            where T: Clone + Eq
+            requires
+                obeys_feq_clone::<T>(),
+            ensures
+                flattened.seq@ =~= a.seq@.map_values(|inner: ArraySeqMtEphS<T>| inner.seq@).flatten();
+    }
+
+    //		Section 9b. impls
+
+
+    /// Acquire the lock, apply updates, release. Preserves the lock invariant.
+    /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|). — matches APAS
+    fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
+        lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
+        updates: Vec<(usize, T)>,
+        Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,
+    )
+        requires
+            obeys_feq_clone::<T>(),
+            lock.pred() == pred,
+            forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+                0 <= updates@[k].0 < pred.source.len()
+                && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                    && pred.updates[j] == updates@[k]
+            },
+        ensures true,
+    {
+        let (mut buf, write_handle) = lock.acquire_write();
+        let len = buf.len();
+        let mut i: usize = 0;
+        while i < updates.len()
+            invariant
+                i <= updates@.len(),
+                len == buf@.len(),
+                pred.inv(buf),
+                obeys_feq_clone::<T>(),
+                forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+                    0 <= updates@[k].0 < pred.source.len()
+                    && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                        && pred.updates[j] == updates@[k]
+                },
+            decreases updates@.len() - i,
+        {
+            let pos = updates[i].0;
+            if pos < len {
+                let val = updates[i].1.clone();
+                proof {
+                    axiom_cloned_implies_eq_owned::<T>(updates@[i as int].1, val);
+                }
+                buf.set(pos, val);
+                proof {
+                    let witness = choose|j: int| #![trigger pred.updates[j]]
+                        0 <= j < pred.updates.len()
+                        && pred.updates[j] == updates@[i as int];
+                    assert forall|p: int| #![trigger buf@[p]] 0 <= p < buf@.len() implies {
+                        buf@[p] == pred.source[p]
+                        || exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+                            && pred.updates[j].0 == p as usize && buf@[p] == pred.updates[j].1
+                    } by {
+                        if p == pos as int {
+                            assert(pred.updates[witness].0 == pos as usize);
+                            assert(buf@[p] == pred.updates[witness].1);
+                        }
+                    }
+                }
+            }
+            i += 1;
+        }
+        write_handle.release_write(buf);
+    }
+
+    //		Section 11b. top level coarse locking
+
+
+    impl<T> RwLockPredicate<Vec<T>> for ArraySeqMtEphInv<T> {
+        open spec fn inv(self, v: Vec<T>) -> bool {
+            v@.len() == self.source.len()
+            && forall|i: int| #![trigger v@[i]] 0 <= i < v@.len() ==> {
+                v@[i] == self.source[i]
+                || exists|j: int| #![trigger self.updates[j]] 0 <= j < self.updates.len()
+                    && self.updates[j].0 == i as usize && v@[i] == self.updates[j].1
+            }
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqMtEphS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: Clone> Clone for ArraySeqMtEphS<T> {
         fn clone(&self) -> (res: Self)
@@ -1965,39 +1981,18 @@ pub mod ArraySeqMtEph {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. derive impls outside verus!
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Debug> Debug for ArraySeqMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            f.debug_list().entries(self.seq.iter()).finish()
-        }
+    /// Literal constructor macro for ArraySeqMtEphS.
+    #[macro_export]
+    macro_rules! ArraySeqMtEphSLit {
+        () => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
+        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
+        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: Display> Display for ArraySeqMtEphS<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "[")?;
-            for (i, item) in self.seq.iter().enumerate() {
-                if i > 0 { write!(f, ", ")?; }
-                write!(f, "{item}")?;
-            }
-            write!(f, "]")
-        }
-    }
-
-    impl<T> Debug for ArraySeqMtEphInv<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqMtEphInv")
-        }
-    }
-
-    impl<T> Display for ArraySeqMtEphInv<T> {
-        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-            write!(f, "ArraySeqMtEphInv")
-        }
-    }
+    //		Section 14. derive impls outside verus!
 
     impl<'a, T: Debug> Debug for ArraySeqMtEphIter<'a, T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
@@ -2023,11 +2018,38 @@ pub mod ArraySeqMtEph {
         }
     }
 
-    /// Literal constructor macro for ArraySeqMtEphS.
-    #[macro_export]
-    macro_rules! ArraySeqMtEphSLit {
-        () => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(Vec::new()) };
-        ($x:expr; $n:expr) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$x; $n]) };
-        ($($x:expr),* $(,)?) => { $crate::Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS::from_vec(vec![$($x),*]) };
+    //		Section 14a. derive impls outside verus!
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: Debug> Debug for ArraySeqMtEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            f.debug_list().entries(self.seq.iter()).finish()
+        }
+    }
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: Display> Display for ArraySeqMtEphS<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "[")?;
+            for (i, item) in self.seq.iter().enumerate() {
+                if i > 0 { write!(f, ", ")?; }
+                write!(f, "{item}")?;
+            }
+            write!(f, "]")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
+
+    impl<T> Debug for ArraySeqMtEphInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphInv")
+        }
+    }
+
+    impl<T> Display for ArraySeqMtEphInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphInv")
+        }
     }
 }

@@ -10,22 +10,32 @@
 //! disproportionate for a CAS exercise. The RTTs validate runtime behavior.
 
 //  Table of Contents
-//	1. module
-//	4. type definitions
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod Exercise12_5 {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use std::ptr::null_mut;
     use std::sync::atomic::{AtomicPtr, Ordering};
 
-verus! {
+verus! 
+{
 
-//		4. type definitions
+    //		Section 4a. type definitions
+
 
 /// Node for the lock-free stack. External due to raw pointer field.
 #[verifier::external] // accept hole
@@ -33,6 +43,9 @@ struct Node<T> {
     value: T,
     next: *mut Node<T>,
 }
+
+    //		Section 4b. type definitions
+
 
 /// Lock-free concurrent stack using AtomicPtr and CAS.
 /// External due to AtomicPtr (no vstd specs) and raw pointers.
@@ -42,8 +55,8 @@ pub struct ConcurrentStackMt<T: Send> {
     head: AtomicPtr<Node<T>>,
 }
 
+    //		Section 8b. traits
 
-//		8. traits
 
 /// Trait for lock-free concurrent stack operations.
 /// 
@@ -52,19 +65,19 @@ pub struct ConcurrentStackMt<T: Send> {
 pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// Spec: the stack is always well-formed after construction.
     open spec fn wf(&self) -> bool { true } // accept hole: Mutex<Vec>-backed, true is correct
-    
+
     /// Create a new empty stack.
     /// - Alg Analysis: APAS: no cost spec.
     /// - Alg Analysis: Code review (Claude Opus 4.6): O(1).
     fn new() -> (stack: Self)
         ensures stack.wf();
-    
+
     /// Push a value onto the stack. Always succeeds (may spin under contention).
     /// - Alg Analysis: APAS: no cost spec.
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries). Lock-free.
     fn push(&self, value: T)
         requires self.wf();
-    
+
     /// Pop a value from the stack.
     /// Returns Some(v) where v was the top element at the linearization point,
     /// or None if the stack was empty at that point.
@@ -72,14 +85,14 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
     /// - Alg Analysis: Code review (Claude Opus 4.6): amortized O(1), worst-case unbounded (CAS retries). Lock-free.
     fn pop(&self) -> (possible_top: Option<T>)
         requires self.wf();
-    
+
     /// Check if the stack is empty at this instant.
     /// Note: Result may be stale by the time caller acts on it.
     /// - Alg Analysis: APAS: no cost spec.
     /// - Alg Analysis: Code review (Claude Opus 4.6): O(1) — single atomic load.
     fn is_empty(&self) -> (empty: bool)
         requires self.wf();
-    
+
     /// Drain all elements from the stack into a Vec.
     /// Elements are returned in LIFO order (most recently pushed first).
     /// Note: Concurrent pushes during drain may or may not be included.
@@ -89,8 +102,8 @@ pub trait ConcurrentStackMtTrait<T: Send>: Sized {
         requires self.wf();
 }
 
+    //		Section 9b. impls
 
-//		9. impls
 
 impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
 
@@ -150,12 +163,6 @@ impl<T: Send> ConcurrentStackMtTrait<T> for ConcurrentStackMt<T> {
     }
 }
 
-impl<T: Send> Default for ConcurrentStackMt<T> {
-    fn default() -> Self { 
-        ConcurrentStackMt::new() 
-    }
-}
-
 impl<T: Send> Drop for ConcurrentStackMt<T> {
     #[verifier::external_body] // accept hole
     fn drop(&mut self)
@@ -172,9 +179,18 @@ impl<T: Send> Drop for ConcurrentStackMt<T> {
     }
 }
 
+    //		Section 12b. derive impls in verus!
+
+
+impl<T: Send> Default for ConcurrentStackMt<T> {
+    fn default() -> Self { 
+        ConcurrentStackMt::new() 
+    }
+}
 } // verus!
 
-    //		14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
 
     impl<T> std::fmt::Debug for Node<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -187,6 +203,8 @@ impl<T: Send> Drop for ConcurrentStackMt<T> {
             write!(f, "Node")
         }
     }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<T: Send> std::fmt::Debug for ConcurrentStackMt<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

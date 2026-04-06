@@ -2,21 +2,28 @@
 //! REVIEWED: NO
 //! Multi-threaded persistent ordered table using coarse RwLock over OrderedTableStPer.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod OrderedTableMtPer {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 8. traits
-    // 9. impls
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
@@ -33,16 +40,19 @@ pub mod OrderedTableMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::laws_eq::obeys_view_eq;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::map::group_map_axioms,
     };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -50,33 +60,8 @@ pub mod OrderedTableMtPer {
         pub ghost expected_view: Map<K::V, V::V>,
     }
 
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> RwLockPredicate<OrderedTableStPer<K, V>> for OrderedTableMtPerInv<K, V> {
-        open spec fn inv(self, v: OrderedTableStPer<K, V>) -> bool {
-            v.spec_orderedtablestper_wf()
-            && v@ == self.expected_view
-        }
-    }
+    //		Section 9a. impls
 
-    #[verifier::reject_recursive_types(K)]
-    #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableMtPer<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
-        pub(crate) locked_table: RwLock<OrderedTableStPer<K, V>, OrderedTableMtPerInv<K, V>>,
-        pub(crate) ghost_locked_table: Ghost<Map<K::V, V::V>>,
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
-        #[verifier::type_invariant]
-        spec fn inv(self) -> bool {
-            self.ghost_locked_table@.dom().finite()
-            && self.locked_table.pred().expected_view == self.ghost_locked_table@
-        }
-
-        pub closed spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
-            self.ghost_locked_table@
-        }
-    }
-
-    // 6. spec fns
 
     /// Construct Mt wrapper from an St table.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
@@ -96,7 +81,18 @@ pub mod OrderedTableMtPer {
         }
     }
 
-    // 5. view impls
+    //		Section 4b. type definitions
+
+
+    #[verifier::reject_recursive_types(K)]
+    #[verifier::reject_recursive_types(V)]
+    pub struct OrderedTableMtPer<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> {
+        pub(crate) locked_table: RwLock<OrderedTableStPer<K, V>, OrderedTableMtPerInv<K, V>>,
+        pub(crate) ghost_locked_table: Ghost<Map<K::V, V::V>>,
+    }
+
+    //		Section 5b. view impls
+
 
     impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> View for OrderedTableMtPer<K, V> {
         type V = Map<K::V, V::V>;
@@ -105,7 +101,8 @@ pub mod OrderedTableMtPer {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
 
     pub trait OrderedTableMtPerTrait<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablemtper_wf(&self) -> bool;
@@ -322,7 +319,21 @@ pub mod OrderedTableMtPer {
             ensures self@.dom().finite();
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPer<K, V> {
+        #[verifier::type_invariant]
+        spec fn inv(self) -> bool {
+            self.ghost_locked_table@.dom().finite()
+            && self.locked_table.pred().expected_view == self.ghost_locked_table@
+        }
+
+        pub closed spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
+            self.ghost_locked_table@
+        }
+    }
+
 
     impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> OrderedTableMtPerTrait<K, V> for OrderedTableMtPer<K, V> {
         open spec fn spec_orderedtablemtper_wf(&self) -> bool {
@@ -682,7 +693,18 @@ pub mod OrderedTableMtPer {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 11a. top level coarse locking
+
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> RwLockPredicate<OrderedTableStPer<K, V>> for OrderedTableMtPerInv<K, V> {
+        open spec fn inv(self, v: OrderedTableStPer<K, V>) -> bool {
+            v.spec_orderedtablestper_wf()
+            && v@ == self.expected_view
+        }
+    }
+
+    //		Section 12b. derive impls in verus!
+
 
     impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> Clone for OrderedTableMtPer<K, V> {
         fn clone(&self) -> (cloned: Self)
@@ -706,9 +728,27 @@ pub mod OrderedTableMtPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     use std::fmt;
+
+    //		Section 14a. derive impls outside verus!
+
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Debug for OrderedTableMtPerInv<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPerInv")
+        }
+    }
+
+    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Display for OrderedTableMtPerInv<K, V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtPerInv")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
 
     impl<K: MtKey + TotalOrder + 'static, V: MtKey + 'static> Default for OrderedTableMtPer<K, V> {
         fn default() -> Self { Self::empty() }
@@ -723,18 +763,6 @@ pub mod OrderedTableMtPer {
     impl<K: MtKey + TotalOrder + 'static, V: MtKey + 'static> fmt::Display for OrderedTableMtPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtPer(size: {})", self.size())
-        }
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Debug for OrderedTableMtPerInv<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtPerInv")
-        }
-    }
-
-    impl<K: MtKey + TotalOrder + 'static, V: StTInMtT + Ord + 'static> fmt::Display for OrderedTableMtPerInv<K, V> {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtPerInv")
         }
     }
 }

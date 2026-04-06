@@ -3,20 +3,30 @@
 //! Struct Chained Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses custom linked list struct for separate chaining collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 4b. type definitions
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 4c. type definitions
+//	Section 6c. spec fns
+//	Section 7c. proof fns/broadcast groups
+//	Section 9c. impls
+//	Section 12a. derive impls in verus!
+//	Section 12b. derive impls in verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod StructChainedHashTable {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!: spec_chain_to_map)
-    // 7. proof fns (inside verus!)
-    // 8. traits (inside verus!: ChainListTrait)
-    // 9. impls (inside verus!: ChainListTrait for ChainList, PartialEqSpecImpl, Default, chain helpers, EntryTrait for ChainList, ParaHashTableStEphTrait, ChainedHashTable)
-    // 11. derive impls in verus!
-    // 13. derive impls outside verus!
-
-    // 2. imports
+    //		Section 2. imports
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -29,12 +39,16 @@ pub mod StructChainedHashTable {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-        // 3. broadcast use
+    //		Section 3. broadcast use
+
+
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-        // 4. type definitions
+    //		Section 4a. type definitions
+
 
         /// Custom linked list node.
         #[verifier::reject_recursive_types(Key)]
@@ -45,6 +59,9 @@ pub mod StructChainedHashTable {
             pub next: Option<Box<Node<Key, Value>>>,
         }
 
+    //		Section 4b. type definitions
+
+
         /// Custom linked list for chained hash table.
         #[verifier::reject_recursive_types(Key)]
         #[verifier::reject_recursive_types(Value)]
@@ -52,72 +69,21 @@ pub mod StructChainedHashTable {
             pub head: Option<Box<Node<Key, Value>>>,
         }
 
-        /// Struct Chained Hash Table implementation.
-        pub struct StructChainedHashTableStEph;
+    //		Section 8b. traits
 
-        // 6. spec fns
-
-        /// Maps a chain (linked list of nodes) to its abstract Map representation.
-        /// Head node's entry is inserted last, so it wins on duplicate keys.
-        pub open spec fn spec_chain_to_map<Key, Value>(
-            chain: Option<Box<Node<Key, Value>>>,
-        ) -> Map<Key, Value>
-            decreases chain,
-        {
-            match chain {
-                None => Map::empty(),
-                Some(node) => spec_chain_to_map(node.next).insert(node.key, node.value),
-            }
-        }
-
-        /// True when no key appears more than once in the chain.
-        pub open spec fn spec_chain_keys_unique<Key, Value>(
-            chain: Option<Box<Node<Key, Value>>>,
-        ) -> bool
-            decreases chain,
-        {
-            match chain {
-                None => true,
-                Some(node) => {
-                    !spec_chain_to_map(node.next).dom().contains(node.key)
-                    && spec_chain_keys_unique(node.next)
-                },
-            }
-        }
-
-        // 7. proof fns
-
-        proof fn _struct_chained_hash_table_verified() {}
-
-        // 8. traits
 
         /// Spec trait for ChainList abstract state.
         pub trait ChainListTrait<Key, Value>: Sized {
             spec fn spec_to_map(&self) -> Map<Key, Value>;
         }
 
-        // 9. impls
+    //		Section 9b. impls
+
 
         impl<Key, Value> ChainListTrait<Key, Value> for ChainList<Key, Value> {
             open spec fn spec_to_map(&self) -> Map<Key, Value> {
                 spec_chain_to_map(self.head)
             }
-        }
-
-        #[cfg(verus_keep_ghost)]
-        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for Node<Key, Value> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-        }
-
-        #[cfg(verus_keep_ghost)]
-        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for ChainList<Key, Value> {
-            open spec fn obeys_eq_spec() -> bool { true }
-            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
-        }
-
-        impl<Key, Value> Default for ChainList<Key, Value> {
-            fn default() -> Self { ChainList { head: None } }
         }
 
         /// Inserts key-value into chain, updating if key exists, appending if not.
@@ -312,7 +278,50 @@ pub mod StructChainedHashTable {
             }
         }
 
-        // 9. impls (ParaHashTableStEphTrait, ChainedHashTable)
+    //		Section 4c. type definitions
+
+
+        /// Struct Chained Hash Table implementation.
+        pub struct StructChainedHashTableStEph;
+
+    //		Section 6c. spec fns
+
+
+        /// Maps a chain (linked list of nodes) to its abstract Map representation.
+        /// Head node's entry is inserted last, so it wins on duplicate keys.
+        pub open spec fn spec_chain_to_map<Key, Value>(
+            chain: Option<Box<Node<Key, Value>>>,
+        ) -> Map<Key, Value>
+            decreases chain,
+        {
+            match chain {
+                None => Map::empty(),
+                Some(node) => spec_chain_to_map(node.next).insert(node.key, node.value),
+            }
+        }
+
+        /// True when no key appears more than once in the chain.
+        pub open spec fn spec_chain_keys_unique<Key, Value>(
+            chain: Option<Box<Node<Key, Value>>>,
+        ) -> bool
+            decreases chain,
+        {
+            match chain {
+                None => true,
+                Some(node) => {
+                    !spec_chain_to_map(node.next).dom().contains(node.key)
+                    && spec_chain_keys_unique(node.next)
+                },
+            }
+        }
+
+    //		Section 7c. proof fns/broadcast groups
+
+
+        proof fn _struct_chained_hash_table_verified() {}
+
+    //		Section 9c. impls
+
 
         impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>
             ParaHashTableStEphTrait<Key, Value, ChainList<Key, Value>, Metrics, H>
@@ -840,7 +849,15 @@ pub mod StructChainedHashTable {
             }
         }
 
-        // 11. derive impls in verus!
+    //		Section 12a. derive impls in verus!
+
+
+        #[cfg(verus_keep_ghost)]
+        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for Node<Key, Value> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+        }
+
 
         impl<Key: Clone, Value: Clone> Clone for Node<Key, Value> {
             fn clone(&self) -> (cloned: Self)
@@ -879,6 +896,19 @@ pub mod StructChainedHashTable {
 
         impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for Node<Key, Value> {}
 
+    //		Section 12b. derive impls in verus!
+
+
+        #[cfg(verus_keep_ghost)]
+        impl<Key: PartialEq, Value: PartialEq> PartialEqSpecImpl for ChainList<Key, Value> {
+            open spec fn obeys_eq_spec() -> bool { true }
+            open spec fn eq_spec(&self, other: &Self) -> bool { *self == *other }
+        }
+
+        impl<Key, Value> Default for ChainList<Key, Value> {
+            fn default() -> Self { ChainList { head: None } }
+        }
+
         impl<Key: Clone, Value: Clone> Clone for ChainList<Key, Value> {
             fn clone(&self) -> (cloned: Self)
                 ensures cloned == *self
@@ -911,7 +941,8 @@ pub mod StructChainedHashTable {
         impl<Key: PartialEq, Value: PartialEq> core::cmp::Eq for ChainList<Key, Value> {}
     }
 
-    // 13. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
+
 
     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for Node<Key, Value> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -929,6 +960,8 @@ pub mod StructChainedHashTable {
         }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for ChainList<Key, Value> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("ChainList")
@@ -942,6 +975,8 @@ pub mod StructChainedHashTable {
             write!(f, "{:?}", self)
         }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl std::fmt::Debug for StructChainedHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

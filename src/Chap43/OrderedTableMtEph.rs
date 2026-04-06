@@ -2,23 +2,30 @@
 //! REVIEWED: NO
 //! Multi-threaded ephemeral ordered table using coarse RwLock over OrderedTableStEph.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 10a. iterators
+//	Section 4b. type definitions
+//	Section 5b. view impls
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 10b. iterators
+//	Section 11a. top level coarse locking
+//	Section 12b. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod OrderedTableMtEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 3. broadcast use
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
-    // 10. iterators
-    // 11. top level coarse locking (from_st, from_sorted_entries)
-    // 12. derive impls in verus!
-    // 13. derive impls outside verus!
-    // 14. macros
-
-    // 2. imports
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use vstd::rwlock::*;
@@ -40,24 +47,47 @@ pub mod OrderedTableMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_fulls;
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,
 };
 
-    // 4. type definitions
+    //		Section 4a. type definitions
+
 
     pub struct OrderedTableMtEphInv;
 
-    impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
-        open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
-            v.spec_orderedtablesteph_wf()
+    pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
+
+    //		Section 10a. iterators
+
+
+    pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableMtEphIter<'a, K, V>) -> bool {
+        0 <= it@.0 <= it@.1.len()
+    }
+
+    impl<'a, K: MtKey, V: MtVal + Ord> IntoIterator for &'a OrderedTableMtEph<K, V> {
+        type Item = Pair<K, V>;
+        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+
+        fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
+            requires self.spec_orderedtablemteph_wf(),
+            ensures
+                it@.0 == 0,
+                iter_invariant(&it),
+        {
+            self.iter()
         }
     }
+
+    //		Section 4b. type definitions
+
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
@@ -66,15 +96,8 @@ broadcast use {
         pub ghost_locked_table: Ghost<Map<K::V, V::V>>,
     }
 
-    pub type OrderedTableMt<K, V> = OrderedTableMtEph<K, V>;
+    //		Section 5b. view impls
 
-    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEph<K, V> {
-        pub open spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
-            self.ghost_locked_table@
-        }
-    }
-
-    // 5. view impls
 
     impl<K: MtKey, V: MtVal + Ord> View for OrderedTableMtEph<K, V> {
         type V = Map<K::V, V::V>;
@@ -83,7 +106,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1 for keys) with multi-threaded ephemeral semantics.
     pub trait OrderedTableMtEphTrait<K: MtKey, V: MtVal + Ord>: Sized + View<V = Map<K::V, V::V>> {
@@ -375,7 +399,15 @@ broadcast use {
                 iter_invariant(&it);
     }
 
-    // 9. impls
+    //		Section 9b. impls
+
+
+    impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEph<K, V> {
+        pub open spec fn spec_ghost_locked_table(self) -> Map<K::V, V::V> {
+            self.ghost_locked_table@
+        }
+    }
+
 
     impl<K: MtKey, V: MtVal + Ord> OrderedTableMtEphTrait<K, V> for OrderedTableMtEph<K, V> {
         open spec fn spec_orderedtablemteph_wf(&self) -> bool {
@@ -776,7 +808,51 @@ broadcast use {
         }
     }
 
-    // 10. iterators
+
+    /// Construct Mt wrapper from an St table.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
+    fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
+        requires inner@.dom().finite()
+        ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
+    {
+        assert(obeys_feq_full_trigger::<K>());
+        assert(obeys_feq_full_trigger::<V>());
+        assert(obeys_feq_full_trigger::<Pair<K, V>>());
+        let ghost view = inner@;
+        proof { assume(inner.spec_orderedtablesteph_wf()); }
+        OrderedTableMtEph {
+            locked_table: RwLock::new(inner, Ghost(OrderedTableMtEphInv)),
+            ghost_locked_table: Ghost(view),
+        }
+    }
+
+    /// Build an MtEph table from entries (used by macro and tests).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to StEph from_sorted_entries
+    pub fn from_sorted_entries<K: MtKey, V: MtVal + Ord>(
+        entries: AVLTreeSeqStPerS<Pair<K, V>>,
+    ) -> (constructed: OrderedTableMtEph<K, V>)
+        requires
+            entries.spec_avltreeseqstper_wf(),
+            entries@.len() < usize::MAX as nat,
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            view_ord_consistent::<Pair<K, V>>(),
+            spec_pair_key_determines_order::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            view_ord_consistent::<K>(),
+            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
+                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
+        ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
+    {
+        assert(obeys_feq_full_trigger::<K>());
+        assert(obeys_feq_full_trigger::<V>());
+        assert(obeys_feq_full_trigger::<Pair<K, V>>());
+        let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
+        from_st(inner)
+    }
+
+    //		Section 10b. iterators
+
+
     // Entries are behind an RwLock, so the iterator collects a snapshot.
     // All iterator infrastructure uses external_body since entries cannot be
     // borrowed through the lock.
@@ -794,10 +870,6 @@ broadcast use {
         open spec fn view(&self) -> (int, Seq<Pair<K, V>>) {
             (self.pos as int, self.snapshot@)
         }
-    }
-
-    pub open spec fn iter_invariant<'a, K, V>(it: &OrderedTableMtEphIter<'a, K, V>) -> bool {
-        0 <= it@.0 <= it@.1.len()
     }
 
     #[verifier::reject_recursive_types(K)]
@@ -891,64 +963,17 @@ broadcast use {
         }
     }
 
-    impl<'a, K: MtKey, V: MtVal + Ord> IntoIterator for &'a OrderedTableMtEph<K, V> {
-        type Item = Pair<K, V>;
-        type IntoIter = OrderedTableMtEphIter<'a, K, V>;
+    //		Section 11a. top level coarse locking
 
-        fn into_iter(self) -> (it: OrderedTableMtEphIter<'a, K, V>)
-            requires self.spec_orderedtablemteph_wf(),
-            ensures
-                it@.0 == 0,
-                iter_invariant(&it),
-        {
-            self.iter()
+
+    impl<K: MtKey, V: MtVal + Ord> RwLockPredicate<OrderedTableStEph<K, V>> for OrderedTableMtEphInv {
+        open spec fn inv(self, v: OrderedTableStEph<K, V>) -> bool {
+            v.spec_orderedtablesteph_wf()
         }
     }
 
-    // 11. top level coarse locking
+    //		Section 12b. derive impls in verus!
 
-    /// Construct Mt wrapper from an St table.
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- wraps inner in RwLock
-    fn from_st<K: MtKey, V: MtVal + Ord>(inner: OrderedTableStEph<K, V>) -> (s: OrderedTableMtEph<K, V>)
-        requires inner@.dom().finite()
-        ensures s@ =~= inner@, s@.dom().finite(), s.spec_orderedtablemteph_wf()
-    {
-        assert(obeys_feq_full_trigger::<K>());
-        assert(obeys_feq_full_trigger::<V>());
-        assert(obeys_feq_full_trigger::<Pair<K, V>>());
-        let ghost view = inner@;
-        proof { assume(inner.spec_orderedtablesteph_wf()); }
-        OrderedTableMtEph {
-            locked_table: RwLock::new(inner, Ghost(OrderedTableMtEphInv)),
-            ghost_locked_table: Ghost(view),
-        }
-    }
-
-    /// Build an MtEph table from entries (used by macro and tests).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to StEph from_sorted_entries
-    pub fn from_sorted_entries<K: MtKey, V: MtVal + Ord>(
-        entries: AVLTreeSeqStPerS<Pair<K, V>>,
-    ) -> (constructed: OrderedTableMtEph<K, V>)
-        requires
-            entries.spec_avltreeseqstper_wf(),
-            entries@.len() < usize::MAX as nat,
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-            view_ord_consistent::<Pair<K, V>>(),
-            spec_pair_key_determines_order::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            view_ord_consistent::<K>(),
-            forall|ii: int, jj: int| 0 <= ii < jj < entries@.len()
-                ==> (#[trigger] entries@[ii]).0 != (#[trigger] entries@[jj]).0,
-        ensures constructed@.dom().finite(), constructed.spec_orderedtablemteph_wf()
-    {
-        assert(obeys_feq_full_trigger::<K>());
-        assert(obeys_feq_full_trigger::<V>());
-        assert(obeys_feq_full_trigger::<Pair<K, V>>());
-        let inner = crate::Chap43::OrderedTableStEph::OrderedTableStEph::from_sorted_entries(entries);
-        from_st(inner)
-    }
-
-    // 12. derive impls in verus!
 
     impl<K: MtKey, V: MtVal + Ord> Clone for OrderedTableMtEph<K, V> {
         fn clone(&self) -> (cloned: Self)
@@ -972,12 +997,44 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs.
+    #[macro_export]
+    macro_rules! OrderedTableMtEphLit {
+        () => {
+            $crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph::empty()
+        };
+        ($($key:expr => $val:expr),+ $(,)?) => {{
+            let pairs = vec![$($crate::Types::Types::Pair($key, $val)),+];
+            let seq = $crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerS::from_vec(pairs);
+            $crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::from_sorted_entries(seq)
+        }};
+    }
+
+    //		Section 14. derive impls outside verus!
 
     use std::fmt;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+
+    //		Section 14a. derive impls outside verus!
+
+    impl fmt::Debug for OrderedTableMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphInv")
+        }
+    }
+
+    impl fmt::Display for OrderedTableMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedTableMtEphInv")
+        }
+    }
+
+    //		Section 14b. derive impls outside verus!
 
     // Ghost<Map<K::V, V::V>> contains FnSpec which is not Send/Sync at the type level,
     // but Ghost is erased at runtime (zero-sized). Safe because no actual data crosses threads.
@@ -1033,32 +1090,5 @@ broadcast use {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableMtEphGhostIterator")
         }
-    }
-
-    impl fmt::Debug for OrderedTableMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtEphInv")
-        }
-    }
-
-    impl fmt::Display for OrderedTableMtEphInv {
-        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            write!(f, "OrderedTableMtEphInv")
-        }
-    }
-
-    // 14. macros
-
-    /// Macro for creating multi-threaded ephemeral ordered tables from sorted key-value pairs.
-    #[macro_export]
-    macro_rules! OrderedTableMtEphLit {
-        () => {
-            $crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEph::empty()
-        };
-        ($($key:expr => $val:expr),+ $(,)?) => {{
-            let pairs = vec![$($crate::Types::Types::Pair($key, $val)),+];
-            let seq = $crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerS::from_vec(pairs);
-            $crate::Chap43::OrderedTableMtEph::OrderedTableMtEph::from_sorted_entries(seq)
-        }};
     }
 }

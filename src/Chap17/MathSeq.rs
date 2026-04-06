@@ -8,22 +8,26 @@
 //! using rust vector which is dense.
 
 //  Table of Contents
-//	1. module
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	12. macros
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod MathSeq {
+
+    //		Section 2. imports
+
     use std::fmt::{Debug, Display, Formatter};
     use std::hash::Hash;
     use std::slice::{Iter, IterMut};
@@ -44,23 +48,11 @@ pub mod MathSeq {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    verus! {
+    verus! 
+{
 
-        //		3. broadcast use
+    //		Section 3. broadcast use
 
-        // Table of Contents
-        // 1. module
-        // 2. imports
-        // 3. broadcast use
-        // 4. type definitions
-        // 5. view impls
-        // 6. spec fns
-        // 8. traits
-        // 9. impls
-        // 10. iterators
-        // 11. derive impls in verus!
-
-        // 3. broadcast use
 
         broadcast use {
             // Vec
@@ -83,47 +75,40 @@ pub mod MathSeq {
         vstd::seq_lib::group_to_multiset_ensures,
         };
 
+    //		Section 4. type definitions
 
-        //		4. type definitions
 
         #[verifier::reject_recursive_types(T)]
         pub struct MathSeqS<T: StT> {
             pub data: Vec<T>,
         }
 
+    //		Section 5. view impls
 
-        //		5. view impls
 
-        // 5. view impls
-        
         impl<T: StT> View for MathSeqS<T> {
             type V = Seq<T::V>;
-            
+
             open spec fn view(&self) -> Seq<T::V> {
                 self.data@.map_values(|t: T| t@)
             }
         }
 
+    //		Section 6. spec fns
 
-        //		6. spec fns
-
-        // 4. type definitions
 
         pub open spec fn valid_key_type<T: View + Clone + Eq>() -> bool {
             &&& obeys_key_model::<T>()
                 &&& obeys_feq_full::<T>()
         }
 
-        // 6. spec fns
 
         pub open spec fn spec_clamp(val: int, max: int) -> int {
             if val < 0 { 0 } else if val > max { max } else { val }
         }
 
+    //		Section 8. traits
 
-        //		8. traits
-
-        // 8. traits
 
         pub trait MathSeqSTrait<T: StT>: Sized + View<V = Seq<T::V>> {
             spec fn spec_len(&self) -> nat;
@@ -267,10 +252,8 @@ pub mod MathSeq {
                     iter_invariant(&it);
         }
 
+    //		Section 9. impls
 
-        //		9. impls
-
-        // 9. impls
 
         impl<T: StT + Hash> MathSeqSTrait<T> for MathSeqS<T> {
 
@@ -594,14 +577,8 @@ pub mod MathSeq {
             }
         }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-
-        //		10. iterators
 
     #[verifier::reject_recursive_types(T)]
     pub struct MathSeqIter<'a, T> {
@@ -722,10 +699,15 @@ pub mod MathSeq {
         }
     }
 
+    //		Section 12. derive impls in verus!
 
-        //		11. derive impls in verus!
 
-    // 11. derive impls in verus!
+    #[cfg(verus_keep_ghost)]
+    impl<T: StT> PartialEqSpecImpl for MathSeqS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: StT> Clone for MathSeqS<T> {
         fn clone(&self) -> (cloned: Self)
@@ -751,7 +733,23 @@ pub mod MathSeq {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! MathSeqSLit {
+        () => {
+            $crate::Chap17::MathSeq::MathSeq::MathSeqS::empty()
+        };
+        ($x:expr; $n:expr) => {
+            $crate::Chap17::MathSeq::MathSeq::MathSeqS::with_len($n, $x)
+        };
+        ($($x:expr),* $(,)?) => {
+            $crate::Chap17::MathSeq::MathSeq::MathSeqS::from_vec(vec![$($x),*])
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
 
     impl<T: StT + Hash> MathSeqS<T> {
         /// Mutable borrow iterator. Must stay outside verus! (returns &mut).
@@ -769,16 +767,14 @@ pub mod MathSeq {
             self.data.iter_mut()
         }
     }
-    
 
-    //		13. derive impls outside verus!
 
     impl<T: StT> Debug for MathSeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             f.debug_list().entries(self.data.iter()).finish()
         }
     }
-    
+
     impl<T: StT> Display for MathSeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "[")?;
@@ -817,23 +813,5 @@ pub mod MathSeq {
         fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
             write!(f, "MathSeqGhostIterator")
         }
-    }
-
-    // 12. macros
-
-
-    //		12. macros
-
-    #[macro_export]
-    macro_rules! MathSeqSLit {
-        () => {
-            $crate::Chap17::MathSeq::MathSeq::MathSeqS::empty()
-        };
-        ($x:expr; $n:expr) => {
-            $crate::Chap17::MathSeq::MathSeq::MathSeqS::with_len($n, $x)
-        };
-        ($($x:expr),* $(,)?) => {
-            $crate::Chap17::MathSeq::MathSeq::MathSeqS::from_vec(vec![$($x),*])
-        };
     }
 }

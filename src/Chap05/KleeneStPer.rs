@@ -4,33 +4,37 @@
 //! Persistent Kleene Star and Plus over a finite alphabet (Definition 5.4, Exercise 5.1).
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod KleeneStPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-verus! {
+verus! 
+{
 
-    //		2. imports
 
     use std::hash::Hash;
     use crate::Chap05::SetStEph::SetStEph::*;
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -41,24 +45,24 @@ verus! {
         vstd::set_lib::group_set_lib_default,
     };
 
+    //		Section 4. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(T)]
     pub struct KleeneStPer<T: StT + Hash> {
         pub alphabet: SetStEph<T>,
     }
 
+    //		Section 5. view impls
 
-    //		5. view impls
 
     impl<T: StT + Hash> View for KleeneStPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Self::V { self.alphabet@ }
     }
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
 
     /// Membership in Σ*: every element of s belongs to the alphabet.
     /// The empty sequence is always in Σ*.
@@ -76,8 +80,8 @@ verus! {
         s.map(|_i: int, t: T| t@)
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
 
     /// Exercise 5.1: Σ* is closed under string concatenation.
     pub proof fn lemma_star_closed_under_concat<V>(alphabet: Set<V>, s1: Seq<V>, s2: Seq<V>)
@@ -181,8 +185,8 @@ verus! {
         };
     }
 
+    //		Section 8. traits
 
-    //		8. traits
 
     pub trait KleeneStPerTrait<T: StT + Hash> : View<V = Set<<T as View>::V>> + Sized {
 
@@ -218,8 +222,8 @@ verus! {
             ensures alpha@ == self@;
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl<T: StT + Hash> KleeneStPerTrait<T> for KleeneStPer<T> {
 
@@ -284,7 +288,8 @@ verus! {
 
 } // verus!
 
-    //		14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl<T: std::fmt::Debug + StT + Hash> std::fmt::Debug for KleeneStPer<T> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

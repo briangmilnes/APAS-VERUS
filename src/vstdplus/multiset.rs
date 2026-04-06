@@ -9,12 +9,28 @@
 //! - `spec_filter_len` — length of the filtered subsequence (elements satisfying pred)
 //! - Loop invariant pattern: `counter == spec_filter_len(seq.subrange(0, index))`
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+
+//		Section 1. module
+
 pub mod multiset {
+
+
+//		Section 2. imports
 
 use vstd::prelude::*;
 use vstd::multiset::Multiset;
 
-verus! {
+verus! 
+{
+
+    //		Section 6. spec fns
+
 
 /// Recursive spec: length of the subsequence of s whose elements satisfy pred.
 pub open spec fn spec_filter_len<T>(s: Seq<T>, pred: spec_fn(T) -> bool) -> int
@@ -27,6 +43,9 @@ pub open spec fn spec_filter_len<T>(s: Seq<T>, pred: spec_fn(T) -> bool) -> int
             + if pred(s.last()) { 1 as int } else { 0 as int }
     }
 }
+
+    //		Section 7. proof fns/broadcast groups
+
 
 /// spec_filter_len is non-negative.
 pub proof fn lemma_spec_filter_len_nonneg<T>(s: Seq<T>, pred: spec_fn(T) -> bool)

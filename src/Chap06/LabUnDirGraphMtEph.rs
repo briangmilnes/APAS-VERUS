@@ -7,24 +7,34 @@
 //! Labeled edge filtering (ng) is parallel.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. top level coarse locking
-//	12. derive impls in verus!
-//	13. macros
-//	14. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions
+//	Section 5a. view impls
+//	Section 6a. spec fns
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 10a. iterators
+//	Section 4b. type definitions
+//	Section 4c. type definitions
+//	Section 5c. view impls
+//	Section 8c. traits
+//	Section 9c. impls
+//	Section 11b. top level coarse locking
+//	Section 12a. derive impls in verus!
+//	Section 13. macros
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+//	Section 14c. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 
 pub mod LabUnDirGraphMtEph {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -36,9 +46,9 @@ pub mod LabUnDirGraphMtEph {
     use crate::{ParaPair, SetLit};
     use crate::vstdplus::accept::accept;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use crate::Chap05::SetStEph::SetStEph::*;
@@ -49,8 +59,8 @@ pub mod LabUnDirGraphMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Types::Types::*;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         vstd::set::group_set_axioms,
@@ -60,8 +70,8 @@ pub mod LabUnDirGraphMtEph {
         vstd::set_lib::group_set_lib_default,
     };
 
+    //		Section 4a. type definitions
 
-    //		4. type definitions
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -70,8 +80,8 @@ pub mod LabUnDirGraphMtEph {
         pub labeled_edges: SetStEph<LabEdge<V, L>>,
     }
 
+    //		Section 5a. view impls
 
-    //		5. view impls
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> View for LabUnDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -80,15 +90,15 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
+    //		Section 6a. spec fns
 
-    //		6. spec fns
 
     pub open spec fn valid_key_type_for_lab_graph<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash>() -> bool {
         valid_key_type_LabEdge::<V, L>()
     }
 
+    //		Section 8a. traits
 
-    //		8. traits
 
     pub trait LabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
@@ -225,8 +235,8 @@ pub mod LabUnDirGraphMtEph {
             decreases edges@.len();
     }
 
+    //		Section 9a. impls
 
-    //		9. impls
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LabUnDirGraphMtEphTrait<V, L>
         for LabUnDirGraphMtEph<V, L>
@@ -582,7 +592,8 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    //		10. iterators
+    //		Section 10a. iterators
+
 
     /// Iterator wrapper for LabUnDirGraphMtEph vertex iteration.
     #[verifier::reject_recursive_types(V)]
@@ -702,15 +713,13 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    //		11. top level coarse locking
+    //		Section 4b. type definitions
+
 
     pub struct LabUnDirGraphMtEphInv;
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> RwLockPredicate<LabUnDirGraphMtEph<V, L>> for LabUnDirGraphMtEphInv {
-        open spec fn inv(self, v: LabUnDirGraphMtEph<V, L>) -> bool {
-            spec_labgraphview_wf(v@) && valid_key_type_for_lab_graph::<V, L>()
-        }
-    }
+    //		Section 4c. type definitions
+
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(L)]
@@ -719,16 +728,8 @@ pub mod LabUnDirGraphMtEph {
         pub(crate) ghost_locked_graph: Ghost<LabGraphView<<V as View>::V, <L as View>::V>>,
     }
 
-    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEph<V, L> {
-        #[verifier::type_invariant]
-        spec fn wf(self) -> bool {
-            spec_labgraphview_wf(self.ghost_locked_graph@)
-        }
+    //		Section 5c. view impls
 
-        pub closed spec fn spec_ghost_locked_graph(self) -> LabGraphView<<V as View>::V, <L as View>::V> {
-            self.ghost_locked_graph@
-        }
-    }
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> View for LockedLabUnDirGraphMtEph<V, L> {
         type V = LabGraphView<<V as View>::V, <L as View>::V>;
@@ -736,6 +737,9 @@ pub mod LabUnDirGraphMtEph {
             self.spec_ghost_locked_graph()
         }
     }
+
+    //		Section 8c. traits
+
 
     pub trait LockedLabUnDirGraphMtEphTrait<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static>
         : View<V = LabGraphView<<V as View>::V, <L as View>::V>> + Sized
@@ -798,6 +802,20 @@ pub mod LabUnDirGraphMtEph {
                 self@.V == old(self)@.V.insert(v1@).insert(v2@),
                 self@.A == old(self)@.A.insert((v1@, v2@, label@)) ||
                 self@.A == old(self)@.A.insert((v2@, v1@, label@));
+    }
+
+    //		Section 9c. impls
+
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEph<V, L> {
+        #[verifier::type_invariant]
+        spec fn wf(self) -> bool {
+            spec_labgraphview_wf(self.ghost_locked_graph@)
+        }
+
+        pub closed spec fn spec_ghost_locked_graph(self) -> LabGraphView<<V as View>::V, <L as View>::V> {
+            self.ghost_locked_graph@
+        }
     }
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> LockedLabUnDirGraphMtEphTrait<V, L>
@@ -890,7 +908,17 @@ pub mod LabUnDirGraphMtEph {
         }
     }
 
-    //		12. derive impls in verus!
+    //		Section 11b. top level coarse locking
+
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> RwLockPredicate<LabUnDirGraphMtEph<V, L>> for LabUnDirGraphMtEphInv {
+        open spec fn inv(self, v: LabUnDirGraphMtEph<V, L>) -> bool {
+            spec_labgraphview_wf(v@) && valid_key_type_for_lab_graph::<V, L>()
+        }
+    }
+
+    //		Section 12a. derive impls in verus!
+
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Clone for LabUnDirGraphMtEph<V, L> {
         fn clone(&self) -> (cloned: Self)
@@ -902,8 +930,8 @@ pub mod LabUnDirGraphMtEph {
 
     } // verus!
 
+    //		Section 13. macros
 
-    //		13. macros
 
     #[macro_export]
     macro_rules! LabUnDirGraphMtEphLit {
@@ -928,8 +956,7 @@ pub mod LabUnDirGraphMtEph {
         }};
     }
 
-
-    //		14. derive impls outside verus!
+    //		Section 14a. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -963,6 +990,8 @@ pub mod LabUnDirGraphMtEph {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphGhostIterator") }
     }
 
+    //		Section 14b. derive impls outside verus!
+
     impl Debug for LabUnDirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphInv") }
     }
@@ -970,6 +999,8 @@ pub mod LabUnDirGraphMtEph {
     impl Display for LabUnDirGraphMtEphInv {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphInv") }
     }
+
+    //		Section 14c. derive impls outside verus!
 
     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Debug for LockedLabUnDirGraphMtEph<V, L> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedLabUnDirGraphMtEph") }

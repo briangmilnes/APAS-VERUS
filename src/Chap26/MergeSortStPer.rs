@@ -5,38 +5,35 @@
 //! Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-//		1. module
-
-
+//		Section 1. module
 
 
 pub mod MergeSortStPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
-
-    //		2. imports
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use vstd::seq_lib::lemma_multiset_commutative;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
-
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -47,10 +44,8 @@ pub mod MergeSortStPer {
         vstd::seq_lib::group_seq_properties,
     };
 
+    //		Section 6. spec fns
 
-    //		6. spec fns
-
-    //		4. spec functions
 
     /// Spec function: result is a sorted permutation of the input.
     pub open spec fn spec_sorted(s: Seq<usize>) -> bool {
@@ -76,10 +71,8 @@ pub mod MergeSortStPer {
         &&& spec_is_permutation(input, sorted)
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
-
-    //		9. impls
 
     /// Helper: pushing an element >= all existing elements preserves sorted.
     pub proof fn lemma_push_sorted(s: Seq<usize>, v: usize)
@@ -104,10 +97,8 @@ pub mod MergeSortStPer {
         }
     }
 
+    //		Section 8. traits
 
-    //		8. traits
-
-    //		8. traits
 
     pub trait MergeSortStTrait {
         /// Merge two sorted sequences into one sorted sequence.
@@ -135,8 +126,8 @@ pub mod MergeSortStPer {
                     Seq::new(sorted.spec_len(), |i: int| sorted.spec_index(i)));
     }
 
+    //		Section 9. impls
 
-    //		9. impls
 
     impl MergeSortStTrait for ArraySeqStPerS<usize> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — two-finger merge; St sequential.

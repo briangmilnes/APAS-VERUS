@@ -5,7 +5,23 @@
 //! Uses f64 for probability values. Impls use external_body for f64 operations.
 //! This is really a very minimal shell until we get better float operations in Verus.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 13. macros
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod Probability {
+
+
+    //		Section 2. imports
 
     use std::cmp::Ordering;
     use std::fmt::{Debug, Display, Formatter};
@@ -21,13 +37,18 @@ pub mod Probability {
 
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
+
     #[derive(Clone, Copy)]
     pub struct Probability(pub f64);
 
-    // 8. traits
+    //		Section 8. traits
+
+
     /// Trait for probability operations
     pub trait ProbabilityTrait: Sized {
         /// - Alg Analysis: APAS: (no cost stated)
@@ -47,7 +68,9 @@ pub mod Probability {
         fn zero() -> Self;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
+
     impl ProbabilityTrait for Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 wrapper construction.
         fn new(p: f64) -> Self { Probability(p) }
@@ -59,25 +82,6 @@ pub mod Probability {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — f64 constant construction.
         fn zero() -> Self { Probability(0.0) }
     }
-
-    // 11. derive impls
-    impl Default for Probability {
-        /// - Alg Analysis: APAS: (no cost stated)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to zero().
-        fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
-    }
-
-    impl PartialEq for Probability {
-        /// - Alg Analysis: APAS: (no cost stated)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — bit-level f64 comparison.
-
-        #[verifier::external_body] // accept hole
-        fn eq(&self, other: &Self) -> bool {
-            self.0.to_bits() == other.0.to_bits()
-        }
-    }
-
-    impl Eq for Probability {}
 
     impl PartialOrd for Probability {
         /// - Alg Analysis: APAS: (no cost stated)
@@ -107,14 +111,6 @@ pub mod Probability {
                 }
             }
         }
-    }
-
-    impl Hash for Probability {
-        /// - Alg Analysis: APAS: (no cost stated)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash f64 bits.
-
-        #[verifier::external_body]  // accept hole
-        fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
     }
 
     impl From<f64> for Probability {
@@ -181,9 +177,49 @@ pub mod Probability {
         open spec fn sub_spec(self, rhs: Probability) -> Probability { arbitrary() }
     }
 
+    //		Section 12. derive impls in verus!
+
+
+    // 11. derive impls
+    impl Default for Probability {
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — delegates to zero().
+        fn default() -> Self { <Probability as ProbabilityTrait>::zero() }
+    }
+
+    impl PartialEq for Probability {
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — bit-level f64 comparison.
+
+        #[verifier::external_body] // accept hole
+        fn eq(&self, other: &Self) -> bool {
+            self.0.to_bits() == other.0.to_bits()
+        }
+    }
+
+    impl Eq for Probability {}
+
+    impl Hash for Probability {
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — hash f64 bits.
+
+        #[verifier::external_body]  // accept hole
+        fn hash<H: Hasher>(&self, state: &mut H) { self.0.to_bits().hash(state); }
+    }
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 13. macros
+
+
+    #[macro_export]
+    macro_rules! prob {
+        ($value:expr) => {
+            <$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($value)
+        };
+    }
+
+    //		Section 14. derive impls outside verus!
+
     impl Debug for Probability {
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format f64 to debug string.
@@ -194,13 +230,5 @@ pub mod Probability {
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format f64 to display string.
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult { write!(f, "{}", self.0) }
-    }
-
-    // 12. macros
-    #[macro_export]
-    macro_rules! prob {
-        ($value:expr) => {
-            <$crate::Chap30::Probability::Probability::Probability as $crate::Chap30::Probability::Probability::ProbabilityTrait>::new($value)
-        };
     }
 }

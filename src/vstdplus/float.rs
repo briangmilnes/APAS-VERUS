@@ -13,7 +13,25 @@
 //! The trait `FloatTotalOrder` guards every axiom with `Self::float_wf(x)`, which for
 //! f32/f64 means `is_finite_spec()` (excludes NaN and infinity).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod float {
+
+    //		Section 2. imports
+
     use core::cmp::Ordering;
     use vstd::prelude::*;
     use vstd::float::FloatBitsProperties;
@@ -22,7 +40,11 @@ pub mod float {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -30,6 +52,87 @@ broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
+
+    //		Section 6. spec fns
+
+
+    // Every element of a sequence is well-formed.
+    pub open spec fn all_float_wf<T: FloatTotalOrder>(s: Seq<T>) -> bool {
+        forall|i: int| #![trigger s[i]] 0 <= i < s.len() ==> T::float_wf(s[i])
+    }
+
+    // Pairwise ordered under the float total order.
+    pub open spec fn spec_float_sorted<T: FloatTotalOrder>(s: Seq<T>) -> bool {
+        forall|a: int, b: int| 0 <= a < b < s.len() ==> #[trigger] s[a].le(s[b])
+    }
+
+    //		Section 7. proof fns/broadcast groups
+
+
+    // f64 broadcast axioms.  Each is an IEEE 754 truth for finite values.
+
+    pub broadcast axiom fn axiom_f64_le_functional(a: f64, b: f64)
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(a, b, false)]
+            !(le_ensures::<f64>(a, b, true) && le_ensures::<f64>(a, b, false));
+
+    pub broadcast axiom fn axiom_f64_reflexive(a: f64)
+        requires a.is_finite_spec(),
+        ensures  #[trigger] le_ensures::<f64>(a, a, true);
+
+    pub broadcast axiom fn axiom_f64_antisymmetric(a: f64, b: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+                 le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true),
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true)]
+            a == b;
+
+    pub broadcast axiom fn axiom_f64_transitive(a: f64, b: f64, c: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
+                 le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, c, true),
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, c, true)]
+            le_ensures::<f64>(a, c, true);
+
+    pub broadcast axiom fn axiom_f64_totality(a: f64, b: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true)]
+            le_ensures::<f64>(a, b, true) || le_ensures::<f64>(b, a, true);
+
+    // f32 broadcast axioms.
+
+    pub broadcast axiom fn axiom_f32_le_functional(a: f32, b: f32)
+        ensures
+            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(a, b, false)]
+            !(le_ensures::<f32>(a, b, true) && le_ensures::<f32>(a, b, false));
+
+    pub broadcast axiom fn axiom_f32_reflexive(a: f32)
+        requires a.is_finite_spec(),
+        ensures  #[trigger] le_ensures::<f32>(a, a, true);
+
+    pub broadcast axiom fn axiom_f32_antisymmetric(a: f32, b: f32)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+                 le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true),
+        ensures
+            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
+            a == b;
+
+    pub broadcast axiom fn axiom_f32_transitive(a: f32, b: f32, c: f32)
+        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
+                 le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, c, true),
+        ensures
+            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, c, true)]
+            le_ensures::<f32>(a, c, true);
+
+    pub broadcast axiom fn axiom_f32_totality(a: f32, b: f32)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+        ensures
+            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
+            le_ensures::<f32>(a, b, true) || le_ensures::<f32>(b, a, true);
+
+    //		Section 8. traits
+
 
     // A floating-point total order, conditional on well-formedness (finite, non-NaN,
     // non-infinite).  Every axiom requires well-formedness of its operands.
@@ -73,15 +176,8 @@ broadcast use {
                 });
     }
 
-    // Every element of a sequence is well-formed.
-    pub open spec fn all_float_wf<T: FloatTotalOrder>(s: Seq<T>) -> bool {
-        forall|i: int| #![trigger s[i]] 0 <= i < s.len() ==> T::float_wf(s[i])
-    }
+    //		Section 9. impls
 
-    // Pairwise ordered under the float total order.
-    pub open spec fn spec_float_sorted<T: FloatTotalOrder>(s: Seq<T>) -> bool {
-        forall|a: int, b: int| 0 <= a < b < s.len() ==> #[trigger] s[a].le(s[b])
-    }
 
     // f64
 
@@ -119,37 +215,6 @@ broadcast use {
         }
     }
 
-    // f64 broadcast axioms.  Each is an IEEE 754 truth for finite values.
-
-    pub broadcast axiom fn axiom_f64_le_functional(a: f64, b: f64)
-        ensures
-            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(a, b, false)]
-            !(le_ensures::<f64>(a, b, true) && le_ensures::<f64>(a, b, false));
-
-    pub broadcast axiom fn axiom_f64_reflexive(a: f64)
-        requires a.is_finite_spec(),
-        ensures  #[trigger] le_ensures::<f64>(a, a, true);
-
-    pub broadcast axiom fn axiom_f64_antisymmetric(a: f64, b: f64)
-        requires a.is_finite_spec(), b.is_finite_spec(),
-                 le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true),
-        ensures
-            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true)]
-            a == b;
-
-    pub broadcast axiom fn axiom_f64_transitive(a: f64, b: f64, c: f64)
-        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
-                 le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, c, true),
-        ensures
-            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, c, true)]
-            le_ensures::<f64>(a, c, true);
-
-    pub broadcast axiom fn axiom_f64_totality(a: f64, b: f64)
-        requires a.is_finite_spec(), b.is_finite_spec(),
-        ensures
-            #![trigger le_ensures::<f64>(a, b, true), le_ensures::<f64>(b, a, true)]
-            le_ensures::<f64>(a, b, true) || le_ensures::<f64>(b, a, true);
-
     // f32
 
     impl FloatTotalOrder for f32 {
@@ -186,36 +251,8 @@ broadcast use {
         }
     }
 
-    // f32 broadcast axioms.
+    //		Section 4. type definitions
 
-    pub broadcast axiom fn axiom_f32_le_functional(a: f32, b: f32)
-        ensures
-            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(a, b, false)]
-            !(le_ensures::<f32>(a, b, true) && le_ensures::<f32>(a, b, false));
-
-    pub broadcast axiom fn axiom_f32_reflexive(a: f32)
-        requires a.is_finite_spec(),
-        ensures  #[trigger] le_ensures::<f32>(a, a, true);
-
-    pub broadcast axiom fn axiom_f32_antisymmetric(a: f32, b: f32)
-        requires a.is_finite_spec(), b.is_finite_spec(),
-                 le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true),
-        ensures
-            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
-            a == b;
-
-    pub broadcast axiom fn axiom_f32_transitive(a: f32, b: f32, c: f32)
-        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
-                 le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, c, true),
-        ensures
-            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, c, true)]
-            le_ensures::<f32>(a, c, true);
-
-    pub broadcast axiom fn axiom_f32_totality(a: f32, b: f32)
-        requires a.is_finite_spec(), b.is_finite_spec(),
-        ensures
-            #![trigger le_ensures::<f32>(a, b, true), le_ensures::<f32>(b, a, true)]
-            le_ensures::<f32>(a, b, true) || le_ensures::<f32>(b, a, true);
 
     // WrappedF64: newtype wrapper giving f64 a View impl for use in ArraySeq and other
     // Verus containers that require View.
@@ -225,10 +262,84 @@ broadcast use {
         pub val: f64,
     }
 
+    //		Section 5. view impls
+
+
     impl View for WrappedF64 {
         type V = f64;
         open spec fn view(&self) -> f64 { self.val }
     }
+
+
+    // Uninterpreted sentinel for unreachable distance (f64::INFINITY at runtime).
+    pub uninterp spec fn UNREACHABLE_SPEC() -> f64;
+
+    // Uninterpreted spec functions for f64 arithmetic (Verus has no spec_add for f64).
+
+    pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_sub_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_mul_spec(a: f64, b: f64) -> f64;
+    pub uninterp spec fn f64_sqrt_spec(a: f64) -> f64;
+    pub uninterp spec fn f64_approx_eq_spec(a: f64, b: f64) -> bool;
+
+
+    // f64 constant axioms.
+
+    pub broadcast axiom fn axiom_f64_zero_is_finite()
+        ensures #[trigger] (0.0f64).is_finite_spec();
+
+    pub broadcast axiom fn axiom_f64_unreachable_not_finite()
+        ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false;
+
+    // f64 arithmetic axioms.
+
+    pub broadcast axiom fn axiom_f64_add_zero_right(a: f64)
+        requires a.is_finite_spec(),
+        ensures #[trigger] f64_add_spec(a, 0.0f64) == a;
+
+    pub broadcast axiom fn axiom_f64_add_commutative(a: f64, b: f64)
+        ensures
+            #![trigger f64_add_spec(a, b), f64_add_spec(b, a)]
+            f64_add_spec(a, b) == f64_add_spec(b, a);
+
+    pub broadcast axiom fn axiom_f64_add_finite_preserves(a: f64, b: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(),
+                 f64_add_spec(a, b).is_finite_spec(),
+        ensures
+            #[trigger] f64_add_spec(a, b).is_finite_spec();
+
+    pub broadcast axiom fn axiom_f64_add_monotone_left(a: f64, b: f64, c: f64)
+        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
+                 le_ensures::<f64>(a, b, true),
+                 f64_add_spec(a, c).is_finite_spec(),
+                 f64_add_spec(b, c).is_finite_spec(),
+        ensures
+            #![trigger le_ensures::<f64>(a, b, true), f64_add_spec(a, c), f64_add_spec(b, c)]
+            le_ensures::<f64>(f64_add_spec(a, c), f64_add_spec(b, c), true);
+
+    // Single broadcast group for both float types.
+    pub broadcast group group_float_finite_total_order {
+        axiom_f64_le_functional,
+        axiom_f64_reflexive,
+        axiom_f64_antisymmetric,
+        axiom_f64_transitive,
+        axiom_f64_totality,
+        axiom_f32_le_functional,
+        axiom_f32_reflexive,
+        axiom_f32_antisymmetric,
+        axiom_f32_transitive,
+        axiom_f32_totality,
+    }
+
+    pub broadcast group group_float_arithmetic {
+        axiom_f64_zero_is_finite,
+        axiom_f64_unreachable_not_finite,
+        axiom_f64_add_zero_right,
+        axiom_f64_add_commutative,
+        axiom_f64_add_finite_preserves,
+        axiom_f64_add_monotone_left,
+    }
+
 
     #[cfg(verus_keep_ghost)]
     impl ClonePreservesView for WrappedF64 {
@@ -308,17 +419,6 @@ broadcast use {
         x.is_finite()
     }
 
-    // Uninterpreted sentinel for unreachable distance (f64::INFINITY at runtime).
-    pub uninterp spec fn UNREACHABLE_SPEC() -> f64;
-
-    // f64 constant axioms.
-
-    pub broadcast axiom fn axiom_f64_zero_is_finite()
-        ensures #[trigger] (0.0f64).is_finite_spec();
-
-    pub broadcast axiom fn axiom_f64_unreachable_not_finite()
-        ensures #[trigger] UNREACHABLE_SPEC().is_finite_spec() == false;
-
     #[verifier::external_body]
     pub fn unreachable_dist() -> (d: WrappedF64)
         ensures d@ == UNREACHABLE_SPEC(),
@@ -343,14 +443,6 @@ broadcast use {
         WrappedF64 { val: v }
     }
 
-    // Uninterpreted spec functions for f64 arithmetic (Verus has no spec_add for f64).
-
-    pub uninterp spec fn f64_add_spec(a: f64, b: f64) -> f64;
-    pub uninterp spec fn f64_sub_spec(a: f64, b: f64) -> f64;
-    pub uninterp spec fn f64_mul_spec(a: f64, b: f64) -> f64;
-    pub uninterp spec fn f64_sqrt_spec(a: f64) -> f64;
-    pub uninterp spec fn f64_approx_eq_spec(a: f64, b: f64) -> bool;
-
     // Free-standing f64 arithmetic exec bridges.
 
     #[verifier::external_body]
@@ -372,57 +464,10 @@ broadcast use {
     pub fn f64_sqrt(a: f64) -> (r: f64)
         ensures r == f64_sqrt_spec(a),
     { a.sqrt() }
-
-    // f64 arithmetic axioms.
-
-    pub broadcast axiom fn axiom_f64_add_zero_right(a: f64)
-        requires a.is_finite_spec(),
-        ensures #[trigger] f64_add_spec(a, 0.0f64) == a;
-
-    pub broadcast axiom fn axiom_f64_add_commutative(a: f64, b: f64)
-        ensures
-            #![trigger f64_add_spec(a, b), f64_add_spec(b, a)]
-            f64_add_spec(a, b) == f64_add_spec(b, a);
-
-    pub broadcast axiom fn axiom_f64_add_finite_preserves(a: f64, b: f64)
-        requires a.is_finite_spec(), b.is_finite_spec(),
-                 f64_add_spec(a, b).is_finite_spec(),
-        ensures
-            #[trigger] f64_add_spec(a, b).is_finite_spec();
-
-    pub broadcast axiom fn axiom_f64_add_monotone_left(a: f64, b: f64, c: f64)
-        requires a.is_finite_spec(), b.is_finite_spec(), c.is_finite_spec(),
-                 le_ensures::<f64>(a, b, true),
-                 f64_add_spec(a, c).is_finite_spec(),
-                 f64_add_spec(b, c).is_finite_spec(),
-        ensures
-            #![trigger le_ensures::<f64>(a, b, true), f64_add_spec(a, c), f64_add_spec(b, c)]
-            le_ensures::<f64>(f64_add_spec(a, c), f64_add_spec(b, c), true);
-
-    // Single broadcast group for both float types.
-    pub broadcast group group_float_finite_total_order {
-        axiom_f64_le_functional,
-        axiom_f64_reflexive,
-        axiom_f64_antisymmetric,
-        axiom_f64_transitive,
-        axiom_f64_totality,
-        axiom_f32_le_functional,
-        axiom_f32_reflexive,
-        axiom_f32_antisymmetric,
-        axiom_f32_transitive,
-        axiom_f32_totality,
-    }
-
-    pub broadcast group group_float_arithmetic {
-        axiom_f64_zero_is_finite,
-        axiom_f64_unreachable_not_finite,
-        axiom_f64_add_zero_right,
-        axiom_f64_add_commutative,
-        axiom_f64_add_finite_preserves,
-        axiom_f64_add_monotone_left,
-    }
-
     } // verus!
+
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for WrappedF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

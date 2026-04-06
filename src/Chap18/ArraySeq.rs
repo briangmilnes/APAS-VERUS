@@ -4,22 +4,25 @@
 //! The simplest possible version, ignoring parallelism. Verusified.
 
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4. type definitions
-//	5. view impls
-//	6. spec fns
-//	7. proof fns/broadcast groups
-//	8. traits
-//	9. impls
-//	10. iterators
-//	11. derive impls in verus!
-//	13. derive impls outside verus!
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 10. iterators
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
 
-//		1. module
+//		Section 1. module
 
 pub mod ArraySeq {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter};
     use std::fmt::Result as FmtResult;
@@ -28,9 +31,9 @@ pub mod ArraySeq {
 
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    //		2. imports
 
     #[cfg(verus_keep_ghost)]
     use {
@@ -48,8 +51,8 @@ pub mod ArraySeq {
     #[cfg(verus_keep_ghost)]
     use vstd::relations::associative;
 
+    //		Section 3. broadcast use
 
-    //		3. broadcast use
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -62,14 +65,16 @@ pub mod ArraySeq {
         crate::vstdplus::feq::feq::group_feq_axioms,
     };
 
-    //		4. type definitions
+    //		Section 4. type definitions
+
 
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqS<T> {
         pub seq: Vec<T>,
     }
 
-    //		5. view impls
+    //		Section 5. view impls
+
 
     impl<T: View> View for ArraySeqS<T> {
         type V = Seq<T::V>;
@@ -79,7 +84,18 @@ pub mod ArraySeq {
         }
     }
 
-    //		6. spec fns
+
+    impl<T: DeepView> DeepView for ArraySeqS<T> {
+        type V = Seq<T::V>;
+
+        open spec fn deep_view(&self) -> Seq<T::V> {
+            let v = self.seq@;
+            Seq::new(v.len(), |i: int| v[i].deep_view())
+        }
+    }
+
+    //		Section 6. spec fns
+
 
     /// Definition 18.7 (iterate). Left fold over a sequence: applies f to the accumulator
     /// and each element from left to right.  spec_iterate(s, f, start_x) = f(...f(f(start_x, s[0]), s[1])..., s[n-1]).
@@ -155,8 +171,8 @@ pub mod ArraySeq {
         forall|x: T| x.deep_view() == x
     }
 
+    //		Section 7. proof fns/broadcast groups
 
-    //		7. proof fns/broadcast groups
 
     // Bridge: deep_view preserves length.
     proof fn lemma_deep_view_len<T: DeepView>(v: &Vec<T>)
@@ -305,7 +321,8 @@ pub mod ArraySeq {
         lemma_find_key_index_not_found(s.deep_view(), k.deep_view());
     }
 
-    //		8. traits
+    //		Section 8. traits
+
 
     /// Data Type 18.1: Generic sequence trait for array-backed sequences.
     pub trait ArraySeqTrait<T: View>: Sized {
@@ -597,19 +614,8 @@ pub mod ArraySeq {
            collected.seq.deep_view() =~= spec_collect(pairs.seq@);
    }
 
+    //		Section 9. impls
 
-    //		9. impls
-
-    impl<T: DeepView> DeepView for ArraySeqS<T> {
-        type V = Seq<T::V>;
-
-        open spec fn deep_view(&self) -> Seq<T::V> {
-            let v = self.seq@;
-            Seq::new(v.len(), |i: int| v[i].deep_view())
-        }
-    }
-
-    //		9. impls
 
     impl<T: View> ArraySeqTrait<T> for ArraySeqS<T> {
         open spec fn spec_len(&self) -> nat {
@@ -1497,15 +1503,9 @@ pub mod ArraySeq {
         pub fn iter_mut(&mut self) -> IterMut<'_, T> { self.seq.iter_mut() }
     }
 
-    #[cfg(verus_keep_ghost)]
-    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqS<T> {
-        open spec fn obeys_eq_spec() -> bool { true }
-        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
-    }
+    //		Section 10. iterators
 
-    //		10. iterators
 
-    
     /// Inner is private; closed view() can access it but external code cannot see it.
     #[verifier::reject_recursive_types(T)]
     pub struct ArraySeqIter<'a, T> {
@@ -1631,7 +1631,15 @@ pub mod ArraySeq {
         fn into_iter(self) -> Self::IntoIter { self.seq.iter_mut() }
     }
 
-    //		11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
+
+    #[cfg(verus_keep_ghost)]
+    impl<T: View + PartialEq> PartialEqSpecImpl for ArraySeqS<T> {
+        open spec fn obeys_eq_spec() -> bool { true }
+        open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
+    }
+
 
     impl<T: Clone> Clone for ArraySeqS<T> {
         fn clone(&self) -> (res: Self)
@@ -1658,8 +1666,8 @@ pub mod ArraySeq {
 
     } // verus!
 
+    //		Section 14. derive impls outside verus!
 
-    //		13. derive impls outside verus!
 
     impl<T: Debug> Debug for ArraySeqS<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {

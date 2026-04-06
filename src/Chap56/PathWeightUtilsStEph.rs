@@ -12,7 +12,21 @@
 //! - `path_weight`: Work O(k), Span O(k) where k is path length
 //! - `validate_subpath_property`: Work O(k), Span O(k) for k-vertex path
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod PathWeightUtilsStEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -21,20 +35,19 @@ pub mod PathWeightUtilsStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::float::float::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T = ArraySeqStPerS<usize>;
 
+
     pub struct PathWeightUtilsStEphS;
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait PathWeightUtilsStEphTrait: Sized {
         spec fn spec_path_weight_int(
@@ -82,7 +95,8 @@ pub mod PathWeightUtilsStEph {
         ) -> (valid: bool);
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl PathWeightUtilsStEphTrait for PathWeightUtilsStEphS {
     open spec fn spec_path_weight_int(
@@ -311,7 +325,8 @@ pub mod PathWeightUtilsStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for PathWeightUtilsStEphS {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

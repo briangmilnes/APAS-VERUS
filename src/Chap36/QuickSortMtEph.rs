@@ -5,24 +5,27 @@
 //! Each applies its pivot strategy at every recursive level.
 //! Parallel recursion via ParaPair! for left/right subarrays after partition.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 6. spec fns
-// 7. proof fns
-// 8. traits
-// 9. impls
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-// 1. module
+//		Section 1. module
 
 pub mod QuickSortMtEph {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::Pair;
@@ -30,7 +33,8 @@ pub mod QuickSortMtEph {
     use crate::vstdplus::rand::rand::random_usize_range;
     use vstd::relations::*;
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -39,7 +43,8 @@ pub mod QuickSortMtEph {
         vstd::multiset::group_multiset_axioms,
     };
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec-level leq closure for sort_by and sorted_by.
     pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
@@ -59,7 +64,8 @@ pub mod QuickSortMtEph {
         }
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
     proof fn lemma_total_ordering<T: TotalOrder>()
@@ -177,7 +183,8 @@ pub mod QuickSortMtEph {
         vstd::seq_lib::lemma_sorted_unique(original.sort_by(leq), candidate, leq);
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait QuickSortMtEphTrait<T: TotalOrder> {
         /// Quicksort with first-element pivot. ParaPair! recursion.
@@ -237,7 +244,8 @@ pub mod QuickSortMtEph {
             ensures out@ =~= left.seq@ + mid.seq@ + right.seq@;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<T: TotalOrder + Copy + Send + 'static> QuickSortMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.

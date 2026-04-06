@@ -2,18 +2,37 @@
 //! REVIEWED: NO
 //! clone_plus - Add postconditions to Clone::clone for data and closures
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 8. traits
+//	Section 9. impls
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod clone_plus {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use core::clone::Clone;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 8. traits
+
 
     // Data cloning with cloned() postcondition
     pub trait ClonePlus: Clone + Sized {
         fn clone_plus(&self) -> (res: Self)
             ensures cloned(*self, res);
     }
+
+    //		Section 9. impls
+
 
     impl<T: Clone> ClonePlus for T {
         #[verifier::external_body]

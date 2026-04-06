@@ -12,7 +12,20 @@
 //! - Phase 3 (n Dijkstras in parallel): Work O(n * m log n) = O(mn log n), Span O(m log n)
 //! - Parallelism in Phase 3: Θ(n) - n independent Dijkstra runs
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+
+//		Section 1. module
+
 pub mod JohnsonMtEphI64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -30,7 +43,17 @@ pub mod JohnsonMtEphI64 {
     use crate::Chap57::DijkstraStEphU64::DijkstraStEphU64::dijkstra;
     use crate::Chap58::BellmanFordStEphI64::BellmanFordStEphI64::bellman_ford;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 4. type definitions
+
+
+    pub type T = WeightedDirGraphStEphI128<usize>;
+
+    //		Section 8. traits
+
+
         pub trait JohnsonMtEphI64Trait {
             /// Parallel Johnson's all-pairs shortest path algorithm
             /// APAS: Work O(mn log n), Span O(m log n) where n = |V|, m = |E|
@@ -49,7 +72,9 @@ pub mod JohnsonMtEphI64 {
                 ensures
                     apsp.spec_n() as nat == graph@.V.len();
         }
-    pub type T = WeightedDirGraphStEphI128<usize>;
+
+    //		Section 9. impls
+
 
     /// Adjust reweighted distance back to original weights.
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.

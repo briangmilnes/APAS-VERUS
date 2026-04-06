@@ -2,13 +2,36 @@
 //! REVIEWED: NO
 //! Chapter 52: Adjacency Matrix Graph (ephemeral, multi-threaded).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 12. derive impls in verus!
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod AdjMatrixGraphMtEph {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -17,15 +40,8 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // Table of Contents
-    // 4. type definitions
-    // 5. view impls
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub struct AdjMatrixGraphMtEph {
         pub matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>,
@@ -33,7 +49,8 @@ broadcast use {
         pub num_edges: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl View for AdjMatrixGraphMtEph {
         type V = Seq<Seq<bool>>;
@@ -42,7 +59,8 @@ broadcast use {
         }
     }
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Count how many of f(0), f(1), ..., f(n-1) are true.
     pub open spec fn spec_count_true(f: spec_fn(int) -> bool, n: int) -> nat
@@ -68,7 +86,8 @@ broadcast use {
             #[trigger] g.matrix.spec_index(i).spec_len() == g.n
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     proof fn lemma_count_true_monotone(f: spec_fn(int) -> bool, i: int, n: int)
         requires 0 <= i <= n
@@ -246,7 +265,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait AdjMatrixGraphMtEphTrait: Sized {
         spec fn spec_adjmatrixgraphmteph_wf(&self) -> bool;
@@ -365,7 +385,8 @@ broadcast use {
                     ==> #[trigger] complemented.spec_edge(i, j) == (i != j && !self.spec_edge(i, j));
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl AdjMatrixGraphMtEphTrait for AdjMatrixGraphMtEph {
 
@@ -778,7 +799,8 @@ broadcast use {
         }
     }
 
-    // 11. derive impls in verus!
+    //		Section 12. derive impls in verus!
+
 
     impl Clone for AdjMatrixGraphMtEph {
         fn clone(&self) -> (out: Self) {
@@ -788,7 +810,8 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for AdjMatrixGraphMtEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

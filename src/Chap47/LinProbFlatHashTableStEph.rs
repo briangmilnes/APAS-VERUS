@@ -3,17 +3,22 @@
 //! Linear Probing Flat Hash Table - Sequential Ephemeral (Chapter 47).
 //! Uses linear probing for open addressing collision resolution.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+
+//		Section 1. module
+
 pub mod LinProbFlatHashTableStEph {
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions (inside verus!)
-    // 6. spec fns (inside verus!: spec_linprobflathashsteph_wf)
-    // 7. proof fns (inside verus!: spec_count_empties, lemma_*_empties, lemma_probe_mod_identity)
-    // 9. impls (inside verus!)
-
-    // 2. imports
+    //		Section 2. imports
     use std::marker::PhantomData;
 
     use vstd::prelude::*;
@@ -25,17 +30,22 @@ pub mod LinProbFlatHashTableStEph {
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_clone, obeys_feq_full_trigger, lemma_reveal_view_injective};
 
-    verus! {
+    verus! 
+{
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
+
     broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
 
-    // 4. type definitions
+    //		Section 4. type definitions
+
 
     /// Linear Probing Flat Hash Table implementation.
     pub struct LinProbFlatHashTableStEph;
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Well-formedness for linear probing flat hash tables.
     /// Unlike chained tables where keys live at their hash slot, open addressing
@@ -68,7 +78,6 @@ pub mod LinProbFlatHashTableStEph {
             })
     }
 
-    // 7. proof fns
 
     /// Counts the number of Empty entries in a flat hash table sequence.
     pub open spec fn spec_count_empties<Key, Value>(
@@ -80,6 +89,9 @@ pub mod LinProbFlatHashTableStEph {
         else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
         else { spec_count_empties(table.drop_last()) }
     }
+
+    //		Section 7. proof fns/broadcast groups
+
 
     /// An all-Empty sequence has empties count equal to its length.
     pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
@@ -171,7 +183,8 @@ pub mod LinProbFlatHashTableStEph {
         }
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl<Key: StT, Value: StT, Metrics: Default, H: Fn(&Key, usize) -> usize + Clone>
         ParaHashTableStEphTrait<Key, Value, FlatEntry<Key, Value>, Metrics, H>
@@ -922,7 +935,8 @@ pub mod LinProbFlatHashTableStEph {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for LinProbFlatHashTableStEph {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

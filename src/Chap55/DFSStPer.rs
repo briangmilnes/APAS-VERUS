@@ -4,7 +4,23 @@
 //! Recursive DFS for finding reachable vertices from a source vertex.
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod DFSStPer {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
@@ -15,25 +31,24 @@ pub mod DFSStPer {
     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_toposortstper_wf, spec_reachable_per, spec_has_edge_per, spec_is_path_per};
     use crate::Types::Types::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use vstd::seq::group_seq_axioms;
 
-    // Table of Contents
-    // 1. module
-    // 2. imports
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
+
+
     pub struct DFSStPer;
 
-    // 6. spec fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
     proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
@@ -56,7 +71,6 @@ broadcast use vstd::seq::group_seq_axioms;
     {
     }
 
-    // 7. proof fns
 
     /// A vertex is trivially reachable from itself (persistent graph variant).
     proof fn lemma_reachable_self_per(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>, v: int)
@@ -188,7 +202,8 @@ broadcast use vstd::seq::group_seq_axioms;
         lemma_neighbor_closed_path_per(graph, visited, path);
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait DFSStPerTrait {
         /// Performs DFS from source vertex s on adjacency list graph G
@@ -210,7 +225,8 @@ broadcast use vstd::seq::group_seq_axioms;
             ;
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Recursive DFS helper using a bool vector for termination tracking and
     /// an AVLTreeSetStPer for persistent result accumulation.
@@ -468,7 +484,8 @@ broadcast use vstd::seq::group_seq_axioms;
 
     } // verus!
 
-    // 14. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for DFSStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

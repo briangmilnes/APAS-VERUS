@@ -8,24 +8,27 @@
 //! span for the divide phase. Both filter closures and the multiset decomposition are
 //! fully verified.
 
-// Table of Contents
-// 1. module
-// 2. imports
-// 3. broadcast use
-// 6. spec fns
-// 7. proof fns
-// 8. traits
-// 9. impls
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
 
-// 1. module
+//		Section 1. module
 
 pub mod OrderStatSelectMtPer {
 
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
 
-    verus! {
+    verus! 
+{
 
-    // 2. imports
 
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
@@ -36,7 +39,8 @@ pub mod OrderStatSelectMtPer {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use vstd::relations::*;
 
-    // 3. broadcast use
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::vec::group_vec_axioms,
@@ -47,7 +51,8 @@ pub mod OrderStatSelectMtPer {
         vstd::seq_lib::group_seq_properties,
     };
 
-    // 6. spec fns
+    //		Section 6. spec fns
+
 
     /// Spec-level leq closure for sort_by and sorted_by.
     pub open spec fn spec_leq<T: TotalOrder>() -> spec_fn(T, T) -> bool {
@@ -72,7 +77,8 @@ pub mod OrderStatSelectMtPer {
         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
     }
 
-    // 7. proof fns
+    //		Section 7. proof fns/broadcast groups
+
 
     /// Bridge from the TotalOrder trait to vstd's total_ordering predicate.
     pub proof fn lemma_total_ordering<T: TotalOrder>()
@@ -127,7 +133,8 @@ pub mod OrderStatSelectMtPer {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait OrderStatSelectMtPerTrait<T: TotalOrder + Clone + Eq> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
@@ -143,7 +150,8 @@ pub mod OrderStatSelectMtPer {
                     Seq::new(a.spec_len(), |i: int| a.spec_index(i)), k as int));
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     /// Append all elements of `b` onto the end of `a`.
     fn append_vec<T: Copy>(a: &mut Vec<T>, b: &Vec<T>)

@@ -5,25 +5,33 @@
 //! Uses external_trait_specification/external_trait_extension pattern like vstd/std_specs/cmp.rs
 //! to add full equality specs to Rust's Eq trait.
 
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 6. spec fns
+//	Section 7. proof fns/broadcast groups
+//	Section 8. traits
+//	Section 9. impls
+
 #[cfg(verus_keep_ghost)]
+
+//		Section 1. module
+
 pub mod feq {
+
+    //		Section 2. imports
+
     use vstd::prelude::*;
     use vstd::std_specs::cmp::PartialEqSpec;
     use vstd::pervasive::strictly_cloned;
     use core::cmp::Eq;
     use core::marker::PointeeSized;
 
-    verus! {
+    verus! 
+{
 
-    // Extend Eq with full equality specs using external_trait_extension
-    #[verifier::external_trait_specification]
-    #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
-    pub trait ExFeq: PartialEq + PointeeSized {
-        type ExternalTraitSpecificationFor: Eq;
+    //		Section 6. spec fns
 
-        // Whether this type obeys full equality (reflexive, symmetric, transitive)
-        spec fn obeys_feq() -> bool;
-    }
 
     // Spec functions for full equality properties (using eq_spec from PartialEqSpec)
     pub open spec fn feq_reflexive<T: Eq + Sized>() -> bool {
@@ -84,6 +92,13 @@ pub mod feq {
     // Trigger function for broadcast axiom: obeys_feq_full holds for well-behaved types.
     pub open spec fn obeys_feq_full_trigger<T>() -> bool { true }
 
+    // Broadcast axiom: types satisfying PartialEq + View obey view_eq.
+    // Sound because all PartialEq impls in APAS-VERUS satisfy the eq/view convention.
+    pub open spec fn obeys_view_eq_trigger<T>() -> bool { true }
+
+    //		Section 7. proof fns/broadcast groups
+
+
     /// Lemma: cloned values have equal views when obeys_feq_full holds
     pub proof fn lemma_cloned_view_eq<T: Eq + View + Clone + Sized>(x: T, y: T)
         requires cloned(x, y), obeys_feq_full::<T>(),
@@ -114,6 +129,96 @@ pub mod feq {
             assert(x@ == y@ ==> x == y);
         }
     }
+
+    // Broadcast proof: cloned values are equal (reference version)
+    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
+        ensures *x == y
+    {
+        admit();
+    }
+
+    // Broadcast proof: cloned values are equal (owned version)
+    pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+        requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
+        ensures x == y
+    {
+        admit();
+    }
+
+    /// When two sequences have the same length and cloned at each index, their map to view is equal.
+    /// Use when establishing clone postconditions for types wrapping ArraySeqStPerS.
+    pub proof fn lemma_seq_map_cloned_view_eq<T: Eq + View + Clone + Sized>(
+        s1: Seq<T>,
+        s2: Seq<T>,
+    )
+        requires
+            s1.len() == s2.len(),
+            forall|i: int| #![trigger s1[i]] #![trigger s2[i]] 0 <= i < s1.len() ==> cloned(s1[i], s2[i]),
+            obeys_feq_clone::<T>(),
+        ensures
+            s1.map(|_i: int, t: T| t@) == s2.map(|_i: int, t: T| t@),
+    {
+        broadcast use axiom_cloned_implies_eq_owned;
+        broadcast use {
+            vstd::seq::group_seq_axioms,
+            crate::vstdplus::feq::feq::group_feq_axioms,
+            vstd::seq_lib::group_seq_properties,
+            vstd::seq_lib::group_to_multiset_ensures,
+        };
+    }
+
+    // Broadcast axiom: types satisfying Eq + View + Clone obey feq_full.
+    pub broadcast proof fn axiom_obeys_feq_full<T: Eq + View + Clone + Sized>()
+        requires #[trigger] obeys_feq_full_trigger::<T>()
+        ensures obeys_feq_full::<T>()
+    { admit(); }
+
+    pub broadcast proof fn axiom_obeys_view_eq<T: PartialEq + View + Sized>()
+        requires #[trigger] obeys_view_eq_trigger::<T>()
+        ensures vstd::laws_eq::obeys_view_eq::<T>()
+    { admit(); }
+
+    // Broadcast proof: strictly_cloned values are equal (reference version).
+    pub broadcast proof fn axiom_strictly_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
+        requires #[trigger] strictly_cloned(*x, y), obeys_feq_clone::<T>()
+        ensures *x == y
+    {
+        admit();
+    }
+
+    // Broadcast proof: strictly_cloned values are equal (owned version).
+    pub broadcast proof fn axiom_strictly_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
+        requires #[trigger] strictly_cloned(x, y), obeys_feq_clone::<T>()
+        ensures x == y
+    {
+        admit();
+    }
+
+    pub broadcast group group_feq_axioms {
+        axiom_cloned_implies_eq,
+        axiom_cloned_implies_eq_owned,
+        axiom_strictly_cloned_implies_eq,
+        axiom_strictly_cloned_implies_eq_owned,
+        axiom_obeys_feq_full,
+        axiom_obeys_view_eq,
+    }
+
+    //		Section 8. traits
+
+
+    // Extend Eq with full equality specs using external_trait_extension
+    #[verifier::external_trait_specification]
+    #[verifier::external_trait_extension(FeqSpec via FeqSpecImpl)]
+    pub trait ExFeq: PartialEq + PointeeSized {
+        type ExternalTraitSpecificationFor: Eq;
+
+        // Whether this type obeys full equality (reflexive, symmetric, transitive)
+        spec fn obeys_feq() -> bool;
+    }
+
+    //		Section 9. impls
+
 
     // Implementation for bool
     impl FeqSpecImpl for bool {
@@ -179,44 +284,6 @@ pub mod feq {
         open spec fn obeys_feq() -> bool { obeys_feq_properties::<isize>() }
     }
 
-    // Broadcast proof: cloned values are equal (reference version)
-    pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
-        requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
-        ensures *x == y
-    {
-        admit();
-    }
-
-    // Broadcast proof: cloned values are equal (owned version)
-    pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
-        requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
-        ensures x == y
-    {
-        admit();
-    }
-
-    /// When two sequences have the same length and cloned at each index, their map to view is equal.
-    /// Use when establishing clone postconditions for types wrapping ArraySeqStPerS.
-    pub proof fn lemma_seq_map_cloned_view_eq<T: Eq + View + Clone + Sized>(
-        s1: Seq<T>,
-        s2: Seq<T>,
-    )
-        requires
-            s1.len() == s2.len(),
-            forall|i: int| #![trigger s1[i]] #![trigger s2[i]] 0 <= i < s1.len() ==> cloned(s1[i], s2[i]),
-            obeys_feq_clone::<T>(),
-        ensures
-            s1.map(|_i: int, t: T| t@) == s2.map(|_i: int, t: T| t@),
-    {
-        broadcast use axiom_cloned_implies_eq_owned;
-        broadcast use {
-            vstd::seq::group_seq_axioms,
-            crate::vstdplus::feq::feq::group_feq_axioms,
-            vstd::seq_lib::group_seq_properties,
-            vstd::seq_lib::group_to_multiset_ensures,
-        };
-    }
-
     // Exec function: test equality and get spec fact
     pub fn feq<T: Eq + View + Clone + Sized>(x: &T, y: &T) -> (eq: bool)
         requires obeys_feq_full::<T>()
@@ -231,47 +298,6 @@ pub mod feq {
         }
         result
     }
-
-    // Broadcast axiom: types satisfying Eq + View + Clone obey feq_full.
-    pub broadcast proof fn axiom_obeys_feq_full<T: Eq + View + Clone + Sized>()
-        requires #[trigger] obeys_feq_full_trigger::<T>()
-        ensures obeys_feq_full::<T>()
-    { admit(); }
-
-    // Broadcast axiom: types satisfying PartialEq + View obey view_eq.
-    // Sound because all PartialEq impls in APAS-VERUS satisfy the eq/view convention.
-    pub open spec fn obeys_view_eq_trigger<T>() -> bool { true }
-
-    pub broadcast proof fn axiom_obeys_view_eq<T: PartialEq + View + Sized>()
-        requires #[trigger] obeys_view_eq_trigger::<T>()
-        ensures vstd::laws_eq::obeys_view_eq::<T>()
-    { admit(); }
-
-    // Broadcast proof: strictly_cloned values are equal (reference version).
-    pub broadcast proof fn axiom_strictly_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
-        requires #[trigger] strictly_cloned(*x, y), obeys_feq_clone::<T>()
-        ensures *x == y
-    {
-        admit();
-    }
-
-    // Broadcast proof: strictly_cloned values are equal (owned version).
-    pub broadcast proof fn axiom_strictly_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
-        requires #[trigger] strictly_cloned(x, y), obeys_feq_clone::<T>()
-        ensures x == y
-    {
-        admit();
-    }
-
-    pub broadcast group group_feq_axioms {
-        axiom_cloned_implies_eq,
-        axiom_cloned_implies_eq_owned,
-        axiom_strictly_cloned_implies_eq,
-        axiom_strictly_cloned_implies_eq_owned,
-        axiom_obeys_feq_full,
-        axiom_obeys_view_eq,
-    }
-
     } // verus!
 }
 
@@ -282,7 +308,7 @@ pub mod feq {
     pub fn feq<T: Eq>(x: &T, y: &T) -> bool {
         *x == *y
     }
-    
+
     /// Stub obeys_feq_clone for non-Verus builds - always true
     pub fn obeys_feq_clone<T: Eq + Clone>() -> bool { true }
 }

@@ -4,7 +4,28 @@
 //! Queue-based BFS for distances (54.5) and shortest-path tree (54.6).
 //! Work: O(|V| + |E|), Span: O(|V| + |E|).
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 4. type definitions
+//	Section 4a. type definitions
+//	Section 8a. traits
+//	Section 9a. impls
+//	Section 4b. type definitions
+//	Section 6b. spec fns
+//	Section 7b. proof fns/broadcast groups
+//	Section 8b. traits
+//	Section 9b. impls
+//	Section 14a. derive impls outside verus!
+//	Section 14b. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod BFSStPer {
+
+
+    //		Section 2. imports
 
     use std::collections::VecDeque;
 
@@ -12,29 +33,82 @@ pub mod BFSStPer {
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
 
-    verus! {
+    verus! 
+{
 
-    // Table of Contents
-    // 4. type definitions
-    // 6. spec fns
-    // 7. proof fns
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
+
     pub type T<N> = ArraySeqStPerS<ArraySeqStPerS<N>>;
 
     pub const UNREACHABLE: usize = usize::MAX;
     pub const NO_PARENT: usize = usize::MAX;
+
+    //		Section 4a. type definitions
+
 
     pub struct BFSTreeS {
         pub parents: ArraySeqStPerS<usize>,
         pub order: ArraySeqStPerS<usize>,
     }
 
+    //		Section 8a. traits
+
+
+    pub trait BFSTreeStPerTrait {
+        spec fn spec_order(&self) -> ArraySeqStPerS<usize>;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        fn top_down_order(&self) -> (order: &ArraySeqStPerS<usize>)
+            ensures
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(i);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        fn bottom_up_order(&self) -> (order: ArraySeqStPerS<usize>)
+            requires self.spec_order().spec_len() <= usize::MAX,
+            ensures
+                order.spec_len() == self.spec_order().spec_len(),
+                forall|i: int| 0 <= i < order.spec_len() ==>
+                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
+    }
+
+    //		Section 9a. impls
+
+
+    impl BFSTreeStPerTrait for BFSTreeS {
+        open spec fn spec_order(&self) -> ArraySeqStPerS<usize> {
+            self.order
+        }
+
+        /// Vertices in BFS order (root first, then distance 1, 2, ...).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
+        fn top_down_order(&self) -> (order: &ArraySeqStPerS<usize>) {
+            &self.order
+        }
+
+        /// Vertices in reverse BFS order (furthest from root first).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
+        fn bottom_up_order(&self) -> (order: ArraySeqStPerS<usize>) {
+            let n = self.order.length();
+            ArraySeqStPerS::tabulate(
+                &|i: usize| -> (r: usize)
+                    requires i < n, n == self.order.spec_len()
+                    ensures r == self.order.spec_index((n - 1 - i) as int)
+                { *self.order.nth(n - 1 - i) },
+                n,
+            )
+        }
+    }
+
+    //		Section 4b. type definitions
+
+
     pub struct BFSStPer;
 
-    // 6. spec fns
+    //		Section 6b. spec fns
+
 
     /// All neighbor indices in the adjacency list are valid vertex indices.
     pub open spec fn spec_bfsstper_wf(graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>) -> bool {
@@ -55,7 +129,8 @@ pub mod BFSStPer {
             #[trigger] parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
     }
 
-    // 7. proof fns
+    //		Section 7b. proof fns/broadcast groups
+
 
     proof fn lemma_tabulate_all_no_parent(parents: &ArraySeqStPerS<usize>, n: int)
         requires
@@ -137,7 +212,9 @@ pub mod BFSStPer {
         }
     }
 
-    // 8. traits
+    //		Section 8b. traits
+
+
     pub trait BFSStPerTrait {
         /// Algorithm 54.5: BFSDistance. Returns distance from source for every vertex.
         /// - Alg Analysis: APAS (Ch54 Alg 54.4): Work O(m lg n), Span O(d lg^2 n)
@@ -182,26 +259,8 @@ pub mod BFSStPer {
         ;
     }
 
-    pub trait BFSTreeStPerTrait {
-        spec fn spec_order(&self) -> ArraySeqStPerS<usize>;
+    //		Section 9b. impls
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
-        fn top_down_order(&self) -> (order: &ArraySeqStPerS<usize>)
-            ensures
-                order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| 0 <= i < order.spec_len() ==>
-                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(i);
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
-        fn bottom_up_order(&self) -> (order: ArraySeqStPerS<usize>)
-            requires self.spec_order().spec_len() <= usize::MAX,
-            ensures
-                order.spec_len() == self.spec_order().spec_len(),
-                forall|i: int| 0 <= i < order.spec_len() ==>
-                    #[trigger] order.spec_index(i) == self.spec_order().spec_index(self.spec_order().spec_len() - 1 - i);
-    }
-
-    // 9. impls
 
     impl BFSStPerTrait for BFSStPer {
 
@@ -430,35 +489,10 @@ pub mod BFSStPer {
     }
 
     } // impl BFSStPerTrait
-
-    impl BFSTreeStPerTrait for BFSTreeS {
-        open spec fn spec_order(&self) -> ArraySeqStPerS<usize> {
-            self.order
-        }
-
-        /// Vertices in BFS order (root first, then distance 1, 2, ...).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — returns reference.
-        fn top_down_order(&self) -> (order: &ArraySeqStPerS<usize>) {
-            &self.order
-        }
-
-        /// Vertices in reverse BFS order (furthest from root first).
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — reverse via tabulate.
-        fn bottom_up_order(&self) -> (order: ArraySeqStPerS<usize>) {
-            let n = self.order.length();
-            ArraySeqStPerS::tabulate(
-                &|i: usize| -> (r: usize)
-                    requires i < n, n == self.order.spec_len()
-                    ensures r == self.order.spec_index((n - 1 - i) as int)
-                { *self.order.nth(n - 1 - i) },
-                n,
-            )
-        }
-    }
-
     } // verus!
 
-    // 14a. derive impls outside verus! — struct BFSTreeS
+    //		Section 14a. derive impls outside verus!
+
 
     impl std::fmt::Debug for BFSTreeS {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -475,7 +509,7 @@ pub mod BFSStPer {
         }
     }
 
-    // 14b. derive impls outside verus! — struct BFSStPer
+    //		Section 14b. derive impls outside verus!
 
     impl std::fmt::Debug for BFSStPer {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

@@ -3,7 +3,22 @@
 //! Chapter 6 Weighted Directed Graph (ephemeral) with f64 weights - Single-threaded version.
 //! Uses WrappedF64 for Verus-compatible float weights.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 8. traits
+//	Section 9. impls
+//	Section 13. macros
+
+//		Section 1. module
+
 pub mod WeightedDirGraphStEphF64 {
+
+
+    //		Section 2. imports
 
     use std::fmt::{Debug, Display, Formatter, Result};
     use std::hash::Hash;
@@ -17,7 +32,11 @@ pub mod WeightedDirGraphStEphF64 {
     use crate::vstdplus::float::float::*;
     use crate::vstdplus::seq_set::*;
 
-verus! {
+verus! 
+{
+
+    //		Section 3. broadcast use
+
 
     broadcast use {
         vstd::std_specs::hash::group_hash_axioms,
@@ -30,8 +49,13 @@ verus! {
         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
     };
 
+    //		Section 4. type definitions
+
 
     pub type WeightedDirGraphStEphF64<V> = LabDirGraphStEph<V, WrappedF64>;
+
+    //		Section 8. traits
+
 
     pub trait WeightedDirGraphStEphF64Trait<V: StT + Hash>:
         View<V = LabGraphView<<V as View>::V, f64>> + Sized {
@@ -86,6 +110,9 @@ verus! {
                 forall |p: (V::V, f64)| in_neighbors@.contains(p) ==
                     (exists |w: f64| #![trigger self@.A.contains((p.0, v@, w))] self@.A.contains((p.0, v@, w)) && p.1 == w);
     }
+
+    //		Section 9. impls
+
 
     impl<V: StT + Hash> WeightedDirGraphStEphF64Trait<V> for WeightedDirGraphStEphF64<V> {
 
@@ -301,6 +328,9 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((p.0
     }
 
 } // verus!
+
+    //		Section 13. macros
+
 
     #[macro_export]
     macro_rules! WeightedDirGraphStEphF64Lit {

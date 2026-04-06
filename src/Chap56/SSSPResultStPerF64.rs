@@ -5,7 +5,23 @@
 //!
 //! Uses `WrappedF64` from vstdplus::float for distances with persistent array sequences.
 
+
+//  Table of Contents
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4. type definitions
+//	Section 5. view impls
+//	Section 8. traits
+//	Section 9. impls
+//	Section 14. derive impls outside verus!
+
+//		Section 1. module
+
 pub mod SSSPResultStPerF64 {
+
+
+    //		Section 2. imports
 
     use vstd::prelude::*;
 
@@ -13,7 +29,11 @@ pub mod SSSPResultStPerF64 {
     use crate::Types::Types::*;
     use crate::vstdplus::float::float::*;
 
-    verus! {
+    verus! 
+{
+
+    //		Section 3. broadcast use
+
 
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
@@ -23,15 +43,11 @@ broadcast use {
     vstd::seq_lib::group_to_multiset_ensures,
 };
 
-    // Table of Contents
-    // 4. type definitions
-    // 5. view impls
-    // 8. traits
-    // 9. impls
+    //		Section 4. type definitions
 
-    // 4. type definitions
 
     pub const NO_PREDECESSOR: usize = usize::MAX;
+
 
     pub struct SSSPResultStPerF64 {
         pub distances: ArraySeqStPerS<WrappedF64>,
@@ -39,7 +55,8 @@ broadcast use {
         pub source: usize,
     }
 
-    // 5. view impls
+    //		Section 5. view impls
+
 
     impl View for SSSPResultStPerF64 {
         type V = Seq<int>;
@@ -48,7 +65,8 @@ broadcast use {
         }
     }
 
-    // 8. traits
+    //		Section 8. traits
+
 
     pub trait SSSPResultStPerF64Trait: Sized {
         spec fn spec_ssspresultstperf64_wf(&self) -> bool;
@@ -131,7 +149,8 @@ broadcast use {
             requires self.spec_ssspresultstperf64_wf();
     }
 
-    // 9. impls
+    //		Section 9. impls
+
 
     impl SSSPResultStPerF64Trait for SSSPResultStPerF64 {
         open spec fn spec_ssspresultstperf64_wf(&self) -> bool {
@@ -264,7 +283,8 @@ broadcast use {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    //		Section 14. derive impls outside verus!
+
 
     impl std::fmt::Debug for SSSPResultStPerF64 {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
