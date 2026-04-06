@@ -1,0 +1,46 @@
+error: assertion failed
+   --> src/Chap37/AVLTreeSeqMtPer.rs:615:20
+    |
+615 |             assert(after_left_views =~= old_out_views + spec_inorder(n.left));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+after_left_views =~= old_out_views.add(spec_inorder(n.left)) 
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqMtPer.rs:494:5
+    |
+494 |     fn build_balanced_from_slice<T: StTInMtT>(a: &[T]) -> (link: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:322:17
+    |
+322 |                 values@.map_values(|t: T| t@) =~= self.spec_seq();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+776 |             out
+    |             --- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:775:13
+    |
+247 |             requires (*self).link_wf(),
+    |                      ----------------- failed precondition
+...
+775 |             self.root.inorder_collect(&mut out);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().map_values((|t| t.view())) =~= old(self).spec_seq() 
+
+verification results:: 1943 verified, 3 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 2769MB, peak z3 RSS: 433MB, min free: 15128MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 44s

@@ -1,0 +1,19 @@
+error[E0425]: cannot find function `lemma_size_lt_usize_max` in this scope
+   --> src/Chap37/AVLTreeSeqMtPer.rs:776:21
+    |
+776 |             proof { lemma_size_lt_usize_max::<T>(&self.root); }
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing one of these functions
+    |
+ 25 +     use crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::lemma_size_lt_usize_max;
+    |
+ 25 +     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::lemma_size_lt_usize_max;
+    |
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1085MB, peak z3 RSS: 0MB, min free: 17434MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

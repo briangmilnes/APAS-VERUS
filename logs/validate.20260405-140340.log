@@ -1,0 +1,22 @@
+error: precondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:777:13
+    |
+247 |             requires (*self).link_wf(),
+    |                      ----------------- failed precondition
+...
+777 |             self.root.inorder_collect(&mut out);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+tmp%.link_wf() 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1945 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 1395MB, peak z3 RSS: 406MB, min free: 16647MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 27s

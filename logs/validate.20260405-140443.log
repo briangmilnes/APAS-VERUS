@@ -1,0 +1,46 @@
+error: assertion failed
+   --> src/Chap37/AVLTreeSeqMtPer.rs:776:20
+    |
+776 |             assert(spec_avltreeseqmtper_wf(self.root));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqMtPer.rs:151:17
+    |
+151 |                   spec_avltreeseqmtper_wf(node.left)
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+152 |                   && spec_avltreeseqmtper_wf(node.right)
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+153 |                   && node.height as nat == 1 + spec_nat_max(
+    |  ____________________^
+154 | |                     spec_cached_height(&node.left),
+155 | |                     spec_cached_height(&node.right),
+156 | |                 )
+    | |_________________^
+157 |                   && node.size as nat == 1 + spec_cached_size(&node.left)
+    |  ____________________^
+158 | |                     + spec_cached_size(&node.right)
+    | |___________________________________________________^
+
+note: 
+
+spec_avltreeseqmtper_wf(self.root)
+|   let tmp%% = self.root;
+|       tmp%% is None ==>
+|           true ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               spec_avltreeseqmtper_wf(node.left) ✘
+|                   reached fuel limit for recursion
+|               spec_avltreeseqmtper_wf(node.right) ✘
+|                   reached fuel limit for recursion
+|               node.height == clip(nat, 1 + spec_nat_max(spec_cached_height(node.left), spec_cached_height(node.right))) ✘
+|               node.size == clip(nat, clip(nat, 1 + spec_cached_size(node.left)) + spec_cached_size(node.right)) ✘
++---
+
+verification results:: 1945 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1388MB, peak z3 RSS: 355MB, min free: 16600MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 27s

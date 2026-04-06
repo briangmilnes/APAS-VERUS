@@ -1,0 +1,1325 @@
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:400:51
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+400 |                 spec_avltreeseqsteph_wf(old(self).left),
+    |                                                   ^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:401:51
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+401 |                 spec_avltreeseqsteph_wf(old(self).right),
+    |                                                   ^^^^^ unknown field
+
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:402:45
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+402 |                 spec_cached_size(&old(self).left) + spec_cached_size(&old(self).right) + 1 < usize::MAX,
+    |                                             ^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:402:81
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+402 |                 spec_cached_size(&old(self).left) + spec_cached_size(&old(self).right) + 1 < usize::MAX,
+    |                                                                                 ^^^^^ unknown field
+
+error[E0609]: no field `left_size` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:404:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+404 |                 self.left_size as nat == spec_cached_size(&self.left),
+    |                      ^^^^^^^^^ unknown field
+
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:404:65
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+404 |                 self.left_size as nat == spec_cached_size(&self.left),
+    |                                                                 ^^^^ unknown field
+
+error[E0609]: no field `right_size` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:405:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+405 |                 self.right_size as nat == spec_cached_size(&self.right),
+    |                      ^^^^^^^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:405:66
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+405 |                 self.right_size as nat == spec_cached_size(&self.right),
+    |                                                                  ^^^^^ unknown field
+
+error[E0609]: no field `height` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:406:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+406 |                 self.height as nat == 1 + spec_nat_max(
+    |                      ^^^^^^ unknown field
+
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:407:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+407 |                     spec_cached_height(&self.left), spec_cached_height(&self.right)),
+    |                                              ^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:407:78
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+407 |                     spec_cached_height(&self.left), spec_cached_height(&self.right)),
+    |                                                                              ^^^^^ unknown field
+
+error[E0609]: no field `value` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:408:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+408 |                 self.value == old(self).value,
+    |                      ^^^^^ unknown field
+
+error[E0609]: no field `value` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:408:41
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+408 |                 self.value == old(self).value,
+    |                                         ^^^^^ unknown field
+
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:409:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+409 |                 self.left == old(self).left,
+    |                      ^^^^ unknown field
+
+error[E0609]: no field `left` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:409:40
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+409 |                 self.left == old(self).left,
+    |                                        ^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:410:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+410 |                 self.right == old(self).right,
+    |                      ^^^^^ unknown field
+
+error[E0609]: no field `right` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:410:41
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+410 |                 self.right == old(self).right,
+    |                                         ^^^^^ unknown field
+
+error[E0609]: no field `index` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:411:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+411 |                 self.index == old(self).index,
+    |                      ^^^^^ unknown field
+
+error[E0609]: no field `index` on type `&mut Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:411:41
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+411 |                 self.index == old(self).index,
+    |                                         ^^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:412:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+412 |                 spec_avltreeseqsteph_wf(Some(*self)),
+    |                                         ---- ^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:412:41
+    |
+412 |                 spec_avltreeseqsteph_wf(Some(*self)),
+    |                                         ^^^^^-----^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:417:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+417 |                 spec_avltreeseqsteph_wf(Some(self)),
+    |                                         ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:417:41
+    |
+417 |                 spec_avltreeseqsteph_wf(Some(self)),
+    |                                         ^^^^^----^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0609]: no field `left` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:418:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+418 |                 self.left is Some,
+    |                      ^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:420:35
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+420 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                              ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                              |
+    |                              arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:420:30
+    |
+420 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                              ^^^^^-------^
+    |                                   |
+    |                                   this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:420:67
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+420 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                                                              ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                                              |
+    |                                                              arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:420:62
+    |
+420 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                                                              ^^^^^----^
+    |                                                                   |
+    |                                                                   this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:421:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+421 |                 spec_avltreeseqsteph_wf(Some(rotated)),
+    |                                         ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:421:41
+    |
+421 |                 spec_avltreeseqsteph_wf(Some(rotated)),
+    |                                         ^^^^^-------^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:422:40
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+422 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                   ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:422:35
+    |
+422 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                   ^^^^^-------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:422:76
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+422 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                                                       ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                                                       |
+    |                                                                       arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:422:71
+    |
+422 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                                                       ^^^^^----^
+    |                                                                            |
+    |                                                                            this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:427:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+427 |                 spec_avltreeseqsteph_wf(Some(self)),
+    |                                         ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:427:41
+    |
+427 |                 spec_avltreeseqsteph_wf(Some(self)),
+    |                                         ^^^^^----^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0609]: no field `right` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:428:22
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+428 |                 self.right is Some,
+    |                      ^^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:430:35
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+430 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                              ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                              |
+    |                              arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:430:30
+    |
+430 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                              ^^^^^-------^
+    |                                   |
+    |                                   this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:430:67
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+430 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                                                              ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                                              |
+    |                                                              arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:430:62
+    |
+430 |                 spec_inorder(Some(rotated)) =~= spec_inorder(Some(self)),
+    |                                                              ^^^^^----^
+    |                                                                   |
+    |                                                                   this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:431:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+431 |                 spec_avltreeseqsteph_wf(Some(rotated)),
+    |                                         ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:431:41
+    |
+431 |                 spec_avltreeseqsteph_wf(Some(rotated)),
+    |                                         ^^^^^-------^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:432:40
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+432 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                   ---- ^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:432:35
+    |
+432 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                   ^^^^^-------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:432:76
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+432 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                                                       ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                                                       |
+    |                                                                       arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:432:71
+    |
+432 |                 spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(self)),
+    |                                                                       ^^^^^----^
+    |                                                                            |
+    |                                                                            this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0609]: no field `left` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:437:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+437 |                 spec_avltreeseqsteph_wf(self.left),
+    |                                              ^^^^ unknown field
+
+error[E0609]: no field `right` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:438:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+438 |                 spec_avltreeseqsteph_wf(self.right),
+    |                                              ^^^^^ unknown field
+
+error[E0609]: no field `left` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:439:40
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+439 |                 spec_cached_size(&self.left) + spec_cached_size(&self.right) + 1 < usize::MAX,
+    |                                        ^^^^ unknown field
+
+error[E0609]: no field `right` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:439:71
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+439 |                 spec_cached_size(&self.left) + spec_cached_size(&self.right) + 1 < usize::MAX,
+    |                                                                       ^^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:441:35
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+441 |                 spec_inorder(Some(balanced)) =~= spec_inorder(Some(self)),
+    |                              ---- ^^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                              |
+    |                              arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:441:30
+    |
+441 |                 spec_inorder(Some(balanced)) =~= spec_inorder(Some(self)),
+    |                              ^^^^^--------^
+    |                                   |
+    |                                   this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:441:68
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+441 |                 spec_inorder(Some(balanced)) =~= spec_inorder(Some(self)),
+    |                                                               ---- ^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                                               |
+    |                                                               arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:441:63
+    |
+441 |                 spec_inorder(Some(balanced)) =~= spec_inorder(Some(self)),
+    |                                                               ^^^^^----^
+    |                                                                    |
+    |                                                                    this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:442:46
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+442 |                 spec_avltreeseqsteph_wf(Some(balanced)),
+    |                                         ---- ^^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:442:41
+    |
+442 |                 spec_avltreeseqsteph_wf(Some(balanced)),
+    |                                         ^^^^^--------^
+    |                                              |
+    |                                              this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:443:40
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+443 |                 spec_cached_size(&Some(balanced))
+    |                                   ---- ^^^^^^^^ expected `Box<AVLTreeNode<_>>`, found type parameter `Self`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+    = note:      expected struct `std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>`
+            found type parameter `Self`
+help: the type constructed contains `Self` due to the type of the argument passed
+   --> src/Chap37/AVLTreeSeqStEph.rs:443:35
+    |
+443 |                 spec_cached_size(&Some(balanced))
+    |                                   ^^^^^--------^
+    |                                        |
+    |                                        this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/option.rs:608:4
+
+error[E0609]: no field `left` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:444:51
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+444 |                     == 1 + spec_cached_size(&self.left) + spec_cached_size(&self.right),
+    |                                                   ^^^^ unknown field
+
+error[E0609]: no field `right` on type `Self`
+   --> src/Chap37/AVLTreeSeqStEph.rs:444:82
+    |
+396 |     pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized {
+    |     ----------------------------------------------- type parameter 'Self' declared here
+...
+444 |                     == 1 + spec_cached_size(&self.left) + spec_cached_size(&self.right),
+    |                                                                                  ^^^^^ unknown field
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:452:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+452 |             requires spec_cached_height(self) <= usize::MAX as nat,
+    |                      ------------------ ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:453:57
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+453 |             ensures height as nat == spec_cached_height(self),
+    |                                      ------------------ ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                                      |
+    |                                      arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:457:46
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+457 |             requires spec_avltreeseqsteph_wf(*self),
+    |                      ----------------------- ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:458:53
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+458 |             ensures size as nat == spec_cached_size(self),
+    |                                    ---------------- ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                                    |
+    |                                    arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:463:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+463 |                 spec_avltreeseqsteph_wf(self),
+    |                 ----------------------- ^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:464:51
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+464 |                 0 <= index as int <= spec_inorder(self).len(),
+    |                                      ------------ ^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                      |
+    |                                      arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:466:34
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+466 |                 spec_cached_size(&self) + 1 < usize::MAX,
+    |                 ---------------- ^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:468:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+468 |                 spec_avltreeseqsteph_wf(inserted),
+    |                 ----------------------- ^^^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:469:30
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+469 |                 spec_inorder(inserted) =~= spec_inorder(self).insert(index as int, value@),
+    |                 ------------ ^^^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:469:57
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+469 |                 spec_inorder(inserted) =~= spec_inorder(self).insert(index as int, value@),
+    |                                            ------------ ^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                            |
+    |                                            arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:470:34
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+470 |                 spec_cached_size(&inserted) == spec_cached_size(&self) + 1,
+    |                 ---------------- ^^^^^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:470:65
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+470 |                 spec_cached_size(&inserted) == spec_cached_size(&self) + 1,
+    |                                                ---------------- ^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                                                |
+    |                                                arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:475:46
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+475 |             requires spec_avltreeseqsteph_wf(*self), (index as int) < spec_inorder(*self).len(),
+    |                      ----------------------- ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                      |
+    |                      arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:475:84
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+475 |             requires spec_avltreeseqsteph_wf(*self), (index as int) < spec_inorder(*self).len(),
+    |                                                                       ------------ ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                                                       |
+    |                                                                       arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:476:43
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+476 |             ensures elem@ == spec_inorder(*self)[index as int],
+    |                              ------------ ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                              |
+    |                              arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:481:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+481 |                 spec_avltreeseqsteph_wf(*old(self)),
+    |                 ----------------------- ^^^^^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:482:47
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+482 |                 (index as int) < spec_inorder(*old(self)).len(),
+    |                                  ------------ ^^^^^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                  |
+    |                                  arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:484:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+484 |                 spec_avltreeseqsteph_wf(*self),
+    |                 ----------------------- ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:485:34
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+485 |                 spec_cached_size(self) == spec_cached_size(old(self)),
+    |                 ---------------- ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:485:60
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+485 |                 spec_cached_size(self) == spec_cached_size(old(self)),
+    |                                           ---------------- ^^^^^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&mut Self`
+    |                                           |
+    |                                           arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:486:36
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+486 |                 spec_cached_height(self) == spec_cached_height(old(self)),
+    |                 ------------------ ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&mut Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:486:64
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+486 |                 spec_cached_height(self) == spec_cached_height(old(self)),
+    |                                             ------------------ ^^^^^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&mut Self`
+    |                                             |
+    |                                             arguments to this function are incorrect
+    |
+    = note:      expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found mutable reference `&mut Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:488:30
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+488 |                 spec_inorder(*self) =~= spec_inorder(*old(self)).update(index as int, value@),
+    |                 ------------ ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:488:54
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+488 |                 spec_inorder(*self) =~= spec_inorder(*old(self)).update(index as int, value@),
+    |                                         ------------ ^^^^^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                         |
+    |                                         arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:493:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+493 |                 spec_avltreeseqsteph_wf(*self),
+    |                 ----------------------- ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:494:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+494 |                 spec_avltreeseqsteph_wf(*other),
+    |                 ----------------------- ^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:496:44
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+496 |             ensures equal == (spec_inorder(*self) =~= spec_inorder(*other)),
+    |                               ------------ ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                               |
+    |                               arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:496:68
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+496 |             ensures equal == (spec_inorder(*self) =~= spec_inorder(*other)),
+    |                                                       ------------ ^^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                                       |
+    |                                                       arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:502:30
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+502 |                 spec_inorder(copy) =~= spec_inorder(*self),
+    |                 ------------ ^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:502:53
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+502 |                 spec_inorder(copy) =~= spec_inorder(*self),
+    |                                        ------------ ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                        |
+    |                                        arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:143:22
+    |
+143 |     pub open spec fn spec_inorder<T: StT>(link: Link<T>) -> Seq<T::V>
+    |                      ^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:503:41
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+503 |                 spec_avltreeseqsteph_wf(*self) ==> spec_avltreeseqsteph_wf(copy),
+    |                 ----------------------- ^^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:503:76
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+503 |                 spec_avltreeseqsteph_wf(*self) ==> spec_avltreeseqsteph_wf(copy),
+    |                                                    ----------------------- ^^^^ expected `Option<Box<AVLTreeNode<_>>>`, found type parameter `Self`
+    |                                                    |
+    |                                                    arguments to this function are incorrect
+    |
+    = note:        expected enum `std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+            found type parameter `Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:179:22
+    |
+179 |     pub open spec fn spec_avltreeseqsteph_wf<T: StT>(link: Link<T>) -> bool
+    |                      ^^^^^^^^^^^^^^^^^^^^^^^         -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:504:34
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+504 |                 spec_cached_size(&copy) == spec_cached_size(self),
+    |                 ---------------- ^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:504:61
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+504 |                 spec_cached_size(&copy) == spec_cached_size(self),
+    |                                            ---------------- ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                                            |
+    |                                            arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:152:22
+    |
+152 |     pub open spec fn spec_cached_size<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:505:36
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+505 |                 spec_cached_height(&copy) == spec_cached_height(self),
+    |                 ------------------ ^^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/AVLTreeSeqStEph.rs:505:65
+    |
+449 |     pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized {
+    |     ----------------------------------------------- found this type parameter
+...
+505 |                 spec_cached_height(&copy) == spec_cached_height(self),
+    |                                              ------------------ ^^^^ expected `&Option<Box<AVLTreeNode<_>>>`, found `&Self`
+    |                                              |
+    |                                              arguments to this function are incorrect
+    |
+    = note: expected reference `&std::option::Option<std::boxed::Box<Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeNode<_>>>`
+               found reference `&Self`
+note: function defined here
+   --> src/Chap37/AVLTreeSeqStEph.rs:159:22
+    |
+159 |     pub open spec fn spec_cached_height<T: StT>(link: &Link<T>) -> nat {
+    |                      ^^^^^^^^^^^^^^^^^^         --------------
+
+error: aborting due to 80 previous errors
+
+Some errors have detailed explanations: E0308, E0609.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 457MB, peak z3 RSS: 0MB, min free: 18164MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

@@ -261,6 +261,156 @@ pub mod AVLTreeSeqStEph {
 
     // 8. traits
 
+    /// Spec accessors for AVL tree nodes (Box<AVLTreeNode>), enabling trait-based contracts.
+    pub trait AVLTreeSeqStEphNodeSpec<T: StT>: Sized {
+        spec fn node_wf(self) -> bool;
+        spec fn node_inorder(self) -> Seq<T::V>;
+        spec fn node_cached_size(self) -> nat;
+        spec fn node_value(&self) -> T;
+        spec fn node_left(&self) -> Link<T>;
+        spec fn node_right(&self) -> Link<T>;
+        spec fn node_index(&self) -> usize;
+    }
+
+    impl<T: StT> AVLTreeSeqStEphNodeSpec<T> for Box<AVLTreeNode<T>> {
+        open spec fn node_wf(self) -> bool { spec_avltreeseqsteph_wf(Some(self)) }
+        open spec fn node_inorder(self) -> Seq<T::V> { spec_inorder(Some(self)) }
+        open spec fn node_cached_size(self) -> nat { spec_cached_size(&Some(self)) }
+        open spec fn node_value(&self) -> T { self.value }
+        open spec fn node_left(&self) -> Link<T> { self.left }
+        open spec fn node_right(&self) -> Link<T> { self.right }
+        open spec fn node_index(&self) -> usize { self.index }
+    }
+
+    /// Exec operations on non-empty AVL tree nodes (Box<AVLTreeNode>).
+    pub trait AVLTreeSeqStEphNodeFns<T: StT>: Sized + AVLTreeSeqStEphNodeSpec<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn update_meta(&mut self)
+            requires
+                old(self).node_left().link_wf(),
+                old(self).node_right().link_wf(),
+                old(self).node_left().link_cached_size()
+                    + old(self).node_right().link_cached_size() + 1 < usize::MAX,
+            ensures
+                self.node_wf(),
+                self.node_inorder() =~= old(self).node_inorder(),
+                self.node_value() == old(self).node_value(),
+                self.node_left() == old(self).node_left(),
+                self.node_right() == old(self).node_right(),
+                self.node_index() == old(self).node_index(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_right_fn(self) -> (rotated: Self)
+            requires
+                self.node_wf(),
+                self.node_left().is_some(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rotate_left_fn(self) -> (rotated: Self)
+            requires
+                self.node_wf(),
+                self.node_right().is_some(),
+            ensures
+                rotated.node_inorder() =~= self.node_inorder(),
+                rotated.node_wf(),
+                rotated.node_cached_size() == self.node_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn rebalance_fn(self) -> (balanced: Self)
+            requires
+                self.node_left().link_wf(),
+                self.node_right().link_wf(),
+                self.node_left().link_cached_size()
+                    + self.node_right().link_cached_size() + 1 < usize::MAX,
+            ensures
+                balanced.node_inorder() =~= self.node_inorder(),
+                balanced.node_wf(),
+                balanced.node_cached_size()
+                    == 1 + self.node_left().link_cached_size()
+                         + self.node_right().link_cached_size(),
+            ;
+    }
+
+    /// Spec accessors for AVL tree links, enabling trait-based contracts.
+    pub trait AVLTreeSeqStEphLinkSpec<T: StT>: Sized {
+        spec fn link_wf(self) -> bool;
+        spec fn link_inorder(self) -> Seq<T::V>;
+        spec fn link_cached_size(self) -> nat;
+        spec fn link_cached_height(self) -> nat;
+    }
+
+    impl<T: StT> AVLTreeSeqStEphLinkSpec<T> for Link<T> {
+        open spec fn link_wf(self) -> bool { spec_avltreeseqsteph_wf(self) }
+        open spec fn link_inorder(self) -> Seq<T::V> { spec_inorder(self) }
+        open spec fn link_cached_size(self) -> nat { spec_cached_size(&self) }
+        open spec fn link_cached_height(self) -> nat { spec_cached_height(&self) }
+    }
+
+    /// Exec operations on AVL tree links (Option<Box<AVLTreeNode>>).
+    pub trait AVLTreeSeqStEphLinkFns<T: StT>: Sized + AVLTreeSeqStEphLinkSpec<T> {
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn h_fn(&self) -> (height: usize)
+            requires (*self).link_cached_height() <= usize::MAX as nat,
+            ensures height as nat == (*self).link_cached_height(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+        fn size_link_fn(&self) -> (size: usize)
+            requires (*self).link_wf(),
+            ensures size as nat == (*self).link_cached_size(),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
+            requires
+                self.link_wf(),
+                0 <= index as int <= self.link_inorder().len(),
+                *old(next_key) < usize::MAX,
+                self.link_cached_size() + 1 < usize::MAX,
+            ensures
+                inserted.link_wf(),
+                inserted.link_inorder() =~= self.link_inorder().insert(index as int, value@),
+                inserted.link_cached_size() == self.link_cached_size() + 1,
+                *next_key == *old(next_key) + 1,
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn nth_link(&self, index: usize) -> (elem: &T)
+            requires (*self).link_wf(), (index as int) < (*self).link_inorder().len(),
+            ensures elem@ == (*self).link_inorder()[index as int],
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn set_link(&mut self, index: usize, value: T) -> (outcome: Result<(), &'static str>)
+            requires
+                old(self).link_wf(),
+                (index as int) < old(self).link_inorder().len(),
+            ensures
+                (*self).link_wf(),
+                (*self).link_cached_size() == old(self).link_cached_size(),
+                (*self).link_cached_height() == old(self).link_cached_height(),
+                outcome is Ok,
+                (*self).link_inorder() =~= old(self).link_inorder().update(index as int, value@),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
+        fn compare_trees(&self, other: &Self) -> (equal: bool)
+            requires
+                (*self).link_wf(),
+                (*other).link_wf(),
+                obeys_feq_full::<T>(),
+            ensures equal == ((*self).link_inorder() =~= (*other).link_inorder()),
+            ;
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        // veracity: no_requires
+        fn clone_link(&self) -> (copy: Self)
+            ensures
+                copy.link_inorder() =~= (*self).link_inorder(),
+                (*self).link_wf() ==> copy.link_wf(),
+                copy.link_cached_size() == (*self).link_cached_size(),
+                copy.link_cached_height() == (*self).link_cached_height(),
+            ;
+    }
+
     pub trait AVLTreeSeqStEphTrait<T: StT>: Sized {
         spec fn spec_seq(&self) -> Seq<T::V>;
         spec fn spec_avltreeseqsteph_wf(&self) -> bool;
@@ -396,72 +546,27 @@ pub mod AVLTreeSeqStEph {
 
     // 9. impls
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn h_fn<T: StT>(n: &Link<T>) -> (height: usize)
-        requires spec_cached_height(n) <= usize::MAX as nat,
-        ensures height as nat == spec_cached_height(n),
-    {
-        match n {
-            None => 0,
-            Some(b) => b.height,
-        }
-    }
+    impl<T: StT> AVLTreeSeqStEphNodeFns<T> for Box<AVLTreeNode<T>> {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn size_link_fn<T: StT>(n: &Link<T>) -> (size: usize)
-        requires spec_avltreeseqsteph_wf(*n),
-        ensures size as nat == spec_cached_size(n),
+    fn update_meta(&mut self)
     {
-        match n {
-            None => 0,
-            Some(b) => {
-                1 + b.left_size + b.right_size
-            }
-        }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn update_meta<T: StT>(n: &mut Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseqsteph_wf(old(n).left),
-            spec_avltreeseqsteph_wf(old(n).right),
-            spec_cached_size(&old(n).left) + spec_cached_size(&old(n).right) + 1 < usize::MAX,
-        ensures
-            n.left_size as nat == spec_cached_size(&n.left),
-            n.right_size as nat == spec_cached_size(&n.right),
-            n.height as nat == 1 + spec_nat_max(
-                spec_cached_height(&n.left), spec_cached_height(&n.right)),
-            n.value == old(n).value,
-            n.left == old(n).left,
-            n.right == old(n).right,
-            n.index == old(n).index,
-            spec_avltreeseqsteph_wf(Some(*n)),
-    {
-        n.left_size = size_link_fn(&n.left);
-        n.right_size = size_link_fn(&n.right);
-        let hl = h_fn(&n.left);
-        let hr = h_fn(&n.right);
+        self.left_size = self.left.size_link_fn();
+        self.right_size = self.right.size_link_fn();
+        let hl = self.left.h_fn();
+        let hr = self.right.h_fn();
         proof {
-            lemma_height_le_size::<T>(&n.left);
-            lemma_height_le_size::<T>(&n.right);
-            // h_left <= size_left, h_right <= size_right.
-            // size_left + size_right + 1 < usize::MAX (precondition).
-            // max(h_left, h_right) <= size_left + size_right < usize::MAX - 1.
-            // 1 + max(h_left, h_right) <= 1 + size_left + size_right < usize::MAX.
+            lemma_height_le_size::<T>(&self.left);
+            lemma_height_le_size::<T>(&self.right);
         }
-        n.height = 1 + if hl >= hr { hl } else { hr };
+        self.height = 1 + if hl >= hr { hl } else { hr };
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_right_fn<T: StT>(mut y: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseqsteph_wf(Some(y)),
-            y.left is Some,
-        ensures
-            spec_inorder(Some(rotated)) =~= spec_inorder(Some(y)),
-            spec_avltreeseqsteph_wf(Some(rotated)),
-            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(y)),
+    fn rotate_right_fn(self) -> (rotated: Self)
     {
+        let ghost node = self;
+        let mut y = self;
         let ghost old_y = *y;
         proof {
             assert(spec_avltreeseqsteph_wf(old_y.left));
@@ -480,27 +585,22 @@ pub mod AVLTreeSeqStEph {
             assert(spec_avltreeseqsteph_wf(y.left));
             assert(spec_avltreeseqsteph_wf(y.right));
         }
-        update_meta(&mut y);
+        y.update_meta();
         x.right = Some(y);
         proof {
             assert(spec_avltreeseqsteph_wf(x.left));
             assert(spec_avltreeseqsteph_wf(x.right));
         }
-        update_meta(&mut x);
+        x.update_meta();
         proof { reveal_with_fuel(spec_inorder, 3); }
         x
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rotate_left_fn<T: StT>(mut x: Box<AVLTreeNode<T>>) -> (rotated: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseqsteph_wf(Some(x)),
-            x.right is Some,
-        ensures
-            spec_inorder(Some(rotated)) =~= spec_inorder(Some(x)),
-            spec_avltreeseqsteph_wf(Some(rotated)),
-            spec_cached_size(&Some(rotated)) == spec_cached_size(&Some(x)),
+    fn rotate_left_fn(self) -> (rotated: Self)
     {
+        let ghost node = self;
+        let mut x = self;
         let ghost old_x = *x;
         proof {
             assert(spec_avltreeseqsteph_wf(old_x.left));
@@ -519,91 +619,94 @@ pub mod AVLTreeSeqStEph {
             assert(spec_avltreeseqsteph_wf(x.left));
             assert(spec_avltreeseqsteph_wf(x.right));
         }
-        update_meta(&mut x);
+        x.update_meta();
         y.left = Some(x);
         proof {
             assert(spec_avltreeseqsteph_wf(y.left));
             assert(spec_avltreeseqsteph_wf(y.right));
         }
-        update_meta(&mut y);
+        y.update_meta();
         proof { reveal_with_fuel(spec_inorder, 3); }
         y
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn rebalance_fn<T: StT>(mut n: Box<AVLTreeNode<T>>) -> (balanced: Box<AVLTreeNode<T>>)
-        requires
-            spec_avltreeseqsteph_wf(n.left),
-            spec_avltreeseqsteph_wf(n.right),
-            spec_cached_size(&n.left) + spec_cached_size(&n.right) + 1 < usize::MAX,
-        ensures
-            spec_inorder(Some(balanced)) =~= spec_inorder(Some(n)),
-            spec_avltreeseqsteph_wf(Some(balanced)),
-            spec_cached_size(&Some(balanced))
-                == 1 + spec_cached_size(&n.left) + spec_cached_size(&n.right),
+    fn rebalance_fn(self) -> (balanced: Self)
     {
-        update_meta(&mut n);
-        let hl = h_fn(&n.left);
-        let hr = h_fn(&n.right);
+        let ghost node = self;
+        let mut n = self;
+        n.update_meta();
+        let hl = n.left.h_fn();
+        let hr = n.right.h_fn();
         if hl > hr.saturating_add(1) {
-            // Left-heavy: n.left must be Some since hl > 1.
             proof {
                 if n.left is None { assert(spec_cached_height(&n.left) == 0); }
                 assert(n.left is Some);
             }
-            if h_fn(&n.left.as_ref().unwrap().right) > h_fn(&n.left.as_ref().unwrap().left) {
-                // Left-right case: rotate left child left, then rotate right.
+            if n.left.as_ref().unwrap().right.h_fn() > n.left.as_ref().unwrap().left.h_fn() {
                 let left = n.left.take().unwrap();
                 proof {
-                    // left.right is Some because its height > 0.
                     let lrh = spec_cached_height(&left.right);
                     if left.right is None { assert(lrh == 0); }
                     assert(left.right is Some);
                 }
-                n.left = Some(rotate_left_fn(left));
-                update_meta(&mut n);
+                n.left = Some(left.rotate_left_fn());
+                n.update_meta();
             }
             proof { reveal_with_fuel(spec_inorder, 2); }
-            return rotate_right_fn(n);
+            return n.rotate_right_fn();
         }
         if hr > hl.saturating_add(1) {
-            // Right-heavy: n.right must be Some since hr > 1.
             proof {
                 if n.right is None { assert(spec_cached_height(&n.right) == 0); }
                 assert(n.right is Some);
             }
-            if h_fn(&n.right.as_ref().unwrap().left) > h_fn(&n.right.as_ref().unwrap().right) {
-                // Right-left case: rotate right child right, then rotate left.
+            if n.right.as_ref().unwrap().left.h_fn() > n.right.as_ref().unwrap().right.h_fn() {
                 let right = n.right.take().unwrap();
                 proof {
                     let rlh = spec_cached_height(&right.left);
                     if right.left is None { assert(rlh == 0); }
                     assert(right.left is Some);
                 }
-                n.right = Some(rotate_right_fn(right));
-                update_meta(&mut n);
+                n.right = Some(right.rotate_right_fn());
+                n.update_meta();
             }
             proof { reveal_with_fuel(spec_inorder, 2); }
-            return rotate_left_fn(n);
+            return n.rotate_left_fn();
         }
         n
     }
 
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    pub fn insert_at_link<T: StT>(node: Link<T>, index: usize, value: T, next_key: &mut usize) -> (inserted: Link<T>)
-        requires
-            spec_avltreeseqsteph_wf(node),
-            0 <= index as int <= spec_inorder(node).len(),
-            *old(next_key) < usize::MAX,
-            spec_cached_size(&node) + 1 < usize::MAX,
-        ensures
-            spec_avltreeseqsteph_wf(inserted),
-            spec_inorder(inserted) =~= spec_inorder(node).insert(index as int, value@),
-            spec_cached_size(&inserted) == spec_cached_size(&node) + 1,
-            *next_key == *old(next_key) + 1,
-        decreases node,
+    } // impl AVLTreeSeqStEphNodeFns
+
+    impl<T: StT> AVLTreeSeqStEphLinkFns<T> for Link<T> {
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn h_fn(&self) -> (height: usize)
     {
-        match node {
+        match self {
+            None => 0,
+            Some(b) => b.height,
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
+    fn size_link_fn(&self) -> (size: usize)
+    {
+        match self {
+            None => 0,
+            Some(b) => {
+                1 + b.left_size + b.right_size
+            }
+        }
+    }
+
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+    fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
+        decreases self,
+    {
+        let ghost node = self;
+        match self {
             None => {
                 let key = *next_key;
                 *next_key += 1;
@@ -627,7 +730,7 @@ pub mod AVLTreeSeqStEph {
                 let ghost old_left_size = spec_cached_size(&old_n.left);
                 if index <= left_size {
                     let ghost old_right = n.right;
-                    n.left = insert_at_link(n.left.take(), index, value, next_key);
+                    n.left = n.left.take().insert_at_link(index, value, next_key);
                     proof {
                         assert(spec_avltreeseqsteph_wf(n.left));
                         assert(n.right == old_right);
@@ -637,8 +740,8 @@ pub mod AVLTreeSeqStEph {
                     }
                 } else {
                     let ghost old_left = n.left;
-                    n.right = insert_at_link(
-                        n.right.take(), index - left_size - 1, value, next_key,
+                    n.right = n.right.take().insert_at_link(
+                        index - left_size - 1, value, next_key,
                     );
                     proof {
                         assert(spec_avltreeseqsteph_wf(n.right));
@@ -649,47 +752,36 @@ pub mod AVLTreeSeqStEph {
                                 (index - left_size - 1) as int, value@));
                     }
                 }
-                Some(rebalance_fn(n))
+                Some(n.rebalance_fn())
             }
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn nth_link<'a, T: StT>(node: &'a Link<T>, index: usize) -> (elem: &'a T)
-        requires spec_avltreeseqsteph_wf(*node), (index as int) < spec_inorder(*node).len(),
-        ensures elem@ == spec_inorder(*node)[index as int],
-        decreases *node,
+    fn nth_link(&self, index: usize) -> (elem: &T)
+        decreases *self,
     {
-        let n = node.as_ref().expect("index out of bounds");
+        let n = self.as_ref().expect("index out of bounds");
         proof { lemma_size_eq_inorder_len::<T>(&n.left); }
         proof { lemma_size_eq_inorder_len::<T>(&n.right); }
         let left_size = n.left_size;
         if index < left_size {
-            nth_link(&n.left, index)
+            n.left.nth_link(index)
         } else if index == left_size {
             &n.value
         } else {
-            nth_link(&n.right, index - left_size - 1)
+            n.right.nth_link(index - left_size - 1)
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-    fn set_link<T: StT>(node: &mut Link<T>, index: usize, value: T) -> (outcome: Result<(), &'static str>)
-        requires
-            spec_avltreeseqsteph_wf(*old(node)),
-            (index as int) < spec_inorder(*old(node)).len(),
-        ensures
-            spec_avltreeseqsteph_wf(*node),
-            spec_cached_size(node) == spec_cached_size(old(node)),
-            spec_cached_height(node) == spec_cached_height(old(node)),
-            outcome is Ok,
-            spec_inorder(*node) =~= spec_inorder(*old(node)).update(index as int, value@),
-        decreases *old(node),
+    fn set_link(&mut self, index: usize, value: T) -> (outcome: Result<(), &'static str>)
+        decreases *old(self),
     {
-        let cur = node.take();
+        let cur = self.take();
         match cur {
             None => {
-                *node = None;
+                *self = None;
                 Err("Index out of bounds")
             }
             Some(mut n) => {
@@ -698,36 +790,31 @@ pub mod AVLTreeSeqStEph {
                 proof { lemma_size_eq_inorder_len::<T>(&n.right); }
                 let left_size = n.left_size;
                 let result = if index < left_size {
-                    set_link(&mut n.left, index, value)
+                    n.left.set_link(index, value)
                 } else if index == left_size {
                     n.value = value;
                     Ok(())
                 } else {
-                    set_link(&mut n.right, index - left_size - 1, value)
+                    n.right.set_link(index - left_size - 1, value)
                 };
-                *node = Some(n);
+                *self = Some(n);
                 result
             }
         }
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
-    fn compare_trees<T: StT>(a: &Link<T>, b: &Link<T>) -> (equal: bool)
-        requires
-            spec_avltreeseqsteph_wf(*a),
-            spec_avltreeseqsteph_wf(*b),
-            obeys_feq_full::<T>(),
-        ensures equal == (spec_inorder(*a) =~= spec_inorder(*b)),
+    fn compare_trees(&self, other: &Self) -> (equal: bool)
     {
-        proof { lemma_size_eq_inorder_len::<T>(a); }
-        proof { lemma_size_eq_inorder_len::<T>(b); }
-        let sa = size_link_fn(a);
-        let sb = size_link_fn(b);
+        proof { lemma_size_eq_inorder_len::<T>(self); }
+        proof { lemma_size_eq_inorder_len::<T>(other); }
+        let sa = self.size_link_fn();
+        let sb = other.size_link_fn();
         if sa != sb {
             return false;
         }
-        let ghost seq_a = spec_inorder(*a);
-        let ghost seq_b = spec_inorder(*b);
+        let ghost seq_a = spec_inorder(*self);
+        let ghost seq_b = spec_inorder(*other);
         let mut i: usize = 0;
         #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
         while i < sa
@@ -735,14 +822,14 @@ pub mod AVLTreeSeqStEph {
                 sa == sb,
                 sa as nat == seq_a.len(),
                 sb as nat == seq_b.len(),
-                seq_a == spec_inorder(*a),
-                seq_b == spec_inorder(*b),
+                seq_a == spec_inorder(*self),
+                seq_b == spec_inorder(*other),
                 0 <= i <= sa,
                 forall|j: int| 0 <= j < i as int ==> seq_a[j] == seq_b[j],
             decreases sa - i,
         {
-            let ai = nth_link(a, i);
-            let bi = nth_link(b, i);
+            let ai = self.nth_link(i);
+            let bi = other.nth_link(i);
             let eq = feq(ai, bi);
             if !eq {
                 return false;
@@ -756,20 +843,15 @@ pub mod AVLTreeSeqStEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
     // veracity: no_requires
-    fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
-        ensures
-            spec_inorder(copy) =~= spec_inorder(*link),
-            spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
-            spec_cached_size(&copy) == spec_cached_size(link),
-            spec_cached_height(&copy) == spec_cached_height(link),
-        decreases *link,
+    fn clone_link(&self) -> (copy: Self)
+        decreases *self,
     {
               assert(obeys_feq_full_trigger::<T>());
-        match link {
+        match self {
             None => None,
             Some(node) => {
-                let left = clone_link(&node.left);
-                let right = clone_link(&node.right);
+                let left = node.left.clone_link();
+                let right = node.right.clone_link();
                 let new_value = node.value.clone_plus();
                 proof { assume(new_value@ == node.value@); }
                 Some(Box::new(AVLTreeNode {
@@ -784,6 +866,8 @@ pub mod AVLTreeSeqStEph {
             }
         }
     }
+
+    } // impl AVLTreeSeqStEphLinkFns
 
     // 9. trait impl
 
@@ -813,26 +897,26 @@ pub mod AVLTreeSeqStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn length(&self) -> (len: usize) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
-            size_link_fn(&self.root)
+            self.root.size_link_fn()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn nth(&self, index: usize) -> (elem: &T) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
-            nth_link(&self.root, index)
+            self.root.nth_link(index)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn set(&mut self, index: usize, item: T) -> (outcome: Result<(), &'static str>) {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
-            set_link(&mut self.root, index, item)
+            self.root.set_link(index, item)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(item: T) -> (tree: Self) {
                       assert(obeys_feq_full_trigger::<T>());
             let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
-            t.root = insert_at_link(t.root.take(), 0, item, &mut t.next_key);
+            t.root = t.root.take().insert_at_link(0, item, &mut t.next_key);
             proof { lemma_size_eq_inorder_len::<T>(&t.root); }
             t
         }
@@ -932,7 +1016,7 @@ pub mod AVLTreeSeqStEph {
                     assert(cloned(values@[i as int], cloned_val));
                     lemma_cloned_view_eq::<T>(values@[i as int], cloned_val);
                 }
-                t.root = insert_at_link(t.root.take(), i, cloned_val, &mut t.next_key);
+                t.root = t.root.take().insert_at_link(i, cloned_val, &mut t.next_key);
                 proof {
                     assert(old_seq.len() == i as int);
                     assert(values@.take(i as int + 1) =~= values@.take(i as int).push(values@[i as int]));
@@ -993,7 +1077,7 @@ pub mod AVLTreeSeqStEph {
             proof { lemma_size_eq_inorder_len::<T>(&self.root); }
             let ghost old_inorder = spec_inorder(self.root);
             let len = self.length();
-            let node = insert_at_link(self.root.take(), len, value, &mut self.next_key);
+            let node = self.root.take().insert_at_link(len, value, &mut self.next_key);
             self.root = node;
             proof {
                 assert(spec_inorder(self.root) =~= old_inorder.insert(len as int, value@));
@@ -1289,7 +1373,7 @@ pub mod AVLTreeSeqStEph {
                 assume(spec_avltreeseqsteph_wf(other.root));
                 assume(obeys_feq_full::<T>());
             }
-            compare_trees(&self.root, &other.root)
+            self.root.compare_trees(&other.root)
         }
     }
 
@@ -1301,7 +1385,7 @@ pub mod AVLTreeSeqStEph {
         {
                       assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStEphS {
-                root: clone_link(&self.root),
+                root: self.root.clone_link(),
                 next_key: self.next_key,
             }
         }
