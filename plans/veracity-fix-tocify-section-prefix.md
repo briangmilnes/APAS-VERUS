@@ -4,14 +4,14 @@
 
 You are working in `~/projects/veracity-agent1`. Do not touch `~/projects/veracity`.
 
+Get a new clean fixture by rm'ing the old tests/fixturs/APAS-VERUS and getting it from git.
+
+
 ## Updated Standard
 
-The `table_of_contents_standard.rs` has been updated with the new format. Pull
-the latest from APAS-VERUS to get it:
+The `table_of_contents_standard.rs` has been updated with the new format. Read it.
 
-```bash
-cd ~/projects/veracity-agent1/tests/fixtures/APAS-VERUS && git pull
-```
+
 
 Then read the updated standard:
 
