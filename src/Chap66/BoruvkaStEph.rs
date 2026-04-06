@@ -585,4 +585,18 @@ pub mod BoruvkaStEph {
             write!(f, "({}, {}, {}, {})", self.0, self.1, self.2, self.3)
         }
     }
+
+    // 14b. derive impls outside verus! — struct BoruvkaStEph
+
+    impl std::fmt::Debug for BoruvkaStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BoruvkaStEph")
+        }
+    }
+
+    impl std::fmt::Display for BoruvkaStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BoruvkaStEph")
+        }
+    }
 }

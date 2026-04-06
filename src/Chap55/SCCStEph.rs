@@ -574,4 +574,18 @@ pub mod SCCStEph {
     } // impl SCCStEphTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for SCCStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SCCStEph")
+        }
+    }
+
+    impl std::fmt::Display for SCCStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SCCStEph")
+        }
+    }
 }

@@ -884,4 +884,18 @@ broadcast use vstd::seq::group_seq_axioms;
     } // impl CycleDetectStEphTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for CycleDetectStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "CycleDetectStEph")
+        }
+    }
+
+    impl std::fmt::Display for CycleDetectStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "CycleDetectStEph")
+        }
+    }
 }

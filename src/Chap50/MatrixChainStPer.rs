@@ -428,6 +428,27 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — format two integers
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
+
+    // 14b. derive impls outside verus! — struct MatrixChainStPerV
+
+    impl Debug for MatrixChainStPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStPerV") }
+    }
+
+    impl Display for MatrixChainStPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStPerV") }
+    }
+
+    // 14c. derive impls outside verus! — struct MatrixChainStPerS
+
+    impl Debug for MatrixChainStPerS {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("MatrixChainStPerS")
+                .field("dimensions_len", &self.dimensions.len())
+                .field("memo_len", &self.memo.len())
+                .finish()
+        }
+    }
 }
 
 #[macro_export]

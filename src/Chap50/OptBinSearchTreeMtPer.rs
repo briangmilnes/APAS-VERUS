@@ -440,6 +440,26 @@ broadcast use {
     impl<T: MtVal> Debug for KeyProb<T> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
     }
+
+    // 14b. derive impls outside verus! — struct OptBSTMtPerMemoInv
+
+    impl Debug for OptBSTMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
+    }
+
+    impl Display for OptBSTMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtPerMemoInv") }
+    }
+
+    // 14c. derive impls outside verus! — struct OBSTMtPerV
+
+    impl<T: MtVal> Debug for OBSTMtPerV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtPerV") }
+    }
+
+    impl<T: MtVal> Display for OBSTMtPerV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtPerV") }
+    }
 }
 
 #[macro_export]

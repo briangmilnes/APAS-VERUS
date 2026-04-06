@@ -345,7 +345,21 @@ pub mod SubsetSumMtEph {
         fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T> { &mut self.multiset }
     }
 
-    // 13. derive impls outside verus!
+    // 13a. derive impls outside verus! — struct SubsetSumMtEphMemoInv
+
+    impl Debug for SubsetSumMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "SubsetSumMtEphMemoInv")
+        }
+    }
+
+    impl Display for SubsetSumMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "SubsetSumMtEphMemoInv")
+        }
+    }
+
+    // 13b. derive impls outside verus! — struct SubsetSumMtEphS
 
     impl<T: MtVal> PartialEq for SubsetSumMtEphS<T> {
         fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }

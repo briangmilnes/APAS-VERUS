@@ -441,4 +441,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl<V: StT + Ord + ClonePreservesView + fmt::Display> fmt::Display for EdgeSetGraphStPer<V> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "EdgeSetGraphStPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
+        }
+    }
 }

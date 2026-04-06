@@ -467,4 +467,18 @@ broadcast use vstd::seq::group_seq_axioms;
     } // impl DFSStPerTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for DFSStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DFSStPer")
+        }
+    }
+
+    impl std::fmt::Display for DFSStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DFSStPer")
+        }
+    }
 }

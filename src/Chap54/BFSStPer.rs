@@ -457,4 +457,35 @@ pub mod BFSStPer {
     }
 
     } // verus!
+
+    // 14a. derive impls outside verus! — struct BFSTreeS
+
+    impl std::fmt::Debug for BFSTreeS {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("BFSTreeS")
+                .field("parents", &self.parents)
+                .field("order", &self.order)
+                .finish()
+        }
+    }
+
+    impl std::fmt::Display for BFSTreeS {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.length(), self.order.length())
+        }
+    }
+
+    // 14b. derive impls outside verus! — struct BFSStPer
+
+    impl std::fmt::Debug for BFSStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BFSStPer")
+        }
+    }
+
+    impl std::fmt::Display for BFSStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "BFSStPer")
+        }
+    }
 }

@@ -331,6 +331,16 @@ broadcast use {
             self.keys == other.keys && self.memo == other.memo
         }
     }
+
+    // 14b. derive impls outside verus! — struct OBSTStPerV
+
+    impl<T: StT> Debug for OBSTStPerV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTStPerV") }
+    }
+
+    impl<T: StT> Display for OBSTStPerV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTStPerV") }
+    }
 }
 
 #[macro_export]

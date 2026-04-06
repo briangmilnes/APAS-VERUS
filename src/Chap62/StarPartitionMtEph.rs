@@ -1815,4 +1815,18 @@ pub mod StarPartitionMtEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for StarPartitionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StarPartitionMtEph")
+        }
+    }
+
+    impl std::fmt::Display for StarPartitionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StarPartitionMtEph")
+        }
+    }
 }

@@ -1053,4 +1053,18 @@ broadcast use {
     } // impl TopoSortStEphTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for TopoSortStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TopoSortStEph")
+        }
+    }
+
+    impl std::fmt::Display for TopoSortStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TopoSortStEph")
+        }
+    }
 }

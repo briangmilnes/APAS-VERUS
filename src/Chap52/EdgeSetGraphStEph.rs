@@ -431,4 +431,21 @@ broadcast use {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<V: StT + Ord + ClonePreservesView + std::fmt::Debug> std::fmt::Debug for EdgeSetGraphStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("EdgeSetGraphStEph")
+                .field("vertices", &self.vertices)
+                .field("edges", &self.edges)
+                .finish()
+        }
+    }
+
+    impl<V: StT + Ord + ClonePreservesView + std::fmt::Display> std::fmt::Display for EdgeSetGraphStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "EdgeSetGraphStEph(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
+        }
+    }
 }

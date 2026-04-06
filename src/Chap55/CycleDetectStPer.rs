@@ -705,4 +705,18 @@ broadcast use vstd::seq::group_seq_axioms;
     } // impl CycleDetectStPerTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for CycleDetectStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "CycleDetectStPer")
+        }
+    }
+
+    impl std::fmt::Display for CycleDetectStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "CycleDetectStPer")
+        }
+    }
 }

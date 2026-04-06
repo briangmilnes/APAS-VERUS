@@ -573,6 +573,36 @@ broadcast use {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "KeyProb({:?}, {:.3})", self.key, self.prob) }
     }
 
+    // 14b. derive impls outside verus! — struct OptBSTMtEphKeysInv
+
+    impl<T: MtVal> Debug for OptBSTMtEphKeysInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
+    }
+
+    impl<T: MtVal> Display for OptBSTMtEphKeysInv<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphKeysInv") }
+    }
+
+    // 14c. derive impls outside verus! — struct OptBSTMtEphMemoInv
+
+    impl Debug for OptBSTMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
+    }
+
+    impl Display for OptBSTMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OptBSTMtEphMemoInv") }
+    }
+
+    // 14d. derive impls outside verus! — struct OBSTMtEphV
+
+    impl<T: MtVal> Debug for OBSTMtEphV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtEphV") }
+    }
+
+    impl<T: MtVal> Display for OBSTMtEphV<T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "OBSTMtEphV") }
+    }
+
     // 12. macros
     #[macro_export]
     macro_rules! OBSTMtEphLit {

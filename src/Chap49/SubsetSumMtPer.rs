@@ -298,7 +298,21 @@ pub mod SubsetSumMtPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    // 13a. derive impls outside verus! — struct SubsetSumMtPerMemoInv
+
+    impl Debug for SubsetSumMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "SubsetSumMtPerMemoInv")
+        }
+    }
+
+    impl Display for SubsetSumMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "SubsetSumMtPerMemoInv")
+        }
+    }
+
+    // 13b. derive impls outside verus! — struct SubsetSumMtPerS
 
     impl<T: MtVal> PartialEq for SubsetSumMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.multiset == other.multiset }

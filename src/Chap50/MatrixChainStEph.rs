@@ -478,6 +478,27 @@ broadcast use {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 14b. derive impls outside verus! — struct MatrixChainStEphV
+
+    impl Debug for MatrixChainStEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
+    }
+
+    impl Display for MatrixChainStEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainStEphV") }
+    }
+
+    // 14c. derive impls outside verus! — struct MatrixChainStEphS
+
+    impl Debug for MatrixChainStEphS {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            f.debug_struct("MatrixChainStEphS")
+                .field("dimensions_len", &self.dimensions.len())
+                .field("memo_len", &self.memo.len())
+                .finish()
+        }
+    }
+
     // 12. macros
     #[macro_export]
     macro_rules! MatrixChainStEphLit {

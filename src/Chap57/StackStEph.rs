@@ -172,4 +172,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl<T: StT + std::fmt::Display> std::fmt::Display for StackStEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StackStEph(len: {})", self.elements.len())
+        }
+    }
 }

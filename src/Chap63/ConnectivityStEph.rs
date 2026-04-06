@@ -253,4 +253,18 @@ pub mod ConnectivityStEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for ConnectivityStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ConnectivityStEph")
+        }
+    }
+
+    impl std::fmt::Display for ConnectivityStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ConnectivityStEph")
+        }
+    }
 }

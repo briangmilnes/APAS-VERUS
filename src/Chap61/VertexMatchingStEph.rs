@@ -173,4 +173,18 @@ pub mod VertexMatchingStEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for VertexMatchingStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "VertexMatchingStEph")
+        }
+    }
+
+    impl std::fmt::Display for VertexMatchingStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "VertexMatchingStEph")
+        }
+    }
 }

@@ -633,4 +633,18 @@ pub mod SCCStPer {
     } // impl SCCStPerTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for SCCStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SCCStPer")
+        }
+    }
+
+    impl std::fmt::Display for SCCStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SCCStPer")
+        }
+    }
 }

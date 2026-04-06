@@ -336,7 +336,21 @@ pub mod MinEditDistMtPer {
 
     } // verus!
 
-    // 13. derive impls outside verus!
+    // 13a. derive impls outside verus! — struct MinEditDistMtPerMemoInv
+
+    impl Debug for MinEditDistMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "MinEditDistMtPerMemoInv")
+        }
+    }
+
+    impl Display for MinEditDistMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "MinEditDistMtPerMemoInv")
+        }
+    }
+
+    // 13b. derive impls outside verus! — struct MinEditDistMtPerS
 
     impl<T: MtVal> PartialEq for MinEditDistMtPerS<T> {
         fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }

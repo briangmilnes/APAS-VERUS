@@ -503,6 +503,26 @@ broadcast use {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 14b. derive impls outside verus! — struct MatrixChainMtPerV
+
+    impl Debug for MatrixChainMtPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
+    }
+
+    impl Display for MatrixChainMtPerV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerV") }
+    }
+
+    // 14c. derive impls outside verus! — struct MatrixChainMtPerMemoInv
+
+    impl Debug for MatrixChainMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
+    }
+
+    impl Display for MatrixChainMtPerMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtPerMemoInv") }
+    }
+
     // 12. macros
     #[macro_export]
     macro_rules! MatrixChainMtPerLit {

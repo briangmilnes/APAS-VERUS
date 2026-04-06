@@ -659,4 +659,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl std::fmt::Display for AdjSeqGraphStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjSeqGraphStEph(n: {}, edges: {})", self.adj.length(), self.num_edges)
+        }
+    }
 }

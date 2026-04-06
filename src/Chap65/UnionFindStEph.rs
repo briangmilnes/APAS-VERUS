@@ -1968,4 +1968,50 @@ pub mod UnionFindStEph {
     }
 
     } // verus!
+
+    // 14a. derive impls outside verus! — struct UnionFindStEph
+
+    impl<V: StT + Hash> std::fmt::Debug for UnionFindStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("UnionFindStEph")
+                .field("parent_len", &self.parent.len())
+                .field("rank_len", &self.rank.len())
+                .field("elements_len", &self.elements.len())
+                .finish()
+        }
+    }
+
+    impl<V: StT + Hash> std::fmt::Display for UnionFindStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "UnionFindStEph(elements: {})", self.elements.len())
+        }
+    }
+
+    // 14b. derive impls outside verus! — struct UnionMergeInfo
+
+    impl<V: View> std::fmt::Debug for UnionMergeInfo<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "UnionMergeInfo")
+        }
+    }
+
+    impl<V: View> std::fmt::Display for UnionMergeInfo<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "UnionMergeInfo")
+        }
+    }
+
+    // 14c. derive impls outside verus! — struct UnionFindStEphV
+
+    impl<V: View> std::fmt::Debug for UnionFindStEphV<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "UnionFindStEphV")
+        }
+    }
+
+    impl<V: View> std::fmt::Display for UnionFindStEphV<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "UnionFindStEphV")
+        }
+    }
 }
