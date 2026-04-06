@@ -1262,7 +1262,7 @@ pub mod StarPartitionMtEph {
                 #[trigger] pm@.contains_key(vertices@[j]@),
             forall|j: int| start as int <= j < end as int ==>
                 pm@.contains_key(vertices@[j]@) ==>
-                pm@[vertices@[j]@]@ == p_vec@[j]@,
+                #[trigger] pm@[vertices@[j]@]@ == p_vec@[j]@,
             forall|v_view: V::V| #[trigger] pm@.contains_key(v_view) ==>
                 exists|j: int| start as int <= j < end as int && #[trigger] vertices@[j]@ == v_view,
         decreases end - start,
@@ -1300,7 +1300,7 @@ pub mod StarPartitionMtEph {
                 forall|j: int| start as int <= j < mid as int ==>
                     #[trigger] r@.contains_key(v1@[j]@),
                 forall|j: int| start as int <= j < mid as int ==>
-                    r@.contains_key(v1@[j]@) ==> r@[v1@[j]@]@ == p1@[j]@,
+                    r@.contains_key(v1@[j]@) ==> #[trigger] r@[v1@[j]@]@ == p1@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| start as int <= j < mid as int && #[trigger] v1@[j]@ == v_view,
         {
@@ -1317,7 +1317,7 @@ pub mod StarPartitionMtEph {
                 forall|j: int| mid as int <= j < end as int ==>
                     #[trigger] r@.contains_key(v2@[j]@),
                 forall|j: int| mid as int <= j < end as int ==>
-                    r@.contains_key(v2@[j]@) ==> r@[v2@[j]@]@ == p2@[j]@,
+                    r@.contains_key(v2@[j]@) ==> #[trigger] r@[v2@[j]@]@ == p2@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| mid as int <= j < end as int && #[trigger] v2@[j]@ == v_view,
         {
@@ -1359,14 +1359,14 @@ pub mod StarPartitionMtEph {
                 // merged covers [start, mid) — correct values.
                 forall|j2: int| start as int <= j2 < mid as int ==>
                     merged@.contains_key(verts_view[j2]@) ==>
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@,
+                    #[trigger] merged@[verts_view[j2]@]@ == pv_view[j2]@,
                 // merged covers [mid, j) — contains_key.
                 forall|j2: int| mid as int <= j2 < j as int ==>
                     #[trigger] merged@.contains_key(verts_view[j2]@),
                 // merged covers [mid, j) — correct values.
                 forall|j2: int| mid as int <= j2 < j as int ==>
                     merged@.contains_key(verts_view[j2]@) ==>
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@,
+                    #[trigger] merged@[verts_view[j2]@]@ == pv_view[j2]@,
                 // Ghost domain tracking: every key in merged@ has a witness in [start, j).
                 forall|v_view: V::V| #[trigger] merged@.contains_key(v_view) ==>
                     dom_witnesses.contains_key(v_view) &&
@@ -1400,7 +1400,7 @@ pub mod StarPartitionMtEph {
                 // Prior left entries preserved — correct values.
                 assert forall|j2: int| start as int <= j2 < mid as int implies
                     (merged@.contains_key(verts_view[j2]@) ==>
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
+                    #[trigger] merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
                     let ghost j2v = verts_view[j2]@;
                     if j2v != jv {
                         assert(pre_merged.contains_key(j2v));
@@ -1428,7 +1428,7 @@ pub mod StarPartitionMtEph {
                 // Prior right entries [mid, j) preserved + new entry j — correct values.
                 assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
                     (merged@.contains_key(verts_view[j2]@) ==>
-                    merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
+                    #[trigger] merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
                     if j2 == j as int {
                         assert(verts_view[j2]@ == jv);
                     } else {
@@ -1754,7 +1754,7 @@ pub mod StarPartitionMtEph {
                     #[trigger] r@.contains_key(va2@[j]@),
                 forall|j: int| 0 <= j < nv as int ==>
                     r@.contains_key(va2@[j]@) ==>
-                    r@[va2@[j]@]@ == pa2@[j]@,
+                    #[trigger] r@[va2@[j]@]@ == pa2@[j]@,
                 forall|v_view: V::V| #[trigger] r@.contains_key(v_view) ==>
                     exists|j: int| 0 <= j < nv as int && #[trigger] va2@[j]@ == v_view,
         {
