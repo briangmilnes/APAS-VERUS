@@ -14,13 +14,11 @@ pub mod total_order {
  pub trait TotalOrder: Sized {
     spec fn le(self, other: Self) -> bool;
 
-// Veracity: USED
     proof fn reflexive(x: Self)
         ensures
             Self::le(x, x),
     ;
 
-// Veracity: USED
     proof fn transitive(x: Self, y: Self, z: Self)
         requires
             Self::le(x, y),
@@ -29,7 +27,6 @@ pub mod total_order {
             Self::le(x, z),
     ;
 
-// Veracity: USED
     proof fn antisymmetric(x: Self, y: Self)
         requires
             Self::le(x, y),
@@ -38,7 +35,6 @@ pub mod total_order {
             x == y,
     ;
 
-// Veracity: USED
     proof fn total(x: Self, y: Self)
         ensures
             Self::le(x, y) || Self::le(y, x),
@@ -73,22 +69,18 @@ pub mod total_order {
 
 impl TotalOrder for u8 {
     open spec fn le(self, other: Self) -> bool {
-// Veracity: USED
         self <= other
     }
 
     proof fn reflexive(x: Self) {
-// Veracity: USED
     }
 
     proof fn transitive(x: Self, y: Self, z: Self) {
     }
-// Veracity: USED
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -105,25 +97,21 @@ impl TotalOrder for u8 {
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
 }
-// Veracity: USED
 
 impl TotalOrder for u16 {
     open spec fn le(self, other: Self) -> bool {
         self <= other
     }
-// Veracity: USED
 
     proof fn reflexive(x: Self) {
     }
 
     proof fn transitive(x: Self, y: Self, z: Self) {
-// Veracity: USED
     }
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -134,7 +122,6 @@ impl TotalOrder for u16 {
             Ordering::Equal
         } else {
             Ordering::Greater
-// Veracity: USED
         }
     }
 
@@ -144,21 +131,18 @@ impl TotalOrder for u16 {
 
 impl TotalOrder for u32 {
     open spec fn le(self, other: Self) -> bool {
-// Veracity: USED
         self <= other
     }
 
     proof fn reflexive(x: Self) {
     }
 
-// Veracity: USED
     proof fn transitive(x: Self, y: Self, z: Self) {
     }
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -166,7 +150,6 @@ impl TotalOrder for u32 {
         if self < other {
             Ordering::Less
         } else if self == other {
-// Veracity: USED
             Ordering::Equal
         } else {
             Ordering::Greater
@@ -177,7 +160,6 @@ impl TotalOrder for u32 {
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
 }
 
-// Veracity: USED
 impl TotalOrder for u64 {
     open spec fn le(self, other: Self) -> bool {
         self <= other
@@ -185,7 +167,6 @@ impl TotalOrder for u64 {
 
     proof fn reflexive(x: Self) {
     }
-// Veracity: USED
 
     proof fn transitive(x: Self, y: Self, z: Self) {
     }
@@ -193,12 +174,10 @@ impl TotalOrder for u64 {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
-// Veracity: USED
         if self < other {
             Ordering::Less
         } else if self == other {
@@ -210,7 +189,6 @@ impl TotalOrder for u64 {
 
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
-// Veracity: USED
 }
 
 impl TotalOrder for u128 {
@@ -219,7 +197,6 @@ impl TotalOrder for u128 {
     }
 
     proof fn reflexive(x: Self) {
-// Veracity: USED
     }
 
     proof fn transitive(x: Self, y: Self, z: Self) {
@@ -228,9 +205,7 @@ impl TotalOrder for u128 {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
-// Veracity: USED
     }
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
@@ -240,7 +215,6 @@ impl TotalOrder for u128 {
             Ordering::Equal
         } else {
             Ordering::Greater
-// Veracity: USED
         }
     }
 
@@ -253,7 +227,6 @@ impl TotalOrder for usize {
         self <= other
     }
 
-// Veracity: USED
     proof fn reflexive(x: Self) {
     }
 
@@ -262,9 +235,7 @@ impl TotalOrder for usize {
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
-// Veracity: USED
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -273,7 +244,6 @@ impl TotalOrder for usize {
             Ordering::Less
         } else if self == other {
             Ordering::Equal
-// Veracity: USED
         } else {
             Ordering::Greater
         }
@@ -287,26 +257,22 @@ impl TotalOrder for i8 {
     open spec fn le(self, other: Self) -> bool {
         self <= other
     }
-// Veracity: USED
 
     proof fn reflexive(x: Self) {
     }
 
     proof fn transitive(x: Self, y: Self, z: Self) {
     }
-// Veracity: USED
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
         if self < other {
             Ordering::Less
-// Veracity: USED
         } else if self == other {
             Ordering::Equal
         } else {
@@ -321,12 +287,10 @@ impl TotalOrder for i8 {
 impl TotalOrder for i16 {
     open spec fn le(self, other: Self) -> bool {
         self <= other
-// Veracity: USED
     }
 
     proof fn reflexive(x: Self) {
     }
-// Veracity: USED
 
     proof fn transitive(x: Self, y: Self, z: Self) {
     }
@@ -334,12 +298,10 @@ impl TotalOrder for i16 {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
-// Veracity: USED
         if self < other {
             Ordering::Less
         } else if self == other {
@@ -355,10 +317,8 @@ impl TotalOrder for i16 {
 
 impl TotalOrder for i32 {
     open spec fn le(self, other: Self) -> bool {
-// Veracity: USED
         self <= other
     }
-// Veracity: USED
 
     proof fn reflexive(x: Self) {
     }
@@ -369,10 +329,8 @@ impl TotalOrder for i32 {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
-// Veracity: USED
 
     fn cmp(&self, other: &Self) -> (c: Ordering) {
         if self < other {
@@ -389,8 +347,6 @@ impl TotalOrder for i32 {
 }
 
 impl TotalOrder for i64 {
-// Veracity: USED
-// Veracity: USED
     open spec fn le(self, other: Self) -> bool {
         self <= other
     }
@@ -404,8 +360,6 @@ impl TotalOrder for i64 {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -422,9 +376,7 @@ impl TotalOrder for i64 {
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
 }
-// Veracity: USED
 
-// Veracity: USED
 impl TotalOrder for i128 {
     open spec fn le(self, other: Self) -> bool {
         self <= other
@@ -438,9 +390,7 @@ impl TotalOrder for i128 {
 
     proof fn antisymmetric(x: Self, y: Self) {
     }
-// Veracity: USED
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 
@@ -457,7 +407,6 @@ impl TotalOrder for i128 {
     proof fn cmp_spec_less_implies_le(a: Self, b: Self) {}
     proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {}
 }
-// Veracity: USED
 
 impl TotalOrder for isize {
     open spec fn le(self, other: Self) -> bool {
@@ -473,7 +422,6 @@ impl TotalOrder for isize {
     proof fn antisymmetric(x: Self, y: Self) {
     }
 
-// Veracity: USED
     proof fn total(x: Self, y: Self) {
     }
 

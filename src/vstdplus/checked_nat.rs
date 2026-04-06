@@ -90,7 +90,6 @@ verus! {
                 b@ >= 0,
             ensures
                 a@ <= a@ + b@,
-// Veracity: USED
                 b@ <= a@ + b@;
 
             // Key lemma: for non-negative values, if final sum of non-negatives fits, the sum is in range

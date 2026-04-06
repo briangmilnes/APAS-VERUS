@@ -180,7 +180,6 @@ pub mod feq {
     }
 
     // Broadcast proof: cloned values are equal (reference version)
-// Veracity: USED
     pub broadcast proof fn axiom_cloned_implies_eq<T: Eq + Clone + Sized>(x: &T, y: T)
         requires #[trigger] cloned(*x, y), obeys_feq_clone::<T>()
         ensures *x == y
@@ -189,7 +188,6 @@ pub mod feq {
     }
 
     // Broadcast proof: cloned values are equal (owned version)
-// Veracity: USED
     pub broadcast proof fn axiom_cloned_implies_eq_owned<T: Eq + Clone + Sized>(x: T, y: T)
         requires #[trigger] cloned(x, y), obeys_feq_clone::<T>()
         ensures x == y

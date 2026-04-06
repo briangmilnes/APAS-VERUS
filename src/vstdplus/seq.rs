@@ -109,7 +109,6 @@ broadcast use {
         s.fold_left(0int, |acc: int, v: int| acc + v)
     }
 
-// Veracity: USED
     // Lemma: the two spec functions are equivalent
     pub proof fn lemma_sum_int_equiv(s: Seq<int>)
         ensures spec_sum_int_seq(s) == spec_sum_int_fold(s)
@@ -120,7 +119,6 @@ broadcast use {
             lemma_sum_int_equiv(s.drop_last());
         }
     }
-// Veracity: USED
 
     // Lemma: sum of s.push(v) = sum(s) + v
     pub proof fn lemma_sum_int_push(s: Seq<int>, v: int)
@@ -129,7 +127,6 @@ broadcast use {
         assert(s.push(v).drop_last() =~= s);
     }
 
-// Veracity: USED
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]
     pub proof fn lemma_sum_int_unfold_take(s: Seq<int>, i: int)
         requires 0 <= i < s.len()
@@ -146,7 +143,6 @@ broadcast use {
     pub open spec fn spec_sum_checked_u32_seq(s: Seq<CheckedU32>) -> int {
         spec_sum_int_seq(s.map(|i: int, c: CheckedU32| c@))
     }
-// Veracity: USED
 
     // Lemma: sum(take(i+1)) = sum(take(i)) + s[i]@ for CheckedU32 sequences
     pub proof fn lemma_sum_checked_u32_unfold_take(s: Seq<CheckedU32>, i: int)
