@@ -1044,6 +1044,30 @@ pub mod AVLTreeSeqMtPer {
         }
     }
 
+    impl<'a, T: StTInMtT> Debug for AVLTreeSeqMtPerBorrowIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqMtPerBorrowIter(pos={}, len={})", self.pos, self.len)
+        }
+    }
+
+    impl<'a, T: StTInMtT> Display for AVLTreeSeqMtPerBorrowIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqMtPerBorrowIter(pos={}, len={})", self.pos, self.len)
+        }
+    }
+
+    impl<'a, T: StTInMtT> Debug for AVLTreeSeqMtPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqMtPerGhostIterator")
+        }
+    }
+
+    impl<'a, T: StTInMtT> Display for AVLTreeSeqMtPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "AVLTreeSeqMtPerGhostIterator")
+        }
+    }
+
 }
 
 // 12. macros

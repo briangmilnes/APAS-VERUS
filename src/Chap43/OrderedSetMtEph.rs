@@ -637,6 +637,18 @@ pub mod OrderedSetMtEph {
         }
     }
 
+    impl fmt::Debug for OrderedSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEphInv")
+        }
+    }
+
+    impl fmt::Display for OrderedSetMtEphInv {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "OrderedSetMtEphInv")
+        }
+    }
+
     // 12. macros
 
     /// Macro for creating ordered sets from literals.

@@ -3386,4 +3386,22 @@ pub mod BSTTreapStEph {
             write!(f, "BSTTreapStEph(size: {})", self.size())
         }
     }
+
+    impl<T: StT + Ord + IsLtTransitive + fmt::Debug> fmt::Debug for ExposedTreap<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                ExposedTreap::Leaf => write!(f, "Leaf"),
+                ExposedTreap::Node(l, k, r) => write!(f, "Node({:?}, {:?}, {:?})", l, k, r),
+            }
+        }
+    }
+
+    impl<T: StT + Ord + IsLtTransitive + fmt::Display> fmt::Display for ExposedTreap<T> {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match self {
+                ExposedTreap::Leaf => write!(f, "Leaf"),
+                ExposedTreap::Node(l, k, r) => write!(f, "Node({}, {}, {})", l, k, r),
+            }
+        }
+    }
 }

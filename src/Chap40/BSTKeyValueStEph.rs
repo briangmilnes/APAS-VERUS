@@ -1644,9 +1644,19 @@ pub mod BSTKeyValueStEph {
         }
     }
 
+    impl fmt::Debug for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
+
+    impl fmt::Display for Lnk {
+        fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(f, "Lnk")
+        }
+    }
+
     // 12. macros
-
-
 
     #[macro_export]
     macro_rules! BSTKeyValueStEphLit {
