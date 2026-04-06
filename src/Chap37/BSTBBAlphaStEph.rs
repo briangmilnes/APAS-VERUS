@@ -28,7 +28,6 @@ pub mod BSTBBAlphaStEph {
     // 2. imports
 
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
-    #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
@@ -157,6 +156,78 @@ pub mod BSTBBAlphaStEph {
                 max.is_some() ==> self.spec_root().tree_contains(*max.unwrap());
     }
 
+    /// Exec BST operations on BalBinTree nodes (BB[α] variant).
+    pub trait BSTBBAlphaNodeFns<T: TotalOrder>: Sized + BSTSpecFns<T> + BalBinTreeTrait<T> {
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
+        fn insert_node(self, value: T) -> (inserted: Self)
+            requires self.tree_is_bst(),
+            ensures
+                inserted.tree_is_bst(),
+                inserted.tree_contains(value),
+                forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
+                    (self.tree_contains(x) || x == value),
+            ;
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
+        fn contains_node(&self, target: &T) -> (found: bool)
+            requires (*self).tree_is_bst(),
+            ensures found == (*self).tree_contains(*target),
+            ;
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
+        fn find_node(&self, target: &T) -> (found: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                found.is_some() == (*self).tree_contains(*target),
+                found.is_some() ==> *found.unwrap() == *target,
+            ;
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
+        fn min_node(&self) -> (min: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> min.is_none(),
+                (*self).spec_size() > 0 ==> min.is_some(),
+                min.is_some() ==> (*self).tree_contains(*min.unwrap()),
+            ;
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
+        fn max_node(&self) -> (max: Option<&T>)
+            requires (*self).tree_is_bst(),
+            ensures
+                (*self).spec_size() == 0 ==> max.is_none(),
+                (*self).spec_size() > 0 ==> max.is_some(),
+                max.is_some() ==> (*self).tree_contains(*max.unwrap()),
+            ;
+        /// Remove and return the minimum element from a non-empty BST subtree.
+        /// - Alg Analysis: APAS: (no cost stated)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
+        fn delete_min_node(self) -> (pair: (Self, T))
+            requires
+                self.spec_size() > 0,
+                self.tree_is_bst(),
+            ensures
+                pair.0.tree_is_bst(),
+                self.tree_contains(pair.1),
+                !pair.0.tree_contains(pair.1),
+                forall|x: T| (#[trigger] pair.0.tree_contains(x)) <==>
+                    (self.tree_contains(x) && x != pair.1),
+                forall|x: T| (#[trigger] self.tree_contains(x)) ==> T::le(pair.1, x),
+            ;
+        /// Delete a key from the BST, returning the modified tree.
+        /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
+        fn delete_node(self, target: &T) -> (deleted: Self)
+            requires self.tree_is_bst(),
+            ensures
+                deleted.tree_is_bst(),
+                !deleted.tree_contains(*target),
+                forall|x: T| (#[trigger] deleted.tree_contains(x)) <==>
+                    (self.tree_contains(x) && x != *target),
+            ;
+    }
+
     // 9. impls
 
     impl<T: TotalOrder> BSTBBAlphaStEphTrait<T> for BSTBBAlphaStEph<T> {
@@ -190,52 +261,47 @@ pub mod BSTBBAlphaStEph {
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn insert(self, value: T) -> (inserted: Self) {
-            BSTBBAlphaStEph { root: insert_node(self.root, value) }
+            BSTBBAlphaStEph { root: self.root.insert_node(value) }
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn contains(&self, target: &T) -> (found: bool) {
-            contains_node(&self.root, target)
+            self.root.contains_node(target)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn find(&self, target: &T) -> (found: Option<&T>) {
-            find_node(&self.root, target)
+            self.root.find_node(target)
         }
 
         /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
         fn delete(self, target: &T) -> (deleted: Self) {
-            BSTBBAlphaStEph { root: delete_node(self.root, target) }
+            BSTBBAlphaStEph { root: self.root.delete_node(target) }
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
         fn minimum(&self) -> (min: Option<&T>) {
-            min_node(&self.root)
+            self.root.min_node()
         }
 
         /// - Alg Analysis: APAS: (no cost stated)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
         fn maximum(&self) -> (max: Option<&T>) {
-            max_node(&self.root)
+            self.root.max_node()
         }
     }
 
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
-    fn insert_node<T: TotalOrder>(node: BalBinTree<T>, value: T) -> (inserted: BalBinTree<T>)
-        requires node.tree_is_bst(),
-        ensures
-            inserted.tree_is_bst(),
-            inserted.tree_contains(value),
-            forall|x: T| (#[trigger] inserted.tree_contains(x)) <==>
-                (node.tree_contains(x) || x == value),
-        decreases node.spec_size(),
+    impl<T: TotalOrder> BSTBBAlphaNodeFns<T> for BalBinTree<T> {
+
+    fn insert_node(self, value: T) -> (inserted: Self)
+        decreases self.spec_size(),
     {
-        match node {
+        let ghost node = self;
+        match self {
             BalBinTree::Leaf => {
                 let r = BalBinTree::Node(Box::new(BalBinNode {
                     left: BalBinTree::Leaf,
@@ -252,7 +318,7 @@ pub mod BSTBBAlphaStEph {
 
                 match TotalOrder::cmp(&value, &node_val) {
                     core::cmp::Ordering::Less => {
-                        let new_left = insert_node(left, value);
+                        let new_left = left.insert_node(value);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: new_left,
                             value: node_val,
@@ -293,7 +359,7 @@ pub mod BSTBBAlphaStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let new_right = insert_node(right, value);
+                        let new_right = right.insert_node(value);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
@@ -361,20 +427,16 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
-    fn contains_node<T: TotalOrder>(node: &BalBinTree<T>, target: &T) -> (found: bool)
-        requires (*node).tree_is_bst(),
-        ensures found == (*node).tree_contains(*target),
-        decreases node.spec_size(),
+    fn contains_node(&self, target: &T) -> (found: bool)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => false,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => true,
                     core::cmp::Ordering::Less => {
-                        let r = contains_node(&inner.left, target);
+                        let r = inner.left.contains_node(target);
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -383,7 +445,7 @@ pub mod BSTBBAlphaStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = contains_node(&inner.right, target);
+                        let r = inner.right.contains_node(target);
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -396,22 +458,16 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
-    fn find_node<'a, T: TotalOrder>(node: &'a BalBinTree<T>, target: &T) -> (found: Option<&'a T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            found.is_some() == (*node).tree_contains(*target),
-            found.is_some() ==> *found.unwrap() == *target,
-        decreases node.spec_size(),
+    fn find_node(&self, target: &T) -> (found: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 match TotalOrder::cmp(target, &inner.value) {
                     core::cmp::Ordering::Equal => Some(&inner.value),
                     core::cmp::Ordering::Less => {
-                        let r = find_node(&inner.left, target);
+                        let r = inner.left.find_node(target);
                         proof {
                             if inner.right.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -420,7 +476,7 @@ pub mod BSTBBAlphaStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let r = find_node(&inner.right, target);
+                        let r = inner.right.find_node(target);
                         proof {
                             if inner.left.tree_contains(*target) {
                                 T::antisymmetric(*target, inner.value);
@@ -433,67 +489,41 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
-    fn min_node<T: TotalOrder>(node: &BalBinTree<T>) -> (min: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> min.is_none(),
-            node.spec_size() > 0 ==> min.is_some(),
-            min.is_some() ==> (*node).tree_contains(*min.unwrap()),
-        decreases node.spec_size(),
+    fn min_node(&self) -> (min: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.left.is_leaf() {
                     Some(&inner.value)
                 } else {
-                    min_node(&inner.left)
+                    inner.left.min_node()
                 }
             }
         }
     }
 
-    /// - Alg Analysis: APAS: (no cost stated)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends rightmost path.
-    fn max_node<T: TotalOrder>(node: &BalBinTree<T>) -> (max: Option<&T>)
-        requires (*node).tree_is_bst(),
-        ensures
-            node.spec_size() == 0 ==> max.is_none(),
-            node.spec_size() > 0 ==> max.is_some(),
-            max.is_some() ==> (*node).tree_contains(*max.unwrap()),
-        decreases node.spec_size(),
+    fn max_node(&self) -> (max: Option<&T>)
+        decreases self.spec_size(),
     {
-        match node {
+        match self {
             BalBinTree::Leaf => None,
             BalBinTree::Node(inner) => {
                 if inner.right.is_leaf() {
                     Some(&inner.value)
                 } else {
-                    max_node(&inner.right)
+                    inner.right.max_node()
                 }
             }
         }
     }
 
-    /// Remove and return the minimum element from a non-empty BST subtree.
-    /// - Alg Analysis: APAS: (no cost stated)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — descends leftmost path.
-    fn delete_min_node<T: TotalOrder>(node: BalBinTree<T>) -> (pair: (BalBinTree<T>, T))
-        requires
-            node.spec_size() > 0,
-            node.tree_is_bst(),
-        ensures
-            pair.0.tree_is_bst(),
-            node.tree_contains(pair.1),
-            !pair.0.tree_contains(pair.1),
-            forall|x: T| (#[trigger] pair.0.tree_contains(x)) <==>
-                (node.tree_contains(x) && x != pair.1),
-            forall|x: T| (#[trigger] node.tree_contains(x)) ==> T::le(pair.1, x),
-        decreases node.spec_size(),
+    fn delete_min_node(self) -> (pair: (Self, T))
+        decreases self.spec_size(),
     {
-        match node {
+        let ghost node = self;
+        match self {
             BalBinTree::Leaf => {
                 proof { assert(false); }
                 unreached()
@@ -533,7 +563,7 @@ pub mod BSTBBAlphaStEph {
                     }
                     (right, node_val)
                 } else {
-                    let (new_left, min_val) = delete_min_node(left);
+                    let (new_left, min_val) = left.delete_min_node();
                     let r = BalBinTree::Node(Box::new(BalBinNode {
                         left: new_left,
                         value: node_val,
@@ -595,19 +625,11 @@ pub mod BSTBBAlphaStEph {
         }
     }
 
-    /// Delete a key from the BST, returning the modified tree.
-    /// - Alg Analysis: APAS (Ch37 CS 38.11): Work O(h(T)), Span O(h(T))
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(h(T)), Span O(h(T)) — agrees with APAS.
-    fn delete_node<T: TotalOrder>(node: BalBinTree<T>, target: &T) -> (deleted: BalBinTree<T>)
-        requires node.tree_is_bst(),
-        ensures
-            deleted.tree_is_bst(),
-            !deleted.tree_contains(*target),
-            forall|x: T| (#[trigger] deleted.tree_contains(x)) <==>
-                (node.tree_contains(x) && x != *target),
-        decreases node.spec_size(),
+    fn delete_node(self, target: &T) -> (deleted: Self)
+        decreases self.spec_size(),
     {
-        match node {
+        let ghost node = self;
+        match self {
             BalBinTree::Leaf => {
                 BalBinTree::Leaf
             }
@@ -618,7 +640,7 @@ pub mod BSTBBAlphaStEph {
 
                 match TotalOrder::cmp(target, &node_val) {
                     core::cmp::Ordering::Less => {
-                        let new_left = delete_node(left, target);
+                        let new_left = left.delete_node(target);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: new_left,
                             value: node_val,
@@ -657,7 +679,7 @@ pub mod BSTBBAlphaStEph {
                         r
                     }
                     core::cmp::Ordering::Greater => {
-                        let new_right = delete_node(right, target);
+                        let new_right = right.delete_node(target);
                         let r = BalBinTree::Node(Box::new(BalBinNode {
                             left: left,
                             value: node_val,
@@ -715,7 +737,7 @@ pub mod BSTBBAlphaStEph {
                             }
                             left
                         } else {
-                            let (new_right, successor) = delete_min_node(right);
+                            let (new_right, successor) = right.delete_min_node();
                             let r = BalBinTree::Node(Box::new(BalBinNode {
                                 left: left,
                                 value: successor,
@@ -772,6 +794,8 @@ pub mod BSTBBAlphaStEph {
             }
         }
     }
+
+    } // impl BSTBBAlphaNodeFns
 
     } // verus!
 

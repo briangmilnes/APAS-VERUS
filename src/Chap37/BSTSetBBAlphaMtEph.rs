@@ -149,6 +149,10 @@ pub mod BSTSetBBAlphaMtEph {
         fn iter(&self) -> (it: BSTSetBBAlphaMtEphIter<T>)
             requires self.spec_bstsetbbalphamteph_wf()
             ensures it@.0 == 0, bstsetbbalphamteph_iter_invariant(&it);
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn copy_set(&self) -> (out: Self)
+            requires self.spec_bstsetbbalphamteph_wf()
+            ensures out.spec_bstsetbbalphamteph_wf();
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -207,14 +211,6 @@ pub mod BSTSetBBAlphaMtEph {
             i = i + 1;
         }
         BSTSetBBAlphaMtEph { tree }
-    }
-
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn copy_set<T: StTInMtT + Ord + TotalOrder>(set: &BSTSetBBAlphaMtEph<T>) -> (out: BSTSetBBAlphaMtEph<T>)
-        requires set.spec_bstsetbbalphamteph_wf()
-        ensures out.spec_bstsetbbalphamteph_wf()
-    {
-        from_vec(values_vec(&set.tree))
     }
 
     impl<T: StTInMtT + Ord + TotalOrder + 'static> BSTSetBBAlphaMtEphTrait<T> for BSTSetBBAlphaMtEph<T> {
@@ -284,15 +280,15 @@ pub mod BSTSetBBAlphaMtEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2)
         fn union(&self, other: &Self) -> Self {
             if self.is_empty() {
-                return copy_set(other);
+                return other.copy_set();
             }
             if other.is_empty() {
-                return copy_set(self);
+                return self.copy_set();
             }
 
             let pivot = match self.tree.minimum() {
                 Some(v) => v,
-                None => { return copy_set(other); }
+                None => { return other.copy_set(); }
             };
 
             let (self_left, found_self, self_right) = self.split(&pivot);
@@ -352,7 +348,7 @@ pub mod BSTSetBBAlphaMtEph {
                 return Self::empty();
             }
             if other.is_empty() {
-                return copy_set(self);
+                return self.copy_set();
             }
 
             let pivot = match self.tree.minimum() {
@@ -489,6 +485,11 @@ pub mod BSTSetBBAlphaMtEph {
 
         fn iter(&self) -> BSTSetBBAlphaMtEphIter<T> {
             BSTSetBBAlphaMtEphIter { snapshot: values_vec(&self.tree), pos: 0 }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn copy_set(&self) -> (out: Self) {
+            from_vec(values_vec(&self.tree))
         }
     }
 
