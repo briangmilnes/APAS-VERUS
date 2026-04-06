@@ -1,0 +1,31 @@
+error: expected `,`
+    --> src/Chap62/StarPartitionMtEph.rs:1218:65
+     |
+1218 |                 (result@[j]@ != verts_view[(start as int + j)]@ implies
+     |                                                                 ^^^^^^^
+
+error[E0432]: unresolved import `crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition`
+  --> src/Chap62/StarContractionMtEph.rs:22:9
+   |
+22 |     use crate::Chap62::StarPartitionMtEph::StarPartitionMtEph::parallel_star_partition;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `parallel_star_partition` in `Chap62::StarPartitionMtEph::StarPartitionMtEph`
+
+error[E0425]: cannot find type `StarPartitionMtEph` in this scope
+    --> src/Chap62/StarPartitionMtEph.rs:1821:30
+     |
+1821 |     impl std::fmt::Debug for StarPartitionMtEph {
+     |                              ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StarPartitionMtEph` in this scope
+    --> src/Chap62/StarPartitionMtEph.rs:1827:32
+     |
+1827 |     impl std::fmt::Display for StarPartitionMtEph {
+     |                                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 221MB, peak z3 RSS: 0MB, min free: 22159MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s

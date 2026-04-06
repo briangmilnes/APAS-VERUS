@@ -1301,13 +1301,13 @@ pub mod BSTRBMtEph {
                     // Bridge from trait ensures (spec_contains) to link_contains.
                     assert(after_insert.spec_contains(value));
                     assert(link_contains(after_insert, value));
-                    assert forall|x: T| link_contains(after_insert, x) ==>
+                    assert forall|x: T| link_contains(after_insert, x) implies
                         (link_contains(old_ghost, x) || x == value)
                     by {
                         assert(after_insert.spec_contains(x) ==>
                             (old_ghost.spec_contains(x) || x == value));
                     };
-                    assert forall|x: T| (link_contains(old_ghost, x) || x == value) ==>
+                    assert forall|x: T| (link_contains(old_ghost, x) || x == value) implies
                         link_contains(after_insert, x)
                     by {
                         if link_contains(old_ghost, x) {
