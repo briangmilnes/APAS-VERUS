@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 19 parametric sequence implementation for array-backed sequences (multi-threaded ephemeral). Verusified.
@@ -1620,13 +1620,13 @@ pub mod ArraySeqMtEph {
         /// Sequential concatenation of two owned sequences. Moves elements from b
         /// into a's Vec via into_iter, avoiding Clone/Eq requirements.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|b|), Span O(|b|)
-        fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (result: ArraySeqMtEphS<T>)
+        fn concat_seqs(a: ArraySeqMtEphS<T>, b: ArraySeqMtEphS<T>) -> (concatenated: ArraySeqMtEphS<T>)
             requires
                 a.seq@.len() + b.seq@.len() <= usize::MAX,
             ensures
-                result.seq@.len() == a.seq@.len() + b.seq@.len(),
-                forall|i: int| #![trigger result.seq@[i]] 0 <= i < a.seq@.len() ==> result.seq@[i] == a.seq@[i],
-                forall|i: int| 0 <= i < b.seq@.len() ==> result.seq@[a.seq@.len() + i] == b.seq@[i],
+                concatenated.seq@.len() == a.seq@.len() + b.seq@.len(),
+                forall|i: int| #![trigger concatenated.seq@[i]] 0 <= i < a.seq@.len() ==> concatenated.seq@[i] == a.seq@[i],
+                forall|i: int| 0 <= i < b.seq@.len() ==> concatenated.seq@[a.seq@.len() + i] == b.seq@[i],
         {
             let ghost a_view = a.seq@;
             let ghost b_view = b.seq@;

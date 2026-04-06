@@ -475,18 +475,18 @@ broadcast use {
     }
 
     impl<T: MtVal> PartialEq for OBSTMtEphS<T> {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let self_rwlock = arc_deref(&self.keys);
             let other_rwlock = arc_deref(&other.keys);
             let self_handle = self_rwlock.acquire_read();
             let other_handle = other_rwlock.acquire_read();
-            let r = *self_handle.borrow() == *other_handle.borrow();
+            let equal = *self_handle.borrow() == *other_handle.borrow();
             other_handle.release_read();
             self_handle.release_read();
-            proof { assume(r == (self@ == other@)); }
-            r
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 

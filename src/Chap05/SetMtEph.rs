@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 5.1 — Multi-threaded ephemeral Set built on `std::collections::HashSet`.
@@ -1110,11 +1110,11 @@ verus! {
             ensures contains == self@.contains(x@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
-        fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>)
+        fn insert(&mut self, x: T) -> (inserted: std::result::Result<bool, ()>)
             ensures
                 self@.finite(),
                 self@ == old(self)@.insert(x@),
-                r is Ok ==> r.unwrap() == !old(self)@.contains(x@);
+                inserted is Ok ==> inserted.unwrap() == !old(self)@.contains(x@);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires read lock, delegates to choose().
         fn choose(&self) -> (element: T)
@@ -1155,7 +1155,7 @@ verus! {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — acquires write lock, delegates to insert().
-        fn insert(&mut self, x: T) -> (r: std::result::Result<bool, ()>) {
+        fn insert(&mut self, x: T) -> (inserted: std::result::Result<bool, ()>) {
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
             proof { assume(self.ghost_locked_set@ == locked_val@); }
             let inserted = locked_val.insert(x);

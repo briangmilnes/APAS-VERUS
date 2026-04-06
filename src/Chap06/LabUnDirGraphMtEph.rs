@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
 //! Chapter 6 Labeled Undirected Graph (ephemeral) using Set for vertices and labeled edges - Multi-threaded version.
@@ -786,14 +786,14 @@ pub mod LabUnDirGraphMtEph {
                 ng@ <= self@.V;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>)
+        fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>)
             ensures
                 spec_labgraphview_wf(self@),
                 self@.V == old(self)@.V.insert(v@),
                 self@.A == old(self)@.A;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>)
+        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (added: std::result::Result<(), ()>)
             ensures
                 spec_labgraphview_wf(self@),
                 self@.V == old(self)@.V.insert(v1@).insert(v2@),
@@ -869,7 +869,7 @@ pub mod LabUnDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_vertex(&mut self, v: V) -> (r: std::result::Result<(), ()>) {
+        fn add_vertex(&mut self, v: V) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_vertex(v);
@@ -880,7 +880,7 @@ pub mod LabUnDirGraphMtEph {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
-        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (r: std::result::Result<(), ()>) {
+        fn add_labeled_edge(&mut self, v1: V, v2: V, label: L) -> (added: std::result::Result<(), ()>) {
             let (mut locked_val, write_handle) = self.locked_graph.acquire_write();
             proof { assume(self.ghost_locked_graph@ == locked_val@); }
             locked_val.add_labeled_edge(v1, v2, label);

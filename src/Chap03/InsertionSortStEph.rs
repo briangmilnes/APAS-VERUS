@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Chapter 3 insertion sort over mutable slices - Generic version using TotalOrder trait.
 //! Reviewed and is clean. briangmilnes@gmail.com 13 March 2026 
 pub mod InsertionSortStEph {

@@ -438,14 +438,14 @@ broadcast use {
     }
 
     impl PartialEq for MatrixChainMtPerS {
-        fn eq(&self, other: &Self) -> (r: bool)
-            ensures r == (self@ == other@)
+        fn eq(&self, other: &Self) -> (equal: bool)
+            ensures equal == (self@ == other@)
         {
             let self_dims = arc_deref(&self.dimensions);
             let other_dims = arc_deref(&other.dimensions);
-            let r = *self_dims == *other_dims;
-            proof { assume(r == (self@ == other@)); }
-            r
+            let equal = *self_dims == *other_dims;
+            proof { assume(equal == (self@ == other@)); }
+            equal
         }
     }
 
