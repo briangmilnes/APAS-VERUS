@@ -10,7 +10,6 @@ pub mod AdjSeqGraphStEph {
 
     verus! {
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,

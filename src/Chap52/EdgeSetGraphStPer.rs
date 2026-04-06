@@ -22,7 +22,6 @@ pub mod EdgeSetGraphStPer {
 
     verus! {
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,

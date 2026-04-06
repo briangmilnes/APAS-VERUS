@@ -24,7 +24,6 @@ pub mod AdjTableGraphStEph {
 
     verus! {
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::map::group_map_axioms,

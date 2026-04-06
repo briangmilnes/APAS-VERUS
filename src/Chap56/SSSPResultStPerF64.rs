@@ -15,7 +15,6 @@ pub mod SSSPResultStPerF64 {
 
     verus! {
 
-// Veracity: added broadcast group
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     crate::vstdplus::float::float::axiom_f64_unreachable_not_finite,

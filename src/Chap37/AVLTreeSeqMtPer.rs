@@ -46,7 +46,6 @@ pub mod AVLTreeSeqMtPer {
 
     broadcast use {
         vstd::seq::group_seq_axioms,
-        // Veracity: added broadcast groups
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
