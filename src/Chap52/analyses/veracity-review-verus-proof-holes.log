@@ -27,7 +27,7 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    13 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjMatrixGraphStPer.rs:799: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:799: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        795 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        797 |         {
@@ -41,7 +41,7 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    7 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/AdjSeqGraphStPer.rs:688: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:688: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        684 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        686 |         {
@@ -49,7 +49,7 @@ Table of Contents:
        689 |             equal
        690 |         }
 ✓ AdjTableGraphMtPer.rs
-   1 clean proof function
+   2 clean proof functions
 ✓ AdjTableGraphStEph.rs
    3 clean proof functions
 ✓ AdjTableGraphStPer.rs
@@ -57,22 +57,22 @@ Table of Contents:
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStEph.rs:428: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       421 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:428: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       421 |         fn clone(&self) -> (cloned: Self)
             ...
        426 |                 edges: self.edges.clone(),
        427 |             };
-       429 |             result
+       429 |             cloned
        430 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStPer.rs:407: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       400 |         fn clone(&self) -> (result: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:407: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       400 |         fn clone(&self) -> (cloned: Self)
             ...
        405 |                 edges: self.edges.clone(),
        406 |             };
-       408 |             result
+       408 |             cloned
        409 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap52/EdgeSetGraphStPer.rs:423: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:423: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        419 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        421 |         {
@@ -132,16 +132,16 @@ Modules:
    14 total
 
 Proof Functions:
-   89 clean (100%)
+   90 clean (100%)
    0 holed (0%)
-   89 total
+   90 total
 
 Function Specs:
-   307 exec fns with complete spec (requires+ensures) (57%)
+   308 exec fns with complete spec (requires+ensures) (57%)
    0 exec fns missing spec (0%)
-   227 proof/spec fns clean (42%)
+   228 proof/spec fns clean (42%)
    0 proof/spec fns with holes (0%)
-   534 total fns
+   536 total fns
 
 
 Holes Found: 0 (actionable)
@@ -156,11 +156,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:24:46 -07:00
-Ended:     2026-04-02 07:24:46 -07:00
-Duration:  89ms
+Started:   2026-04-06 09:40:04 -07:00
+Ended:     2026-04-06 09:40:04 -07:00
+Duration:  84ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-uration:  89ms
-
-Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

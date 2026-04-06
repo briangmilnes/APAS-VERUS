@@ -21,26 +21,26 @@ Table of Contents:
 =================================================================
 
 ⚠ BSTParaMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:865: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       858 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:866: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       859 |         fn clone(&self) -> (cloned: Self)
             ...
-       863 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
-       864 |             };
-       866 |             cloned
-       867 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:880: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       871 |         fn clone(&self) -> (cloned: Self)
+       864 |                 Exposed::Node(l, k, r) => Exposed::Node(l.clone(), k.clone(), r.clone()),
+       865 |             };
+       867 |             cloned
+       868 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:881: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       872 |         fn clone(&self) -> (cloned: Self)
             ...
-       878 |                 right: self.right.clone(),
-       879 |             };
-       881 |             cloned
-       882 |         }
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:245: info: fn_missing_requires
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1993: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaMtEph.rs:1994: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
+       879 |                 right: self.right.clone(),
+       880 |             };
+       882 |             cloned
+       883 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:246: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1994: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Send for ParamBST<T> {} [high]
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaMtEph.rs:1995: info: structural_false_positive UNSAFE_SEND_SYNC ParamBST — unsafe impl<T: MtKey> Sync for ParamBST<T> {} [high]
    Info: 1 total
 ℹ BSTParaStEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap38/BSTParaStEph.rs:160: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap38/BSTParaStEph.rs:161: info: fn_missing_requires
    Info: 1 total
    5 clean proof functions
 
@@ -102,8 +102,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 14:11:07 -07:00
-Ended:     2026-04-02 14:11:07 -07:00
-Duration:  65ms
+Started:   2026-04-06 09:40:03 -07:00
+Ended:     2026-04-06 09:40:03 -07:00
+Duration:  45ms
 
 Full output: src/Chap38/analyses/veracity-review-verus-proof-holes.log
+output: src/Chap38/analyses/veracity-review-verus-proof-holes.log

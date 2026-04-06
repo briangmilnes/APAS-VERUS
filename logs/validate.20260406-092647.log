@@ -1,0 +1,186 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap37/BSTRBMtEph.rs:1304:21
+     |
+1304 |                     assert forall|x: T| link_contains(after_insert, x) ==>
+     |                     ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap37/BSTRBMtEph.rs:1310:21
+     |
+1310 |                     assert forall|x: T| (link_contains(old_ghost, x) || x == value) ==>
+     |                     ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1217:13
+     |
+1217 |             assert forall|j: int| 0 <= j < result@.len() implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1401:17
+     |
+1401 |                 assert forall|j2: int| start as int <= j2 < mid as int implies
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1429:17
+     |
+1429 |                 assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
+     |                 ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap62/StarPartitionMtEph.rs:1708:13
+     |
+1708 |             assert forall|j2: int| 0 <= j2 < nv as int implies
+     |             ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStPer.rs:440:5
+    |
+440 |     fn rotate_right(self) -> (rotated: Self)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1263:13
+     |
+1263 | /             forall|j: int| start as int <= j < end as int ==>
+1264 | |                 pm@.contains_key(vertices@[j]@) ==>
+1265 | |                 pm@[vertices@[j]@]@ == p_vec@[j]@,
+     | |_________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1265:40
+     |
+1265 |                 pm@[vertices@[j]@]@ == p_vec@[j]@,
+     |                                        ^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1302:17
+     |
+1302 | /                 forall|j: int| start as int <= j < mid as int ==>
+1303 | |                     r@.contains_key(v1@[j]@) ==> r@[v1@[j]@]@ == p1@[j]@,
+     | |________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1303:66
+     |
+1303 |                     r@.contains_key(v1@[j]@) ==> r@[v1@[j]@]@ == p1@[j]@,
+     |                                                                  ^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1319:17
+     |
+1319 | /                 forall|j: int| mid as int <= j < end as int ==>
+1320 | |                     r@.contains_key(v2@[j]@) ==> r@[v2@[j]@]@ == p2@[j]@,
+     | |________________________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1320:66
+     |
+1320 |                     r@.contains_key(v2@[j]@) ==> r@[v2@[j]@]@ == p2@[j]@,
+     |                                                                  ^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1401:17
+     |
+1401 |                 assert forall|j2: int| start as int <= j2 < mid as int implies
+     |                 ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1403:50
+     |
+1403 |                     merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
+     |                                                  ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1429:17
+     |
+1429 |                 assert forall|j2: int| mid as int <= j2 < j as int + 1 implies
+     |                 ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1431:50
+     |
+1431 |                     merged@[verts_view[j2]@]@ == pv_view[j2]@) by {
+     |                                                  ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1360:17
+     |
+1360 | /                 forall|j2: int| start as int <= j2 < mid as int ==>
+1361 | |                     merged@.contains_key(verts_view[j2]@) ==>
+1362 | |                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
+     | |_____________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1362:50
+     |
+1362 |                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
+     |                                                  ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1367:17
+     |
+1367 | /                 forall|j2: int| mid as int <= j2 < j as int ==>
+1368 | |                     merged@.contains_key(verts_view[j2]@) ==>
+1369 | |                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
+     | |_____________________________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1369:50
+     |
+1369 |                     merged@[verts_view[j2]@]@ == pv_view[j2]@,
+     |                                                  ^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap62/StarPartitionMtEph.rs:1755:17
+     |
+1755 | /                 forall|j: int| 0 <= j < nv as int ==>
+1756 | |                     r@.contains_key(va2@[j]@) ==>
+1757 | |                     r@[va2@[j]@]@ == pa2@[j]@,
+     | |_____________________________________________^
+
+note:   trigger 1 of 1:
+    --> src/Chap62/StarPartitionMtEph.rs:1757:38
+     |
+1757 |                     r@[va2@[j]@]@ == pa2@[j]@,
+     |                                      ^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap62/StarPartitionMtEph.rs:1755:17
+     |
+1755 | /                 forall|j: int| 0 <= j < nv as int ==>
+1756 | |                     r@.contains_key(va2@[j]@) ==>
+1757 | |                     r@[va2@[j]@]@ == pa2@[j]@,
+     | |_____________________________________________^
+
+verification results:: 5701 verified, 1 errors
+error: aborting due to 1 previous error; 6 warnings emitted
+
+Elapsed: 91s
+Sampled Memory Usage: peak rust_verify RSS: 10863MB, peak z3 RSS: 473MB, min free: 11517MB
+Sampled CPU Usage: rust_verify: 228s, z3 children: 177s

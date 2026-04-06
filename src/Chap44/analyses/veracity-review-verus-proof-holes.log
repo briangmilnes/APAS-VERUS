@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ DocumentIndex.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:616: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:616: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        612 |         fn clone(&self) -> (cloned: Self)
             ...
        614 |         {
        615 |             let cloned = DocumentIndex { word_to_docs: self.word_to_docs.clone() };
        617 |             cloned
        618 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap44/DocumentIndex.rs:622: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap44/DocumentIndex.rs:622: info: structural_false_positive STD_TRAIT_IMPL eq — #[verifier::external_body] [high]
 
 =================================================================
 2. Depends Upon
@@ -83,9 +83,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:24:45 -07:00
-Ended:     2026-04-02 07:24:45 -07:00
-Duration:  6ms
+Started:   2026-04-06 09:40:04 -07:00
+Ended:     2026-04-06 09:40:04 -07:00
+Duration:  8ms
 
 Full output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap44/analyses/veracity-review-verus-proof-holes.log
+c/Chap44/analyses/veracity-review-verus-proof-holes.log

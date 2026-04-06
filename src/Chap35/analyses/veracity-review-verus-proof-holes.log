@@ -20,10 +20,14 @@ Table of Contents:
 1. File Holes
 =================================================================
 
-✓ OrderStatSelectMtEph.rs
-   2 clean proof functions
-✓ OrderStatSelectMtPer.rs
-   2 clean proof functions
+ℹ OrderStatSelectMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtEph.rs:144: info: fn_missing_requires
+   Info: 1 total
+   3 clean proof functions
+ℹ OrderStatSelectMtPer.rs
+/home/milnes/projects/APAS-VERUS/src/Chap35/OrderStatSelectMtPer.rs:149: info: fn_missing_requires
+   Info: 1 total
+   3 clean proof functions
 ✓ OrderStatSelectStEph.rs
    1 clean proof function
 ✓ OrderStatSelectStPer.rs
@@ -61,20 +65,23 @@ Modules:
    4 total
 
 Proof Functions:
-   6 clean (100%)
+   8 clean (100%)
    0 holed (0%)
-   6 total
+   8 total
 
 Function Specs:
-   14 exec fns with complete spec (requires+ensures) (46%)
-   0 exec fns missing spec (0%)
-   16 proof/spec fns clean (53%)
+   16 exec fns with complete spec (requires+ensures) (42%)
+   2 exec fns missing spec (5%)
+   20 proof/spec fns clean (52%)
    0 proof/spec fns with holes (0%)
-   30 total fns
+   38 total fns
 
 
 Holes Found: 0 (actionable)
 Real Proof Targets: 0 (all actionable)
+
+Accepted (reviewed): 2 total
+   2 × fn_missing_requires
 
 No proof holes or warnings found! All proofs are complete.
 
@@ -82,9 +89,9 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:24:44 -07:00
-Ended:     2026-04-02 07:24:44 -07:00
-Duration:  21ms
+Started:   2026-04-06 09:40:03 -07:00
+Ended:     2026-04-06 09:40:03 -07:00
+Duration:  20ms
 
 Full output: src/Chap35/analyses/veracity-review-verus-proof-holes.log
-eview-verus-proof-holes.log
+veracity-review-verus-proof-holes.log

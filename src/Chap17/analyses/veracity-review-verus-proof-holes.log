@@ -21,14 +21,14 @@ Table of Contents:
 =================================================================
 
 ⚠ MathSeq.rs
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:736: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:736: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        732 |         fn clone(&self) -> (cloned: Self)
             ...
        734 |         {
        735 |             let cloned = MathSeqS { data: self.data.clone() };
        737 |             cloned
        738 |         }
-/home/milnes/projects/APAS-VERUS-agent3/src/Chap17/MathSeq.rs:748: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+/home/milnes/projects/APAS-VERUS/src/Chap17/MathSeq.rs:748: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
        744 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
        746 |         {
@@ -86,9 +86,9 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-02 07:24:44 -07:00
-Ended:     2026-04-02 07:24:44 -07:00
+Started:   2026-04-06 09:40:03 -07:00
+Ended:     2026-04-06 09:40:03 -07:00
 Duration:  8ms
 
 Full output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap17/analyses/veracity-review-verus-proof-holes.log
+-proof-holes.log
