@@ -1773,6 +1773,30 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
+    impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ArraySeqMtEphSliceIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ArraySeqMtEphSliceIter")
+        }
+    }
+
+    impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ArraySeqMtEphSliceGhostIterator")
+        }
+    }
+
+    impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ArraySeqMtEphSliceGhostIterator")
+        }
+    }
+
     #[macro_export]
     macro_rules! Chap18ArraySeqMtEphSliceSLit {
         () => {

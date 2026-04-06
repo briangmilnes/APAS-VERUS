@@ -763,4 +763,22 @@ verus! {
             < $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEph<_> as $crate::Chap06::DirGraphStEph::DirGraphStEph::DirGraphStEphTrait<_> >::from_sets(__V, __A)
         }}
     }
+
+    //		14. derive impls outside verus!
+
+    impl<'a, V: StT + Hash> Debug for DirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphIter") }
+    }
+
+    impl<'a, V: StT + Hash> Display for DirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphIter") }
+    }
+
+    impl<'a, V: StT + Hash> Debug for DirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphGhostIterator") }
+    }
+
+    impl<'a, V: StT + Hash> Display for DirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphStEphGhostIterator") }
+    }
 }

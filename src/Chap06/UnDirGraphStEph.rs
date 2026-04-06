@@ -543,4 +543,20 @@ verus! {
             < $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEph<_> as $crate::Chap06::UnDirGraphStEph::UnDirGraphStEph::UnDirGraphStEphTrait<_> >::from_sets(__V, __E)
         }};
     }
+
+    impl<'a, V: StT + Hash> Debug for UnDirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphStEphIter") }
+    }
+
+    impl<'a, V: StT + Hash> Display for UnDirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphStEphIter") }
+    }
+
+    impl<'a, V: StT + Hash> Debug for UnDirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphStEphGhostIterator") }
+    }
+
+    impl<'a, V: StT + Hash> Display for UnDirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphStEphGhostIterator") }
+    }
 }

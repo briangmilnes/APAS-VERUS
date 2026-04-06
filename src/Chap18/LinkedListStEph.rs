@@ -935,4 +935,28 @@ pub mod LinkedListStEph {
             write!(f, "]")
         }
     }
+
+    impl<'a, T: Debug> Debug for LinkedListStEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStEphIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for LinkedListStEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStEphIter")
+        }
+    }
+
+    impl<'a, T> Debug for LinkedListStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStEphGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for LinkedListStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStEphGhostIterator")
+        }
+    }
 }

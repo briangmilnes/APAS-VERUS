@@ -202,4 +202,30 @@ pub mod HFSchedulerMtEph {
     }
 
     } // verus!
+
+    //		14. derive impls outside verus!
+
+    impl std::fmt::Debug for PoolState {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("PoolState").finish()
+        }
+    }
+
+    impl std::fmt::Display for PoolState {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PoolState")
+        }
+    }
+
+    impl<T> std::fmt::Debug for ExTaskState<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ExTaskState")
+        }
+    }
+
+    impl<T> std::fmt::Display for ExTaskState<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ExTaskState")
+        }
+    }
 }

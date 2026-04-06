@@ -1082,4 +1082,28 @@ pub mod ArraySeqStPer {
         }
     }
 
+    impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStPerIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStPerIter")
+        }
+    }
+
+    impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStPerGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStPerGhostIterator")
+        }
+    }
+
 }

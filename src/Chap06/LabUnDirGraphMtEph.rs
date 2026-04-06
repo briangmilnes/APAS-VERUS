@@ -947,4 +947,36 @@ pub mod LabUnDirGraphMtEph {
             )
         }
     }
+
+    impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphGhostIterator") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphGhostIterator") }
+    }
+
+    impl Debug for LabUnDirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphInv") }
+    }
+
+    impl Display for LabUnDirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphMtEphInv") }
+    }
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Debug for LockedLabUnDirGraphMtEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedLabUnDirGraphMtEph") }
+    }
+
+    impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Display for LockedLabUnDirGraphMtEph<V, L> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedLabUnDirGraphMtEph") }
+    }
 }

@@ -917,4 +917,28 @@ pub mod LinkedListStPer {
             write!(f, "]")
         }
     }
+
+    impl<'a, T: Debug> Debug for LinkedListStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStPerIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for LinkedListStPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStPerIter")
+        }
+    }
+
+    impl<'a, T> Debug for LinkedListStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStPerGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for LinkedListStPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "LinkedListStPerGhostIterator")
+        }
+    }
 }

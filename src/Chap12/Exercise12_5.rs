@@ -174,4 +174,30 @@ impl<T: Send> Drop for ConcurrentStackMt<T> {
 
 } // verus!
 
+    //		14. derive impls outside verus!
+
+    impl<T> std::fmt::Debug for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Node")
+        }
+    }
+
+    impl<T> std::fmt::Display for Node<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "Node")
+        }
+    }
+
+    impl<T: Send> std::fmt::Debug for ConcurrentStackMt<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ConcurrentStackMt")
+        }
+    }
+
+    impl<T: Send> std::fmt::Display for ConcurrentStackMt<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "ConcurrentStackMt")
+        }
+    }
+
 } // mod

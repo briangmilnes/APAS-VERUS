@@ -460,4 +460,20 @@ verus! {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { std::fmt::Display::fmt(&self.pairs, f) }
     }
 
+    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for RelationStEphIter<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "RelationStEphIter") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Display for RelationStEphIter<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "RelationStEphIter") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for RelationStEphGhostIterator<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "RelationStEphGhostIterator") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Display for RelationStEphGhostIterator<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "RelationStEphGhostIterator") }
+    }
+
 }
