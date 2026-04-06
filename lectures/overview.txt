@@ -43,6 +43,7 @@ And for code formatting: ``code``
 + Veracity: Holes
 + A new age of Software Engineering: AI
 + The Agents
++ The Agents: They lie, they cheat, they're wusses
 + The Agents: The costs.
 + The Agents: Memory and Throughput
 + The Agents: The Economic Model.
@@ -56,8 +57,6 @@ And for code formatting: ``code``
 + The Scariest Cautionary Tales: Open Source = Open Holes
 + A new age of Software Engineering: Provers
 + A new age of Software Engineering: Prove or Die
-+ A new age of Software Engineering: Quantitative Drive
-
 + Questions?
 + Some of my Questions:
 + The Internet Apocalypse
