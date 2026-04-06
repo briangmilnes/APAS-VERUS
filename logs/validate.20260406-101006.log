@@ -1,0 +1,22 @@
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap37/BSTRBMtEph.rs:1304:21
+     |
+1304 |                     assert forall|x: T| link_contains(after_insert, x) ==>
+     |                     ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+warning: using ==> in `assert forall` does not currently assume the antecedent in the body; consider using `implies` instead of `==>`
+    --> src/Chap37/BSTRBMtEph.rs:1310:21
+     |
+1310 |                     assert forall|x: T| (link_contains(old_ghost, x) || x == value) ==>
+     |                     ^^^^^^
+     |
+     = help: If you didn't mean to assume the antecedent, we're very curious to hear why! To tell us, please open an issue on the Verus issue tracker on github with the title `Don't always make assert forall assume the antecedent`. If no one opens such an issue, we'll soon change the behavior of Verus to always assume the antecedent of the outermost implication
+
+verification results:: 1946 verified, 0 errors
+warning: 2 warnings emitted
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 1403MB, peak z3 RSS: 440MB, min free: 20315MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 31s
