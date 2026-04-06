@@ -4,6 +4,24 @@
 
 You are working in `~/projects/veracity-agent1`. Do not touch `~/projects/veracity`.
 
+## Updated Standard
+
+The `table_of_contents_standard.rs` has been updated with the new format. Pull
+the latest from APAS-VERUS to get it:
+
+```bash
+cd ~/projects/veracity-agent1/tests/fixtures/APAS-VERUS && git pull
+```
+
+Then read the updated standard:
+
+```
+tests/fixtures/APAS-VERUS/src/standards/table_of_contents_standard.rs
+```
+
+This is the source of truth for the section header format. Your tocify output
+must match it.
+
 ## Problem
 
 Section headers in APAS-VERUS source files use bare numbers:
