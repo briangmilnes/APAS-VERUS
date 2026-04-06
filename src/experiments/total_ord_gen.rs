@@ -67,14 +67,14 @@ verus! {
     // Test function that requires TotalOrdGen
     fn test_equality_axioms<T: TotalOrdGen>(x: T, y: T, z: T) {
         proof {
-// Veracity: TESTING             assert(x == x); // T::axiom_eq_reflexive(&x);
+            assert(x == x); // T::axiom_eq_reflexive(&x);
 
             if x == y { 
                 assert(y == x); // T::axiom_eq_symmetric(&x, &y);
             }
 
             if x == y && y == z {
-// Veracity: TESTING                 assert(x == z); // T::axiom_eq_transitive(&x, &y, &z);
+                assert(x == z); // T::axiom_eq_transitive(&x, &y, &z);
             }
 
             if x == y {
@@ -93,16 +93,16 @@ verus! {
 
     fn test_ordering_axioms<T: TotalOrdGen>(x: T, y: T, z: T) {
         proof {
-// Veracity: TESTING             assert(x.le_spec(&x)); // T::axiom_le_reflexive(&x);
+            assert(x.le_spec(&x)); // T::axiom_le_reflexive(&x);
 
-// Veracity: TESTING             assert(x.le_spec(&y) || y.le_spec(&x)); // T::axiom_le_total(&x, &y);
+            assert(x.le_spec(&y) || y.le_spec(&x)); // T::axiom_le_total(&x, &y);
 
             if x.le_spec(&y) && y.le_spec(&z) {
-// Veracity: TESTING                 assert(x.le_spec(&z)); // T::axiom_le_transitive(&x, &y, &z);
+                assert(x.le_spec(&z)); // T::axiom_le_transitive(&x, &y, &z);
             }
 
             if x.le_spec(&y) && y.le_spec(&x) {
-// Veracity: TESTING                 assert(x == y); // T::axiom_le_antisymmetric(&x, &y);
+                assert(x == y); // T::axiom_le_antisymmetric(&x, &y);
             }
         }
     }

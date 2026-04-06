@@ -46,13 +46,6 @@ pub mod verus_keep_ghost_and_test {
 
     verus! {
 
-// Veracity: added broadcast group
-broadcast use {
-    crate::vstdplus::feq::feq::group_feq_axioms,
-    vstd::seq::group_seq_axioms,
-    vstd::seq_lib::group_seq_properties,
-    vstd::seq_lib::group_to_multiset_ensures,
-};
 
     // This import is only needed for ghost specs (Vec::@ view axioms).
     // Under cargo test, verus_keep_ghost is NOT set, so this line is removed.

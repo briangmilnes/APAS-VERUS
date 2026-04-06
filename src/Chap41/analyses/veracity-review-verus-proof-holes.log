@@ -21,150 +21,150 @@ Table of Contents:
 =================================================================
 
 ❌ AVLTreeSetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:650: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-       651 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:651: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
-       652 | 
-       653 |     // 12. macros
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:578: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:685: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
+       686 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:686: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+       687 | 
+       688 |     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtEph.rs:590: info: accept()
    Holes: 2 total
       2 × unsafe impl
    Info: 1 total
 ❌ AVLTreeSetMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:606: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
-       607 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:607: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
-       608 | 
-       609 |     // 13. macros
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:560: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       525 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:633: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
+       634 |     unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:634: error: unsafe impl - unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+       635 | 
+       636 |     impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:600: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       565 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       558 |                 i = i + 1;
-       559 |             }
-       561 |             all_eq
-       562 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:566: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:573: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
+       598 |                 i = i + 1;
+       599 |             }
+       601 |             all_eq
+       602 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:520: info: structural_false_positive STD_TRAIT_IMPL partial_cmp — #[verifier::external_body] [high]
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetMtPer.rs:527: info: structural_false_positive STD_TRAIT_IMPL cmp — #[verifier::external_body] [high]
    Holes: 2 total
       2 × unsafe impl
    Info: 2 × structural_false_positive
       2 × STD_TRAIT_IMPL
 ⚠ AVLTreeSetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:832: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       828 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:864: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       860 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       830 |         {
-       831 |             proof {
-       833 |                 assume(other.spec_avltreesetsteph_wf());
-       834 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:833: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       828 |         fn eq(&self, other: &Self) -> (equal: bool)
+       862 |         {
+       863 |             proof {
+       865 |                 assume(other.spec_avltreesetsteph_wf());
+       866 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:865: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       860 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       831 |             proof {
-       832 |                 assume(self.spec_avltreesetsteph_wf());
-       834 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       835 |                 assume(view_ord_consistent::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:834: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       828 |         fn eq(&self, other: &Self) -> (equal: bool)
+       863 |             proof {
+       864 |                 assume(self.spec_avltreesetsteph_wf());
+       866 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       867 |                 assume(view_ord_consistent::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:866: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       860 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       832 |                 assume(self.spec_avltreesetsteph_wf());
-       833 |                 assume(other.spec_avltreesetsteph_wf());
-       835 |                 assume(view_ord_consistent::<T>());
-       836 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:835: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       828 |         fn eq(&self, other: &Self) -> (equal: bool)
+       864 |                 assume(self.spec_avltreesetsteph_wf());
+       865 |                 assume(other.spec_avltreesetsteph_wf());
+       867 |                 assume(view_ord_consistent::<T>());
+       868 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:867: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       860 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       833 |                 assume(other.spec_avltreesetsteph_wf());
-       834 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       836 |             }
-       837 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:838: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       828 |         fn eq(&self, other: &Self) -> (equal: bool)
+       865 |                 assume(other.spec_avltreesetsteph_wf());
+       866 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       868 |             }
+       869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStEph.rs:870: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       860 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       836 |             }
-       837 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
-       839 |             equal
-       840 |         }
+       868 |             }
+       869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+       871 |             equal
+       872 |         }
 ⚠ AVLTreeSetStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:715: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       711 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:746: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       742 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       713 |         {
-       714 |             proof {
-       716 |                 assume(other.spec_avltreesetstper_wf());
-       717 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:716: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       711 |         fn eq(&self, other: &Self) -> (equal: bool)
+       744 |         {
+       745 |             proof {
+       747 |                 assume(other.spec_avltreesetstper_wf());
+       748 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:747: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       742 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       714 |             proof {
-       715 |                 assume(self.spec_avltreesetstper_wf());
-       717 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       718 |                 assume(view_ord_consistent::<T>());
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:717: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       711 |         fn eq(&self, other: &Self) -> (equal: bool)
+       745 |             proof {
+       746 |                 assume(self.spec_avltreesetstper_wf());
+       748 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       749 |                 assume(view_ord_consistent::<T>());
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:748: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       742 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       715 |                 assume(self.spec_avltreesetstper_wf());
-       716 |                 assume(other.spec_avltreesetstper_wf());
-       718 |                 assume(view_ord_consistent::<T>());
-       719 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:718: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       711 |         fn eq(&self, other: &Self) -> (equal: bool)
+       746 |                 assume(self.spec_avltreesetstper_wf());
+       747 |                 assume(other.spec_avltreesetstper_wf());
+       749 |                 assume(view_ord_consistent::<T>());
+       750 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:749: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       742 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       716 |                 assume(other.spec_avltreesetstper_wf());
-       717 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
-       719 |             }
-       720 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
-/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:721: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       711 |         fn eq(&self, other: &Self) -> (equal: bool)
+       747 |                 assume(other.spec_avltreesetstper_wf());
+       748 |                 assume(vstd::laws_cmp::obeys_cmp_spec::<T>());
+       750 |             }
+       751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+/home/milnes/projects/APAS-VERUS/src/Chap41/AVLTreeSetStPer.rs:752: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       742 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       719 |             }
-       720 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
-       722 |             equal
-       723 |         }
+       750 |             }
+       751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+       753 |             equal
+       754 |         }
 ⚠ ArraySetEnumMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:962: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       958 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:978: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       974 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       960 |         {
-       961 |             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
-       963 |             equal
-       964 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:975: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       968 |         fn clone(&self) -> (cloned: Self)
+       976 |         {
+       977 |             let equal = self.universe_size == other.universe_size && self.bits == other.bits;
+       979 |             equal
+       980 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetEnumMtEph.rs:991: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       984 |         fn clone(&self) -> (cloned: Self)
             ...
-       973 |                 universe_size: self.universe_size,
-       974 |             };
-       976 |             cloned
-       977 |         }
+       989 |                 universe_size: self.universe_size,
+       990 |             };
+       992 |             cloned
+       993 |         }
 ⚠ ArraySetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1252: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1248 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1266: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1262 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1250 |         {
-      1251 |             proof {
-      1253 |                 assume(other.spec_arraysetsteph_wf());
-      1254 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1253: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1248 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1264 |         {
+      1265 |             proof {
+      1267 |                 assume(other.spec_arraysetsteph_wf());
+      1268 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1267: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1262 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1251 |             proof {
-      1252 |                 assume(self.spec_arraysetsteph_wf());
-      1254 |             }
-      1255 |             let equal = self.size() == other.size() && {
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1275: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1248 |         fn eq(&self, other: &Self) -> (equal: bool)
+      1265 |             proof {
+      1266 |                 assume(self.spec_arraysetsteph_wf());
+      1268 |             }
+      1269 |             let equal = self.size() == other.size() && {
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1289: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1262 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1273 |                 all_found
-      1274 |             };
-      1276 |             equal
-      1277 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1288: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1281 |         fn clone(&self) -> (cloned: Self)
+      1287 |                 all_found
+      1288 |             };
+      1290 |             equal
+      1291 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap41/ArraySetStEph.rs:1302: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1295 |         fn clone(&self) -> (cloned: Self)
             ...
-      1286 |             };
-      1287 |             proof {
-      1289 |                 lemma_seq_map_cloned_view_eq(
-      1290 |                     self.elements.seq@,
+      1300 |             };
+      1301 |             proof {
+      1303 |                 lemma_seq_map_cloned_view_eq(
+      1304 |                     self.elements.seq@,
 
 =================================================================
 2. Depends Upon
@@ -231,12 +231,15 @@ Structural (info only): 2
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:04 -07:00
-Ended:     2026-04-06 09:40:04 -07:00
-Duration:  53ms
+Started:   2026-04-06 15:36:01 -07:00
+Ended:     2026-04-06 15:36:01 -07:00
+Duration:  142ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log
-09:40:04 -07:00
-Duration:  53ms
+==================
+
+Started:   2026-04-06 15:36:01 -07:00
+Ended:     2026-04-06 15:36:01 -07:00
+Duration:  142ms
 
 Full output: src/Chap41/analyses/veracity-review-verus-proof-holes.log

@@ -1,14 +1,16 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! REVIEWED: NO
 
-//! Arc<RwLock> bridge — two generic external_body functions that preserve
-//! pred() through Arc::new and Arc::clone.
+//! Arc bridge — generic external_body functions for Arc::clone and
+//! Arc<RwLock> construction/clone that preserve specs through Arc.
 //!
-//! vstd's Arc spec preserves View (arc@ == (*arc)@) but RwLock's pred()
-//! isn't part of its View. These two functions bridge that gap with tight
-//! ensures so callers get full spec propagation.
+//! vstd has no ensures on Arc::clone. These functions bridge that gap
+//! with tight ensures so callers get full spec propagation.
 //!
-//! Trust boundary: two external_body functions for the entire project.
+//! Trust boundary: three external_body functions for the entire project.
+//! - clone_arc: preserves View through Arc::clone.
+//! - new_arc_rwlock: preserves pred() through Arc::new(RwLock::new(...)).
+//! - clone_arc_rwlock: preserves pred() through Arc::clone on RwLock.
 
 
 //  Table of Contents
@@ -51,6 +53,15 @@ pub mod arc_rwlock {
         arc: &Arc<RwLock<V, Pred>>,
     ) -> (cloned: Arc<RwLock<V, Pred>>)
         ensures cloned.pred() == arc.pred(),
+    {
+        arc.clone()
+    }
+
+    /// Clone any Arc<T>, preserving the view in ensures.
+    /// Replaces per-type clone_arc_* helpers throughout the codebase.
+    #[verifier::external_body]
+    pub fn clone_arc<T>(arc: &Arc<T>) -> (cloned: Arc<T>)
+        ensures *cloned == *arc,
     {
         arc.clone()
     }

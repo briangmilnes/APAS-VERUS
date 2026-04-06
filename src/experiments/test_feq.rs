@@ -262,7 +262,7 @@ pub mod test_feq {
     fn test_point_reflexive(p: Point)
         requires obeys_feq_full::<Point>()
     {
-// Veracity: TESTING         test_generic_reflexive(p);
+        test_generic_reflexive(p);
     }
 
     fn test_point_symmetric(p1: Point, p2: Point)
@@ -281,7 +281,7 @@ pub mod test_feq {
     fn test_color_reflexive(c: Color)
         requires obeys_feq_full::<Color>()
     {
-// Veracity: TESTING         test_generic_reflexive(c);
+        test_generic_reflexive(c);
     }
 
     fn test_color_symmetric(c1: Color, c2: Color)
@@ -319,7 +319,7 @@ pub mod test_feq {
     fn test_inttree_reflexive(t: IntTree)
         requires obeys_feq_full::<IntTree>()
     {
-// Veracity: TESTING         test_generic_reflexive(t);
+        test_generic_reflexive(t);
     }
 
     fn test_inttree_symmetric(t1: IntTree, t2: IntTree)
@@ -347,7 +347,7 @@ pub mod test_feq {
     fn test_pair_reflexive(p: Pair<u64, u64>)
         requires obeys_feq_full::<Pair<u64, u64>>()
     {
-// Veracity: TESTING         test_generic_reflexive(p);
+        test_generic_reflexive(p);
     }
 
     fn test_pair_symmetric(p1: Pair<u64, u64>, p2: Pair<u64, u64>)
@@ -371,7 +371,6 @@ pub mod test_feq {
     fn test_pair_with_axiom(p: Pair<u64, u64>) {
         broadcast use {
             crate::Types::Types::group_Pair_axioms,
-            // Veracity: added broadcast groups
             crate::vstdplus::feq::feq::group_feq_axioms,
             vstd::seq::group_seq_axioms,
             vstd::seq_lib::group_seq_properties,

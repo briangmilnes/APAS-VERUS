@@ -22,22 +22,9 @@ Table of Contents:
 
 ✓ StarContractionMtEph.rs
 ✓ StarContractionStEph.rs
-❌ StarPartitionMtEph.rs
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:103: error: external_body - #[verifier::external_body]
-       104 |     fn clone_arc_vec<V>(arc: &Arc<Vec<V>>) -> (cloned: Arc<Vec<V>>)
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:110: error: external_body - #[verifier::external_body]
-       111 |     fn clone_arc_hmvp_bool<V: View + Eq + Hash>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:119: error: external_body - #[verifier::external_body]
-       120 |     fn clone_arc_hmvp_usize<V: View + Eq + Hash>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:128: error: external_body - #[verifier::external_body]
-       129 |     fn clone_arc_hmvp_v<V: View + Eq + Hash>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:137: error: external_body - #[verifier::external_body]
-       138 |     fn clone_arc_th_edges<V>(
-/home/milnes/projects/APAS-VERUS-agent2/src/Chap62/StarPartitionMtEph.rs:149: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
-   Holes: 5 total
-      5 × external_body
+ℹ StarPartitionMtEph.rs
+/home/milnes/projects/APAS-VERUS/src/Chap62/StarPartitionMtEph.rs:128: info: structural_false_positive OPAQUE_EXTERNAL hash_coin — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
-      1 × OPAQUE_EXTERNAL
 ✓ StarPartitionStEph.rs
 
 =================================================================
@@ -67,8 +54,8 @@ StarPartitionStEph.rs  depends upon only clean modules
 =================================================================
 
 Modules:
-   3 clean (no holes, no errors; 75%)
-   1 holed (holes or errors, 25%)
+   4 clean (no holes, no errors; 100%)
+   0 holed (holes or errors, 0%)
    4 total
 
 Proof Functions:
@@ -77,26 +64,34 @@ Proof Functions:
    0 total
 
 Function Specs:
-   31 exec fns with complete spec (requires+ensures) (79%)
+   26 exec fns with complete spec (requires+ensures) (76%)
    0 exec fns missing spec (0%)
-   8 proof/spec fns clean (20%)
+   8 proof/spec fns clean (23%)
    0 proof/spec fns with holes (0%)
-   39 total fns
+   34 total fns
 
 
-Holes Found: 5 (actionable)
-   5 × external_body (100%)
-Real Proof Targets: 5 (all actionable)
+Holes Found: 0 (actionable)
+Real Proof Targets: 0 (all actionable)
 
 Structural (info only): 1
    1 × OPAQUE_EXTERNAL
+
+No proof holes or warnings found! All proofs are complete.
 
 =================================================================
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 10:17:31 -07:00
-Ended:     2026-04-06 10:17:31 -07:00
-Duration:  36ms
+Started:   2026-04-06 15:36:04 -07:00
+Ended:     2026-04-06 15:36:04 -07:00
+Duration:  73ms
+
+Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log
+===
+
+Started:   2026-04-06 15:36:04 -07:00
+Ended:     2026-04-06 15:36:04 -07:00
+Duration:  73ms
 
 Full output: src/Chap62/analyses/veracity-review-verus-proof-holes.log

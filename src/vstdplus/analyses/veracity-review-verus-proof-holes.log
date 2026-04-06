@@ -1,4 +1,4 @@
-$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/vstdplus/clone_plus.rs
+$ /home/milnes/projects/veracity/target/release/veracity-review-proof-holes src/vstdplus/arc_rwlock.rs
 Full output: src/vstdplus/analyses/veracity-review-verus-proof-holes.log
 
 Table of Contents:
@@ -59,8 +59,8 @@ No proof holes or warnings found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-01 07:01:23 -07:00
-Ended:     2026-04-01 07:01:23 -07:00
+Started:   2026-04-06 15:35:48 -07:00
+Ended:     2026-04-06 15:35:48 -07:00
 Duration:  3ms
 
 Full output: src/vstdplus/analyses/veracity-review-verus-proof-holes.log

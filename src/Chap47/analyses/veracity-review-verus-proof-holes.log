@@ -23,17 +23,17 @@ Table of Contents:
 ✓ ChainedHashTable.rs
    5 clean proof functions
 ℹ DoubleHashFlatHashTableStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:197: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
+/home/milnes/projects/APAS-VERUS/src/Chap47/DoubleHashFlatHashTableStEph.rs:209: info: structural_false_positive OPAQUE_EXTERNAL second_hash — #[verifier::external_body] [medium]
    Info: 1 × structural_false_positive
    5 clean proof functions
 ⚠ FlatHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:163: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       155 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap47/FlatHashTable.rs:173: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       165 |         fn clone(&self) -> (cloned: Self)
             ...
-       161 |                 FlatEntry::Deleted => FlatEntry::Deleted,
-       162 |             };
-       164 |             c
-       165 |         }
+       171 |                 FlatEntry::Deleted => FlatEntry::Deleted,
+       172 |             };
+       174 |             c
+       175 |         }
 ✓ LinProbFlatHashTableStEph.rs
    4 clean proof functions
 ✓ LinkedListChainedHashTableStEph.rs
@@ -43,34 +43,34 @@ Table of Contents:
 ✓ QuadProbFlatHashTableStEph.rs
    9 clean proof functions
 ⚠ StructChainedHashTable.rs
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:858: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       846 |             fn clone(&self) -> (cloned: Self)
-            ...
-       856 |                     },
-       857 |                 };
-       859 |                 cloned
-       860 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:875: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       864 |             fn eq(&self, other: &Self) -> (equal: bool)
+       863 |             fn clone(&self) -> (cloned: Self)
             ...
-       873 |                         _ => false,
-       874 |                     };
-       876 |                 equal
+       873 |                     },
+       874 |                 };
+       876 |                 cloned
        877 |             }
 /home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:892: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       883 |             fn clone(&self) -> (cloned: Self)
+       881 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       890 |                     },
-       891 |                 };
-       893 |                 cloned
+       890 |                         _ => false,
+       891 |                     };
+       893 |                 equal
        894 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:906: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       898 |             fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:922: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       913 |             fn clone(&self) -> (cloned: Self)
             ...
-       904 |                     _ => false,
-       905 |                 };
-       907 |                 equal
-       908 |             }
+       920 |                     },
+       921 |                 };
+       923 |                 cloned
+       924 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap47/StructChainedHashTable.rs:936: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       928 |             fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       934 |                     _ => false,
+       935 |                 };
+       937 |                 equal
+       938 |             }
 ✓ VecChainedHashTableStEph.rs
    1 clean proof function
 
@@ -143,9 +143,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:04 -07:00
-Ended:     2026-04-06 09:40:04 -07:00
-Duration:  59ms
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:02 -07:00
+Duration:  179ms
 
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log
+=======================
+
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:02 -07:00
+Duration:  179ms
+
 Full output: src/Chap47/analyses/veracity-review-verus-proof-holes.log

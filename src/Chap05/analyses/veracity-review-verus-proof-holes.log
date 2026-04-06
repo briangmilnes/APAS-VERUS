@@ -23,35 +23,35 @@ Table of Contents:
 ✓ KleeneStPer.rs
    9 clean proof functions
 ⚠ MappingStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:633: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       622 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/MappingStEph.rs:644: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       633 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       631 |             }
-       632 |             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
-       634 |             r
-       635 |         }
+       642 |             }
+       643 |             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.
+       645 |             r
+       646 |         }
 ✓ RelationStEph.rs
 ⚠ SetMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1198: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1194 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1233: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1229 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1196 |         {
-      1197 |             let equal = self.elements == other.elements;
-      1199 |             equal
-      1200 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1141: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1151: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1172: info: accept()
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1160: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
+      1231 |         {
+      1232 |             let equal = self.elements == other.elements;
+      1234 |             equal
+      1235 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1159: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1169: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1190: info: accept()
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetMtEph.rs:1178: info: structural_false_positive RWLOCK_GHOST insert — proof { assume(self.ghost_locked_set@ == locked_val@); } [medium]
    Info: 3 total
 ⚠ SetStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:934: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       929 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap05/SetStEph.rs:946: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       941 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       932 |             let equal = self.elements == other.elements;
-       933 |             // HashSetWithView* eq is external_body so we have to trust it here.
-       935 |             equal
-       936 |         }
+       944 |             let equal = self.elements == other.elements;
+       945 |             // HashSetWithView* eq is external_body so we have to trust it here.
+       947 |             equal
+       948 |         }
 
 =================================================================
 2. Depends Upon
@@ -117,12 +117,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:03 -07:00
-Ended:     2026-04-06 09:40:03 -07:00
-Duration:  33ms
+Started:   2026-04-06 15:35:58 -07:00
+Ended:     2026-04-06 15:35:58 -07:00
+Duration:  94ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log
-07:00
-Duration:  33ms
+==================
+
+Started:   2026-04-06 15:35:58 -07:00
+Ended:     2026-04-06 15:35:58 -07:00
+Duration:  94ms
 
 Full output: src/Chap05/analyses/veracity-review-verus-proof-holes.log

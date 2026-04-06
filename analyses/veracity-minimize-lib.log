@@ -7,11 +7,11 @@ Logging to: /home/milnes/projects/APAS-VERUS/analyses/veracity-minimize-lib.log
 
 Arguments:
   -c, --codebase:     /home/milnes/projects/APAS-VERUS
-  -l, --library:      ./src/vstdplus/
+  -l, --library:      /home/milnes/projects/APAS-VERUS/src/vstdplus
   -F, --file:         (all files)
-  -n, --dry-run:      false
-  -b, --broadcasts:   true
-  -L, --lib-broadcasts: true
+  -n, --dry-run:      true
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
   -N, --max-lemmas:   all
   -a, --asserts:      false
   -A, --max-asserts:  all
@@ -20,12 +20,20 @@ Arguments:
   -e, --exclude:      (none)
   -f, --fail-fast:    false
   --danger:           false
+  --project:          APAS
+
+Mode: full crate verification (estimated 90-120s per iteration)
 
 ═══════════════════════════════════════════════════════════════════════════════
 IMPORTANT: No code will be harmed in the improving of your codebase!
 ═══════════════════════════════════════════════════════════════════════════════
 
-✓ Codebase is in git and committed. Proceeding safely.
+✗ Codebase is in git but has uncommitted changes.
+
+  Please commit your changes first:
+    cd /home/milnes/projects/APAS-VERUS && git add -A && git commit -m 'Before Veracity'
+
+  (Continuing anyway because this is a dry run...)
 
 Veracity will repeatedly comment things in and out using // Veracity: lines
 to test and improve your use of vstd. All changes are reversible comments.
@@ -67,9 +75,9 @@ Comment markers inserted:
 Phase 0: Stripping existing Veracity markers
 ═══════════════════════════════════════════════════════════════
 
-  Found 387 existing Veracity markers
+  Found 1 existing Veracity markers
   Cleaning up for fresh analysis...
-  ✓ Removed 2819 markers
+  ✓ Removed 0 markers
 
 ═══════════════════════════════════════════════════════════════
 Phase 1: Analyzing and verifying codebase
@@ -82,58 +90,7 @@ Phase 1: Analyzing and verifying codebase
     Total:      0
 
   Verifying...
-  ✗ Verification failed. Exiting.
-  Fix verification errors before running Veracity.
-
-Verus output:
-─────────────────────────────────────────────────────────────────
-   Compiling proc-macro2 v1.0.103
-   Compiling unicode-ident v1.0.22
-   Compiling quote v1.0.41
-   Compiling verus_syn v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/dependencies/syn)
-   Compiling autocfg v1.5.0
-   Compiling libc v0.2.177
-   Compiling verus_prettyplease v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/dependencies/prettyplease)
-   Compiling radium v0.7.0
-   Compiling rand_core v0.10.0
-   Compiling hashbrown v0.12.3
-   Compiling cfg-if v1.0.4
-   Compiling getrandom v0.4.1
-   Compiling tap v1.0.1
-   Compiling cpufeatures v0.3.0
-   Compiling unicode-xid v0.2.6
-   Compiling vstd v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/vstd)
-   Compiling verus_builtin v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/builtin)
-   Compiling funty v2.0.0
-   Compiling wyz v0.5.1
-   Compiling chacha20 v0.10.0
-   Compiling indexmap v1.9.3
-   Compiling bitvec v1.0.1
-   Compiling syn v2.0.108
-   Compiling rand v0.10.0
-   Compiling synstructure v0.13.2
-   Compiling derive_more-impl v1.0.0
-   Compiling derive_more v1.0.0
-   Compiling verus_state_machines_macros v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/state_machines_macros)
-   Compiling verus_builtin_macros v0.0.0-2026-02-24-1505 (/home/milnes/projects/verus/source/builtin_macros)
-   Compiling apas-verus v0.1.0 (/home/milnes/projects/APAS-VERUS)
-error: this file contains an unclosed delimiter
-   --> src/vstdplus/feq.rs:192:42
-    |
-  8 | pub mod feq {
-    |             - unclosed delimiter
-...
- 15 |     verus! {
-    |            - unclosed delimiter
-...
-189 |     {
-    |     - unclosed delimiter
-190 |         broadcast use axiom_cloned_implies_eq_owned;
-191 |         broadcast use {
-    |                       - unclosed delimiter
-192 |             vstd::seq::group_seq_axioms,
-    |                                         ^
-
-error: could not compile `apas-verus` (lib) due to 1 previous error
-warning: build failed, waiting for other jobs to finish...
-─────────────────────────────────────────────────────────────────
+  251 call sites in library
+  15461 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 158 spec functions

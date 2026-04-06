@@ -21,81 +21,81 @@ Table of Contents:
 =================================================================
 
 ⚠ BottomUpDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:490: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       486 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:497: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       493 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       488 |         {
-       489 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       491 |             r
-       492 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:184: info: trivial_spec_wf
+       495 |         {
+       496 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       498 |             r
+       499 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtEph.rs:191: info: trivial_spec_wf
    Info: 1 total
 ⚠ BottomUpDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:453: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       449 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:460: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       456 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       451 |         {
-       452 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       454 |             r
-       455 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:156: info: trivial_spec_wf
+       458 |         {
+       459 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       461 |             r
+       462 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPMtPer.rs:163: info: trivial_spec_wf
    Info: 1 total
 ⚠ BottomUpDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:507: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       503 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:516: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       512 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       505 |         {
-       506 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       508 |             r
-       509 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:183: info: trivial_spec_wf
+       514 |         {
+       515 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       517 |             r
+       518 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStEph.rs:192: info: trivial_spec_wf
    Info: 1 total
 ⚠ BottomUpDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:465: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       461 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:472: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       468 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       463 |         {
-       464 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       466 |             r
-       467 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:157: info: trivial_spec_wf
+       470 |         {
+       471 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       473 |             r
+       474 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/BottomUpDPStPer.rs:164: info: trivial_spec_wf
    Info: 1 total
 ⚠ TopDownDPMtEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:511: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       507 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:542: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       538 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       509 |         {
-       510 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       512 |             r
-       513 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:419: info: trivial_spec_wf
+       540 |         {
+       541 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       543 |             r
+       544 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtEph.rs:79: info: trivial_spec_wf
    Info: 1 total
 ⚠ TopDownDPMtPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:466: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       462 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:497: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       493 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       464 |         {
-       465 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       467 |             r
-       468 |         }
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:379: info: trivial_spec_wf
+       495 |         {
+       496 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       498 |             r
+       499 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPMtPer.rs:79: info: trivial_spec_wf
    Info: 1 total
 ⚠ TopDownDPStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:417: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       413 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStEph.rs:426: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       422 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       415 |         {
-       416 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       418 |             r
-       419 |         }
+       424 |         {
+       425 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       427 |             r
+       428 |         }
 ⚠ TopDownDPStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:369: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       365 |         fn eq(&self, other: &Self) -> (eq: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap51/TopDownDPStPer.rs:378: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       374 |         fn eq(&self, other: &Self) -> (eq: bool)
             ...
-       367 |         {
-       368 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
-       370 |             r
-       371 |         }
+       376 |         {
+       377 |             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+       379 |             r
+       380 |         }
 
 =================================================================
 2. Depends Upon
@@ -164,9 +164,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:04 -07:00
-Ended:     2026-04-06 09:40:04 -07:00
-Duration:  31ms
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:03 -07:00
+Duration:  113ms
 
 Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap51/analyses/veracity-review-verus-proof-holes.log
+================
+
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:03 -07:00
+Duration:  113ms
+
+Full output: src/Chap51/analyses/veracity-review-verus-proof-holes.log

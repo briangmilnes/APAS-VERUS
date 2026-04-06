@@ -36,6 +36,7 @@ pub mod StarPartitionMtEph {
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
+    use crate::vstdplus::arc_rwlock::arc_rwlock::clone_arc;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_view_injective, obeys_feq_full, lemma_reveal_view_injective};
     use crate::vstdplus::feq::feq::feq;
@@ -119,51 +120,7 @@ pub mod StarPartitionMtEph {
     //		Section 9. impls
 
 
-    // Arc clone helpers: vstd has no ensures on Arc::clone, so we add
-    // type-specific helpers that preserve the view across clone.
-
-    #[verifier::external_body]
-    fn clone_arc_vec<V>(arc: &Arc<Vec<V>>) -> (cloned: Arc<Vec<V>>)
-        ensures cloned@ == arc@,
-    {
-        arc.clone()
-    }
-
-    #[verifier::external_body]
-    fn clone_arc_hmvp_bool<V: View + Eq + Hash>(
-        arc: &Arc<HashMapWithViewPlus<V, bool>>,
-    ) -> (cloned: Arc<HashMapWithViewPlus<V, bool>>)
-        ensures cloned@ == arc@,
-    {
-        arc.clone()
-    }
-
-    #[verifier::external_body]
-    fn clone_arc_hmvp_usize<V: View + Eq + Hash>(
-        arc: &Arc<HashMapWithViewPlus<V, usize>>,
-    ) -> (cloned: Arc<HashMapWithViewPlus<V, usize>>)
-        ensures cloned@ == arc@,
-    {
-        arc.clone()
-    }
-
-    #[verifier::external_body]
-    fn clone_arc_hmvp_v<V: View + Eq + Hash>(
-        arc: &Arc<HashMapWithViewPlus<V, V>>,
-    ) -> (cloned: Arc<HashMapWithViewPlus<V, V>>)
-        ensures cloned@ == arc@,
-    {
-        arc.clone()
-    }
-
-    #[verifier::external_body]
-    fn clone_arc_th_edges<V>(
-        arc: &Arc<Vec<(usize, V)>>,
-    ) -> (cloned: Arc<Vec<(usize, V)>>)
-        ensures cloned@ == arc@,
-    {
-        arc.clone()
-    }
+    // Arc clone: uses generic clone_arc from vstdplus/arc_rwlock.rs.
 
     /// Deterministic hash-based coin flip from (seed, index).
     /// Replaces sequential RNG with a parallelizable hash function.
@@ -1641,7 +1598,7 @@ pub mod StarPartitionMtEph {
         let vertices_vec = arc_deref(&vertices_arc);
 
         // Loop 1: parallel build of vertex-to-index map (Work O(n lg n), Span O(lg n)).
-        let vertex_to_index = build_vertex_to_index_mt(clone_arc_vec(&vertices_arc), 0, nv);
+        let vertex_to_index = build_vertex_to_index_mt(clone_arc(&vertices_arc), 0, nv);
 
         // Ghost facts after loop 1: vertex_to_index covers all graph@.V.
         proof {
@@ -1660,7 +1617,7 @@ pub mod StarPartitionMtEph {
         let vertex_to_index = arc_deref(&vtx_to_idx_arc);
 
         // Loop 2: parallel hash-based coin flips (Work O(n), Span O(lg n)).
-        let coin_flips_owned = hash_coin_flips_mt(clone_arc_vec(&vertices_arc), seed, 0, nv);
+        let coin_flips_owned = hash_coin_flips_mt(clone_arc(&vertices_arc), seed, 0, nv);
         let coin_flips_arc: Arc<HashMapWithViewPlus<V, bool>> = Arc::new(coin_flips_owned);
         let coin_flips = arc_deref(&coin_flips_arc);
 
@@ -1695,8 +1652,8 @@ pub mod StarPartitionMtEph {
         }
         let edge_arc: Arc<Vec<Edge<V>>> = Arc::new(edge_vec);
         let th_edges = build_th_edges_mt(
-            edge_arc, clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc),
-            clone_arc_vec(&vertices_arc), nv, 0, ne,
+            edge_arc, clone_arc(&coin_flips_arc), clone_arc(&vtx_to_idx_arc),
+            clone_arc(&vertices_arc), nv, 0, ne,
         );
         let th_edges = th_edges;
 
@@ -1705,15 +1662,15 @@ pub mod StarPartitionMtEph {
         let th_edges_arc: Arc<Vec<(usize, V)>> = Arc::new(th_edges);
         let nth = arc_deref(&th_edges_arc).len();
         let satellite_map = build_satellite_map_mt(
-            th_edges_arc, clone_arc_vec(&vertices_arc), nv,
-            clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc), 0, nth,
+            th_edges_arc, clone_arc(&vertices_arc), nv,
+            clone_arc(&coin_flips_arc), clone_arc(&vtx_to_idx_arc), 0, nth,
         );
         let satellite_map_arc: Arc<HashMapWithViewPlus<V, V>> = Arc::new(satellite_map);
 
         // Step 4b: build p_vec with inject (Work O(n), Span O(lg n)).
         let p_vec = build_p_vec_with_inject_mt(
-            clone_arc_vec(&vertices_arc), satellite_map_arc,
-            clone_arc_hmvp_bool(&coin_flips_arc), clone_arc_hmvp_usize(&vtx_to_idx_arc), nv, 0, nv,
+            clone_arc(&vertices_arc), satellite_map_arc,
+            clone_arc(&coin_flips_arc), clone_arc(&vtx_to_idx_arc), nv, 0, nv,
         );
 
         // Bridge: establish p_vec properties before Arc wrapping.

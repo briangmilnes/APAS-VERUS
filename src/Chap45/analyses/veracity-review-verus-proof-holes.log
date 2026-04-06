@@ -21,97 +21,97 @@ Table of Contents:
 =================================================================
 
 ⚠ BalancedTreePQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:823: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       819 |             fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BalancedTreePQ.rs:844: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       840 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       821 |             {
-       822 |                 let equal = self.elements == other.elements;
-       824 |                 equal
-       825 |             }
+       842 |             {
+       843 |                 let equal = self.elements == other.elements;
+       845 |                 equal
+       846 |             }
 ⚠ BinaryHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1811: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1802 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1818: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1809 |             fn clone(&self) -> (cloned: Self)
             ...
-      1809 |                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
-      1810 |                 proof {
-      1812 |                     lemma_seq_map_cloned_view_eq(
-      1813 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1832: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1828 |             fn eq(&self, other: &Self) -> (equal: bool)
+      1816 |                 let cloned = BinaryHeapPQ { elements: self.elements.clone() };
+      1817 |                 proof {
+      1819 |                     lemma_seq_map_cloned_view_eq(
+      1820 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/BinaryHeapPQ.rs:1839: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1835 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1830 |             {
-      1831 |                 let equal = self.elements == other.elements;
-      1833 |                 equal
-      1834 |             }
+      1837 |             {
+      1838 |                 let equal = self.elements == other.elements;
+      1840 |                 equal
+      1841 |             }
 ⚠ HeapsortExample.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:98: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-        87 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:112: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       101 |             fn clone(&self) -> (cloned: Self)
             ...
-        96 |                     leftist_heap_result: self.leftist_heap_result.clone(),
-        97 |                 };
-        99 |                 cloned
-       100 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:113: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       104 |             fn eq(&self, other: &Self) -> (equal: bool)
+       110 |                     leftist_heap_result: self.leftist_heap_result.clone(),
+       111 |                 };
+       113 |                 cloned
+       114 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/HeapsortExample.rs:127: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       118 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       111 |                     && self.binary_heap_result == other.binary_heap_result
-       112 |                     && self.leftist_heap_result == other.leftist_heap_result;
-       114 |                 equal
-       115 |             }
+       125 |                     && self.binary_heap_result == other.binary_heap_result
+       126 |                     && self.leftist_heap_result == other.leftist_heap_result;
+       128 |                 equal
+       129 |             }
 ⚠ LeftistHeapPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1185: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1172 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1207: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1194 |             fn clone(&self) -> (cloned: Self)
             ...
-      1183 |                             rank: *rank,
-      1184 |                         };
-      1186 |                         cloned
-      1187 |                     }
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1205: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1193 |             fn eq(&self, other: &Self) -> (equal: bool)
-            ...
-      1203 |                     _ => false,
-      1204 |                 };
-      1206 |                 equal
-      1207 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1217: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1213 |             fn clone(&self) -> (cloned: Self)
-            ...
-      1215 |             {
-      1216 |                 let cloned = LeftistHeapPQ { root: self.root.clone() };
-      1218 |                 cloned
-      1219 |             }
+      1205 |                             rank: *rank,
+      1206 |                         };
+      1208 |                         cloned
+      1209 |                     }
 /home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1227: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1223 |             fn eq(&self, other: &Self) -> (equal: bool)
+      1215 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-      1225 |             {
-      1226 |                 let equal = self.root == other.root;
+      1225 |                     _ => false,
+      1226 |                 };
       1228 |                 equal
       1229 |             }
-/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:86: info: fn_missing_requires
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1252: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1248 |             fn clone(&self) -> (cloned: Self)
+            ...
+      1250 |             {
+      1251 |                 let cloned = LeftistHeapPQ { root: self.root.clone() };
+      1253 |                 cloned
+      1254 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:1262: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1258 |             fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+      1260 |             {
+      1261 |                 let equal = self.root == other.root;
+      1263 |                 equal
+      1264 |             }
+/home/milnes/projects/APAS-VERUS/src/Chap45/LeftistHeapPQ.rs:787: info: fn_missing_requires
    Info: 1 total
 ⚠ SortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1079: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-      1074 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/SortedListPQ.rs:1100: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+      1095 |             fn clone(&self) -> (cloned: Self)
             ...
-      1077 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
-      1078 |                 proof {
-      1080 |                     lemma_seq_map_cloned_view_eq(
-      1081 |                         self.elements.seq@,
+      1098 |                 let cloned = SortedListPQ { elements: self.elements.clone() };
+      1099 |                 proof {
+      1101 |                     lemma_seq_map_cloned_view_eq(
+      1102 |                         self.elements.seq@,
 ⚠ UnsortedListPQ.rs
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:679: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       674 |             fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:700: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       695 |             fn clone(&self) -> (cloned: Self)
             ...
-       677 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
-       678 |                 proof {
-       680 |                     lemma_seq_map_cloned_view_eq(
-       681 |                         self.elements.seq@,
-/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:694: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       690 |             fn eq(&self, other: &Self) -> (equal: bool)
+       698 |                 let cloned = UnsortedListPQ { elements: self.elements.clone() };
+       699 |                 proof {
+       701 |                     lemma_seq_map_cloned_view_eq(
+       702 |                         self.elements.seq@,
+/home/milnes/projects/APAS-VERUS/src/Chap45/UnsortedListPQ.rs:715: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       711 |             fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       692 |             {
-       693 |                 let equal = self.elements == other.elements;
-       695 |                 equal
-       696 |             }
+       713 |             {
+       714 |                 let equal = self.elements == other.elements;
+       716 |                 equal
+       717 |             }
 
 =================================================================
 2. Depends Upon
@@ -176,12 +176,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:04 -07:00
-Ended:     2026-04-06 09:40:04 -07:00
-Duration:  59ms
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:02 -07:00
+Duration:  192ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log
-07:00
-Duration:  59ms
+===============
+
+Started:   2026-04-06 15:36:02 -07:00
+Ended:     2026-04-06 15:36:02 -07:00
+Duration:  192ms
 
 Full output: src/Chap45/analyses/veracity-review-verus-proof-holes.log

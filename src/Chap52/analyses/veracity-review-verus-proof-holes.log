@@ -27,13 +27,13 @@ Table of Contents:
 ✓ AdjMatrixGraphStEph.rs
    13 clean proof functions
 ⚠ AdjMatrixGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:799: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       795 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjMatrixGraphStPer.rs:818: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       814 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       797 |         {
-       798 |             let equal = self.matrix == other.matrix && self.n == other.n;
-       800 |             equal
-       801 |         }
+       816 |         {
+       817 |             let equal = self.matrix == other.matrix && self.n == other.n;
+       819 |             equal
+       820 |         }
 ✓ AdjSeqGraphMtEph.rs
    7 clean proof functions
 ✓ AdjSeqGraphMtPer.rs
@@ -41,13 +41,13 @@ Table of Contents:
 ✓ AdjSeqGraphStEph.rs
    7 clean proof functions
 ⚠ AdjSeqGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:688: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       684 |         fn eq(&self, other: &Self) -> (equal: bool)
+/home/milnes/projects/APAS-VERUS/src/Chap52/AdjSeqGraphStPer.rs:709: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       705 |         fn eq(&self, other: &Self) -> (equal: bool)
             ...
-       686 |         {
-       687 |             let equal = self.adj == other.adj;
-       689 |             equal
-       690 |         }
+       707 |         {
+       708 |             let equal = self.adj == other.adj;
+       710 |             equal
+       711 |         }
 ✓ AdjTableGraphMtPer.rs
    2 clean proof functions
 ✓ AdjTableGraphStEph.rs
@@ -57,28 +57,28 @@ Table of Contents:
 ✓ EdgeSetGraphMtPer.rs
    1 clean proof function
 ⚠ EdgeSetGraphStEph.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:428: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       421 |         fn clone(&self) -> (cloned: Self)
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStEph.rs:445: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       438 |         fn clone(&self) -> (cloned: Self)
             ...
-       426 |                 edges: self.edges.clone(),
-       427 |             };
-       429 |             cloned
-       430 |         }
+       443 |                 edges: self.edges.clone(),
+       444 |             };
+       446 |             cloned
+       447 |         }
 ⚠ EdgeSetGraphStPer.rs
-/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:407: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       400 |         fn clone(&self) -> (cloned: Self)
-            ...
-       405 |                 edges: self.edges.clone(),
-       406 |             };
-       408 |             cloned
-       409 |         }
 /home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:423: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
-       419 |         fn eq(&self, other: &Self) -> (equal: bool)
+       416 |         fn clone(&self) -> (cloned: Self)
             ...
-       421 |         {
-       422 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
-       424 |             equal
+       421 |                 edges: self.edges.clone(),
+       422 |             };
+       424 |             cloned
        425 |         }
+/home/milnes/projects/APAS-VERUS/src/Chap52/EdgeSetGraphStPer.rs:439: warning: assume_eq_clone_workaround - at this point in Verus, clones may have to assume they work on generic types
+       435 |         fn eq(&self, other: &Self) -> (equal: bool)
+            ...
+       437 |         {
+       438 |             let equal = self.vertices == other.vertices && self.edges == other.edges;
+       440 |             equal
+       441 |         }
 
 =================================================================
 2. Depends Upon
@@ -156,9 +156,15 @@ No proof holes found! All proofs are complete.
 5. Started/Ended/Duration
 =================================================================
 
-Started:   2026-04-06 09:40:04 -07:00
-Ended:     2026-04-06 09:40:04 -07:00
-Duration:  84ms
+Started:   2026-04-06 15:36:03 -07:00
+Ended:     2026-04-06 15:36:03 -07:00
+Duration:  334ms
 
 Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
-output: src/Chap52/analyses/veracity-review-verus-proof-holes.log
+====================
+
+Started:   2026-04-06 15:36:03 -07:00
+Ended:     2026-04-06 15:36:03 -07:00
+Duration:  334ms
+
+Full output: src/Chap52/analyses/veracity-review-verus-proof-holes.log

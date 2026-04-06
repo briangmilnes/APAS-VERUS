@@ -26,7 +26,6 @@ verus! {
 broadcast use {
     vstd::seq_lib::group_seq_properties,
     vstd::set::group_set_axioms,
-        // Veracity: added broadcast groups
         crate::vstdplus::feq::feq::group_feq_axioms,
         vstd::seq::group_seq_axioms,
         vstd::seq_lib::group_to_multiset_ensures,

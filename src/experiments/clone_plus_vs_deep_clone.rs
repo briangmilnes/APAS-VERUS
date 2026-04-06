@@ -71,7 +71,6 @@ pub mod clone_plus_vs_deep_clone {
     {
         broadcast use {
             vstd::laws_eq::group_laws_eq,
-            // Veracity: added broadcast groups
             crate::vstdplus::feq::feq::group_feq_axioms,
             vstd::seq::group_seq_axioms,
             vstd::seq_lib::group_seq_properties,

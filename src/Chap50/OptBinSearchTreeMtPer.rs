@@ -118,14 +118,6 @@ broadcast use {
     //		Section 9b. impls
 
 
-    /// Clone Arc<Vec<Probability>> preserving the view.
-    #[verifier::external_body]
-    fn clone_arc_prob_vec(arc: &Arc<Vec<Probability>>) -> (cloned: Arc<Vec<Probability>>)
-        ensures (*cloned)@ =~= (*arc)@,
-    {
-        arc.clone()
-    }
-
     /// - Alg Analysis: APAS (Ch50 Alg 50.2): Work O(n^3), Span O(n lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^3), Span O(n lg n) — parallel min reduction over split points via join, O(1) prefix sum lookup
     fn obst_rec(
@@ -209,9 +201,9 @@ broadcast use {
         } else {
             let mid = lo + (hi - lo) / 2;
             let memo1 = clone_arc_rwlock(memo);
-            let ps1 = clone_arc_prob_vec(prefix_sums);
+            let ps1 = clone_arc(prefix_sums);
             let memo2 = clone_arc_rwlock(memo);
-            let ps2 = clone_arc_prob_vec(prefix_sums);
+            let ps2 = clone_arc(prefix_sums);
 
             let f1 = move || -> (r: Probability)
                 requires
