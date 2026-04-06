@@ -1,0 +1,48 @@
+error[E0599]: no method named `spec_bstsetsplaymteph_wf` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:186:25
+    |
+174 |     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized {
+    |     -------------------------------------------------------------------------- method `spec_bstsetsplaymteph_wf` not found for this type parameter
+...
+186 |             ensures set.spec_bstsetsplaymteph_wf();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `spec_bstsetsplaymteph_wf`, perhaps you need to add another supertrait for it:
+    |
+174 |     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized + Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait {
+    |                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_bstsetsplaymteph_wf` found for reference `&Self` in the current scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:189:27
+    |
+189 |             requires self.spec_bstsetsplaymteph_wf(),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `&Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `spec_bstsetsplaymteph_wf`, perhaps you need to add another supertrait for it:
+    |
+174 |     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized + Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait {
+    |                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: no method named `spec_bstsetsplaymteph_wf` found for type parameter `Self` in the current scope
+   --> src/Chap37/BSTSetSplayMtEph.rs:190:25
+    |
+174 |     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized {
+    |     -------------------------------------------------------------------------- method `spec_bstsetsplaymteph_wf` not found for this type parameter
+...
+190 |             ensures out.spec_bstsetsplaymteph_wf();
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^ method not found in `Self`
+    |
+    = help: items from traits can only be used if the type parameter is bounded by the trait
+help: the following trait defines an item `spec_bstsetsplaymteph_wf`, perhaps you need to add another supertrait for it:
+    |
+174 |     pub trait BSTSetSplayMtEphHelperFns<T: StTInMtT + Ord + TotalOrder>: Sized + Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait {
+    |                                                                                +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 451MB, peak z3 RSS: 0MB, min free: 17006MB
+Sampled CPU Usage: rust_verify: 5s, z3 children: 0s

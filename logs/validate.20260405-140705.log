@@ -1,0 +1,130 @@
+error: postcondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:193:17
+    |
+193 |                   self.spec_left() == old(self).spec_left(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+354 | /         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+355 | |             self.size = 1 + ls + rs;
+356 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:194:17
+    |
+194 |                   self.spec_right() == old(self).spec_right(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+354 | /         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+355 | |             self.size = 1 + ls + rs;
+356 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:195:17
+    |
+195 |                   self.spec_key() == old(self).spec_key(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+354 | /         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+355 | |             self.size = 1 + ls + rs;
+356 | |         }
+    | |_________- at the end of the function body
+
+error: postcondition not satisfied
+   --> src/Chap37/BSTSplayMtEph.rs:196:17
+    |
+196 | /                 link_spec_size(old(self).spec_left()) + link_spec_size(old(self).spec_right()) < usize::MAX as nat
+197 | |                     ==> self.spec_node_size() == 1 + link_spec_size(old(self).spec_left()) + link_spec_size(old(self).spec_right());
+    | |___________________________________________________________________________________________________________________________________^ failed this postcondition
+...
+354 | /         if ls < usize::MAX && rs <= usize::MAX - 1 - ls {
+355 | |             self.size = 1 + ls + rs;
+356 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTSplayMtEph.rs:193:17
+    |
+193 |                 self.spec_left() == old(self).spec_left(),
+    |                 ^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_left() =~= old(self).spec_left() ✘
+|   self.spec_left() is None ==>
+|       old(self).spec_left() is None ✘
+|   self.spec_left() is Some ==>
+|       old(self).spec_left() is Some ✘
+|       self.spec_left().0 =~= old(self).spec_left().0 ✘
+|       |   self.spec_left().0.key =~= old(self).spec_left().0.key ✘
+|       |   self.spec_left().0.size =~= old(self).spec_left().0.size ✘
+|       |   self.spec_left().0.left =~= old(self).spec_left().0.left 
+|       |   self.spec_left().0.right =~= old(self).spec_left().0.right 
+|       +---
++---
+self.spec_right() =~= old(self).spec_right() 
+self.spec_key() == old(self).spec_key() 
+clip(nat, link_spec_size(old(self).spec_left()) + link_spec_size(old(self).spec_right())) < UnsignedMax.Exec(usize::BITS) ==>
+    self.spec_node_size() == clip(nat, clip(nat, 1 + link_spec_size(old(self).spec_left())) + link_spec_size(old(self).spec_right())) 
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1749:20
+     |
+1749 |             assert(link_node_count(node.left) <= mid as nat);
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1750:20
+     |
+1750 |             assert(link_node_count(node.right) <= (values@.len() - mid - 1) as nat);
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1752:20
+     |
+1752 |             assert(link_spec_size(node.left) <= mid as nat);
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1753:20
+     |
+1753 |             assert(link_spec_size(node.right) <= (values@.len() - mid - 1) as nat);
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1755:20
+     |
+1755 |             assert(node.size as nat == 1 + link_spec_size(node.left) + link_spec_size(node.right));
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1758:20
+     |
+1758 |             assert(node.left == gl);
+     |                    ^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1759:20
+     |
+1759 |             assert(node.right == gr);
+     |                    ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1761:20
+     |
+1761 |             assert(node.key == pivot);
+     |                    ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+link_node_count(node.left) <= mid 
+
+verification results:: 1944 verified, 2 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 3559MB, peak z3 RSS: 386MB, min free: 14404MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 31s

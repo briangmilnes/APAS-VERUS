@@ -1,0 +1,40 @@
+error[E0425]: cannot find function `clone_link` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2202:24
+     |
+2202 |             let left = clone_link(&self.left);
+     |                        ^^^^^^^^^^ not found in this scope
+     |
+note: function `crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::clone_link` exists but is inaccessible
+    --> src/Chap37/AVLTreeSeqStEph.rs:759:5
+     |
+ 759 | /     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
+ 760 | |         ensures
+ 761 | |             spec_inorder(copy) =~= spec_inorder(*link),
+ 762 | |             spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
+...    |
+ 786 | |     }
+     | |_____^ not accessible
+
+error[E0425]: cannot find function `clone_link` in this scope
+    --> src/Chap37/BSTSplayMtEph.rs:2203:25
+     |
+2203 |             let right = clone_link(&self.right);
+     |                         ^^^^^^^^^^ not found in this scope
+     |
+note: function `crate::Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::clone_link` exists but is inaccessible
+    --> src/Chap37/AVLTreeSeqStEph.rs:759:5
+     |
+ 759 | /     fn clone_link<T: StT>(link: &Link<T>) -> (copy: Link<T>)
+ 760 | |         ensures
+ 761 | |             spec_inorder(copy) =~= spec_inorder(*link),
+ 762 | |             spec_avltreeseqsteph_wf(*link) ==> spec_avltreeseqsteph_wf(copy),
+...    |
+ 786 | |     }
+     | |_____^ not accessible
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 170MB, peak z3 RSS: 0MB, min free: 16801MB
+Sampled CPU Usage: rust_verify: 1s, z3 children: 0s
