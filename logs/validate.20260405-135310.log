@@ -1,0 +1,168 @@
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:684:24
+    |
+684 |                 assert(link_contains(after_rl, z) <==> link_contains(old_link, z));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:685:24
+    |
+685 |                 assert(link_contains(after_rr, z) <==> link_contains(after_rl, z));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:686:24
+    |
+686 |                 assert(link_contains(after_fl, z) <==> link_contains(after_rr, z));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTRBMtEph.rs:80:21
+    |
+ 80 |             None => false,
+    |                     ^^^^^
+...
+ 83 |                 || link_contains(node.right, target),
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+684 |                 assert(link_contains(after_rl, z) <==> link_contains(old_link, z));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_contains(after_rl, z) == link_contains(old_link, z)
+|   link_contains(after_rl, z) ==>
+|       link_contains(old_link, z) ✘
+|       |   let tmp%% = old_link;
+|       |       tmp%% is None ==>
+|       |           false ✘
+|       |       !(tmp%% is None) ==>
+|       |           let node = tmp%%.0;
+|       |               !(node.key == z || link_contains(node.left, z)) ==>
+|       |                   link_contains(node.right, z)
+|       |                   |   let tmp%% = node.right;
+|       |                   |       tmp%% is None ==>
+|       |                   |           false ✘
+|       |                   |       !(tmp%% is None) ==>
+|       |                   |           let node = tmp%%.0;
+|       |                   |               !(node.key == z || link_contains(node.left, z)) ==>
+|       |                   |                   link_contains(node.right, z) ✘
+|       |                   |                       reached fuel limit for recursion
+|       |                   +---
+|       +---
+|   link_contains(old_link, z) ==>
+|       link_contains(after_rl, z) ✘
+|       |   let tmp%% = after_rl;
+|       |       tmp%% is None ==>
+|       |           false ✔
+|       |       !(tmp%% is None) ==>
+|       |           let node = tmp%%.0;
+|       |               !(node.key == z || link_contains(node.left, z)) ==>
+|       |                   link_contains(node.right, z)
+|       |                   |   let tmp%% = node.right;
+|       |                   |       tmp%% is None ==>
+|       |                   |           false ✘
+|       |                   |       !(tmp%% is None) ==>
+|       |                   |           let node = tmp%%.0;
+|       |                   |               !(node.key == z || link_contains(node.left, z)) ==>
+|       |                   |                   link_contains(node.right, z) 
+|       |                   +---
+|       +---
++---
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:724:44
+    |
+724 | ...                   assert(x == value);
+    |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:738:44
+    |
+738 | ...                   assert(link_contains(node.left, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:742:33
+    |
+742 | ...                   (link_contains(*old(self), x) || x == value)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:766:44
+    |
+766 | ...                   assert(x == value);
+    |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:780:44
+    |
+780 | ...                   assert(link_contains(node.right, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:784:33
+    |
+784 | ...                   (link_contains(*old(self), x) || x == value)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+x == value 
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:871:88
+    |
+871 |                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(*min.unwrap(), x) by {
+    |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+min.0.le(x) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: assertion failed
+   --> src/Chap37/BSTRBMtEph.rs:915:88
+    |
+915 |                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(x, *max.unwrap()) by {
+    |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+x.le(max.0) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: assertion failed
+    --> src/Chap37/BSTRBMtEph.rs:1268:41
+     |
+1268 |                       assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
+     |  _________________________________________^
+1269 | |                         <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+     | |____________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTRBMtEph.rs:1268:41
+     |
+1268 |                     assert forall|x: T| (#[trigger] link_to_bbt(new_root).tree_contains(x))
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1269 |                         <==> (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+     |                                                                          ^^^^^^^^^^
+
+note: 
+
+link_to_bbt(new_root).tree_contains(x) == (link_to_bbt(old_ghost).tree_contains(x) || x == value)
+|   link_to_bbt(new_root).tree_contains(x) ==>
+|       !(link_to_bbt(old_ghost).tree_contains(x)) ==>
+|           x == value ✘
+|   link_to_bbt(old_ghost).tree_contains(x) || x == value ==>
+|       link_to_bbt(new_root).tree_contains(x) ✘
++---
+
+verification results:: 1941 verified, 5 errors
+error: aborting due to 12 previous errors
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 1397MB, peak z3 RSS: 404MB, min free: 16729MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 24s

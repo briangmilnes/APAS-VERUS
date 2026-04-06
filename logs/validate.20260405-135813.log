@@ -1,0 +1,102 @@
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:764:63
+    |
+764 | ...                   assert forall|x: T| link_contains(old(self), x) implies
+    |                                           ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                                           |
+    |                                           arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:769:63
+    |
+769 | ...                   assert forall|x: T| link_contains(old(self), x) implies
+    |                                           ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                                           |
+    |                                           arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:779:48
+    |
+779 | ...                   (link_contains(old(self), x) || x == value)
+    |                        ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                        |
+    |                        arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:821:63
+    |
+821 | ...                   assert forall|x: T| link_contains(old(self), x) implies
+    |                                           ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                                           |
+    |                                           arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:826:63
+    |
+826 | ...                   assert forall|x: T| link_contains(old(self), x) implies
+    |                                           ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                                           |
+    |                                           arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error[E0308]: mismatched types
+   --> src/Chap37/BSTRBMtEph.rs:836:48
+    |
+836 | ...                   (link_contains(old(self), x) || x == value)
+    |                        ------------- ^^^^^^^^^ expected `Option<Box<Node<T>>>`, found `&mut Option<Box<Node<T>>>`
+    |                        |
+    |                        arguments to this function are incorrect
+    |
+    = note:           expected enum `std::option::Option<_>`
+            found mutable reference `&mut std::option::Option<_>`
+note: function defined here
+   --> src/Chap37/BSTRBMtEph.rs:76:22
+    |
+ 76 |     pub open spec fn link_contains<T: StTInMtT + Ord + TotalOrder>(link: Link<T>, target: T) -> bool
+    |                      ^^^^^^^^^^^^^                                 -------------
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 487MB, peak z3 RSS: 0MB, min free: 18001MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
