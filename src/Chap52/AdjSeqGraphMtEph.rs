@@ -606,4 +606,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl std::fmt::Display for AdjSeqGraphMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjSeqGraphMtEph(n: {}, edges: {})", self.adj.length(), self.num_edges)
+        }
+    }
 }

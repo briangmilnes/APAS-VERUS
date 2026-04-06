@@ -515,4 +515,18 @@ broadcast use vstd::seq::group_seq_axioms;
     } // impl DFSStEphTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for DFSStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DFSStEph")
+        }
+    }
+
+    impl std::fmt::Display for DFSStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "DFSStEph")
+        }
+    }
 }

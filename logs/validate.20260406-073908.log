@@ -1,0 +1,206 @@
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+   --> src/Chap54/BFSStEph.rs:485:72
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                        ^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:78:5
+    |
+ 78 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.seq.len(), self.order.len())
+    |                                                                        ++++
+help: there is a method `length` with a similar name
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.length(), self.order.len())
+    |                                                                           +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+   --> src/Chap54/BFSStEph.rs:485:90
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                                          ^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:78:5
+    |
+ 78 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.seq.len())
+    |                                                                                          ++++
+help: there is a method `length` with a similar name
+    |
+485 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.length())
+    |                                                                                             +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap54/BFSStPer.rs:474:72
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                        ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:77:5
+    |
+ 77 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.seq.len(), self.order.len())
+    |                                                                        ++++
+help: there is a method `length` with a similar name
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.length(), self.order.len())
+    |                                                                           +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap54/BFSStPer.rs:474:90
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                                          ^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:77:5
+    |
+ 77 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.seq.len())
+    |                                                                                          ++++
+help: there is a method `length` with a similar name
+    |
+474 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.length())
+    |                                                                                             +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+   --> src/Chap54/BFSMtEph.rs:935:72
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                        ^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:70:5
+    |
+ 70 |     pub struct ArraySeqMtEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.seq.len(), self.order.len())
+    |                                                                        ++++
+help: there is a method `length` with a similar name
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.length(), self.order.len())
+    |                                                                           +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+   --> src/Chap54/BFSMtEph.rs:935:90
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                                          ^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:70:5
+    |
+ 70 |     pub struct ArraySeqMtEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.seq.len())
+    |                                                                                          ++++
+help: there is a method `length` with a similar name
+    |
+935 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.length())
+    |                                                                                             +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS<T>` in the current scope
+   --> src/Chap54/BFSMtPer.rs:943:72
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                        ^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:69:5
+    |
+ 69 |     pub struct ArraySeqMtPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.seq.len(), self.order.len())
+    |                                                                        ++++
+help: there is a method `length` with a similar name
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.length(), self.order.len())
+    |                                                                           +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS<T>` in the current scope
+   --> src/Chap54/BFSMtPer.rs:943:90
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.len())
+    |                                                                                          ^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:69:5
+    |
+ 69 |     pub struct ArraySeqMtPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.seq.len())
+    |                                                                                          ++++
+help: there is a method `length` with a similar name
+    |
+943 |             write!(f, "BFSTreeS(parents: {}, order: {})", self.parents.len(), self.order.length())
+    |                                                                                             +++
+
+error: aborting due to 8 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 398MB, peak z3 RSS: 0MB, min free: 17628MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

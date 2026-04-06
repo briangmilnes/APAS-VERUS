@@ -629,6 +629,36 @@ broadcast use {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "{}×{}", self.rows, self.cols) }
     }
 
+    // 14b. derive impls outside verus! — struct MatrixChainMtEphDimInv
+
+    impl Debug for MatrixChainMtEphDimInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
+    }
+
+    impl Display for MatrixChainMtEphDimInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphDimInv") }
+    }
+
+    // 14c. derive impls outside verus! — struct MatrixChainMtEphMemoInv
+
+    impl Debug for MatrixChainMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
+    }
+
+    impl Display for MatrixChainMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphMemoInv") }
+    }
+
+    // 14d. derive impls outside verus! — struct MatrixChainMtEphV
+
+    impl Debug for MatrixChainMtEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphV") }
+    }
+
+    impl Display for MatrixChainMtEphV {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MatrixChainMtEphV") }
+    }
+
     // 12. macros
     #[macro_export]
     macro_rules! MatrixChainMtEphLit {

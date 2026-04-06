@@ -658,4 +658,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl std::fmt::Display for AdjSeqGraphMtPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjSeqGraphMtPer(n: {}, edges: {})", self.adj.length(), self.num_edges)
+        }
+    }
 }

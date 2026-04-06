@@ -442,4 +442,18 @@ pub mod StarContractionMtEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for StarContractionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StarContractionMtEph")
+        }
+    }
+
+    impl std::fmt::Display for StarContractionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "StarContractionMtEph")
+        }
+    }
 }

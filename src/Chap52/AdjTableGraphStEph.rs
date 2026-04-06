@@ -904,4 +904,18 @@ broadcast use {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<V: StT + Ord> std::fmt::Debug for AdjTableGraphStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphStEph(vertices: {})", self.adj.size())
+        }
+    }
+
+    impl<V: StT + Ord> std::fmt::Display for AdjTableGraphStEph<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphStEph(vertices: {})", self.adj.size())
+        }
+    }
 }

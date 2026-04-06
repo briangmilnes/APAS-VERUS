@@ -842,4 +842,18 @@ pub mod TopoSortStPer {
     } // impl TopoSortStPerTrait
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for TopoSortStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TopoSortStPer")
+        }
+    }
+
+    impl std::fmt::Display for TopoSortStPer {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "TopoSortStPer")
+        }
+    }
 }

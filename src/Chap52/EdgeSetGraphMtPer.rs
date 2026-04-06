@@ -403,4 +403,21 @@ pub mod EdgeSetGraphMtPer {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Debug + 'static> std::fmt::Debug for EdgeSetGraphMtPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("EdgeSetGraphMtPer")
+                .field("vertices", &self.vertices)
+                .field("edges", &self.edges)
+                .finish()
+        }
+    }
+
+    impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Display + 'static> std::fmt::Display for EdgeSetGraphMtPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "EdgeSetGraphMtPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
+        }
+    }
 }

@@ -203,4 +203,18 @@ pub mod SpanTreeMtEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for SpanTreeMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SpanTreeMtEph")
+        }
+    }
+
+    impl std::fmt::Display for SpanTreeMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "SpanTreeMtEph")
+        }
+    }
 }

@@ -841,4 +841,16 @@ broadcast use {
             AdjTableGraphStPer { adj: self.adj.clone() }
         }
     }
+
+    impl<V: StT + Ord> std::fmt::Debug for AdjTableGraphStPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphStPer(vertices: {})", self.adj.size())
+        }
+    }
+
+    impl<V: StT + Ord> std::fmt::Display for AdjTableGraphStPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphStPer(vertices: {})", self.adj.size())
+        }
+    }
 }

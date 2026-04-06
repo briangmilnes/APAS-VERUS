@@ -939,4 +939,16 @@ broadcast use {
             AdjTableGraphMtPer { adj: self.adj.clone(), num_edges: self.num_edges }
         }
     }
+
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Debug for AdjTableGraphMtPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphMtPer(vertices: {}, edges: {})", self.adj.size(), self.num_edges)
+        }
+    }
+
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Display for AdjTableGraphMtPer<V> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjTableGraphMtPer(vertices: {}, edges: {})", self.adj.size(), self.num_edges)
+        }
+    }
 }

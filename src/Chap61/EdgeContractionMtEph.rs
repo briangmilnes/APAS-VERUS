@@ -235,4 +235,18 @@ pub mod EdgeContractionMtEph {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for EdgeContractionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "EdgeContractionMtEph")
+        }
+    }
+
+    impl std::fmt::Display for EdgeContractionMtEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "EdgeContractionMtEph")
+        }
+    }
 }

@@ -495,4 +495,18 @@ pub mod PrimStEph {
                 .finish()
         }
     }
+
+    // 14a. derive impls outside verus! — struct PrimStEph
+
+    impl std::fmt::Debug for PrimStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "PrimStEph")
+        }
+    }
+
+    impl Display for PrimStEph {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "PrimStEph")
+        }
+    }
 }

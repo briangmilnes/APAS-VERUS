@@ -681,4 +681,18 @@ pub mod DocumentIndex {
                 .finish()
         }
     }
+
+    // 14b. derive impls outside verus! — struct QueryBuilder
+
+    impl<'a> Debug for QueryBuilder<'a> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "QueryBuilder({:?})", self.index)
+        }
+    }
+
+    impl<'a> Display for QueryBuilder<'a> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+            write!(f, "QueryBuilder({})", self.index)
+        }
+    }
 }

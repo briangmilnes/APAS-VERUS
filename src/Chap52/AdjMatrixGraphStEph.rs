@@ -784,4 +784,10 @@ broadcast use {
                 .finish()
         }
     }
+
+    impl std::fmt::Display for AdjMatrixGraphStEph {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjMatrixGraphStEph(n: {}, edges: {})", self.n, self.num_edges)
+        }
+    }
 }

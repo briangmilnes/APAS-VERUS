@@ -416,7 +416,21 @@ pub mod MinEditDistMtEph {
         fn target_mut(&mut self) -> &mut ArraySeqMtEphS<T> { &mut self.target }
     }
 
-    // 13. derive impls outside verus!
+    // 13a. derive impls outside verus! — struct MinEditDistMtEphMemoInv
+
+    impl Debug for MinEditDistMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "MinEditDistMtEphMemoInv")
+        }
+    }
+
+    impl Display for MinEditDistMtEphMemoInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "MinEditDistMtEphMemoInv")
+        }
+    }
+
+    // 13b. derive impls outside verus! — struct MinEditDistMtEphS
 
     impl<T: MtVal> PartialEq for MinEditDistMtEphS<T> {
         fn eq(&self, other: &Self) -> bool { self.source == other.source && self.target == other.target }

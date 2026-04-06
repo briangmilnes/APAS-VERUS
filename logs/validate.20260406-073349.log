@@ -1,0 +1,106 @@
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+   --> src/Chap52/AdjSeqGraphStEph.rs:665:70
+    |
+665 |             write!(f, "AdjSeqGraphStEph(n: {}, edges: {})", self.adj.len(), self.num_edges)
+    |                                                                      ^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:78:5
+    |
+ 78 |     pub struct ArraySeqStEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+665 |             write!(f, "AdjSeqGraphStEph(n: {}, edges: {})", self.adj.seq.len(), self.num_edges)
+    |                                                                      ++++
+help: there is a method `length` with a similar name
+    |
+665 |             write!(f, "AdjSeqGraphStEph(n: {}, edges: {})", self.adj.length(), self.num_edges)
+    |                                                                         +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap52/AdjSeqGraphStPer.rs:710:70
+    |
+710 |             write!(f, "AdjSeqGraphStPer(n: {}, edges: {})", self.adj.len(), self.num_edges)
+    |                                                                      ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:63:5
+    |
+ 63 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+710 |             write!(f, "AdjSeqGraphStPer(n: {}, edges: {})", self.adj.seq.len(), self.num_edges)
+    |                                                                      ++++
+help: there is a method `length` with a similar name
+    |
+710 |             write!(f, "AdjSeqGraphStPer(n: {}, edges: {})", self.adj.length(), self.num_edges)
+    |                                                                         +++
+
+error[E0599]: no method named `len` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+   --> src/Chap52/AdjSeqGraphMtEph.rs:612:70
+    |
+612 |             write!(f, "AdjSeqGraphMtEph(n: {}, edges: {})", self.adj.len(), self.num_edges)
+    |                                                                      ^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:70:5
+    |
+ 70 |     pub struct ArraySeqMtEphS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+612 |             write!(f, "AdjSeqGraphMtEph(n: {}, edges: {})", self.adj.seq.len(), self.num_edges)
+    |                                                                      ++++
+help: there is a method `length` with a similar name
+    |
+612 |             write!(f, "AdjSeqGraphMtEph(n: {}, edges: {})", self.adj.length(), self.num_edges)
+    |                                                                         +++
+
+error[E0599]: no method named `len` found for struct `Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerS<T>` in the current scope
+   --> src/Chap52/AdjSeqGraphMtPer.rs:664:70
+    |
+664 |             write!(f, "AdjSeqGraphMtPer(n: {}, edges: {})", self.adj.len(), self.num_edges)
+    |                                                                      ^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:69:5
+    |
+ 69 |     pub struct ArraySeqMtPerS<T> {
+    |     ---------------------------- method `len` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `len`, perhaps you need to implement one of them:
+            candidate #1: `vstdplus::VecQueue::VecQueue::VecQueueTrait`
+            candidate #2: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+            candidate #3: `std::iter::ExactSizeIterator`
+help: one of the expressions' fields has a method of the same name
+    |
+664 |             write!(f, "AdjSeqGraphMtPer(n: {}, edges: {})", self.adj.seq.len(), self.num_edges)
+    |                                                                      ++++
+help: there is a method `length` with a similar name
+    |
+664 |             write!(f, "AdjSeqGraphMtPer(n: {}, edges: {})", self.adj.length(), self.num_edges)
+    |                                                                         +++
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 934MB, peak z3 RSS: 0MB, min free: 16902MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 0s

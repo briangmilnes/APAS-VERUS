@@ -5,7 +5,7 @@
 
 pub mod AdjSeqGraphStPer {
 
-    use std::fmt::{Debug, Formatter};
+    use std::fmt::{Debug, Display, Formatter};
 
     use vstd::prelude::*;
     #[cfg(verus_keep_ghost)]
@@ -702,6 +702,12 @@ broadcast use {
                 .field("adj", &self.adj)
                 .field("num_edges", &self.num_edges)
                 .finish()
+        }
+    }
+
+    impl Display for AdjSeqGraphStPer {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "AdjSeqGraphStPer(n: {}, edges: {})", self.adj.length(), self.num_edges)
         }
     }
 }
