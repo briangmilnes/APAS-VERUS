@@ -25,30 +25,30 @@
 //!
 //! Reference: src/Chap05/SetStEph.rs (the only chapter file with all 14 sections).
 //  Table of Contents
-//	1. module
-//	2. imports
-//	3. broadcast use
-//	4a. type definitions — struct InnerS
-//	5a. view impls — struct InnerS
-//	6a. spec fns — struct InnerS
-//	7a. proof fns/broadcast groups — struct InnerS
-//	8a. traits — struct InnerS
-//	9a. impls — struct InnerS
-//	4b. type definitions — struct ExampleS
-//	5b. view impls — struct ExampleS
-//	6b. spec fns — struct ExampleS
-//	7b. proof fns/broadcast groups — struct ExampleS
-//	8b. traits — struct ExampleS
-//	9b. impls — struct ExampleS
-//	10b. iterators — struct ExampleS
-//	11. top level coarse locking
-//	12a. derive impls in verus! — struct InnerS
-//	12b. derive impls in verus! — struct ExampleS
-//	13a. macros — struct InnerS
-//	13b. macros — struct ExampleS
-//	14a. derive impls outside verus! — struct InnerS
-//	14b. derive impls outside verus! — struct ExampleS
-//		1. module
+//	Section 1. module
+//	Section 2. imports
+//	Section 3. broadcast use
+//	Section 4a. type definitions — struct InnerS
+//	Section 5a. view impls — struct InnerS
+//	Section 6a. spec fns — struct InnerS
+//	Section 7a. proof fns/broadcast groups — struct InnerS
+//	Section 8a. traits — struct InnerS
+//	Section 9a. impls — struct InnerS
+//	Section 4b. type definitions — struct ExampleS
+//	Section 5b. view impls — struct ExampleS
+//	Section 6b. spec fns — struct ExampleS
+//	Section 7b. proof fns/broadcast groups — struct ExampleS
+//	Section 8b. traits — struct ExampleS
+//	Section 9b. impls — struct ExampleS
+//	Section 10b. iterators — struct ExampleS
+//	Section 11. top level coarse locking
+//	Section 12a. derive impls in verus! — struct InnerS
+//	Section 12b. derive impls in verus! — struct ExampleS
+//	Section 13a. macros — struct InnerS
+//	Section 13b. macros — struct ExampleS
+//	Section 14a. derive impls outside verus! — struct InnerS
+//	Section 14b. derive impls outside verus! — struct ExampleS
+//		Section 1. module
 pub mod table_of_contents_standard {
 
     use std::fmt::{Debug, Display, Formatter};
@@ -57,14 +57,14 @@ pub mod table_of_contents_standard {
 
     verus! {
 
-    //		2. imports
+    //		Section 2. imports
     //
     // use std::... first, then vstd, then crate modules.
     // Verus-only imports go behind #[cfg(verus_keep_ghost)].
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
 
-    //		3. broadcast use
+    //		Section 3. broadcast use
     //
     // Import broadcast groups so their lemmas fire automatically.
     broadcast use vstd::seq::group_seq_axioms;
@@ -73,13 +73,13 @@ pub mod table_of_contents_standard {
     // Type group a: InnerS (leaf type, no dependencies)
     // ========================================================================
 
-    //		4a. type definitions — struct InnerS
+    //		Section 4a. type definitions — struct InnerS
 
     pub struct InnerS {
         pub val: u64,
     }
 
-    //		5a. view impls — struct InnerS
+    //		Section 5a. view impls — struct InnerS
 
     impl View for InnerS {
         type V = int;
@@ -89,13 +89,13 @@ pub mod table_of_contents_standard {
         }
     }
 
-    //		6a. spec fns — struct InnerS
+    //		Section 6a. spec fns — struct InnerS
 
     pub open spec fn spec_inners_wf(s: &InnerS) -> bool {
         s@ >= 0
     }
 
-    //		7a. proof fns/broadcast groups — struct InnerS
+    //		Section 7a. proof fns/broadcast groups — struct InnerS
 
     pub broadcast proof fn lemma_inners_view_nat(s: &InnerS)
         ensures
@@ -107,7 +107,7 @@ pub mod table_of_contents_standard {
         lemma_inners_view_nat,
     }
 
-    //		8a. traits — struct InnerS
+    //		Section 8a. traits — struct InnerS
 
     pub trait InnerSTrait: Sized {
         spec fn spec_val(&self) -> int;
@@ -123,7 +123,7 @@ pub mod table_of_contents_standard {
         ;
     }
 
-    //		9a. impls — struct InnerS
+    //		Section 9a. impls — struct InnerS
 
     impl InnerSTrait for InnerS {
         open spec fn spec_val(&self) -> int {
@@ -145,14 +145,14 @@ pub mod table_of_contents_standard {
     // Type group b: ExampleS (depends on InnerS, has iterators)
     // ========================================================================
 
-    //		4b. type definitions — struct ExampleS
+    //		Section 4b. type definitions — struct ExampleS
 
     #[verifier::reject_recursive_types(T)]
     pub struct ExampleS<T> {
         pub seq: Vec<T>,
     }
 
-    //		5b. view impls — struct ExampleS
+    //		Section 5b. view impls — struct ExampleS
 
     impl<T> View for ExampleS<T> {
         type V = Seq<T>;
@@ -162,7 +162,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    //		6b. spec fns — struct ExampleS
+    //		Section 6b. spec fns — struct ExampleS
     //
     // Spec functions can have LOOSER bounds than the trait (section 8).
     // Here: T: View (spec-only). The trait requires T: View + Copy + PartialEq.
@@ -177,7 +177,7 @@ pub mod table_of_contents_standard {
         s@.len()
     }
 
-    //		7b. proof fns/broadcast groups — struct ExampleS
+    //		Section 7b. proof fns/broadcast groups — struct ExampleS
 
     /// View length is always non-negative.
     pub broadcast proof fn lemma_view_len_nat<T>(s: &ExampleS<T>)
@@ -190,7 +190,7 @@ pub mod table_of_contents_standard {
         lemma_view_len_nat,
     }
 
-    //		8b. traits — struct ExampleS
+    //		Section 8b. traits — struct ExampleS
     //
     // Traits have the full exec bounds needed by their methods.
     // Spec functions in traits are abstract (no body) or open.
@@ -225,7 +225,7 @@ pub mod table_of_contents_standard {
         ;
     }
 
-    //		9b. impls — struct ExampleS
+    //		Section 9b. impls — struct ExampleS
 
     impl<T: View + Copy + PartialEq> ExampleTrait<T> for ExampleS<T> {
         open spec fn spec_len(&self) -> nat {
@@ -284,7 +284,7 @@ pub mod table_of_contents_standard {
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    //		10b. iterators — struct ExampleS
+    //		Section 10b. iterators — struct ExampleS
     //
     // Everything iterator-related for ExampleS lives here: the iterator struct,
     // its view, the ghost iterator struct, its view, iter_invariant, all trait
@@ -440,7 +440,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    //		11. top level coarse locking
+    //		Section 11. top level coarse locking
     //
     // Mt modules only. Contains the complete Layer 2 locking wrapper:
     // Inv struct, RwLockPredicate impl, Locked struct, type_invariant
@@ -449,7 +449,7 @@ pub mod table_of_contents_standard {
     // do not use coarse locking.
     // See: src/standards/toplevel_coarse_rwlocks_for_mt_modules.rs
 
-    //		12a. derive impls in verus! — struct InnerS
+    //		Section 12a. derive impls in verus! — struct InnerS
 
     #[cfg(verus_keep_ghost)]
     impl PartialEqSpecImpl for InnerS {
@@ -475,7 +475,7 @@ pub mod table_of_contents_standard {
 
     impl Eq for InnerS {}
 
-    //		12b. derive impls in verus! — struct ExampleS
+    //		Section 12b. derive impls in verus! — struct ExampleS
     //
     // Clone, PartialEq, Eq go inside verus! so they can have ensures.
     impl<T: Clone> Clone for ExampleS<T> {
@@ -498,11 +498,11 @@ pub mod table_of_contents_standard {
 
     } // verus!
 
-    //		13a. macros — struct InnerS
+    //		Section 13a. macros — struct InnerS
     //
     // (InnerS has no macro in this example.)
 
-    //		13b. macros — struct ExampleS
+    //		Section 13b. macros — struct ExampleS
     //
     // macro_rules! goes outside verus!, inside the pub mod.
     // Use $crate for fully qualified paths so the macro works from any crate.
@@ -520,7 +520,7 @@ pub mod table_of_contents_standard {
         }};
     }
 
-    //		14a. derive impls outside verus! — struct InnerS
+    //		Section 14a. derive impls outside verus! — struct InnerS
 
     impl Display for InnerS {
         fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -534,7 +534,7 @@ pub mod table_of_contents_standard {
         }
     }
 
-    //		14b. derive impls outside verus! — struct ExampleS
+    //		Section 14b. derive impls outside verus! — struct ExampleS
     //
     // Display and Debug go outside verus!, inside the pub mod.
 

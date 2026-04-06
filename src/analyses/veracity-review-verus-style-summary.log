@@ -6,12 +6,12 @@ Warnings by rule:
 |   # | Rule       | Count | Description                                           |
 | --- | ---------- | ----- | ----------------------------------------------------- |
 |   1 | [18]       |   718 | Definition order inside verus!                        |
-|   2 | [22:proof] |   558 | Free proof fn should be trait method                  |
-|   3 | [22:spec]  |   532 | Free spec fn should be trait signature with impl body |
-|   4 | [22:exec]  |   438 | Free exec fn should be trait method                   |
-|   5 | [14]       |   342 | Debug/Display impl outside verus!                     |
-|   6 | [17]       |   164 | Iterator/IntoIterator inside verus!                   |
-|   7 | [23b]      |    88 | Free fn stricter/incompatible bounds vs trait         |
+|   2 | [22:spec]  |   215 | Free spec fn should be trait signature with impl body |
+|   3 | [17]       |   164 | Iterator/IntoIterator inside verus!                   |
+|   4 | [14]       |   135 | Debug/Display impl outside verus!                     |
+|   5 | [22:exec]  |   121 | Free exec fn should be trait method                   |
+|   6 | [23b]      |    88 | Free fn stricter/incompatible bounds vs trait         |
+|   7 | [22:proof] |    62 | Free proof fn should be trait method                  |
 |   8 | [13]       |    52 | Trait impl inside verus!                              |
 |   9 | [12]       |    48 | Trait fns have specs                                  |
 |  10 | [11]       |    40 | Set/Seq broadcast groups                              |
@@ -19,55 +19,54 @@ Warnings by rule:
 |  12 | [20]       |    29 | Every trait has at least one impl                     |
 |  13 | [4]        |     3 | std imports grouped                                   |
 
-Total: 3046 warnings, 246 files checked.
+Total: 1709 warnings, 246 files checked.
+Note: 1130 free functions correctly placed per Standard 19 ([22a] info, not shown).
 
 Warnings by chapter:
-|   # | Chapter | Warnings | Top rules                                 |
-| --- | ------- | -------- | ----------------------------------------- |
-|   1 | Chap06  |      222 | [22:spec] 87, [18] 64, [14] 48            |
-|   2 | Chap50  |      219 | [18] 67, [17] 58, [14] 34                 |
-|   3 | Chap43  |      213 | [18] 67, [22:proof] 44, [22:exec] 25      |
-|   4 | Chap39  |      187 | [18] 78, [22:exec] 50, [22:proof] 30      |
-|   5 | Chap18  |      172 | [18] 59, [14] 34, [22:spec] 31            |
-|   6 | Chap37  |      162 | [22:spec] 55, [18] 53, [22:proof] 28      |
-|   7 | Chap52  |      160 | [22:proof] 90, [22:spec] 20, [14] 19      |
-|   8 | Chap55  |      121 | [22:proof] 48, [22:spec] 31, [22:exec] 19 |
-|   9 | Chap49  |      113 | [18] 28, [22:exec] 16, [13] 14            |
-|  10 | Chap38  |      102 | [18] 52, [22:exec] 21, [14] 13            |
-|  11 | Chap26  |       97 | [22:spec] 44, [22:exec] 18, [22:proof] 18 |
-|  12 | Chap65  |       93 | [22:proof] 24, [22:spec] 24, [18] 17      |
-|  13 | Chap19  |       89 | [18] 28, [14] 16, [22:spec] 16            |
-|  14 | Chap47  |       88 | [22:proof] 32, [22:spec] 20, [18] 10      |
-|  15 | Chap41  |       80 | [22:proof] 23, [18] 20, [22:exec] 12      |
-|  16 | Chap05  |       79 | [18] 26, [14] 22, [22:spec] 19            |
-|  17 | Chap40  |       75 | [22:proof] 30, [22:spec] 12, [18] 9       |
-|  18 | Chap54  |       66 | [22:proof] 22, [14] 16, [22:spec] 12      |
-|  19 | Chap62  |       64 | [22:exec] 25, [17] 8, [22:spec] 8         |
-|  20 | Chap66  |       55 | [18] 24, [22:exec] 13, [22:spec] 6        |
-|  21 | Chap23  |       49 | [14] 22, [18] 19, [22:spec] 4             |
-|  22 | Chap42  |       49 | [22:proof] 32, [22:spec] 8, [22:exec] 6   |
-|  23 | Chap28  |       46 | [22:spec] 17, [22:proof] 15, [22:exec] 14 |
-|  24 | Chap45  |       44 | [22:exec] 13, [22:proof] 13, [18] 9       |
-|  25 | Chap51  |       42 | [18] 20, [22:spec] 14, [22:proof] 4       |
-|  26 | Chap35  |       41 | [22:spec] 12, [22:exec] 10, [23b] 10      |
-|  27 | Chap53  |       37 | [22:exec] 20, [17] 15, [22:spec] 2        |
-|  28 | Chap59  |       36 | [22:exec] 26, [17] 4, [20] 4              |
-|  29 | Chap61  |       31 | [22:exec] 12, [14] 8, [22:spec] 4         |
-|  30 | Chap27  |       26 | [22:proof] 24, [23b] 1, [22:exec] 1       |
-|  31 | Chap64  |       25 | [22:exec] 12, [14] 6, [20] 3              |
-|  32 | Chap63  |       24 | [22:exec] 10, [17] 4, [14] 4              |
-|  33 | Chap57  |       22 | [18] 12, [22:exec] 4, [17] 3              |
-|  34 | Chap36  |       19 | [22:spec] 7, [22:proof] 7, [23b] 2        |
-|  35 | Chap02  |       17 | [22:exec] 7, [22:proof] 5, [14] 4         |
-|  36 | Chap17  |       13 | [18] 5, [14] 4, [22:spec] 3               |
-|  37 | Chap44  |       13 | [14] 4, [17] 3, [18] 2                    |
-|  38 | Chap30  |       12 | [18] 8, [12] 4                            |
-|  39 | Chap11  |       10 | [22:exec] 6, [22:proof] 3, [22:spec] 1    |
-|  40 | Chap12  |        9 | [14] 5, [12] 2, [22:exec] 1               |
-|  41 | Chap56  |        9 | [12] 9                                    |
-|  42 | Chap58  |        8 | [22:exec] 6, [20] 2                       |
-|  43 | Chap03  |        4 | [22:spec] 3, [22:exec] 1                  |
-|  44 | other   |        3 | [22:exec] 2, [18] 1                       |
+|   # | Chapter | Warnings | Top rules                            |
+| --- | ------- | -------- | ------------------------------------ |
+|   1 | Chap06  |      218 | [22:spec] 83, [18] 64, [14] 48       |
+|   2 | Chap50  |      159 | [18] 67, [17] 58, [13] 20            |
+|   3 | Chap18  |      131 | [18] 59, [14] 34, [23b] 12           |
+|   4 | Chap39  |      126 | [18] 78, [22:exec] 29, [23b] 14      |
+|   5 | Chap37  |      123 | [18] 53, [22:spec] 42, [22:proof] 25 |
+|   6 | Chap43  |      119 | [18] 67, [23b] 13, [17] 10           |
+|   7 | Chap49  |       87 | [18] 28, [13] 14, [15] 12            |
+|   8 | Chap38  |       73 | [18] 52, [22:exec] 18, [13] 2        |
+|   9 | Chap65  |       72 | [22:proof] 21, [22:spec] 18, [18] 17 |
+|  10 | Chap19  |       64 | [18] 28, [14] 16, [23b] 7            |
+|  11 | Chap05  |       58 | [18] 26, [14] 22, [22:spec] 9        |
+|  12 | Chap41  |       42 | [18] 20, [23b] 7, [13] 4             |
+|  13 | Chap47  |       41 | [18] 10, [22:spec] 7, [11] 6         |
+|  14 | Chap26  |       36 | [22:exec] 18, [18] 7, [22:spec] 5    |
+|  15 | Chap52  |       34 | [17] 18, [18] 8, [22:spec] 4         |
+|  16 | Chap66  |       34 | [18] 24, [15] 6, [22:spec] 2         |
+|  17 | Chap23  |       27 | [18] 19, [22:spec] 4, [22:proof] 2   |
+|  18 | Chap62  |       27 | [18] 8, [17] 8, [20] 4               |
+|  19 | Chap40  |       23 | [23b] 9, [18] 9, [12] 3              |
+|  20 | Chap51  |       20 | [18] 20                              |
+|  21 | Chap45  |       19 | [18] 9, [12] 8, [22:proof] 2         |
+|  22 | Chap35  |       17 | [23b] 10, [22:exec] 6, [18] 1        |
+|  23 | Chap53  |       17 | [17] 15, [22:spec] 2                 |
+|  24 | Chap57  |       17 | [18] 12, [17] 3, [20] 2              |
+|  25 | Chap30  |       12 | [18] 8, [12] 4                       |
+|  26 | Chap17  |       11 | [18] 5, [14] 4, [13] 1               |
+|  27 | Chap61  |       11 | [22:spec] 4, [20] 4, [17] 2          |
+|  28 | Chap59  |       10 | [20] 4, [17] 4, [18] 2               |
+|  29 | Chap63  |       10 | [17] 4, [20] 2, [22:spec] 2          |
+|  30 | Chap44  |        9 | [17] 3, [14] 2, [18] 2               |
+|  31 | Chap56  |        9 | [12] 9                               |
+|  32 | Chap12  |        8 | [14] 5, [12] 2, [22:spec] 1          |
+|  33 | Chap54  |        8 | [18] 8                               |
+|  34 | Chap55  |        7 | [11] 6, [18] 1                       |
+|  35 | Chap64  |        7 | [20] 3, [22:spec] 3, [12] 1          |
+|  36 | Chap28  |        6 | [22:exec] 6                          |
+|  37 | Chap36  |        5 | [23b] 2, [22:exec] 1, [18] 1         |
+|  38 | Chap02  |        4 | [14] 4                               |
+|  39 | Chap42  |        3 | [20] 1, [18] 1, [23b] 1              |
+|  40 | Chap27  |        2 | [22:exec] 1, [23b] 1                 |
+|  41 | Chap58  |        2 | [20] 2                               |
+|  42 | other   |        1 | [18] 1                               |
 
 [23b] bound mismatch patterns:
 |   # | Gap (fn has, trait lacks)  | Count | Example files |
@@ -89,4 +88,4 @@ Warnings by chapter:
 |  15 | DeepView < V = T >         |     1 | Chap18/ArraySeq |
 |  16 | PartialEq                  |     1 | Chap18/ArraySeq |
 
-Summary log: /home/milnes/projects/APAS-VERUS-agent4/src/analyses/veracity-review-verus-style-summary.log
+Summary log: /home/milnes/projects/APAS-VERUS/src/analyses/veracity-review-verus-style-summary.log
