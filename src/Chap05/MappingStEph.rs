@@ -671,4 +671,20 @@ verus! {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { Display::fmt(&self.mapping, f) }
     }
 
+    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for MappingStEphIter<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphIter") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Display for MappingStEphIter<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphIter") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Debug for MappingStEphGhostIterator<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphGhostIterator") }
+    }
+
+    impl<'a, X: StT + Hash, Y: StT + Hash> Display for MappingStEphGhostIterator<'a, X, Y> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "MappingStEphGhostIterator") }
+    }
+
 }

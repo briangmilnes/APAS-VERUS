@@ -557,4 +557,20 @@ verus! {
             < $crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEph<_, _> as $crate::Chap06::LabUnDirGraphStEph::LabUnDirGraphStEph::LabUnDirGraphStEphTrait<_, _> >::from_vertices_and_labeled_edges(vertices, labeled_edges)
         }};
     }
+
+    impl<'a, V: HashOrd> Debug for LabUnDirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphStEphIter") }
+    }
+
+    impl<'a, V: HashOrd> Display for LabUnDirGraphStEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphStEphIter") }
+    }
+
+    impl<'a, V: HashOrd> Debug for LabUnDirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphStEphGhostIterator") }
+    }
+
+    impl<'a, V: HashOrd> Display for LabUnDirGraphStEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LabUnDirGraphStEphGhostIterator") }
+    }
 }

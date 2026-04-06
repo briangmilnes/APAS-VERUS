@@ -1677,4 +1677,28 @@ pub mod ArraySeq {
             write!(f, "]")
         }
     }
+
+    impl<'a, T: Debug> Debug for ArraySeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqIter")
+        }
+    }
+
+    impl<'a, T> Debug for ArraySeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqGhostIterator")
+        }
+    }
 }

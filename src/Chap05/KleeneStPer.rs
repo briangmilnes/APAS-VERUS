@@ -285,4 +285,20 @@ verus! {
 
 } // verus!
 
+    //		14. derive impls outside verus!
+
+    impl<T: std::fmt::Debug + StT + Hash> std::fmt::Debug for KleeneStPer<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            f.debug_struct("KleeneStPer")
+                .field("alphabet", &self.alphabet)
+                .finish()
+        }
+    }
+
+    impl<T: std::fmt::Display + StT + Hash> std::fmt::Display for KleeneStPer<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "KleeneStPer({})", self.alphabet)
+        }
+    }
+
 } // pub mod KleeneStPer

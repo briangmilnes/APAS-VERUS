@@ -843,4 +843,36 @@ pub mod UnDirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} E={:?}", self.V, self.E) }
     }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Debug for UnDirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphGhostIterator") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Display for UnDirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphGhostIterator") }
+    }
+
+    impl Debug for UnDirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphInv") }
+    }
+
+    impl Display for UnDirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "UnDirGraphMtEphInv") }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Debug for LockedUnDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedUnDirGraphMtEph") }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Display for LockedUnDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedUnDirGraphMtEph") }
+    }
 }

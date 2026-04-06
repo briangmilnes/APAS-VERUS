@@ -134,4 +134,10 @@ impl std::fmt::Debug for SpinLock {
     }
 }
 
+impl std::fmt::Display for SpinLock {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "SpinLock")
+    }
+}
+
 } // mod

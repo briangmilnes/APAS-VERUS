@@ -1188,4 +1188,36 @@ pub mod DirGraphMtEph {
     impl<V: StTInMtT + Hash + 'static> Display for DirGraphMtEph<V> {
         fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "V={} A={:?}", self.V, self.A) }
     }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Debug for DirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Display for DirGraphMtEphIter<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphIter") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Debug for DirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphGhostIterator") }
+    }
+
+    impl<'a, V: StTInMtT + Hash + 'static> Display for DirGraphMtEphGhostIterator<'a, V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphGhostIterator") }
+    }
+
+    impl Debug for DirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }
+    }
+
+    impl Display for DirGraphMtEphInv {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "DirGraphMtEphInv") }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Debug for LockedDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedDirGraphMtEph") }
+    }
+
+    impl<V: StTInMtT + Hash + 'static> Display for LockedDirGraphMtEph<V> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> Result { write!(f, "LockedDirGraphMtEph") }
+    }
 }

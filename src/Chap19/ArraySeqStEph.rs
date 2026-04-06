@@ -1252,6 +1252,30 @@ pub mod ArraySeqStEph {
         }
     }
 
+    impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStEphIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStEphIter")
+        }
+    }
+
+    impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStEphGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqStEphGhostIterator")
+        }
+    }
+
 
     //		12. macros
 

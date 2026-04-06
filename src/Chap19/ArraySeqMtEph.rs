@@ -1833,6 +1833,30 @@ pub mod ArraySeqMtEph {
         }
     }
 
+    impl<'a, T: Debug> Debug for ArraySeqMtEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqMtEphIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphIter")
+        }
+    }
+
+    impl<'a, T> Debug for ArraySeqMtEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqMtEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtEphGhostIterator")
+        }
+    }
+
     /// Literal constructor macro for Chap19 ArraySeqMtEphS.
     #[macro_export]
     macro_rules! ArraySeqMtEphChap19SLit {

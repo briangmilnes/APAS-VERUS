@@ -1875,6 +1875,30 @@ pub mod ArraySeqMtPer {
         }
     }
 
+    impl<'a, T: Debug> Debug for ArraySeqMtPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtPerIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqMtPerIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtPerIter")
+        }
+    }
+
+    impl<'a, T> Debug for ArraySeqMtPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtPerGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for ArraySeqMtPerGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
+            write!(f, "ArraySeqMtPerGhostIterator")
+        }
+    }
+
     /// Literal constructor macro for ArraySeqMtPerS.
     #[macro_export]
     macro_rules! ArraySeqMtPerSLit {

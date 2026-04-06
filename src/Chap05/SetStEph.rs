@@ -966,4 +966,28 @@ verus! {
         }
     }
 
+    impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetStEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Display for SetStEphIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetStEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetStEphGhostIterator")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Display for SetStEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetStEphGhostIterator")
+        }
+    }
+
 }

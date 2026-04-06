@@ -1230,4 +1230,52 @@ verus! {
         }
     }
 
+    impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphIter<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphIter")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphGhostIterator")
+        }
+    }
+
+    impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphGhostIterator")
+        }
+    }
+
+    impl std::fmt::Debug for SetMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphInv")
+        }
+    }
+
+    impl std::fmt::Display for SetMtEphInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "SetMtEphInv")
+        }
+    }
+
+    impl<T: StT + Hash> std::fmt::Debug for LockedSetMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedSetMtEph")
+        }
+    }
+
+    impl<T: StT + Hash> std::fmt::Display for LockedSetMtEph<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedSetMtEph")
+        }
+    }
+
 }

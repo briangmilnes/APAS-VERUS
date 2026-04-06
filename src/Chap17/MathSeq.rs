@@ -795,7 +795,31 @@ pub mod MathSeq {
             write!(f, "]")
         }
     }
-    
+
+    impl<'a, T: Debug> Debug for MathSeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "MathSeqIter({:?})", self.inner)
+        }
+    }
+
+    impl<'a, T> Display for MathSeqIter<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "MathSeqIter")
+        }
+    }
+
+    impl<'a, T> Debug for MathSeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "MathSeqGhostIterator")
+        }
+    }
+
+    impl<'a, T> Display for MathSeqGhostIterator<'a, T> {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            write!(f, "MathSeqGhostIterator")
+        }
+    }
+
     // 12. macros
 
 
