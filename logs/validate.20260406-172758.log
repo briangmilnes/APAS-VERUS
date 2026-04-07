@@ -1,0 +1,42 @@
+error: precondition not satisfied
+   --> src/Chap38/OrdKeyMap.rs:871:28
+    |
+634 |             requires self.spec_ordkeymap_wf(), obeys_view_eq::<K>()
+    |                                                -------------------- failed precondition
+...
+871 |             let existing = self.find(&k);
+    |                            ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap38/OrdKeyMap.rs:634:48
+    |
+634 |             requires self.spec_ordkeymap_wf(), obeys_view_eq::<K>()
+    |                                                ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_ordkeymap_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+error: precondition not satisfied
+   --> src/Chap38/OrdKeyMap.rs:956:28
+    |
+634 |             requires self.spec_ordkeymap_wf(), obeys_view_eq::<K>()
+    |                                                -------------------- failed precondition
+...
+956 |             let existing = self.find(k);
+    |                            ^^^^^^^^^^^^
+
+note: 
+
+self.spec_ordkeymap_wf() ✔
+obeys_view_eq() ✘
+    function is uninterpreted
+
+verification results:: 1180 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 11875MB, peak z3 RSS: 418MB, min free: 6431MB
+Sampled CPU Usage: rust_verify: 301s, z3 children: 206s
