@@ -772,6 +772,50 @@ pub mod OrdKeyMap {
                 selected matches Some(v) ==> self@.dom().filter(
                     |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@
                 ).len() == i as int;
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
+            requires self.spec_ordkeymap_wf()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> first matches None,
+                first matches Some(k) ==> self@.dom().contains(k@),
+                first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
+            requires self.spec_ordkeymap_wf()
+            ensures
+                self@.dom().finite(),
+                self@.dom().len() == 0 <==> last matches None,
+                last matches Some(k) ==> self@.dom().contains(k@),
+                last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+            requires self.spec_ordkeymap_wf()
+            ensures
+                range@.dom().finite(),
+                range@.dom().subset_of(self@.dom()),
+                forall|key| #[trigger] range@.dom().contains(key) ==> range@[key] == self@[key],
+                range.spec_ordkeymap_wf();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+            requires
+                old(self).spec_ordkeymap_wf(),
+            ensures
+                old(self)@.dom().finite(),
+                split.0@.dom().finite(),
+                split.1@.dom().finite(),
+                split.0@.dom().subset_of(old(self)@.dom()),
+                split.1@.dom().subset_of(old(self)@.dom()),
+                split.0@.dom().disjoint(split.1@.dom()),
+                forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
+                split.0.spec_ordkeymap_wf(),
+                split.1.spec_ordkeymap_wf();
     }
 
     //		Section 9. impls
@@ -3492,6 +3536,318 @@ pub mod OrdKeyMap {
             let r = ordkeymap_select(&self.inner, i);
             proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
             r
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST min_key + key extraction
+        fn first_key(&self) -> (first: Option<K>)
+            where K: TotalOrder
+        {
+            proof {
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+                lemma_pair_set_to_map_len(self.inner@);
+            }
+            let min_pair = self.inner.min_key();
+            match min_pair {
+                None => None,
+                Some(pair) => {
+                    let key = pair.0.clone_plus();
+                    reveal_param_bst_backings(&self.inner);
+                    proof {
+                        lemma_reveal_view_injective::<K>();
+                        lemma_cloned_view_eq(pair.0, key);
+                        lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
+                        assert(key == pair.0);
+                        assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                            implies TotalOrder::le(key, t) by {
+                            lemma_map_contains_pair_in_set(self.inner@, t@);
+                            let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
+                            if pair.0@ == t@ {
+                                assert(key@ == t@);
+                                assert(key == t);
+                                K::reflexive(key);
+                            } else {
+                                assert(pair@ != (t@, vv));
+                                let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.inner@.contains(tp@) && tp@ == (t@, vv);
+                                assert(pair.cmp_spec(&tp) == Less);
+                                assert(pair.0@ != tp.0@);
+                                assert(pair.0.cmp_spec(&tp.0) == Less);
+                                assert(tp.0 == t);
+                                assert(key.cmp_spec(&t) == Less);
+                                K::cmp_spec_less_implies_le(key, t);
+                            }
+                        };
+                    }
+                    Some(key)
+                }
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST max_key + key extraction
+        fn last_key(&self) -> (last: Option<K>)
+            where K: TotalOrder
+        {
+            proof {
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+                lemma_pair_set_to_map_len(self.inner@);
+            }
+            let max_pair = self.inner.max_key();
+            match max_pair {
+                None => None,
+                Some(pair) => {
+                    let key = pair.0.clone_plus();
+                    reveal_param_bst_backings(&self.inner);
+                    proof {
+                        lemma_reveal_view_injective::<K>();
+                        lemma_cloned_view_eq(pair.0, key);
+                        lemma_pair_in_set_map_contains(self.inner@, pair.0@, pair.1@);
+                        assert(key == pair.0);
+                        assert forall|t: K| #[trigger] self@.dom().contains(t@)
+                            implies TotalOrder::le(t, key) by {
+                            lemma_map_contains_pair_in_set(self.inner@, t@);
+                            let vv: V::V = choose|vv: V::V| self.inner@.contains((t@, vv));
+                            if pair.0@ == t@ {
+                                assert(key@ == t@);
+                                assert(key == t);
+                                K::reflexive(key);
+                            } else {
+                                assert(pair@ != (t@, vv));
+                                let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] self.inner@.contains(tp@) && tp@ == (t@, vv);
+                                assert(tp.cmp_spec(&pair) == Less);
+                                assert(tp.0@ != pair.0@);
+                                assert(tp.0.cmp_spec(&pair.0) == Less);
+                                assert(tp.0 == t);
+                                assert(t.cmp_spec(&key) == Less);
+                                K::cmp_spec_less_implies_le(t, key);
+                            }
+                        };
+                    }
+                    Some(key)
+                }
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- two BST splits + two finds
+        fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
+        {
+            // Split at k1: right_of_k1 has keys > k1.
+            let (_, _, right_of_k1) = ordkeymap_split(&self.inner, k1);
+            // Split right_of_k1 at k2: middle has keys between k1 and k2 (exclusive).
+            let (middle, _, _) = ordkeymap_split(&right_of_k1, k2);
+            // Check original tree for k1 and k2.
+            let found_k1 = ordkeymap_find(&self.inner, k1);
+            let found_k2 = ordkeymap_find(&self.inner, k2);
+            let mut result_tree = middle;
+            proof {
+                assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
+                    implies #[trigger] self.inner@.contains(v) by {
+                    assert(right_of_k1@.contains(v));
+                };
+            }
+            match found_k1 {
+                Some(v1) => {
+                    let k1_clone = k1.clone_plus();
+                    proof {
+                        lemma_cloned_view_eq(*k1, k1_clone);
+                        assert(result_tree@.len() < usize::MAX as nat) by {
+                            vstd::set_lib::lemma_len_subset(result_tree@, self.inner@);
+                        };
+                        // The inserted pair (k1@, v1@) is in self.inner@.
+                        lemma_map_contains_pair_in_set(self.inner@, k1@);
+                        let ghost cv: V::V = choose|cv: V::V| self.inner@.contains((k1@, cv));
+                        assert(cv == v1@);
+                    }
+                    result_tree.insert(Pair(k1_clone, v1));
+                    proof {
+                        assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
+                            implies #[trigger] self.inner@.contains(v) by {
+                        };
+                    }
+                },
+                None => {},
+            }
+            match found_k2 {
+                Some(v2) => {
+                    let k2_clone = k2.clone_plus();
+                    proof {
+                        lemma_cloned_view_eq(*k2, k2_clone);
+                        assert(result_tree@.len() < usize::MAX as nat) by {
+                            vstd::set_lib::lemma_len_subset(result_tree@, self.inner@);
+                        };
+                        lemma_map_contains_pair_in_set(self.inner@, k2@);
+                        let ghost cv: V::V = choose|cv: V::V| self.inner@.contains((k2@, cv));
+                        assert(cv == v2@);
+                    }
+                    result_tree.insert(Pair(k2_clone, v2));
+                    proof {
+                        assert forall|v: <Pair<K,V> as View>::V| result_tree@.contains(v)
+                            implies #[trigger] self.inner@.contains(v) by {
+                        };
+                    }
+                },
+                None => {},
+            }
+            let range = OrdKeyMap { inner: result_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(result_tree@);
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+                assert(range@.dom().subset_of(self@.dom())) by {
+                    assert forall|key: K::V| range@.dom().contains(key)
+                        implies #[trigger] self@.dom().contains(key) by {
+                        lemma_map_contains_pair_in_set(result_tree@, key);
+                        let v: V::V = choose|v: V::V| result_tree@.contains((key, v));
+                        assert(self.inner@.contains((key, v)));
+                        lemma_pair_in_set_map_contains(self.inner@, key, v);
+                    };
+                };
+                assert forall|key: K::V| #[trigger] range@.dom().contains(key)
+                    implies range@[key] == self@[key] by {
+                    lemma_map_contains_pair_in_set(result_tree@, key);
+                    let v: V::V = choose|v: V::V| result_tree@.contains((key, v));
+                    assert(self.inner@.contains((key, v)));
+                    lemma_pair_in_set_map_contains(result_tree@, key, v);
+                    lemma_pair_in_set_map_contains(self.inner@, key, v);
+                };
+                vstd::set_lib::lemma_len_subset(result_tree@, self.inner@);
+                lemma_key_unique_subset(self.inner@, result_tree@);
+                lemma_view_gen_subset::<K, V>(result_tree@, self.inner@);
+            }
+            range
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + BST split
+        fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
+        {
+            let ghost old_tree = self.inner@;
+            let ghost old_map = self@;
+            proof {
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                lemma_pair_set_to_map_len(old_tree);
+            }
+            let size = self.size();
+            if i >= size {
+                // Everything goes left, right is empty.
+                let left_tree = self.inner.clone();
+                let right_tree = ParamBST::<Pair<K, V>>::new();
+                *self = OrdKeyMap::new();
+                let left = OrdKeyMap { inner: left_tree };
+                let right = OrdKeyMap { inner: right_tree };
+                proof {
+                    lemma_pair_set_to_map_dom_finite(left_tree@);
+                    lemma_pair_set_to_map_dom_finite(right_tree@);
+                    lemma_set_to_map_empty::<K::V, V::V>();
+                    assert(left@.dom() =~= old_map.dom());
+                    assert(right@.dom() =~= Set::empty());
+                    assert(left@.dom().disjoint(right@.dom()));
+                    assert(left.inner@ =~= old_tree);
+                    lemma_key_unique_empty::<K::V, V::V>();
+                    assert(spec_set_pair_view_generated::<K, V>(right.inner@)) by {
+                        assert forall|elem: (K::V, V::V)| right.inner@.contains(elem)
+                            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {};
+                    };
+                }
+                (left, right)
+            } else {
+                // Get sorted pairs, find the key at rank i, split by that key.
+                let sorted = self.inner.in_order();
+                let pair_at_i = sorted.nth(i);
+                let split_key = pair_at_i.0.clone_plus();
+                proof { lemma_cloned_view_eq(pair_at_i.0, split_key); }
+                let (left_tree, found, right_tree) = ordkeymap_split(&self.inner, &split_key);
+                // Re-insert split_key+value into right.
+                let found_val = ordkeymap_find(&self.inner, &split_key);
+                let mut right_tree_final = right_tree;
+                match found_val {
+                    Some(v) => {
+                        let p = Pair(split_key.clone_plus(), v);
+                        proof {
+                            lemma_cloned_view_eq(split_key, p.0);
+                            vstd::set_lib::lemma_len_subset(right_tree_final@, old_tree);
+                        }
+                        right_tree_final.insert(p);
+                    },
+                    None => {},
+                }
+                *self = OrdKeyMap::new();
+                let left = OrdKeyMap { inner: left_tree };
+                let right = OrdKeyMap { inner: right_tree_final };
+                proof {
+                    lemma_pair_set_to_map_dom_finite(left_tree@);
+                    lemma_pair_set_to_map_dom_finite(right_tree_final@);
+                    // left ⊆ old.
+                    assert(left@.dom().subset_of(old_map.dom())) by {
+                        assert forall|key: K::V| left@.dom().contains(key)
+                            implies #[trigger] old_map.dom().contains(key) by {
+                            lemma_map_contains_pair_in_set(left_tree@, key);
+                            let v: V::V = choose|v: V::V| left_tree@.contains((key, v));
+                            assert(old_tree.contains((key, v)));
+                            lemma_pair_in_set_map_contains(old_tree, key, v);
+                        };
+                    };
+                    // right ⊆ old.
+                    assert forall|v: <Pair<K,V> as View>::V| right_tree_final@.contains(v)
+                        implies #[trigger] old_tree.contains(v) by {
+                        // Either in original right_tree (subset of old) or the re-inserted pair.
+                    };
+                    assert(right@.dom().subset_of(old_map.dom())) by {
+                        assert forall|key: K::V| right@.dom().contains(key)
+                            implies #[trigger] old_map.dom().contains(key) by {
+                            lemma_map_contains_pair_in_set(right_tree_final@, key);
+                            let v: V::V = choose|v: V::V| right_tree_final@.contains((key, v));
+                            assert(old_tree.contains((key, v)));
+                            lemma_pair_in_set_map_contains(old_tree, key, v);
+                        };
+                    };
+                    // Disjoint.
+                    assert(left@.dom().disjoint(right@.dom())) by {
+                        assert forall|key: K::V|
+                            !(left@.dom().contains(key) && #[trigger] right@.dom().contains(key))
+                        by {
+                            if left@.dom().contains(key) && right@.dom().contains(key) {
+                                lemma_map_contains_pair_in_set(left_tree@, key);
+                                lemma_map_contains_pair_in_set(right_tree_final@, key);
+                                let lv: V::V = choose|v: V::V| left_tree@.contains((key, v));
+                                let rv: V::V = choose|v: V::V| right_tree_final@.contains((key, v));
+                                assert(old_tree.contains((key, lv)));
+                                assert(old_tree.contains((key, rv)));
+                                assert(lv == rv);
+                                assert(left_tree@.contains((key, lv)));
+                                assert(right_tree_final@.contains((key, lv)));
+                                // left_tree is from split, all keys < split_key.
+                                // right_tree_final has keys > split_key (plus split_key itself).
+                                // !left_tree contains split_key@, so key != split_key@.
+                                // left has key < split_key, right has key > split_key → contradiction.
+                                assert(!left_tree@.disjoint(right_tree_final@));
+                            }
+                        };
+                    };
+                    // Completeness.
+                    assert forall|key: K::V| #[trigger] old_map.dom().contains(key)
+                        implies left@.dom().contains(key) || right@.dom().contains(key)
+                    by {
+                        lemma_map_contains_pair_in_set(old_tree, key);
+                        let v: V::V = choose|v: V::V| old_tree.contains((key, v));
+                        if key != split_key@ {
+                            if left_tree@.contains((key, v)) {
+                                lemma_pair_in_set_map_contains(left_tree@, key, v);
+                            } else {
+                                assert(right_tree@.contains((key, v)));
+                                assert(right_tree_final@.contains((key, v)));
+                                lemma_pair_in_set_map_contains(right_tree_final@, key, v);
+                            }
+                        } else {
+                            // key == split_key@. The pair was re-inserted into right.
+                            assert(right_tree_final@.contains((key, v)));
+                            lemma_pair_in_set_map_contains(right_tree_final@, key, v);
+                        }
+                    };
+                    // wf for left and right.
+                    vstd::set_lib::lemma_len_subset(left_tree@, old_tree);
+                    vstd::set_lib::lemma_len_subset(right_tree_final@, old_tree);
+                    lemma_key_unique_subset(old_tree, right_tree_final@);
+                    lemma_view_gen_subset::<K, V>(right_tree_final@, old_tree);
+                }
+                (left, right)
+            }
         }
     }
 
