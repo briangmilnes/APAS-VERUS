@@ -1,0 +1,202 @@
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:5150:43
+     |
+5150 |                     assert(left.tree@ =~= old_tree);
+     |                            ---------------^^^^^^^^
+     |                            |              |
+     |                            |              expected `Map<<K as View>::V, <V as View>::V>`, found `Set<(<K as View>::V, <V as View>::V)>`
+     |                            arguments to this function are incorrect
+     |
+     = note: expected struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+                found struct `vstd::set::Set<(<K as vstd::string::View>::V, <V as vstd::string::View>::V)>`
+note: function defined here
+    --> builtin/src/lib.rs:270:7
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:5152:44
+     |
+5152 |                     assert(right.tree@ =~= Set::empty());
+     |                            ----------------^^^^^^^^^^^^
+     |                            |               |
+     |                            |               expected `Map<<K as View>::V, <V as View>::V>`, found `Set<_>`
+     |                            arguments to this function are incorrect
+     |
+     = note: expected struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+                found struct `vstd::set::Set<_>`
+note: function defined here
+    --> builtin/src/lib.rs:270:7
+
+error[E0308]: mismatched types
+    --> src/Chap43/OrderedTableStEph.rs:5154:65
+     |
+5154 |                     assert(spec_set_pair_view_generated::<K, V>(right.tree@)) by {
+     |                            ------------------------------------ ^^^^^^^^^^^ expected `Set<(<K as View>::V, <V as View>::V)>`, found `Map<<K as View>::V, <V as View>::V>`
+     |                            |
+     |                            arguments to this function are incorrect
+     |
+     = note: expected struct `vstd::set::Set<(<K as vstd::string::View>::V, <V as vstd::string::View>::V)>`
+                found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+    --> src/Chap43/OrderedTableStEph.rs:95:22
+     |
+  95 |     pub open spec fn spec_set_pair_view_generated<K: View, V: View>(s: Set<(K::V, V::V)>) -> bool {
+     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^                   --------------------
+
+error[E0599]: no method named `contains` found for struct `vstd::map::Map<K, V>` in the current scope
+    --> src/Chap43/OrderedTableStEph.rs:5155:71
+     |
+5155 |                         assert forall|elem: (K::V, V::V)| right.tree@.contains(elem)
+     |                                                                       ^^^^^^^^
+     |
+     = help: items from traits can only be used if the trait is implemented and in scope
+     = note: the following traits define an item `contains`, perhaps you need to implement one of them:
+             candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+             candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+             candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+             candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+             candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+             candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+             candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+             candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+             candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+             candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+             candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+             candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+             candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+             candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+             candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+help: there is a method `contains_key` with a similar name
+     |
+5155 |                         assert forall|elem: (K::V, V::V)| right.tree@.contains_key(elem)
+     |                                                                               ++++
+
+error[E0599]: no method named `in_order` found for struct `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>` in the current scope
+   --> src/Chap43/OrderedTableMtEph.rs:791:37
+    |
+791 |             let sorted = inner.tree.in_order();
+    |                                     ^^^^^^^^ method not found in `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>`
+    |
+   ::: src/Chap38/OrdKeyMap.rs:58:5
+    |
+ 58 |     pub struct OrdKeyMap<K: StT + Ord, V: StT + Ord> {
+    |     ------------------------------------------------ method `in_order` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `in_order`, perhaps you need to implement one of them:
+            candidate #1: `Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #5: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #6: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #7: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #8: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #9: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+help: one of the expressions' fields has a method of the same name
+    |
+791 |             let sorted = inner.tree.inner.in_order();
+    |                                     ++++++
+
+error[E0599]: no method named `size` found for struct `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>` in the current scope
+    --> src/Chap43/OrderedTableMtEph.rs:1048:50
+     |
+1048 |             let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
+     |                                                  ^^^^ method not found in `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>`
+     |
+    ::: src/Chap38/OrdKeyMap.rs:58:5
+     |
+  58 |     pub struct OrdKeyMap<K: StT + Ord, V: StT + Ord> {
+     |     ------------------------------------------------ method `size` not found for this struct
+...
+ 623 |         fn size(&self) -> (count: usize)
+     |            ---- the method is available for `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: one of the expressions' fields has a method of the same name
+     |
+1048 |             let result = self_read.borrow().tree.inner.size() == other_read.borrow().tree.size();
+     |                                                  ++++++
+help: trait `OrdKeyMapTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+     |
+  30 +     use crate::Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait;
+     |
+
+error[E0599]: no method named `size` found for struct `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>` in the current scope
+    --> src/Chap43/OrderedTableMtEph.rs:1048:85
+     |
+1048 |             let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
+     |                                                                                     ^^^^ method not found in `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>`
+     |
+    ::: src/Chap38/OrdKeyMap.rs:58:5
+     |
+  58 |     pub struct OrdKeyMap<K: StT + Ord, V: StT + Ord> {
+     |     ------------------------------------------------ method `size` not found for this struct
+...
+ 623 |         fn size(&self) -> (count: usize)
+     |            ---- the method is available for `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMap<K, V>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: one of the expressions' fields has a method of the same name
+     |
+1048 |             let result = self_read.borrow().tree.size() == other_read.borrow().tree.inner.size();
+     |                                                                                     ++++++
+help: trait `OrdKeyMapTrait` which provides `size` is implemented but not in scope; perhaps you want to import it
+     |
+  30 +     use crate::Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait;
+     |
+
+error[E0308]: mismatched types
+   --> src/Chap43/AugOrderedTableStEph.rs:564:50
+    |
+564 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStEph.rs:185:18
+    |
+185 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error[E0308]: mismatched types
+   --> src/Chap43/AugOrderedTableStEph.rs:901:50
+    |
+901 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStEph.rs:185:18
+    |
+185 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error[E0308]: mismatched types
+   --> src/Chap43/AugOrderedTableStEph.rs:913:50
+    |
+913 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStEph.rs:185:18
+    |
+185 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error: aborting due to 10 previous errors
+
+Some errors have detailed explanations: E0308, E0599.
+For more information about an error, try `rustc --explain E0308`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 884MB, peak z3 RSS: 0MB, min free: 17367MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 0s
