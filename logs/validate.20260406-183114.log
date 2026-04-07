@@ -1,0 +1,70 @@
+error[E0308]: mismatched types
+   --> src/Chap43/AugOrderedTableStPer.rs:965:50
+    |
+965 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStPer.rs:122:18
+    |
+122 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error[E0308]: mismatched types
+   --> src/Chap43/AugOrderedTableStPer.rs:977:50
+    |
+977 |                 lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStPer.rs:122:18
+    |
+122 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedTableMtPer.rs:76:46
+    |
+ 76 |             lemma_pair_set_to_map_dom_finite(inner.tree@);
+    |             -------------------------------- ^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |             |
+    |             arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStPer.rs:122:18
+    |
+122 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error[E0308]: mismatched types
+   --> src/Chap43/OrderedTableMtPer.rs:648:50
+    |
+648 |                 lemma_pair_set_to_map_dom_finite(range.tree@);
+    |                 -------------------------------- ^^^^^^^^^^^ expected `Set<(_, _)>`, found `Map<<K as View>::V, <V as View>::V>`
+    |                 |
+    |                 arguments to this function are incorrect
+    |
+    = note: expected struct `vstd::set::Set<(_, _)>`
+               found struct `vstd::map::Map<<K as vstd::string::View>::V, <V as vstd::string::View>::V>`
+note: function defined here
+   --> src/Chap43/OrderedTableStPer.rs:122:18
+    |
+122 |     pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^         ----------------
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0308`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 648MB, peak z3 RSS: 0MB, min free: 17494MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

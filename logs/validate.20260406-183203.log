@@ -1,0 +1,15 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap43/OrderedTableStPer.rs:994:5
+    |
+994 | /     fn bst_next_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
+995 | |         tree: &ParamBST<Pair<K, V>>,
+996 | |         k: &K,
+997 | |     ) -> (successor: Option<K>)
+    | |______________________________^
+
+verification results:: 2797 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 58s
+Sampled Memory Usage: peak rust_verify RSS: 2918MB, peak z3 RSS: 396MB, min free: 14889MB
+Sampled CPU Usage: rust_verify: 61s, z3 children: 108s

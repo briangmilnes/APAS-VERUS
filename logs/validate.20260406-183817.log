@@ -1,0 +1,55 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:437:59
+     |
+ 437 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+     |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1713 |             OrderedTableStPer { tree: OrdKeyMap::new() }
+     |             -------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:437:59
+    |
+437 |             ensures table@ == Map::<K::V, V::V>::empty(), table.spec_orderedtablestper_wf();
+    |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= empty() ✔
+%return.spec_orderedtablestper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1719:13
+     |
+1719 |             tree.insert(k, v);
+     |             ^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap38/OrdKeyMap.rs:644:17
+     |
+ 644 |                 old(self).spec_ordkeymap_wf(),
+     |                 ----------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap38/OrdKeyMap.rs:644:17
+    |
+644 |                 old(self).spec_ordkeymap_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+645 |                 obeys_view_eq::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tree.spec_ordkeymap_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_view_eq() ✘
+    function is opaque
+!(tree.view().dom().contains(k.view())) ==>
+    clip(nat, tree.view().dom().len() + 1) < UnsignedMax.Exec(usize::BITS) ✔
+
+verification results:: 2796 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 62s
+Sampled Memory Usage: peak rust_verify RSS: 5554MB, peak z3 RSS: 427MB, min free: 12785MB
+Sampled CPU Usage: rust_verify: 102s, z3 children: 131s

@@ -73,7 +73,7 @@ pub mod OrderedTableMtPer {
     {
         let ghost view = inner@;
         proof {
-            lemma_pair_set_to_map_dom_finite(inner.tree@);
+            lemma_pair_set_to_map_dom_finite(inner.tree.inner@);
         }
         OrderedTableMtPer {
             locked_table: RwLock::new(inner, Ghost(OrderedTableMtPerInv { expected_view: view })),
@@ -645,7 +645,7 @@ pub mod OrderedTableMtPer {
             let range = inner.get_key_range(k1, k2);
             read_handle.release_read();
             proof {
-                lemma_pair_set_to_map_dom_finite(range.tree@);
+                lemma_pair_set_to_map_dom_finite(range.tree.inner@);
             }
             from_st_table(range)
         }
