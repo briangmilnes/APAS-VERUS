@@ -3,6 +3,8 @@
 
 pub mod Example44_1 {
 
+    use std::fmt::{Debug, Display, Formatter};
+
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap44::DocumentIndex::DocumentIndex::*;
@@ -231,6 +233,20 @@ pub mod Example44_1 {
         let brute_force_work = tweets.length(); // Represents O(n) complexity
 
         (indexed_work, brute_force_work)
+    }
+
+    // 14. derive impls outside verus!
+
+    impl Debug for TweetQueryExamples {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "TweetQueryExamples")
+        }
+    }
+
+    impl Display for TweetQueryExamples {
+        fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
+            write!(f, "TweetQueryExamples")
+        }
     }
 
     /// Demonstrate the tokenization process.
