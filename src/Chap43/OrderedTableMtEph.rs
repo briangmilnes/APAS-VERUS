@@ -1018,6 +1018,7 @@ broadcast use {
     use std::fmt;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
+    use crate::Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 
     //		Section 14a. derive impls outside verus!
@@ -1045,7 +1046,7 @@ broadcast use {
         fn eq(&self, other: &Self) -> bool {
             let self_read = self.locked_table.acquire_read();
             let other_read = other.locked_table.acquire_read();
-            let result = self_read.borrow().tree.inner.size() == other_read.borrow().tree.inner.size();
+            let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
             other_read.release_read();
             self_read.release_read();
             result
