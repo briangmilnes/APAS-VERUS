@@ -32,6 +32,7 @@ pub mod AdjTableGraphStEph {
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesWf;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::{obeys_feq_full, obeys_feq_full_trigger, obeys_feq_fulls,
         lemma_cloned_view_eq};
@@ -57,14 +58,14 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct AdjTableGraphStEph<V: StT + Ord> {
+    pub struct AdjTableGraphStEph<V: StT + Ord + TotalOrder> {
         pub adj: TableStEph<V, AVLTreeSetStEph<V>>,
     }
 
     //		Section 5. view impls
 
 
-    impl<V: StT + Ord> View for AdjTableGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder> View for AdjTableGraphStEph<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -213,7 +214,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait AdjTableGraphStEphTrait<V: StT + Ord>: Sized {
+    pub trait AdjTableGraphStEphTrait<V: StT + Ord + TotalOrder>: Sized {
         spec fn spec_adjtablegraphsteph_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
@@ -312,7 +313,7 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder> AdjTableGraphStEphTrait<V> for AdjTableGraphStEph<V> {
         open spec fn spec_adjtablegraphsteph_wf(&self) -> bool {
             // Type-level predicates needed by table and set operations.
             obeys_view_eq::<V>()
@@ -924,13 +925,13 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord> std::fmt::Debug for AdjTableGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Debug for AdjTableGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "AdjTableGraphStEph(vertices: {})", self.adj.size())
         }
     }
 
-    impl<V: StT + Ord> std::fmt::Display for AdjTableGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Display for AdjTableGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "AdjTableGraphStEph(vertices: {})", self.adj.size())
         }

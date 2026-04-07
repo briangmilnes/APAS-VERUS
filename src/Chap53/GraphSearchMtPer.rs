@@ -37,6 +37,7 @@ pub mod GraphSearchMtPer {
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
@@ -52,7 +53,7 @@ pub mod GraphSearchMtPer {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct SearchResult<V: StTInMtT + Ord + 'static> {
+    pub struct SearchResult<V: StTInMtT + Ord + TotalOrder + 'static> {
         pub visited: AVLTreeSetMtPer<V>,
         pub parent: Option<AVLTreeSetMtPer<Pair<V, V>>>,
     }
@@ -60,7 +61,7 @@ pub mod GraphSearchMtPer {
     //		Section 9a. impls
 
 
-    impl<V: StTInMtT + Ord + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> GraphSearchMtPerTrait<V> for SearchResult<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
@@ -87,7 +88,7 @@ pub mod GraphSearchMtPer {
     //		Section 9b. impls
 
 
-    impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectAll {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> SelectionStrategy<V> for SelectAll {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) { (frontier.clone(), false) }
     }
@@ -100,7 +101,7 @@ pub mod GraphSearchMtPer {
     //		Section 8c. traits
 
 
-    pub trait SelectionStrategy<V: StTInMtT + Ord + 'static> {
+    pub trait SelectionStrategy<V: StTInMtT + Ord + TotalOrder + 'static> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool))
             requires
@@ -110,7 +111,7 @@ pub mod GraphSearchMtPer {
             ensures selected.0@.subset_of(frontier@);
     }
 
-    pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + 'static> {
+    pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static> {
         /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
@@ -169,7 +170,7 @@ pub mod GraphSearchMtPer {
     //		Section 9c. impls
 
 
-    impl<V: StTInMtT + Ord + 'static> SelectionStrategy<V> for SelectOne {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> SelectionStrategy<V> for SelectOne {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element.
         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) {
             if frontier.size() == 0 {
@@ -198,7 +199,7 @@ pub mod GraphSearchMtPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_multi; sequential despite Mt module (no join).
-    pub fn graph_search<V: StTInMtT + Ord + 'static, G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
+    pub fn graph_search<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         S: SelectionStrategy<V>,
@@ -227,7 +228,7 @@ pub mod GraphSearchMtPer {
     /// Graph exploration loop (Algorithm 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds with AVL set ops; sequential despite Mt module (no join).
     #[verifier::exec_allows_no_decreases_clause]
-    fn graph_search_explore<V: StTInMtT + Ord + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
+    fn graph_search_explore<V: StTInMtT + Ord + TotalOrder + 'static, G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>>(
         graph: &G,
         strategy: &S,
         visited_init: AVLTreeSetMtPer<V>,
@@ -334,7 +335,7 @@ pub mod GraphSearchMtPer {
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; sequential despite Mt module.
-    pub fn graph_search_multi<V: StTInMtT + Ord + 'static, G, S>(
+    pub fn graph_search_multi<V: StTInMtT + Ord + TotalOrder + 'static, G, S>(
         graph: &G,
         sources: AVLTreeSetMtPer<V>,
         strategy: &S,
@@ -363,7 +364,7 @@ pub mod GraphSearchMtPer {
     /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-    pub fn reachable<V: StTInMtT + Ord + 'static, G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
+    pub fn reachable<V: StTInMtT + Ord + TotalOrder + 'static, G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
     where
         G: Fn(&V) -> AVLTreeSetMtPer<V>,
         requires
@@ -384,7 +385,7 @@ pub mod GraphSearchMtPer {
     //		Section 12a. derive impls in verus!
 
 
-    impl<V: StTInMtT + Ord + 'static> Clone for SearchResult<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> Clone for SearchResult<V> {
         fn clone(&self) -> (cloned: Self) {
             SearchResult {
                 visited: self.visited.clone(),
@@ -398,7 +399,7 @@ pub mod GraphSearchMtPer {
     //		Section 14a. derive impls outside verus!
 
 
-    impl<V: StTInMtT + Ord + 'static> std::fmt::Debug for SearchResult<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Debug for SearchResult<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("SearchResult")
                 .field("visited", &self.visited)
@@ -407,7 +408,7 @@ pub mod GraphSearchMtPer {
         }
     }
 
-    impl<V: StTInMtT + Ord + 'static> std::fmt::Display for SearchResult<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + 'static> std::fmt::Display for SearchResult<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "SearchResult(visited={})", self.visited.size())
         }

@@ -63,7 +63,7 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStPer<T: StT + Ord> {
+    pub struct OrderedSetStPer<T: StT + Ord + TotalOrder> {
         pub base_set: AVLTreeSetStPer<T>,
     }
 
@@ -72,7 +72,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<T: StT + Ord> View for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> View for OrderedSetStPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
     }
@@ -81,7 +81,7 @@ broadcast use {
 
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+    proof fn lemma_cmp_antisymmetry<T: StT + Ord + TotalOrder>(a: T, b: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             a.cmp_spec(&b) == Greater,
@@ -92,7 +92,7 @@ broadcast use {
     }
 
     /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
-    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+    proof fn lemma_cmp_transitivity<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             a.cmp_spec(&b) == Less,
@@ -104,7 +104,7 @@ broadcast use {
     }
 
     /// Equal congruence: Equal(a,b) implies cmp(a,c) == cmp(b,c).
-    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+    proof fn lemma_cmp_equal_congruent<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -122,7 +122,7 @@ broadcast use {
     /// Trait defining all ordered set operations (ADT 41.1 + ADT 43.1) with persistent semantics.
     /// Postconditions for ordering operations use cmp_spec (from Ord) rather than TotalOrder::le;
     /// matching ParamBST's ensure style directly.
-    pub trait OrderedSetStPerTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait OrderedSetStPerTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_orderedsetstper_wf(&self) -> bool;
 
         // Base set operations (ADT 41.1) - delegated
@@ -414,7 +414,7 @@ broadcast use {
 
     /// Maximum key in a ParamBST via right-spine walk.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
-    fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
+    fn tree_max_key<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>) -> (maximum: Option<T>)
         requires
             tree@.finite(),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -470,7 +470,7 @@ broadcast use {
 
     /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
-    fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
+    fn tree_select<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
         requires
             tree@.finite(),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -518,7 +518,7 @@ broadcast use {
     }
 
 
-    impl<T: StT + Ord> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
         open spec fn spec_orderedsetstper_wf(&self) -> bool {
             self.base_set.spec_avltreesetstper_wf()
             && obeys_feq_full::<T>()
@@ -954,7 +954,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- from_vec + n treap inserts
-    pub fn from_sorted_elements<T: StT + Ord>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
+    pub fn from_sorted_elements<T: StT + Ord + TotalOrder>(elements: Vec<T>) -> (constructed: OrderedSetStPer<T>)
         requires
             elements@.len() < usize::MAX,
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -967,7 +967,7 @@ broadcast use {
     }
 
 
-    impl<T: StT + Ord> OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> OrderedSetStPer<T> {
         /// Returns an iterator over the set elements via in-order traversal.
         pub fn iter(&self) -> (it: OrderedSetStPerIter<T>)
             requires self.spec_orderedsetstper_wf(),
@@ -986,20 +986,20 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStPerIter<T: StT + Ord> {
+    pub struct OrderedSetStPerIter<T: StT + Ord + TotalOrder> {
         pub inner: IntoIter<T>,
     }
 
-    impl<T: StT + Ord> View for OrderedSetStPerIter<T> {
+    impl<T: StT + Ord + TotalOrder> View for OrderedSetStPerIter<T> {
         type V = (int, Seq<T>);
         open spec fn view(&self) -> (int, Seq<T>) { self.inner@ }
     }
 
-    pub open spec fn iter_invariant<T: StT + Ord>(it: &OrderedSetStPerIter<T>) -> bool {
+    pub open spec fn iter_invariant<T: StT + Ord + TotalOrder>(it: &OrderedSetStPerIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    impl<T: StT + Ord> std::iter::Iterator for OrderedSetStPerIter<T> {
+    impl<T: StT + Ord + TotalOrder> std::iter::Iterator for OrderedSetStPerIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -1025,24 +1025,24 @@ broadcast use {
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct OrderedSetStPerGhostIterator<T: StT + Ord> {
+    pub struct OrderedSetStPerGhostIterator<T: StT + Ord + TotalOrder> {
         pub pos: int,
         pub elements: Seq<T>,
     }
 
-    impl<T: StT + Ord> View for OrderedSetStPerGhostIterator<T> {
+    impl<T: StT + Ord + TotalOrder> View for OrderedSetStPerGhostIterator<T> {
         type V = Seq<T>;
         open spec fn view(&self) -> Seq<T> { self.elements.take(self.pos) }
     }
 
-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStPerIter<T> {
+    impl<T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIteratorNew for OrderedSetStPerIter<T> {
         type GhostIter = OrderedSetStPerGhostIterator<T>;
         open spec fn ghost_iter(&self) -> OrderedSetStPerGhostIterator<T> {
             OrderedSetStPerGhostIterator { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<T: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedSetStPerGhostIterator<T> {
+    impl<T: StT + Ord + TotalOrder> vstd::pervasive::ForLoopGhostIterator for OrderedSetStPerGhostIterator<T> {
         type ExecIter = OrderedSetStPerIter<T>;
         type Item = T;
         type Decrease = int;
@@ -1080,7 +1080,7 @@ broadcast use {
     //		Section 12. derive impls in verus!
 
 
-    impl<T: StT + Ord> Clone for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> Clone for OrderedSetStPer<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -1090,7 +1090,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> Default for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> Default for OrderedSetStPer<T> {
         fn default() -> (d: Self)
             ensures d@.finite(), d@.len() == 0
         {
@@ -1099,12 +1099,12 @@ broadcast use {
     }
 
     #[cfg(verus_keep_ghost)]
-    impl<T: StT + Ord> PartialEqSpecImpl for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for OrderedSetStPer<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: StT + Ord> Eq for OrderedSetStPer<T> {}
+    impl<T: StT + Ord + TotalOrder> Eq for OrderedSetStPer<T> {}
 
     } // verus!
 
@@ -1124,13 +1124,13 @@ broadcast use {
 
     //		Section 14. derive impls outside verus!
 
-    impl<T: StT + Ord> PartialEq for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStPer<T> {
         fn eq(&self, other: &Self) -> bool {
             self.base_set == other.base_set
         }
     }
 
-    impl<T: StT + Ord> fmt::Debug for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();
@@ -1142,7 +1142,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> fmt::Display for OrderedSetStPer<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();
@@ -1154,25 +1154,25 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
+    impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetStPerIter({:?})", self.inner)
         }
     }
 
-    impl<T: StT + Ord> fmt::Display for OrderedSetStPerIter<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetStPerIter")
         }
     }
 
-    impl<T: StT + Ord> fmt::Debug for OrderedSetStPerGhostIterator<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPerGhostIterator<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetStPerGhostIterator")
         }
     }
 
-    impl<T: StT + Ord> fmt::Display for OrderedSetStPerGhostIterator<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerGhostIterator<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedSetStPerGhostIterator")
         }

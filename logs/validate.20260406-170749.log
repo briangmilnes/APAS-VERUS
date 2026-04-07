@@ -1,0 +1,1040 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap43/OrderedSetStPer.rs:67:23
+   |
+67 |         pub base_set: AVLTreeSetStPer<T>,
+   |                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+   |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+  --> src/Chap41/AVLTreeSetStPer.rs:66:47
+   |
+66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+   |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+   |
+66 |     pub struct OrderedSetStPer<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> {
+   |                                             ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_orderedtablesteph_wf` exists for reference `&Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5259:22
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5259 |                 self.spec_orderedtablesteph_wf(),
+     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_orderedtablesteph_wf` exists for struct `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5291:19
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `spec_orderedtablesteph_wf` not found for this struct because it doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5291 |             table.spec_orderedtablesteph_wf(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_orderedtablesteph_wf` exists for reference `&'a Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5486:22
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5486 |                 self.spec_orderedtablesteph_wf(),
+     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5530:18
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5530 |             self.size() == other.size()
+     |                  ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5530:34
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5530 |             self.size() == other.size()
+     |                                  ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5536:59
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5536 |             write!(f, "OrderedTableStEph(size: {})", self.size())
+     |                                                           ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEph<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:5542:59
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStEphTrait<K, V>`
+...
+5542 |             write!(f, "OrderedTableStEph(size: {})", self.size())
+     |                                                           ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:3101:25
+     |
+3101 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStEphTrait<K, V> for OrderedTableStEph<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  64 |     pub struct OrderedTableStEph<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStPer.rs:3344:32
+     |
+3344 |                 let c = pair.0.cmp(k);
+     |                                ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+3344 -                 let c = pair.0.cmp(k);
+3344 +                 let c = std::cmp::Ord::cmp(&pair.0, k);
+     |
+help: disambiguate the method for candidate #2
+     |
+3344 -                 let c = pair.0.cmp(k);
+3344 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&pair.0, k);
+     |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStPer.rs:3551:42
+     |
+3551 |                 let ge_k1 = match pair.0.cmp(k1) {
+     |                                          ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+3551 -                 let ge_k1 = match pair.0.cmp(k1) {
+3551 +                 let ge_k1 = match std::cmp::Ord::cmp(&pair.0, k1) {
+     |
+help: disambiguate the method for candidate #2
+     |
+3551 -                 let ge_k1 = match pair.0.cmp(k1) {
+3551 +                 let ge_k1 = match vstdplus::total_order::total_order::TotalOrder::cmp(&pair.0, k1) {
+     |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStPer.rs:3555:42
+     |
+3555 |                 let le_k2 = match pair.0.cmp(k2) {
+     |                                          ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+3555 -                 let le_k2 = match pair.0.cmp(k2) {
+3555 +                 let le_k2 = match std::cmp::Ord::cmp(&pair.0, k2) {
+     |
+help: disambiguate the method for candidate #2
+     |
+3555 -                 let le_k2 = match pair.0.cmp(k2) {
+3555 +                 let le_k2 = match vstdplus::total_order::total_order::TotalOrder::cmp(&pair.0, k2) {
+     |
+
+error[E0599]: the method `spec_orderedtablestper_wf` exists for reference `&Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:4006:22
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStPerTrait<K, V>`
+...
+4006 |                 self.spec_orderedtablestper_wf(),
+     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1687:25
+     |
+1687 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_orderedtablestper_wf` exists for struct `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:4037:19
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- method `spec_orderedtablestper_wf` not found for this struct because it doesn't satisfy `_: OrderedTableStPerTrait<K, V>`
+...
+4037 |             table.spec_orderedtablestper_wf(),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1687:25
+     |
+1687 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_orderedtablestper_wf` exists for reference `&'a Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:4240:22
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStPerTrait<K, V>`
+...
+4240 |                 self.spec_orderedtablestper_wf(),
+     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1687:25
+     |
+1687 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:4306:59
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStPerTrait<K, V>`
+...
+4306 |             write!(f, "OrderedTableStPer(size: {})", self.size())
+     |                                                           ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1687:25
+     |
+1687 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPer<K, V>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:4312:59
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+     |     -------------------------------------------------------- doesn't satisfy `_: OrderedTableStPerTrait<K, V>`
+...
+4312 |             write!(f, "OrderedTableStPer(size: {})", self.size())
+     |                                                           ^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+note: trait bound `K: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1687:25
+     |
+1687 |     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+     |                         ^^^^^^^^^^                ----------------------------     -----------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+     |
+  66 |     pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> where K: vstdplus::total_order::total_order::TotalOrder {
+     |                                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+  --> src/Chap43/OrderedSetStPer.rs:77:72
+   |
+77 |         open spec fn view(&self) -> Set<<T as View>::V> { self.base_set@ }
+   |                                                                        ^ method cannot be called due to unsatisfied trait bounds
+   |
+  ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+   |
+66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+   |     ----------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+   |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+  --> src/Chap41/AVLTreeSetStPer.rs:75:25
+   |
+75 |     impl<T: StT + Ord + TotalOrder> View for AVLTreeSetStPer<T> {
+   |                         ^^^^^^^^^^  ----     ------------------
+   |                         |
+   |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+  --> src/Chap41/AVLTreeSetStPer.rs:66:58
+   |
+66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+   |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:523:27
+    |
+523 |             self.base_set.spec_avltreesetstper_wf()
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `spec_avltreesetstper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:531:25
+    |
+531 |         { self.base_set.size() }
+    |                         ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:537:41
+    |
+537 |             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:537:41
+    |
+537 |             OrderedSetStPer { base_set: AVLTreeSetStPer::empty() }
+    |                                         ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>` to implement `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait<T>`
+   --> src/Chap41/AVLTreeSetStPer.rs:443:37
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ----------  ^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:544:41
+    |
+544 |             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:544:41
+    |
+544 |             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
+    |                                         ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>` to implement `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait<T>`
+   --> src/Chap41/AVLTreeSetStPer.rs:443:37
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ----------  ^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:544:68
+    |
+544 |             OrderedSetStPer { base_set: AVLTreeSetStPer::singleton(x) }
+    |                                         -------------------------- ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |                                         |
+    |                                         required by a bound introduced by this call
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait::singleton`
+   --> src/Chap41/AVLTreeSetStPer.rs:196:51
+    |
+196 |     pub trait AVLTreeSetStPerTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                   ^^^^^^^^^^ required by this bound in `AVLTreeSetStPerTrait::singleton`
+...
+227 |         fn singleton(x: T) -> (tree: Self)
+    |            --------- required by a bound in this associated function
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:549:25
+    |
+549 |         { self.base_set.find(x) }
+    |                         ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:554:55
+    |
+554 |             OrderedSetStPer { base_set: self.base_set.insert(x) }
+    |                                                       ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:554:41
+    |
+554 |             OrderedSetStPer { base_set: self.base_set.insert(x) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `delete` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:560:55
+    |
+560 |             OrderedSetStPer { base_set: self.base_set.delete(x) }
+    |                                                       ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `delete` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:560:41
+    |
+560 |             OrderedSetStPer { base_set: self.base_set.delete(x) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `filter` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:570:55
+    |
+570 |             OrderedSetStPer { base_set: self.base_set.filter(f, Ghost(spec_pred)) }
+    |                                                       ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `filter` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>` or `_: Iterator`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = note: the following trait bounds were not satisfied:
+            `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>: std::iter::Iterator`
+            which is required by `&mut Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>: std::iter::Iterator`
+note: the trait `std::iter::Iterator` must be implemented
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/iter/traits/iterator.rs:40:0
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:570:41
+    |
+570 |             OrderedSetStPer { base_set: self.base_set.filter(f, Ghost(spec_pred)) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `intersection` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:576:55
+    |
+576 |             OrderedSetStPer { base_set: self.base_set.intersection(&other.base_set) }
+    |                                                       ^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `intersection` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:576:41
+    |
+576 |             OrderedSetStPer { base_set: self.base_set.intersection(&other.base_set) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `union` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:582:55
+    |
+582 |             OrderedSetStPer { base_set: self.base_set.union(&other.base_set) }
+    |                                                       ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `union` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:582:41
+    |
+582 |             OrderedSetStPer { base_set: self.base_set.union(&other.base_set) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:588:55
+    |
+588 |             OrderedSetStPer { base_set: self.base_set.difference(&other.base_set) }
+    |                                                       ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |     ----------------------------------------------------- method `difference` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetStPer.rs:66:58
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:588:41
+    |
+588 |             OrderedSetStPer { base_set: self.base_set.difference(&other.base_set) }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:770:76
+    |
+770 |             let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                                            ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:770:52
+    |
+770 |             let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:771:77
+    |
+771 |             let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_tree } };
+    |                                                                             ^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:771:53
+    |
+771 |             let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_tree } };
+    |                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:834:41
+    |
+834 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: result_tree } }
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:834:65
+    |
+834 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: result_tree } }
+    |                                                                 ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:912:80
+    |
+912 |                 let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                                                ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:912:56
+    |
+912 |                 let left = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: left_tree } };
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:913:81
+    |
+913 |                 let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_with_pivot } };
+    |                                                                                 ^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:913:57
+    |
+913 |                 let right = OrderedSetStPer { base_set: AVLTreeSetStPer { tree: right_with_pivot } };
+    |                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+   --> src/Chap41/AVLTreeSetStPer.rs:66:47
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+    |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+521 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> OrderedSetStPerTrait<T> for OrderedSetStPer<T> {
+    |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1088:41
+     |
+1088 |                 base_set: self.base_set.clone(),
+     |                                         ^^^^^ method cannot be called due to unsatisfied trait bounds
+     |
+    ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+     |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+    --> src/Chap41/AVLTreeSetStPer.rs:757:25
+     |
+ 757 |     impl<T: StT + Ord + TotalOrder> Clone for AVLTreeSetStPer<T> {
+     |                         ^^^^^^^^^^  -----     ------------------
+     |                         |
+     |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    -->  src/Chap41/AVLTreeSetStPer.rs:66:58
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> where T: vstdplus::total_order::total_order::TotalOrder {
+     |                                                           +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1088:27
+     |
+1088 |                 base_set: self.base_set.clone(),
+     |                           ^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+    --> src/Chap41/AVLTreeSetStPer.rs:66:47
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1083 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> Clone for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1097:41
+     |
+1097 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: ParamBST::new() } }
+     |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+    --> src/Chap41/AVLTreeSetStPer.rs:66:47
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1093 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> Default for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1097:65
+     |
+1097 |             OrderedSetStPer { base_set: AVLTreeSetStPer { tree: ParamBST::new() } }
+     |                                                                 ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer`
+    --> src/Chap41/AVLTreeSetStPer.rs:66:47
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |                                               ^^^^^^^^^^ required by this bound in `AVLTreeSetStPer`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1093 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> Default for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0369]: binary operation `==` cannot be applied to type `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`
+    --> src/Chap43/OrderedSetStPer.rs:1129:27
+     |
+1129 |             self.base_set == other.base_set
+     |             ------------- ^^ -------------- Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>
+     |             |
+     |             Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>
+     |
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1127 |     impl<T: StT + Ord + vstdplus::total_order::total_order::TotalOrder> PartialEq for OrderedSetStPer<T> {
+     |                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 52 previous errors
+
+Some errors have detailed explanations: E0034, E0277, E0369, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 705MB, peak z3 RSS: 0MB, min free: 18077MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

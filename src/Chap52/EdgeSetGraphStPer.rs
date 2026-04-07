@@ -37,8 +37,9 @@ pub mod EdgeSetGraphStPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -54,7 +55,7 @@ broadcast use {
 
 
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
-    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord>()
+    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord + TotalOrder>()
         requires
             vstd::laws_cmp::obeys_cmp_spec::<V>(),
             view_ord_consistent::<V>(),
@@ -69,7 +70,7 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct EdgeSetGraphStPer<V: StT + Ord + ClonePreservesView> {
+    pub struct EdgeSetGraphStPer<V: StT + Ord + TotalOrder + ClonePreservesView> {
         pub vertices: AVLTreeSetStPer<V>,
         pub edges: AVLTreeSetStPer<Pair<V, V>>,
     }
@@ -77,7 +78,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<V: StT + Ord + ClonePreservesView> View for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> View for EdgeSetGraphStPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -85,7 +86,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait EdgeSetGraphStPerTrait<V: StT + Ord + ClonePreservesView>: Sized {
+    pub trait EdgeSetGraphStPerTrait<V: StT + Ord + TotalOrder + ClonePreservesView>: Sized {
         spec fn spec_edgesetgraphstper_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -178,7 +179,7 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord + ClonePreservesView> EdgeSetGraphStPerTrait<V> for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> EdgeSetGraphStPerTrait<V> for EdgeSetGraphStPer<V> {
         open spec fn spec_edgesetgraphstper_wf(&self) -> bool {
             self.vertices.spec_avltreesetstper_wf()
             && self.edges.spec_avltreesetstper_wf()
@@ -412,7 +413,7 @@ broadcast use {
     //		Section 12. derive impls in verus!
 
 
-    impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> Clone for EdgeSetGraphStPer<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
         {
@@ -426,12 +427,12 @@ broadcast use {
     }
 
     #[cfg(verus_keep_ghost)]
-    impl<V: StT + Ord + ClonePreservesView + PartialEq> PartialEqSpecImpl for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + PartialEq> PartialEqSpecImpl for EdgeSetGraphStPer<V> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<V: StT + Ord + ClonePreservesView + PartialEq> PartialEq for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + PartialEq> PartialEq for EdgeSetGraphStPer<V> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@),
         {
@@ -441,14 +442,14 @@ broadcast use {
         }
     }
 
-    impl<V: StT + Ord + ClonePreservesView + Eq> Eq for EdgeSetGraphStPer<V> {}
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + Eq> Eq for EdgeSetGraphStPer<V> {}
 
     } // verus!
 
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
         /// - Alg Analysis: APAS: N/A — Rust Debug trait, not in textbook.
         /// - Claude-Opus-4.6: Work depends on graph size — outside verus!, not verified.
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -459,7 +460,7 @@ broadcast use {
         }
     }
 
-    impl<V: StT + Ord + ClonePreservesView + fmt::Display> fmt::Display for EdgeSetGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Display> fmt::Display for EdgeSetGraphStPer<V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "EdgeSetGraphStPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
         }

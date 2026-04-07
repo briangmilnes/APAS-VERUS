@@ -1,0 +1,2099 @@
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap52/EdgeSetGraphMtPer.rs:55:23
+   |
+55 |         pub vertices: AVLTreeSetMtPer<V>,
+   |                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+   |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+  --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+   |
+69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+   |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+   |
+54 |     pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> {
+   |                                                                                   ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:223:9
+    |
+223 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self) {
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:234:9
+    |
+234 |         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:237:9
+    |
+237 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:245:9
+    |
+245 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:223:39
+    |
+223 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self) {
+    |                                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:234:32
+    |
+234 |         fn vertices(&self) -> &AVLTreeSetMtPer<V> { &self.vertices }
+    |                                ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:237:29
+    |
+237 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>> { &self.edges }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:245:55
+    |
+245 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+    |                                                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:102:39
+    |
+102 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+    |                                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:126:32
+    |
+126 |         fn vertices(&self) -> &AVLTreeSetMtPer<V>
+    |                                ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:130:29
+    |
+130 |         fn edges(&self) -> &AVLTreeSetMtPer<Pair<V, V>>
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:140:55
+    |
+140 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+    |                                                       ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetmtper_wf` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:104:19
+    |
+104 |                 v.spec_avltreesetmtper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `spec_avltreesetmtper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:223:30
+    |
+223 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetmtper_wf` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:105:19
+    |
+105 |                 e.spec_avltreesetmtper_wf(),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `spec_avltreesetmtper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/vstdplus/total_order.rs:611:9
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ^^^^^^^^^^                             ----------     ----------
+    |         |
+    |         unsatisfied trait bound introduced here
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Types.rs:227:40
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V) where V: vstdplus::total_order::total_order::TotalOrder;
+    |                                         +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:111:33
+    |
+111 |                     #[trigger] e@.contains((u, w))
+    |                                 ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:112:26
+    |
+112 |                     ==> v@.contains(u) && v@.contains(w),
+    |                          ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:112:44
+    |
+112 |                     ==> v@.contains(u) && v@.contains(w),
+    |                                            ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:102:36
+    |
+102 |         fn from_vertices_and_edges(v: AVLTreeSetMtPer<V>, e: AVLTreeSetMtPer<Pair<V, V>>) -> (out: Self)
+    |                                    ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:140:12
+    |
+140 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+    |            ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:144:13
+    |
+144 |             ensures
+    |             ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:140:44
+    |
+140 |         fn out_neighbors(&self, u: &V) -> (neighbors: AVLTreeSetMtPer<V>)
+    |                                            ^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+ 85 |     pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder>: Sized {
+    |                                                                                       ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:145:26
+    |
+145 |                 neighbors@ == Set::new(|v: <V as View>::V| self.spec_edges().contains((u@, v))),
+    |                          ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetmtper_wf` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:146:27
+    |
+146 |                 neighbors.spec_avltreesetmtper_wf();
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `spec_avltreesetmtper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:223:30
+    |
+223 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetmtper_wf` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:191:27
+    |
+191 |             self.vertices.spec_avltreesetmtper_wf()
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `spec_avltreesetmtper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:223:30
+    |
+223 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetmtper_wf` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:192:27
+    |
+192 |             && self.edges.spec_avltreesetmtper_wf()
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `spec_avltreesetmtper_wf` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/vstdplus/total_order.rs:611:9
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ^^^^^^^^^^                             ----------     ----------
+    |         |
+    |         unsatisfied trait bound introduced here
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Types.rs:227:40
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V) where V: vstdplus::total_order::total_order::TotalOrder;
+    |                                         +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:198:38
+    |
+198 |                 #[trigger] self.edges@.contains((u, v))
+    |                                      ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:199:34
+    |
+199 |                 ==> self.vertices@.contains(u) && self.vertices@.contains(v)
+    |                                  ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:199:64
+    |
+199 |                 ==> self.vertices@.contains(u) && self.vertices@.contains(v)
+    |                                                                ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:203:26
+    |
+203 |             self.vertices@
+    |                          ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:207:23
+    |
+207 |             self.edges@
+    |                       ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:211:52
+    |
+211 |             Set::new(|v: <V as View>::V| self.edges@.contains((u, v)))
+    |                                                    ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:217:27
+    |
+217 |                 vertices: AVLTreeSetMtPer::empty(),
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:217:27
+    |
+217 |                 vertices: AVLTreeSetMtPer::empty(),
+    |                           ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>` to implement `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait<V>`
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:52
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ----------            ^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:218:24
+    |
+218 |                 edges: AVLTreeSetMtPer::empty(),
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:218:24
+    |
+218 |                 edges: AVLTreeSetMtPer::empty(),
+    |                        ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:224:43
+    |
+224 |             EdgeSetGraphMtPer { vertices: v, edges: e }
+    |                                           ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:228:57
+    |
+228 |         fn num_vertices(&self) -> usize { self.vertices.size() }
+    |                                                         ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:231:51
+    |
+231 |         fn num_edges(&self) -> usize { self.edges.size() }
+    |                                                   ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `size`, perhaps you need to implement one of them:
+            candidate #1: `Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #5: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #6: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #7: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #8: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #9: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #10: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #11: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #12: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #13: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #14: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #16: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #17: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #18: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #19: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #20: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #21: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #22: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #23: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #24: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #25: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #26: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #27: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #28: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #29: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #30: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #31: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #32: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #33: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #34: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #35: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #36: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #37: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+            candidate #38: `std::os::unix::fs::MetadataExt`
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:240:63
+    |
+240 |         fn has_edge(&self, u: &V, v: &V) -> bool { self.edges.find(&Pair(u.clone(), v.clone())) }
+    |                                                               ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #25: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #26: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #27: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #28: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #29: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #30: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #31: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #32: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #33: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #34: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #35: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #36: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+            candidate #37: `std::iter::Iterator`
+
+error[E0599]: the method `to_seq` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:248:34
+    |
+248 |             let seq = self.edges.to_seq();
+    |                                  ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `to_seq` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_seq`, perhaps you need to implement one of them:
+            candidate #1: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #2: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #3: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #4: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #5: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #6: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #7: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #8: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #9: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:250:33
+    |
+250 |             let mut neighbors = AVLTreeSetMtPer::<V>::empty();
+    |                                 ^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:250:55
+    |
+250 |             let mut neighbors = AVLTreeSetMtPer::<V>::empty();
+    |                                                       ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:262:59
+    |
+262 |                     seq.spec_seq().to_set() =~= self.edges@,
+    |                                                           ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:264:35
+    |
+264 |                         self.edges@.contains((u@, w)),
+    |                                   ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:275:42
+    |
+275 |                         assert(self.edges@.contains(seq.spec_seq()[i as int]));
+    |                                          ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:287:38
+    |
+287 |                     assert(self.edges@.contains((u@, v)));
+    |                                      ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:296:38
+    |
+296 |                     assert(self.edges@.contains((u@, v)));
+    |                                      ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:307:53
+    |
+307 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                     ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:307:70
+    |
+307 |         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
+    |                                                                      ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:311:46
+    |
+311 |             let new_vertices = self.vertices.insert(v);
+    |                                              ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:312:40
+    |
+312 |             let new_edges = self.edges.clone();
+    |                                        ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:606:30
+    |
+606 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> Clone for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `clone`, perhaps you need to implement one of them:
+            candidate #1: `std::clone::Clone`
+            candidate #2: `vstd::std_specs::clone::ExClone`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:319:27
+    |
+319 |                 vertices: new_vertices,
+    |                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `delete` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:331:46
+    |
+331 |             let new_vertices = self.vertices.delete(&v_cv);
+    |                                              ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `delete` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `to_seq` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:332:34
+    |
+332 |             let seq = self.edges.to_seq();
+    |                                  ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `to_seq` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `to_seq`, perhaps you need to implement one of them:
+            candidate #1: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #2: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #3: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #4: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #5: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #6: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #7: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #8: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #9: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:334:33
+    |
+334 |             let mut new_edges = AVLTreeSetMtPer::<Pair<V, V>>::empty();
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:334:64
+    |
+334 |             let mut new_edges = AVLTreeSetMtPer::<Pair<V, V>>::empty();
+    |                                                                ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `empty`, perhaps you need to implement one of them:
+            candidate #1: `Chap18::ArraySeq::ArraySeq::ArraySeqTrait`
+            candidate #2: `Chap18::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphRedefinableTrait`
+            candidate #3: `Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceTrait`
+            candidate #4: `Chap18::ArraySeqMtPer::ArraySeqMtPer::ArraySeqMtPerRedefinableTrait`
+            candidate #5: `Chap18::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphRedefinableTrait`
+            candidate #6: `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerRedefinableTrait`
+            candidate #7: `Chap18::LinkedListStEph::LinkedListStEph::LinkedListStEphRedefinableTrait`
+            candidate #8: `Chap18::LinkedListStPer::LinkedListStPer::LinkedListStPerRedefinableTrait`
+            candidate #9: `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphTrait`
+            candidate #10: `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceTrait`
+            candidate #11: `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait`
+            candidate #12: `Chap19::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerTrait`
+            candidate #13: `Chap23::PrimTreeSeqStPer::PrimTreeSeqStPer::PrimTreeSeqStTrait`
+            candidate #14: `Chap37::AVLTreeSeq::AVLTreeSeq::AVLTreeSeq`
+            candidate #15: `Chap37::AVLTreeSeqMtPer::AVLTreeSeqMtPer::AVLTreeSeqMtPerTrait`
+            candidate #16: `Chap37::AVLTreeSeqStEph::AVLTreeSeqStEph::AVLTreeSeqStEphTrait`
+            candidate #17: `Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait`
+            candidate #18: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #19: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #20: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #21: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #22: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #23: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #24: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #25: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #26: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #27: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #28: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #29: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #30: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #31: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #32: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #33: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #34: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #35: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #36: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #37: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #38: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #39: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #40: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #41: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+            candidate #42: `Chap52::AdjTableGraphMtPer::AdjTableGraphMtPer::AdjTableGraphMtPerTrait`
+            candidate #43: `Chap52::AdjTableGraphStEph::AdjTableGraphStEph::AdjTableGraphStEphTrait`
+            candidate #44: `Chap52::AdjTableGraphStPer::AdjTableGraphStPer::AdjTableGraphStPerTrait`
+            candidate #45: `Chap52::EdgeSetGraphMtPer::EdgeSetGraphMtPer::EdgeSetGraphMtPerTrait`
+            candidate #46: `Chap52::EdgeSetGraphStEph::EdgeSetGraphStEph::EdgeSetGraphStEphTrait`
+            candidate #47: `Chap52::EdgeSetGraphStPer::EdgeSetGraphStPer::EdgeSetGraphStPerTrait`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:347:51
+    |
+347 |                     new_vertices@ == self.vertices@.remove(v@),
+    |                                                   ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:348:59
+    |
+348 |                     seq.spec_seq().to_set() =~= self.edges@,
+    |                                                           ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:351:39
+    |
+351 |                         ==> self.edges@.contains((a, b)) && a != v@ && b != v@,
+    |                                       ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:362:42
+    |
+362 |                         assert(self.edges@.contains(seq.spec_seq()[i as int]));
+    |                                          ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:374:38
+    |
+374 |                     assert(self.edges@.contains((a, b)));
+    |                                      ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `view`, perhaps you need to implement one of them:
+            candidate #1: `vstd::std_specs::btree::MapIterAdditionalSpecFns`
+            candidate #2: `vstd::string::View`
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:376:41
+    |
+376 |                     assert(self.vertices@.contains(a));
+    |                                         ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:377:41
+    |
+377 |                     assert(self.vertices@.contains(b));
+    |                                         ^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:76:30
+    |
+ 76 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            ----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:382:27
+    |
+382 |                 vertices: new_vertices,
+    |                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:391:46
+    |
+391 |             let new_vertices = self.vertices.insert(u_cv).insert(v_cv);
+    |                                              ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:392:40
+    |
+392 |             let new_edges = self.edges.insert(Pair(u, v));
+    |                                        ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `insert`, perhaps you need to implement one of them:
+            candidate #1: `Chap18::ArraySeq::ArraySeq::ArraySeqTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #5: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #6: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #7: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #8: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #9: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #10: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #11: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #12: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #13: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #14: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #16: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #17: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #18: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #19: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #20: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #21: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #22: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #23: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #24: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #25: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #26: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #27: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #28: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #29: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #30: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #31: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #32: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #33: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #34: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #35: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #36: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #37: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+            candidate #38: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:399:27
+    |
+399 |                 vertices: new_vertices,
+    |                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `delete` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:406:40
+    |
+406 |             let new_edges = self.edges.delete(&Pair(u.clone(), v.clone()));
+    |                                        ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `delete` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `delete`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #2: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #3: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #4: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #5: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #6: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #7: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #8: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #9: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #10: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #11: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #12: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #13: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #14: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #15: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #16: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #17: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #18: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #19: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #20: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #21: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #22: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #23: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #24: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #25: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #26: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #27: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #28: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #29: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #30: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+
+error[E0599]: the method `clone` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:407:46
+    |
+407 |             let new_vertices = self.vertices.clone();
+    |                                              ^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:606:30
+    |
+606 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> Clone for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:414:27
+    |
+414 |                 vertices: new_vertices,
+    |                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+189 |     impl<V: StTInMtT + Ord + ClonePreservesView + 'static + vstdplus::total_order::total_order::TotalOrder> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    |                                                           ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:428:36
+    |
+428 |                 .field("vertices", &self.vertices)
+    |                                    ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>` to implement `std::fmt::Debug`
+   --> src/Chap41/AVLTreeSetMtPer.rs:637:52
+    |
+637 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+    |                              ----------            ^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                              |
+    |                              unsatisfied trait bound introduced here
+    = note: required for the cast from `&Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>` to `&dyn std::fmt::Debug`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+425 |     impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Debug + 'static + vstdplus::total_order::total_order::TotalOrder> std::fmt::Debug for EdgeSetGraphMtPer<V> {
+    |                                                                             ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:429:33
+    |
+429 |                 .field("edges", &self.edges)
+    |                                 ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+    |
+note: required for `Types::Types::Pair<V, V>` to implement `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:611:48
+    |
+611 | impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    |         ----------                             ^^^^^^^^^^     ^^^^^^^^^^
+    |         |
+    |         unsatisfied trait bound introduced here
+note: required for `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>` to implement `std::fmt::Debug`
+   --> src/Chap41/AVLTreeSetMtPer.rs:637:52
+    |
+637 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+    |                              ----------            ^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                              |
+    |                              unsatisfied trait bound introduced here
+    = note: required for the cast from `&Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>` to `&dyn std::fmt::Debug`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+    |
+425 |     impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Debug + 'static + vstdplus::total_order::total_order::TotalOrder> std::fmt::Debug for EdgeSetGraphMtPer<V> {
+    |                                                                             ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<V>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:436:83
+    |
+436 |             write!(f, "EdgeSetGraphMtPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
+    |                                                                                   ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<V>`
+    |
+note: trait bound `V: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:73
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> where V: vstdplus::total_order::total_order::TotalOrder {
+    |                                                                          +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer<Types::Types::Pair<V, V>>`, but its trait bounds were not satisfied
+   --> src/Chap52/EdgeSetGraphMtPer.rs:436:102
+    |
+436 |             write!(f, "EdgeSetGraphMtPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
+    |                                                                                                      ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Types.rs:227:5
+    |
+227 |     pub struct Pair<K, V>(pub K, pub V);
+    |     --------------------- doesn't satisfy `_: TotalOrder`
+    |
+   ::: src/Chap41/AVLTreeSetMtPer.rs:69:5
+    |
+ 69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+    |     -------------------------------------------------------------------- method `size` not found for this struct because it doesn't satisfy `_: AVLTreeSetMtPerTrait<Pair<V, V>>`
+    |
+note: trait bound `Types::Types::Pair<V, V>: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:381:30
+    |
+381 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                              ^^^^^^^^^^            -----------------------     ------------------
+    |                              |
+    |                              unsatisfied trait bound introduced here
+note: the trait `vstdplus::total_order::total_order::TotalOrder` must be implemented
+   --> src/vstdplus/total_order.rs:31:2
+    |
+ 31 |  pub trait TotalOrder: Sized {
+    |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `size`, perhaps you need to implement one of them:
+            candidate #1: `Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #5: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #6: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #7: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #8: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #9: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #10: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #11: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #12: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #13: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #14: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #16: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #17: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #18: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #19: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #20: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #21: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #22: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #23: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #24: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #25: `Chap42::TableMtEph::TableMtEph::TableMtEphTrait`
+            candidate #26: `Chap42::TableStEph::TableStEph::TableStEphTrait`
+            candidate #27: `Chap42::TableStPer::TableStPer::TableStPerTrait`
+            candidate #28: `Chap43::AugOrderedTableMtEph::AugOrderedTableMtEph::AugOrderedTableMtEphTrait`
+            candidate #29: `Chap43::AugOrderedTableStEph::AugOrderedTableStEph::AugOrderedTableStEphTrait`
+            candidate #30: `Chap43::AugOrderedTableStPer::AugOrderedTableStPer::AugOrderedTableStPerTrait`
+            candidate #31: `Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait`
+            candidate #32: `Chap43::OrderedSetStEph::OrderedSetStEph::OrderedSetStEphTrait`
+            candidate #33: `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerTrait`
+            candidate #34: `Chap43::OrderedTableMtEph::OrderedTableMtEph::OrderedTableMtEphTrait`
+            candidate #35: `Chap43::OrderedTableMtPer::OrderedTableMtPer::OrderedTableMtPerTrait`
+            candidate #36: `Chap43::OrderedTableStEph::OrderedTableStEph::OrderedTableStEphTrait`
+            candidate #37: `Chap43::OrderedTableStPer::OrderedTableStPer::OrderedTableStPerTrait`
+            candidate #38: `std::os::unix::fs::MetadataExt`
+
+error: aborting due to 75 previous errors
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1141MB, peak z3 RSS: 0MB, min free: 17570MB
+Sampled CPU Usage: rust_verify: 17s, z3 children: 0s

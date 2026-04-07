@@ -44,8 +44,9 @@ pub mod AVLTreeSetMtEph {
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -62,14 +63,14 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static> {
+    pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + TotalOrder + 'static> {
         pub tree: ParamBST<T>,
     }
 
     //		Section 5. view impls
 
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
@@ -77,14 +78,14 @@ broadcast use {
     //		Section 6. spec fns
 
 
-    pub open spec fn avltreesetmteph_iter_invariant<T: StTInMtT + Ord + 'static>(it: &AVLTreeSetMtEphIter<T>) -> bool {
+    pub open spec fn avltreesetmteph_iter_invariant<T: StTInMtT + Ord + TotalOrder + 'static>(it: &AVLTreeSetMtEphIter<T>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
     //		Section 8. traits
 
 
-    pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait AVLTreeSetMtEphTrait<T: StTInMtT + Ord + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
         /// Well-formedness: backing BST is well-formed.
         spec fn spec_avltreesetmteph_wf(&self) -> bool;
 
@@ -244,7 +245,7 @@ broadcast use {
 
     /// Parallel D&C set construction from Vec: split in half, recurse via join(), union.
     /// Work O(n lg n), Span O(lg^2 n) — matches APAS Ex 41.3 parallel fromSeq.
-    fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    fn from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
         requires
             obeys_feq_full_trigger::<T>(),
             vals@.len() <= usize::MAX,
@@ -370,7 +371,7 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
         open spec fn spec_avltreesetmteph_wf(&self) -> bool {
             self.tree@.finite()
         }
@@ -538,30 +539,30 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtEphIter<T: StTInMtT + Ord + 'static> {
+    pub struct AVLTreeSetMtEphIter<T: StTInMtT + Ord + TotalOrder + 'static> {
         pub snapshot: Vec<T>,
         pub pos: usize,
     }
 
     #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + 'static> {
+    pub struct AVLTreeSetMtEphGhostIter<T: StTInMtT + Ord + TotalOrder + 'static> {
         pub pos: int,
         pub elements: Seq<T::V>,
     }
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtEphIter<T> {
         type V = (int, Seq<T::V>);
         open spec fn view(&self) -> (int, Seq<T::V>) {
             (self.pos as int, self.snapshot@.map_values(|t: T| t@))
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtEphGhostIter<T> {
         type V = Seq<T::V>;
         open spec fn view(&self) -> Seq<T::V> { self.elements.take(self.pos) }
     }
 
-    impl<T: StTInMtT + Ord + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> std::iter::Iterator for AVLTreeSetMtEphIter<T> {
         type Item = T;
 
         fn next(&mut self) -> (next: Option<T>)
@@ -593,14 +594,14 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSetMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> vstd::pervasive::ForLoopGhostIteratorNew for AVLTreeSetMtEphIter<T> {
         type GhostIter = AVLTreeSetMtEphGhostIter<T>;
         open spec fn ghost_iter(&self) -> AVLTreeSetMtEphGhostIter<T> {
             AVLTreeSetMtEphGhostIter { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> vstd::pervasive::ForLoopGhostIterator for AVLTreeSetMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> vstd::pervasive::ForLoopGhostIterator for AVLTreeSetMtEphGhostIter<T> {
         type ExecIter = AVLTreeSetMtEphIter<T>;
         type Item = T::V;
         type Decrease = int;
@@ -635,7 +636,7 @@ broadcast use {
         }
     }
 
-    impl<'a, T: StTInMtT + Ord + 'static> std::iter::IntoIterator for &'a AVLTreeSetMtEph<T> {
+    impl<'a, T: StTInMtT + Ord + TotalOrder + 'static> std::iter::IntoIterator for &'a AVLTreeSetMtEph<T> {
         type Item = T;
         type IntoIter = AVLTreeSetMtEphIter<T>;
         fn into_iter(self) -> (it: AVLTreeSetMtEphIter<T>)
@@ -649,12 +650,12 @@ broadcast use {
     //		Section 12. derive impls in verus!
 
 
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Default for AVLTreeSetMtEph<T> {
         fn default() -> Self { Self::empty() }
     }
 
 
-    impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Clone for AVLTreeSetMtEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -682,34 +683,34 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
     // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
-    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtEph<T> {}
-    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtEph<T> {}
+    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtEph<T> {}
+    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtEph<T> {}
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphIter(pos={})", self.pos)
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtEphIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphIter")
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEphGhostIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphGhostIter")
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtEphGhostIter<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEphGhostIter<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "AVLTreeSetMtEphGhostIter")
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();
@@ -723,7 +724,7 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtEph<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();

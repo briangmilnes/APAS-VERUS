@@ -989,7 +989,7 @@ pub mod BSTParaMtEph {
                     rv.lemma_subset_not_in_lt(tree@, rkv);
                     vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
                 }
-                match key.cmp(&root_key) {
+                match <T as std::cmp::Ord>::cmp(key, &root_key) {
                     | Less => {
                         let (ll, found, lr) = split_inner(&left, key);
                         proof {
@@ -1135,7 +1135,7 @@ pub mod BSTParaMtEph {
                     left@.lemma_subset_not_in_lt(tree@, root_key@);
                     right@.lemma_subset_not_in_lt(tree@, root_key@);
                 }
-                match key.cmp(&root_key) {
+                match <T as std::cmp::Ord>::cmp(key, &root_key) {
                     | Equal => Some(root_key),
                     | Less => find_recursive(&left, key),
                     | Greater => find_recursive(&right, key),

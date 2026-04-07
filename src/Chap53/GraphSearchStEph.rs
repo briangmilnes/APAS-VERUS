@@ -32,10 +32,11 @@ pub mod GraphSearchStEph {
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -47,7 +48,7 @@ pub mod GraphSearchStEph {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct SearchResult<V: StT + Ord> {
+    pub struct SearchResult<V: StT + Ord + TotalOrder> {
         pub visited: AVLTreeSetStEph<V>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
     }
@@ -55,7 +56,7 @@ pub mod GraphSearchStEph {
     //		Section 9a. impls
 
 
-    impl<V: StT + Ord> GraphSearchStEphTrait<V> for SearchResult<V> {
+    impl<V: StT + Ord + TotalOrder> GraphSearchStEphTrait<V> for SearchResult<V> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to free fn; St sequential.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>,
@@ -80,7 +81,7 @@ pub mod GraphSearchStEph {
     //		Section 9b. impls
 
 
-    impl<V: StT + Ord> SelectionStrategy<V> for SelectAll {
+    impl<V: StT + Ord + TotalOrder> SelectionStrategy<V> for SelectAll {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|frontier|), Span O(|frontier|) — clones entire frontier.
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) { (frontier.clone(), false) }
     }
@@ -93,7 +94,7 @@ pub mod GraphSearchStEph {
     //		Section 8c. traits
 
 
-    pub trait SelectionStrategy<V: StT + Ord> {
+    pub trait SelectionStrategy<V: StT + Ord + TotalOrder> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work varies by strategy, Span varies by strategy — abstract selection from frontier.
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool))
             requires
@@ -102,7 +103,7 @@ pub mod GraphSearchStEph {
             ensures selected.0@.subset_of(frontier@);
     }
 
-    pub trait GraphSearchStEphTrait<V: StT + Ord> {
+    pub trait GraphSearchStEphTrait<V: StT + Ord + TotalOrder> {
         /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
@@ -161,7 +162,7 @@ pub mod GraphSearchStEph {
     //		Section 9c. impls
 
 
-    impl<V: StT + Ord> SelectionStrategy<V> for SelectOne {
+    impl<V: StT + Ord + TotalOrder> SelectionStrategy<V> for SelectOne {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — picks first element via to_seq + nth.
         fn select(&self, frontier: &AVLTreeSetStEph<V>) -> (selected: (AVLTreeSetStEph<V>, bool)) {
             if frontier.size() == 0 {
@@ -190,7 +191,7 @@ pub mod GraphSearchStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — wraps sources into set + delegates to graph_search_multi; St sequential.
-    pub fn graph_search<V: StT + Ord, G, S>(
+    pub fn graph_search<V: StT + Ord + TotalOrder, G, S>(
         graph: &G, source: V, strategy: &S,
         Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (search: SearchResult<V>)
@@ -222,7 +223,7 @@ pub mod GraphSearchStEph {
     /// Graph exploration loop (Algorithm 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — ≤|V| rounds, each round: select + neighbor union via AVL ops; St sequential.
     #[verifier::exec_allows_no_decreases_clause]
-    fn graph_search_explore<V: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
+    fn graph_search_explore<V: StT + Ord + TotalOrder, G: Fn(&V) -> AVLTreeSetStEph<V>, S: SelectionStrategy<V>>(
         graph: &G,
         strategy: &S,
         visited_init: AVLTreeSetStEph<V>,
@@ -324,7 +325,7 @@ pub mod GraphSearchStEph {
 
     /// Generic graph search starting from multiple sources (Exercise 53.3).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((|V|+|E|) log |V|), Span O((|V|+|E|) log |V|) — delegates to graph_search_explore; St sequential.
-    pub fn graph_search_multi<V: StT + Ord, G, S>(
+    pub fn graph_search_multi<V: StT + Ord + TotalOrder, G, S>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
         strategy: &S,
@@ -353,7 +354,7 @@ pub mod GraphSearchStEph {
     /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
     /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
-    pub fn reachable<V: StT + Ord, G>(
+    pub fn reachable<V: StT + Ord + TotalOrder, G>(
         graph: &G, source: V,
         Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,
     ) -> (reachable_set: AVLTreeSetStEph<V>)
@@ -377,7 +378,7 @@ pub mod GraphSearchStEph {
     //		Section 12a. derive impls in verus!
 
 
-    impl<V: StT + Ord> Clone for SearchResult<V> {
+    impl<V: StT + Ord + TotalOrder> Clone for SearchResult<V> {
         fn clone(&self) -> (out: Self) {
             SearchResult {
                 visited: self.visited.clone(),
@@ -391,7 +392,7 @@ pub mod GraphSearchStEph {
     //		Section 14a. derive impls outside verus!
 
 
-    impl<V: StT + Ord> std::fmt::Debug for SearchResult<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Debug for SearchResult<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("SearchResult")
                 .field("visited", &self.visited)
@@ -400,7 +401,7 @@ pub mod GraphSearchStEph {
         }
     }
 
-    impl<V: StT + Ord> std::fmt::Display for SearchResult<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Display for SearchResult<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "SearchResult(visited={})", self.visited.size())
         }

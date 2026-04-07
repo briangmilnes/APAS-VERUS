@@ -627,7 +627,7 @@ pub mod BSTParaTreapMtEph {
                 }
                 let ghost rk = root_key;
                 let ghost kval = *key;
-                match key.cmp(&root_key) {
+                match <T as std::cmp::Ord>::cmp(key, &root_key) {
                     | Less => {
                         let ghost lv = left@;
                         let ghost rv = right@;
@@ -2147,7 +2147,7 @@ pub mod BSTParaTreapMtEph {
                         assert(left@.len() < self@.len());
                         assert(right@.len() < self@.len());
                     }
-                    match key.cmp(&root_key) {
+                    match <T as std::cmp::Ord>::cmp(key, &root_key) {
                         | Equal => Some(root_key),
                         | Less => left.find(key),
                         | Greater => right.find(key),

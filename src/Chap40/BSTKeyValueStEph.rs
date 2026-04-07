@@ -1493,7 +1493,7 @@ pub mod BSTKeyValueStEph {
     //		Section 8c. traits
 
 
-    pub trait LinkTrait<K: StT + Ord, V: StT>: Sized {
+    pub trait LinkTrait<K: StT + Ord + TotalOrder, V: StT>: Sized {
         spec fn spec_height_link(link: &Link<K, V>) -> nat;
         spec fn spec_min_key_link(link: &Link<K, V>) -> Option<K>;
         spec fn spec_max_key_link(link: &Link<K, V>) -> Option<K>;
@@ -1529,7 +1529,7 @@ pub mod BSTKeyValueStEph {
     }
 
 
-    impl<K: StT + Ord, V: StT> LinkTrait<K, V> for Lnk {
+    impl<K: StT + Ord + TotalOrder, V: StT> LinkTrait<K, V> for Lnk {
         open spec fn spec_height_link(link: &Link<K, V>) -> nat
             decreases *link,
         {

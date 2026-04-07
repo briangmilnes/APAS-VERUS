@@ -63,7 +63,7 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetStEph<T: StT + Ord> {
+    pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
         pub tree: ParamBST<T>,
     }
 
@@ -72,7 +72,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<T: StT + Ord> View for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> View for AVLTreeSetStEph<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
@@ -194,7 +194,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait AVLTreeSetStEphTrait<T: StT + Ord>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait AVLTreeSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_avltreesetsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -516,13 +516,13 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<T: StT + Ord> AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> AVLTreeSetStEph<T> {
         /// Backward-compatible spec alias for view.
         pub open spec fn spec_set_view(&self) -> Set<<T as View>::V> { self@ }
     }
 
 
-    impl<T: StT + Ord> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
         open spec fn spec_avltreesetsteph_wf(&self) -> bool {
             self.tree.spec_bstparasteph_wf()
             && self@.len() < usize::MAX as nat
@@ -824,7 +824,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> ClonePreservesWf for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> ClonePreservesWf for AVLTreeSetStEph<T> {
         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
@@ -844,19 +844,19 @@ broadcast use {
     //		Section 12. derive impls in verus!
 
 
-    impl<T: StT + Ord> Default for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> Default for AVLTreeSetStEph<T> {
         fn default() -> Self { Self::empty() }
     }
 
     #[cfg(verus_keep_ghost)]
-    impl<T: StT + Ord> PartialEqSpecImpl for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> PartialEqSpecImpl for AVLTreeSetStEph<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: StT + Ord> Eq for AVLTreeSetStEph<T> {}
+    impl<T: StT + Ord + TotalOrder> Eq for AVLTreeSetStEph<T> {}
 
-    impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> PartialEq for AVLTreeSetStEph<T> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -872,7 +872,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> Clone for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> Clone for AVLTreeSetStEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@
         {
@@ -898,7 +898,7 @@ broadcast use {
 
     //		Section 14. derive impls outside verus!
 
-    impl<T: StT + Ord> fmt::Debug for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             let mut v: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut v);
@@ -913,7 +913,7 @@ broadcast use {
         }
     }
 
-    impl<T: StT + Ord> fmt::Display for AVLTreeSetStEph<T> {
+    impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSetStEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             let mut v: Vec<T> = Vec::new();
             self.tree.collect_in_order(&mut v);

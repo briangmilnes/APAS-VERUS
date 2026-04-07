@@ -79,7 +79,7 @@ broadcast use {
 
 
     /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+    proof fn lemma_cmp_antisymmetry<T: StT + Ord + TotalOrder>(a: T, b: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             a.cmp_spec(&b) == Greater,
@@ -90,7 +90,7 @@ broadcast use {
     }
 
     /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
-    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+    proof fn lemma_cmp_transitivity<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             a.cmp_spec(&b) == Less,
@@ -102,7 +102,7 @@ broadcast use {
     }
 
     /// Equal congruence: Equal(a,b) implies cmp(a,c) == cmp(b,c).
-    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+    proof fn lemma_cmp_equal_congruent<T: StT + Ord + TotalOrder>(a: T, b: T, c: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -443,7 +443,7 @@ broadcast use {
 
     /// Maximum key in a ParamBST via right-spine walk.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- BST traversal to rightmost node
-    fn tree_max_key<T: StT + Ord>(tree: &ParamBST<T>) -> (maximum: Option<T>)
+    fn tree_max_key<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>) -> (maximum: Option<T>)
         requires
             tree@.finite(),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -507,7 +507,7 @@ broadcast use {
 
     /// Recursive select: find the i-th element in the BST (0-indexed, in sorted order).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- augmented BST traversal by rank
-    fn tree_select<T: StT + Ord>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
+    fn tree_select<T: StT + Ord + TotalOrder>(tree: &ParamBST<T>, i: usize) -> (selected: Option<T>)
         requires
             tree@.finite(),
             vstd::laws_cmp::obeys_cmp_spec::<T>(),

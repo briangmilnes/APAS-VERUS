@@ -47,8 +47,9 @@ pub mod AVLTreeSetMtPer {
     use crate::Chap38::BSTParaMtEph::BSTParaMtEph::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -65,14 +66,14 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(T)]
-    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static> {
+    pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
         pub tree: ParamBST<T>,
     }
 
     //		Section 5. view impls
 
 
-    impl<T: StTInMtT + Ord + 'static> View for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> View for AVLTreeSetMtPer<T> {
         type V = Set<<T as View>::V>;
         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
     }
@@ -80,7 +81,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + 'static>: Sized + View<V = Set<<T as View>::V>> {
+    pub trait AVLTreeSetMtPerTrait<T: StTInMtT + Ord + TotalOrder + 'static>: Sized + View<V = Set<<T as View>::V>> {
         spec fn spec_avltreesetmtper_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch41 CS 41.3): Work O(u), Span O(1)
@@ -219,7 +220,7 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPer<T> {
         pub open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             self.tree@.finite()
         }
@@ -230,7 +231,7 @@ broadcast use {
     /// which means AVLTreeSetMtPer::spec_avltreesetmtper_wf() always holds.
     /// This wraps the Chap38 helper that has visibility to the type_invariant.
     // veracity: no_requires
-    pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + 'static>(s: &AVLTreeSetMtPer<T>)
+    pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + TotalOrder + 'static>(s: &AVLTreeSetMtPer<T>)
         ensures s.spec_avltreesetmtper_wf()
     {
         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
@@ -239,7 +240,7 @@ broadcast use {
     /// ParamBST size is stored as usize, so @.len() <= usize::MAX.
     /// Returns the size so callers can use it in capacity proofs.
     // veracity: no_requires
-    pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + 'static>(
+    pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + TotalOrder + 'static>(
         s: &AVLTreeSetMtPer<T>,
     ) -> (sz: usize)
         ensures
@@ -254,7 +255,7 @@ broadcast use {
 
     /// Parallel D&C set construction from Vec: split in half, recurse via join(), union.
     /// Work O(n lg n), Span O(lg^2 n) — matches APAS Ex 41.3 parallel fromSeq.
-    fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    fn from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
         requires
             obeys_feq_full_trigger::<T>(),
             vals@.len() <= usize::MAX,
@@ -377,7 +378,7 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
         open spec fn spec_avltreesetmtper_wf(&self) -> bool {
             self.tree@.finite()
         }
@@ -516,14 +517,14 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> PartialOrd for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> PartialOrd for AVLTreeSetMtPer<T> {
         #[verifier::external_body]
         fn partial_cmp(&self, other: &Self) -> (ord: Option<Ordering>) {
             Some(self.cmp(other))
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Ord for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Ord for AVLTreeSetMtPer<T> {
         #[verifier::external_body]
         fn cmp(&self, other: &Self) -> (ord: Ordering)
         {
@@ -536,32 +537,32 @@ broadcast use {
             let min_n = if n_self < n_other { n_self } else { n_other };
             let mut i: usize = 0;
             while i < min_n {
-                let c = self_seq[i].cmp(&other_seq[i]);
+                let c = <T as std::cmp::Ord>::cmp(&self_seq[i], &other_seq[i]);
                 if c != Equal {
                     return c;
                 }
                 i += 1;
             }
-            n_self.cmp(&n_other)
+            <usize as std::cmp::Ord>::cmp(&n_self, &n_other)
         }
     }
 
     //		Section 12. derive impls in verus!
 
 
-    impl<T: StTInMtT + Ord + 'static> Default for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Default for AVLTreeSetMtPer<T> {
         fn default() -> Self { Self::empty() }
     }
 
     #[cfg(verus_keep_ghost)]
-    impl<T: StTInMtT + Ord + 'static> PartialEqSpecImpl for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> PartialEqSpecImpl for AVLTreeSetMtPer<T> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Eq for AVLTreeSetMtPer<T> {}
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Eq for AVLTreeSetMtPer<T> {}
 
-    impl<T: StTInMtT + Ord + 'static> PartialEq for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> PartialEq for AVLTreeSetMtPer<T> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -602,7 +603,7 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> Clone for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> Clone for AVLTreeSetMtPer<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@, cloned.spec_avltreesetmtper_wf() == self.spec_avltreesetmtper_wf(),
         {
@@ -630,10 +631,10 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
     // Ghost fields are zero-sized; ParamBST is Send/Sync via BSTParaMtEph.
-    unsafe impl<T: StTInMtT + Ord + 'static> Send for AVLTreeSetMtPer<T> {}
-    unsafe impl<T: StTInMtT + Ord + 'static> Sync for AVLTreeSetMtPer<T> {}
+    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Send for AVLTreeSetMtPer<T> {}
+    unsafe impl<T: StTInMtT + Ord + TotalOrder + 'static> Sync for AVLTreeSetMtPer<T> {}
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Debug for AVLTreeSetMtPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();
@@ -647,7 +648,7 @@ broadcast use {
         }
     }
 
-    impl<T: StTInMtT + Ord + 'static> fmt::Display for AVLTreeSetMtPer<T> {
+    impl<T: StTInMtT + Ord + TotalOrder + 'static> fmt::Display for AVLTreeSetMtPer<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "{{")?;
             let seq = self.to_seq();

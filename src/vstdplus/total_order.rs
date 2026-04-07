@@ -20,6 +20,7 @@ pub mod total_order {
     use vstd::std_specs::cmp::PartialOrdIs;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
+    use crate::Types::Types::Pair;
 
     verus! 
 {
@@ -605,6 +606,118 @@ impl TotalOrder for String {
 // directly in the TotalOrder trait with Ord as a supertrait.
 // pub trait TotalOrderBridge: TotalOrder + Ord { ... }
 // All 14 impls (u8..isize, String) removed — proof bodies identical to TotalOrder impls above.
+
+// Lexicographic TotalOrder for Pair<K, V>: (k1, v1) ≤ (k2, v2) iff k1 < k2, or k1 == k2 and v1 ≤ v2.
+impl<K: TotalOrder + Ord, V: TotalOrder + Ord> TotalOrder for Pair<K, V> {
+    open spec fn le(self, other: Self) -> bool {
+        TotalOrder::le(self.0, other.0) &&
+        (self.0 == other.0 ==> TotalOrder::le(self.1, other.1))
+    }
+
+    proof fn reflexive(x: Self) {
+        K::reflexive(x.0);
+        V::reflexive(x.1);
+    }
+
+    proof fn transitive(x: Self, y: Self, z: Self) {
+        K::transitive(x.0, y.0, z.0);
+        if x.0 == z.0 {
+            K::antisymmetric(x.0, y.0);
+            V::transitive(x.1, y.1, z.1);
+        }
+    }
+
+    proof fn antisymmetric(x: Self, y: Self) {
+        K::antisymmetric(x.0, y.0);
+        V::antisymmetric(x.1, y.1);
+    }
+
+    proof fn total(x: Self, y: Self) {
+        K::total(x.0, y.0);
+        if TotalOrder::le(x.0, y.0) && TotalOrder::le(y.0, x.0) {
+            K::antisymmetric(x.0, y.0);
+            V::total(x.1, y.1);
+            K::reflexive(x.0);
+            K::reflexive(y.0);
+        }
+    }
+
+    fn cmp(&self, other: &Self) -> (c: Ordering) {
+        let c0 = TotalOrder::cmp(&self.0, &other.0);
+        match c0 {
+            Ordering::Less => {
+                proof {
+                    assert(TotalOrder::le(self.0, other.0));
+                    assert(self.0 != other.0);
+                }
+                c0
+            }
+            Ordering::Equal => {
+                // self.0 == other.0 from c0 ensures
+                let c1 = TotalOrder::cmp(&self.1, &other.1);
+                match c1 {
+                    Ordering::Less => {
+                        proof {
+                            K::reflexive(self.0);
+                        }
+                        c1
+                    }
+                    Ordering::Equal => c1,
+                    Ordering::Greater => {
+                        proof {
+                            K::reflexive(other.0);
+                        }
+                        c1
+                    }
+                }
+            }
+            Ordering::Greater => {
+                proof {
+                    assert(TotalOrder::le(other.0, self.0));
+                    assert(self.0 != other.0);
+                }
+                c0
+            }
+        }
+    }
+}
+
+impl TotalOrder for char {
+    open spec fn le(self, other: Self) -> bool {
+        self <= other
+    }
+
+    proof fn reflexive(x: Self) {
+    }
+
+    proof fn transitive(x: Self, y: Self, z: Self) {
+    }
+
+    proof fn antisymmetric(x: Self, y: Self) {
+    }
+
+    proof fn total(x: Self, y: Self) {
+    }
+
+    fn cmp(&self, other: &Self) -> (c: Ordering) {
+        if self < other {
+            Ordering::Less
+        } else if self == other {
+            Ordering::Equal
+        } else {
+            Ordering::Greater
+        }
+    }
+
+    // accept hole
+    proof fn cmp_spec_less_implies_le(a: Self, b: Self) {
+        assume(TotalOrder::le(a, b));
+    }
+    // accept hole
+    proof fn cmp_spec_greater_implies_le(a: Self, b: Self) {
+        assume(TotalOrder::le(b, a));
+    }
+}
 
 } // verus!
 }

@@ -32,8 +32,9 @@ pub mod EdgeSetGraphStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpec;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -49,7 +50,7 @@ broadcast use {
 
 
     /// Bridges PartialEq's eq_spec to View equality via the cmp chain.
-    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord>()
+    proof fn lemma_eq_spec_iff_view_eq<V: StT + Ord + TotalOrder>()
         requires
             vstd::laws_cmp::obeys_cmp_spec::<V>(),
             view_ord_consistent::<V>(),
@@ -64,7 +65,7 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct EdgeSetGraphStEph<V: StT + Ord + ClonePreservesView> {
+    pub struct EdgeSetGraphStEph<V: StT + Ord + TotalOrder + ClonePreservesView> {
         pub vertices: AVLTreeSetStEph<V>,
         pub edges: AVLTreeSetStEph<Pair<V, V>>,
     }
@@ -72,7 +73,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<V: StT + Ord + ClonePreservesView> View for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> View for EdgeSetGraphStEph<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -80,7 +81,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait EdgeSetGraphStEphTrait<V: StT + Ord + ClonePreservesView>: Sized {
+    pub trait EdgeSetGraphStEphTrait<V: StT + Ord + TotalOrder + ClonePreservesView>: Sized {
         spec fn spec_edgesetgraphsteph_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -176,7 +177,7 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord + ClonePreservesView> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> EdgeSetGraphStEphTrait<V> for EdgeSetGraphStEph<V> {
         open spec fn spec_edgesetgraphsteph_wf(&self) -> bool {
             self.vertices.spec_avltreesetsteph_wf()
             && self.edges.spec_avltreesetsteph_wf()
@@ -434,7 +435,7 @@ broadcast use {
     //		Section 12. derive impls in verus!
 
 
-    impl<V: StT + Ord + ClonePreservesView> Clone for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView> Clone for EdgeSetGraphStEph<V> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
         {
@@ -452,7 +453,7 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord + ClonePreservesView + std::fmt::Debug> std::fmt::Debug for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + std::fmt::Debug> std::fmt::Debug for EdgeSetGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("EdgeSetGraphStEph")
                 .field("vertices", &self.vertices)
@@ -461,7 +462,7 @@ broadcast use {
         }
     }
 
-    impl<V: StT + Ord + ClonePreservesView + std::fmt::Display> std::fmt::Display for EdgeSetGraphStEph<V> {
+    impl<V: StT + Ord + TotalOrder + ClonePreservesView + std::fmt::Display> std::fmt::Display for EdgeSetGraphStEph<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "EdgeSetGraphStEph(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
         }

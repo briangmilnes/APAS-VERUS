@@ -30,6 +30,7 @@ pub mod EdgeSetGraphMtPer {
     use crate::Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
     #[cfg(verus_keep_ghost)]
@@ -51,7 +52,7 @@ pub mod EdgeSetGraphMtPer {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + ClonePreservesView + 'static> {
+    pub struct EdgeSetGraphMtPer<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + 'static> {
         pub vertices: AVLTreeSetMtPer<V>,
         pub edges: AVLTreeSetMtPer<Pair<V, V>>,
     }
@@ -59,7 +60,7 @@ pub mod EdgeSetGraphMtPer {
     //		Section 5. view impls
 
 
-    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> View for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + 'static> View for EdgeSetGraphMtPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -82,7 +83,7 @@ pub mod EdgeSetGraphMtPer {
     //		Section 8. traits
 
 
-    pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + ClonePreservesView + 'static>: Sized {
+    pub trait EdgeSetGraphMtPerTrait<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + 'static>: Sized {
         spec fn spec_edgesetgraphmtper_wf(&self) -> bool;
         spec fn spec_vertices(&self) -> Set<<V as View>::V>;
         spec fn spec_edges(&self) -> Set<(<V as View>::V, <V as View>::V)>;
@@ -186,7 +187,7 @@ pub mod EdgeSetGraphMtPer {
     //		Section 9. impls
 
 
-    impl<V: StTInMtT + Ord + ClonePreservesView + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + 'static> EdgeSetGraphMtPerTrait<V> for EdgeSetGraphMtPer<V> {
         open spec fn spec_edgesetgraphmtper_wf(&self) -> bool {
             self.vertices.spec_avltreesetmtper_wf()
             && self.edges.spec_avltreesetmtper_wf()
@@ -422,7 +423,7 @@ pub mod EdgeSetGraphMtPer {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Debug + 'static> std::fmt::Debug for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + std::fmt::Debug + 'static> std::fmt::Debug for EdgeSetGraphMtPer<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("EdgeSetGraphMtPer")
                 .field("vertices", &self.vertices)
@@ -431,7 +432,7 @@ pub mod EdgeSetGraphMtPer {
         }
     }
 
-    impl<V: StTInMtT + Ord + ClonePreservesView + std::fmt::Display + 'static> std::fmt::Display for EdgeSetGraphMtPer<V> {
+    impl<V: StTInMtT + Ord + TotalOrder + ClonePreservesView + std::fmt::Display + 'static> std::fmt::Display for EdgeSetGraphMtPer<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "EdgeSetGraphMtPer(vertices: {}, edges: {})", self.vertices.size(), self.edges.size())
         }
