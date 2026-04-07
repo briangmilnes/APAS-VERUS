@@ -1,0 +1,28 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1081:17
+     |
+1081 |                 old(self)@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+4835 |             (left_table, found_val, right_table)
+     |             ------------------------------------ at the end of the function body
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:4825:25
+     |
+4825 |                         !(left_table@.dom().contains(key) && #[trigger] right_table@.dom().contains(key))
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left_table.view().dom().contains(key) ==>
+    !(right_table.view().dom().contains(key)) 
+
+verification results:: 2812 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 79s
+Sampled Memory Usage: peak rust_verify RSS: 6165MB, peak z3 RSS: 596MB, min free: 11553MB
+Sampled CPU Usage: rust_verify: 140s, z3 children: 302s
