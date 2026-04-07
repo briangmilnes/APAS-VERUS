@@ -307,7 +307,7 @@ broadcast use {
     }
 
     // BYPASSED: lemma_cmp_antisymmetry — unused after delegation refactor.
-    #[cfg(any())]
+    #[cfg(never)]
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -993,7 +993,7 @@ broadcast use {
 
 
     // BYPASSED: bst_next_by_key replaced by OrdKeyMap::next_key delegation.
-    #[cfg(any())]
+    #[cfg(never)]
     #[verifier::rlimit(20)]
     fn bst_next_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
@@ -1351,7 +1351,7 @@ broadcast use {
     }
 
     // BYPASSED: bst_prev_by_key replaced by OrdKeyMap::prev_key delegation.
-    #[cfg(any())]
+    #[cfg(never)]
     /// Find the previous (predecessor) key strictly less than k via BST descent.
     /// O(lg n).
     fn bst_prev_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
