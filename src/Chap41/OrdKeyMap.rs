@@ -12,6 +12,7 @@
 //	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
+//	Section 12. derive impls in verus!
 //	Section 14. derive impls outside verus!
 
 //		Section 1. module
@@ -862,6 +863,50 @@ pub mod OrdKeyMap {
                 forall|key| #[trigger] old(self)@.dom().contains(key) ==> split.0@.dom().contains(key) || split.1@.dom().contains(key),
                 split.0.spec_ordkeymap_wf(),
                 split.1.spec_ordkeymap_wf();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn collect(&self) -> (entries: Vec<Pair<K, V>>)
+            requires self.spec_ordkeymap_wf(),
+            ensures
+                entries@.len() == self@.dom().len(),
+                self@.dom().finite();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        fn filter<F: Fn(&K, &V) -> bool>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
+            requires
+                self.spec_ordkeymap_wf(),
+                forall|k: &K, v: &V| #[trigger] f.requires((k, v)),
+                forall|k: K, v: V, keep: bool|
+                    f.ensures((&k, &v), keep) ==> keep == spec_pred(k@, v@),
+            ensures
+                filtered@.dom().subset_of(self@.dom()),
+                forall|k: K::V| #[trigger] filtered@.contains_key(k) ==> filtered@[k] == self@[k],
+                forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+                    ==> #[trigger] filtered@.dom().contains(k),
+                filtered@.dom().finite(),
+                filtered.spec_ordkeymap_wf();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
+        fn map_values<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
+            requires
+                self.spec_ordkeymap_wf(),
+                forall|k: &K, v: &V| #[trigger] f.requires((k, v)),
+                obeys_feq_clone::<Pair<K, V>>(),
+            ensures
+                mapped@.dom() =~= self@.dom(),
+                mapped@.dom().finite(),
+                mapped.spec_ordkeymap_wf();
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
+        fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
+            requires
+                self.spec_ordkeymap_wf(),
+                forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2)),
+            ensures self@.dom().finite();
     }
 
     //		Section 9. impls
@@ -4503,6 +4548,244 @@ pub mod OrdKeyMap {
                 }
                 (left, right)
             }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to in_order
+        fn collect(&self) -> (entries: Vec<Pair<K, V>>)
+        {
+            let sorted = self.inner.in_order();
+            let len = sorted.length();
+            let mut out: Vec<Pair<K, V>> = Vec::with_capacity(len);
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == sorted@.len(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    out@.len() == i as nat,
+                    forall|j: int| 0 <= j < i as int ==>
+                        (#[trigger] out@[j])@ == sorted@[j],
+                decreases len - i,
+            {
+                let elem = sorted.nth(i);
+                let cloned = elem.clone_plus();
+                proof { lemma_cloned_view_eq(*elem, cloned); }
+                out.push(cloned);
+                i = i + 1;
+            }
+            proof {
+                lemma_pair_set_to_map_len(self.inner@);
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+            }
+            out
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + conditional BST inserts
+        fn filter<F: Fn(&K, &V) -> bool>(
+            &self,
+            f: F,
+            Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>,
+        ) -> (filtered: Self)
+        {
+            // Use ParamBST::filter with an adapter predicate.
+            let pair_pred = |p: &Pair<K, V>| -> (keep: bool)
+                ensures keep == spec_pred(p.0@, p.1@)
+            {
+                f(&p.0, &p.1)
+            };
+            let ghost pair_spec_pred = |pv: (K::V, V::V)| -> bool { spec_pred(pv.0, pv.1) };
+            let filtered_tree = self.inner.filter(pair_pred, Ghost(pair_spec_pred));
+            let filtered = OrdKeyMap { inner: filtered_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(filtered_tree@);
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+                lemma_key_unique_subset(self.inner@, filtered_tree@);
+                // filtered_tree@ ⊆ self.inner@.
+                assert(filtered@.dom().subset_of(self@.dom())) by {
+                    assert forall|k: K::V| filtered@.dom().contains(k)
+                        implies #[trigger] self@.dom().contains(k)
+                    by {
+                        lemma_map_contains_pair_in_set(filtered_tree@, k);
+                        let v: V::V = choose|v: V::V| filtered_tree@.contains((k, v));
+                        assert(self.inner@.contains((k, v)));
+                        lemma_pair_in_set_map_contains(self.inner@, k, v);
+                    };
+                };
+                assert forall|k: K::V| #[trigger] filtered@.contains_key(k)
+                    implies filtered@[k] == self@[k]
+                by {
+                    lemma_map_contains_pair_in_set(filtered_tree@, k);
+                    let v: V::V = choose|v: V::V| filtered_tree@.contains((k, v));
+                    assert(self.inner@.contains((k, v)));
+                    lemma_pair_in_set_map_contains(self.inner@, k, v);
+                    lemma_pair_in_set_map_contains(filtered_tree@, k, v);
+                };
+                assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
+                    implies #[trigger] filtered@.dom().contains(k)
+                by {
+                    lemma_map_contains_pair_in_set(self.inner@, k);
+                    let v: V::V = choose|v: V::V| self.inner@.contains((k, v));
+                    lemma_pair_in_set_map_contains(self.inner@, k, v);
+                    // v == self@[k], so spec_pred(k, v) holds.
+                    assert(pair_spec_pred((k, v)));
+                    assert(filtered_tree@.contains((k, v)));
+                    lemma_pair_in_set_map_contains(filtered_tree@, k, v);
+                };
+                vstd::set_lib::lemma_len_subset(filtered_tree@, self.inner@);
+                assert(spec_pair_key_determines_order::<K, V>());
+                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
+                assert(view_ord_consistent::<K>());
+                assert(obeys_feq_fulls::<K, V>());
+                lemma_view_gen_subset::<K, V>(filtered_tree@, self.inner@);
+            }
+            filtered
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- in_order + BST inserts
+        fn map_values<F: Fn(&K, &V) -> V>(&self, f: F) -> (mapped: Self)
+        {
+            let sorted = self.inner.in_order();
+            let len = sorted.length();
+            let mut new_tree = ParamBST::<Pair<K, V>>::new();
+            let mut i: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(self.inner@, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
+            }
+            while i < len
+                invariant
+                    0 <= i <= len,
+                    len as nat == sorted@.len(),
+                    self.spec_ordkeymap_wf(),
+                    forall|k: &K, v: &V| #[trigger] f.requires((k, v)),
+                    obeys_feq_clone::<Pair<K, V>>(),
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    sorted@.len() == self.inner@.len(),
+                    forall|v: (K::V, V::V)| self.inner@.contains(v) <==> #[trigger] sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
+                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
+                    new_tree@.len() == i as nat,
+                    new_tree@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    forall|p: (K::V, V::V)| new_tree@.contains(p) ==>
+                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] sorted@[j]).0,
+                    forall|j: int| 0 <= j < i as int
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                decreases len - i,
+            {
+                let pair = sorted.nth(i);
+                let new_val = f(&pair.0, &pair.1);
+                let k_clone = pair.0.clone_plus();
+                let ghost old_new_tree_view = new_tree@;
+                proof {
+                    lemma_cloned_view_eq(pair.0, k_clone);
+                    assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+                        if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+                            lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+                            let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
+                            let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
+                            assert(false);
+                        }
+                    };
+                }
+                new_tree.insert(Pair(k_clone, new_val));
+                proof {
+                    lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(k_clone, new_val));
+                    assert(new_tree@.len() == i as nat + 1);
+                    assert(new_tree@.len() < usize::MAX as nat);
+                    lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, new_val@);
+                    assert forall|j: int| 0 <= j < i as int + 1
+                        implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0)
+                    by {
+                        if j == i as int {
+                            assert(new_tree@.contains((sorted@[i as int].0, new_val@)));
+                            lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, new_val@);
+                        } else {
+                            lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j].0);
+                            let w: V::V = choose|w: V::V| old_new_tree_view.contains((sorted@[j].0, w));
+                            assert(new_tree@.contains((sorted@[j].0, w)));
+                            lemma_pair_in_set_map_contains(new_tree@, sorted@[j].0, w);
+                        }
+                    };
+                }
+                i = i + 1;
+            }
+            let mapped = OrdKeyMap { inner: new_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(new_tree@);
+                lemma_pair_set_to_map_dom_finite(self.inner@);
+                assert(mapped@.dom() =~= self@.dom()) by {
+                    assert forall|key: K::V| #[trigger] mapped@.dom().contains(key)
+                        implies self@.dom().contains(key)
+                    by {
+                        lemma_map_contains_pair_in_set(new_tree@, key);
+                        let v: V::V = choose|v: V::V| new_tree@.contains((key, v));
+                        let j = choose|j: int| 0 <= j < i as int && (key, v).0 == (#[trigger] sorted@[j]).0;
+                        assert(self.inner@.contains(sorted@[j]));
+                        lemma_pair_in_set_map_contains(self.inner@, sorted@[j].0, sorted@[j].1);
+                    };
+                    assert forall|key: K::V| self@.dom().contains(key)
+                        implies #[trigger] mapped@.dom().contains(key)
+                    by {
+                        lemma_map_contains_pair_in_set(self.inner@, key);
+                        let v: V::V = choose|v: V::V| self.inner@.contains((key, v));
+                        assert(sorted@.contains((key, v)));
+                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (key, v);
+                        assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
+                        assert(sorted@[j].0 == key);
+                    };
+                };
+                assert(spec_pair_key_determines_order::<K, V>());
+                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
+                assert(view_ord_consistent::<K>());
+                assert(obeys_feq_fulls::<K, V>());
+            }
+            mapped
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + fold
+        fn reduce<F: Fn(&V, &V) -> V>(&self, f: F, id: &V) -> (reduced: V)
+            ensures self@.dom().finite()
+        {
+            let sorted = self.inner.in_order();
+            let len = sorted.length();
+            let mut reduced = id.clone_plus();
+            proof { lemma_cloned_view_eq(*id, reduced); }
+            let mut i: usize = 0;
+            while i < len
+                invariant
+                    i <= len,
+                    len as nat == sorted@.len(),
+                    forall|v1: &V, v2: &V| #[trigger] f.requires((v1, v2)),
+                decreases len - i,
+            {
+                let pair = sorted.nth(i);
+                reduced = f(&reduced, &pair.1);
+                i = i + 1;
+            }
+            proof { lemma_pair_set_to_map_dom_finite(self.inner@); }
+            reduced
+        }
+    }
+
+    //		Section 12. derive impls in verus!
+
+
+    impl<K: StT + Ord, V: StT + Ord> Clone for OrdKeyMap<K, V> {
+        fn clone(&self) -> (cloned: Self)
+            ensures cloned@ == self@
+        {
+            OrdKeyMap { inner: self.inner.clone() }
         }
     }
 
