@@ -41,16 +41,15 @@ pub mod StackStEph {
     //		Section 3. broadcast use
 
 
+    #[cfg(verus_keep_ghost)]
+    use vstd::std_specs::clone::*;
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::seq::group_seq_axioms,
     vstd::seq_lib::group_seq_properties,
     vstd::seq_lib::group_to_multiset_ensures,
 };
-
-
-    #[cfg(verus_keep_ghost)]
-    use vstd::std_specs::clone::*;
 
     //		Section 4. type definitions
 

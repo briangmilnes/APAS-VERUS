@@ -23,13 +23,13 @@ pub mod ParaPairs {
     //		Section 3. broadcast use
 
 
+    use crate::Types::Types::*;
+
 broadcast use {
     crate::vstdplus::feq::feq::group_feq_axioms,
     vstd::set::group_set_axioms,
     vstd::set_lib::group_set_lib_default,
 };
-
-    use crate::Types::Types::*;
 
     //		Section 9. impls
 
