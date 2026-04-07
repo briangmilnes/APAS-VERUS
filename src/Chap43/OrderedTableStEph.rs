@@ -116,33 +116,8 @@ broadcast use {
         exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
     }
 
-    /// Connection between K's Ord ordering (cmp_spec) and K's TotalOrder (le).
-    /// Required by O(lg n) ordering operations that leverage BST structure.
-    /// Trivially holds for all integer types and String.
-    pub open spec fn spec_ord_agrees_total_order<K: StT + Ord + TotalOrder>() -> bool {
-        &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
-        &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
-    }
-
     //		Section 7. proof fns/broadcast groups
 
-
-    /// Subset of a View-generated set is View-generated.
-    proof fn lemma_view_gen_subset<K: View, V: View>(
-        sub: Set<(K::V, V::V)>,
-        sup: Set<(K::V, V::V)>,
-    )
-        requires
-            sub.subset_of(sup),
-            spec_set_pair_view_generated::<K, V>(sup),
-        ensures
-            spec_set_pair_view_generated::<K, V>(sub),
-    {
-        assert forall|elem: (K::V, V::V)| sub.contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            assert(sup.contains(elem));
-        };
-    }
 
     /// Inserting a Pair view into a View-generated set preserves View-generation.
     proof fn lemma_view_gen_insert<K: View, V: View>(
@@ -161,23 +136,6 @@ broadcast use {
             } else {
                 assert(s.contains(elem));
             }
-        };
-    }
-
-    /// Union of two View-generated sets is View-generated.
-    proof fn lemma_view_gen_union<K: View, V: View>(
-        a: Set<(K::V, V::V)>,
-        b: Set<(K::V, V::V)>,
-    )
-        requires
-            spec_set_pair_view_generated::<K, V>(a),
-            spec_set_pair_view_generated::<K, V>(b),
-        ensures
-            spec_set_pair_view_generated::<K, V>(a.union(b)),
-    {
-        assert forall|elem: (K::V, V::V)| a.union(b).contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            if a.contains(elem) {} else { assert(b.contains(elem)); }
         };
     }
 
@@ -289,20 +247,6 @@ broadcast use {
         };
     }
 
-    /// Equal-substitution for cmp_spec: Equal(a,b) implies a compares the same way as b to c.
-    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Equal,
-        ensures
-            a.cmp_spec(&c) == b.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
-    }
-
     /// In-order traversal keys are pairwise distinct: distinct indices have distinct keys.
     /// Follows from set-key-uniqueness and the bijection between sorted seq and tree set.
     proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
@@ -342,14 +286,6 @@ broadcast use {
         };
     }
 
-    /// Key uniqueness is preserved by set remove.
-    proof fn lemma_key_unique_remove<KV, VV>(s: Set<(KV, VV)>, pair: (KV, VV))
-        requires spec_key_unique_pairs_set(s)
-        ensures spec_key_unique_pairs_set(s.remove(pair))
-    {
-
-    }
-
     /// Key uniqueness is preserved by subset.
     proof fn lemma_key_unique_subset<KV, VV>(s: Set<(KV, VV)>, sub: Set<(KV, VV)>)
         requires
@@ -366,59 +302,6 @@ broadcast use {
         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
     {
 
-    }
-
-    /// Key uniqueness for union of disjoint sets (by key) that are individually key-unique.
-    proof fn lemma_key_unique_disjoint_union<KV, VV>(
-        s1: Set<(KV, VV)>, s2: Set<(KV, VV)>, root: (KV, VV),
-    )
-        requires
-            spec_key_unique_pairs_set(s1),
-            spec_key_unique_pairs_set(s2),
-            s1.disjoint(s2),
-            !s1.contains(root),
-            !s2.contains(root),
-            // No key in s1 equals a key in s2 or the root key.
-            forall|p1: (KV, VV), p2: (KV, VV)|
-                #[trigger] s1.contains(p1) && #[trigger] s2.contains(p2) ==> p1.0 != p2.0,
-            forall|p: (KV, VV)| #[trigger] s1.contains(p) ==> p.0 != root.0,
-            forall|p: (KV, VV)| #[trigger] s2.contains(p) ==> p.0 != root.0,
-        ensures
-            spec_key_unique_pairs_set(s1.union(s2).insert(root))
-    {
-
-        let combined = s1.union(s2).insert(root);
-        assert forall|k: KV, v1: VV, v2: VV|
-            combined.contains((k, v1)) && combined.contains((k, v2))
-            implies v1 == v2
-        by {
-            // Case analysis on which sets (k, v1) and (k, v2) come from.
-            if k == root.0 {
-                // Both must be root (by key separation from s1 and s2).
-                if s1.contains((k, v1)) {
-                    assert(false);
-                }
-                if s2.contains((k, v1)) {
-                    assert(false);
-                }
-                if s1.contains((k, v2)) {
-                    assert(false);
-                }
-                if s2.contains((k, v2)) {
-                    assert(false);
-                }
-            } else {
-                // (k, v1) and (k, v2) are in s1 ∪ s2.
-                // By key separation, both must be in the same set.
-                if s1.contains((k, v1)) && s2.contains((k, v2)) {
-                    assert(false); // key separation
-                }
-                if s2.contains((k, v1)) && s1.contains((k, v2)) {
-                    assert(false); // key separation
-                }
-                // Both in s1 or both in s2 → key uniqueness.
-            }
-        };
     }
 
     /// Map over the set after insert: extends the map with the new key-value pair.
@@ -472,172 +355,10 @@ broadcast use {
         };
     }
 
-    /// Map over the set after remove: removes the key from the map.
-    proof fn lemma_set_to_map_remove_pair<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
-        requires
-            spec_key_unique_pairs_set(s),
-            s.contains((k, v)),
-        ensures
-            spec_pair_set_to_map(s.remove((k, v)))
-                =~= spec_pair_set_to_map(s).remove(k),
-    {
-
-        let old_m = spec_pair_set_to_map(s);
-        let new_s = s.remove((k, v));
-        let new_m = spec_pair_set_to_map(new_s);
-        // Forward: every key in new_m is in old_m.remove(k).
-        assert forall|key: KV| new_m.dom().contains(key)
-            implies old_m.remove(k).dom().contains(key) && #[trigger] new_m[key] == #[trigger] old_m[key]
-        by {
-            let vv: VV = choose|vv: VV| new_s.contains((key, vv));
-            assert(s.contains((key, vv)));
-            // key != k because (k, v) was removed and (key, vv) is still there.
-            // If key == k, then vv == v by key uniqueness, but (k, v) was removed.
-            if key == k {
-                assert(new_s.contains((k, vv)));
-                assert(!new_s.contains((k, v)));
-                assert(vv != v);
-                assert(s.contains((k, vv)));
-                assert(s.contains((k, v)));
-                // Key uniqueness: vv == v. Contradiction.
-                assert(false);
-            }
-            let cv: VV = choose|cv: VV| s.contains((key, cv));
-            assert(cv == vv);
-        };
-        // Backward: every key in old_m.remove(k) is in new_m.
-        assert forall|key: KV| old_m.remove(k).dom().contains(key)
-            implies #[trigger] new_m.dom().contains(key)
-        by {
-            assert(key != k);
-            let vv: VV = choose|vv: VV| s.contains((key, vv));
-            assert(new_s.contains((key, vv)));
-        };
-    }
-
-    /// The map over a union-insert equals the map over left ∪ right ∪ {root}.
-    /// Used after expose/join_mid to relate tree view to subtree views.
-    proof fn lemma_set_to_map_union_root<KV, VV>(
-        left: Set<(KV, VV)>, right: Set<(KV, VV)>, root_k: KV, root_v: VV,
-    )
-        requires
-            spec_key_unique_pairs_set(left),
-            spec_key_unique_pairs_set(right),
-            left.disjoint(right),
-            !left.contains((root_k, root_v)),
-            !right.contains((root_k, root_v)),
-            forall|p: (KV, VV)| #[trigger] left.contains(p) ==> p.0 != root_k,
-            forall|p: (KV, VV)| #[trigger] right.contains(p) ==> p.0 != root_k,
-            forall|p1: (KV, VV), p2: (KV, VV)|
-                #[trigger] left.contains(p1) && #[trigger] right.contains(p2) ==> p1.0 != p2.0,
-        ensures
-            ({
-                let combined = left.union(right).insert((root_k, root_v));
-                let combined_map = spec_pair_set_to_map(combined);
-                let left_map = spec_pair_set_to_map(left);
-                let right_map = spec_pair_set_to_map(right);
-                &&& combined_map.dom() =~= left_map.dom().union(right_map.dom()).insert(root_k)
-                &&& forall|k: KV| left_map.dom().contains(k) ==>
-                    #[trigger] combined_map[k] == left_map[k]
-                &&& forall|k: KV| right_map.dom().contains(k) ==>
-                    #[trigger] combined_map[k] == right_map[k]
-                &&& combined_map.contains_key(root_k) && combined_map[root_k] == root_v
-            })
-    {
-
-        let combined = left.union(right).insert((root_k, root_v));
-        let cm = spec_pair_set_to_map(combined);
-        let lm = spec_pair_set_to_map(left);
-        let rm = spec_pair_set_to_map(right);
-        // Domain equality.
-        assert(cm.dom() =~= lm.dom().union(rm.dom()).insert(root_k)) by {
-            assert forall|k: KV| cm.dom().contains(k) implies
-                #[trigger] lm.dom().union(rm.dom()).insert(root_k).contains(k)
-            by {
-                let v: VV = choose|v: VV| combined.contains((k, v));
-                if k == root_k {
-                } else if left.contains((k, v)) {
-                } else {
-                    assert(right.contains((k, v)));
-                }
-            };
-            assert forall|k: KV| lm.dom().union(rm.dom()).insert(root_k).contains(k) implies
-                #[trigger] cm.dom().contains(k)
-            by {
-                if k == root_k {
-                    assert(combined.contains((root_k, root_v)));
-                } else if lm.dom().contains(k) {
-                    let v: VV = choose|v: VV| left.contains((k, v));
-                    assert(combined.contains((k, v)));
-                } else {
-                    let v: VV = choose|v: VV| right.contains((k, v));
-                    assert(combined.contains((k, v)));
-                }
-            };
-        };
-        // Root value.
-        assert(cm.contains_key(root_k)) by {
-            assert(combined.contains((root_k, root_v)));
-        };
-        let cv: VV = choose|cv: VV| combined.contains((root_k, cv));
-        assert(cv == root_v) by {
-            if left.contains((root_k, cv)) {
-                assert(false);
-            }
-            if right.contains((root_k, cv)) {
-                assert(false);
-            }
-        };
-        // Left values.
-        assert forall|k: KV| lm.dom().contains(k) implies #[trigger] cm[k] == lm[k] by {
-            let v_l: VV = choose|v: VV| left.contains((k, v));
-            assert(combined.contains((k, v_l)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            // v_c must equal v_l: if from right, contradiction on key separation.
-            if right.contains((k, v_c)) {
-                assert(left.contains((k, v_l)));
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                assert(false);
-            }
-            assert(left.contains((k, v_c)));
-            assert(v_c == v_l);
-        };
-        // Right values.
-        assert forall|k: KV| rm.dom().contains(k) implies #[trigger] cm[k] == rm[k] by {
-            let v_r: VV = choose|v: VV| right.contains((k, v));
-            assert(combined.contains((k, v_r)));
-            let v_c: VV = choose|v: VV| combined.contains((k, v));
-            if left.contains((k, v_c)) {
-                assert(right.contains((k, v_r)));
-                assert(false);
-            }
-            if (k, v_c) == (root_k, root_v) {
-                assert(false);
-            }
-            assert(right.contains((k, v_c)));
-            assert(v_c == v_r);
-        };
-    }
-
     /// The map over an empty set is the empty map.
     proof fn lemma_set_to_map_empty<KV, VV>()
         ensures spec_pair_set_to_map(Set::<(KV, VV)>::empty()) =~= Map::<KV, VV>::empty()
     {
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Less,
-        ensures
-            b.cmp_spec(&a) == Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
     }
 
     //		Section 8. traits
