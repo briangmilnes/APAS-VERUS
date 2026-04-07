@@ -1,0 +1,165 @@
+error[E0599]: no method named `length` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableStPer.rs:785:30
+    |
+785 |             let len = sorted.length();
+    |                              ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:67:5
+    |
+ 67 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `length` not found for this struct
+...
+133 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:140:9
+    |
+140 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+141 | |             requires index < self.spec_len()
+142 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+ 28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableStPer.rs:823:35
+    |
+823 |                 let pair = sorted.nth(i);
+    |                                   ^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:67:5
+    |
+ 67 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `nth` not found for this struct
+...
+140 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+    |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:133:9
+    |
+133 | /         fn length(&self) -> (len: usize)
+134 | |             ensures len as int == self.spec_len();
+    | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+    |
+ 28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `length` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+   --> src/Chap43/OrderedTableStPer.rs:971:30
+    |
+971 |             let len = sorted.length();
+    |                              ^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:67:5
+    |
+ 67 |     pub struct ArraySeqStPerS<T> {
+    |     ---------------------------- method `length` not found for this struct
+...
+133 |         fn length(&self) -> (len: usize)
+    |            ------ the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+   --> src/Chap18/ArraySeqStPer.rs:140:9
+    |
+140 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+141 | |             requires index < self.spec_len()
+142 | |             ensures *nth_elem == self.spec_index(index as int);
+    | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+    |
+ 28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+    |
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+    --> src/Chap43/OrderedTableStPer.rs:1005:35
+     |
+1005 |                 let pair = sorted.nth(i);
+     |                                   ^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:67:5
+     |
+  67 |     pub struct ArraySeqStPerS<T> {
+     |     ---------------------------- method `nth` not found for this struct
+...
+ 140 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+     |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+    --> src/Chap18/ArraySeqStPer.rs:133:9
+     |
+ 133 | /         fn length(&self) -> (len: usize)
+ 134 | |             ensures len as int == self.spec_len();
+     | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+     |
+  28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+     |
+
+error[E0599]: no method named `length` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+    --> src/Chap43/OrderedTableStPer.rs:1073:30
+     |
+1073 |             let len = sorted.length();
+     |                              ^^^^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:67:5
+     |
+  67 |     pub struct ArraySeqStPerS<T> {
+     |     ---------------------------- method `length` not found for this struct
+...
+ 133 |         fn length(&self) -> (len: usize)
+     |            ------ the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+    --> src/Chap18/ArraySeqStPer.rs:140:9
+     |
+ 140 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+ 141 | |             requires index < self.spec_len()
+ 142 | |             ensures *nth_elem == self.spec_index(index as int);
+     | |_______________________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+     |
+  28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+     |
+
+error[E0599]: no method named `nth` found for struct `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<T>` in the current scope
+    --> src/Chap43/OrderedTableStPer.rs:1107:35
+     |
+1107 |                 let pair = sorted.nth(i);
+     |                                   ^^^
+     |
+    ::: src/Chap18/ArraySeqStPer.rs:67:5
+     |
+  67 |     pub struct ArraySeqStPerS<T> {
+     |     ---------------------------- method `nth` not found for this struct
+...
+ 140 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+     |            --- the method is available for `Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerS<Types::Types::Pair<K, V>>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+    --> src/Chap18/ArraySeqStPer.rs:133:9
+     |
+ 133 | /         fn length(&self) -> (len: usize)
+ 134 | |             ensures len as int == self.spec_len();
+     | |__________________________________________________^
+help: trait `ArraySeqStPerBaseTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+     |
+  28 +     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
+     |
+
+error: aborting due to 6 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1174MB, peak z3 RSS: 85MB, min free: 18245MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 4s
