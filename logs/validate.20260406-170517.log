@@ -1,0 +1,132 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap38/BSTParaMtEph.rs:992:27
+    |
+992 |                 match key.cmp(&root_key) {
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+    |
+help: disambiguate the method for candidate #2
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+    |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap38/BSTParaMtEph.rs:1138:27
+     |
+1138 |                 match key.cmp(&root_key) {
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+     |
+help: disambiguate the method for candidate #2
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+     |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:540:37
+    |
+540 |                 let c = self_seq[i].cmp(&other_seq[i]);
+    |                                     ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+540 -                 let c = self_seq[i].cmp(&other_seq[i]);
+540 +                 let c = std::cmp::Ord::cmp(&self_seq[i], &other_seq[i]);
+    |
+help: disambiguate the method for candidate #2
+    |
+540 -                 let c = self_seq[i].cmp(&other_seq[i]);
+540 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&self_seq[i], &other_seq[i]);
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtPer.rs:541:25
+    |
+527 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> Ord for AVLTreeSetMtPer<T> {
+    |          - expected this type parameter
+...
+541 |                 if c != Equal {
+    |                         ^^^^^ expected type parameter `T`, found `Ordering`
+    |
+    = note: expected type parameter `T`
+                         found enum `std::cmp::Ordering`
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:546:20
+    |
+546 |             n_self.cmp(&n_other)
+    |                    ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `usize`
+   --> src/vstdplus/total_order.rs:280:5
+    |
+280 |     fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: candidate #2 is defined in an impl of the trait `std::cmp::Ord` for the type `usize`
+help: disambiguate the method for candidate #1
+    |
+546 -             n_self.cmp(&n_other)
+546 +             vstdplus::total_order::total_order::TotalOrder::cmp(&n_self, &n_other)
+    |
+help: disambiguate the method for candidate #2
+    |
+546 -             n_self.cmp(&n_other)
+546 +             std::cmp::Ord::cmp(&n_self, &n_other)
+    |
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0034, E0308.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 449MB, peak z3 RSS: 0MB, min free: 18030MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

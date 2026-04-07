@@ -1,0 +1,145 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1158:9
+     |
+1158 |         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerIter`
+    --> src/Chap43/OrderedSetStPer.rs:989:51
+     |
+ 989 |     pub struct OrderedSetStPerIter<T: StT + Ord + TotalOrder> {
+     |                                                   ^^^^^^^^^^ required by this bound in `OrderedSetStPerIter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1157 |     impl<T: StT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for OrderedSetStPerIter<T> {
+     |                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1157:52
+     |
+1157 |     impl<T: StT + Ord + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerIter`
+    --> src/Chap43/OrderedSetStPer.rs:989:51
+     |
+ 989 |     pub struct OrderedSetStPerIter<T: StT + Ord + TotalOrder> {
+     |                                                   ^^^^^^^^^^ required by this bound in `OrderedSetStPerIter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1157 |     impl<T: StT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for OrderedSetStPerIter<T> {
+     |                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap43/OrderedSetStPer.rs:1158:17
+     |
+1158 |         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+     |                 ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required by a bound in `Chap43::OrderedSetStPer::OrderedSetStPer::OrderedSetStPerIter`
+    --> src/Chap43/OrderedSetStPer.rs:989:51
+     |
+ 989 |     pub struct OrderedSetStPerIter<T: StT + Ord + TotalOrder> {
+     |                                                   ^^^^^^^^^^ required by this bound in `OrderedSetStPerIter`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+1157 |     impl<T: StT + Ord + fmt::Debug + vstdplus::total_order::total_order::TotalOrder> fmt::Debug for OrderedSetStPerIter<T> {
+     |                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStEph.rs:1207:27
+     |
+1207 |                 let c = k.cmp(&root_pair.0);
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1207 -                 let c = k.cmp(&root_pair.0);
+1207 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+     |
+help: disambiguate the method for candidate #2
+     |
+1207 -                 let c = k.cmp(&root_pair.0);
+1207 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+     |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap43/OrderedTableStEph.rs:2052:27
+     |
+2052 |                 let c = k.cmp(&root_pair.0);
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+2052 -                 let c = k.cmp(&root_pair.0);
+2052 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+     |
+help: disambiguate the method for candidate #2
+     |
+2052 -                 let c = k.cmp(&root_pair.0);
+2052 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+     |
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap43/OrderedTableStPer.rs:917:27
+    |
+917 |                 let c = k.cmp(&root_pair.0);
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+917 -                 let c = k.cmp(&root_pair.0);
+917 +                 let c = std::cmp::Ord::cmp(&k, &root_pair.0);
+    |
+help: disambiguate the method for candidate #2
+    |
+917 -                 let c = k.cmp(&root_pair.0);
+917 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&k, &root_pair.0);
+    |
+
+error: aborting due to 6 previous errors
+
+Some errors have detailed explanations: E0034, E0277.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 687MB, peak z3 RSS: 0MB, min free: 18132MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s

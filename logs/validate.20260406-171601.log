@@ -1,0 +1,62 @@
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap53/GraphSearchMtPer.rs:56:22
+   |
+56 |         pub visited: AVLTreeSetMtPer<V>,
+   |                      ^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+   |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+  --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+   |
+69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+   |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+   |
+55 |     pub struct SearchResult<V: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> {
+   |                                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap53/GraphSearchMtPer.rs:70:9
+   |
+70 | /         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as ...
+71 | |         where G: Fn(&V) -> AVLTreeSetMtPer<V>, S: SelectionStrategy<V>,
+   | |_______________________________________________________________________^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+   |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+  --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+   |
+69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+   |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+   |
+63 |     impl<V: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> GraphSearchMtPerTrait<V> for SearchResult<V> {
+   |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap53/GraphSearchMtPer.rs:77:9
+   |
+77 | /         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtP...
+78 | |         where G: Fn(&V) -> AVLTreeSetMtPer<V>,
+   | |______________________________________________^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+   |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+  --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+   |
+69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+   |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restricting type parameter `V` with trait `TotalOrder`
+   |
+63 |     impl<V: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> GraphSearchMtPerTrait<V> for SearchResult<V> {
+   |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `V: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+  --> src/Chap53/GraphSearchMtPer.rs:92:9
+   |
+92 |         fn select(&self, frontier: &AVLTreeSetMtPer<V>) -> (selected: (AVLTreeSetMtPer<V>, bool)) { (frontier.clone(), false) }
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `V`
+   |
+note: required by a bound in `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPer`
+  --> src/Chap41/AVLTreeSetMtPer.rs:69:52
+   |
+69 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + TotalOrder + 'static> {
+   |                                                    ^^^^^^^^^^ required by this bound in `AVLTreeSetMtPer`
+help: consider further restric

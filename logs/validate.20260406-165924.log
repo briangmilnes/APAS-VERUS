@@ -1,0 +1,3181 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:66:19
+    |
+ 66 |         pub tree: ParamBST<T>,
+    |                   ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 65 |     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:247:73
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                         ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:19
+    |
+ 69 |         pub tree: ParamBST<T>,
+    |                   ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 68 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:257:77
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                             ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap38/BSTParaMtEph.rs:992:27
+    |
+992 |                 match key.cmp(&root_key) {
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+    |
+help: disambiguate the method for candidate #2
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+    |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap38/BSTParaMtEph.rs:1138:27
+     |
+1138 |                 match key.cmp(&root_key) {
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+     |
+help: disambiguate the method for candidate #2
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+     |
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:828:52
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+828 |         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:848:38
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+848 |         fn default() -> Self { Self::empty() }
+    |                                      ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:864:29
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+864 |                 assume(self.spec_avltreesetsteph_wf());
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:865:30
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+865 |                 assume(other.spec_avltreesetsteph_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:30
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:46
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:61
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                             ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetStEph.rs:869:89
+    |
+859 |     impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
+    |          - expected this type parameter
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                                                         ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:710:52
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+710 |         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetstper_wf() }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:730:38
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+730 |         fn default() -> Self { Self::empty() }
+    |                                      ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:746:29
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+746 |                 assume(self.spec_avltreesetstper_wf());
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:747:30
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+747 |                 assume(other.spec_avltreesetstper_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:30
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:46
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:61
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                             ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetStPer.rs:751:89
+    |
+741 |     impl<T: StT + Ord> PartialEq for AVLTreeSetStPer<T> {
+    |          - expected this type parameter
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                                                         ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:74:68
+    |
+ 74 |         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
+    |                                                                    ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:247:8
+    |
+247 |       fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |  ________^
+248 | |         requires
+249 | |             obeys_feq_full_trigger::<T>(),
+250 | |             vals@.len() <= usize::MAX,
+251 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+252 | |             view_ord_consistent::<T>(),
+253 | |         ensures
+    | |_______________^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:253:9
+    |
+253 |         ensures
+    |         ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:247:67
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                   ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:254:17
+    |
+254 |             tree@.finite(),
+    |                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:255:17
+    |
+255 |             tree@ =~= vals@.map_values(|t: T| t@).to_set(),
+    |                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:260:24
+    |
+260 |             let tree = ParamBST::<T>::new();
+    |                        ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `new` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:260:39
+    |
+260 |             let tree = ParamBST::<T>::new();
+    |                                       ^^^ function or associated item cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- function or associated item `new` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:268:24
+    |
+268 |             let tree = ParamBST::singleton(elem);
+    |                        ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:268:24
+    |
+268 |             let tree = ParamBST::singleton(elem);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:338:37
+    |
+338 |             let f1 = move || -> (t: ParamBST<T>)
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:339:26
+    |
+339 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                          ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:339:39
+    |
+339 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                                       ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:341:17
+    |
+341 |                 from_vec_dc(left_vals)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:343:37
+    |
+343 |             let f2 = move || -> (t: ParamBST<T>)
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:344:26
+    |
+344 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                          ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:344:39
+    |
+344 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                                       ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:346:17
+    |
+346 |                 from_vec_dc(right_vals)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap41/AVLTreeSetMtEph.rs:348:43
+     |
+ 348 |             let (left_tree, right_tree) = join(f1, f2);
+     |                                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+    --> src/Concurrency.rs:75:13
+     |
+  75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+     |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required for `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` to implement `std::marker::Send`
+    --> src/Chap38/BSTParaMtEph.rs:2099:27
+     |
+2099 |     unsafe impl<T: MtKey> Send for ParamBST<T> {}
+     |                    -----  ^^^^     ^^^^^^^^^^^
+     |                    |
+     |                    unsatisfied trait bound introduced here
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+    --> src/Chap02/HFSchedulerMtEph.rs:129:12
+     |
+ 125 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+     |            ---- required by a bound in this function
+...
+ 129 |         A: Send + 'static,
+     |            ^^^^ required by this bound in `join`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+ 247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+     |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:353:33
+    |
+353 |                 assert(left_tree@ =~= left_views.to_set());
+    |                                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:354:34
+    |
+354 |                 assert(right_tree@ =~= right_views.to_set());
+    |                                  ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:357:33
+    |
+357 |                 assert(left_tree@.len() + right_tree@.len() <= n as nat);
+    |                                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:357:53
+    |
+357 |                 assert(left_tree@.len() + right_tree@.len() <= n as nat);
+    |                                                     ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `union` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:359:36
+    |
+359 |             let result = left_tree.union(&right_tree);
+    |                                    ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `union` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                     ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:375:22
+    |
+375 |             self.tree@.finite()
+    |                      ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:381:23
+    |
+381 |             self.tree.size()
+    |                       ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `size` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:389:23
+    |
+389 |             self.tree.collect_in_order(&mut out);
+    |                       ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:422:37
+    |
+422 |             AVLTreeSetMtEph { tree: ParamBST::new() }
+    |                                     ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:422:37
+    |
+422 |             AVLTreeSetMtEph { tree: ParamBST::new() }
+    |                                     ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:428:37
+    |
+428 |             AVLTreeSetMtEph { tree: ParamBST::singleton(x) }
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:428:37
+    |
+428 |             AVLTreeSetMtEph { tree: ParamBST::singleton(x) }
+    |                                     ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:468:24
+    |
+468 |             let tree = from_vec_dc(vals);
+    |                        ^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:470:28
+    |
+470 |                 assert(tree@ =~= vals_views.to_set());
+    |                            ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:473:31
+    |
+473 |             AVLTreeSetMtEph { tree }
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `filter` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:483:43
+    |
+483 |             let filtered_tree = self.tree.filter(f, Ghost(spec_pred));
+    |                                           ^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `filter` not found for this struct because it doesn't satisfy `_: Iterator` or `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+    = note: the following trait bounds were not satisfied:
+            `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>: std::iter::Iterator`
+            which is required by `&mut Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>: std::iter::Iterator`
+note: the trait `std::iter::Iterator` must be implemented
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/iter/traits/iterator.rs:40:0
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:484:37
+    |
+484 |             AVLTreeSetMtEph { tree: filtered_tree }
+    |                                     ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `intersect` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:490:41
+    |
+490 |             let common_tree = self.tree.intersect(&other.tree);
+    |                                         ^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `intersect` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:491:37
+    |
+491 |             AVLTreeSetMtEph { tree: common_tree }
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:497:44
+    |
+497 |             let remaining_tree = self.tree.difference(&other.tree);
+    |                                            ^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `difference` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:498:37
+    |
+498 |             AVLTreeSetMtEph { tree: remaining_tree }
+    |                                     ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `union` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:504:43
+    |
+504 |             let combined_tree = self.tree.union(&other.tree);
+    |                                           ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `union` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:505:37
+    |
+505 |             AVLTreeSetMtEph { tree: combined_tree }
+    |                                     ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+373 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtEphTrait<T> for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `find` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:511:36
+    |
+511 |             let result = self.tree.find(x);
+    |                                    ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `find` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `delete` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:519:23
+    |
+519 |             self.tree.delete(x);
+    |                       ^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `delete` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `insert` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:526:23
+    |
+526 |             self.tree.insert(x);
+    |                       ^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `insert` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:532:23
+    |
+532 |             self.tree.collect_in_order(&mut vals);
+    |                       ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+    --> src/Chap41/AVLTreeSetMtEph.rs:661:47
+     |
+ 661 |             AVLTreeSetMtEph { tree: self.tree.clone() }
+     |                                               ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap38/BSTParaMtEph.rs:161:5
+     |
+ 161 |     pub struct ParamBST<T: MtKey> {
+     |     ----------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+     |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+    --> src/Chap38/BSTParaMtEph.rs:2023:13
+     |
+2023 |     impl<T: MtKey> Clone for ParamBST<T> {
+     |             ^^^^^  -----     -----------
+     |             |
+     |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    -->  src/Chap38/BSTParaMtEph.rs:161:34
+     |
+ 161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+     |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:661:37
+    |
+661 |             AVLTreeSetMtEph { tree: self.tree.clone() }
+    |                                     ^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+657 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> Clone for AVLTreeSetMtEph<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:77:68
+    |
+ 77 |         open spec fn view(&self) -> Set<<T as View>::V> { self.tree@ }
+    |                                                                    ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:224:22
+    |
+224 |             self.tree@.finite()
+    |                      ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::MtKey` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:236:80
+    |
+236 |         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+    |         ---------------------------------------------------------------------- ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite`
+   --> src/Chap38/BSTParaMtEph.rs:115:43
+    |
+115 |     pub fn assert_parambst_view_finite<T: MtKey>(s: &ParamBST<T>)
+    |                                           ^^^^^ required by this bound in `assert_parambst_view_finite`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+233 |     pub fn assert_avltreesetmtper_always_wf<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(s: &AVLTreeSetMtPer<T>)
+    |                                                                         ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::MtKey` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:250:80
+    |
+250 |         crate::Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite(&s.tree);
+    |         ---------------------------------------------------------------------- ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |         |
+    |         required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::assert_parambst_view_finite`
+   --> src/Chap38/BSTParaMtEph.rs:115:43
+    |
+115 |     pub fn assert_parambst_view_finite<T: MtKey>(s: &ParamBST<T>)
+    |                                           ^^^^^ required by this bound in `assert_parambst_view_finite`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+242 |     pub fn assert_avltreesetmtper_bounded_size<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(
+    |                                                                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:257:8
+    |
+257 |       fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |  ________^
+258 | |         requires
+259 | |             obeys_feq_full_trigger::<T>(),
+260 | |             vals@.len() <= usize::MAX,
+261 | |             vstd::laws_cmp::obeys_cmp_spec::<T>(),
+262 | |             view_ord_consistent::<T>(),
+263 | |         ensures
+    | |_______________^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:263:9
+    |
+263 |         ensures
+    |         ^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:257:71
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                       ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:264:17
+    |
+264 |             tree@.finite(),
+    |                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:265:17
+    |
+265 |             tree@ =~= vals@.map_values(|t: T| t@).to_set(),
+    |                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:270:24
+    |
+270 |             let tree = ParamBST::<T>::new();
+    |                        ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `new` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:270:39
+    |
+270 |             let tree = ParamBST::<T>::new();
+    |                                       ^^^ function or associated item cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- function or associated item `new` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:278:24
+    |
+278 |             let tree = ParamBST::singleton(elem);
+    |                        ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:278:24
+    |
+278 |             let tree = ParamBST::singleton(elem);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:348:37
+    |
+348 |             let f1 = move || -> (t: ParamBST<T>)
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:349:26
+    |
+349 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                          ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:349:39
+    |
+349 |                 ensures t@.finite(), t@ =~= left_vals@.map_values(|t: T| t@).to_set()
+    |                                       ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:351:17
+    |
+351 |                 from_vec_dc_per(left_vals)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:353:37
+    |
+353 |             let f2 = move || -> (t: ParamBST<T>)
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:354:26
+    |
+354 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                          ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:354:39
+    |
+354 |                 ensures t@.finite(), t@ =~= right_vals@.map_values(|t: T| t@).to_set()
+    |                                       ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:356:17
+    |
+356 |                 from_vec_dc_per(right_vals)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+    --> src/Chap41/AVLTreeSetMtPer.rs:358:43
+     |
+ 358 |             let (left_tree, right_tree) = join(f1, f2);
+     |                                           ^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+     |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+    --> src/Concurrency.rs:75:13
+     |
+  75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+     |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required for `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` to implement `std::marker::Send`
+    --> src/Chap38/BSTParaMtEph.rs:2099:27
+     |
+2099 |     unsafe impl<T: MtKey> Send for ParamBST<T> {}
+     |                    -----  ^^^^     ^^^^^^^^^^^
+     |                    |
+     |                    unsatisfied trait bound introduced here
+note: required by a bound in `Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join`
+    --> src/Chap02/HFSchedulerMtEph.rs:129:12
+     |
+ 125 |     pub fn join<A, B, FA, FB>(fa: FA, fb: FB) -> (joined_pair: (A, B))
+     |            ---- required by a bound in this function
+...
+ 129 |         A: Send + 'static,
+     |            ^^^^ required by this bound in `join`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+     |
+ 257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+     |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:360:33
+    |
+360 |                 assert(left_tree@ =~= left_views.to_set());
+    |                                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:361:34
+    |
+361 |                 assert(right_tree@ =~= right_views.to_set());
+    |                                  ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:364:33
+    |
+364 |                 assert(left_tree@.len() + right_tree@.len() <= n as nat);
+    |                                 ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:364:53
+    |
+364 |                 assert(left_tree@.len() + right_tree@.len() <= n as nat);
+    |                                                     ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `union` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:366:36
+    |
+366 |             let result = left_tree.union(&right_tree);
+    |                                    ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `union` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T> where T: Concurrency::Concurrency::MtKey)
+    |                                                                                         ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:382:22
+    |
+382 |             self.tree@.finite()
+    |                      ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:388:23
+    |
+388 |             self.tree.size()
+    |                       ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `size` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:395:23
+    |
+395 |             self.tree.collect_in_order(&mut vals);
+    |                       ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:427:37
+    |
+427 |             AVLTreeSetMtPer { tree: ParamBST::new() }
+    |                                     ^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:427:37
+    |
+427 |             AVLTreeSetMtPer { tree: ParamBST::new() }
+    |                                     ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:433:37
+    |
+433 |             AVLTreeSetMtPer { tree: ParamBST::singleton(x) }
+    |                                     ^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:433:37
+    |
+433 |             AVLTreeSetMtPer { tree: ParamBST::singleton(x) }
+    |                                     ^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:453:24
+    |
+453 |             let tree = from_vec_dc_per(vals);
+    |                        ^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `view` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:455:28
+    |
+455 |                 assert(tree@ =~= vals_views.to_set());
+    |                            ^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `view` not found for this struct because it doesn't satisfy `_: View`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:169:13
+    |
+169 |     impl<T: MtKey> View for ParamBST<T> {
+    |             ^^^^^  ----     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:458:31
+    |
+458 |             AVLTreeSetMtPer { tree }
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `filter` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:468:43
+    |
+468 |             let filtered_tree = self.tree.filter(f, Ghost(spec_pred));
+    |                                           ^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `filter` not found for this struct because it doesn't satisfy `_: Iterator` or `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+    = note: the following trait bounds were not satisfied:
+            `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>: std::iter::Iterator`
+            which is required by `&mut Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>: std::iter::Iterator`
+note: the trait `std::iter::Iterator` must be implemented
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/iter/traits/iterator.rs:40:0
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:469:37
+    |
+469 |             AVLTreeSetMtPer { tree: filtered_tree }
+    |                                     ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `intersect` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:475:41
+    |
+475 |             let common_tree = self.tree.intersect(&other.tree);
+    |                                         ^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `intersect` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:476:37
+    |
+476 |             AVLTreeSetMtPer { tree: common_tree }
+    |                                     ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:482:44
+    |
+482 |             let remaining_tree = self.tree.difference(&other.tree);
+    |                                            ^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `difference` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:483:37
+    |
+483 |             AVLTreeSetMtPer { tree: remaining_tree }
+    |                                     ^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `union` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:489:43
+    |
+489 |             let combined_tree = self.tree.union(&other.tree);
+    |                                           ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `union` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:490:37
+    |
+490 |             AVLTreeSetMtPer { tree: combined_tree }
+    |                                     ^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `find` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:496:36
+    |
+496 |             let result = self.tree.find(x);
+    |                                    ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `find` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+    --> src/Chap41/AVLTreeSetMtPer.rs:503:38
+     |
+ 503 |             let mut tree = self.tree.clone();
+     |                                      ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap38/BSTParaMtEph.rs:161:5
+     |
+ 161 |     pub struct ParamBST<T: MtKey> {
+     |     ----------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+     |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+    --> src/Chap38/BSTParaMtEph.rs:2023:13
+     |
+2023 |     impl<T: MtKey> Clone for ParamBST<T> {
+     |             ^^^^^  -----     -----------
+     |             |
+     |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    -->  src/Chap38/BSTParaMtEph.rs:161:34
+     |
+ 161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+     |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:506:31
+    |
+506 |             AVLTreeSetMtPer { tree }
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+    --> src/Chap41/AVLTreeSetMtPer.rs:512:38
+     |
+ 512 |             let mut tree = self.tree.clone();
+     |                                      ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap38/BSTParaMtEph.rs:161:5
+     |
+ 161 |     pub struct ParamBST<T: MtKey> {
+     |     ----------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+     |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+    --> src/Chap38/BSTParaMtEph.rs:2023:13
+     |
+2023 |     impl<T: MtKey> Clone for ParamBST<T> {
+     |             ^^^^^  -----     -----------
+     |             |
+     |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    -->  src/Chap38/BSTParaMtEph.rs:161:34
+     |
+ 161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+     |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:515:31
+    |
+515 |             AVLTreeSetMtPer { tree }
+    |                               ^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+380 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> AVLTreeSetMtPerTrait<T> for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:532:23
+    |
+532 |             self.tree.collect_in_order(&mut self_seq);
+    |                       ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:533:24
+    |
+533 |             other.tree.collect_in_order(&mut other_seq);
+    |                        ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:569:38
+    |
+569 |             let _sz_self = self.tree.size();
+    |                                      ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `size` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:570:40
+    |
+570 |             let _sz_other = other.tree.size();
+    |                                        ^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `size` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:573:23
+    |
+573 |             self.tree.collect_in_order(&mut self_vals);
+    |                       ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `collect_in_order` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:574:24
+    |
+574 |             other.tree.collect_in_order(&mut other_vals);
+    |                        ^^^^^^^^^^^^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+    |
+   ::: src/Chap38/BSTParaMtEph.rs:161:5
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |     ----------------------------- method `collect_in_order` not found for this struct because it doesn't satisfy `_: ParamBSTTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+   --> src/Chap38/BSTParaMtEph.rs:490:13
+    |
+490 |     impl<T: MtKey> ParamBSTTrait<T> for ParamBST<T> {
+    |             ^^^^^  ----------------     -----------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap38/BSTParaMtEph.rs:161:34
+    |
+161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+    |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `clone` exists for struct `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>`, but its trait bounds were not satisfied
+    --> src/Chap41/AVLTreeSetMtPer.rs:609:47
+     |
+ 609 |             AVLTreeSetMtPer { tree: self.tree.clone() }
+     |                                               ^^^^^ method cannot be called on `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST<T>` due to unsatisfied trait bounds
+     |
+    ::: src/Chap38/BSTParaMtEph.rs:161:5
+     |
+ 161 |     pub struct ParamBST<T: MtKey> {
+     |     ----------------------------- method `clone` not found for this struct because it doesn't satisfy `_: Clone`
+     |
+note: trait bound `T: Concurrency::Concurrency::MtKey` was not satisfied
+    --> src/Chap38/BSTParaMtEph.rs:2023:13
+     |
+2023 |     impl<T: MtKey> Clone for ParamBST<T> {
+     |             ^^^^^  -----     -----------
+     |             |
+     |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    -->  src/Chap38/BSTParaMtEph.rs:161:34
+     |
+ 161 |     pub struct ParamBST<T: MtKey> where T: Concurrency::Concurrency::MtKey {
+     |                                   ++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:609:37
+    |
+609 |             AVLTreeSetMtPer { tree: self.tree.clone() }
+    |                                     ^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+605 |     impl<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> Clone for AVLTreeSetMtPer<T> {
+    |                                      ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/Example41_3.rs:83:43
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                                           ^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:894:22
+    |
+894 |             $( __set.insert($x); )*
+    |                      ------ required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required by a bound in `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait::insert`
+   --> src/Chap41/AVLTreeSetStEph.rs:197:51
+    |
+197 |     pub trait AVLTreeSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                   ^^^^^^^^^^ required by this bound in `AVLTreeSetStEphTrait::insert`
+...
+326 |         fn insert(&mut self, x: T)
+    |            ------ required by a bound in this associated function
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:893:174
+    |
+893 | ...LTreeSetStEphTrait<_> >::empty();
+    |                       ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required by a bound in `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait::empty`
+   --> src/Chap41/AVLTreeSetStEph.rs:197:51
+    |
+197 |     pub trait AVLTreeSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                   ^^^^^^^^^^ required by this bound in `AVLTreeSetStEphTrait::empty`
+...
+220 |         fn empty() -> (empty: Self)
+    |            ----- required by a bound in this associated function
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:893:31
+    |
+893 | ...     let mut __set = < $crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<_> as $crate::Chap41::AVLTreeSetStEph::...
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>` to implement `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait<char>`
+   --> src/Chap41/AVLTreeSetStEph.rs:525:37
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ----------  ^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:894:22
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+...
+894 |             $( __set.insert($x); )*
+    |                      ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `insert`, perhaps you need to implement one of them:
+            candidate #1: `Chap18::ArraySeq::ArraySeq::ArraySeqTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #5: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #6: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #7: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #8: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #9: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #10: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #11: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #12: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #13: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #14: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #16: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #17: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #18: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #19: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #20: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #21: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #22: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #23: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #24: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #25: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:84:26
+    |
+ 84 |         let fa = set_abc.find(&'a');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:85:26
+    |
+ 85 |         let fb = set_abc.find(&'b');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:86:26
+    |
+ 86 |         let fc = set_abc.find(&'c');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error: aborting due to 135 previous errors
+
+Some errors have detailed explanations: E0034, E0277, E0308, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 10374MB, peak z3 RSS: 0MB, min free: 8245MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 0s

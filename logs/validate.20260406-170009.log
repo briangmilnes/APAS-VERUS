@@ -1,0 +1,160 @@
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:66:19
+    |
+ 66 |         pub tree: ParamBST<T>,
+    |                   ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 65 |     pub struct AVLTreeSetMtEph<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtEph.rs:247:73
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                         ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+247 |     fn from_vec_dc<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:69:19
+    |
+ 69 |         pub tree: ParamBST<T>,
+    |                   ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+ 68 |     pub struct AVLTreeSetMtPer<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder> {
+    |                                                            ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetMtPer.rs:257:77
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                                             ^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `T`
+    |
+note: required for `T` to implement `Concurrency::Concurrency::MtKey`
+   --> src/Concurrency.rs:75:13
+    |
+ 75 |     impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
+    |             ^^^^^     ^                           ---------- unsatisfied trait bound introduced here
+note: required by a bound in `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBST`
+   --> src/Chap38/BSTParaMtEph.rs:161:28
+    |
+161 |     pub struct ParamBST<T: MtKey> {
+    |                            ^^^^^ required by this bound in `ParamBST`
+help: consider further restricting type parameter `T` with trait `TotalOrder`
+    |
+257 |     fn from_vec_dc_per<T: StTInMtT + Ord + 'static + vstdplus::total_order::total_order::TotalOrder>(vals: Vec<T>) -> (tree: ParamBST<T>)
+    |                                                    ++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap38/BSTParaMtEph.rs:992:27
+    |
+992 |                 match key.cmp(&root_key) {
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+    |
+help: disambiguate the method for candidate #2
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+    |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap38/BSTParaMtEph.rs:1138:27
+     |
+1138 |                 match key.cmp(&root_key) {
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+     |
+help: disambiguate the method for candidate #2
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+     |
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:828:52
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+828 |         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound

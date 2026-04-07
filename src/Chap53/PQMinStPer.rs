@@ -33,6 +33,7 @@ pub mod PQMinStPer {
     use crate::Chap41::AVLTreeSetStPer::AVLTreeSetStPer::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
     #[cfg(verus_keep_ghost)]
@@ -51,7 +52,7 @@ pub mod PQMinStPer {
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(P)]
-    pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
+    pub struct PQMinResult<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> {
         pub visited: AVLTreeSetStPer<V>,
         pub priorities: AVLTreeSetStPer<Pair<V, P>>,     // (vertex, priority)
         pub parent: Option<AVLTreeSetStPer<Pair<V, V>>>, // (child, parent)
@@ -60,7 +61,7 @@ pub mod PQMinStPer {
     //		Section 6. spec fns
 
 
-    pub open spec fn spec_pqminstper_wf_generic<V: StT + Ord, P: StT + Ord>(
+    pub open spec fn spec_pqminstper_wf_generic<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         s: &PQMinResult<V, P>,
     ) -> bool {
         s.visited@.finite() && s.priorities@.finite()
@@ -69,7 +70,7 @@ pub mod PQMinStPer {
     //		Section 8. traits
 
 
-    pub trait PQMinStPerTrait<V: StT + Ord, P: StT + Ord> {
+    pub trait PQMinStPerTrait<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> {
         spec fn spec_pqminstper_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
@@ -129,7 +130,7 @@ pub mod PQMinStPer {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord, P: StT + Ord> PQMinStPerTrait<V, P> for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> PQMinStPerTrait<V, P> for PQMinResult<V, P> {
         open spec fn spec_pqminstper_wf(&self) -> bool {
             spec_pqminstper_wf_generic(self)
             && obeys_feq_full::<V>()
@@ -152,7 +153,7 @@ pub mod PQMinStPer {
 
     /// Priority-first search from single source (Section 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_min_multi; St sequential.
-    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>, Ghost(spec_priority): Ghost<spec_fn(<V as View>::V) -> <P as View>::V>) -> (search: PQMinResult<V, P>)
+    pub fn pq_min<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>, Ghost(spec_priority): Ghost<spec_fn(<V as View>::V) -> <P as View>::V>) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStPer<V>,
         PF: Fn(&V) -> P,
@@ -189,7 +190,7 @@ pub mod PQMinStPer {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — AVL to_seq + nth(0) for min; St sequential.
-    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
+    fn pq_find_min_priority<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         frontier: &AVLTreeSetStPer<Pair<Pair<P, V>, V>>,
     ) -> (min_vertex: Option<V>)
         requires
@@ -219,7 +220,7 @@ pub mod PQMinStPer {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — |V| rounds × (find_min + neighbor scan × AVL insert); St sequential.
     #[verifier::exec_allows_no_decreases_clause]
-    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
+    fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn(&V) -> AVLTreeSetStPer<V>, PF: Fn(&V) -> P>(
         graph: &G,
         priority_fn: &PF,
         visited_init: AVLTreeSetStPer<V>,
@@ -471,7 +472,7 @@ pub mod PQMinStPer {
 
     /// Priority-first search from multiple sources (Section 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_explore; St sequential.
-    pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+    pub fn pq_min_multi<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(
         graph: &G,
         sources: AVLTreeSetStPer<V>,
         priority_fn: &PF,
@@ -590,7 +591,7 @@ pub mod PQMinStPer {
     //		Section 12. derive impls in verus!
 
 
-    impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> Clone for PQMinResult<V, P> {
         fn clone(&self) -> (out: Self) {
             PQMinResult {
                 visited: self.visited.clone(),
@@ -605,7 +606,7 @@ pub mod PQMinStPer {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord, P: StT + Ord> std::fmt::Debug for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Debug for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQMinResult")
                 .field("visited", &self.visited)
@@ -615,7 +616,7 @@ pub mod PQMinStPer {
         }
     }
 
-    impl<V: StT + Ord, P: StT + Ord> std::fmt::Display for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Display for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "PQMinResult(visited={}, priorities={})", self.visited.size(), self.priorities.size())
         }

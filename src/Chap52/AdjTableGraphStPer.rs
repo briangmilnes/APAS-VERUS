@@ -30,6 +30,7 @@ pub mod AdjTableGraphStPer {
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::{
         spec_sum_adj_sizes, spec_sum_entry_sizes,
@@ -66,14 +67,14 @@ broadcast use {
 
 
     #[verifier::reject_recursive_types(V)]
-    pub struct AdjTableGraphStPer<V: StT + Ord> {
+    pub struct AdjTableGraphStPer<V: StT + Ord + TotalOrder> {
         pub adj: TableStPer<V, AVLTreeSetStPer<V>>,
     }
 
     //		Section 5. view impls
 
 
-    impl<V: StT + Ord> View for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder> View for AdjTableGraphStPer<V> {
         type V = Self;
         open spec fn view(&self) -> Self::V { *self }
     }
@@ -115,7 +116,7 @@ broadcast use {
     //		Section 8. traits
 
 
-    pub trait AdjTableGraphStPerTrait<V: StT + Ord>: Sized {
+    pub trait AdjTableGraphStPerTrait<V: StT + Ord + TotalOrder>: Sized {
         spec fn spec_adjtablegraphstper_wf(&self) -> bool;
         spec fn spec_adj(&self) -> Map<<V as View>::V, Set<<V as View>::V>>;
         spec fn spec_num_edges(&self) -> nat;
@@ -212,7 +213,7 @@ broadcast use {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder> AdjTableGraphStPerTrait<V> for AdjTableGraphStPer<V> {
         open spec fn spec_adjtablegraphstper_wf(&self) -> bool {
             // Type-level predicates needed by table and set operations.
             obeys_view_eq::<V>()
@@ -852,19 +853,19 @@ broadcast use {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord + Clone> Clone for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder + Clone> Clone for AdjTableGraphStPer<V> {
         fn clone(&self) -> Self {
             AdjTableGraphStPer { adj: self.adj.clone() }
         }
     }
 
-    impl<V: StT + Ord> std::fmt::Debug for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Debug for AdjTableGraphStPer<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "AdjTableGraphStPer(vertices: {})", self.adj.size())
         }
     }
 
-    impl<V: StT + Ord> std::fmt::Display for AdjTableGraphStPer<V> {
+    impl<V: StT + Ord + TotalOrder> std::fmt::Display for AdjTableGraphStPer<V> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "AdjTableGraphStPer(vertices: {})", self.adj.size())
         }

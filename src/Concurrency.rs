@@ -36,6 +36,7 @@ pub fn diverge<A>() -> A {
 pub mod Concurrency {
     use vstd::prelude::*;
     use crate::Types::Types::*;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
 
     verus! {
 
@@ -46,7 +47,7 @@ pub mod Concurrency {
     pub trait MtT: Sized + Send + Sync {}
 
     /// Multi-threaded key type with ordering and static lifetime.
-    pub trait MtKey: StTInMtT + Ord + 'static {}
+    pub trait MtKey: StTInMtT + Ord + TotalOrder + 'static {}
 
     /// Multi-threaded value type with static lifetime.
     pub trait MtVal: StTInMtT + 'static {}
@@ -71,7 +72,7 @@ pub mod Concurrency {
     // Blanket implementations
     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
     impl<T> MtT for T where T: Sized + Send + Sync {}
-    impl<T> MtKey for T where T: StTInMtT + Ord + 'static {}
+    impl<T> MtKey for T where T: StTInMtT + Ord + TotalOrder + 'static {}
     impl<T> MtVal for T where T: StTInMtT + 'static {}
     impl<T, V> MtReduceFn<V> for T where T: Fn(&V, &V) -> V + Clone + Send + Sync + 'static {}
     impl<F, T> Pred<T> for F where F: Fn(&T) -> bool + Send + Sync + 'static {}

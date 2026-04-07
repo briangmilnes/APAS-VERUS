@@ -63,7 +63,7 @@ broadcast use {
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPer<K: StT + Ord, V: StT + Ord> {
+    pub struct OrderedTableStPer<K: StT + Ord + TotalOrder, V: StT + Ord> {
         pub tree: ParamBST<Pair<K, V>>,
     }
 
@@ -72,7 +72,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStPer<K, V> {
         type V = Map<K::V, V::V>;
 
         open spec fn view(&self) -> Self::V { spec_pair_set_to_map(self.tree@) }
@@ -103,7 +103,7 @@ broadcast use {
     }
 
     /// Pair ordering is determined by key ordering when keys differ.
-    pub open spec fn spec_pair_key_determines_order<K: StT + Ord, V: StT + Ord>() -> bool {
+    pub open spec fn spec_pair_key_determines_order<K: StT + Ord + TotalOrder, V: StT + Ord>() -> bool {
         forall|p1: Pair<K, V>, p2: Pair<K, V>|
             p1.0.cmp_spec(&p2.0) != Equal ==>
             (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
@@ -415,7 +415,7 @@ broadcast use {
 
 
     /// Trait defining all ordered table operations (ADT 42.1 + ADT 43.1) with persistent semantics.
-    pub trait OrderedTableStPerTrait<K: StT + Ord, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
+    pub trait OrderedTableStPerTrait<K: StT + Ord + TotalOrder, V: StT + Ord>: Sized + View<V = Map<K::V, V::V>> {
         spec fn spec_orderedtablestper_wf(&self) -> bool;
         spec fn spec_orderedtablestper_find_pre(&self) -> bool;
 
@@ -846,7 +846,7 @@ broadcast use {
 
     /// Find by key in a ParamBST of pairs via recursive BST descent.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST search by key
-    fn bst_find_by_key<K: StT + Ord, V: StT + Ord>(
+    fn bst_find_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
         k: &K,
     ) -> (found: Option<V>)
@@ -914,7 +914,7 @@ broadcast use {
                         };
                     };
                 }
-                let c = k.cmp(&root_pair.0);
+                let c = <K as std::cmp::Ord>::cmp(k, &root_pair.0);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     Equal => {
@@ -1684,7 +1684,7 @@ broadcast use {
     }
 
 
-    impl<K: StT + Ord, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
             self.tree.spec_bstparasteph_wf()
             && spec_key_unique_pairs_set(self.tree@)
@@ -3341,7 +3341,7 @@ broadcast use {
             {
                 let pair = sorted.nth(i);
                 proof { reveal(obeys_view_eq); }
-                let c = pair.0.cmp(k);
+                let c = <K as std::cmp::Ord>::cmp(&pair.0, k);
                 proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
                 match c {
                     core::cmp::Ordering::Less => {
@@ -3548,11 +3548,11 @@ broadcast use {
                 decreases len - i,
             {
                 let pair = sorted.nth(i);
-                let ge_k1 = match pair.0.cmp(k1) {
+                let ge_k1 = match <K as std::cmp::Ord>::cmp(&pair.0, k1) {
                     Less => false,
                     _ => true,
                 };
-                let le_k2 = match pair.0.cmp(k2) {
+                let le_k2 = match <K as std::cmp::Ord>::cmp(&pair.0, k2) {
                     Greater => false,
                     _ => true,
                 };
@@ -3999,7 +3999,7 @@ broadcast use {
     }
 
 
-    impl<K: StT + Ord, V: StT + Ord> OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPer<K, V> {
         /// Returns an iterator over the table entries via in-order traversal.
         pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
             requires
@@ -4015,7 +4015,7 @@ broadcast use {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- n BST inserts from sorted entries
-    pub fn from_sorted_entries<K: StT + Ord, V: StT + Ord>(
+    pub fn from_sorted_entries<K: StT + Ord + TotalOrder, V: StT + Ord>(
         entries: AVLTreeSeqStPerS<Pair<K, V>>,
     ) -> (table: OrderedTableStPer<K, V>)
         requires
@@ -4139,20 +4139,20 @@ broadcast use {
 
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerIter<K: StT + Ord, V: StT + Ord> {
+    pub struct OrderedTableStPerIter<K: StT + Ord + TotalOrder, V: StT + Ord> {
         pub inner: IntoIter<Pair<K, V>>,
     }
 
-    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStPerIter<K, V> {
         type V = (int, Seq<Pair<K, V>>);
         open spec fn view(&self) -> (int, Seq<Pair<K, V>>) { self.inner@ }
     }
 
-    pub open spec fn iter_invariant<K: StT + Ord, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
+    pub open spec fn iter_invariant<K: StT + Ord + TotalOrder, V: StT + Ord>(it: &OrderedTableStPerIter<K, V>) -> bool {
         0 <= it@.0 <= it@.1.len()
     }
 
-    impl<K: StT + Ord, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::Iterator for OrderedTableStPerIter<K, V> {
         type Item = Pair<K, V>;
 
         fn next(&mut self) -> (next: Option<Pair<K, V>>)
@@ -4180,24 +4180,24 @@ broadcast use {
     /// Ghost iterator for ForLoopGhostIterator support.
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
-    pub struct OrderedTableStPerGhostIterator<K: StT + Ord, V: StT + Ord> {
+    pub struct OrderedTableStPerGhostIterator<K: StT + Ord + TotalOrder, V: StT + Ord> {
         pub pos: int,
         pub elements: Seq<Pair<K, V>>,
     }
 
-    impl<K: StT + Ord, V: StT + Ord> View for OrderedTableStPerGhostIterator<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> View for OrderedTableStPerGhostIterator<K, V> {
         type V = Seq<Pair<K, V>>;
         open spec fn view(&self) -> Seq<Pair<K, V>> { self.elements.take(self.pos) }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStPerIter<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIteratorNew for OrderedTableStPerIter<K, V> {
         type GhostIter = OrderedTableStPerGhostIterator<K, V>;
         open spec fn ghost_iter(&self) -> OrderedTableStPerGhostIterator<K, V> {
             OrderedTableStPerGhostIterator { pos: self@.0, elements: self@.1 }
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStPerGhostIterator<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> vstd::pervasive::ForLoopGhostIterator for OrderedTableStPerGhostIterator<K, V> {
         type ExecIter = OrderedTableStPerIter<K, V>;
         type Item = Pair<K, V>;
         type Decrease = int;
@@ -4232,7 +4232,7 @@ broadcast use {
         }
     }
 
-    impl<'a, K: StT + Ord, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStPer<K, V> {
+    impl<'a, K: StT + Ord + TotalOrder, V: StT + Ord> std::iter::IntoIterator for &'a OrderedTableStPer<K, V> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStPerIter<K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
@@ -4251,14 +4251,14 @@ broadcast use {
 
 
     #[cfg(verus_keep_ghost)]
-    impl<K: StT + Ord, V: StT + Ord> PartialEqSpecImpl for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> PartialEqSpecImpl for OrderedTableStPer<K, V> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> Eq for OrderedTableStPer<K, V> {}
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> Eq for OrderedTableStPer<K, V> {}
 
-    impl<K: StT + Ord, V: StT + Ord> PartialEq for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> PartialEq for OrderedTableStPer<K, V> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -4268,7 +4268,7 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> Clone for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> Clone for OrderedTableStPer<K, V> {
         fn clone(&self) -> (copy: Self)
             ensures copy@ == self@
         {
@@ -4301,37 +4301,37 @@ broadcast use {
 
     use std::fmt;
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPer(size: {})", self.size())
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStPer<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPer<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPer(size: {})", self.size())
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStPerIter<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStPerIter<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("OrderedTableStPerIter").finish()
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStPerIter<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPerIter<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPerIter")
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Debug for OrderedTableStPerGhostIterator<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Debug for OrderedTableStPerGhostIterator<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPerGhostIterator")
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord> fmt::Display for OrderedTableStPerGhostIterator<K, V> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord> fmt::Display for OrderedTableStPerGhostIterator<K, V> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "OrderedTableStPerGhostIterator")
         }

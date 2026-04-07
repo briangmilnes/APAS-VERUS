@@ -30,10 +30,11 @@ pub mod PQMinStEph {
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
+    use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -46,7 +47,7 @@ pub mod PQMinStEph {
 
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(P)]
-    pub struct PQMinResult<V: StT + Ord, P: StT + Ord> {
+    pub struct PQMinResult<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> {
         pub visited: AVLTreeSetStEph<V>,
         pub priorities: AVLTreeSetStEph<Pair<V, P>>,
         pub parent: Option<AVLTreeSetStEph<Pair<V, V>>>,
@@ -55,7 +56,7 @@ pub mod PQMinStEph {
     //		Section 6. spec fns
 
 
-    pub open spec fn spec_pqminsteph_wf_generic<V: StT + Ord, P: StT + Ord>(
+    pub open spec fn spec_pqminsteph_wf_generic<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         s: &PQMinResult<V, P>,
     ) -> bool {
         s.visited@.finite() && s.priorities@.finite()
@@ -64,7 +65,7 @@ pub mod PQMinStEph {
     //		Section 8. traits
 
 
-    pub trait PQMinStEphTrait<V: StT + Ord, P: StT + Ord> {
+    pub trait PQMinStEphTrait<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> {
         spec fn spec_pqminsteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
@@ -133,7 +134,7 @@ pub mod PQMinStEph {
     //		Section 9. impls
 
 
-    impl<V: StT + Ord, P: StT + Ord> PQMinStEphTrait<V, P> for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> PQMinStEphTrait<V, P> for PQMinResult<V, P> {
         open spec fn spec_pqminsteph_wf(&self) -> bool {
             spec_pqminsteph_wf_generic(self)
             && obeys_feq_fulls::<P, V>()
@@ -160,7 +161,7 @@ pub mod PQMinStEph {
     /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
     /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — delegates to pq_min_multi.
-    pub fn pq_min<V: StT + Ord, P: StT + Ord, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
+    pub fn pq_min<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
     where
         G: Fn(&V) -> AVLTreeSetStEph<V>,
         PF: Fn(&V) -> P,
@@ -201,7 +202,7 @@ pub mod PQMinStEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log |frontier|), Span O(log |frontier|) — AVL to_seq + nth(0) for min; St sequential.
-    fn pq_find_min_priority<V: StT + Ord, P: StT + Ord>(
+    fn pq_find_min_priority<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder>(
         frontier: &AVLTreeSetStEph<Pair<Pair<P, V>, V>>,
     ) -> (min_vertex: Option<V>)
         requires
@@ -229,7 +230,7 @@ pub mod PQMinStEph {
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — |V| rounds × (find_min O(log V) + neighbor scan O(deg) × AVL insert O(log V)); St sequential.
     #[verifier::exec_allows_no_decreases_clause]
-    fn pq_explore<V: StT + Ord, P: StT + Ord, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
+    fn pq_explore<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P>(
         graph: &G,
         priority_fn: &PF,
         visited_init: AVLTreeSetStEph<V>,
@@ -516,7 +517,7 @@ pub mod PQMinStEph {
 
     /// Priority-first search from multiple sources (Section 53.4).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to pq_explore; St sequential.
-    pub fn pq_min_multi<V: StT + Ord, P: StT + Ord, G, PF>(
+    pub fn pq_min_multi<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder, G, PF>(
         graph: &G,
         sources: AVLTreeSetStEph<V>,
         priority_fn: &PF,
@@ -656,7 +657,7 @@ pub mod PQMinStEph {
     //		Section 12. derive impls in verus!
 
 
-    impl<V: StT + Ord, P: StT + Ord> Clone for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> Clone for PQMinResult<V, P> {
         fn clone(&self) -> (out: Self) {
             PQMinResult {
                 visited: self.visited.clone(),
@@ -671,7 +672,7 @@ pub mod PQMinStEph {
     //		Section 14. derive impls outside verus!
 
 
-    impl<V: StT + Ord, P: StT + Ord> std::fmt::Debug for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Debug for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             f.debug_struct("PQMinResult")
                 .field("visited", &self.visited)
@@ -681,7 +682,7 @@ pub mod PQMinStEph {
         }
     }
 
-    impl<V: StT + Ord, P: StT + Ord> std::fmt::Display for PQMinResult<V, P> {
+    impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Display for PQMinResult<V, P> {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             write!(f, "PQMinResult(visited={}, priorities={})", self.visited.size(), self.priorities.size())
         }

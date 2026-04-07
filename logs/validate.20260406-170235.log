@@ -1,0 +1,726 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap38/BSTParaMtEph.rs:992:27
+    |
+992 |                 match key.cmp(&root_key) {
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+    |
+help: disambiguate the method for candidate #2
+    |
+992 -                 match key.cmp(&root_key) {
+992 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+    |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap38/BSTParaMtEph.rs:1138:27
+     |
+1138 |                 match key.cmp(&root_key) {
+     |                           ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+     |
+help: disambiguate the method for candidate #2
+     |
+1138 -                 match key.cmp(&root_key) {
+1138 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+     |
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:828:52
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+828 |         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetsteph_wf() }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:848:38
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+848 |         fn default() -> Self { Self::empty() }
+    |                                      ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:864:29
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+864 |                 assume(self.spec_avltreesetsteph_wf());
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetsteph_wf` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:865:30
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+865 |                 assume(other.spec_avltreesetsteph_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:30
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:46
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for reference `&Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:869:61
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStEphTrait<T>`
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                             ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetStEph.rs:869:89
+    |
+859 |     impl<T: StT + Ord> PartialEq for AVLTreeSetStEph<T> {
+    |          - expected this type parameter
+...
+869 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                                                         ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:710:52
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+710 |         open spec fn spec_wf(&self) -> bool { self.spec_avltreesetstper_wf() }
+    |                                                    ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the function or associated item `empty` exists for struct `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:730:38
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- function or associated item `empty` not found for this struct because it doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+730 |         fn default() -> Self { Self::empty() }
+    |                                      ^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:746:29
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+746 |                 assume(self.spec_avltreesetstper_wf());
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_avltreesetstper_wf` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:747:30
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+747 |                 assume(other.spec_avltreesetstper_wf());
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:30
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `size` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:46
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                              ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `difference` exists for reference `&Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPer<T>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:751:61
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> {
+    |     ---------------------------------------- doesn't satisfy `_: AVLTreeSetStPerTrait<T>`
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                             ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `T: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStPer.rs:443:25
+    |
+443 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStPerTrait<T> for AVLTreeSetStPer<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 66 |     pub struct AVLTreeSetStPer<T: StT + Ord> where T: vstdplus::total_order::total_order::TotalOrder {
+    |                                              +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetStPer.rs:751:89
+    |
+741 |     impl<T: StT + Ord> PartialEq for AVLTreeSetStPer<T> {
+    |          - expected this type parameter
+...
+751 |             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+    |                                                                                         ^ expected type parameter `T`, found integer
+    |
+    = note: expected type parameter `T`
+                         found type `{integer}`
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:540:37
+    |
+540 |                 let c = self_seq[i].cmp(&other_seq[i]);
+    |                                     ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+540 -                 let c = self_seq[i].cmp(&other_seq[i]);
+540 +                 let c = std::cmp::Ord::cmp(&self_seq[i], &other_seq[i]);
+    |
+help: disambiguate the method for candidate #2
+    |
+540 -                 let c = self_seq[i].cmp(&other_seq[i]);
+540 +                 let c = vstdplus::total_order::total_order::TotalOrder::cmp(&self_seq[i], &other_seq[i]);
+    |
+
+error[E0308]: mismatched types
+   --> src/Chap41/AVLTreeSetMtPer.rs:541:25
+    |
+527 |     impl<T: StTInMtT + Ord + TotalOrder + 'static> Ord for AVLTreeSetMtPer<T> {
+    |          - expected this type parameter
+...
+541 |                 if c != Equal {
+    |                         ^^^^^ expected type parameter `T`, found `Ordering`
+    |
+    = note: expected type parameter `T`
+                         found enum `std::cmp::Ordering`
+
+error[E0034]: multiple applicable items in scope
+   --> src/Chap41/AVLTreeSetMtPer.rs:546:20
+    |
+546 |             n_self.cmp(&n_other)
+    |                    ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in an impl of the trait `vstdplus::total_order::total_order::TotalOrder` for the type `usize`
+   --> src/vstdplus/total_order.rs:280:5
+    |
+280 |     fn cmp(&self, other: &Self) -> (c: Ordering) {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: candidate #2 is defined in an impl of the trait `std::cmp::Ord` for the type `usize`
+help: disambiguate the method for candidate #1
+    |
+546 -             n_self.cmp(&n_other)
+546 +             vstdplus::total_order::total_order::TotalOrder::cmp(&n_self, &n_other)
+    |
+help: disambiguate the method for candidate #2
+    |
+546 -             n_self.cmp(&n_other)
+546 +             std::cmp::Ord::cmp(&n_self, &n_other)
+    |
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/Example41_3.rs:83:43
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                                           ^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:894:22
+    |
+894 |             $( __set.insert($x); )*
+    |                      ------ required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required by a bound in `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait::insert`
+   --> src/Chap41/AVLTreeSetStEph.rs:197:51
+    |
+197 |     pub trait AVLTreeSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                   ^^^^^^^^^^ required by this bound in `AVLTreeSetStEphTrait::insert`
+...
+326 |         fn insert(&mut self, x: T)
+    |            ------ required by a bound in this associated function
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:893:174
+    |
+893 | ...LTreeSetStEphTrait<_> >::empty();
+    |                       ^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required by a bound in `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait::empty`
+   --> src/Chap41/AVLTreeSetStEph.rs:197:51
+    |
+197 |     pub trait AVLTreeSetStEphTrait<T: StT + Ord + TotalOrder>: Sized + View<V = Set<<T as View>::V>> {
+    |                                                   ^^^^^^^^^^ required by this bound in `AVLTreeSetStEphTrait::empty`
+...
+220 |         fn empty() -> (empty: Self)
+    |            ----- required by a bound in this associated function
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `char: vstdplus::total_order::total_order::TotalOrder` is not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:893:31
+    |
+893 | ...     let mut __set = < $crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<_> as $crate::Chap41::AVLTreeSetStEph::...
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `vstdplus::total_order::total_order::TotalOrder` is not implemented for `char`
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+    = help: the following other types implement trait `vstdplus::total_order::total_order::TotalOrder`:
+              Types::Types::Pair<K, V>
+              i128
+              i16
+              i32
+              i64
+              i8
+              isize
+              std::string::String
+            and 6 others
+note: required for `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>` to implement `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait<char>`
+   --> src/Chap41/AVLTreeSetStEph.rs:525:37
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ----------  ^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `insert` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:894:22
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `insert` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+...
+894 |             $( __set.insert($x); )*
+    |                      ^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/Example41_3.rs:83:23
+    |
+ 83 |         let set_abc = AVLTreeSetStEphLit!['a', 'b', 'c'];
+    |                       ---------------------------------- in this macro invocation
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `insert`, perhaps you need to implement one of them:
+            candidate #1: `Chap18::ArraySeq::ArraySeq::ArraySeqTrait`
+            candidate #2: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #3: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #5: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #6: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #7: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #8: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #9: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #10: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #11: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #12: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #13: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #14: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #16: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #17: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #18: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #19: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #20: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #21: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #22: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #23: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #24: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #25: `vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::HashMapWithViewPlusTrait`
+    = note: this error originates in the macro `AVLTreeSetStEphLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:84:26
+    |
+ 84 |         let fa = set_abc.find(&'a');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:85:26
+    |
+ 85 |         let fb = set_abc.find(&'b');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error[E0599]: the method `find` exists for struct `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEph<char>`, but its trait bounds were not satisfied
+   --> src/Chap41/Example41_3.rs:86:26
+    |
+ 86 |         let fc = set_abc.find(&'c');
+    |                          ^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+    |
+ 66 |     pub struct AVLTreeSetStEph<T: StT + Ord> {
+    |     ---------------------------------------- method `find` not found for this struct because it doesn't satisfy `_: AVLTreeSetStEphTrait<char>`
+    |
+note: trait bound `char: vstdplus::total_order::total_order::TotalOrder` was not satisfied
+   --> src/Chap41/AVLTreeSetStEph.rs:525:25
+    |
+525 |     impl<T: StT + Ord + TotalOrder> AVLTreeSetStEphTrait<T> for AVLTreeSetStEph<T> {
+    |                         ^^^^^^^^^^  -----------------------     ------------------
+    |                         |
+    |                         unsatisfied trait bound introduced here
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following traits define an item `find`, perhaps you need to implement one of them:
+            candidate #1: `Chap37::BSTAVLMtEph::BSTAVLMtEph::BSTAVLMtEphTrait`
+            candidate #2: `Chap37::BSTAVLStEph::BSTAVLStEph::BSTAVLStEphTrait`
+            candidate #3: `Chap37::BSTBBAlphaMtEph::BSTBBAlphaMtEph::BSTBBAlphaMtEphTrait`
+            candidate #4: `Chap37::BSTBBAlphaStEph::BSTBBAlphaStEph::BSTBBAlphaStEphTrait`
+            candidate #5: `Chap37::BSTPlainMtEph::BSTPlainMtEph::BSTPlainMtEphTrait`
+            candidate #6: `Chap37::BSTPlainStEph::BSTPlainStEph::BSTPlainStEphTrait`
+            candidate #7: `Chap37::BSTRBMtEph::BSTRBMtEph::BSTRBMtEphTrait`
+            candidate #8: `Chap37::BSTRBStEph::BSTRBStEph::BSTRBStEphTrait`
+            candidate #9: `Chap37::BSTSetAVLMtEph::BSTSetAVLMtEph::BSTSetAVLMtEphTrait`
+            candidate #10: `Chap37::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEph::BSTSetBBAlphaMtEphTrait`
+            candidate #11: `Chap37::BSTSetPlainMtEph::BSTSetPlainMtEph::BSTSetPlainMtEphTrait`
+            candidate #12: `Chap37::BSTSetRBMtEph::BSTSetRBMtEph::BSTSetRBMtEphTrait`
+            candidate #13: `Chap37::BSTSetSplayMtEph::BSTSetSplayMtEph::BSTSetSplayMtEphTrait`
+            candidate #14: `Chap37::BSTSplayMtEph::BSTSplayMtEph::BSTSplayMtEphTrait`
+            candidate #15: `Chap37::BSTSplayStEph::BSTSplayStEph::BSTSplayStEphTrait`
+            candidate #16: `Chap38::BSTParaMtEph::BSTParaMtEph::ParamBSTTrait`
+            candidate #17: `Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait`
+            candidate #18: `Chap41::AVLTreeSetMtEph::AVLTreeSetMtEph::AVLTreeSetMtEphTrait`
+            candidate #19: `Chap41::AVLTreeSetMtPer::AVLTreeSetMtPer::AVLTreeSetMtPerTrait`
+            candidate #20: `Chap41::AVLTreeSetStEph::AVLTreeSetStEph::AVLTreeSetStEphTrait`
+            candidate #21: `Chap41::AVLTreeSetStPer::AVLTreeSetStPer::AVLTreeSetStPerTrait`
+            candidate #22: `Chap41::ArraySetEnumMtEph::ArraySetEnumMtEph::ArraySetEnumMtEphTrait`
+            candidate #23: `Chap41::ArraySetStEph::ArraySetStEph::ArraySetStEphTrait`
+            candidate #24: `std::iter::Iterator`
+
+error: aborting due to 28 previous errors
+
+Some errors have detailed explanations: E0034, E0277, E0308, E0599.
+For more information about an error, try `rustc --explain E0034`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 440MB, peak z3 RSS: 0MB, min free: 18025MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

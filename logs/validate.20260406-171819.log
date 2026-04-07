@@ -1,0 +1,66 @@
+error[E0034]: multiple applicable items in scope
+   --> src/Chap39/BSTParaTreapMtEph.rs:630:27
+    |
+630 |                 match key.cmp(&root_key) {
+    |                           ^^^ multiple `cmp` found
+    |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+   --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+   --> src/vstdplus/total_order.rs:60:5
+    |
+ 60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+ 61 | |         ensures
+ 62 | |             (match c {
+ 63 | |                 Ordering::Less => self.le(*other) && self != other,
+...   |
+ 66 | |             }),
+ 67 | |     ;
+    | |_____^
+help: disambiguate the method for candidate #1
+    |
+630 -                 match key.cmp(&root_key) {
+630 +                 match std::cmp::Ord::cmp(&key, &root_key) {
+    |
+help: disambiguate the method for candidate #2
+    |
+630 -                 match key.cmp(&root_key) {
+630 +                 match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+    |
+
+error[E0034]: multiple applicable items in scope
+    --> src/Chap39/BSTParaTreapMtEph.rs:2150:31
+     |
+2150 |                     match key.cmp(&root_key) {
+     |                               ^^^ multiple `cmp` found
+     |
+note: candidate #1 is defined in the trait `std::cmp::Ord`
+    --> /rustc/4a4ef493e3a1488c6e321570238084b38948f6db/library/core/src/cmp.rs:991:4
+note: candidate #2 is defined in the trait `vstdplus::total_order::total_order::TotalOrder`
+    --> src/vstdplus/total_order.rs:60:5
+     |
+  60 | /     fn cmp(&self, other: &Self) -> (c: Ordering)
+  61 | |         ensures
+  62 | |             (match c {
+  63 | |                 Ordering::Less => self.le(*other) && self != other,
+...    |
+  66 | |             }),
+  67 | |     ;
+     | |_____^
+help: disambiguate the method for candidate #1
+     |
+2150 -                     match key.cmp(&root_key) {
+2150 +                     match std::cmp::Ord::cmp(&key, &root_key) {
+     |
+help: disambiguate the method for candidate #2
+     |
+2150 -                     match key.cmp(&root_key) {
+2150 +                     match vstdplus::total_order::total_order::TotalOrder::cmp(&key, &root_key) {
+     |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0034`.
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 1165MB, peak z3 RSS: 0MB, min free: 17549MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 0s

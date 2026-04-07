@@ -60,7 +60,7 @@ broadcast use {
     #[verifier::reject_recursive_types(K)]
     #[verifier::reject_recursive_types(V)]
     #[verifier::reject_recursive_types(F)]
-    pub struct AugOrderedTableStPer<K: StT + Ord, V: StT + Ord, F>
+    pub struct AugOrderedTableStPer<K: StT + Ord + TotalOrder, V: StT + Ord, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -75,7 +75,7 @@ broadcast use {
     //		Section 5. view impls
 
 
-    impl<K: StT + Ord, V: StT + Ord, F> View for AugOrderedTableStPer<K, V, F>
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F> View for AugOrderedTableStPer<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -86,7 +86,7 @@ broadcast use {
     //		Section 7. proof fns/broadcast groups
 
 
-    proof fn lemma_aug_view<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
+    proof fn lemma_aug_view<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone>(
         t: &AugOrderedTableStPer<K, V, F>,
     )
         ensures t@ =~= t.base_table@
@@ -97,7 +97,7 @@ broadcast use {
 
     /// Trait defining all augmented ordered table operations (ADT 43.3)
     /// Extends ordered table operations with efficient reduction
-    pub trait AugOrderedTableStPerTrait<K: StT + Ord, V: StT + Ord, F>: Sized + View<V = Map<K::V, V::V>>
+    pub trait AugOrderedTableStPerTrait<K: StT + Ord + TotalOrder, V: StT + Ord, F>: Sized + View<V = Map<K::V, V::V>>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -459,7 +459,7 @@ broadcast use {
 
     /// Fold all values in `base` through `reducer`, returning `identity` for empty tables.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- collect O(n) + linear fold
-    pub fn calculate_reduction<K: StT + Ord, V: StT + Ord, F>(
+    pub fn calculate_reduction<K: StT + Ord + TotalOrder, V: StT + Ord, F>(
         base: &OrderedTableStPer<K, V>,
         reducer: &F,
         identity: &V,
@@ -492,7 +492,7 @@ broadcast use {
     }
 
 
-    impl<K: StT + Ord, V: StT + Ord, F> AugOrderedTableStPerTrait<K, V, F> for AugOrderedTableStPer<K, V, F>
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F> AugOrderedTableStPerTrait<K, V, F> for AugOrderedTableStPer<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -982,7 +982,7 @@ broadcast use {
     }
 
 
-    impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStPer<K, V, F> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> AugOrderedTableStPer<K, V, F> {
         /// Returns an iterator over the table entries via the base ordered table.
         pub fn iter(&self) -> (it: OrderedTableStPerIter<K, V>)
             requires self.spec_augorderedtablestper_wf(),
@@ -998,7 +998,7 @@ broadcast use {
     //		Section 10. iterators
 
 
-    impl<'a, K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStPer<K, V, F> {
+    impl<'a, K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> std::iter::IntoIterator for &'a AugOrderedTableStPer<K, V, F> {
         type Item = Pair<K, V>;
         type IntoIter = OrderedTableStPerIter<K, V>;
         fn into_iter(self) -> (it: Self::IntoIter)
@@ -1016,14 +1016,14 @@ broadcast use {
 
 
     #[cfg(verus_keep_ghost)]
-    impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> PartialEqSpecImpl for AugOrderedTableStPer<K, V, F> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> PartialEqSpecImpl for AugOrderedTableStPer<K, V, F> {
         open spec fn obeys_eq_spec() -> bool { true }
         open spec fn eq_spec(&self, other: &Self) -> bool { self@ == other@ }
     }
 
-    impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> Eq for AugOrderedTableStPer<K, V, F> {}
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> Eq for AugOrderedTableStPer<K, V, F> {}
 
-    impl<K: StT + Ord, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> PartialEq for AugOrderedTableStPer<K, V, F> {
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F: Fn(&V, &V) -> V + Clone> PartialEq for AugOrderedTableStPer<K, V, F> {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
@@ -1033,7 +1033,7 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord, F> Clone for AugOrderedTableStPer<K, V, F>
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F> Clone for AugOrderedTableStPer<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -1072,7 +1072,7 @@ broadcast use {
 
     //		Section 14. derive impls outside verus!
 
-    impl<K: StT + Ord, V: StT + Ord, F> Display for AugOrderedTableStPer<K, V, F>
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F> Display for AugOrderedTableStPer<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
@@ -1086,7 +1086,7 @@ broadcast use {
         }
     }
 
-    impl<K: StT + Ord, V: StT + Ord, F> Debug for AugOrderedTableStPer<K, V, F>
+    impl<K: StT + Ord + TotalOrder, V: StT + Ord, F> Debug for AugOrderedTableStPer<K, V, F>
     where
         F: Fn(&V, &V) -> V + Clone,
     {
