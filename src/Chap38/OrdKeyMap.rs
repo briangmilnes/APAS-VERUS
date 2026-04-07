@@ -1310,6 +1310,7 @@ pub mod OrdKeyMap {
     }
 
     /// Find the next (successor) key strictly greater than k via BST descent. O(lg n).
+    #[verifier::rlimit(20)]
     fn ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
         k: &K,

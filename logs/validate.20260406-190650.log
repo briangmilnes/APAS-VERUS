@@ -1,0 +1,15 @@
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap38/OrdKeyMap.rs:1313:5
+     |
+1313 | /     fn ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord>(
+1314 | |         tree: &ParamBST<Pair<K, V>>,
+1315 | |         k: &K,
+1316 | |     ) -> (successor: Option<K>)
+     | |______________________________^
+
+verification results:: 5756 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 116s
+Sampled Memory Usage: peak rust_verify RSS: 11388MB, peak z3 RSS: 599MB, min free: 6554MB
+Sampled CPU Usage: rust_verify: 269s, z3 children: 262s
