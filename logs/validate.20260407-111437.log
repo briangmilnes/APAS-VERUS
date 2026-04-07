@@ -1,0 +1,59 @@
+error[E0599]: no method named `length` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+    --> src/Chap41/OrdKeyMap.rs:4893:27
+     |
+4893 |             let len = seq.length();
+     |                           ^^^^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- method `length` not found for this struct
+...
+ 185 |         fn length(&self) -> (len: usize)
+     |            ------ the method is available for `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<K>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: there is a method `nth` with a similar name, but with different arguments
+    --> src/Chap19/ArraySeqStEph.rs:192:9
+     |
+ 192 | /         fn nth(&self, index: usize) -> (nth_elem: &T)
+ 193 | |             requires index < self.spec_len()
+ 194 | |             ensures *nth_elem == self.spec_index(index as int);
+     | |_______________________________________________________________^
+help: trait `ArraySeqStEphTrait` which provides `length` is implemented but not in scope; perhaps you want to import it
+     |
+  25 +     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+     |
+
+error[E0599]: no method named `nth` found for struct `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<T>` in the current scope
+    --> src/Chap41/OrdKeyMap.rs:4941:29
+     |
+4941 |                 let k = seq.nth(i);
+     |                             ^^^
+     |
+    ::: src/Chap19/ArraySeqStEph.rs:71:5
+     |
+  71 |     pub struct ArraySeqStEphS<T> {
+     |     ---------------------------- method `nth` not found for this struct
+...
+ 192 |         fn nth(&self, index: usize) -> (nth_elem: &T)
+     |            --- the method is available for `Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphS<K>` here
+     |
+     = help: items from traits can only be used if the trait is in scope
+help: there is a method `length` with a similar name, but with different arguments
+    --> src/Chap19/ArraySeqStEph.rs:185:9
+     |
+ 185 | /         fn length(&self) -> (len: usize)
+ 186 | |             ensures len as int == self.spec_len();
+     | |__________________________________________________^
+help: trait `ArraySeqStEphTrait` which provides `nth` is implemented but not in scope; perhaps you want to import it
+     |
+  25 +     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
+     |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 3358MB, peak z3 RSS: 331MB, min free: 14476MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 65s

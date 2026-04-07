@@ -1,5 +1,6 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
+use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap41::OrdKeyMap::OrdKeyMap::*;
 use apas_verus::Types::Types::*;
 
@@ -640,4 +641,121 @@ fn test_ordkeymap_next_prev_walk() {
     }
     keys_bwd.reverse();
     assert_eq!(keys_bwd, vec![10, 20, 30, 40, 50]);
+}
+
+// domain, tabulate, restrict, subtract
+
+fn make_set(vals: &[u64]) -> ArraySetStEph<u64> {
+    let mut s = ArraySetStEph::empty();
+    for &v in vals {
+        s.insert(v);
+    }
+    s
+}
+
+#[test]
+fn test_ordkeymap_domain_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let dom = m.domain();
+    assert_eq!(dom.size(), 0);
+}
+
+#[test]
+fn test_ordkeymap_domain() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let dom = m.domain();
+    assert_eq!(dom.size(), 3);
+    assert!(dom.find(&10));
+    assert!(dom.find(&20));
+    assert!(dom.find(&30));
+    assert!(!dom.find(&99));
+}
+
+#[test]
+fn test_ordkeymap_tabulate() {
+    let keys = make_set(&[10, 20, 30]);
+    let f = |k: &u64| -> u64 { *k * 10 };
+    let table: OrdKeyMap<u64, u64> = OrdKeyMap::tabulate(&keys, &f);
+    assert_eq!(table.size(), 3);
+    assert_eq!(table.find(&10), Some(100));
+    assert_eq!(table.find(&20), Some(200));
+    assert_eq!(table.find(&30), Some(300));
+    assert_eq!(table.find(&99), None);
+}
+
+#[test]
+fn test_ordkeymap_tabulate_empty() {
+    let keys: ArraySetStEph<u64> = ArraySetStEph::empty();
+    let f = |k: &u64| -> u64 { *k };
+    let table: OrdKeyMap<u64, u64> = OrdKeyMap::tabulate(&keys, &f);
+    assert_eq!(table.size(), 0);
+}
+
+#[test]
+fn test_ordkeymap_restrict() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4)]);
+    let keep = make_set(&[10, 30, 50]);
+    let restricted = m.restrict(&keep);
+    assert_eq!(restricted.size(), 2);
+    assert_eq!(restricted.find(&10), Some(1));
+    assert_eq!(restricted.find(&30), Some(3));
+    assert_eq!(restricted.find(&20), None);
+    assert_eq!(restricted.find(&40), None);
+}
+
+#[test]
+fn test_ordkeymap_restrict_empty_keys() {
+    let m = make_map(&[(10, 1), (20, 2)]);
+    let empty_keys: ArraySetStEph<u64> = ArraySetStEph::empty();
+    let restricted = m.restrict(&empty_keys);
+    assert_eq!(restricted.size(), 0);
+}
+
+#[test]
+fn test_ordkeymap_restrict_empty_map() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let keys = make_set(&[10, 20]);
+    let restricted = m.restrict(&keys);
+    assert_eq!(restricted.size(), 0);
+}
+
+#[test]
+fn test_ordkeymap_subtract() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4)]);
+    let remove = make_set(&[10, 30, 50]);
+    let remaining = m.subtract(&remove);
+    assert_eq!(remaining.size(), 2);
+    assert_eq!(remaining.find(&20), Some(2));
+    assert_eq!(remaining.find(&40), Some(4));
+    assert_eq!(remaining.find(&10), None);
+    assert_eq!(remaining.find(&30), None);
+}
+
+#[test]
+fn test_ordkeymap_subtract_empty_keys() {
+    let m = make_map(&[(10, 1), (20, 2)]);
+    let empty_keys: ArraySetStEph<u64> = ArraySetStEph::empty();
+    let remaining = m.subtract(&empty_keys);
+    assert_eq!(remaining.size(), 2);
+    assert_eq!(remaining.find(&10), Some(1));
+    assert_eq!(remaining.find(&20), Some(2));
+}
+
+#[test]
+fn test_ordkeymap_subtract_all() {
+    let m = make_map(&[(10, 1), (20, 2)]);
+    let all_keys = make_set(&[10, 20]);
+    let remaining = m.subtract(&all_keys);
+    assert_eq!(remaining.size(), 0);
+}
+
+#[test]
+fn test_ordkeymap_domain_roundtrip() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let dom = m.domain();
+    let restricted = m.restrict(&dom);
+    assert_eq!(restricted.size(), 3);
+    assert_eq!(restricted.find(&10), Some(1));
+    assert_eq!(restricted.find(&20), Some(2));
+    assert_eq!(restricted.find(&30), Some(3));
 }
