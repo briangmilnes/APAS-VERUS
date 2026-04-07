@@ -1,0 +1,46 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1758:39
+     |
+1758 |             OrderedTableStEph { tree: OrdKeyMap::new() }
+     |                                       ^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap38/OrdKeyMap.rs:623:17
+     |
+ 623 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+     |                 ---------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap38/OrdKeyMap.rs:623:17
+    |
+623 |                 vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/laws_eq.rs:18:8
+   --> vstd/laws_cmp.rs:48:8
+
+note: 
+
+obeys_cmp_spec() ✘
+|   obeys_eq_spec() ✘
+|   |   obeys_eq_spec() ✘
+|   |       trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   obeys_eq_spec_properties() ✘
+|   |       function is uninterpreted
+|   +---
+|   obeys_cmp_partial_ord() ✘
+|       function is uninterpreted
+|   obeys_cmp_ord() ✘
+|       function is opaque
+|   obeys_partial_cmp_spec_properties() 
++---
+view_ord_consistent() 
+spec_pair_key_determines_order() 
+obeys_cmp_spec() 
+view_ord_consistent() 
+
+verification results:: 2812 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 69s
+Sampled Memory Usage: peak rust_verify RSS: 3014MB, peak z3 RSS: 387MB, min free: 14573MB
+Sampled CPU Usage: rust_verify: 65s, z3 children: 83s
