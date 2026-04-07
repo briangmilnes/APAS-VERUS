@@ -25,13 +25,13 @@ pub mod OrderedTableStEph {
 
     //		Section 2. imports
 
-    use std::cmp::Ordering::{Equal, Greater, Less};
+    use std::cmp::Ordering::Equal;
     use std::vec::IntoIter;
 
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
     use crate::Chap41::OrdKeyMap::OrdKeyMap::{OrdKeyMap, OrdKeyMapTrait};
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
-    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
     use crate::Types::Types::*;
@@ -109,11 +109,6 @@ broadcast use {
         forall|p1: Pair<K, V>, p2: Pair<K, V>|
             p1.0.cmp_spec(&p2.0) != Equal ==>
             (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
-    }
-
-    /// Spec predicate for rank_key: x is strictly less than k in the total order.
-    pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
-        exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
     }
 
     //		Section 7. proof fns/broadcast groups
