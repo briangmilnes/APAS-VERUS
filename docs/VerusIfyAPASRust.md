@@ -1,5 +1,9 @@
 # Verus-ifying APAS Rust Code
 
+> **Note (2026-04-07):** This was an early onboarding guide (Dec 2025). Many
+> patterns here are now codified in `src/standards/`. The standards are the
+> authoritative reference. This doc remains useful as a narrative introduction.
+
 This document captures lessons learned from converting APAS (Algorithms Parallel and Sequential) Rust code to Verus-verified code.
 
 ## 1. Code Organization: The Correct Pattern

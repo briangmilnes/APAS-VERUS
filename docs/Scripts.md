@@ -5,6 +5,11 @@ body { max-width: 100% !important; width: 100% !important; margin: 0 !important;
 table { width: 100% !important; table-layout: fixed; }
 </style>
 
+> **Note (2026-04-07):** This file may be stale. The authoritative script
+> reference is in CLAUDE.md (sections "Running Verus", "Validation Modes",
+> "Analysis Scripts", "Merge & Rebase Scripts"). Run `ls scripts/*.sh` for
+> the current list.
+
 # Scripts
 
 All scripts live in `scripts/`, auto-detect the worktree root via `BASH_SOURCE`, and work from any of the four worktrees (main, agent1, agent2, agent3). Output is ANSI-stripped for Emacs `M-x compile`.

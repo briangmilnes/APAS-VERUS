@@ -7,9 +7,15 @@ table { width: 100% !important; table-layout: fixed; }
 
 # Chapter Verusification State
 
-Generated: 2026-02-13
+Generated: 2026-02-13 (table below). Last updated header: 2026-04-07.
 
-**Totals:** 1476 verified, 2491 RTTs, 0 errors
+**Current totals (2026-04-07):** 5,763 verified, 3,776 RTTs, 0 errors, 4 holes (Chap41 only), 45/46 chapters clean.
+
+**Original totals (2026-02-13):** 1,476 verified, 2,491 RTTs, 0 errors.
+
+> Note: The table below is from Feb 2026. Per-chapter details are stale.
+> For current status run `scripts/chapter-cleanliness-status.sh` and
+> `scripts/all-holes-by-chap.sh`.
 
 ## State Legend
 
