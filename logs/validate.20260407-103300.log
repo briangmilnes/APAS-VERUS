@@ -1,0 +1,85 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:570:17
+     |
+ 570 | /                 forall|k: K::V| #[trigger] self@.contains_key(k) && other@.contains_key(k) ==>
+ 571 | |                     (exists|v1: V, v2: V, r: V|
+ 572 | |                         v1@ == self@[k] && v2@ == other@[k]
+ 573 | |                         && f.ensures((&v1, &v2), r)
+ 574 | |                         && table@[k] == r@),
+     | |___________________________________________^ failed this postcondition
+...
+1555 |               OrderedTableStPer { tree: self.tree.union_with(&other.tree, &f) }
+     |               ----------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:571:21
+    |
+571 | /                     (exists|v1: V, v2: V, r: V|
+572 | |                         v1@ == self@[k] && v2@ == other@[k]
+573 | |                         && f.ensures((&v1, &v2), r)
+574 | |                         && table@[k] == r@),
+    | |___________________________________________^
+
+note: 
+
+%return.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        %return.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        %return.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && %return.view().index(k) == r.view()) ✘
+%return.spec_orderedtablestper_wf() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:789:17
+     |
+ 789 |                 self@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1868 |             (OrderedTableStPer { tree: left }, mid, OrderedTableStPer { tree: right })
+     |             -------------------------------------------------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStPer.rs:789:17
+    |
+789 |                 self@.dom().finite(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).view().dom().finite() ✘
+    function is uninterpreted
+let tmp%% = %return.1;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            old(self).view().dom().contains(old(k).view()) ✔
+            v.view() == old(self).view().index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = %return.1;
+    tmp%% is None ==>
+        !(old(self).view().dom().contains(old(k).view())) ✔
+    !(tmp%% is None) ==>
+        true ✔
+!(%return.0.view().dom().contains(old(k).view())) ✔
+!(%return.2.view().dom().contains(old(k).view())) ✔
+%return.0.view().dom().subset_of(old(self).view().dom()) ✔
+%return.2.view().dom().subset_of(old(self).view().dom()) ✔
+%return.0.view().dom().disjoint(%return.2.view().dom()) ✔
+forall |key|
+    old(self).view().dom().contains(key) ==>
+        !(%return.0.view().dom().contains(key) || %return.2.view().dom().contains(key)) ==>
+            key == old(k).view() ✔
+%return.0.spec_orderedtablestper_wf() ✔
+%return.2.spec_orderedtablestper_wf() ✔
+
+verification results:: 2812 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 57s
+Sampled Memory Usage: peak rust_verify RSS: 5819MB, peak z3 RSS: 656MB, min free: 11778MB
+Sampled CPU Usage: rust_verify: 135s, z3 children: 192s
