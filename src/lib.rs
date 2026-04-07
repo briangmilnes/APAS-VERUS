@@ -442,7 +442,6 @@ pub mod Chap37 {
 pub mod Chap38 {
     pub mod BSTParaStEph;
     pub mod BSTParaMtEph;
-    pub mod OrdKeyMap;
 }
 
 
@@ -463,6 +462,7 @@ pub mod Chap40 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap41")))]
 pub mod Chap41 {
+    pub mod OrdKeyMap;
     pub mod ArraySetStEph;
     pub mod ArraySetEnumMtEph;
     pub mod AVLTreeSetStEph;

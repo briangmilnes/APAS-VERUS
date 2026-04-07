@@ -1018,7 +1018,7 @@ broadcast use {
     use std::fmt;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::ArraySeqStEphTrait;
     use crate::Chap38::BSTParaStEph::BSTParaStEph::ParamBSTTrait;
-    use crate::Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait;
+    use crate::Chap41::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
 
     //		Section 14a. derive impls outside verus!

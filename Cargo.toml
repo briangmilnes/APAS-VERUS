@@ -671,7 +671,7 @@ path = "tests/Chap38/TestBSTParaStEph.rs"
 
 [[test]]
 name = "TestOrdKeyMap"
-path = "tests/Chap38/TestOrdKeyMap.rs"
+path = "tests/Chap41/TestOrdKeyMap.rs"
 
 [[test]]
 name = "TestBSTParaTreapMtEph"
