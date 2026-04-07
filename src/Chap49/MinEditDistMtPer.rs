@@ -115,8 +115,6 @@ pub mod MinEditDistMtPer {
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|+|T|) — parallel recursive memoized with join; matches APAS
         fn min_edit_distance(&self) -> (dist: usize)
-        where
-            T: Send + Sync + 'static
             requires
                 self.spec_mineditdistmtper_wf(),
                 self.spec_source_len() + self.spec_target_len() < usize::MAX;
@@ -167,7 +165,7 @@ pub mod MinEditDistMtPer {
     /// Recursive memoized parallel minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|×|T|), Span O(|S|+|T|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|×|T|), Span O(|S|+|T|) — matches APAS
-    fn min_edit_distance_rec<T: MtVal + Send + Sync + 'static>(
+    fn min_edit_distance_rec<T: MtVal>(
         source: &ArraySeqMtPerS<T>,
         target: &ArraySeqMtPerS<T>,
         memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, usize>, usize>, MinEditDistMtPerMemoInv>>,
@@ -305,8 +303,6 @@ pub mod MinEditDistMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|+|T|) — clones + memoized recursive DP with parallel join; Mt parallel.
         fn min_edit_distance(&self) -> (dist: usize)
-        where
-            T: Send + Sync + 'static,
         {
             {
                 let rwlock = arc_deref(&self.memo);

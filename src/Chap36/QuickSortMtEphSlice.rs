@@ -28,6 +28,7 @@ pub mod QuickSortMtEphSlice {
 
 
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
+    use crate::Concurrency::Concurrency::*;
     use crate::Types::Types::Pair;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
@@ -57,7 +58,7 @@ pub mod QuickSortMtEphSlice {
     }
 
     /// Extract the element sequence from a slice as Seq<T>.
-    pub open spec fn elements<T: Eq + Clone>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
     }
 
@@ -194,7 +195,7 @@ pub mod QuickSortMtEphSlice {
     }
 
     /// Prove elements(from_vec(v)) =~= v@.
-    proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    proof fn lemma_elements_from_vec<T: StTInMtT + TotalOrder>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
         requires
             a.spec_arrayseqmtephslice_wf(),
             a.spec_len() == v.len(),
@@ -213,7 +214,7 @@ pub mod QuickSortMtEphSlice {
     //		Section 8. traits
 
 
-    pub trait QuickSortMtEphSliceTrait<T: TotalOrder + Eq + Clone> {
+    pub trait QuickSortMtEphSliceTrait<T: StTInMtT + TotalOrder> {
         /// Quicksort with first-element pivot. ParaPair! recursion.
         /// - Alg Analysis: APAS (Ch36 Alg 36.1): Work O(n^2), Span O(n lg n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2) worst, Span O(n lg n) worst — parallel D&C partition via join + parallel recursion via ParaPair
@@ -335,7 +336,7 @@ pub mod QuickSortMtEphSlice {
     /// Parallel D&C three-way partition.  Split into halves, partition each half
     /// in parallel via `join`, concatenate the three result Vecs.
     /// Work O(n), Span O(lg n) for the partition itself (plus O(n) rejoin).
-    fn partition_three_dc<T: TotalOrder + Eq + Clone + Send + Sync + 'static>(
+    fn partition_three_dc<T: StTInMtT + TotalOrder>(
         a: &ArraySeqMtEphSliceS<T>,
         pivot: &T,
     ) -> (partitioned: (Vec<T>, Vec<T>, Vec<T>))
@@ -479,7 +480,7 @@ pub mod QuickSortMtEphSlice {
     }
 
 
-    impl<T: TotalOrder + Eq + Clone + Send + Sync + 'static> QuickSortMtEphSliceTrait<T>
+    impl<T: StTInMtT + TotalOrder> QuickSortMtEphSliceTrait<T>
         for ArraySeqMtEphSliceS<T>
     {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — three comparisons.

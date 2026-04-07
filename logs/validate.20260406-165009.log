@@ -1,0 +1,71 @@
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:78:20
+    |
+ 78 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                    ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 77 |     pub open spec fn spec_slice_elements<T: Eq + Clone>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                                                                              +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap35/OrderStatSelectMtEph.rs:78:43
+    |
+ 78 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                                           ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap35/OrderStatSelectMtPer.rs:78:20
+    |
+ 78 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                    ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 77 |     pub open spec fn spec_slice_elements<T: Eq + Clone>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                                                                              +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: t

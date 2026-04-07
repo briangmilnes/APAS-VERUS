@@ -52,6 +52,7 @@ pub mod ArraySeqMtEph {
         vstd::std_specs::clone::*,
     };
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::*;
+    use crate::Concurrency::Concurrency::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::*;
@@ -1348,7 +1349,7 @@ pub mod ArraySeqMtEph {
         /// - Alg Analysis: APAS: no cost spec (semantics-only chapter).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |updates|), Span O(|updates|) — matches APAS; lock serializes the writers.
         pub fn ninject_par(a: &ArraySeqMtEphS<T>, updates: &Vec<(usize, T)>) -> (injected: ArraySeqMtEphS<T>)
-            where T: Clone + Send + Sync + Eq + 'static
+            where T: StTInMtT
             requires
                 obeys_feq_clone::<T>(),
                 forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==>
@@ -1873,7 +1874,7 @@ pub mod ArraySeqMtEph {
     /// Acquire the lock, apply updates, release. Preserves the lock invariant.
     /// - Alg Analysis: APAS: N/A — implementation utility, not in prose.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|updates|), Span O(|updates|). — matches APAS
-    fn apply_ninject_updates<T: Clone + Eq + Send + Sync + 'static>(
+    fn apply_ninject_updates<T: StTInMtT>(
         lock: Arc<RwLock<Vec<T>, ArraySeqMtEphInv<T>>>,
         updates: Vec<(usize, T)>,
         Ghost(pred): Ghost<ArraySeqMtEphInv<T>>,

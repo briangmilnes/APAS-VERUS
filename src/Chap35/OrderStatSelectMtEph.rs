@@ -33,6 +33,7 @@ pub mod OrderStatSelectMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+    use crate::Concurrency::Concurrency::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     use crate::vstdplus::rand::rand::random_usize_range;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
@@ -73,7 +74,7 @@ pub mod OrderStatSelectMtEph {
     }
 
     /// Extract the element sequence from a slice as Seq<T>.
-    pub open spec fn spec_slice_elements<T: Eq + Clone>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    pub open spec fn spec_slice_elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
     }
 
@@ -136,7 +137,7 @@ pub mod OrderStatSelectMtEph {
     //		Section 8. traits
 
 
-    pub trait OrderStatSelectMtEphTrait<T: TotalOrder + Clone + Eq> {
+    pub trait OrderStatSelectMtEphTrait<T: StTInMtT + TotalOrder> {
         /// Find the kth smallest element (0-indexed) using contraction-based selection.
         /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg^2 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — parallel D&C partition O(lg n) per round + parallel recursion
@@ -196,7 +197,7 @@ pub mod OrderStatSelectMtEph {
     /// Work O(n), Span O(lg n) for the divide phase (plus O(n) sequential rejoin).
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg n) — uses parallel filter.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C partition via join, base case O(1), O(lg n) levels
-    fn partition_three_dc<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
+    fn partition_three_dc<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphSliceS<T>,
         pivot: &T,
     ) -> (partitioned: (Vec<T>, Vec<T>, Vec<T>))
@@ -341,7 +342,7 @@ pub mod OrderStatSelectMtEph {
     /// Uses D&C parallel partition via join() for O(lg n) span divide phase.
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n), Span O(lg n) — uses parallel filter.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(lg n) — parallel D&C partition via join
-    fn parallel_three_way_partition<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
+    fn parallel_three_way_partition<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphS<T>, pivot: T, pivot_idx: usize, n: usize,
     ) -> (partition: (Vec<T>, usize, Vec<T>))
         requires
@@ -468,7 +469,7 @@ pub mod OrderStatSelectMtEph {
         (left, eq_count, right)
     }
 
-    impl<T: TotalOrder + Copy + Clone + Send + Sync + Eq + 'static> OrderStatSelectMtEphTrait<T> for ArraySeqMtEphS<T> {
+    impl<T: StTInMtT + TotalOrder + Copy> OrderStatSelectMtEphTrait<T> for ArraySeqMtEphS<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — delegates to select_inner; D&C parallel partition via join
         fn select(a: &ArraySeqMtEphS<T>, k: usize) -> (found: Option<T>)
         {
@@ -484,7 +485,7 @@ pub mod OrderStatSelectMtEph {
     /// - Alg Analysis: APAS (Ch35 Alg 35.2): Work O(n) expected, Span O(lg^2 n) w.h.p.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n) expected, Span O(lg^2 n) expected — D&C partition is O(lg n) span
     ///   per round; geometric shrinkage over O(lg n) expected rounds gives O(lg^2 n).
-    fn select_inner<T: TotalOrder + Copy + Send + Sync + Eq + 'static>(
+    fn select_inner<T: StTInMtT + TotalOrder + Copy>(
         a: &ArraySeqMtEphS<T>, k: usize,
     ) -> (found: Option<T>)
         requires

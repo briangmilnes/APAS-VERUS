@@ -1,0 +1,645 @@
+error[E0599]: the method `spec_arrayseqmtephslice_wf` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:200:15
+    |
+200 |             a.spec_arrayseqmtephslice_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_arrayseqmtephslice_wf` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>) where T: Concurrency::Concurrency::StTInMtT
+    |                                                                                                        +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:201:15
+    |
+201 |             a.spec_len() == v.len(),
+    |               ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>) where T: Concurrency::Concurrency::StTInMtT
+    |                                                                                                        +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:202:41
+    |
+202 |             forall|i: int| #![trigger a.spec_index(i)]
+    |                                         ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:203:40
+    |
+203 |                 0 <= i < v.len() ==> a.spec_index(i) == v[i],
+    |                                        ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:204:26
+    |
+204 |         ensures elements(a) =~= v,
+    |                 -------- ^ the trait `std::marker::Send` is not implemented for `T`
+    |                 |
+    |                 required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Send`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Send>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:204:26
+    |
+204 |         ensures elements(a) =~= v,
+    |                 -------- ^ the trait `std::marker::Sync` is not implemented for `T`
+    |                 |
+    |                 required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                       ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Sync`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Sync>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:204:26
+    |
+204 |         ensures elements(a) =~= v,
+    |                 -------- ^ the trait `std::fmt::Display` is not implemented for `T`
+    |                 |
+    |                 required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Display`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Display>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:204:26
+    |
+204 |         ensures elements(a) =~= v,
+    |                 -------- ^ the trait `std::fmt::Debug` is not implemented for `T`
+    |                 |
+    |                 required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Debug`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Debug>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:204:26
+    |
+204 |         ensures elements(a) =~= v,
+    |                 -------- ^ the trait `vstd::string::View` is not implemented for `T`
+    |                 |
+    |                 required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `View`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + vstd::string::View>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:206:25
+    |
+206 |         assert(elements(a).len() == v.len());
+    |                -------- ^ the trait `std::marker::Send` is not implemented for `T`
+    |                |
+    |                required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Send`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Send>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:206:25
+    |
+206 |         assert(elements(a).len() == v.len());
+    |                -------- ^ the trait `std::marker::Sync` is not implemented for `T`
+    |                |
+    |                required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                       ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Sync`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Sync>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:206:25
+    |
+206 |         assert(elements(a).len() == v.len());
+    |                -------- ^ the trait `std::fmt::Display` is not implemented for `T`
+    |                |
+    |                required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Display`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Display>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:206:25
+    |
+206 |         assert(elements(a).len() == v.len());
+    |                -------- ^ the trait `std::fmt::Debug` is not implemented for `T`
+    |                |
+    |                required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Debug`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Debug>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:206:25
+    |
+206 |         assert(elements(a).len() == v.len());
+    |                -------- ^ the trait `vstd::string::View` is not implemented for `T`
+    |                |
+    |                required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `View`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + vstd::string::View>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:208:30
+    |
+208 |             implies elements(a)[i] == #[trigger] v[i] by
+    |                     -------- ^ the trait `std::marker::Send` is not implemented for `T`
+    |                     |
+    |                     required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Send`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Send>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:208:30
+    |
+208 |             implies elements(a)[i] == #[trigger] v[i] by
+    |                     -------- ^ the trait `std::marker::Sync` is not implemented for `T`
+    |                     |
+    |                     required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                       ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Sync`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Sync>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:208:30
+    |
+208 |             implies elements(a)[i] == #[trigger] v[i] by
+    |                     -------- ^ the trait `std::fmt::Display` is not implemented for `T`
+    |                     |
+    |                     required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Display`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Display>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:208:30
+    |
+208 |             implies elements(a)[i] == #[trigger] v[i] by
+    |                     -------- ^ the trait `std::fmt::Debug` is not implemented for `T`
+    |                     |
+    |                     required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Debug`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Debug>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:208:30
+    |
+208 |             implies elements(a)[i] == #[trigger] v[i] by
+    |                     -------- ^ the trait `vstd::string::View` is not implemented for `T`
+    |                     |
+    |                     required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `View`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + vstd::string::View>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:29
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                    -------- ^ the trait `std::marker::Send` is not implemented for `T`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Send`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Send>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:29
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                    -------- ^ the trait `std::marker::Sync` is not implemented for `T`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^                       ---- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Sync`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::marker::Sync>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:29
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                    -------- ^ the trait `std::fmt::Display` is not implemented for `T`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Display`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Display>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:29
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                    -------- ^ the trait `std::fmt::Debug` is not implemented for `T`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `Debug`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + std::fmt::Debug>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:29
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                    -------- ^ the trait `vstd::string::View` is not implemented for `T`
+    |                    |
+    |                    required by a bound introduced by this call
+    |
+note: required for `T` to implement `Types::Types::StT`
+   --> src/Types.rs:126:13
+    |
+126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+    |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+   --> src/Concurrency.rs:72:13
+    |
+ 72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+    |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap36::QuickSortMtEphSlice::QuickSortMtEphSlice::elements`
+   --> src/Chap36/QuickSortMtEphSlice.rs:61:34
+    |
+ 61 |     pub open spec fn elements<T: StTInMtT>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> {
+    |                                  ^^^^^^^^ required by this bound in `elements`
+help: consider further restricting type parameter `T` with trait `View`
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone + vstd::string::View>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>)
+    |                                                                 ++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:40
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                                        ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 25 previous errors
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1645MB, peak z3 RSS: 0MB, min free: 16517MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s

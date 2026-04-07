@@ -179,7 +179,7 @@ pub mod ReduceContractMtEph {
     /// Parallelism via the help-first scheduler's join.
     /// - Alg Analysis: APAS: N/A — Verus-specific helper (contraction step factored out for sharing).
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n/2) — two parallel halves via join, each O(n/4).
-    pub fn contract_parallel<T: StTInMtT + Clone + 'static, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
+    pub fn contract_parallel<T: StTInMtT, F: Fn(&T, &T) -> T + Send + Sync + 'static>(
         a: &ArraySeqMtEphS<T>,
         f: &Arc<F>,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>,

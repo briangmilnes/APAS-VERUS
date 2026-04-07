@@ -114,8 +114,7 @@ pub mod SubsetSumMtEph {
         /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(|S|) — parallel recursive memoized with join; matches APAS
         fn subset_sum(&mut self, target: i32) -> (found: bool)
-        where
-            T: Into<i32> + Copy + Send + Sync + 'static
+            where T: Into<i32> + Copy,
             requires old(self).spec_subsetsummteph_wf(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
@@ -175,7 +174,7 @@ pub mod SubsetSumMtEph {
     /// Recursive memoized parallel subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k×|S|), Span O(|S|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k×|S|), Span O(|S|) — matches APAS
-    fn subset_sum_rec<T: MtVal + Into<i32> + Copy + Send + Sync + 'static>(
+    fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
         multiset: &ArraySeqMtEphS<T>,
         memo: &Arc<RwLock<HashMapWithViewPlus<Pair<usize, i32>, bool>, SubsetSumMtEphMemoInv>>,
         i: usize,
@@ -288,8 +287,7 @@ pub mod SubsetSumMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(|S|) — memoized recursive DP with parallel join; Mt parallel.
         fn subset_sum(&mut self, target: i32) -> (found: bool)
-        where
-            T: Into<i32> + Copy + Send + Sync + 'static,
+            where T: Into<i32> + Copy,
         {
             if target < 0 {
                 return false;

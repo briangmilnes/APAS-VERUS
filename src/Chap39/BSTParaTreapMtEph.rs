@@ -275,7 +275,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn expose_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
+    fn expose_internal<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (exposed: Exposed<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> exposed is Leaf,
@@ -337,7 +337,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn expose_with_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
+    fn expose_with_priority_internal<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (parts: Option<(ParamTreap<T>, T, i64, ParamTreap<T>)>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.len() == 0 ==> parts is None,
@@ -384,7 +384,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn tree_priority_internal<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (p: i64)
+    fn tree_priority_internal<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (p: i64)
         requires tree.spec_bstparatreapmteph_wf(),
         ensures true,
     {
@@ -399,7 +399,7 @@ pub mod BSTParaTreapMtEph {
 
     /// Build a new tree from (left, key, priority, right) maintaining BST and heap ordering.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-    fn make_node<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
+    fn make_node<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (node: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -447,7 +447,7 @@ pub mod BSTParaTreapMtEph {
     /// Merge two BST-ordered subtrees with a middle key, rebalancing by priority (treap heap).
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
-    fn join_with_priority<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
+    fn join_with_priority<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, key: T, priority: i64, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -603,7 +603,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
-    fn split_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
+    fn split_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>, key: &T) -> (parts: (ParamTreap<T>, bool, ParamTreap<T>))
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             parts.1 == tree@.contains(key@),
@@ -775,7 +775,7 @@ pub mod BSTParaTreapMtEph {
 
     /// - Alg Analysis: APAS (Ch39 DS 39.3): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|)) — matches APAS
-    fn join_pair_inner<T: MtKey + ClonePreservesView + 'static>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
+    fn join_pair_inner<T: MtKey + ClonePreservesView>(left: ParamTreap<T>, right: ParamTreap<T>) -> (joined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1011,7 +1011,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
-    fn union_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
+    fn union_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (combined: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1193,7 +1193,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
-    fn intersect_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
+    fn intersect_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (common: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1368,7 +1368,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
-    fn difference_inner<T: MtKey + ClonePreservesView + 'static>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
+    fn difference_inner<T: MtKey + ClonePreservesView>(a: &ParamTreap<T>, b: &ParamTreap<T>) -> (remaining: ParamTreap<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1548,7 +1548,7 @@ pub mod BSTParaTreapMtEph {
     // because T::V is a ghost type that does not implement Send. Sequential recursion avoids
     // the Send constraint entirely while preserving correctness.
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n) expected, Span O(log^2 n) expected
-    fn filter_inner<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
+    fn filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: &Arc<F>,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -1732,7 +1732,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(log^2 n)
-    fn filter_parallel<T: MtKey + ClonePreservesView + 'static, F: Pred<T>>(
+    fn filter_parallel<T: MtKey + ClonePreservesView, F: Pred<T>>(
         tree: &ParamTreap<T>,
         predicate: F,
         Ghost(spec_pred): Ghost<spec_fn(T::V) -> bool>,
@@ -1757,7 +1757,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn reduce_inner<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (reduced: T)
+    fn reduce_inner<T: MtKey + ClonePreservesView, F>(tree: &ParamTreap<T>, op: &Arc<F>, identity: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1792,7 +1792,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
-    fn reduce_parallel<T: MtKey + ClonePreservesView + 'static, F>(tree: &ParamTreap<T>, op: F, base: T) -> (reduced: T)
+    fn reduce_parallel<T: MtKey + ClonePreservesView, F>(tree: &ParamTreap<T>, op: F, base: T) -> (reduced: T)
     where
         F: Fn(T, T) -> T + Send + Sync + 'static,
         requires
@@ -1807,7 +1807,7 @@ pub mod BSTParaTreapMtEph {
     }
 
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    fn collect_in_order<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>, out: &mut Vec<T>)
+    fn collect_in_order<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>, out: &mut Vec<T>)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
             view_ord_consistent::<T>(),
@@ -1870,7 +1870,7 @@ pub mod BSTParaTreapMtEph {
     //		Section 8d. traits
 
 
-    pub trait ParamTreapTrait<T: MtKey + ClonePreservesView + 'static>: Sized + View<V = Set<T::V>> {
+    pub trait ParamTreapTrait<T: MtKey + ClonePreservesView>: Sized + View<V = Set<T::V>> {
         spec fn spec_bstparatreapmteph_wf(&self) -> bool;
 
         /// - Alg Analysis: APAS (Ch39 CS 38.11): Work O(1), Span O(1)
@@ -2047,7 +2047,7 @@ pub mod BSTParaTreapMtEph {
         }
     }
 
-    impl<T: MtKey + ClonePreservesView + 'static> ParamTreapTrait<T> for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView> ParamTreapTrait<T> for ParamTreap<T> {
         open spec fn spec_bstparatreapmteph_wf(&self) -> bool { self@.finite() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -2225,7 +2225,7 @@ pub mod BSTParaTreapMtEph {
     //		Section 12b. derive impls in verus!
 
 
-    impl<T: MtKey + ClonePreservesView + 'static> Clone for Exposed<T> {
+    impl<T: MtKey + ClonePreservesView> Clone for Exposed<T> {
         fn clone(&self) -> (cloned: Self)
             ensures true
         {
@@ -2239,7 +2239,7 @@ pub mod BSTParaTreapMtEph {
     //		Section 12c. derive impls in verus!
 
 
-    impl<T: MtKey + ClonePreservesView + 'static> Clone for NodeInner<T> {
+    impl<T: MtKey + ClonePreservesView> Clone for NodeInner<T> {
         fn clone(&self) -> (cloned: Self)
             ensures true
         {
@@ -2256,7 +2256,7 @@ pub mod BSTParaTreapMtEph {
     //		Section 12d. derive impls in verus!
 
 
-    impl<T: MtKey + ClonePreservesView + 'static> Clone for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView> Clone for ParamTreap<T> {
         #[verifier::exec_allows_no_decreases_clause]
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
@@ -2378,13 +2378,13 @@ pub mod BSTParaTreapMtEph {
     unsafe impl<T: MtKey> Send for ParamTreap<T> {}
     unsafe impl<T: MtKey> Sync for ParamTreap<T> {}
 
-    impl<T: MtKey + ClonePreservesView + 'static> fmt::Debug for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView> fmt::Debug for ParamTreap<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "ParamTreap(size: {})", self.size())
         }
     }
 
-    impl<T: MtKey + ClonePreservesView + 'static> fmt::Display for ParamTreap<T> {
+    impl<T: MtKey + ClonePreservesView> fmt::Display for ParamTreap<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "ParamTreap(size: {})", self.size())
         }

@@ -1,0 +1,33 @@
+error: invariant not satisfied at end of loop body
+   --> src/Chap36/QuickSortMtEph.rs:441:21
+    |
+441 | /                     forall|j: int| 0 <= j < right@.len() ==>
+442 | |                         (#[trigger] T::le(pivot, right@[j])) && right@[j] != pivot,
+    | |__________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:484:32
+    |
+484 |                 ensures r@ =~= left_view.sort_by(spec_leq::<T>()), r@.len() == left_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap36/QuickSortMtEph.rs:491:32
+    |
+491 |                 ensures r@ =~= right_view.sort_by(spec_leq::<T>()), r@.len() == right_view.len()
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:95:12
+    |
+    = note: recommendation not met
+
+verification results:: 938 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2015MB, peak z3 RSS: 173MB, min free: 16378MB
+Sampled CPU Usage: rust_verify: 17s, z3 children: 1s

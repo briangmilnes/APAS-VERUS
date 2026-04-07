@@ -1,0 +1,262 @@
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1425:21
+     |
+1425 |                     apply_ninject_updates(lock1, left, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Display` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `Display`
+     |
+ 694 |     impl<T: std::fmt::Display> ArraySeqMtEphS<T> {
+     |           +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1425:21
+     |
+1425 |                     apply_ninject_updates(lock1, left, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Debug` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `Debug`
+     |
+ 694 |     impl<T: std::fmt::Debug> ArraySeqMtEphS<T> {
+     |           +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1425:21
+     |
+1425 |                     apply_ninject_updates(lock1, left, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `View`
+     |
+ 694 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1430:21
+     |
+1430 |                     apply_ninject_updates(lock2, right, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Display` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `Display`
+     |
+ 694 |     impl<T: std::fmt::Display> ArraySeqMtEphS<T> {
+     |           +++++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1430:21
+     |
+1430 |                     apply_ninject_updates(lock2, right, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Debug` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `Debug`
+     |
+ 694 |     impl<T: std::fmt::Debug> ArraySeqMtEphS<T> {
+     |           +++++++++++++++++
+
+error[E0277]: the trait bound `T: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1430:21
+     |
+1430 |                     apply_ninject_updates(lock2, right, Ghost(pred));
+     |                     ^^^^^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `T`
+     |
+note: required for `T` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `T` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEph::ArraySeqMtEph::apply_ninject_updates`
+    --> src/Chap18/ArraySeqMtEph.rs:1877:33
+     |
+1877 |     fn apply_ninject_updates<T: StTInMtT>(
+     |                                 ^^^^^^^^ required by this bound in `apply_ninject_updates`
+help: consider restricting type parameter `T` with trait `View`
+     |
+ 694 |     impl<T: vstd::string::View> ArraySeqMtEphS<T> {
+     |           ++++++++++++++++++++
+
+error[E0277]: the trait bound `U: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEphSlice.rs:729:21
+     |
+ 729 |             let v = map_dc_vec(self, f);
+     |                     ^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Display` is not implemented for `U`
+     |
+note: required for `U` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                       ------- unsatisfied trait bound introduced here
+note: required for `U` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::map_dc_vec`
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1055:46
+     |
+1055 |     pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(
+     |                                              ^^^^^^^^ required by this bound in `map_dc_vec`
+help: consider further restricting type parameter `U` with trait `Display`
+     |
+ 724 |         fn map<U: Eq + Clone + Send + Sync + 'static + std::fmt::Display, F: MtMapFn<T, U>>(
+     |                                                      +++++++++++++++++++
+
+error[E0277]: the trait bound `U: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEphSlice.rs:729:21
+     |
+ 729 |             let v = map_dc_vec(self, f);
+     |                     ^^^^^^^^^^^^^^^^^^^ the trait `std::fmt::Debug` is not implemented for `U`
+     |
+note: required for `U` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                 ----- unsatisfied trait bound introduced here
+note: required for `U` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::map_dc_vec`
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1055:46
+     |
+1055 |     pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(
+     |                                              ^^^^^^^^ required by this bound in `map_dc_vec`
+help: consider further restricting type parameter `U` with trait `Debug`
+     |
+ 724 |         fn map<U: Eq + Clone + Send + Sync + 'static + std::fmt::Debug, F: MtMapFn<T, U>>(
+     |                                                      +++++++++++++++++
+
+error[E0277]: the trait bound `U: Concurrency::Concurrency::StTInMtT` is not satisfied
+    --> src/Chap18/ArraySeqMtEphSlice.rs:729:21
+     |
+ 729 |             let v = map_dc_vec(self, f);
+     |                     ^^^^^^^^^^^^^^^^^^^ the trait `vstd::string::View` is not implemented for `U`
+     |
+note: required for `U` to implement `Types::Types::StT`
+    --> src/Types.rs:126:13
+     |
+ 126 |     impl<T> StT for T where T: Eq + Clone + Display + Debug + Sized + vstd::prelude::View {}
+     |             ^^^     ^                                                 ------------------- unsatisfied trait bound introduced here
+note: required for `U` to implement `Concurrency::Concurrency::StTInMtT`
+    --> src/Concurrency.rs:72:13
+     |
+  72 |     impl<T> StTInMtT for T where T: StT + Send + Sync + 'static {}
+     |             ^^^^^^^^     ^          --- unsatisfied trait bound introduced here
+note: required by a bound in `Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::map_dc_vec`
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1055:46
+     |
+1055 |     pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(
+     |                                              ^^^^^^^^ required by this bound in `map_dc_vec`
+help: consider further restricting type parameter `U` with trait `View`
+     |
+ 724 |         fn map<U: Eq + Clone + Send + Sync + 'static + vstd::string::View, F: MtMapFn<T, U>>(
+     |                                                      ++++++++++++++++++++
+
+error[E0599]: the function or associated item `from_vec` exists for struct `Chap18::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<U>`, but its trait bounds were not satisfied
+   --> src/Chap18/ArraySeqMtEphSlice.rs:730:39
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- function or associated item `from_vec` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<U>`
+...
+730 |             ArraySeqMtEphSliceS::<U>::from_vec(v)
+    |                                       ^^^^^^^^ function or associated item cannot be called due to unsatisfied trait bounds
+    |
+note: trait bound `U: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap18/ArraySeqMtEphSlice.rs:587:13
+    |
+587 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where U: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 10 previous errors
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2233MB, peak z3 RSS: 0MB, min free: 16409MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 52s

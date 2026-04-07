@@ -1,0 +1,80 @@
+error[E0277]: the trait bound `T: std::marker::Copy` is not satisfied
+   --> src/Chap49/SubsetSumMtEph.rs:302:28
+    |
+302 |             subset_sum_rec(&self.multiset, &self.memo, n, target)
+    |             -------------- ^^^^^^^^^^^^^^ the trait `std::marker::Copy` is not implemented for `T`
+    |             |
+    |             required by a bound introduced by this call
+    |
+note: required by a bound in `Chap49::SubsetSumMtEph::SubsetSumMtEph::subset_sum_rec`
+   --> src/Chap49/SubsetSumMtEph.rs:176:46
+    |
+176 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
+    |                                              ^^^^ required by this bound in `subset_sum_rec`
+help: consider further restricting type parameter `T` with trait `Copy`
+    |
+259 |     impl<T: MtVal + std::marker::Copy> SubsetSumMtEphTrait<T> for SubsetSumMtEphS<T> {
+    |                   +++++++++++++++++++
+
+error[E0277]: the trait bound `i32: std::convert::From<T>` is not satisfied
+   --> src/Chap49/SubsetSumMtEph.rs:302:28
+    |
+302 |             subset_sum_rec(&self.multiset, &self.memo, n, target)
+    |             -------------- ^^^^^^^^^^^^^^ the trait `std::convert::From<T>` is not implemented for `i32`
+    |             |
+    |             required by a bound introduced by this call
+    |
+    = note: required for `T` to implement `std::convert::Into<i32>`
+note: required by a bound in `Chap49::SubsetSumMtEph::SubsetSumMtEph::subset_sum_rec`
+   --> src/Chap49/SubsetSumMtEph.rs:176:34
+    |
+176 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
+    |                                  ^^^^^^^^^ required by this bound in `subset_sum_rec`
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+259 |     impl<T: MtVal> SubsetSumMtEphTrait<T> for SubsetSumMtEphS<T> where i32: std::convert::From<T> {
+    |                                                                  ++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `T: std::marker::Copy` is not satisfied
+   --> src/Chap49/SubsetSumMtPer.rs:283:28
+    |
+283 |             subset_sum_rec(&self.multiset, &self.memo, n, target)
+    |             -------------- ^^^^^^^^^^^^^^ the trait `std::marker::Copy` is not implemented for `T`
+    |             |
+    |             required by a bound introduced by this call
+    |
+note: required by a bound in `Chap49::SubsetSumMtPer::SubsetSumMtPer::subset_sum_rec`
+   --> src/Chap49/SubsetSumMtPer.rs:157:46
+    |
+157 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
+    |                                              ^^^^ required by this bound in `subset_sum_rec`
+help: consider further restricting type parameter `T` with trait `Copy`
+    |
+240 |     impl<T: MtVal + std::marker::Copy> SubsetSumMtPerTrait<T> for SubsetSumMtPerS<T> {
+    |                   +++++++++++++++++++
+
+error[E0277]: the trait bound `i32: std::convert::From<T>` is not satisfied
+   --> src/Chap49/SubsetSumMtPer.rs:283:28
+    |
+283 |             subset_sum_rec(&self.multiset, &self.memo, n, target)
+    |             -------------- ^^^^^^^^^^^^^^ the trait `std::convert::From<T>` is not implemented for `i32`
+    |             |
+    |             required by a bound introduced by this call
+    |
+    = note: required for `T` to implement `std::convert::Into<i32>`
+note: required by a bound in `Chap49::SubsetSumMtPer::SubsetSumMtPer::subset_sum_rec`
+   --> src/Chap49/SubsetSumMtPer.rs:157:34
+    |
+157 |     fn subset_sum_rec<T: MtVal + Into<i32> + Copy>(
+    |                                  ^^^^^^^^^ required by this bound in `subset_sum_rec`
+help: consider introducing a `where` clause, but there might be an alternative better way to express this requirement
+    |
+240 |     impl<T: MtVal> SubsetSumMtPerTrait<T> for SubsetSumMtPerS<T> where i32: std::convert::From<T> {
+    |                                                                  ++++++++++++++++++++++++++++++++
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0277`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2071MB, peak z3 RSS: 0MB, min free: 15895MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 50s

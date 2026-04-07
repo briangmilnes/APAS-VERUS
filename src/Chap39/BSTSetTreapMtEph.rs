@@ -237,7 +237,7 @@ pub mod BSTSetTreapMtEph {
 
     #[verifier::exec_allows_no_decreases_clause]
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
-    fn minimum_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (min: Option<T>)
+    fn minimum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (min: Option<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.finite(),
@@ -261,7 +261,7 @@ pub mod BSTSetTreapMtEph {
 
     #[verifier::exec_allows_no_decreases_clause]
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n) expected, O(n) worst case; Span O(log n) expected, O(n) worst case
-    fn maximum_inner<T: MtKey + ClonePreservesView + 'static>(tree: &ParamTreap<T>) -> (max: Option<T>)
+    fn maximum_inner<T: MtKey + ClonePreservesView>(tree: &ParamTreap<T>) -> (max: Option<T>)
         requires vstd::laws_cmp::obeys_cmp_spec::<T>(), view_ord_consistent::<T>(),
         ensures
             tree@.finite(),
@@ -280,7 +280,7 @@ pub mod BSTSetTreapMtEph {
         }
     }
 
-    impl<T: MtKey + ClonePreservesView + 'static> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
+    impl<T: MtKey + ClonePreservesView> BSTSetTreapMtEphTrait<T> for BSTSetTreapMtEph<T> {
         open spec fn spec_bstsettreapmteph_wf(&self) -> bool {
             self@.finite()
         }
@@ -425,7 +425,7 @@ pub mod BSTSetTreapMtEph {
     //		Section 12. derive impls in verus!
 
 
-    impl<T: MtKey + ClonePreservesView + 'static> Clone for BSTSetTreapMtEph<T> {
+    impl<T: MtKey + ClonePreservesView> Clone for BSTSetTreapMtEph<T> {
         fn clone(&self) -> (cloned: Self)
             ensures cloned@ == self@,
         {
@@ -454,13 +454,13 @@ pub mod BSTSetTreapMtEph {
 
     //		Section 14. derive impls outside verus!
 
-    impl<T: MtKey + ClonePreservesView + 'static + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
+    impl<T: MtKey + ClonePreservesView + fmt::Debug> fmt::Debug for BSTSetTreapMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetTreapMtEph(size: {})", self.size())
         }
     }
 
-    impl<T: MtKey + ClonePreservesView + 'static> fmt::Display for BSTSetTreapMtEph<T> {
+    impl<T: MtKey + ClonePreservesView> fmt::Display for BSTSetTreapMtEph<T> {
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             write!(f, "BSTSetTreapMtEph(size: {})", self.size())
         }

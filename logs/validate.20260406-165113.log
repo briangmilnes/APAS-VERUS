@@ -1,0 +1,171 @@
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:62:20
+    |
+ 62 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                    ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+ 61 |     pub open spec fn elements<T: Eq + Clone>(a: ArraySeqMtEphSliceS<T>) -> Seq<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                                                                   +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:62:43
+    |
+ 62 |         Seq::new(a.spec_len(), |i: int| a.spec_index(i))
+    |                                           ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_arrayseqmtephslice_wf` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:200:15
+    |
+200 |             a.spec_arrayseqmtephslice_wf(),
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_arrayseqmtephslice_wf` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>) where T: Concurrency::Concurrency::StTInMtT
+    |                                                                                                        +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_len` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:201:15
+    |
+201 |             a.spec_len() == v.len(),
+    |               ^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_len` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+    |
+198 |     proof fn lemma_elements_from_vec<T: TotalOrder + Eq + Clone>(v: Seq<T>, a: ArraySeqMtEphSliceS<T>) where T: Concurrency::Concurrency::StTInMtT
+    |                                                                                                        +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:202:41
+    |
+202 |             forall|i: int| #![trigger a.spec_index(i)]
+    |                                         ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:203:40
+    |
+203 |                 0 <= i < v.len() ==> a.spec_index(i) == v[i],
+    |                                        ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error[E0599]: the method `spec_index` exists for struct `Chap19::ArraySeqMtEphSlice::ArraySeqMtEphSlice::ArraySeqMtEphSliceS<T>`, but its trait bounds were not satisfied
+   --> src/Chap36/QuickSortMtEphSlice.rs:210:40
+    |
+210 |             assert(elements(a)[i] == a.spec_index(i));
+    |                                        ^^^^^^^^^^ method cannot be called due to unsatisfied trait bounds
+    |
+   ::: src/Chap19/ArraySeqMtEphSlice.rs:68:5
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> {
+    |     --------------------------------- method `spec_index` not found for this struct because it doesn't satisfy `_: ArraySeqMtEphSliceTrait<T>`
+    |
+note: trait bound `T: Concurrency::Concurrency::StTInMtT` was not satisfied
+   --> src/Chap19/ArraySeqMtEphSlice.rs:601:13
+    |
+601 |     impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    |             ^^^^^^^^  --------------------------     ----------------------
+    |             |
+    |             unsatisfied trait bound introduced here
+help: consider restricting the type parameter to satisfy the trait bound
+   --> src/Chap19/ArraySeqMtEphSlice.rs:68:38
+    |
+ 68 |     pub struct ArraySeqMtEphSliceS<T> where T: Concurrency::Concurrency::StTInMtT {
+    |                                       +++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1190MB, peak z3 RSS: 0MB, min free: 17432MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s

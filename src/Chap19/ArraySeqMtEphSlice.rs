@@ -326,7 +326,7 @@ pub mod ArraySeqMtEphSlice {
     //		Section 8. traits
 
 
-    pub trait ArraySeqMtEphSliceTrait<T: Eq + Clone>: Sized {
+    pub trait ArraySeqMtEphSliceTrait<T: StTInMtT>: Sized {
         spec fn spec_arrayseqmtephslice_wf(&self) -> bool;
 
         spec fn spec_len(&self) -> nat;
@@ -523,7 +523,6 @@ pub mod ArraySeqMtEphSlice {
         fn reduce<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (reduced: T)
-            where T: Send + Sync + 'static
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -535,10 +534,9 @@ pub mod ArraySeqMtEphSlice {
 
         /// Parallel map via D&C on O(1) slices.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — D&C + join, O(1) split, O(n) rejoin.
-        fn map<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+        fn map<U: StTInMtT, F: MtMapFn<T, U>>(
             &self, f: &F,
         ) -> (mapped: ArraySeqMtEphSliceS<U>)
-            where T: Send + Sync + 'static
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -554,7 +552,6 @@ pub mod ArraySeqMtEphSlice {
         fn filter<F: MtPred<T>>(
             &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
         ) -> (filtered: Self)
-            where T: Send + Sync + 'static
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -568,7 +565,6 @@ pub mod ArraySeqMtEphSlice {
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(n * W(f)), Span O(lg n + S(f))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * W(f)), Span O(lg n * S(f)) — D&C + join, O(n) rejoin.
         fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
-            where T: Send + Sync + 'static
             requires
                 obeys_feq_clone::<T>(),
                 forall|i: usize| i < length ==> #[trigger] f.requires((i,)),
@@ -584,7 +580,6 @@ pub mod ArraySeqMtEphSlice {
         fn scan<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (scanned: (Self, T))
-            where T: Send + Sync + 'static
             requires
                 self.spec_arrayseqmtephslice_wf(),
                 obeys_feq_clone::<T>(),
@@ -603,7 +598,7 @@ pub mod ArraySeqMtEphSlice {
     //		Section 9. impls
 
 
-    impl<T: Eq + Clone> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
+    impl<T: StTInMtT> ArraySeqMtEphSliceTrait<T> for ArraySeqMtEphSliceS<T> {
         open spec fn spec_arrayseqmtephslice_wf(&self) -> bool {
             self.start + self.len <= (*self.data)@.len()
             && self.start + self.len <= usize::MAX
@@ -906,7 +901,6 @@ pub mod ArraySeqMtEphSlice {
         fn reduce<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (reduced: T)
-            where T: Send + Sync + 'static
         {
             let len = self.length();
             if len == 0 {
@@ -920,10 +914,9 @@ pub mod ArraySeqMtEphSlice {
             }
         }
 
-        fn map<U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+        fn map<U: StTInMtT, F: MtMapFn<T, U>>(
             &self, f: &F,
         ) -> (mapped: ArraySeqMtEphSliceS<U>)
-            where T: Send + Sync + 'static
         {
             let v = map_dc_vec(self, f);
             ArraySeqMtEphSliceS::<U>::from_vec(v)
@@ -932,14 +925,12 @@ pub mod ArraySeqMtEphSlice {
         fn filter<F: MtPred<T>>(
             &self, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
         ) -> (filtered: Self)
-            where T: Send + Sync + 'static
         {
             let v = filter_dc_vec(self, pred, Ghost(spec_pred));
             Self::from_vec(v)
         }
 
         fn tabulate<F: MtTabulateFn<T>>(f: &F, length: usize) -> (tab: Self)
-            where T: Send + Sync + 'static
         {
             let v = tabulate_dc_vec(f, 0, length);
             let ghost v_view = v@;
@@ -958,7 +949,6 @@ pub mod ArraySeqMtEphSlice {
         fn scan<F: MtReduceFn<T>>(
             &self, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
         ) -> (scanned: (Self, T))
-            where T: Send + Sync + 'static
         {
             let len = self.length();
             if len == 0 {
@@ -988,7 +978,7 @@ pub mod ArraySeqMtEphSlice {
     }
 
     /// D&C reduce on O(1) slices. Called by trait reduce for non-empty sequences.
-    pub(crate) fn reduce_dc<T: Eq + Clone + Send + Sync + 'static, F: MtReduceFn<T>>(
+    pub(crate) fn reduce_dc<T: StTInMtT, F: MtReduceFn<T>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
     ) -> (reduced: T)
@@ -1092,7 +1082,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
     /// D&C map producing Vec<U>. Called by trait map.
-    pub(crate) fn map_dc_vec<T: Eq + Clone + Send + Sync + 'static, U: Eq + Clone + Send + Sync + 'static, F: MtMapFn<T, U>>(
+    pub(crate) fn map_dc_vec<T: StTInMtT, U: StTInMtT, F: MtMapFn<T, U>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
     ) -> (mapped: Vec<U>)
             requires
@@ -1165,7 +1155,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
     /// D&C filter producing Vec<T>. Called by trait filter.
-    pub(crate) fn filter_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtPred<T>>(
+    pub(crate) fn filter_dc_vec<T: StTInMtT, F: MtPred<T>>(
         a: &ArraySeqMtEphSliceS<T>, pred: &F,
         Ghost(spec_pred): Ghost<spec_fn(T) -> bool>,
     ) -> (filtered: Vec<T>)
@@ -1242,7 +1232,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
     /// D&C tabulate producing Vec<T>. Called by trait tabulate.
-    pub(crate) fn tabulate_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtTabulateFn<T>>(
+    pub(crate) fn tabulate_dc_vec<T: StTInMtT, F: MtTabulateFn<T>>(
         f: &F, start: usize, count: usize,
     ) -> (tabulated: Vec<T>)
             requires
@@ -1339,7 +1329,7 @@ pub mod ArraySeqMtEphSlice {
         }
 
 
-    pub(crate) fn scan_dc_vec<T: Eq + Clone + Send + Sync + 'static, F: MtReduceFn<T>>(
+    pub(crate) fn scan_dc_vec<T: StTInMtT, F: MtReduceFn<T>>(
         a: &ArraySeqMtEphSliceS<T>, f: &F,
         Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T,
     ) -> (scanned: (Vec<T>, T))
@@ -1519,7 +1509,7 @@ pub mod ArraySeqMtEphSlice {
     /// - Primitive: flatten. Concatenate a sequence of sequences.
     /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(sum |a[i]|), Span O(lg |a| + max |a[i]|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(sum |a[i]|), Span O(lg^2 |a| + max |a[i]|) — ACCEPTED DIFFERENCE: Vec concat at each D&C level; O(1) rejoin needs PCell pre-allocated output
-    pub fn flatten<T: Eq + Clone + Send + Sync + 'static>(
+    pub fn flatten<T: StTInMtT>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
     ) -> (flattened: ArraySeqMtEphSliceS<T>)
         requires
@@ -1535,7 +1525,7 @@ pub mod ArraySeqMtEphSlice {
     }
 
     /// D&C flatten producing Vec<T>. Called by flatten.
-    fn flatten_dc_vec<T: Eq + Clone + Send + Sync + 'static>(
+    fn flatten_dc_vec<T: StTInMtT>(
         a: &ArraySeqMtEphSliceS<ArraySeqMtEphSliceS<T>>,
     ) -> (flattened: Vec<T>)
         requires
@@ -1744,7 +1734,7 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-    impl<'a, T: Eq + Clone> std::iter::IntoIterator for &'a ArraySeqMtEphSliceS<T> {
+    impl<'a, T: StTInMtT> std::iter::IntoIterator for &'a ArraySeqMtEphSliceS<T> {
         type Item = &'a T;
         type IntoIter = ArraySeqMtEphSliceIter<'a, T>;
 
