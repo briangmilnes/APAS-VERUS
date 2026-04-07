@@ -110,11 +110,6 @@ broadcast use {
             (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
     }
 
-    /// Spec predicate for rank_key: x is strictly less than k in the total order.
-    pub open spec fn spec_rank_pred<K: StT + Ord + TotalOrder>(x: K::V, k: K) -> bool {
-        exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
-    }
-
     //		Section 7. proof fns/broadcast groups
 
 
