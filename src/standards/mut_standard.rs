@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Mut Standard: all verified &mut patterns in APAS-VERUS.
 //!
 //! Seven stable patterns (no flags needed) plus two experimental patterns

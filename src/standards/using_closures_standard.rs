@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Using Closures Standard: how to pass closures with specs in APAS-VERUS.
 //!
 //! Verus closures can carry `requires` and `ensures` clauses. The receiver

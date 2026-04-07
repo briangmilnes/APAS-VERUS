@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Spec WF Standard: well-formedness predicates in trait-impl modules.
 //!
@@ -256,4 +256,28 @@ pub mod spec_wf_standard {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for Container<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Container(len={})", self.data.len())
+        }
+    }
+    impl<T: std::fmt::Display> std::fmt::Display for Container<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Container(len={})", self.data.len())
+        }
+    }
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for VecWrapper<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "VecWrapper(len={})", self.seq.len())
+        }
+    }
+    impl<T: std::fmt::Display> std::fmt::Display for VecWrapper<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "VecWrapper(len={})", self.seq.len())
+        }
+    }
 }

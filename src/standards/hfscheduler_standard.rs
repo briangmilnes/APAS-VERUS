@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! HFScheduler Standard: Arc<RwLock<T, Inv>> + HFScheduler join() for verified
 //! fork-join parallelism with shared mutable state.
@@ -173,4 +173,17 @@ pub mod hfscheduler_standard {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for BoundedCounterInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounterInv")
+        }
+    }
+    impl std::fmt::Display for BoundedCounterInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounterInv")
+        }
+    }
 }

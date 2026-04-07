@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Capacity Bounds Standard: integer max bounds in requires, not assumes.
 //!
@@ -240,4 +240,17 @@ pub mod capacity_bounds_standard {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for BoundedStack {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedStack(len={})", self.items.len())
+        }
+    }
+    impl std::fmt::Display for BoundedStack {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedStack(len={})", self.items.len())
+        }
+    }
 }

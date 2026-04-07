@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Iterative vs Recursive Standard: naming when both algorithm variants coexist.
 //!
@@ -181,4 +181,17 @@ pub mod iterative_vs_recursive_standard {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for Numbers {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Numbers(len={})", self.elements.len())
+        }
+    }
+    impl std::fmt::Display for Numbers {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Numbers(len={})", self.elements.len())
+        }
+    }
 } // pub mod

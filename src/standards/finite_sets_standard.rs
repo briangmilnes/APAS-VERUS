@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Finite Sets Standard: finiteness flows through wf, not assumes.
 //!
@@ -163,4 +163,17 @@ pub mod finite_sets_standard {
     // Four holes for one structural fact. Put it in wf, get zero holes.
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for FiniteCollection {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "FiniteCollection(len={})", self.elements.len())
+        }
+    }
+    impl std::fmt::Display for FiniteCollection {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "FiniteCollection(len={})", self.elements.len())
+        }
+    }
 }
