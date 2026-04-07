@@ -1,0 +1,69 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:818:17
+     |
+ 818 |                 self@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1674 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+     |         ------------------------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:818:17
+    |
+818 |                 self@.dom().finite(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✘
+    function is uninterpreted
+self.spec_orderedtablesteph_wf() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:842:17
+     |
+ 842 |                   self@.dom().finite(),
+     |                   ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1686 |               proof {
+     |  ___________________-
+1687 | |                 // Trigger bridge: materialize result@[k] to fire the OrdKeyMap existential.
+1688 | |                 assert forall|k: K::V|
+1689 | |                     #[trigger] old_map.contains_key(k) && other_map.contains_key(k) implies
+...    |
+1696 | |                 };
+1697 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:842:17
+    |
+842 |                 self@.dom().finite(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        self.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✘
+    function is uninterpreted
+self.spec_orderedtablesteph_wf() ✔
+
+verification results:: 2815 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 65s
+Sampled Memory Usage: peak rust_verify RSS: 4928MB, peak z3 RSS: 426MB, min free: 13419MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 97s
