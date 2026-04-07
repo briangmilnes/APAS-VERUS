@@ -68,17 +68,22 @@ Delegate to `self.inner.difference(&other.inner)`. Bridge: same pattern.
 
 ## Approach
 
-Look at how OrderedTableStEph's `union` (255 lines) works. Most of those
-lines are bridge proof. The actual delegation is short. Extract the bridge
-proof pattern into a helper lemma if possible.
+**Do NOT write these proofs from scratch.** OrderedTableStEph already has
+working, verified proofs for union (255 lines), intersect (130 lines), and
+difference. COPY the proof bodies from OrderedTableStEph into OrdKeyMap and
+adapt:
 
-ParamBST's union/intersect/difference already ensure:
-- `combined@ == self@.union(other@)` (in Set terms)
-- `combined@.finite()`
-- wf preserved
+1. Open `src/Chap43/OrderedTableStEph.rs`
+2. Find the `union` function body — it has working proof assertions
+3. Copy the proof logic into OrdKeyMap's `union` method
+4. Adapt references: `self.tree` → `self.inner`, remove any OrderedTable-specific
+   wf references, use OrdKeyMap's wf and bridge lemmas instead
+5. The core proof structure (case analysis, lemma calls) stays the same
 
-Your job is to prove the Map-level postconditions from the Set-level ensures.
-The key lemma: `spec_pair_set_to_map(a.union(b)) == spec_pair_set_to_map(a).union_prefer_right(spec_pair_set_to_map(b))` when both sides have unique keys.
+The proofs work because they're proving the same thing — Map-level postconditions
+from Set-level BST ensures. The only difference is which wf predicate and which
+bridge lemmas are in scope. OrdKeyMap has the same bridge lemmas, so the proofs
+should transfer with minimal adaptation.
 
 ## Validation
 

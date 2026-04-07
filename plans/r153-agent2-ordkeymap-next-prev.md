@@ -72,15 +72,26 @@ BST descent using size-based indexing.
 
 ## Approach
 
-Copy `bst_next_by_key` from OrderedTableStEph. Adapt:
-1. Change parameter from `tree: &ParamBST<Pair<K,V>>` to use `self.inner`
+**Do NOT write these proofs from scratch.** OrderedTableStEph already has
+working, verified proofs:
+- `bst_next_by_key` (305 lines) — BST successor with full ordering proof
+- `bst_prev_by_key` (286 lines) — BST predecessor
+- `bst_select_by_rank` (325 lines) — rank-based selection
+- `bst_rank_by_key` (279 lines) — rank computation
+
+COPY these function bodies from `src/Chap43/OrderedTableStEph.rs` into
+OrdKeyMap and adapt:
+
+1. Change parameter from `tree: &ParamBST<Pair<K,V>>` to take `&self` or
+   use `self.inner` for the ParamBST access
 2. The internal recursion stays on `Link` / BST nodes — same tree traversal
 3. The ensures speak in Map terms via OrdKeyMap's View
-4. Bridge proof at the top level: connect BST-level result to Map postcondition
+4. Replace OrderedTable's bridge lemma calls with OrdKeyMap's equivalents
+   (same lemma names, they were copied from OrderedTable in R152)
+5. Replace OrderedTable's wf references with OrdKeyMap's wf
 
-The proof logic (TotalOrder transitivity chains, BST ordering exclusion) stays
-the same. What shrinks is the bridge overhead — OrdKeyMap's wf already bundles
-key uniqueness and pair_set_to_map properties.
+The proof logic (TotalOrder transitivity chains, BST ordering exclusion) is
+the hard part and it's ALREADY PROVEN. Don't reinvent it. Move it.
 
 ## Priority
 
