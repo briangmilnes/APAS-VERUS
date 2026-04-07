@@ -1,0 +1,25 @@
+error[E0525]: expected a closure that implements the `Fn` trait, but this closure only implements `FnOnce`
+    --> src/Chap43/OrderedTableStEph.rs:2493:27
+     |
+2493 |             let wrapper = |v1: &V, v2: &V| -> (r: V)
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^ this closure implements `FnOnce`, not `Fn`
+2494 |                 requires f.requires((v1, v2))
+     |                          - closure is `FnOnce` because it moves the variable `f` out of its environment
+...
+2499 |             let combined = self.tree.union_with(&other.tree, &wrapper);
+     |                                      ----------              -------- the requirement to implement `Fn` derives from here
+     |                                      |
+     |                                      required by a bound introduced by this call
+     |
+note: required by a bound in `Chap38::OrdKeyMap::OrdKeyMap::OrdKeyMapTrait::union_with`
+    --> src/Chap38/OrdKeyMap.rs:724:26
+     |
+ 724 |         fn union_with<F: Fn(&V, &V) -> V>(&self, other: &Self, combine: &F) -> (combined: Self)
+     |                          ^^^^^^^^^^^^^^^ required by this bound in `OrdKeyMapTrait::union_with`
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0525`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 627MB, peak z3 RSS: 0MB, min free: 17529MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s
