@@ -1,0 +1,166 @@
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:783:17
+    |
+191 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________-
+192 | |         requires
+193 | |             spec_key_unique_pairs_set(s),
+194 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...   |
+212 | |         };
+213 | |     }
+    | |_____- similarly named function `lemma_key_unique_insert` defined here
+...
+783 |                   lemma_key_unique_empty::<K::V, V::V>();
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap41/OrdKeyMap.rs:345:11
+    |
+345 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+346 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+347 | |     {
+348 | |     }
+    | |_____^ `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty`: not accessible
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:301:11
+    |
+301 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+302 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+...   |
+305 | |     }
+    | |_____^ `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty`: not accessible
+help: a function with a similar name exists
+    |
+783 -                 lemma_key_unique_empty::<K::V, V::V>();
+783 +                 lemma_key_unique_insert::<K::V, V::V>();
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:969:17
+    |
+191 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________-
+192 | |         requires
+193 | |             spec_key_unique_pairs_set(s),
+194 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...   |
+212 | |         };
+213 | |     }
+    | |_____- similarly named function `lemma_key_unique_insert` defined here
+...
+969 |                   lemma_key_unique_empty::<K::V, V::V>();
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: these functions exist but are inaccessible
+   --> src/Chap41/OrdKeyMap.rs:345:11
+    |
+345 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+346 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+347 | |     {
+348 | |     }
+    | |_____^ `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty`: not accessible
+    |
+   ::: src/Chap43/OrderedTableStEph.rs:301:11
+    |
+301 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+302 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+...   |
+305 | |     }
+    | |_____^ `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty`: not accessible
+help: a function with a similar name exists
+    |
+969 -                 lemma_key_unique_empty::<K::V, V::V>();
+969 +                 lemma_key_unique_insert::<K::V, V::V>();
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1071:17
+     |
+ 191 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+     |  ___________-
+ 192 | |         requires
+ 193 | |             spec_key_unique_pairs_set(s),
+ 194 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...    |
+ 212 | |         };
+ 213 | |     }
+     | |_____- similarly named function `lemma_key_unique_insert` defined here
+...
+1071 |                   lemma_key_unique_empty::<K::V, V::V>();
+     |                   ^^^^^^^^^^^^^^^^^^^^^^
+     |
+note: these functions exist but are inaccessible
+    --> src/Chap41/OrdKeyMap.rs:345:11
+     |
+ 345 |       proof fn lemma_key_unique_empty<KV, VV>()
+     |  ___________^
+ 346 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+ 347 | |     {
+ 348 | |     }
+     | |_____^ `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty`: not accessible
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:301:11
+     |
+ 301 |       proof fn lemma_key_unique_empty<KV, VV>()
+     |  ___________^
+ 302 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+...    |
+ 305 | |     }
+     | |_____^ `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty`: not accessible
+help: a function with a similar name exists
+     |
+1071 -                 lemma_key_unique_empty::<K::V, V::V>();
+1071 +                 lemma_key_unique_insert::<K::V, V::V>();
+     |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1360:13
+     |
+ 191 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+     |  ___________-
+ 192 | |         requires
+ 193 | |             spec_key_unique_pairs_set(s),
+ 194 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...    |
+ 212 | |         };
+ 213 | |     }
+     | |_____- similarly named function `lemma_key_unique_insert` defined here
+...
+1360 |               lemma_key_unique_empty::<K::V, V::V>();
+     |               ^^^^^^^^^^^^^^^^^^^^^^
+     |
+note: these functions exist but are inaccessible
+    --> src/Chap41/OrdKeyMap.rs:345:11
+     |
+ 345 |       proof fn lemma_key_unique_empty<KV, VV>()
+     |  ___________^
+ 346 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+ 347 | |     {
+ 348 | |     }
+     | |_____^ `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty`: not accessible
+     |
+    ::: src/Chap43/OrderedTableStEph.rs:301:11
+     |
+ 301 |       proof fn lemma_key_unique_empty<KV, VV>()
+     |  ___________^
+ 302 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+...    |
+ 305 | |     }
+     | |_____^ `crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty`: not accessible
+help: a function with a similar name exists
+     |
+1360 -             lemma_key_unique_empty::<K::V, V::V>();
+1360 +             lemma_key_unique_insert::<K::V, V::V>();
+     |
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3072MB, peak z3 RSS: 256MB, min free: 16235MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 68s

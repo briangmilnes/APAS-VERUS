@@ -1,0 +1,23 @@
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:1454:13
+     |
+1454 |             AVLTreeSeqStPerS::from_vec(entries)
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:363:22
+     |
+ 363 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+entries.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 2817 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 60s
+Sampled Memory Usage: peak rust_verify RSS: 3338MB, peak z3 RSS: 430MB, min free: 15920MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 97s
