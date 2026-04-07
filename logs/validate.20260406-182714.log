@@ -1,0 +1,46 @@
+error: invariant not satisfied before loop
+    --> src/Chap38/OrdKeyMap.rs:1519:21
+     |
+1519 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+    --> src/Chap38/OrdKeyMap.rs:1595:29
+     |
+ 239 |         requires spec_pair_set_to_map(s).contains_key(k)
+     |                  --------------------------------------- failed precondition
+...
+1595 |                             lemma_map_contains_pair_in_set(other_tree, self_sorted@[i as int].0);
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+    --> src/Chap38/OrdKeyMap.rs:1597:36
+     |
+1597 | ...                   assert(ov@ == ov_val);
+     |                              ^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_pair_set_to_map(other_tree).dom().contains(tmp%) 
+    function is uninterpreted
+
+error: invariant not satisfied before loop
+    --> src/Chap38/OrdKeyMap.rs:1884:21
+     |
+1884 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap38/OrdKeyMap.rs:2028:21
+     |
+2028 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1199 verified, 4 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1100MB, peak z3 RSS: 326MB, min free: 16869MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 9s
