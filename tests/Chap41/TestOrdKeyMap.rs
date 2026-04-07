@@ -1,8 +1,8 @@
 //! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
-use apas_verus::Chap41::ArraySetStEph::ArraySetStEph::*;
 use apas_verus::Chap41::OrdKeyMap::OrdKeyMap::*;
 use apas_verus::Types::Types::*;
+use vstd::prelude::Ghost;
 
 fn make_map(pairs: &[(u64, u64)]) -> OrdKeyMap<u64, u64> {
     let mut m = OrdKeyMap::new();
@@ -643,119 +643,262 @@ fn test_ordkeymap_next_prev_walk() {
     assert_eq!(keys_bwd, vec![10, 20, 30, 40, 50]);
 }
 
-// domain, tabulate, restrict, subtract
+// collect tests.
 
-fn make_set(vals: &[u64]) -> ArraySetStEph<u64> {
-    let mut s = ArraySetStEph::empty();
-    for &v in vals {
-        s.insert(v);
+#[test]
+fn test_ordkeymap_collect_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let entries = m.collect();
+    assert!(entries.is_empty());
+}
+
+#[test]
+fn test_ordkeymap_collect_singleton() {
+    let m = make_map(&[(42, 99)]);
+    let entries = m.collect();
+    assert_eq!(entries.len(), 1);
+    assert_eq!(entries[0].0, 42u64);
+    assert_eq!(entries[0].1, 99u64);
+}
+
+#[test]
+fn test_ordkeymap_collect_sorted_order() {
+    // Insert out of order; collect must return ascending key order.
+    let m = make_map(&[(30, 3), (10, 1), (50, 5), (20, 2), (40, 4)]);
+    let entries = m.collect();
+    assert_eq!(entries.len(), 5);
+    let keys: Vec<u64> = entries.iter().map(|p| p.0).collect();
+    assert_eq!(keys, vec![10, 20, 30, 40, 50]);
+    for e in &entries {
+        assert_eq!(m.find(&e.0), Some(e.1));
     }
-    s
 }
 
 #[test]
-fn test_ordkeymap_domain_empty() {
+fn test_ordkeymap_collect_values_correct() {
+    let m = make_map(&[(1, 100), (2, 200), (3, 300)]);
+    let entries = m.collect();
+    assert_eq!(entries.len(), 3);
+    assert_eq!(entries[0], Pair(1u64, 100u64));
+    assert_eq!(entries[1], Pair(2u64, 200u64));
+    assert_eq!(entries[2], Pair(3u64, 300u64));
+}
+
+// filter tests.
+
+#[test]
+fn test_ordkeymap_filter_keep_some() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30), (4, 40), (5, 50)]);
+    // Keep only entries with even keys.
+    let filtered = m.filter(|k: &u64, _v: &u64| *k % 2 == 0, Ghost::assume_new());
+    assert_eq!(filtered.size(), 2);
+    assert_eq!(filtered.find(&2u64), Some(20u64));
+    assert_eq!(filtered.find(&4u64), Some(40u64));
+    assert_eq!(filtered.find(&1u64), None);
+    assert_eq!(filtered.find(&3u64), None);
+    assert_eq!(filtered.find(&5u64), None);
+}
+
+#[test]
+fn test_ordkeymap_filter_keep_none() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    // Keep nothing.
+    let filtered = m.filter(|_k: &u64, _v: &u64| false, Ghost::assume_new());
+    assert!(filtered.is_empty());
+}
+
+#[test]
+fn test_ordkeymap_filter_keep_all() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    // Keep everything.
+    let filtered = m.filter(|_k: &u64, _v: &u64| true, Ghost::assume_new());
+    assert_eq!(filtered.size(), 3);
+    assert_eq!(filtered.find(&1u64), Some(10u64));
+    assert_eq!(filtered.find(&2u64), Some(20u64));
+    assert_eq!(filtered.find(&3u64), Some(30u64));
+}
+
+#[test]
+fn test_ordkeymap_filter_by_value() {
+    let m = make_map(&[(1, 5), (2, 15), (3, 25), (4, 35)]);
+    // Keep only entries with value > 20.
+    let filtered = m.filter(|_k: &u64, v: &u64| *v > 20, Ghost::assume_new());
+    assert_eq!(filtered.size(), 2);
+    assert_eq!(filtered.find(&3u64), Some(25u64));
+    assert_eq!(filtered.find(&4u64), Some(35u64));
+    assert_eq!(filtered.find(&1u64), None);
+    assert_eq!(filtered.find(&2u64), None);
+}
+
+#[test]
+fn test_ordkeymap_filter_empty_map() {
     let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
-    let dom = m.domain();
-    assert_eq!(dom.size(), 0);
+    let filtered = m.filter(|_k: &u64, _v: &u64| true, Ghost::assume_new());
+    assert!(filtered.is_empty());
+}
+
+// map_values tests.
+
+#[test]
+fn test_ordkeymap_map_values_double() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    let mapped = m.map_values(|_k: &u64, v: &u64| *v * 2);
+    assert_eq!(mapped.size(), 3);
+    assert_eq!(mapped.find(&1u64), Some(20u64));
+    assert_eq!(mapped.find(&2u64), Some(40u64));
+    assert_eq!(mapped.find(&3u64), Some(60u64));
 }
 
 #[test]
-fn test_ordkeymap_domain() {
-    let m = make_map(&[(10, 1), (20, 2), (30, 3)]);
-    let dom = m.domain();
-    assert_eq!(dom.size(), 3);
-    assert!(dom.find(&10));
-    assert!(dom.find(&20));
-    assert!(dom.find(&30));
-    assert!(!dom.find(&99));
+fn test_ordkeymap_map_values_keys_unchanged() {
+    let m = make_map(&[(5, 50), (10, 100), (15, 150)]);
+    let mapped = m.map_values(|_k: &u64, v: &u64| *v + 1);
+    assert_eq!(mapped.size(), 3);
+    // Keys must be exactly the same set.
+    assert_eq!(mapped.first_key(), Some(5u64));
+    assert_eq!(mapped.last_key(), Some(15u64));
+    assert_eq!(mapped.find(&5u64), Some(51u64));
+    assert_eq!(mapped.find(&10u64), Some(101u64));
+    assert_eq!(mapped.find(&15u64), Some(151u64));
+    // Original map unchanged.
+    assert_eq!(m.find(&5u64), Some(50u64));
 }
 
 #[test]
-fn test_ordkeymap_tabulate() {
-    let keys = make_set(&[10, 20, 30]);
-    let f = |k: &u64| -> u64 { *k * 10 };
-    let table: OrdKeyMap<u64, u64> = OrdKeyMap::tabulate(&keys, &f);
-    assert_eq!(table.size(), 3);
-    assert_eq!(table.find(&10), Some(100));
-    assert_eq!(table.find(&20), Some(200));
-    assert_eq!(table.find(&30), Some(300));
-    assert_eq!(table.find(&99), None);
+fn test_ordkeymap_map_values_key_dependent() {
+    // Value becomes key + old_value.
+    let m = make_map(&[(1, 100), (2, 200), (3, 300)]);
+    let mapped = m.map_values(|k: &u64, v: &u64| *k + *v);
+    assert_eq!(mapped.find(&1u64), Some(101u64));
+    assert_eq!(mapped.find(&2u64), Some(202u64));
+    assert_eq!(mapped.find(&3u64), Some(303u64));
 }
 
 #[test]
-fn test_ordkeymap_tabulate_empty() {
-    let keys: ArraySetStEph<u64> = ArraySetStEph::empty();
-    let f = |k: &u64| -> u64 { *k };
-    let table: OrdKeyMap<u64, u64> = OrdKeyMap::tabulate(&keys, &f);
-    assert_eq!(table.size(), 0);
-}
-
-#[test]
-fn test_ordkeymap_restrict() {
-    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4)]);
-    let keep = make_set(&[10, 30, 50]);
-    let restricted = m.restrict(&keep);
-    assert_eq!(restricted.size(), 2);
-    assert_eq!(restricted.find(&10), Some(1));
-    assert_eq!(restricted.find(&30), Some(3));
-    assert_eq!(restricted.find(&20), None);
-    assert_eq!(restricted.find(&40), None);
-}
-
-#[test]
-fn test_ordkeymap_restrict_empty_keys() {
-    let m = make_map(&[(10, 1), (20, 2)]);
-    let empty_keys: ArraySetStEph<u64> = ArraySetStEph::empty();
-    let restricted = m.restrict(&empty_keys);
-    assert_eq!(restricted.size(), 0);
-}
-
-#[test]
-fn test_ordkeymap_restrict_empty_map() {
+fn test_ordkeymap_map_values_empty() {
     let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
-    let keys = make_set(&[10, 20]);
-    let restricted = m.restrict(&keys);
-    assert_eq!(restricted.size(), 0);
+    let mapped = m.map_values(|_k: &u64, v: &u64| *v * 10);
+    assert!(mapped.is_empty());
+}
+
+// reduce tests.
+
+#[test]
+fn test_ordkeymap_reduce_sum() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30), (4, 40)]);
+    let total = m.reduce(|acc: &u64, v: &u64| acc + v, &0u64);
+    assert_eq!(total, 100u64);
 }
 
 #[test]
-fn test_ordkeymap_subtract() {
-    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4)]);
-    let remove = make_set(&[10, 30, 50]);
-    let remaining = m.subtract(&remove);
-    assert_eq!(remaining.size(), 2);
-    assert_eq!(remaining.find(&20), Some(2));
-    assert_eq!(remaining.find(&40), Some(4));
-    assert_eq!(remaining.find(&10), None);
-    assert_eq!(remaining.find(&30), None);
+fn test_ordkeymap_reduce_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let result = m.reduce(|acc: &u64, v: &u64| acc + v, &0u64);
+    assert_eq!(result, 0u64);
 }
 
 #[test]
-fn test_ordkeymap_subtract_empty_keys() {
-    let m = make_map(&[(10, 1), (20, 2)]);
-    let empty_keys: ArraySetStEph<u64> = ArraySetStEph::empty();
-    let remaining = m.subtract(&empty_keys);
-    assert_eq!(remaining.size(), 2);
-    assert_eq!(remaining.find(&10), Some(1));
-    assert_eq!(remaining.find(&20), Some(2));
+fn test_ordkeymap_reduce_max() {
+    let m = make_map(&[(1, 5), (2, 3), (3, 8), (4, 1), (5, 6)]);
+    let max = m.reduce(|acc: &u64, v: &u64| if *v > *acc { *v } else { *acc }, &0u64);
+    assert_eq!(max, 8u64);
 }
 
 #[test]
-fn test_ordkeymap_subtract_all() {
-    let m = make_map(&[(10, 1), (20, 2)]);
-    let all_keys = make_set(&[10, 20]);
-    let remaining = m.subtract(&all_keys);
-    assert_eq!(remaining.size(), 0);
+fn test_ordkeymap_reduce_singleton() {
+    let m = make_map(&[(42, 99)]);
+    let result = m.reduce(|acc: &u64, v: &u64| acc + v, &0u64);
+    assert_eq!(result, 99u64);
+}
+
+// Clone tests.
+
+#[test]
+fn test_ordkeymap_clone_equals_original() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    let c = m.clone();
+    assert_eq!(c.size(), m.size());
+    assert_eq!(c.find(&1u64), m.find(&1u64));
+    assert_eq!(c.find(&2u64), m.find(&2u64));
+    assert_eq!(c.find(&3u64), m.find(&3u64));
+    assert_eq!(c.first_key(), m.first_key());
+    assert_eq!(c.last_key(), m.last_key());
 }
 
 #[test]
-fn test_ordkeymap_domain_roundtrip() {
-    let m = make_map(&[(10, 1), (20, 2), (30, 3)]);
-    let dom = m.domain();
-    let restricted = m.restrict(&dom);
-    assert_eq!(restricted.size(), 3);
-    assert_eq!(restricted.find(&10), Some(1));
-    assert_eq!(restricted.find(&20), Some(2));
-    assert_eq!(restricted.find(&30), Some(3));
+fn test_ordkeymap_clone_modify_clone_no_effect_on_original() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    let mut c = m.clone();
+    c.insert(4u64, 40u64);
+    c.delete(&1u64);
+    // Original unchanged.
+    assert_eq!(m.size(), 3);
+    assert_eq!(m.find(&1u64), Some(10u64));
+    assert_eq!(m.find(&4u64), None);
+    // Clone has the changes.
+    assert_eq!(c.size(), 3);
+    assert_eq!(c.find(&4u64), Some(40u64));
+    assert_eq!(c.find(&1u64), None);
+}
+
+#[test]
+fn test_ordkeymap_clone_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let c = m.clone();
+    assert!(c.is_empty());
+}
+
+// Integration tests.
+
+#[test]
+fn test_ordkeymap_collect_after_filter() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30), (4, 40), (5, 50)]);
+    let filtered = m.filter(|k: &u64, _v: &u64| *k % 2 != 0, Ghost::assume_new());
+    let entries = filtered.collect();
+    // Odd keys: 1, 3, 5.
+    assert_eq!(entries.len(), 3);
+    assert_eq!(entries[0].0, 1u64);
+    assert_eq!(entries[1].0, 3u64);
+    assert_eq!(entries[2].0, 5u64);
+}
+
+#[test]
+fn test_ordkeymap_clone_filter_map_values_independent() {
+    let m = make_map(&[(1, 10), (2, 20), (3, 30), (4, 40)]);
+    let c = m.clone();
+    // Filter even keys from clone, double values.
+    let filtered = c.filter(|k: &u64, _v: &u64| *k % 2 == 0, Ghost::assume_new());
+    let mapped = filtered.map_values(|_k: &u64, v: &u64| *v * 2);
+    // Verify original untouched.
+    assert_eq!(m.size(), 4);
+    assert_eq!(m.find(&1u64), Some(10u64));
+    // Verify derived maps correct.
+    assert_eq!(filtered.size(), 2);
+    assert_eq!(mapped.find(&2u64), Some(40u64));
+    assert_eq!(mapped.find(&4u64), Some(80u64));
+    assert_eq!(mapped.find(&1u64), None);
+}
+
+#[test]
+fn test_ordkeymap_reduce_after_map_values() {
+    let m = make_map(&[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]);
+    // Square each value, then sum.
+    let squared = m.map_values(|_k: &u64, v: &u64| *v * *v);
+    let total = squared.reduce(|acc: &u64, v: &u64| acc + v, &0u64);
+    assert_eq!(total, 55u64); // 1 + 4 + 9 + 16 + 25.
+}
+
+#[test]
+fn test_ordkeymap_collect_roundtrip() {
+    // Build from collect output using make_map logic.
+    let m = make_map(&[(3, 30), (1, 10), (2, 20)]);
+    let entries = m.collect();
+    let mut m2 = OrdKeyMap::new();
+    for e in &entries {
+        m2.insert(e.0, e.1);
+    }
+    assert_eq!(m2.size(), m.size());
+    assert_eq!(m2.find(&1u64), m.find(&1u64));
+    assert_eq!(m2.find(&2u64), m.find(&2u64));
+    assert_eq!(m2.find(&3u64), m.find(&3u64));
 }
