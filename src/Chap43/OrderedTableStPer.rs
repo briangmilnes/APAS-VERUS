@@ -306,19 +306,6 @@ broadcast use {
         };
     }
 
-    // BYPASSED: lemma_cmp_antisymmetry — unused after delegation refactor.
-    #[cfg(never)]
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Less,
-        ensures b.cmp_spec(&a) == Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
     /// Map over the set after insert: extends the map with the new key-value pair.
     proof fn lemma_set_to_map_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
         requires
@@ -992,704 +979,6 @@ broadcast use {
     }
 
 
-    // BYPASSED: bst_next_by_key replaced by OrdKeyMap::next_key delegation.
-    #[cfg(never)]
-    #[verifier::rlimit(20)]
-    fn bst_next_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
-        tree: &ParamBST<Pair<K, V>>,
-        k: &K,
-    ) -> (successor: Option<K>)
-        requires
-            tree.spec_bstparasteph_wf(),
-            spec_key_unique_pairs_set(tree@),
-            spec_set_pair_view_generated::<K, V>(tree@),
-            view_ord_consistent::<K>(),
-            obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            spec_pair_key_determines_order::<K, V>(),
-            view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-        ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
-            successor matches Some(nk) ==> spec_pair_set_to_map(tree@).dom().contains(nk@),
-            successor matches Some(v) ==> TotalOrder::le(*k, v) && v@ != k@,
-            successor matches Some(v) ==> forall|t: K| #![trigger t@]
-                spec_pair_set_to_map(tree@).dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@
-                ==> TotalOrder::le(v, t),
-            successor is None ==> forall|t: K| #![trigger t@]
-                spec_pair_set_to_map(tree@).dom().contains(t@)
-                ==> !(TotalOrder::le(*k, t) && t@ != k@),
-        decreases tree@.len(),
-    {
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
-        match tree.expose() {
-            Exposed::Leaf => None,
-            Exposed::Node(left, root_pair, right) => {
-                reveal_param_bst_backings(&left);
-                reveal_param_bst_backings(&right);
-                proof {
-                    reveal(vstd::laws_cmp::obeys_cmp_ord);
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
-                    lemma_key_unique_subset(tree@, left@);
-                    lemma_key_unique_subset(tree@, right@);
-                    lemma_view_gen_subset::<K, V>(left@, tree@);
-                    lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_reveal_view_injective::<K>();
-                }
-                let c = Ord::cmp(k, &root_pair.0);
-                proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
-                match c {
-                    Less => {
-                        proof { assert(k.cmp_spec(&root_pair.0) == Less); }
-                        // k < root.key: root is a candidate; check left for closer successor.
-                        let left_result = bst_next_by_key(&left, k);
-                        match left_result {
-                            Some(lk) => {
-                                // Found closer successor in left subtree.
-                                proof {
-                                    // lk is in left@, hence in tree@.
-                                    lemma_map_contains_pair_in_set(left@, lk@);
-                                    let vv: V::V = choose|vv: V::V| left@.contains((lk@, vv));
-                                    assert(tree@.contains((lk@, vv)));
-                                    lemma_pair_in_set_map_contains(tree@, lk@, vv);
-                                    // Prove lk is min successor in tree.
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(*k, t) && t@ != k@
-                                        implies TotalOrder::le(lk, t) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if left@.contains((t@, tv)) {
-                                            // t in left: by recursion, lk <= t.
-                                            lemma_pair_in_set_map_contains(left@, t@, tv);
-                                        } else if (t@, tv) == root_pair@ {
-                                            // t is root: lk in left, so lk < root.
-                                            let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
-                                            assert(lp.cmp_spec(&root_pair) == Less);
-                                            assert(lp.0@ != root_pair.0@) by {
-                                                if lp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(lp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(lp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(lp.0 == lk);
-                                            assert(root_pair.0 == t);
-                                            K::cmp_spec_less_implies_le(lk, t);
-                                        } else {
-                                            // t in right: lk < root < t.
-                                            assert(right@.contains((t@, tv)));
-                                            let lp: Pair<K, V> = choose|lp: Pair<K, V>| #[trigger] left@.contains(lp@) && lp@ == (lk@, vv);
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(lp.cmp_spec(&root_pair) == Less);
-                                            assert(tp.cmp_spec(&root_pair) == Greater);
-                                            assert(lp.0@ != root_pair.0@) by {
-                                                if lp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(lp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(lp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(lp.0 == lk);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_less_implies_le(lk, root_pair.0);
-                                            K::cmp_spec_greater_implies_le(tp.0, root_pair.0);
-                                            K::transitive(lk, root_pair.0, t);
-                                        }
-                                    };
-                                }
-                                Some(lk)
-                            },
-                            None => {
-                                // No successor in left; root is the successor.
-                                let key = root_pair.0.clone_plus();
-                                proof {
-                                    lemma_cloned_view_eq(root_pair.0, key);
-                                    assert(key == root_pair.0);
-                                    assert(tree@.contains(root_pair@));
-                                    lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
-                                    // k < root, so le(k, root) and k != root.
-                                    K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                    assert(k@ != root_pair.0@);
-                                    // Prove root is min successor.
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(*k, t) && t@ != k@
-                                        implies TotalOrder::le(key, t) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if left@.contains((t@, tv)) {
-                                            // t in left with t > k: contradicts no successor in left.
-                                            lemma_pair_in_set_map_contains(left@, t@, tv);
-                                        } else if (t@, tv) == root_pair@ {
-                                            K::reflexive(key);
-                                        } else {
-                                            // t in right: root < t.
-                                            assert(right@.contains((t@, tv)));
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Greater);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_greater_implies_le(t, root_pair.0);
-                                        }
-                                    };
-                                }
-                                Some(key)
-                            },
-                        }
-                    },
-                    Equal => {
-                        // k == root.key: successor is min of right subtree.
-                        proof { assert(k.cmp_spec(&root_pair.0) == Equal); assert(k@ == root_pair.0@); }
-                        let right_min = right.min_key();
-                        match right_min {
-                            None => {
-                                proof {
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(*k, t) && t@ != k@
-                                        implies false by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if left@.contains((t@, tv)) {
-                                            // t in left: t.cmp_spec(root) == Less
-                                            // But spec_pair_key_determines_order + key unique...
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Less);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_less_implies_le(t, root_pair.0);
-                                            assert(TotalOrder::le(t, root_pair.0));
-                                            assert(root_pair.0 == *k);
-                                            // So le(t, k). Combined with le(k, t) and t != k → contradiction.
-                                            K::antisymmetric(t, *k);
-                                        } else if (t@, tv) == root_pair@ {
-                                            // t@ == root_pair.0@ == k@ but t@ != k@: contradiction.
-                                        } else {
-                                            // t in right: but right is empty.
-                                            assert(right@.contains((t@, tv)));
-                                        }
-                                    };
-                                }
-                                None
-                            },
-                            Some(min_pair) => {
-                                let key = min_pair.0.clone_plus();
-                                proof {
-                                    lemma_cloned_view_eq(min_pair.0, key);
-                                    assert(key == min_pair.0);
-                                    assert(right@.contains(min_pair@));
-                                    assert(tree@.contains(min_pair@));
-                                    lemma_pair_in_set_map_contains(tree@, min_pair.0@, min_pair.1@);
-                                    // min_pair in right, so min_pair > root => key > k.
-                                    assert(min_pair.0@ != root_pair.0@) by {
-                                        if min_pair.0@ == root_pair.0@ {
-                                            assert(tree@.contains(min_pair@));
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
-                                    assert(min_pair.cmp_spec(&root_pair) == Greater);
-                                    assert(min_pair.0.cmp_spec(&root_pair.0) == Greater);
-                                    K::cmp_spec_greater_implies_le(min_pair.0, root_pair.0);
-                                    assert(root_pair.0 == *k);
-                                    assert(key@ != k@);
-                                    // Prove key is min successor.
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(*k, t) && t@ != k@
-                                        implies TotalOrder::le(key, t) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if left@.contains((t@, tv)) {
-                                            // t in left: t < root = k. But le(k, t) and t != k ⇒ contradiction.
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Less);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_less_implies_le(t, root_pair.0);
-                                            assert(root_pair.0 == *k);
-                                            K::antisymmetric(t, *k);
-                                        } else if (t@, tv) == root_pair@ {
-                                            // t == k: contradicts t@ != k@.
-                                        } else {
-                                            // t in right: min_pair is min of right.
-                                            assert(right@.contains((t@, tv)));
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            // min_key ensures: min.cmp_spec(tp) == Less || min@ == tp@.
-                                            if min_pair@ == tp@ {
-                                                K::reflexive(key);
-                                            } else {
-                                                assert(min_pair.cmp_spec(&tp) == Less);
-                                                assert(min_pair.0@ != tp.0@) by {
-                                                    if min_pair.0@ == tp.0@ {
-                                                        assert(tree@.contains(min_pair@));
-                                                        assert(tree@.contains(tp@));
-                                                    }
-                                                };
-                                                assert(min_pair.0.cmp_spec(&tp.0) == Less);
-                                                assert(tp.0 == t);
-                                                K::cmp_spec_less_implies_le(key, t);
-                                            }
-                                        }
-                                    };
-                                }
-                                Some(key)
-                            },
-                        }
-                    },
-                    Greater => {
-                        // k > root.key: successor must be in right subtree.
-                        proof { assert(k.cmp_spec(&root_pair.0) == Greater); }
-                        let result = bst_next_by_key(&right, k);
-                        proof {
-                            if result is Some {
-                                let rk = result->Some_0;
-                                lemma_map_contains_pair_in_set(right@, rk@);
-                                let rv: V::V = choose|rv: V::V| right@.contains((rk@, rv));
-                                assert(tree@.contains((rk@, rv)));
-                                lemma_pair_in_set_map_contains(tree@, rk@, rv);
-                                assert forall|t: K| #![trigger t@]
-                                    spec_pair_set_to_map(tree@).dom().contains(t@)
-                                    && TotalOrder::le(*k, t) && t@ != k@
-                                    implies TotalOrder::le(rk, t) by {
-                                    lemma_map_contains_pair_in_set(tree@, t@);
-                                    let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                    if left@.contains((t@, tv)) {
-                                        let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                        assert(tp.cmp_spec(&root_pair) == Less);
-                                        assert(tp.0@ != root_pair.0@) by {
-                                            if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
-                                        assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                        assert(tp.0 == t);
-                                        K::cmp_spec_less_implies_le(t, root_pair.0);
-                                        K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                        K::transitive(t, root_pair.0, *k);
-                                        K::antisymmetric(t, *k);
-                                    } else if (t@, tv) == root_pair@ {
-                                        assert(root_pair.0 == t);
-                                        K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                        K::antisymmetric(t, *k);
-                                    } else {
-                                        assert(right@.contains((t@, tv)));
-                                        lemma_pair_in_set_map_contains(right@, t@, tv);
-                                    }
-                                };
-                            } else {
-                                // result is None: no successor in right subtree.
-                                // Prove: no successor in tree.
-                                assert forall|t: K| #![trigger t@]
-                                    spec_pair_set_to_map(tree@).dom().contains(t@)
-                                    implies !(TotalOrder::le(*k, t) && t@ != k@) by {
-                                    lemma_map_contains_pair_in_set(tree@, t@);
-                                    let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                    if left@.contains((t@, tv)) {
-                                        let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                        assert(tp.cmp_spec(&root_pair) == Less);
-                                        assert(tp.0@ != root_pair.0@) by {
-                                            if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
-                                        assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                        assert(tp.0 == t);
-                                        K::cmp_spec_less_implies_le(t, root_pair.0);
-                                        K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                        K::transitive(t, root_pair.0, *k);
-                                        if TotalOrder::le(*k, t) && t@ != k@ {
-                                            K::antisymmetric(t, *k);
-                                        }
-                                    } else if (t@, tv) == root_pair@ {
-                                        assert(root_pair.0 == t);
-                                        K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                        if TotalOrder::le(*k, t) && t@ != k@ {
-                                            K::antisymmetric(t, *k);
-                                        }
-                                    } else {
-                                        assert(right@.contains((t@, tv)));
-                                        lemma_pair_in_set_map_contains(right@, t@, tv);
-                                        // By recursion's None ensures: !(le(k, t) && t != k).
-                                    }
-                                };
-                            }
-                        }
-                        result
-                    },
-                }
-            }
-        }
-    }
-
-    // BYPASSED: bst_prev_by_key replaced by OrdKeyMap::prev_key delegation.
-    #[cfg(never)]
-    /// Find the previous (predecessor) key strictly less than k via BST descent.
-    /// O(lg n).
-    fn bst_prev_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
-        tree: &ParamBST<Pair<K, V>>,
-        k: &K,
-    ) -> (predecessor: Option<K>)
-        requires
-            tree.spec_bstparasteph_wf(),
-            spec_key_unique_pairs_set(tree@),
-            spec_set_pair_view_generated::<K, V>(tree@),
-            view_ord_consistent::<K>(),
-            obeys_feq_fulls::<K, V>(),
-            vstd::laws_cmp::obeys_cmp_spec::<K>(),
-            spec_pair_key_determines_order::<K, V>(),
-            view_ord_consistent::<Pair<K, V>>(),
-            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-        ensures
-            spec_pair_set_to_map(tree@).dom().finite(),
-            predecessor matches Some(pk) ==> spec_pair_set_to_map(tree@).dom().contains(pk@),
-            predecessor matches Some(v) ==> TotalOrder::le(v, *k) && v@ != k@,
-            predecessor matches Some(v) ==> forall|t: K| #![trigger t@]
-                spec_pair_set_to_map(tree@).dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@
-                ==> TotalOrder::le(t, v),
-            predecessor is None ==> forall|t: K| #![trigger t@]
-                spec_pair_set_to_map(tree@).dom().contains(t@)
-                ==> !(TotalOrder::le(t, *k) && t@ != k@),
-        decreases tree@.len(),
-    {
-        proof { lemma_pair_set_to_map_dom_finite(tree@); }
-        match tree.expose() {
-            Exposed::Leaf => None,
-            Exposed::Node(left, root_pair, right) => {
-                reveal_param_bst_backings(&left);
-                reveal_param_bst_backings(&right);
-                proof {
-                    reveal(vstd::laws_cmp::obeys_cmp_ord);
-                    vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(tree@ =~= left@.union(right@).insert(root_pair@));
-                    lemma_key_unique_subset(tree@, left@);
-                    lemma_key_unique_subset(tree@, right@);
-                    lemma_view_gen_subset::<K, V>(left@, tree@);
-                    lemma_view_gen_subset::<K, V>(right@, tree@);
-                    lemma_reveal_view_injective::<K>();
-                }
-                let c = Ord::cmp(k, &root_pair.0);
-                proof { reveal(vstd::laws_cmp::obeys_cmp_ord); }
-                match c {
-                    Greater => {
-                        // k > root.key: root is a candidate; check right for closer predecessor.
-                        let right_result = bst_prev_by_key(&right, k);
-                        match right_result {
-                            Some(rk) => {
-                                // Found closer predecessor in right subtree.
-                                proof {
-                                    lemma_map_contains_pair_in_set(right@, rk@);
-                                    let rv: V::V = choose|rv: V::V| right@.contains((rk@, rv));
-                                    assert(tree@.contains((rk@, rv)));
-                                    lemma_pair_in_set_map_contains(tree@, rk@, rv);
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(t, *k) && t@ != k@
-                                        implies TotalOrder::le(t, rk) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if right@.contains((t@, tv)) {
-                                            lemma_pair_in_set_map_contains(right@, t@, tv);
-                                        } else if (t@, tv) == root_pair@ {
-                                            // root < rk (rk in right).
-                                            let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
-                                            assert(rp.cmp_spec(&root_pair) == Greater);
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(rp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(rp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(rp.0 == rk);
-                                            assert(root_pair.0 == t);
-                                            K::cmp_spec_greater_implies_le(rk, root_pair.0);
-                                        } else {
-                                            // t in left: t < root < rk.
-                                            assert(left@.contains((t@, tv)));
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            let rp: Pair<K, V> = choose|rp: Pair<K, V>| #[trigger] right@.contains(rp@) && rp@ == (rk@, rv);
-                                            assert(tp.cmp_spec(&root_pair) == Less);
-                                            assert(rp.cmp_spec(&root_pair) == Greater);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(rp.0@ != root_pair.0@) by {
-                                                if rp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(rp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(rp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(tp.0 == t);
-                                            assert(rp.0 == rk);
-                                            K::cmp_spec_less_implies_le(t, root_pair.0);
-                                            K::cmp_spec_greater_implies_le(rk, root_pair.0);
-                                            K::transitive(t, root_pair.0, rk);
-                                        }
-                                    };
-                                }
-                                Some(rk)
-                            },
-                            None => {
-                                // No predecessor in right; root is the predecessor.
-                                let key = root_pair.0.clone_plus();
-                                proof {
-                                    lemma_cloned_view_eq(root_pair.0, key);
-                                    assert(key == root_pair.0);
-                                    assert(tree@.contains(root_pair@));
-                                    lemma_pair_in_set_map_contains(tree@, root_pair.0@, root_pair.1@);
-                                    K::cmp_spec_greater_implies_le(*k, root_pair.0);
-                                    assert(k@ != root_pair.0@);
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(t, *k) && t@ != k@
-                                        implies TotalOrder::le(t, key) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if right@.contains((t@, tv)) {
-                                            // t in right with t < k: contradicts no predecessor in right.
-                                            lemma_pair_in_set_map_contains(right@, t@, tv);
-                                        } else if (t@, tv) == root_pair@ {
-                                            K::reflexive(key);
-                                        } else {
-                                            // t in left: t < root.
-                                            assert(left@.contains((t@, tv)));
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Less);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Less);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_less_implies_le(t, root_pair.0);
-                                        }
-                                    };
-                                }
-                                Some(key)
-                            },
-                        }
-                    },
-                    Equal => {
-                        // k == root.key: predecessor is max of left subtree.
-                        proof { assert(k@ == root_pair.0@); }
-                        let left_max = left.max_key();
-                        match left_max {
-                            None => {
-                                proof {
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(t, *k) && t@ != k@
-                                        implies false by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if right@.contains((t@, tv)) {
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Greater);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_greater_implies_le(t, root_pair.0);
-                                            assert(root_pair.0 == *k);
-                                            K::antisymmetric(*k, t);
-                                        } else if (t@, tv) == root_pair@ {
-                                        } else {
-                                            assert(left@.contains((t@, tv)));
-                                        }
-                                    };
-                                }
-                                None
-                            },
-                            Some(max_pair) => {
-                                let key = max_pair.0.clone_plus();
-                                proof {
-                                    lemma_cloned_view_eq(max_pair.0, key);
-                                    assert(key == max_pair.0);
-                                    assert(left@.contains(max_pair@));
-                                    assert(tree@.contains(max_pair@));
-                                    lemma_pair_in_set_map_contains(tree@, max_pair.0@, max_pair.1@);
-                                    assert(max_pair.0@ != root_pair.0@) by {
-                                        if max_pair.0@ == root_pair.0@ {
-                                            assert(tree@.contains(max_pair@));
-                                            assert(tree@.contains(root_pair@));
-                                        }
-                                    };
-                                    assert(max_pair.cmp_spec(&root_pair) == Less);
-                                    assert(max_pair.0.cmp_spec(&root_pair.0) == Less);
-                                    K::cmp_spec_less_implies_le(max_pair.0, root_pair.0);
-                                    assert(root_pair.0 == *k);
-                                    assert(key@ != k@);
-                                    assert forall|t: K| #![trigger t@]
-                                        spec_pair_set_to_map(tree@).dom().contains(t@)
-                                        && TotalOrder::le(t, *k) && t@ != k@
-                                        implies TotalOrder::le(t, key) by {
-                                        lemma_map_contains_pair_in_set(tree@, t@);
-                                        let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                        if right@.contains((t@, tv)) {
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                            assert(tp.cmp_spec(&root_pair) == Greater);
-                                            assert(tp.0@ != root_pair.0@) by {
-                                                if tp.0@ == root_pair.0@ {
-                                                    assert(tree@.contains(tp@));
-                                                    assert(tree@.contains(root_pair@));
-                                                }
-                                            };
-                                            assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                            assert(tp.0 == t);
-                                            K::cmp_spec_greater_implies_le(t, root_pair.0);
-                                            assert(root_pair.0 == *k);
-                                            K::antisymmetric(*k, t);
-                                        } else if (t@, tv) == root_pair@ {
-                                        } else {
-                                            assert(left@.contains((t@, tv)));
-                                            let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] left@.contains(tp@) && tp@ == (t@, tv);
-                                            // max_key ensures: tp.cmp_spec(max) == Less || tp@ == max@.
-                                            if max_pair@ == tp@ {
-                                                K::reflexive(key);
-                                            } else {
-                                                assert(tp.cmp_spec(&max_pair) == Less);
-                                                assert(tp.0@ != max_pair.0@) by {
-                                                    if tp.0@ == max_pair.0@ {
-                                                        assert(tree@.contains(tp@));
-                                                        assert(tree@.contains(max_pair@));
-                                                    }
-                                                };
-                                                assert(tp.0.cmp_spec(&max_pair.0) == Less);
-                                                assert(tp.0 == t);
-                                                K::cmp_spec_less_implies_le(t, key);
-                                            }
-                                        }
-                                    };
-                                }
-                                Some(key)
-                            },
-                        }
-                    },
-                    Less => {
-                        // k < root.key: predecessor must be in left subtree.
-                        let result = bst_prev_by_key(&left, k);
-                        proof {
-                            if result is Some {
-                                let lk = result->Some_0;
-                                lemma_map_contains_pair_in_set(left@, lk@);
-                                let lv: V::V = choose|lv: V::V| left@.contains((lk@, lv));
-                                assert(tree@.contains((lk@, lv)));
-                                lemma_pair_in_set_map_contains(tree@, lk@, lv);
-                                assert forall|t: K| #![trigger t@]
-                                    spec_pair_set_to_map(tree@).dom().contains(t@)
-                                    && TotalOrder::le(t, *k) && t@ != k@
-                                    implies TotalOrder::le(t, lk) by {
-                                    lemma_map_contains_pair_in_set(tree@, t@);
-                                    let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                    if left@.contains((t@, tv)) {
-                                        lemma_pair_in_set_map_contains(left@, t@, tv);
-                                    } else if (t@, tv) == root_pair@ {
-                                        assert(root_pair.0 == t);
-                                        K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                        K::antisymmetric(t, *k);
-                                    } else {
-                                        assert(right@.contains((t@, tv)));
-                                        let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                        assert(tp.cmp_spec(&root_pair) == Greater);
-                                        assert(tp.0@ != root_pair.0@) by {
-                                            if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
-                                        assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                        assert(tp.0 == t);
-                                        K::cmp_spec_greater_implies_le(t, root_pair.0);
-                                        K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                        K::transitive(*k, root_pair.0, t);
-                                        K::antisymmetric(t, *k);
-                                    }
-                                };
-                            } else {
-                                // result is None: no predecessor in left.
-                                assert forall|t: K| #![trigger t@]
-                                    spec_pair_set_to_map(tree@).dom().contains(t@)
-                                    implies !(TotalOrder::le(t, *k) && t@ != k@) by {
-                                    lemma_map_contains_pair_in_set(tree@, t@);
-                                    let tv: V::V = choose|tv: V::V| tree@.contains((t@, tv));
-                                    if left@.contains((t@, tv)) {
-                                        lemma_pair_in_set_map_contains(left@, t@, tv);
-                                        // By recursion's None ensures: !(le(t, k) && t != k).
-                                    } else if (t@, tv) == root_pair@ {
-                                        assert(root_pair.0 == t);
-                                        K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                        if TotalOrder::le(t, *k) && t@ != k@ {
-                                            K::antisymmetric(t, *k);
-                                        }
-                                    } else {
-                                        assert(right@.contains((t@, tv)));
-                                        let tp: Pair<K, V> = choose|tp: Pair<K, V>| #[trigger] right@.contains(tp@) && tp@ == (t@, tv);
-                                        assert(tp.cmp_spec(&root_pair) == Greater);
-                                        assert(tp.0@ != root_pair.0@) by {
-                                            if tp.0@ == root_pair.0@ {
-                                                assert(tree@.contains(tp@));
-                                                assert(tree@.contains(root_pair@));
-                                            }
-                                        };
-                                        assert(tp.0.cmp_spec(&root_pair.0) == Greater);
-                                        assert(tp.0 == t);
-                                        K::cmp_spec_greater_implies_le(t, root_pair.0);
-                                        K::cmp_spec_less_implies_le(*k, root_pair.0);
-                                        K::transitive(*k, root_pair.0, t);
-                                        if TotalOrder::le(t, *k) && t@ != k@ {
-                                            K::antisymmetric(t, *k);
-                                        }
-                                    }
-                                };
-                            }
-                        }
-                        result
-                    },
-                }
-            }
-        }
-    }
-
 
     impl<K: StT + Ord + TotalOrder, V: StT + Ord> OrderedTableStPerTrait<K, V> for OrderedTableStPer<K, V> {
         open spec fn spec_orderedtablestper_wf(&self) -> bool {
@@ -1697,15 +986,7 @@ broadcast use {
         }
 
         open spec fn spec_orderedtablestper_find_pre(&self) -> bool {
-            self.tree.inner.spec_bstparasteph_wf()
-            && spec_key_unique_pairs_set(self.tree.inner@)
-            && spec_set_pair_view_generated::<K, V>(self.tree.inner@)
-            && obeys_feq_fulls::<K, V>()
-            && vstd::laws_cmp::obeys_cmp_spec::<K>()
-            && view_ord_consistent::<K>()
-            && spec_pair_key_determines_order::<K, V>()
-            && view_ord_consistent::<Pair<K, V>>()
-            && vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>()
+            self.tree.spec_ordkeymap_wf()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
@@ -1744,19 +1025,78 @@ broadcast use {
             OrderedTableStPer { tree: OrdKeyMap { inner: bst } }
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to bst_find_by_key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::find
         fn find(&self, k: &K) -> (found: Option<V>) {
-            bst_find_by_key(&self.tree.inner, k)
+            self.tree.find(k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::insert
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap insert/delete
         fn insert(&self, k: K, v: V) -> (table: Self) {
-            let mut tree = OrdKeyMap { inner: self.tree.inner.clone() };
-            proof {
-                lemma_pair_set_to_map_len(self.tree.inner@);
+            let mut tree = self.tree.inner.clone();
+            let ghost old_tree_view = self.tree.inner@;
+            let ghost old_map = self@;
+            let existing = bst_find_by_key(&self.tree.inner, &k);
+            match existing {
+                Some(old_v) => {
+                    proof {
+                        lemma_map_contains_pair_in_set(old_tree_view, k@);
+                        let ghost v_chosen: V::V = choose|vv: V::V| old_tree_view.contains((k@, vv));
+                        lemma_pair_in_set_map_contains(old_tree_view, k@, v_chosen);
+                        assert(old_tree_view.contains((k@, old_v@)));
+                    }
+                    let k_del = k.clone_plus();
+                    let ov_del = old_v.clone_plus();
+                    proof {
+                        lemma_cloned_view_eq(k, k_del);
+                        lemma_cloned_view_eq(old_v, ov_del);
+                    }
+                    tree.delete(&Pair(k_del, ov_del));
+                    let ghost mid_tree_view = tree@;
+                    proof {
+                        lemma_set_to_map_remove_pair(old_tree_view, k@, old_v@);
+                        lemma_key_unique_remove(old_tree_view, (k@, old_v@));
+                        assert(!spec_pair_set_to_map(mid_tree_view).dom().contains(k@));
+                    }
+                    tree.insert(Pair(k, v));
+                    proof {
+                        lemma_set_to_map_insert(mid_tree_view, k@, v@);
+                        lemma_key_unique_insert(mid_tree_view, k@, v@);
+                        lemma_pair_set_to_map_dom_finite(tree@);
+                        let ghost new_map = spec_pair_set_to_map(tree@);
+                        assert(new_map =~= old_map.remove(k@).insert(k@, v@));
+                        assert(new_map[k@] == v@);
+                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
+                            implies new_map[k2] == old_map[k2]
+                        by {};
+                        assert(new_map.dom() =~= old_map.dom().insert(k@)) by {
+                            assert(old_map.dom().contains(k@));
+                            assert(old_map.remove(k@).insert(k@, v@).dom()
+                                =~= old_map.dom().remove(k@).insert(k@));
+                            assert(old_map.dom().remove(k@).insert(k@)
+                                =~= old_map.dom());
+                        };
+                        assert(tree@.len() <= old_tree_view.len());
+                        assert(tree@.len() < usize::MAX as nat);
+                    }
+                },
+                None => {
+                    tree.insert(Pair(k, v));
+                    proof {
+                        lemma_set_to_map_insert(old_tree_view, k@, v@);
+                        lemma_pair_set_to_map_dom_finite(tree@);
+                        lemma_key_unique_insert(old_tree_view, k@, v@);
+                        lemma_pair_set_to_map_len(old_tree_view);
+                        assert(tree@.len() < usize::MAX as nat);
+                        let ghost new_map = spec_pair_set_to_map(tree@);
+                        assert(new_map =~= old_map.insert(k@, v@));
+                        assert(new_map[k@] == v@);
+                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
+                            implies new_map[k2] == old_map[k2]
+                        by {};
+                    }
+                },
             }
-            tree.insert(k, v);
-            OrderedTableStPer { tree }
+            OrderedTableStPer { tree: OrdKeyMap { inner: tree } }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
@@ -1764,11 +1104,35 @@ broadcast use {
             self.insert(k, v)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::delete
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap delete
         fn delete(&self, k: &K) -> (table: Self) {
-            let mut tree = OrdKeyMap { inner: self.tree.inner.clone() };
-            tree.delete(k);
-            OrderedTableStPer { tree }
+            let mut tree = self.tree.inner.clone();
+            let ghost old_tree_view = self.tree.inner@;
+            let ghost old_map = self@;
+            let existing = bst_find_by_key(&self.tree.inner, &k);
+            match existing {
+                Some(v) => {
+                    let v_clone = v.clone_plus();
+                    let k_clone = k.clone_plus();
+                    proof {
+                        lemma_cloned_view_eq(*k, k_clone);
+                        lemma_cloned_view_eq(v, v_clone);
+                    }
+                    tree.delete(&Pair(k_clone, v_clone));
+                    proof {
+                        lemma_set_to_map_remove_pair(old_tree_view, k@, v@);
+                        lemma_pair_set_to_map_dom_finite(tree@);
+                        lemma_key_unique_remove(old_tree_view, (k@, v@));
+                    }
+                },
+                None => {
+                    proof {
+                        assert(self@ =~= old_map.remove(k@));
+                        lemma_pair_set_to_map_dom_finite(self.tree.inner@);
+                    }
+                },
+            }
+            OrderedTableStPer { tree: OrdKeyMap { inner: tree } }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
@@ -2718,10 +2082,111 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, find per element in other
         #[verifier::loop_isolation(false)]
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::difference
         fn difference(&self, other: &Self) -> (table: Self) {
-            let remaining = self.tree.difference(&other.tree);
-            OrderedTableStPer { tree: remaining }
+            let ghost old_tree = self.tree.inner@;
+            let ghost old_map = self@;
+            let sorted = self.tree.inner.in_order();
+            let len = sorted.length();
+            let mut new_tree = ParamBST::<Pair<K, V>>::new();
+            let mut i: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
+            }
+            while i < len
+                invariant
+                    self.spec_orderedtablestper_wf(),
+                    other.spec_orderedtablestper_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    self.tree.inner@ == old_tree,
+                    len as nat == sorted@.len(),
+                    sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
+                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] sorted@[j]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==> old_tree.contains(p),
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==> !other@.dom().contains(p.0),
+                    forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int && !other@.dom().contains(sorted@[j].0) ==> new_tree@.contains(sorted@[j]),
+                    old_map == spec_pair_set_to_map(old_tree),
+                    0 <= i <= len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() <= i as nat,
+                    new_tree@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                decreases len - i,
+            {
+                let pair = sorted.nth(i);
+                proof { reveal(obeys_view_eq); }
+                let in_other = other.find(&pair.0);
+                match in_other {
+                    None => {
+                        let cloned = pair.clone_plus();
+                        let ghost old_new_tree_view = new_tree@;
+                        proof {
+                            lemma_cloned_view_eq(*pair, cloned);
+                            assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+                                if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+                                    lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+                                    let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
+                                    let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
+                                    assert(false);
+                                }
+                            };
+                        }
+                        new_tree.insert(cloned);
+                        proof {
+                            assert(new_tree@.len() <= i as nat + 1);
+                            assert(new_tree@.len() < usize::MAX as nat);
+                            lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
+                            assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
+                            assert(old_tree.contains(sorted@[i as int]));
+                        }
+                    },
+                    Some(_) => {},
+                }
+                i += 1;
+            }
+            let table = OrderedTableStPer { tree: OrdKeyMap { inner: new_tree } };
+            proof {
+                lemma_pair_set_to_map_dom_finite(new_tree@);
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                assert(table@.dom() =~= old_map.dom().difference(other@.dom())) by {
+                    assert forall|k: K::V| table@.dom().contains(k)
+                        implies #[trigger] old_map.dom().difference(other@.dom()).contains(k)
+                    by {
+                        lemma_map_contains_pair_in_set(new_tree@, k);
+                        let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
+                        lemma_pair_in_set_map_contains(old_tree, k, v);
+                    };
+                    assert forall|k: K::V| old_map.dom().contains(k) && !other@.dom().contains(k)
+                        implies #[trigger] table@.dom().contains(k)
+                    by {
+                        lemma_map_contains_pair_in_set(old_tree, k);
+                        let v: V::V = choose|v: V::V| old_tree.contains((k, v));
+                        assert(sorted@.contains((k, v)));
+                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
+                        assert(new_tree@.contains(sorted@[j]));
+                        lemma_pair_in_set_map_contains(new_tree@, k, v);
+                    };
+                };
+                assert forall|k: K::V| #[trigger] table@.contains_key(k)
+                    implies table@[k] == old_map[k]
+                by {
+                    lemma_map_contains_pair_in_set(new_tree@, k);
+                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
+                    lemma_pair_in_set_map_contains(new_tree@, k, v);
+                    lemma_pair_in_set_map_contains(old_tree, k, v);
+                };
+                vstd::set_lib::lemma_len_subset(new_tree@, old_tree);
+            }
+            table
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, check key membership per element
@@ -3234,6 +2699,7 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(left_tree@);
                 lemma_pair_set_to_map_dom_finite(right_tree@);
 
+                // !parts.0@.dom().contains(k@) and !parts.2@.dom().contains(k@).
                 assert(!left_table@.dom().contains(k@)) by {
                     if left_table@.dom().contains(k@) {
                         lemma_map_contains_pair_in_set(left_tree@, k@);
@@ -3249,6 +2715,7 @@ broadcast use {
                     }
                 };
 
+                // parts.0@.dom().subset_of(self@.dom()).
                 assert forall|kk: K::V| left_table@.dom().contains(kk)
                     implies #[trigger] self@.dom().contains(kk)
                 by {
@@ -3258,6 +2725,7 @@ broadcast use {
                     lemma_pair_in_set_map_contains(old_tree, kk, v);
                 };
 
+                // parts.2@.dom().subset_of(self@.dom()).
                 assert forall|kk: K::V| right_table@.dom().contains(kk)
                     implies #[trigger] self@.dom().contains(kk)
                 by {
@@ -3267,6 +2735,7 @@ broadcast use {
                     lemma_pair_in_set_map_contains(old_tree, kk, v);
                 };
 
+                // parts.0@.dom().disjoint(parts.2@.dom()).
                 assert(left_table@.dom().disjoint(right_table@.dom())) by {
                     assert forall|kk: K::V| !(left_table@.dom().contains(kk) && right_table@.dom().contains(kk))
                     by {
@@ -3284,6 +2753,7 @@ broadcast use {
                     };
                 };
 
+                // Completeness: self@.dom().contains(key) ==> left or right or == k@.
                 assert forall|key: K::V| #[trigger] self@.dom().contains(key)
                     implies left_table@.dom().contains(key) || right_table@.dom().contains(key) || key == k@
                 by {
@@ -3299,6 +2769,7 @@ broadcast use {
                     }
                 };
 
+                // wf for both tables.
                 vstd::set_lib::lemma_len_subset(left_tree@, old_tree);
                 vstd::set_lib::lemma_len_subset(right_tree@, old_tree);
             }
@@ -3408,141 +2879,19 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
+            where K: TotalOrder
+        {
+            self.rank_key_iter(k)
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::rank_key
+        fn rank_key_iter(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
             self.tree.rank_key(k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
-        #[verifier::loop_isolation(false)]
-        fn rank_key_iter(&self, k: &K) -> (rank: usize)
-            where K: TotalOrder
-        {
-            proof {
-                lemma_reveal_view_injective::<K>();
-                assert(obeys_feq_full_trigger::<K>());
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
-            }
-            let sorted = self.tree.inner.in_order();
-            let len = sorted.length();
-            let mut count: usize = 0;
-            let mut i: usize = 0;
-            let ghost filter_pred = |x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@;
-            let ghost mut counted_keys: Set<K::V> = Set::empty();
-            proof {
-                lemma_sorted_keys_pairwise_distinct(self.tree.inner@, sorted@);
-            }
-            while i < len
-                invariant
-                    self.spec_orderedtablestper_wf(),
-                    obeys_feq_full::<K>(),
-                    obeys_view_eq::<K>(),
-                    len as nat == sorted@.len(),
-                    sorted@.len() == self.tree.inner@.len(),
-                    forall|v: <Pair<K, V> as View>::V| self.tree.inner@.contains(v) <==> #[trigger] sorted@.contains(v),
-                    forall|ii: int, jj: int|
-                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
-                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
-                    0 <= i <= len,
-                    0 <= count <= i,
-                    counted_keys.finite(),
-                    count as nat == counted_keys.len(),
-                    forall|x: K::V| #[trigger] counted_keys.contains(x) ==>
-                        (exists|j: int| #![trigger sorted@[j]] 0 <= j < i as int
-                            && sorted@[j].0 == x && filter_pred(x)),
-                    forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int && filter_pred(sorted@[j].0) ==>
-                        counted_keys.contains(sorted@[j].0),
-                    forall|x: K::V| counted_keys.contains(x) ==> #[trigger] self@.dom().contains(x),
-                decreases len - i,
-            {
-                let pair = sorted.nth(i);
-                let c = TotalOrder::cmp(&pair.0, k);
-                proof { reveal(obeys_view_eq); }
-                match c {
-                    core::cmp::Ordering::Less => {
-                        proof {
-                            assert(count < len) by { };
-                            // pair.0 < k: witness for filter_pred.
-                            assert(TotalOrder::le(pair.0, *k) && pair.0 != *k);
-                            assert(pair.0@ != k@);
-                            assert(filter_pred(pair.0@)) by {
-                                assert(pair.0@ == pair.0@ && TotalOrder::le(pair.0, *k) && pair.0@ != k@);
-                            };
-                            // pair.0@ not already counted (pairwise distinct keys).
-                            assert(!counted_keys.contains(pair.0@)) by {
-                                if counted_keys.contains(pair.0@) {
-                                    let jj = choose|jj: int| 0 <= jj < i as int
-                                        && (#[trigger] sorted@[jj]).0 == pair.0@ && filter_pred(pair.0@);
-                                    assert(sorted@[jj as int].0 == sorted@[i as int].0);
-                                }
-                            };
-                            counted_keys = counted_keys.insert(pair.0@);
-                            // In self@.dom().
-                            assert(sorted@.contains(sorted@[i as int])) by {
-                                assert(sorted@[i as int] == sorted@[i as int]);
-                            };
-                            assert(self.tree.inner@.contains(sorted@[i as int]));
-                            lemma_pair_in_set_map_contains(self.tree.inner@, sorted@[i as int].0, sorted@[i as int].1);
-                        }
-                        count = count + 1;
-                    },
-                    core::cmp::Ordering::Equal => {
-                        proof {
-                            // pair.0 == k: filter_pred(pair.0@) is false.
-                            assert(pair.0 == *k);
-                            assert(!filter_pred(pair.0@)) by {
-                                if filter_pred(pair.0@) {
-                                    let t: K = choose|t: K| #![trigger t@] t@ == pair.0@ && TotalOrder::le(t, *k) && t@ != k@;
-                                    assert(t@ == pair.0@ && pair.0@ == k@);
-                                    assert(t@ != k@);
-                                }
-                            };
-                        }
-                    },
-                    core::cmp::Ordering::Greater => {
-                        proof {
-                            // k < pair.0: filter_pred(pair.0@) is false.
-                            assert(TotalOrder::le(*k, pair.0) && pair.0 != *k);
-                            assert(pair.0@ != k@);
-                            assert(!filter_pred(pair.0@)) by {
-                                if filter_pred(pair.0@) {
-                                    let t: K = choose|t: K| #![trigger t@] t@ == pair.0@ && TotalOrder::le(t, *k) && t@ != k@;
-                                    // t@ == pair.0@, so by obeys_view_eq t == pair.0.
-                                    assert(t@ == pair.0@);
-                                    assert(t == pair.0);
-                                    // t.le(k) && k.le(pair.0) with t == pair.0 gives pair.0.le(k) && k.le(pair.0).
-                                    TotalOrder::antisymmetric(pair.0, *k);
-                                }
-                            };
-                        }
-                    },
-                }
-                i = i + 1;
-            }
-            proof {
-                // counted_keys =~= self@.dom().filter(filter_pred).
-                assert forall|x: K::V| counted_keys.contains(x)
-                    implies #[trigger] self@.dom().filter(filter_pred).contains(x) by {
-                };
-                assert forall|x: K::V| #[trigger] self@.dom().filter(filter_pred).contains(x)
-                    implies counted_keys.contains(x) by {
-                    // x is in self@.dom() and filter_pred(x) holds.
-                    lemma_map_contains_pair_in_set(self.tree.inner@, x);
-                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((x, vv));
-                    assert(sorted@.contains((x, vv)));
-                    let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (x, vv);
-                    assert(sorted@[j].0 == x && filter_pred(sorted@[j].0));
-                };
-                assert(counted_keys =~= self@.dom().filter(filter_pred));
-                self@.dom().lemma_len_filter(filter_pred);
-                lemma_pair_set_to_map_len(self.tree.inner@);
-            }
-            count
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index access
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
