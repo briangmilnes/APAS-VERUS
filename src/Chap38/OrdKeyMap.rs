@@ -619,7 +619,17 @@ pub mod OrdKeyMap {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            requires
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
+            ensures
+                empty.spec_ordkeymap_wf(),
+                empty@ == Map::<K::V, V::V>::empty();
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
@@ -2599,11 +2609,12 @@ pub mod OrdKeyMap {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty()
         {
             let inner = ParamBST::<Pair<K, V>>::new();
             proof {
                 lemma_set_to_map_empty::<K::V, V::V>();
+                assert(spec_key_unique_pairs_set::<K::V, V::V>(inner@));
+                assert(spec_set_pair_view_generated::<K, V>(inner@));
             }
             OrdKeyMap { inner }
         }

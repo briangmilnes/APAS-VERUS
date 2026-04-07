@@ -657,7 +657,17 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
         fn empty() -> (empty: Self)
-            ensures empty@ == Map::<K::V, V::V>::empty();
+            requires
+                obeys_feq_fulls::<K, V>(),
+                obeys_feq_full::<Pair<K, V>>(),
+                vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                view_ord_consistent::<Pair<K, V>>(),
+                spec_pair_key_determines_order::<K, V>(),
+                vstd::laws_cmp::obeys_cmp_spec::<K>(),
+                view_ord_consistent::<K>(),
+            ensures
+                empty.spec_orderedtablesteph_wf(),
+                empty@ == Map::<K::V, V::V>::empty();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS
         /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- agrees with APAS
