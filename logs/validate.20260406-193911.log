@@ -1,0 +1,29 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStPer.rs:801:17
+     |
+ 801 |                 self@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+3235 |             (left_table, found_val, right_table)
+     |             ------------------------------------ at the end of the function body
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStPer.rs:3213:46
+     |
+3213 |                     assert forall|key: K::V| !(left_table@.dom().contains(key) && right_table@.dom().contains(key))
+     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+left_table.view().dom().contains(key) ==>
+    !(right_table.view().dom().contains(key)) 
+        function is uninterpreted
+
+verification results:: 2812 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 53s
+Sampled Memory Usage: peak rust_verify RSS: 3050MB, peak z3 RSS: 335MB, min free: 14984MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 121s

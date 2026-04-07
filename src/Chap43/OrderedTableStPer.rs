@@ -306,7 +306,8 @@ broadcast use {
         };
     }
 
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
+    // BYPASSED: lemma_cmp_antisymmetry — unused after delegation refactor.
+    #[cfg(any())]
     proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
         requires
             vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -991,6 +992,8 @@ broadcast use {
     }
 
 
+    // BYPASSED: bst_next_by_key replaced by OrdKeyMap::next_key delegation.
+    #[cfg(any())]
     #[verifier::rlimit(20)]
     fn bst_next_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
         tree: &ParamBST<Pair<K, V>>,
@@ -1347,6 +1350,8 @@ broadcast use {
         }
     }
 
+    // BYPASSED: bst_prev_by_key replaced by OrdKeyMap::prev_key delegation.
+    #[cfg(any())]
     /// Find the previous (predecessor) key strictly less than k via BST descent.
     /// O(lg n).
     fn bst_prev_by_key<K: StT + Ord + TotalOrder, V: StT + Ord>(
@@ -1744,73 +1749,14 @@ broadcast use {
             bst_find_by_key(&self.tree.inner, k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap insert/delete
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::insert
         fn insert(&self, k: K, v: V) -> (table: Self) {
-            let mut tree = self.tree.inner.clone();
-            let ghost old_tree_view = self.tree.inner@;
-            let ghost old_map = self@;
-            let existing = bst_find_by_key(&self.tree.inner, &k);
-            match existing {
-                Some(old_v) => {
-                    proof {
-                        lemma_map_contains_pair_in_set(old_tree_view, k@);
-                        let ghost v_chosen: V::V = choose|vv: V::V| old_tree_view.contains((k@, vv));
-                        lemma_pair_in_set_map_contains(old_tree_view, k@, v_chosen);
-                        assert(old_tree_view.contains((k@, old_v@)));
-                    }
-                    let k_del = k.clone_plus();
-                    let ov_del = old_v.clone_plus();
-                    proof {
-                        lemma_cloned_view_eq(k, k_del);
-                        lemma_cloned_view_eq(old_v, ov_del);
-                    }
-                    tree.delete(&Pair(k_del, ov_del));
-                    let ghost mid_tree_view = tree@;
-                    proof {
-                        lemma_set_to_map_remove_pair(old_tree_view, k@, old_v@);
-                        lemma_key_unique_remove(old_tree_view, (k@, old_v@));
-                        assert(!spec_pair_set_to_map(mid_tree_view).dom().contains(k@));
-                    }
-                    tree.insert(Pair(k, v));
-                    proof {
-                        lemma_set_to_map_insert(mid_tree_view, k@, v@);
-                        lemma_key_unique_insert(mid_tree_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(tree@);
-                        let ghost new_map = spec_pair_set_to_map(tree@);
-                        assert(new_map =~= old_map.remove(k@).insert(k@, v@));
-                        assert(new_map[k@] == v@);
-                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
-                            implies new_map[k2] == old_map[k2]
-                        by {};
-                        assert(new_map.dom() =~= old_map.dom().insert(k@)) by {
-                            assert(old_map.dom().contains(k@));
-                            assert(old_map.remove(k@).insert(k@, v@).dom()
-                                =~= old_map.dom().remove(k@).insert(k@));
-                            assert(old_map.dom().remove(k@).insert(k@)
-                                =~= old_map.dom());
-                        };
-                        assert(tree@.len() <= old_tree_view.len());
-                        assert(tree@.len() < usize::MAX as nat);
-                    }
-                },
-                None => {
-                    tree.insert(Pair(k, v));
-                    proof {
-                        lemma_set_to_map_insert(old_tree_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(tree@);
-                        lemma_key_unique_insert(old_tree_view, k@, v@);
-                        lemma_pair_set_to_map_len(old_tree_view);
-                        assert(tree@.len() < usize::MAX as nat);
-                        let ghost new_map = spec_pair_set_to_map(tree@);
-                        assert(new_map =~= old_map.insert(k@, v@));
-                        assert(new_map[k@] == v@);
-                        assert forall|k2: K::V| k2 != k@ && #[trigger] old_map.dom().contains(k2)
-                            implies new_map[k2] == old_map[k2]
-                        by {};
-                    }
-                },
+            let mut tree = OrdKeyMap { inner: self.tree.inner.clone() };
+            proof {
+                lemma_pair_set_to_map_len(self.tree.inner@);
             }
-            OrderedTableStPer { tree: OrdKeyMap { inner: tree } }
+            tree.insert(k, v);
+            OrderedTableStPer { tree }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to insert
@@ -1818,35 +1764,11 @@ broadcast use {
             self.insert(k, v)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- bst_find_by_key + treap delete
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::delete
         fn delete(&self, k: &K) -> (table: Self) {
-            let mut tree = self.tree.inner.clone();
-            let ghost old_tree_view = self.tree.inner@;
-            let ghost old_map = self@;
-            let existing = bst_find_by_key(&self.tree.inner, &k);
-            match existing {
-                Some(v) => {
-                    let v_clone = v.clone_plus();
-                    let k_clone = k.clone_plus();
-                    proof {
-                        lemma_cloned_view_eq(*k, k_clone);
-                        lemma_cloned_view_eq(v, v_clone);
-                    }
-                    tree.delete(&Pair(k_clone, v_clone));
-                    proof {
-                        lemma_set_to_map_remove_pair(old_tree_view, k@, v@);
-                        lemma_pair_set_to_map_dom_finite(tree@);
-                        lemma_key_unique_remove(old_tree_view, (k@, v@));
-                    }
-                },
-                None => {
-                    proof {
-                        assert(self@ =~= old_map.remove(k@));
-                        lemma_pair_set_to_map_dom_finite(self.tree.inner@);
-                    }
-                },
-            }
-            OrderedTableStPer { tree: OrdKeyMap { inner: tree } }
+            let mut tree = OrdKeyMap { inner: self.tree.inner.clone() };
+            tree.delete(k);
+            OrderedTableStPer { tree }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to delete
@@ -2796,111 +2718,10 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, find per element in other
         #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::difference
         fn difference(&self, other: &Self) -> (table: Self) {
-            let ghost old_tree = self.tree.inner@;
-            let ghost old_map = self@;
-            let sorted = self.tree.inner.in_order();
-            let len = sorted.length();
-            let mut new_tree = ParamBST::<Pair<K, V>>::new();
-            let mut i: usize = 0;
-            proof {
-                lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
-            }
-            while i < len
-                invariant
-                    self.spec_orderedtablestper_wf(),
-                    other.spec_orderedtablestper_wf(),
-                    obeys_view_eq::<K>(),
-                    obeys_feq_full::<Pair<K, V>>(),
-                    self.tree.inner@ == old_tree,
-                    len as nat == sorted@.len(),
-                    sorted@.len() == old_tree.len(),
-                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] sorted@.contains(v),
-                    forall|ii: int, jj: int|
-                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
-                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
-                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
-                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] sorted@[j]).0,
-                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==> old_tree.contains(p),
-                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==> !other@.dom().contains(p.0),
-                    forall|j: int| #![trigger sorted@[j]] 0 <= j < i as int && !other@.dom().contains(sorted@[j].0) ==> new_tree@.contains(sorted@[j]),
-                    old_map == spec_pair_set_to_map(old_tree),
-                    0 <= i <= len,
-                    new_tree.spec_bstparasteph_wf(),
-                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
-                    view_ord_consistent::<Pair<K, V>>(),
-                    new_tree@.len() <= i as nat,
-                    new_tree@.len() < usize::MAX as nat,
-                    spec_key_unique_pairs_set(new_tree@),
-                    spec_key_unique_pairs_set(old_tree),
-                decreases len - i,
-            {
-                let pair = sorted.nth(i);
-                proof { reveal(obeys_view_eq); }
-                let in_other = other.find(&pair.0);
-                match in_other {
-                    None => {
-                        let cloned = pair.clone_plus();
-                        let ghost old_new_tree_view = new_tree@;
-                        proof {
-                            lemma_cloned_view_eq(*pair, cloned);
-                            assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
-                                if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
-                                    lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
-                                    let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
-                                    let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
-                                    assert(false);
-                                }
-                            };
-                        }
-                        new_tree.insert(cloned);
-                        proof {
-                            assert(new_tree@.len() <= i as nat + 1);
-                            assert(new_tree@.len() < usize::MAX as nat);
-                            lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
-                            assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
-                            assert(old_tree.contains(sorted@[i as int]));
-                        }
-                    },
-                    Some(_) => {},
-                }
-                i += 1;
-            }
-            let table = OrderedTableStPer { tree: OrdKeyMap { inner: new_tree } };
-            proof {
-                lemma_pair_set_to_map_dom_finite(new_tree@);
-                lemma_pair_set_to_map_dom_finite(old_tree);
-                assert(table@.dom() =~= old_map.dom().difference(other@.dom())) by {
-                    assert forall|k: K::V| table@.dom().contains(k)
-                        implies #[trigger] old_map.dom().difference(other@.dom()).contains(k)
-                    by {
-                        lemma_map_contains_pair_in_set(new_tree@, k);
-                        let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                        lemma_pair_in_set_map_contains(old_tree, k, v);
-                    };
-                    assert forall|k: K::V| old_map.dom().contains(k) && !other@.dom().contains(k)
-                        implies #[trigger] table@.dom().contains(k)
-                    by {
-                        lemma_map_contains_pair_in_set(old_tree, k);
-                        let v: V::V = choose|v: V::V| old_tree.contains((k, v));
-                        assert(sorted@.contains((k, v)));
-                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
-                        assert(new_tree@.contains(sorted@[j]));
-                        lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    };
-                };
-                assert forall|k: K::V| #[trigger] table@.contains_key(k)
-                    implies table@[k] == old_map[k]
-                by {
-                    lemma_map_contains_pair_in_set(new_tree@, k);
-                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    lemma_pair_in_set_map_contains(old_tree, k, v);
-                };
-                vstd::set_lib::lemma_len_subset(new_tree@, old_tree);
-            }
-            table
+            let remaining = self.tree.difference(&other.tree);
+            OrderedTableStPer { tree: remaining }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterate self, check key membership per element
@@ -3242,11 +3063,11 @@ broadcast use {
             self.previous_key_iter(k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST predecessor descent
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::prev_key
         fn previous_key_iter(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
         {
-            bst_prev_by_key(&self.tree.inner, k)
+            self.tree.prev_key(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to next_key_iter
@@ -3256,11 +3077,11 @@ broadcast use {
             self.next_key_iter(k)
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- BST successor descent
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::next_key
         fn next_key_iter(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
         {
-            bst_next_by_key(&self.tree.inner, k)
+            self.tree.next_key(k)
         }
 
 
@@ -3413,7 +3234,6 @@ broadcast use {
                 lemma_pair_set_to_map_dom_finite(left_tree@);
                 lemma_pair_set_to_map_dom_finite(right_tree@);
 
-                // !parts.0@.dom().contains(k@) and !parts.2@.dom().contains(k@).
                 assert(!left_table@.dom().contains(k@)) by {
                     if left_table@.dom().contains(k@) {
                         lemma_map_contains_pair_in_set(left_tree@, k@);
@@ -3429,7 +3249,6 @@ broadcast use {
                     }
                 };
 
-                // parts.0@.dom().subset_of(self@.dom()).
                 assert forall|kk: K::V| left_table@.dom().contains(kk)
                     implies #[trigger] self@.dom().contains(kk)
                 by {
@@ -3439,7 +3258,6 @@ broadcast use {
                     lemma_pair_in_set_map_contains(old_tree, kk, v);
                 };
 
-                // parts.2@.dom().subset_of(self@.dom()).
                 assert forall|kk: K::V| right_table@.dom().contains(kk)
                     implies #[trigger] self@.dom().contains(kk)
                 by {
@@ -3449,7 +3267,6 @@ broadcast use {
                     lemma_pair_in_set_map_contains(old_tree, kk, v);
                 };
 
-                // parts.0@.dom().disjoint(parts.2@.dom()).
                 assert(left_table@.dom().disjoint(right_table@.dom())) by {
                     assert forall|kk: K::V| !(left_table@.dom().contains(kk) && right_table@.dom().contains(kk))
                     by {
@@ -3467,7 +3284,6 @@ broadcast use {
                     };
                 };
 
-                // Completeness: self@.dom().contains(key) ==> left or right or == k@.
                 assert forall|key: K::V| #[trigger] self@.dom().contains(key)
                     implies left_table@.dom().contains(key) || right_table@.dom().contains(key) || key == k@
                 by {
@@ -3483,7 +3299,6 @@ broadcast use {
                     }
                 };
 
-                // wf for both tables.
                 vstd::set_lib::lemma_len_subset(left_tree@, old_tree);
                 vstd::set_lib::lemma_len_subset(right_tree@, old_tree);
             }
@@ -3593,10 +3408,11 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to rank_key_iter
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::rank_key
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
         {
-            self.rank_key_iter(k)
+            self.tree.rank_key(k)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + count elements <= k
@@ -3727,60 +3543,11 @@ broadcast use {
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + index access
-        #[verifier::loop_isolation(false)]
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to OrdKeyMap::select_key
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
         {
-            proof {
-                assert(obeys_feq_full_trigger::<K>());
-                assert(obeys_feq_full_trigger::<Pair<K, V>>());
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
-            }
-            if i >= self.size() {
-                None
-            } else {
-                let sorted = self.tree.inner.in_order();
-                let len = sorted.length();
-                proof {
-                    assert forall|jj: int| 0 <= jj < sorted@.len()
-                        implies self.tree.inner@.contains(#[trigger] sorted@[jj]) by {
-                        assert(sorted@.contains(sorted@[jj]));
-                    };
-                }
-                let mut j: usize = 0;
-                let mut result_key: Option<K> = None;
-                while j < len
-                    invariant
-                        j <= len,
-                        len as nat == sorted@.len(),
-                        self.spec_orderedtablestper_wf(),
-                        obeys_view_eq::<K>(),
-                        obeys_feq_full::<K>(),
-                        obeys_feq_full::<Pair<K, V>>(),
-                        self@.dom().finite(),
-                        i < self@.dom().len(),
-                        forall|jj: int| 0 <= jj < sorted@.len() ==>
-                            self.tree.inner@.contains(#[trigger] sorted@[jj]),
-                        result_key matches Some(rk) ==>
-                            self@.dom().contains(rk@) &&
-                            self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@]
-                                t@ == x && TotalOrder::le(t, rk) && t@ != rk@).len() == i as int,
-                    decreases len - j,
-                {
-                    let candidate = sorted.nth(j);
-                    let candidate_key = candidate.0.clone_plus();
-                    proof { lemma_cloned_view_eq(candidate.0, candidate_key); }
-                    let rank_val = self.rank_key(&candidate_key);
-                    if rank_val == i && result_key.is_none() {
-                        proof {
-                            lemma_pair_in_set_map_contains(self.tree.inner@, sorted@[j as int].0, sorted@[j as int].1);
-                        }
-                        result_key = Some(candidate_key);
-                    }
-                    j = j + 1;
-                }
-                result_key
-            }
+            self.tree.select_key(i)
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- delegates to split_rank_key_iter
