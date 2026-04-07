@@ -1,0 +1,88 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:539:17
+     |
+ 539 |                 self@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1032 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+     |         ------------------------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:539:17
+    |
+539 |                 self@.dom().finite(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✘
+    function is uninterpreted
+self.spec_orderedtablesteph_wf() ✔
+
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:558:17
+     |
+ 558 | /                 forall|k: K::V| #[trigger] old(self)@.contains_key(k) && other@.contains_key(k) ==>
+ 559 | |                     (exists|v1: V, v2: V, r: V|
+ 560 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+ 561 | |                         && f.ensures((&v1, &v2), r)
+ 562 | |                         && self@[k] == r@),
+     | |__________________________________________^ failed this postcondition
+...
+1042 |               proof {
+     |  ___________________-
+1043 | |                 lemma_pair_set_to_map_dom_finite(self.tree.inner@);
+1044 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:559:21
+    |
+559 | /                     (exists|v1: V, v2: V, r: V|
+560 | |                         v1@ == old(self)@[k] && v2@ == other@[k]
+561 | |                         && f.ensures((&v1, &v2), r)
+562 | |                         && self@[k] == r@),
+    | |__________________________________________^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().union(old(other).view().dom()) ✔
+forall |k|
+    old(self).view().dom().contains(k) && !(old(other).view().dom().contains(k)) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+forall |k|
+    old(other).view().dom().contains(k) && !(old(self).view().dom().contains(k)) ==>
+        self.view().index(k) == old(other).view().index(k) ✔
+forall |k|
+    old(self).view().dom().contains(k) && old(other).view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✘
+self.view().dom().finite() ✔
+self.spec_orderedtablesteph_wf() ✔
+
+error: precondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:1699:13
+     |
+1699 |             AVLTreeSeqStPerS::from_vec(entries)
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:363:22
+     |
+ 363 |             requires values@.len() < usize::MAX,
+     |                      -------------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+entries.view().len() < UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 2809 verified, 3 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 59s
+Sampled Memory Usage: peak rust_verify RSS: 5503MB, peak z3 RSS: 415MB, min free: 13857MB
+Sampled CPU Usage: rust_verify: 135s, z3 children: 155s
