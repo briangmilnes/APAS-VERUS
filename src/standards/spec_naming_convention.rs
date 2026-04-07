@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Spec Naming Convention Standard: well-formedness predicates and spec function names.
 //!
@@ -203,4 +203,39 @@ pub mod spec_naming_convention {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for BoundedCounter {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounter({}/{})", self.value, self.bound)
+        }
+    }
+    impl std::fmt::Display for BoundedCounter {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounter({}/{})", self.value, self.bound)
+        }
+    }
+
+    impl std::fmt::Debug for BoundedCounterInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounterInv")
+        }
+    }
+    impl std::fmt::Display for BoundedCounterInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "BoundedCounterInv")
+        }
+    }
+
+    impl std::fmt::Debug for LockedBoundedCounter {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedBoundedCounter")
+        }
+    }
+    impl std::fmt::Display for LockedBoundedCounter {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedBoundedCounter")
+        }
+    }
 }

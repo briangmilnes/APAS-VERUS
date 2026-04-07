@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! RwLock + TSM Standard: zero-assume locking for Mt modules.
 //!
@@ -263,4 +263,39 @@ pub mod rwlock_tsm_standard {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for CountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDown({})", self.count)
+        }
+    }
+    impl std::fmt::Display for CountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDown({})", self.count)
+        }
+    }
+
+    impl std::fmt::Debug for CountDownLockInterior {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDownLockInterior")
+        }
+    }
+    impl std::fmt::Display for CountDownLockInterior {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDownLockInterior")
+        }
+    }
+
+    impl std::fmt::Debug for LockedCdStateMachine {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedCdStateMachine")
+        }
+    }
+    impl std::fmt::Display for LockedCdStateMachine {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedCdStateMachine")
+        }
+    }
 }

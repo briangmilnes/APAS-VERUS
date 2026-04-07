@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Top-Level Coarse RwLock Standard: wrapping a verified struct in RwLock for Mt modules.
 //!
@@ -249,4 +249,39 @@ pub mod toplevel_coarse_rwlocks_for_mt_modules {
     }
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for CountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDown({})", self.count)
+        }
+    }
+    impl std::fmt::Display for CountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDown({})", self.count)
+        }
+    }
+
+    impl std::fmt::Debug for CountDownInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDownInv")
+        }
+    }
+    impl std::fmt::Display for CountDownInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "CountDownInv")
+        }
+    }
+
+    impl std::fmt::Debug for LockedCountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedCountDown")
+        }
+    }
+    impl std::fmt::Display for LockedCountDown {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedCountDown")
+        }
+    }
 }

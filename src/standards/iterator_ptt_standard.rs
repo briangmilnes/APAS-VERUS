@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Iterator PTT Standard: required proof time tests for collection iterators.
 //!
 //! Every APAS-VERUS collection that implements `iter()` must have a corresponding

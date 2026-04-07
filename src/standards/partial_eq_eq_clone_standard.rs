@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! PartialEq, Eq, and Clone Standard for APAS-VERUS modules.
 //!
@@ -236,4 +236,17 @@ pub mod partial_eq_eq_clone_standard {
     impl<T: Eq + View> Eq for Collection<T> {}
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl<T: std::fmt::Debug> std::fmt::Debug for Collection<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Collection(len={})", self.elements.len())
+        }
+    }
+    impl<T: std::fmt::Display> std::fmt::Display for Collection<T> {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Collection(len={})", self.elements.len())
+        }
+    }
 } // pub mod

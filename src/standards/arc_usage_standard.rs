@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 
 //! Arc Usage Standard: when Arc is needed and when it is not.
 //!
@@ -235,4 +235,39 @@ pub mod arc_usage_standard {
     // type Link<T> = Option<Arc<Node<T>>>;
 
     } // verus!
+
+    // 14. derive impls outside verus!
+
+    impl std::fmt::Debug for Widget {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Widget({})", self.value)
+        }
+    }
+    impl std::fmt::Display for Widget {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "Widget({})", self.value)
+        }
+    }
+
+    impl std::fmt::Debug for WidgetInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "WidgetInv")
+        }
+    }
+    impl std::fmt::Display for WidgetInv {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "WidgetInv")
+        }
+    }
+
+    impl std::fmt::Debug for LockedWidget {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedWidget")
+        }
+    }
+    impl std::fmt::Display for LockedWidget {
+        fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+            write!(f, "LockedWidget")
+        }
+    }
 }

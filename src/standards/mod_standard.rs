@@ -1,4 +1,4 @@
-//  Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
+//! Copyright (C) 2025 Acar, Blelloch and Milnes from 'Algorithms Parallel and Sequential'.
 //! Module Standard: how to structure an APAS-VERUS module file.
 //!
 //! Every APAS-VERUS source file wraps its content in a `pub mod ModuleName` block.
