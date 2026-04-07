@@ -327,6 +327,297 @@ fn test_ordkeymap_intersect_with_empty() {
     assert!(c.is_empty());
 }
 
+// first_key tests.
+
+#[test]
+fn test_ordkeymap_first_key_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    assert_eq!(m.first_key(), None);
+}
+
+#[test]
+fn test_ordkeymap_first_key_singleton() {
+    let m = make_map(&[(42, 1)]);
+    assert_eq!(m.first_key(), Some(42u64));
+}
+
+#[test]
+fn test_ordkeymap_first_key_multiple() {
+    let m = make_map(&[(30, 3), (10, 1), (20, 2)]);
+    assert_eq!(m.first_key(), Some(10u64));
+}
+
+#[test]
+fn test_ordkeymap_first_key_is_minimum() {
+    let m = make_map(&[(100, 1), (50, 2), (200, 3), (1, 4), (75, 5)]);
+    assert_eq!(m.first_key(), Some(1u64));
+}
+
+// last_key tests.
+
+#[test]
+fn test_ordkeymap_last_key_empty() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    assert_eq!(m.last_key(), None);
+}
+
+#[test]
+fn test_ordkeymap_last_key_singleton() {
+    let m = make_map(&[(42, 1)]);
+    assert_eq!(m.last_key(), Some(42u64));
+}
+
+#[test]
+fn test_ordkeymap_last_key_multiple() {
+    let m = make_map(&[(30, 3), (10, 1), (20, 2)]);
+    assert_eq!(m.last_key(), Some(30u64));
+}
+
+#[test]
+fn test_ordkeymap_last_key_is_maximum() {
+    let m = make_map(&[(100, 1), (50, 2), (200, 3), (1, 4), (75, 5)]);
+    assert_eq!(m.last_key(), Some(200u64));
+}
+
+#[test]
+fn test_ordkeymap_first_last_key_singleton_equal() {
+    let m = make_map(&[(77, 99)]);
+    assert_eq!(m.first_key(), m.last_key());
+    assert_eq!(m.first_key(), Some(77u64));
+}
+
+// get_key_range tests.
+
+#[test]
+fn test_ordkeymap_get_key_range_all_keys() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4), (50, 5)]);
+    let range = m.get_key_range(&5u64, &55u64);
+    assert_eq!(range.size(), 5);
+    assert_eq!(range.find(&10u64), Some(1u64));
+    assert_eq!(range.find(&50u64), Some(5u64));
+}
+
+#[test]
+fn test_ordkeymap_get_key_range_subset() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4), (50, 5)]);
+    let range = m.get_key_range(&15u64, &35u64);
+    assert_eq!(range.find(&10u64), None);
+    assert_eq!(range.find(&20u64), Some(2u64));
+    assert_eq!(range.find(&30u64), Some(3u64));
+    assert_eq!(range.find(&40u64), None);
+    assert_eq!(range.find(&50u64), None);
+}
+
+#[test]
+fn test_ordkeymap_get_key_range_no_keys_in_bounds() {
+    let m = make_map(&[(10, 1), (50, 5)]);
+    let range = m.get_key_range(&20u64, &40u64);
+    assert_eq!(range.size(), 0);
+    assert!(range.is_empty());
+}
+
+#[test]
+fn test_ordkeymap_get_key_range_exact_boundaries() {
+    let m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let range = m.get_key_range(&10u64, &30u64);
+    assert_eq!(range.find(&10u64), Some(1u64));
+    assert_eq!(range.find(&20u64), Some(2u64));
+    assert_eq!(range.find(&30u64), Some(3u64));
+}
+
+#[test]
+fn test_ordkeymap_get_key_range_empty_map() {
+    let m: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let range = m.get_key_range(&0u64, &100u64);
+    assert!(range.is_empty());
+}
+
+#[test]
+fn test_ordkeymap_get_key_range_values_preserved() {
+    let m = make_map(&[(10, 111), (20, 222), (30, 333)]);
+    let range = m.get_key_range(&10u64, &20u64);
+    assert_eq!(range.find(&10u64), Some(111u64));
+    assert_eq!(range.find(&20u64), Some(222u64));
+    assert_eq!(range.find(&30u64), None);
+}
+
+// split_rank_key tests.
+
+#[test]
+fn test_ordkeymap_split_rank_key_at_zero() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let (left, right) = m.split_rank_key(0);
+    assert_eq!(left.size(), 0);
+    assert!(left.is_empty());
+    assert_eq!(right.size(), 3);
+    assert_eq!(right.find(&10u64), Some(1u64));
+    assert_eq!(right.find(&20u64), Some(2u64));
+    assert_eq!(right.find(&30u64), Some(3u64));
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_at_size() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let (left, right) = m.split_rank_key(3);
+    assert_eq!(left.size(), 3);
+    assert_eq!(right.size(), 0);
+    assert!(right.is_empty());
+    assert_eq!(left.find(&10u64), Some(1u64));
+    assert_eq!(left.find(&20u64), Some(2u64));
+    assert_eq!(left.find(&30u64), Some(3u64));
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_at_middle() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4), (50, 5)]);
+    let (left, right) = m.split_rank_key(2);
+    assert_eq!(left.size(), 2);
+    assert_eq!(right.size(), 3);
+    assert_eq!(left.find(&10u64), Some(1u64));
+    assert_eq!(left.find(&20u64), Some(2u64));
+    assert_eq!(left.find(&30u64), None);
+    assert_eq!(right.find(&30u64), Some(3u64));
+    assert_eq!(right.find(&40u64), Some(4u64));
+    assert_eq!(right.find(&50u64), Some(5u64));
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_sizes_sum() {
+    let mut m = make_map(&[(5, 50), (15, 150), (25, 250), (35, 350), (45, 450)]);
+    let original_size = 5;
+    let split_point = 3;
+    let (left, right) = m.split_rank_key(split_point);
+    assert_eq!(left.size() + right.size(), original_size);
+    assert_eq!(left.size(), split_point);
+    assert_eq!(right.size(), original_size - split_point);
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_disjoint_doms() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4)]);
+    let (left, right) = m.split_rank_key(2);
+    // Keys in left must not appear in right.
+    if let Some(k) = left.first_key() {
+        assert_eq!(right.find(&k), None);
+    }
+    if let Some(k) = left.last_key() {
+        assert_eq!(right.find(&k), None);
+    }
+    // Keys in right must not appear in left.
+    if let Some(k) = right.first_key() {
+        assert_eq!(left.find(&k), None);
+    }
+    if let Some(k) = right.last_key() {
+        assert_eq!(left.find(&k), None);
+    }
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_ordering() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3), (40, 4), (50, 5)]);
+    let (left, right) = m.split_rank_key(3);
+    // All keys in left must be less than all keys in right.
+    if let (Some(left_max), Some(right_min)) = (left.last_key(), right.first_key()) {
+        assert!(left_max < right_min);
+    }
+}
+
+#[test]
+fn test_ordkeymap_split_rank_key_singleton_left() {
+    let mut m = make_map(&[(10, 1), (20, 2), (30, 3)]);
+    let (left, right) = m.split_rank_key(1);
+    assert_eq!(left.size(), 1);
+    assert_eq!(left.first_key(), Some(10u64));
+    assert_eq!(right.size(), 2);
+}
+
+// Stress tests.
+
+#[test]
+fn test_ordkeymap_stress_200_entries() {
+    let mut m = OrdKeyMap::new();
+    // Insert 200 entries.
+    for i in 0u64..200 {
+        m.insert(i * 2, i * 10); // even keys 0,2,...,398
+    }
+    assert_eq!(m.size(), 200);
+    // Verify all present.
+    for i in 0u64..200 {
+        assert_eq!(m.find(&(i * 2)), Some(i * 10));
+    }
+    // Verify odd keys absent.
+    for i in 0u64..10 {
+        assert_eq!(m.find(&(i * 2 + 1)), None);
+    }
+    // Check first and last.
+    assert_eq!(m.first_key(), Some(0u64));
+    assert_eq!(m.last_key(), Some(398u64));
+    // rank/select roundtrip for a few indices.
+    for i in 0usize..10 {
+        let k = m.select_key(i).unwrap();
+        assert_eq!(m.rank_key(&k), i);
+        assert_eq!(k, (i as u64) * 2);
+    }
+    // get_key_range for middle 100 keys.
+    let range = m.get_key_range(&100u64, &298u64);
+    assert_eq!(range.find(&100u64), Some(500u64));
+    assert_eq!(range.find(&298u64), Some(1490u64));
+    assert_eq!(range.find(&98u64), None);
+    assert_eq!(range.find(&300u64), None);
+}
+
+#[test]
+fn test_ordkeymap_stress_insert_delete_find() {
+    let mut m = OrdKeyMap::new();
+    // Insert 100 entries.
+    for i in 0u64..100 {
+        m.insert(i, i * 5);
+    }
+    assert_eq!(m.size(), 100);
+    // Delete every even key.
+    for i in (0u64..100).step_by(2) {
+        m.delete(&i);
+    }
+    assert_eq!(m.size(), 50);
+    // Odd keys remain, even keys gone.
+    for i in 0u64..100 {
+        if i % 2 == 0 {
+            assert_eq!(m.find(&i), None);
+        } else {
+            assert_eq!(m.find(&i), Some(i * 5));
+        }
+    }
+    // first_key = 1, last_key = 99.
+    assert_eq!(m.first_key(), Some(1u64));
+    assert_eq!(m.last_key(), Some(99u64));
+}
+
+#[test]
+fn test_ordkeymap_stress_union_intersect() {
+    let mut pairs_a = vec![];
+    let mut pairs_b = vec![];
+    for i in 0u64..50 {
+        pairs_a.push((i, i));
+    }
+    for i in 25u64..75 {
+        pairs_b.push((i, i + 100));
+    }
+    let a = make_map(&pairs_a);
+    let b = make_map(&pairs_b);
+    // Union: left wins on collision.
+    let u = a.union_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(u.size(), 75);
+    assert_eq!(u.find(&0u64), Some(0u64));    // only in a
+    assert_eq!(u.find(&74u64), Some(174u64)); // only in b
+    assert_eq!(u.find(&25u64), Some(25u64)); // collision, left wins
+    // Intersection: right wins on collision.
+    let inter = a.intersect_with(&b, &|_v1: &u64, v2: &u64| *v2);
+    assert_eq!(inter.size(), 25); // keys 25..49
+    assert_eq!(inter.find(&24u64), None); // only in a
+    assert_eq!(inter.find(&50u64), None); // only in b
+    assert_eq!(inter.find(&30u64), Some(130u64)); // in both, right wins
+}
+
 // Comprehensive next/prev walkthrough.
 
 #[test]
