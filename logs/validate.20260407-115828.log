@@ -1,0 +1,46 @@
+error: postcondition not satisfied
+    --> src/Chap43/OrderedTableStEph.rs:539:17
+     |
+ 539 |                 self@.dom().finite(),
+     |                 ^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1032 |         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+     |         ------------------------------------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedTableStEph.rs:539:17
+    |
+539 |                 self@.dom().finite(),
+    |                 ^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view().dom() =~= old(self).view().dom().intersect(old(other).view().dom()) ✔
+forall |k|
+    self.view().dom().contains(k) ==>
+        (exists |v1, v2, r| v1.view() == old(self).view().index(k) && v2.view() == old(other).view().index(k) && ClosureEns(old(f), (v1, v2), r) && self.view().index(k) == r.view()) ✔
+self.view().dom().finite() ✘
+    function is uninterpreted
+self.spec_orderedtablesteph_wf() ✔
+
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1048:29
+     |
+1048 |                       implies (exists|v1: V, v2: V, r: V|
+     |  _____________________________^
+1049 | |                         v1@ == old_map[k] && v2@ == other_map[k]
+1050 | |                         && f.ensures((&v1, &v2), r) && self@[k] == r@)
+     | |______________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |v1, v2, r| v1.view() == old_map.index(k) && v2.view() == other_map.index(k) && ClosureEns(f, (v1, v2), r) && self.view().index(k) == r.view()) 
+
+verification results:: 2810 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 56s
+Sampled Memory Usage: peak rust_verify RSS: 3279MB, peak z3 RSS: 465MB, min free: 16100MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 90s

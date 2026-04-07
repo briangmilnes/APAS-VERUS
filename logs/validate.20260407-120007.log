@@ -1,0 +1,21 @@
+error: assertion failed
+    --> src/Chap43/OrderedTableStEph.rs:1054:29
+     |
+1054 |                       implies (exists|v1: V, v2: V, r: V|
+     |  _____________________________^
+1055 | |                         v1@ == old_map[k] && v2@ == other_map[k]
+1056 | |                         && f.ensures((&v1, &v2), r) && combined@[k] == r@)
+     | |__________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |v1, v2, r| v1.view() == old_map.index(k) && v2.view() == other_map.index(k) && ClosureEns(f, (v1, v2), r) && combined.view().index(k) == r.view()) 
+
+verification results:: 2811 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 59s
+Sampled Memory Usage: peak rust_verify RSS: 3192MB, peak z3 RSS: 475MB, min free: 16004MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 68s
