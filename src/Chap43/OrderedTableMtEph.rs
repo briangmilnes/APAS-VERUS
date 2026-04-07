@@ -788,7 +788,7 @@ broadcast use {
             let read_handle = self.locked_table.acquire_read();
             let inner = read_handle.borrow();
             proof { assume(inner.spec_orderedtablesteph_wf()); }
-            let sorted = inner.tree.in_order();
+            let sorted = inner.tree.inner.in_order();
             let n = sorted.length();
             let mut snapshot: Vec<Pair<K, V>> = Vec::new();
             let mut i: usize = 0;
@@ -1045,7 +1045,7 @@ broadcast use {
         fn eq(&self, other: &Self) -> bool {
             let self_read = self.locked_table.acquire_read();
             let other_read = other.locked_table.acquire_read();
-            let result = self_read.borrow().tree.size() == other_read.borrow().tree.size();
+            let result = self_read.borrow().tree.inner.size() == other_read.borrow().tree.inner.size();
             other_read.release_read();
             self_read.release_read();
             result

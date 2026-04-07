@@ -561,7 +561,7 @@ broadcast use {
         {
             proof {
                 lemma_aug_view(self);
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
             }
             self.base_table.is_empty()
         }
@@ -898,7 +898,7 @@ broadcast use {
             proof {
                 lemma_aug_view(self);
                 // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
             }
             self.cached_reduction.clone()
         }
@@ -910,7 +910,7 @@ broadcast use {
             proof {
                 lemma_aug_view(self);
                 // wf chain: aug_wf → orderedtable_wf → bst_wf → tree@.finite().
-                lemma_pair_set_to_map_dom_finite(self.base_table.tree@);
+                lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
             }
             let range_table = self.get_key_range(k1, k2);
             range_table.cached_reduction.clone()
@@ -924,7 +924,7 @@ broadcast use {
             requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
-                it@.1.len() == self.base_table.tree@.len(),
+                it@.1.len() == self.base_table.tree.inner@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
@@ -941,7 +941,7 @@ broadcast use {
             requires self.spec_augorderedtablesteph_wf()
             ensures
                 it@.0 == 0,
-                it@.1.len() == self.base_table.tree@.len(),
+                it@.1.len() == self.base_table.tree.inner@.len(),
                 iter_invariant(&it),
         {
             self.base_table.iter()
