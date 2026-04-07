@@ -116,14 +116,6 @@ broadcast use {
         exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, k) && t@ != k@
     }
 
-    /// Connection between K's Ord ordering (cmp_spec) and K's TotalOrder (le).
-    /// Required by O(lg n) ordering operations that leverage BST structure.
-    /// Trivially holds for all integer types and String.
-    pub open spec fn spec_ord_agrees_total_order<K: StT + Ord + TotalOrder>() -> bool {
-        &&& forall|a: K, b: K| a.cmp_spec(&b) == Less ==> TotalOrder::le(a, b)
-        &&& forall|a: K, b: K| a.cmp_spec(&b) == Greater ==> TotalOrder::le(b, a)
-    }
-
     //		Section 7. proof fns/broadcast groups
 
 
@@ -255,7 +247,6 @@ broadcast use {
         };
     }
 
-
     /// In-order traversal keys are pairwise distinct: distinct indices have distinct keys.
     /// Follows from set-key-uniqueness and the bijection between sorted seq and tree set.
     proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
@@ -295,7 +286,6 @@ broadcast use {
         };
     }
 
-
     /// Key uniqueness is preserved by subset.
     proof fn lemma_key_unique_subset<KV, VV>(s: Set<(KV, VV)>, sub: Set<(KV, VV)>)
         requires
@@ -313,7 +303,6 @@ broadcast use {
     {
 
     }
-
 
     /// Map over the set after insert: extends the map with the new key-value pair.
     proof fn lemma_set_to_map_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
@@ -366,15 +355,11 @@ broadcast use {
         };
     }
 
-
-
-
     /// The map over an empty set is the empty map.
     proof fn lemma_set_to_map_empty<KV, VV>()
         ensures spec_pair_set_to_map(Set::<(KV, VV)>::empty()) =~= Map::<KV, VV>::empty()
     {
     }
-
 
     //		Section 8. traits
 
@@ -1406,32 +1391,602 @@ broadcast use {
             reduced
         }
 
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::intersect_with
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterative intersection
         fn intersection<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
         {
-            self.tree = self.tree.intersect_with(&other.tree, &f);
-            proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
-        }
-
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- delegates to OrdKeyMap::union_with
-        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
-        {
+            let ghost old_tree = self.tree.inner@;
             let ghost old_map = self@;
             let ghost other_map = other@;
-            let result = self.tree.union_with(&other.tree, &f);
-            self.tree = result;
+            let sorted = self.tree.inner.in_order();
+            let len = sorted.length();
+            let mut new_tree = ParamBST::<Pair<K, V>>::new();
+            let ghost mut result_v1: Seq<V> = Seq::empty();
+            let ghost mut result_v2: Seq<V> = Seq::empty();
+            let ghost mut result_r: Seq<V> = Seq::empty();
+            let mut i: usize = 0;
             proof {
-                // Trigger bridge: materialize result@[k] to fire the OrdKeyMap existential.
-                assert forall|k: K::V|
-                    #[trigger] old_map.contains_key(k) && other_map.contains_key(k) implies
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<K>());
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
+            }
+            while i < len
+                invariant
+                    self.tree.inner@ == old_tree,
+                    old(self).tree.inner@ == old_tree,
+                    old(self).spec_orderedtablesteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                    old_map == spec_pair_set_to_map(old_tree),
+                    other_map == other@,
+                    len as nat == sorted@.len(),
+                    sorted@.len() == old_tree.len(),
+                    0 <= i <= len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() <= i as nat,
+                    new_tree@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                    result_v1.len() == new_tree@.len() as int,
+                    result_v2.len() == new_tree@.len() as int,
+                    result_r.len() == new_tree@.len() as int,
+                    sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < sorted@.len() && 0 <= jj < sorted@.len() && ii != jj
+                        ==> (#[trigger] sorted@[ii]).0 != (#[trigger] sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] sorted@[j]).0,
+                    // Entries in new_tree have keys in other's domain.
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        other_map.dom().contains(p.0),
+                    // Entries in new_tree have keys from old_tree.
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] sorted@.contains(v),
+                    // Completeness: processed keys in other are in new_tree.
+                    forall|j2: int| 0 <= j2 < i as int && other_map.dom().contains(sorted@[j2].0)
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j2].0),
+                    // Value tracking: each entry's value is f(old_val, other_val).
+                    forall|kv: K::V| #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(kv) ==>
+                        (exists|v1: V, v2: V, r: V|
+                            v1@ == old_map[kv] && v2@ == other_map[kv]
+                            && f.ensures((&v1, &v2), r)
+                            && spec_pair_set_to_map(new_tree@)[kv] == r@),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                decreases len - i,
+            {
+                let pair = sorted.nth(i);
+                proof { reveal(obeys_view_eq); }
+                let other_find = other.find(&pair.0);
+                match other_find {
+                    Some(other_v) => {
+                        let combined = f(&pair.1, &other_v);
+                        let key_clone = pair.0.clone_plus();
+                        proof {
+                            assert(obeys_feq_full_trigger::<K>());
+                            assert(key_clone@ == pair.0@);
+                        }
+                        let ghost old_new_tree_view = new_tree@;
+                        proof {
+                            assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+                                if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+                                    lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+                                    let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((sorted@[i as int].0, vv));
+                                    let jj = choose|jj: int| 0 <= jj < i as int && (sorted@[i as int].0, vv).0 == (#[trigger] sorted@[jj]).0;
+                                    assert(false);
+                                }
+                            };
+                            // pair values link.
+                            assert(sorted@.contains(sorted@[i as int])) by { assert(sorted@[i as int] == sorted@[i as int]); };
+                            assert(old_tree.contains(sorted@[i as int]));
+                            lemma_pair_in_set_map_contains(old_tree, sorted@[i as int].0, sorted@[i as int].1);
+                        }
+                        new_tree.insert(Pair(key_clone, combined));
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined));
+                            assert(new_tree@.len() <= i as nat + 1);
+                            assert(new_tree@.len() < usize::MAX as nat);
+                            lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, combined@);
+                            result_v1 = result_v1.push(pair.1);
+                            result_v2 = result_v2.push(other_v);
+                            result_r = result_r.push(combined);
+                            // Completeness maintenance for new key.
+                            lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined@);
+                            // Completeness for old keys: old entries preserved.
+                            assert forall|j2: int| 0 <= j2 < i as int && other_map.dom().contains(sorted@[j2].0)
+                                implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j2].0)
+                            by {
+                                lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j2].0);
+                                let w: V::V = choose|w: V::V| old_new_tree_view.contains((sorted@[j2].0, w));
+                                assert(new_tree@.contains((sorted@[j2].0, w)));
+                                lemma_pair_in_set_map_contains(new_tree@, sorted@[j2].0, w);
+                            };
+                            // Value tracking for new key.
+                            assert(spec_pair_set_to_map(new_tree@)[sorted@[i as int].0] == combined@) by {
+                                lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined@);
+                            };
+                            assert(pair.1@ == old_map[sorted@[i as int].0]);
+                            assert(other_v@ == other_map[sorted@[i as int].0]);
+                            assert(f.ensures((&pair.1, &other_v), combined));
+                            // Value tracking for old keys.
+                            assert forall|kv: K::V| #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(kv)
+                                implies (exists|v1: V, v2: V, r: V|
+                                    v1@ == old_map[kv] && v2@ == other_map[kv]
+                                    && f.ensures((&v1, &v2), r)
+                                    && spec_pair_set_to_map(new_tree@)[kv] == r@)
+                            by {
+                                if kv == sorted@[i as int].0 {
+                                    // New entry.
+                                    assert(pair.1@ == old_map[kv]);
+                                    assert(other_v@ == other_map[kv]);
+                                    assert(f.ensures((&pair.1, &other_v), combined));
+                                    assert(spec_pair_set_to_map(new_tree@)[kv] == combined@);
+                                } else {
+                                    // Old entry — value unchanged.
+                                    lemma_map_contains_pair_in_set(new_tree@, kv);
+                                    let w: V::V = choose|w: V::V| new_tree@.contains((kv, w));
+                                    assert(old_new_tree_view.contains((kv, w)));
+                                    lemma_pair_in_set_map_contains(old_new_tree_view, kv, w);
+                                    lemma_pair_in_set_map_contains(new_tree@, kv, w);
+                                    assert(spec_pair_set_to_map(new_tree@)[kv] == spec_pair_set_to_map(old_new_tree_view)[kv]);
+                                }
+                            };
+                        }
+                    },
+                    None => {},
+                }
+                i += 1;
+            }
+            self.tree = OrdKeyMap { inner: new_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(new_tree@);
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                // Domain proof: self@.dom() =~= old_map.dom().intersect(other_map.dom()).
+                assert(self@.dom() =~= old_map.dom().intersect(other_map.dom())) by {
+                    // Forward: key in self → key in old AND other.
+                    assert forall|k: K::V| #[trigger] self@.dom().contains(k)
+                        implies old_map.dom().contains(k) && other_map.dom().contains(k)
+                    by {
+                        lemma_map_contains_pair_in_set(new_tree@, k);
+                        let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
+                        let j = choose|j: int| 0 <= j < i as int && (k, v).0 == (#[trigger] sorted@[j]).0;
+                        assert(sorted@.contains(sorted@[j])) by { assert(sorted@[j] == sorted@[j]); };
+                        assert(old_tree.contains(sorted@[j]));
+                        lemma_pair_in_set_map_contains(old_tree, sorted@[j].0, sorted@[j].1);
+                    };
+                    // Backward: key in old AND other → key in self.
+                    assert forall|k: K::V|
+                        old_map.dom().contains(k) && other_map.dom().contains(k)
+                        implies #[trigger] self@.dom().contains(k)
+                    by {
+                        lemma_map_contains_pair_in_set(old_tree, k);
+                        let v: V::V = choose|v: V::V| old_tree.contains((k, v));
+                        assert(sorted@.contains((k, v)));
+                        let j = choose|j: int| 0 <= j < sorted@.len() && sorted@[j] == (k, v);
+                        assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
+                        assert(sorted@[j].0 == k);
+                    };
+                };
+                // Value proof.
+                assert forall|k: K::V| #[trigger] self@.contains_key(k) implies
                     (exists|v1: V, v2: V, r: V|
                         v1@ == old_map[k] && v2@ == other_map[k]
                         && f.ensures((&v1, &v2), r)
-                        && self@[k] == r@) by {
-                    let vk = result@[k];
-                    assert(result@[k] == vk);
+                        && self@[k] == r@)
+                by {
+                    // From value tracking invariant.
+                    assert(spec_pair_set_to_map(new_tree@).dom().contains(k));
                 };
-                lemma_pair_set_to_map_dom_finite(self.tree.inner@);
+                // WF proofs: new_tree size bounded by old_tree size.
+                assert(new_tree@.len() < usize::MAX as nat);
+                // Type axioms flow from old(self).spec_orderedtablesteph_wf().
+                assert(spec_pair_key_determines_order::<K, V>());
+                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
+                assert(view_ord_consistent::<K>());
+                assert(obeys_feq_fulls::<K, V>());
+            }
+        }
+
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m), Span O(n * m) -- iterative merge
+        fn union<F: Fn(&V, &V) -> V>(&mut self, other: &Self, f: F)
+        {
+            let ghost old_tree = self.tree.inner@;
+            let ghost old_map = self@;
+            let ghost other_map = other@;
+            proof {
+                assert(obeys_feq_full_trigger::<V>());
+                assert(obeys_feq_full_trigger::<K>());
+                assert(obeys_feq_full_trigger::<Pair<K, V>>());
+                lemma_pair_set_to_map_len(old_tree);
+                lemma_pair_set_to_map_len(other.tree.inner@);
+            }
+            // Phase 1: iterate self entries, merge with other where overlapping.
+            let self_sorted = self.tree.inner.in_order();
+            let self_len = self_sorted.length();
+            let mut new_tree = ParamBST::<Pair<K, V>>::new();
+            let mut i: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(old_tree, self_sorted@);
+                lemma_key_unique_empty::<K::V, V::V>();
+                // Empty set is trivially view-generated.
+                assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+                    assert forall|elem: (K::V, V::V)| new_tree@.contains(elem)
+                        implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
+                        assert(false);
+                    };
+                };
+            }
+            while i < self_len
+                invariant
+                    self.tree.inner@ == old_tree,
+                    old(self).spec_orderedtablesteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    forall|v1: &V, v2: &V| f.requires((v1, v2)),
+                    self_len as nat == self_sorted@.len(),
+                    self_sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] self_sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < self_sorted@.len() && 0 <= jj < self_sorted@.len() && ii != jj
+                        ==> (#[trigger] self_sorted@[ii]).0 != (#[trigger] self_sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        exists|j: int| 0 <= j < i as int && p.0 == (#[trigger] self_sorted@[j]).0,
+                    0 <= i <= self_len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() == i as nat,
+                    new_tree@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                    old_map == spec_pair_set_to_map(old_tree),
+                    other_map == other@,
+                    // Phase 1 completeness.
+                    forall|j2: int| 0 <= j2 < i as int
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0),
+                    // Phase 1 value tracking (unified per-pair).
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        old_map.dom().contains(p.0) &&
+                        ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                        || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                            v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                            && f.ensures((&v1, &v2), r) && p.1 == r@)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                decreases self_len - i,
+            {
+                let pair = self_sorted.nth(i);
+                proof { reveal(obeys_view_eq); }
+                let other_find = other.find(&pair.0);
+                let ghost old_new_tree_view = new_tree@;
+                proof {
+                    // Freshness: self_sorted@[i].0 not in new_tree.
+                    assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(self_sorted@[i as int].0)) by {
+                        if spec_pair_set_to_map(old_new_tree_view).dom().contains(self_sorted@[i as int].0) {
+                            lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[i as int].0);
+                            let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((self_sorted@[i as int].0, vv));
+                            let jj = choose|jj: int| 0 <= jj < i as int && (self_sorted@[i as int].0, vv).0 == (#[trigger] self_sorted@[jj]).0;
+                            assert(false);
+                        }
+                    };
+                    // Link sorted entry to old_tree.
+                    assert(self_sorted@.contains(self_sorted@[i as int])) by { assert(self_sorted@[i as int] == self_sorted@[i as int]); };
+                    assert(old_tree.contains(self_sorted@[i as int]));
+                    lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                }
+                match other_find {
+                    Some(ov) => {
+                        let combined = f(&pair.1, &ov);
+                        let key_clone = pair.0.clone_plus();
+                        proof { lemma_cloned_view_eq(pair.0, key_clone); }
+                        new_tree.insert(Pair(key_clone, combined));
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined));
+                            assert(new_tree@.len() == i as nat + 1);
+                            assert(new_tree@.len() < usize::MAX as nat);
+                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, combined@);
+                            // Completeness maintenance.
+                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, combined@);
+                            assert forall|j2: int| 0 <= j2 < i as int
+                                implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
+                            by {
+                                lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[j2].0);
+                                let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
+                                assert(new_tree@.contains((self_sorted@[j2].0, w)));
+                                lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
+                            };
+                            // Value tracking maintenance: new pair is combined.
+                            assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+                                lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                            };
+                            assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+                                old_map.dom().contains(p.0) &&
+                                ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                                || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                    v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                    && f.ensures((&v1, &v2), r) && p.1 == r@))
+                            by {
+                                if old_new_tree_view.contains(p) {
+                                    // Existing pair — invariant held before insert.
+                                } else {
+                                    // New pair: p == (self_sorted@[i].0, combined@).
+                                    assert(p.0 == self_sorted@[i as int].0);
+                                    assert(p.1 == combined@);
+                                    assert(other_map.dom().contains(p.0));
+                                }
+                            };
+                        }
+                    },
+                    None => {
+                        let cloned = pair.clone_plus();
+                        proof { lemma_cloned_view_eq(*pair, cloned); }
+                        new_tree.insert(cloned);
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
+                            assert(new_tree@.len() == i as nat + 1);
+                            assert(new_tree@.len() < usize::MAX as nat);
+                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                            // Completeness maintenance.
+                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                            assert forall|j2: int| 0 <= j2 < i as int
+                                implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[j2].0)
+                            by {
+                                lemma_map_contains_pair_in_set(old_new_tree_view, self_sorted@[j2].0);
+                                let w: V::V = choose|w: V::V| old_new_tree_view.contains((self_sorted@[j2].0, w));
+                                assert(new_tree@.contains((self_sorted@[j2].0, w)));
+                                lemma_pair_in_set_map_contains(new_tree@, self_sorted@[j2].0, w);
+                            };
+                            // Value tracking maintenance: new pair is self-only.
+                            assert(old_map.dom().contains(self_sorted@[i as int].0)) by {
+                                lemma_pair_in_set_map_contains(old_tree, self_sorted@[i as int].0, self_sorted@[i as int].1);
+                            };
+                            assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+                                old_map.dom().contains(p.0) &&
+                                ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                                || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                    v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                    && f.ensures((&v1, &v2), r) && p.1 == r@))
+                            by {
+                                if old_new_tree_view.contains(p) {
+                                    // Existing pair — invariant held before insert.
+                                } else {
+                                    // New pair: p == self_sorted@[i] (cloned).
+                                    assert(p.0 == self_sorted@[i as int].0);
+                                    assert(p.1 == self_sorted@[i as int].1);
+                                    assert(!other_map.dom().contains(p.0));
+                                    assert(old_tree.contains(p));
+                                }
+                            };
+                        }
+                    },
+                }
+                i += 1;
+            }
+            // Phase 2: iterate other entries, add those not in self.
+            let other_sorted = other.tree.inner.in_order();
+            let other_len = other_sorted.length();
+            let mut j: usize = 0;
+            proof {
+                lemma_sorted_keys_pairwise_distinct(other.tree.inner@, other_sorted@);
+                // Bridge: old keys preserved (Phase 1 completeness → per-key form).
+                assert forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                    implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+                by {
+                    lemma_map_contains_pair_in_set(old_tree, kv);
+                    let vv: V::V = choose|vv: V::V| old_tree.contains((kv, vv));
+                    assert(self_sorted@.contains((kv, vv)));
+                    let jx: int = choose|jx: int| 0 <= jx < self_sorted@.len() as int && self_sorted@[jx] == (kv, vv);
+                    assert(spec_pair_set_to_map(new_tree@).dom().contains(self_sorted@[jx].0));
+                };
+                lemma_pair_set_to_map_len(old_tree);
+                lemma_pair_set_to_map_len(other.tree.inner@);
+            }
+            while j < other_len
+                invariant
+                    self.tree.inner@ == old_tree,
+                    old(self).spec_orderedtablesteph_wf(),
+                    other.spec_orderedtablesteph_wf(),
+                    obeys_view_eq::<K>(),
+                    obeys_feq_full::<Pair<K, V>>(),
+                    obeys_feq_full::<V>(),
+                    obeys_feq_full::<K>(),
+                    other_map == other@,
+                    old_map == spec_pair_set_to_map(old_tree),
+                    other_len as nat == other_sorted@.len(),
+                    other_sorted@.len() == other.tree.inner@.len(),
+                    self_sorted@.len() == old_tree.len(),
+                    forall|v: <Pair<K, V> as View>::V| other.tree.inner@.contains(v) <==> #[trigger] other_sorted@.contains(v),
+                    forall|v: <Pair<K, V> as View>::V| old_tree.contains(v) <==> #[trigger] self_sorted@.contains(v),
+                    forall|ii: int, jj: int|
+                        0 <= ii < other_sorted@.len() && 0 <= jj < other_sorted@.len() && ii != jj
+                        ==> (#[trigger] other_sorted@[ii]).0 != (#[trigger] other_sorted@[jj]).0,
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        old_map.dom().contains(p.0) ||
+                        (exists|j2: int| 0 <= j2 < j as int && p.0 == (#[trigger] other_sorted@[j2]).0),
+                    0 <= j <= other_len,
+                    new_tree.spec_bstparasteph_wf(),
+                    vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+                    view_ord_consistent::<Pair<K, V>>(),
+                    new_tree@.len() <= self_sorted@.len() + j as nat,
+                    self_sorted@.len() + other_sorted@.len() < usize::MAX as nat,
+                    spec_key_unique_pairs_set(new_tree@),
+                    spec_key_unique_pairs_set(old_tree),
+                    // Old keys preserved.
+                    forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                        ==> spec_pair_set_to_map(new_tree@).dom().contains(kv),
+                    // Other completeness.
+                    forall|j2: int| 0 <= j2 < j as int && !old_map.dom().contains(other_sorted@[j2].0)
+                        ==> #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0),
+                    // Phase 2 value tracking (3-way).
+                    forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) ==>
+                        (old_map.dom().contains(p.0) &&
+                            ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                            || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                && f.ensures((&v1, &v2), r) && p.1 == r@)))
+                        || (!old_map.dom().contains(p.0) && other.tree.inner@.contains(p)),
+                    spec_set_pair_view_generated::<K, V>(new_tree@),
+                decreases other_len - j,
+            {
+                let pair = other_sorted.nth(j);
+                proof { reveal(obeys_view_eq); }
+                let in_self = self.find(&pair.0);
+                match in_self {
+                    None => {
+                        // find returned None → !old_map.dom().contains(other_sorted@[j].0).
+                        let cloned = pair.clone_plus();
+                        let ghost old_new_tree_view = new_tree@;
+                        proof {
+                            lemma_cloned_view_eq(*pair, cloned);
+                            // Freshness: other_sorted@[j].0 not already in new_tree.
+                            assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(other_sorted@[j as int].0)) by {
+                                if spec_pair_set_to_map(old_new_tree_view).dom().contains(other_sorted@[j as int].0) {
+                                    lemma_map_contains_pair_in_set(old_new_tree_view, other_sorted@[j as int].0);
+                                    let vv: V::V = choose|vv: V::V| old_new_tree_view.contains((other_sorted@[j as int].0, vv));
+                                    if old_map.dom().contains(other_sorted@[j as int].0) {
+                                        assert(false);
+                                    } else {
+                                        let j2 = choose|j2: int| 0 <= j2 < j as int && (other_sorted@[j as int].0, vv).0 == (#[trigger] other_sorted@[j2]).0;
+                                        assert(false);
+                                    }
+                                }
+                            };
+                        }
+                        new_tree.insert(cloned);
+                        proof {
+                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
+                            assert(new_tree@.len() <= self_sorted@.len() + j as nat + 1);
+                            lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            // Old keys preserved maintenance.
+                            assert forall|kv: K::V| #[trigger] old_map.dom().contains(kv)
+                                implies spec_pair_set_to_map(new_tree@).dom().contains(kv)
+                            by {
+                                lemma_map_contains_pair_in_set(old_new_tree_view, kv);
+                                let w: V::V = choose|w: V::V| old_new_tree_view.contains((kv, w));
+                                assert(new_tree@.contains((kv, w)));
+                                lemma_pair_in_set_map_contains(new_tree@, kv, w);
+                            };
+                            // Other completeness maintenance.
+                            assert(other_sorted@.contains(other_sorted@[j as int])) by {
+                                assert(other_sorted@[j as int] == other_sorted@[j as int]);
+                            };
+                            assert(other.tree.inner@.contains(other_sorted@[j as int]));
+                            lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            assert forall|j2: int| 0 <= j2 < j as int + 1
+                                && !old_map.dom().contains(other_sorted@[j2].0)
+                                implies #[trigger] spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[j2].0)
+                            by {
+                                if j2 == j as int {
+                                } else {
+                                    lemma_map_contains_pair_in_set(old_new_tree_view, other_sorted@[j2].0);
+                                    let w: V::V = choose|w: V::V| old_new_tree_view.contains((other_sorted@[j2].0, w));
+                                    assert(new_tree@.contains((other_sorted@[j2].0, w)));
+                                    lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j2].0, w);
+                                }
+                            };
+                            // Value tracking maintenance.
+                            assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
+                                (old_map.dom().contains(p.0) &&
+                                    ((!other_map.dom().contains(p.0) && old_tree.contains(p))
+                                    || (other_map.dom().contains(p.0) && exists|v1: V, v2: V, r: V|
+                                        v1@ == old_map[p.0] && v2@ == other_map[p.0]
+                                        && f.ensures((&v1, &v2), r) && p.1 == r@)))
+                                || (!old_map.dom().contains(p.0) && other.tree.inner@.contains(p))
+                            by {
+                                if old_new_tree_view.contains(p) {
+                                } else {
+                                    assert(p.0 == other_sorted@[j as int].0);
+                                    assert(p.1 == other_sorted@[j as int].1);
+                                    assert(!old_map.dom().contains(p.0));
+                                    assert(other.tree.inner@.contains(p));
+                                }
+                            };
+                        }
+                    },
+                    Some(_) => {},
+                }
+                j += 1;
+            }
+            self.tree = OrdKeyMap { inner: new_tree };
+            proof {
+                lemma_pair_set_to_map_dom_finite(new_tree@);
+                lemma_pair_set_to_map_dom_finite(old_tree);
+                lemma_pair_set_to_map_dom_finite(other.tree.inner@);
+                // 1. Domain: self@.dom() =~= old_map.dom().union(other_map.dom()).
+                assert(self@.dom() =~= old_map.dom().union(other_map.dom())) by {
+                    assert forall|kv: K::V| self@.dom().contains(kv)
+                        implies #[trigger] old_map.dom().union(other_map.dom()).contains(kv)
+                    by {
+                        lemma_map_contains_pair_in_set(self.tree.inner@, kv);
+                        let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((kv, vv));
+                        if !old_map.dom().contains(kv) {
+                            assert(other.tree.inner@.contains((kv, vv)));
+                            lemma_pair_in_set_map_contains(other.tree.inner@, kv, vv);
+                        }
+                    };
+                    assert forall|kv: K::V| #[trigger] old_map.dom().union(other_map.dom()).contains(kv)
+                        implies self@.dom().contains(kv)
+                    by {
+                        if old_map.dom().contains(kv) {
+                        } else {
+                            assert(other_map.dom().contains(kv));
+                            lemma_map_contains_pair_in_set(other.tree.inner@, kv);
+                            let vv: V::V = choose|vv: V::V| other.tree.inner@.contains((kv, vv));
+                            assert(other_sorted@.contains((kv, vv)));
+                            let jx: int = choose|jx: int| 0 <= jx < other_sorted@.len() as int && other_sorted@[jx] == (kv, vv);
+                            assert(!old_map.dom().contains(other_sorted@[jx].0));
+                            assert(spec_pair_set_to_map(new_tree@).dom().contains(other_sorted@[jx].0));
+                        }
+                    };
+                };
+                // 2. Self-only values.
+                assert forall|k: K::V| #[trigger] old_map.contains_key(k) && !other_map.contains_key(k)
+                    implies self@[k] == old_map[k]
+                by {
+                    lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+                    assert(old_tree.contains((k, vv)));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                    lemma_pair_in_set_map_contains(old_tree, k, vv);
+                };
+                // 3. Other-only values.
+                assert forall|k: K::V| #[trigger] other_map.contains_key(k) && !old_map.contains_key(k)
+                    implies self@[k] == other_map[k]
+                by {
+                    lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+                    assert(other.tree.inner@.contains((k, vv)));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                    lemma_pair_in_set_map_contains(other.tree.inner@, k, vv);
+                };
+                // 4. Both values.
+                assert forall|k: K::V| #[trigger] old_map.contains_key(k) && other_map.contains_key(k) implies
+                    (exists|v1: V, v2: V, r: V|
+                        v1@ == old_map[k] && v2@ == other_map[k]
+                        && f.ensures((&v1, &v2), r)
+                        && self@[k] == r@)
+                by {
+                    lemma_map_contains_pair_in_set(self.tree.inner@, k);
+                    let vv: V::V = choose|vv: V::V| self.tree.inner@.contains((k, vv));
+                    lemma_pair_in_set_map_contains(self.tree.inner@, k, vv);
+                };
+                // 5. wf.
+                assert(self.tree.inner@.len() < usize::MAX as nat);
             }
         }
 

@@ -292,20 +292,6 @@ broadcast use {
 
     }
 
-    /// Subset of a View-generated set is View-generated.
-    proof fn lemma_view_gen_subset<K: View, V: View>(
-        sub: Set<(K::V, V::V)>,
-        sup: Set<(K::V, V::V)>,
-    )
-        requires sub.subset_of(sup), spec_set_pair_view_generated::<K, V>(sup),
-        ensures spec_set_pair_view_generated::<K, V>(sub),
-    {
-        assert forall|elem: (K::V, V::V)| sub.contains(elem)
-            implies exists|p: Pair<K, V>| (#[trigger] p@) == elem by {
-            assert(sup.contains(elem));
-        };
-    }
-
     /// Map over the set after insert: extends the map with the new key-value pair.
     proof fn lemma_set_to_map_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
         requires
