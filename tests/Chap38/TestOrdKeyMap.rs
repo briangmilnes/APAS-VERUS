@@ -227,6 +227,106 @@ fn test_ordkeymap_rank_select_roundtrip() {
     }
 }
 
+// union_with tests.
+
+#[test]
+fn test_ordkeymap_union_with_disjoint() {
+    let a = make_map(&[(1, 10), (3, 30)]);
+    let b = make_map(&[(2, 20), (4, 40)]);
+    let c = a.union_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.size(), 4);
+    assert_eq!(c.find(&1u64), Some(10u64));
+    assert_eq!(c.find(&2u64), Some(20u64));
+    assert_eq!(c.find(&3u64), Some(30u64));
+    assert_eq!(c.find(&4u64), Some(40u64));
+}
+
+#[test]
+fn test_ordkeymap_union_with_overlap_sum() {
+    let a = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    let b = make_map(&[(2, 200), (3, 300), (4, 400)]);
+    let c = a.union_with(&b, &|v1: &u64, v2: &u64| *v1 + *v2);
+    assert_eq!(c.size(), 4);
+    assert_eq!(c.find(&1u64), Some(10u64));
+    assert_eq!(c.find(&2u64), Some(220u64));
+    assert_eq!(c.find(&3u64), Some(330u64));
+    assert_eq!(c.find(&4u64), Some(400u64));
+}
+
+#[test]
+fn test_ordkeymap_union_with_overlap_left_wins() {
+    let a = make_map(&[(1, 10), (2, 20)]);
+    let b = make_map(&[(2, 200), (3, 300)]);
+    let c = a.union_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.find(&2u64), Some(20u64));
+}
+
+#[test]
+fn test_ordkeymap_union_with_overlap_right_wins() {
+    let a = make_map(&[(1, 10), (2, 20)]);
+    let b = make_map(&[(2, 200), (3, 300)]);
+    let c = a.union_with(&b, &|_v1: &u64, v2: &u64| *v2);
+    assert_eq!(c.find(&2u64), Some(200u64));
+}
+
+#[test]
+fn test_ordkeymap_union_with_empty_left() {
+    let a: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let b = make_map(&[(1, 10)]);
+    let c = a.union_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.size(), 1);
+    assert_eq!(c.find(&1u64), Some(10u64));
+}
+
+#[test]
+fn test_ordkeymap_union_with_empty_right() {
+    let a = make_map(&[(1, 10)]);
+    let b: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let c = a.union_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.size(), 1);
+    assert_eq!(c.find(&1u64), Some(10u64));
+}
+
+// intersect_with tests.
+
+#[test]
+fn test_ordkeymap_intersect_with_overlap_sum() {
+    let a = make_map(&[(1, 10), (2, 20), (3, 30)]);
+    let b = make_map(&[(2, 200), (3, 300), (4, 400)]);
+    let c = a.intersect_with(&b, &|v1: &u64, v2: &u64| *v1 + *v2);
+    assert_eq!(c.size(), 2);
+    assert_eq!(c.find(&2u64), Some(220u64));
+    assert_eq!(c.find(&3u64), Some(330u64));
+    assert_eq!(c.find(&1u64), None);
+    assert_eq!(c.find(&4u64), None);
+}
+
+#[test]
+fn test_ordkeymap_intersect_with_left_wins() {
+    let a = make_map(&[(1, 10), (2, 20)]);
+    let b = make_map(&[(2, 200), (3, 300)]);
+    let c = a.intersect_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.size(), 1);
+    assert_eq!(c.find(&2u64), Some(20u64));
+}
+
+#[test]
+fn test_ordkeymap_intersect_with_disjoint() {
+    let a = make_map(&[(1, 10), (3, 30)]);
+    let b = make_map(&[(2, 20), (4, 40)]);
+    let c = a.intersect_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert_eq!(c.size(), 0);
+    assert!(c.is_empty());
+}
+
+#[test]
+fn test_ordkeymap_intersect_with_empty() {
+    let a = make_map(&[(1, 10)]);
+    let b: OrdKeyMap<u64, u64> = OrdKeyMap::new();
+    let c = a.intersect_with(&b, &|v1: &u64, _v2: &u64| *v1);
+    assert!(c.is_empty());
+}
+
 // Comprehensive next/prev walkthrough.
 
 #[test]
