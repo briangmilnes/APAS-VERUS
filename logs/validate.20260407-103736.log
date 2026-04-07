@@ -1,0 +1,11 @@
+error: trigger must be a function call, a field access, or arithmetic operator
+    --> src/Chap43/OrderedTableStPer.rs:1559:51
+     |
+1559 |                 assert forall|k: K::V| #[trigger] (self@.contains_key(k) && other@.contains_key(k)) implies
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 50s
+Sampled Memory Usage: peak rust_verify RSS: 2844MB, peak z3 RSS: 372MB, min free: 14504MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 62s
