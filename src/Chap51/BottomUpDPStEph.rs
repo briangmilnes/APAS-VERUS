@@ -32,6 +32,7 @@ pub mod BottomUpDPStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
 
     verus! {
@@ -43,11 +44,6 @@ pub mod BottomUpDPStEph {
     }
 
     //		Section 6. spec fns
-
-
-    pub open spec fn spec_min(a: nat, b: nat) -> nat {
-        if a <= b { a } else { b }
-    }
 
 
     pub trait BottomUpDPStEphTrait: Sized {
