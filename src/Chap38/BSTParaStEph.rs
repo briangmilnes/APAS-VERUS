@@ -157,33 +157,21 @@ pub mod BSTParaStEph {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Disjointness: subsets of disjoint sets.
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
-                            if left_filtered@.contains(x) && right_filtered@.contains(x) {
-                                assert(left@.contains(x) && right@.contains(x));
-                            }
-                        };
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
-                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {
-                            assert(left@.contains(t@));
-                        };
-                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {
-                            assert(right@.contains(t@));
-                        };
+                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {};
+                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {};
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
                     proof {
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {
-                            if right_filtered@.contains(x) { assert(right@.contains(x)); }
-                        };
+                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
                         assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
                             left_filtered@.contains(s@) && right_filtered@.contains(o@) implies
                             s.cmp_spec(&o) == Less by {
-                            assert(left@.contains(s@));
-                            assert(right@.contains(o@));
                             lemma_cmp_antisymmetry(o, key);
                             lemma_cmp_transitivity(s, key, o);
                         };
@@ -852,31 +840,24 @@ pub mod BSTParaStEph {
                             let ghost llv = ll@;
                             let ghost lrv = lr@;
                             proof {
-                                // ll ∪ lr =~= left.remove(key@), so lr ⊆ left and ll ⊆ left.
                                 assert forall|x| lrv.contains(x) implies lv.contains(x) by {
                                     assert(llv.union(lrv).contains(x));
                                 };
-                                assert(lrv.subset_of(lv));
                                 assert forall|x| llv.contains(x) implies lv.contains(x) by {
                                     assert(llv.union(lrv).contains(x));
                                 };
-                                assert(llv.subset_of(lv));
                                 vstd::set_lib::lemma_len_subset(lrv, lv);
                             }
                             let rebuilt = Self::join_mid(Exposed::Node(lr, root_key, right));
                             proof {
-                                assert(rebuilt@ =~= lrv.union(rv).insert(rkv));
-                                assert(!rv.contains(key@));
                                 assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if llv.contains(x) {
                                         assert(llv.union(lrv).contains(x));
                                     }
                                     if lv.contains(x) && x != key@ {
-                                        assert(lv.remove(key@).contains(x));
                                         assert(llv.union(lrv).contains(x));
                                     }
                                 };
-                                assert(llv.union(rebuilt@) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements > key.
                                 assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Greater by {
@@ -892,7 +873,6 @@ pub mod BSTParaStEph {
                                     } else {
                                         // t@ == rkv → Equal(t, rk) via view_ord_consistent.
                                         // kval < rk, Equal(rk, t) → kval < t (eq_subst).
-                                        assert(t@ == rkv);
                                         lemma_cmp_eq_subst(kval, rk, t);
                                     }
                                 };
@@ -910,27 +890,21 @@ pub mod BSTParaStEph {
                                 assert forall|x| rlv.contains(x) implies rv.contains(x) by {
                                     assert(rlv.union(rrv).contains(x));
                                 };
-                                assert(rlv.subset_of(rv));
                                 assert forall|x| rrv.contains(x) implies rv.contains(x) by {
                                     assert(rlv.union(rrv).contains(x));
                                 };
-                                assert(rrv.subset_of(rv));
                                 vstd::set_lib::lemma_len_subset(rlv, rv);
                             }
                             let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
                             proof {
-                                assert(rebuilt@ =~= lv.union(rlv).insert(rkv));
-                                assert(!lv.contains(key@));
                                 assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if rrv.contains(x) {
                                         assert(rlv.union(rrv).contains(x));
                                     }
                                     if rv.contains(x) && x != key@ {
-                                        assert(rv.remove(key@).contains(x));
                                         assert(rlv.union(rrv).contains(x));
                                     }
                                 };
-                                assert(rebuilt@.union(rrv) =~= self@.remove(key@));
                                 // Ordering: rebuilt elements < key.
                                 assert forall|t: T| (#[trigger] rebuilt@.contains(t@)) implies
                                     t.cmp_spec(&key) == Less by {
@@ -946,7 +920,6 @@ pub mod BSTParaStEph {
                                     } else {
                                         // t@ == rkv → Equal(t, rk) via view_ord_consistent.
                                         // t cmp kval == rk cmp kval (congruence), rk < kval.
-                                        assert(t@ == rkv);
                                         lemma_cmp_antisymmetry(kval, rk);
                                         lemma_cmp_equal_congruent(t, rk, kval);
                                     }
@@ -1145,11 +1118,9 @@ pub mod BSTParaStEph {
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) => {
-                    proof { assert(self@.union(other@) =~= other@); }
                     other.clone()
                 }
                 | (_, Exposed::Leaf) => {
-                    proof { assert(self@.union(other@) =~= self@); }
                     self.clone()
                 }
                 | (Exposed::Node(al, ak, ar), _) => {
@@ -1172,9 +1143,6 @@ pub mod BSTParaStEph {
                         assert(other@.remove(akv).subset_of(other@));
                         vstd::set_lib::lemma_len_subset(blv, other@);
                         vstd::set_lib::lemma_len_subset(brv, other@);
-                        // al.len() = sv.len() - ar.len() - 1, so al.len() + bl.len() < sv.len() + other.len().
-                        assert(alv.len() + blv.len() <= sv.len() - 1 + other@.len());
-                        assert(arv.len() + brv.len() <= sv.len() - 1 + other@.len());
                     }
                     let left_union = al.union(&bl);
                     let right_union = ar.union(&br);
@@ -1183,16 +1151,9 @@ pub mod BSTParaStEph {
                     proof {
                         // Ordering: luv = alv ∪ blv (all < ak), ruv = arv ∪ brv (all > ak).
                         assert forall|t: T| (#[trigger] luv.contains(t@))
-                            implies t.cmp_spec(&ak) == Less by {
-                            if alv.contains(t@) {} else { assert(blv.contains(t@)); }
-                        };
+                            implies t.cmp_spec(&ak) == Less by {};
                         assert forall|t: T| (#[trigger] ruv.contains(t@))
-                            implies t.cmp_spec(&ak) == Greater by {
-                            if arv.contains(t@) {} else { assert(brv.contains(t@)); }
-                        };
-                        // Non-containment: akv ∉ al ∪ bl, akv ∉ ar ∪ br.
-                        assert(!luv.contains(akv));
-                        assert(!ruv.contains(akv));
+                            implies t.cmp_spec(&ak) == Greater by {};
                         // Disjointness via witness property: every view in al@/bl@ has a T witness.
                         use_type_invariant(&al);
                         use_type_invariant(&bl);
@@ -1202,10 +1163,7 @@ pub mod BSTParaStEph {
                                 assert(alv.contains(x) || blv.contains(x));
                                 assert(exists|t: T| t@ == x);
                                 let ghost t: T = choose|t: T| t@ == x;
-                                assert(t@ == x);
-                                assert(luv.contains(t@));
                                 assert(t.cmp_spec(&ak) == Less);
-                                assert(ruv.contains(t@));
                                 assert(t.cmp_spec(&ak) == Greater);
                             }
                         };
@@ -1213,20 +1171,17 @@ pub mod BSTParaStEph {
                         // So luv.len() + ruv.len() + 1 ≤ (self@ ∪ other@).len() ≤ usize::MAX.
                         vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
                         let ghost luv_ruv = luv.union(ruv);
-                        assert(!luv_ruv.contains(akv));
                         assert forall|x| #[trigger] luv_ruv.insert(akv).contains(x)
                             implies sv.union(other@).contains(x) by {
                             if x == akv { assert(sv.contains(akv)); }
                             else if luv.contains(x) {
                                 if alv.contains(x) { assert(sv.contains(x)); }
-                                else { assert(blv.contains(x)); assert(other@.contains(x)); }
+                                else { assert(other@.contains(x)); }
                             } else {
-                                assert(ruv.contains(x));
                                 if arv.contains(x) { assert(sv.contains(x)); }
-                                else { assert(brv.contains(x)); assert(other@.contains(x)); }
+                                else { assert(other@.contains(x)); }
                             }
                         };
-                        assert(luv_ruv.insert(akv).subset_of(sv.union(other@)));
                         vstd::set_lib::lemma_len_union(sv, other@);
                         vstd::set_lib::lemma_len_subset(luv_ruv.insert(akv), sv.union(other@));
                         assert(luv.len() + ruv.len() < usize::MAX as nat);
@@ -1242,15 +1197,12 @@ pub mod BSTParaStEph {
                         assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
                             result@.contains(x) by {
                             if blv.contains(x) || brv.contains(x) {
-                                assert(other@.remove(akv).contains(x));
                                 assert(other@.contains(x));
                             }
                             if other@.contains(x) && x != akv {
-                                assert(other@.remove(akv).contains(x));
                                 assert(blv.union(brv).contains(x));
                             }
                         };
-                        assert(result@ =~= sv.union(other@));
                     }
                     result
                 }
@@ -1265,7 +1217,6 @@ pub mod BSTParaStEph {
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) | (_, Exposed::Leaf) => {
-                    proof { assert(self@.intersect(other@) =~= Set::empty()); }
                     Self::new()
                 }
                 | (Exposed::Node(al, ak, ar), _) => {
@@ -1286,28 +1237,18 @@ pub mod BSTParaStEph {
                     let ghost rrv = right_res@;
                     if found {
                         proof {
-                            // lrv = al@.intersect(bl@) ⊂ al@, rrv = ar@.intersect(br@) ⊂ ar@.
-                            assert(lrv.subset_of(alv));
-                            assert(rrv.subset_of(arv));
                             // Disjoint: subsets of disjoint sets.
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
-                            // Non-containment: akv ∉ al@ and akv ∉ ar@ from expose.
-                            assert(!lrv.contains(akv));
-                            assert(!rrv.contains(akv));
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
-                                assert(alv.contains(t@));
-                            };
-                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
-                                assert(arv.contains(t@));
-                            };
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
                         proof {
@@ -1318,47 +1259,35 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(alv.contains(x) && blv.contains(x));
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(arv.contains(x) && brv.contains(x));
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) && x != akv {
-                                    assert(other@.remove(akv).contains(x));
                                     assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(alv.contains(t@));
                                         assert(t.cmp_spec(&ak) == Less);
-                                        // brv ordering says Greater — contradiction.
                                         assert(!brv.contains(x));
                                         assert(blv.contains(x));
                                         assert(lrv.contains(x));
                                     } else {
-                                        assert(arv.contains(x));
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(arv.contains(t@));
                                         assert(t.cmp_spec(&ak) == Greater);
-                                        // blv ordering says Less — contradiction.
                                         assert(!blv.contains(x));
                                         assert(brv.contains(x));
                                         assert(rrv.contains(x));
                                     }
                                 }
                             };
-                            assert(result@ =~= sv.intersect(other@));
                         }
                         result
                     } else {
                         proof {
-                            // lrv = al@.intersect(bl@) ⊂ al@, rrv = ar@.intersect(br@) ⊂ ar@.
-                            assert(lrv.subset_of(alv));
-                            assert(rrv.subset_of(arv));
                             // Disjoint: subsets of disjoint sets.
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
@@ -1372,8 +1301,6 @@ pub mod BSTParaStEph {
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak). s < ak < o ⟹ s < o.
                             assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
-                                assert(alv.contains(s@));
-                                assert(arv.contains(o@));
                                 lemma_cmp_antisymmetry(o, ak);
                                 lemma_cmp_transitivity(s, ak, o);
                             };
@@ -1386,30 +1313,24 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(alv.contains(x) && blv.contains(x));
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(arv.contains(x) && brv.contains(x));
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) {
-                                    assert(other@.remove(akv).contains(x));
                                     assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(alv.contains(t@));
                                         assert(t.cmp_spec(&ak) == Less);
                                         assert(!brv.contains(x));
                                         assert(blv.contains(x));
                                         assert(lrv.contains(x));
                                     } else {
-                                        assert(arv.contains(x));
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(arv.contains(t@));
                                         assert(t.cmp_spec(&ak) == Greater);
                                         assert(!blv.contains(x));
                                         assert(brv.contains(x));
@@ -1417,7 +1338,6 @@ pub mod BSTParaStEph {
                                     }
                                 }
                             };
-                            assert(result@ =~= sv.intersect(other@));
                         }
                         result
                     }
@@ -1433,11 +1353,9 @@ pub mod BSTParaStEph {
         {
             match (self.expose(), other.expose()) {
                 | (Exposed::Leaf, _) => {
-                    proof { assert(self@.difference(other@) =~= Set::empty()); }
                     Self::new()
                 }
                 | (_, Exposed::Leaf) => {
-                    proof { assert(self@.difference(other@) =~= self@); }
                     self.clone()
                 }
                 | (Exposed::Node(al, ak, ar), _) => {
@@ -1458,9 +1376,6 @@ pub mod BSTParaStEph {
                     let ghost rrv = right_res@;
                     if found {
                         proof {
-                            // lrv = al@.difference(bl@) ⊂ al@, rrv = ar@.difference(br@) ⊂ ar@.
-                            assert(lrv.subset_of(alv));
-                            assert(rrv.subset_of(arv));
                             // Disjoint: subsets of disjoint sets are disjoint.
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
@@ -1474,8 +1389,6 @@ pub mod BSTParaStEph {
                             // Ordering: elements of lrv ⊂ al@ are < ak, elements of rrv ⊂ ar@ are > ak.
                             assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)] lrv.contains(s@) && rrv.contains(o@)
                                 implies s.cmp_spec(&o) == Less by {
-                                assert(alv.contains(s@));
-                                assert(arv.contains(o@));
                                 lemma_cmp_antisymmetry(o, ak);
                                 lemma_cmp_transitivity(s, ak, o);
                             };
@@ -1489,37 +1402,18 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(alv.contains(x) && !blv.contains(x));
-                                    assert(sv.contains(x));
-                                    // Prove x ∉ other@: need x ∉ brv and x != akv.
-                                    assert(x != akv);  // x ∈ alv and !alv.contains(akv).
-                                    // x ∉ brv by ordering contradiction via witness.
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(alv.contains(t@));
                                     assert(t.cmp_spec(&ak) == Less);
-                                    // If brv.contains(x) then brv.contains(t@) so
-                                    // t.cmp_spec(&ak) == Greater — contradicts Less.
-                                    assert(!brv.contains(x));
                                     assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(arv.contains(x) && !brv.contains(x));
-                                    assert(sv.contains(x));
-                                    // Prove x ∉ other@: need x ∉ blv and x != akv.
-                                    assert(x != akv);  // x ∈ arv and !arv.contains(akv).
-                                    // x ∉ blv by ordering contradiction via witness.
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(arv.contains(t@));
                                     assert(t.cmp_spec(&ak) == Greater);
-                                    // If blv.contains(x) then blv.contains(t@) so
-                                    // t.cmp_spec(&ak) == Less — contradicts Greater.
-                                    assert(!blv.contains(x));
                                     assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) {
-                                    assert(!blv.union(brv).contains(x));
                                     if alv.contains(x) {
                                         assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
@@ -1527,33 +1421,22 @@ pub mod BSTParaStEph {
                                     }
                                 }
                             };
-                            assert(result@ =~= sv.difference(other@));
                         }
                         result
                     } else {
                         proof {
-                            // lrv = al@.difference(bl@) ⊂ al@, rrv = ar@.difference(br@) ⊂ ar@.
-                            assert(lrv.subset_of(alv));
-                            assert(rrv.subset_of(arv));
                             // Disjoint: subsets of disjoint sets.
                             assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
                                 if lrv.contains(x) && rrv.contains(x) {
                                     assert(alv.contains(x) && arv.contains(x));
                                 }
                             };
-                            // Non-containment: akv ∉ al@ and akv ∉ ar@ from expose.
-                            assert(!lrv.contains(akv));
-                            assert(!rrv.contains(akv));
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {
-                                assert(alv.contains(t@));
-                            };
-                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {
-                                assert(arv.contains(t@));
-                            };
+                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
+                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
                         proof {
@@ -1565,29 +1448,18 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(alv.contains(x) && !blv.contains(x));
-                                    assert(sv.contains(x));
-                                    // Prove x ∉ other@ = blv ∪ brv.
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(alv.contains(t@));
                                     assert(t.cmp_spec(&ak) == Less);
-                                    assert(!brv.contains(x));
-                                    assert(!blv.union(brv).contains(x));
+                                    assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(arv.contains(x) && !brv.contains(x));
-                                    assert(sv.contains(x));
-                                    // Prove x ∉ other@ = blv ∪ brv.
                                     assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(arv.contains(t@));
                                     assert(t.cmp_spec(&ak) == Greater);
-                                    assert(!blv.contains(x));
-                                    assert(!blv.union(brv).contains(x));
+                                    assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) && x != akv {
-                                    assert(!blv.union(brv).contains(x));
                                     if alv.contains(x) {
                                         assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
@@ -1595,7 +1467,6 @@ pub mod BSTParaStEph {
                                     }
                                 }
                             };
-                            assert(result@ =~= sv.difference(other@));
                         }
                         result
                     }
@@ -1653,13 +1524,9 @@ pub mod BSTParaStEph {
                         assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
                             self@.contains(out@[i]@) by {
                             if i < g1 as int {
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[i] == out_1[i]);
-                                assert(left@.contains(out_1[i]@));
+                                assert(left@.contains(out@[i]@));
                             } else if i == g1 as int {
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[g1 as int] == key);
-                            } else if i < g2 as int {
+                                assert(out@[i]@ == key@);
                             } else {
                                 assert(right@.contains(out@[i]@));
                             }
@@ -1669,19 +1536,15 @@ pub mod BSTParaStEph {
                             exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
                             if left@.contains(v) {
                                 let i_left = choose|i: int| #![trigger out_1[i]] g0 <= i < g1 as int && out_1[i]@ == v;
-                                assert(out_2[i_left] == out_1[i_left]);
-                                assert(out@[i_left] == out_2[i_left]);
+                                assert(out@[i_left]@ == v);
                             } else if v == key@ {
-                                assert(out_2[g1 as int] == key);
-                                assert(out@[g1 as int] == out_2[g1 as int]);
+                                assert(out@[g1 as int]@ == key@);
                             } else {
                                 assert(right@.contains(v));
                             }
                         };
                         // Preservation: old elements unchanged.
                         assert forall|i: int| #![trigger out@[i]] 0 <= i < g0 implies out@[i] == out_0[i] by {
-                            assert(out@[i] == out_2[i]);
-                            assert(out_2[i] == out_1[i]);
                             assert(out_1[i] == out_0[i]);
                         };
                         // No duplicate views in the new portion.
@@ -1690,36 +1553,18 @@ pub mod BSTParaStEph {
                         assert forall|i: int, j: int| #![trigger out@[i], out@[j]] g0 <= i < j < out@.len()
                             implies out@[i]@ != out@[j]@ by {
                             if i < g1 as int && j < g1 as int {
-                                // Both in left: induction gives no dups.
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[i] == out_1[i]);
-                                assert(out@[j] == out_2[j]);
-                                assert(out_2[j] == out_1[j]);
                             } else if i < g1 as int && j == g1 as int {
-                                // i in left, j is key: left@ doesn't contain key@.
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[i] == out_1[i]);
-                                assert(left@.contains(out_1[i]@));
-                                assert(out@[j] == out_2[j]);
-                                assert(out_2[g1 as int] == key);
+                                assert(left@.contains(out@[i]@));
                                 assert(!left@.contains(key@));
                             } else if i < g1 as int && j >= g2 as int {
-                                // i in left, j in right: disjoint sets.
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[i] == out_1[i]);
-                                assert(left@.contains(out_1[i]@));
+                                assert(left@.contains(out@[i]@));
                                 assert(right@.contains(out@[j]@));
-                                assert(left@.disjoint(right@));
                             } else if i == g1 as int && j >= g2 as int {
-                                // i is key, j in right: right@ doesn't contain key@.
-                                assert(out@[i] == out_2[i]);
-                                assert(out_2[g1 as int] == key);
+                                assert(out@[i]@ == key@);
                                 assert(right@.contains(out@[j]@));
                                 assert(!right@.contains(key@));
                             } else if i >= g2 as int && j >= g2 as int {
-                                // Both in right: induction gives no dups.
                             }
-                            // Remaining cases (i < g1, j in [g1+1..g2)) are impossible since g2 == g1+1.
                         };
                     }
                 }
@@ -1742,23 +1587,15 @@ pub mod BSTParaStEph {
                 };
                 assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
-                    assert(result@[i] == result.spec_index(i)@);
                     assert(result.spec_index(i) == out@[i]);
-                    assert(out@[i]@ == v);
                     assert(self@.contains(out@[i]@));
                 };
                 // No duplicates: collect_in_order gives view-level no-dups, lift to result@.
                 assert forall|i: int, j: int| 0 <= i < result@.len() && 0 <= j < result@.len() && i != j
                     implies result@[i] != result@[j] by {
-                    assert(result@[i] == result.spec_index(i)@);
                     assert(result.spec_index(i) == out@[i]);
-                    assert(result@[j] == result.spec_index(j)@);
                     assert(result.spec_index(j) == out@[j]);
-                    if i < j {
-                        assert(out@[i]@ != out@[j]@);
-                    } else {
-                        assert(out@[j]@ != out@[i]@);
-                    }
+                    if i < j { } else { assert(out@[j]@ != out@[i]@); }
                 };
             }
             result
