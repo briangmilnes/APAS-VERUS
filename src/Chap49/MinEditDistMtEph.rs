@@ -93,7 +93,6 @@ pub mod MinEditDistMtEph {
         spec fn spec_mineditdistmteph_wf(&self) -> bool;
 
         /// Create new minimum edit distance solver.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
@@ -105,7 +104,6 @@ pub mod MinEditDistMtEph {
                 empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sequences(source: ArraySeqMtEphS<T>, target: ArraySeqMtEphS<T>) -> (edit_dist: Self)
             ensures
@@ -125,19 +123,16 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get the source sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn source(&self) -> (s: &ArraySeqMtEphS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn target(&self) -> (t: &ArraySeqMtEphS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Set element in source sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set_source(&mut self, index: usize, value: T)
             requires
@@ -148,7 +143,6 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Set element in target sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set_target(&mut self, index: usize, value: T)
             requires
@@ -159,7 +153,6 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Clear memoization table.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clear_memo(&mut self)
             requires old(self).spec_mineditdistmteph_wf(),
@@ -168,7 +161,6 @@ pub mod MinEditDistMtEph {
                 self.spec_target_len() == old(self).spec_target_len();
 
         /// Get memoization table size.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
@@ -425,12 +417,10 @@ pub mod MinEditDistMtEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait MinEditDistMtEphMutTrait<T: MtVal> {
         /// Get mutable source sequence (ephemeral allows mutation).
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn source_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
 
         /// Get mutable target sequence (ephemeral allows mutation).
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn target_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
     }

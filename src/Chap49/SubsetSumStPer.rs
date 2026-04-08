@@ -83,7 +83,6 @@ pub mod SubsetSumStPer {
         spec fn spec_multiset_len(&self) -> nat;
 
         /// Create new subset sum solver.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
@@ -92,7 +91,6 @@ pub mod SubsetSumStPer {
             ensures empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_multiset(multiset: ArraySeqStPerS<T>) -> (subset_sum: Self)
             ensures subset_sum.spec_multiset_len() == multiset.spec_len();
@@ -105,13 +103,11 @@ pub mod SubsetSumStPer {
             T: Into<i32> + Copy;
 
         /// Get the multiset.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset(&self) -> (ms: &ArraySeqStPerS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Get memoization table size.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }

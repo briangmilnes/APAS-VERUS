@@ -93,7 +93,6 @@ pub mod MinEditDistStPer {
         spec fn spec_target_len(&self) -> nat;
 
         /// Create new minimum edit distance solver.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
@@ -102,7 +101,6 @@ pub mod MinEditDistStPer {
             ensures empty.spec_source_len() == 0, empty.spec_target_len() == 0;
 
         /// Create from source and target sequences.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_sequences(source: ArraySeqStPerS<T>, target: ArraySeqStPerS<T>) -> (edit_dist: Self)
             ensures
@@ -116,19 +114,16 @@ pub mod MinEditDistStPer {
             requires self.spec_source_len() + self.spec_target_len() < usize::MAX;
 
         /// Get the source sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn source(&self) -> (s: &ArraySeqStPerS<T>)
             ensures s.spec_len() == self.spec_source_len();
 
         /// Get the target sequence.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn target(&self) -> (t: &ArraySeqStPerS<T>)
             ensures t.spec_len() == self.spec_target_len();
 
         /// Get memoization table size.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }

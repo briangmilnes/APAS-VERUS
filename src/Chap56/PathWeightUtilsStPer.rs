@@ -73,7 +73,6 @@ pub mod PathWeightUtilsStPer {
             weights: &ArraySeqStPerS<ArraySeqStPerS<WrappedF64>>,
         ) -> (weight: Option<WrappedF64>);
 
-        /// - Alg Analysis: APAS (Ch56 Def 56.4): validates sub-paths property along a path.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
         fn validate_subpath_property_int(
             path: &ArraySeqStPerS<usize>,
@@ -82,7 +81,6 @@ pub mod PathWeightUtilsStPer {
         ) -> (valid: bool)
             ensures valid == Self::spec_validate_subpath_int(path, distances, weights, 0);
 
-        /// - Alg Analysis: APAS (Ch56 Def 56.4): validates sub-paths property along a path.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(k) — definition, k = path length
         fn validate_subpath_property_float(
             path: &ArraySeqStPerS<usize>,

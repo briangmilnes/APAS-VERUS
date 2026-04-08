@@ -112,7 +112,6 @@ pub mod GraphSearchMtPer {
     }
 
     pub trait GraphSearchMtPerTrait<V: StTInMtT + Ord + TotalOrder + 'static> {
-        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
@@ -130,7 +129,6 @@ pub mod GraphSearchMtPer {
                 view_ord_consistent::<V>(),
             ensures search.visited@.contains(source@);
 
-        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — neighbor loop is sequential despite parallel set ops.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetMtPer<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
@@ -149,7 +147,6 @@ pub mod GraphSearchMtPer {
                 view_ord_consistent::<V>(),
             ensures sources@.subset_of(search.visited@);
 
-        /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential control flow; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)
@@ -347,7 +344,6 @@ pub mod GraphSearchMtPer {
     }
 
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
-    /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
     pub fn reachable<V: StTInMtT + Ord + TotalOrder + 'static, G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetMtPer<V>)

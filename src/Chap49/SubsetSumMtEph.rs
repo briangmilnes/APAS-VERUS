@@ -92,7 +92,6 @@ pub mod SubsetSumMtEph {
         spec fn spec_subsetsummteph_wf(&self) -> bool;
 
         /// Create new subset sum solver.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (empty: Self)
         where
@@ -103,7 +102,6 @@ pub mod SubsetSumMtEph {
                 empty.spec_multiset_len() == 0;
 
         /// Create from multiset.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn from_multiset(multiset: ArraySeqMtEphS<T>) -> (subset_sum: Self)
             ensures
@@ -119,13 +117,11 @@ pub mod SubsetSumMtEph {
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get the multiset.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset(&self) -> (ms: &ArraySeqMtEphS<T>)
             ensures ms.spec_len() == self.spec_multiset_len();
 
         /// Set element at index (ephemeral mutation).
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn set(&mut self, index: usize, value: T)
             requires
@@ -134,14 +130,12 @@ pub mod SubsetSumMtEph {
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Clear memoization table.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clear_memo(&mut self)
             requires old(self).spec_subsetsummteph_wf(),
             ensures self.spec_multiset_len() == old(self).spec_multiset_len();
 
         /// Get memoization table size.
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn memo_size(&self) -> (count: usize);
     }
@@ -362,7 +356,6 @@ pub mod SubsetSumMtEph {
     /// Trait for methods returning &mut (not supported inside verus!).
     pub trait SubsetSumMtEphMutTrait<T: MtVal> {
         /// Get mutable multiset (ephemeral allows mutation).
-        /// - Alg Analysis: APAS (Ch49 ref): not specified
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn multiset_mut(&mut self) -> &mut ArraySeqMtEphS<T>;
     }
