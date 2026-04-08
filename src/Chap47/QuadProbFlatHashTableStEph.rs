@@ -617,9 +617,7 @@ pub mod QuadProbFlatHashTableStEph {
                                 assert(spec_flat_has_key(old_table_seq[slot as int], key));
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
-                                    if spec_flat_has_key(old_table_seq[j], key) {
-                                        assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                    }
+                                    if spec_flat_has_key(old_table_seq[j], key) {}
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                                 assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
@@ -633,23 +631,9 @@ pub mod QuadProbFlatHashTableStEph {
                                     && #[trigger] spec_flat_has_key(table.table@[i], k)
                                     implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
                                     if i == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                        if k == key && j != slot as int {
-                                            assert(table.table@[j] == old_table_seq[j]);
-                                            assert(!spec_flat_has_key(old_table_seq[j], key));
-                                        }
-                                    } else {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        assert(spec_flat_has_key(old_table_seq[i], k));
-                                        if j != slot as int {
-                                            assert(table.table@[j] == old_table_seq[j]);
-                                        } else {
-                                            assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                            if k == key {
-                                                assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                                assert(i != slot as int);
-                                            }
-                                        }
+                                        if k == key && j != slot as int {}
+                                    } else if j == slot as int {
+                                        if k == key {}
                                     }
                                 }
                                 // Wf: probe chain (Occupied→Occupied, Empty status unchanged).
@@ -665,13 +649,7 @@ pub mod QuadProbFlatHashTableStEph {
                                                 ==> !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty)
                                     }) by {
                                     if i == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                        if k == key {
-                                            assert(spec_flat_has_key(old_table_seq[slot as int], key));
-                                        }
-                                    } else {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        assert(spec_flat_has_key(old_table_seq[i], k));
+                                        if k == key {}
                                     }
                                     let hk = (table.spec_hash@)(k) as int % m as int;
                                     let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, m as int)]]
@@ -683,7 +661,6 @@ pub mod QuadProbFlatHashTableStEph {
                                         implies !(#[trigger] table.table@[spec_tri_probe(hk, j, m as int)] is Empty) by {
                                         let pos = spec_tri_probe(hk, j, m as int);
                                         if pos == slot as int {
-                                            // Was Occupied, now Occupied. Not Empty.
                                         } else {
                                             assert(table.table@[pos] == old_table_seq[pos]);
                                         }
@@ -706,16 +683,13 @@ pub mod QuadProbFlatHashTableStEph {
                             table.num_elements = table.num_elements + 1;
                         }
                         proof {
-                            assert(old_table_seq[slot as int] is Empty);
                             assert forall |j: int| 0 <= j < old_table_seq.len()
                                 implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
-                                if spec_flat_has_key(old_table_seq[j], key) {
-                                }
+                                if spec_flat_has_key(old_table_seq[j], key) {}
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
                             let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
                             assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
-                            assert(old_table_seq[slot as int].spec_entry_to_map() =~= Map::<Key, Value>::empty());
                             assert(new_entry.spec_entry_to_map() =~=
                                 old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                             lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
@@ -726,25 +700,12 @@ pub mod QuadProbFlatHashTableStEph {
                                 && #[trigger] spec_flat_has_key(table.table@[i], k)
                                 implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
                                 if i == slot as int {
-                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key && j != slot as int {
-                                        assert(table.table@[j] == old_table_seq[j]);
-                                        assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
-                                        if spec_flat_has_key(old_table_seq[j], key) {
-                                        }
+                                        if spec_flat_has_key(old_table_seq[j], key) {}
                                     }
-                                } else {
-                                    assert(table.table@[i] == old_table_seq[i]);
-                                    assert(spec_flat_has_key(old_table_seq[i], k));
-                                    if j == slot as int {
-                                        assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
-                                        if k == key {
-                                            assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
-                                            if spec_flat_has_key(old_table_seq[i], key) {
-                                            }
-                                        }
-                                    } else {
-                                        assert(table.table@[j] == old_table_seq[j]);
+                                } else if j == slot as int {
+                                    if k == key {
+                                        if spec_flat_has_key(old_table_seq[i], key) {}
                                     }
                                 }
                             }
@@ -764,24 +725,17 @@ pub mod QuadProbFlatHashTableStEph {
                                 }) by {
                                 let hk = (table.spec_hash@)(k) as int % gm;
                                 if i == slot as int {
-                                    assert(spec_flat_has_key(table.table@[slot as int], k) ==> k == key);
                                     if k == key {
-                                        assert(hk == h as int);
-                                        // Witness n = attempt: spec_tri_probe(h, attempt, m) == slot.
-                                        assert(slot as int == spec_tri_probe(h as int, ga, gm));
-                                        // Probe path 0..attempt was not Empty (loop invariant).
                                         assert forall |j: int| 0 <= j < ga
                                             implies !(#[trigger] table.table@[spec_tri_probe(h as int, j, gm)] is Empty) by {
                                             let pos = spec_tri_probe(h as int, j, gm);
                                             if pos == slot as int {
-                                                // Old slot was Empty; invariant says pos not Empty. Contradiction.
+                                            } else {
+                                                assert(table.table@[pos] == old_table_seq[pos]);
                                             }
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 } else {
-                                    assert(table.table@[i] == old_table_seq[i]);
-                                    assert(spec_flat_has_key(old_table_seq[i], k));
                                     let n = choose |n: int| #![trigger old_table_seq[spec_tri_probe(hk, n, gm)]]
                                         0 <= n < gm
                                         && spec_tri_probe(hk, n, gm) == i
@@ -790,11 +744,8 @@ pub mod QuadProbFlatHashTableStEph {
                                     assert forall |j: int| 0 <= j < n
                                         implies !(#[trigger] table.table@[spec_tri_probe(hk, j, gm)] is Empty) by {
                                         let pos = spec_tri_probe(hk, j, gm);
-                                        if pos == slot as int {
-                                            // Was Empty, now Occupied. Not Empty.
-                                        } else {
-                                            assert(table.table@[pos] == old_table_seq[pos]);
-                                        }
+                                        if pos == slot as int {}
+                                        else { assert(table.table@[pos] == old_table_seq[pos]); }
                                     }
                                 }
                             }

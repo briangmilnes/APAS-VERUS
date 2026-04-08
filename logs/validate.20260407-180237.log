@@ -1,0 +1,52 @@
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^ failed this postcondition
+    |
+   ::: src/Chap47/QuadProbFlatHashTableStEph.rs:753:25
+    |
+753 |                           return;
+    |                           ------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✘
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:804:29
+    |
+804 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+805 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:806:24
+    |
+806 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1256 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3622MB, peak z3 RSS: 368MB, min free: 20332MB
+Sampled CPU Usage: rust_verify: 82s, z3 children: 64s
