@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:969:17
+     |
+ 969 |                   filtered.spec_len() == spec_filter_len(a.seq@, spec_pred),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+ 976 | /             if len == 0 {
+ 977 | |                 let filtered = ArraySeqMtPerS::<T> { seq: Vec::new() };
+ 978 | |                 proof {
+...    |
+1129 | |                 filtered
+1130 | |             }
+     | |_____________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1115:28
+     |
+1115 |                     assert(filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred));
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+filtered.seq.view().to_multiset() =~= a.seq.view().to_multiset().filter(spec_pred) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 6970MB, peak z3 RSS: 839MB, min free: 17923MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 62s

@@ -1,0 +1,57 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1632:17
+     |
+1632 | /                 forall|i: int| #![trigger tab_seq.seq@[i]] 0 <= i < length
+1633 | |                     ==> f.ensures(((offset + i) as usize,), tab_seq.seq@[i]),
+     | |____________________________________________________________________________^ failed this postcondition
+...
+1636 | /             if length == 0 {
+1637 | |                 ArraySeqMtPerS { seq: Vec::new() }
+1638 | |             } else if length == 1 {
+1639 | |                 let mut seq = Vec::with_capacity(1);
+...    |
+1694 | |                 combined
+1695 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtPer.rs:1633:25
+     |
+1633 |                     ==> f.ensures(((offset + i) as usize,), tab_seq.seq@[i]),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tab_seq.seq.view().len() == old(length) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(length) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(f), (clip(usize, old(offset) + i)), tab_seq.seq.view().index(i)) ✘
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtPer.rs:1655:70
+     |
+1655 | ...                   ==> f1.ensures(((offset + i) as usize,), r.seq@[i]),
+     |                                                                ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtPer.rs:1669:76
+     |
+1669 | ...                   ==> f2.ensures(((offset + mid + i) as usize,), r.seq@[i]),
+     |                                                                      ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 6269MB, peak z3 RSS: 684MB, min free: 18876MB
+Sampled CPU Usage: rust_verify: 146s, z3 children: 137s

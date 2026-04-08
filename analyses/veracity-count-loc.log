@@ -1,12 +1,19 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-     153/      81/     221/      82 MathSeq.rs
+     346/     331/     568/      42 ArraySeq.rs
+     317/     452/     764/      62 ArraySeqMtEph.rs
+     384/     287/     760/      63 ArraySeqMtEphSlice.rs
+     279/     397/     827/      58 ArraySeqMtPer.rs
+     215/     133/     421/      42 ArraySeqStEph.rs
+     205/     133/     404/      52 ArraySeqStPer.rs
+     172/     109/     340/      44 LinkedListStEph.rs
+     167/     109/     331/      44 LinkedListStPer.rs
 --------------------------------------------
     spec    proof     exec     rust
-     153/      81/     221/      82 Total
-     817 total lines
-1 files analyzed
-7ms
+   2,085/   1,951/   4,415/     407 Total
+  11,674 total lines
+8 files analyzed
+113ms
 
 Proof Lines Per Function
 ========================
@@ -14,35 +21,46 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |     229 |      59 |     170 |       0 |     221 |    1.04 |
+|   1 | root       |   3,999 |     529 |   3,045 |     425 |   4,415 |    0.91 |
 
-1 chapters, 229 proof lines, 221 exec lines, ratio 1.04
-229 min  229 max  229.0 avg  229.0 median (proof lines)
+1 chapters, 3,999 proof lines, 4,415 exec lines, ratio 0.91
+3,999 min  3,999 max  3999.0 avg  3999.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | MathSeq                        |     229 |      59 |     170 |       0 |     221 |   1.04 |
+|   1 | root       | ArraySeqMtEph                  |     764 |      73 |     615 |      76 |     764 |   1.00 |
+|   2 | root       | ArraySeq                       |     671 |     104 |     435 |     132 |     568 |   1.18 |
+|   3 | root       | ArraySeqMtPer                  |     671 |      57 |     574 |      40 |     827 |   0.81 |
+|   4 | root       | ArraySeqMtEphSlice             |     658 |      93 |     404 |     161 |     760 |   0.87 |
+|   5 | root       | ArraySeqStEph                  |     345 |      57 |     284 |       4 |     421 |   0.82 |
+|   6 | root       | ArraySeqStPer                  |     335 |      59 |     272 |       4 |     404 |   0.83 |
+|   7 | root       | LinkedListStEph                |     280 |      43 |     233 |       4 |     340 |   0.82 |
+|   8 | root       | LinkedListStPer                |     275 |      43 |     228 |       4 |     331 |   0.83 |
 
-1 modules, 229 proof lines, 221 exec lines, ratio 1.04
-229 min  229 max  229.0 avg  229.0 median (proof lines)
+8 modules, 3,999 proof lines, 4,415 exec lines, ratio 0.91
+275 min  764 max  499.9 avg  501.5 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  41 exec functions total, 26 with proof lines
-  170 total proof lines in exec fns
-  1 min  53 max  6.5 avg  3.5 median
+  399 exec functions total, 304 with proof lines
+  3,045 total proof lines in exec fns
+  1 min  122 max  10.0 avg  7.0 median
 
 Per proof function:
-  0 proof functions
+  27 proof functions
+  425 total proof lines in proof fns
+  4 min  38 max  15.7 avg  15.0 median
 
 Grand total:
-  66 total functions, 47 with proof lines (71%)
-  229 total proof lines, 221 exec lines, ratio 1.04
-  1 min  53 max  4.9 avg  3.0 median (proof lines per fn)
+  603 total functions, 492 with proof lines (82%)
+  3,999 total proof lines, 4,415 exec lines, ratio 0.91
+  1 min  122 max  8.1 avg  5.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | -------- | ----- | ------ |
-|   1 | root       | MathSeq                        | range    |  exec |     53 |
+|   # | Chap       | Module                         | Function  |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | --------- | ----- | ------ |
+|   1 | root       | ArraySeqMtEph                  | filter_dc |  exec |    122 |
+|   2 | root       | ArraySeqMtPer                  | filter_dc |  exec |    105 |
+|   3 | root       | ArraySeqMtEph                  | map_dc    |  exec |     72 |
 
-1 functions over 50 proof lines
+3 functions over 50 proof lines

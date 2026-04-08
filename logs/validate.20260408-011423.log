@@ -1,0 +1,45 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqMtPer.rs:270:17
+    |
+270 | /                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+271 | |                     =~= spec_inject(
+272 | |                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+273 | |                         updates@);
+    | |_________________________________^ failed this postcondition
+...
+641 |               injected
+    |               -------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqMtPer.rs:270:17
+    |
+270 | /                 Seq::new(injected.spec_len(), |i: int| injected.spec_index(i))
+271 | |                     =~= spec_inject(
+272 | |                         Seq::new(a.spec_len(), |i: int| a.spec_index(i)),
+273 | |                         updates@);
+    | |_________________________________^
+
+note: 
+
+%return.spec_arrayseqmtper_wf() ✔
+%return.spec_len() == old(a).spec_len() ✔
+new(%return.spec_len(), (|i| %return.spec_index(i))) =~= spec_inject(new(old(a).spec_len(), (|i| old(a).spec_index(i))), old(updates).view()) ✘
+
+note: recommendation not met
+   --> src/Chap18/ArraySeqMtPer.rs:626:28
+    |
+626 |                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
+    |                            ^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:510:12
+    |
+    = note: recommendation not met
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 7641MB, peak z3 RSS: 588MB, min free: 17709MB
+Sampled CPU Usage: rust_verify: 173s, z3 children: 119s

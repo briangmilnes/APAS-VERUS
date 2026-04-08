@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/ArraySeqMtEph.rs:575:21
+    |
+575 |                     acc == s.take(i as int).fold_left(id, spec_f),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/ArraySeqMtEph.rs:576:21
+    |
+576 | /                     forall|k: int| #![trigger seq@[k]] 0 <= k < seq@.len() ==>
+577 | |                         seq@[k] == s.take(k + 1).fold_left(id, spec_f),
+    | |______________________________________________________________________^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 2217MB, peak z3 RSS: 360MB, min free: 24420MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 38s

@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqMtEph.rs:859:17
+    |
+859 |                   reduced == spec_iterate(Seq::new(a.spec_len(), |i: int| a.spec_index(i)), spec_f, id),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+864 | /             if len == 0 {
+865 | |                 proof {
+866 | | // Veracity: UNNEEDED assert                     assert(s =~= Seq::<T>::empty());
+867 | |                     reveal_with_fuel(Seq::fold_left, 1);
+...   |
+929 | |                 combined
+930 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+reduced == spec_iterate(new(old(a).spec_len(), (|i| old(a).spec_index(i))), old(spec_f), old(id)) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 3679MB, peak z3 RSS: 394MB, min free: 22971MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 7s

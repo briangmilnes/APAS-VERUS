@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1005:45
+     |
+1005 |                           assert forall|v: T| #[trigger] filtered.seq@.to_multiset().count(v)
+     |  _____________________________________________^
+1006 | |                             == a.seq@.to_multiset().filter(spec_pred).count(v) by {}
+     | |______________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+filtered.seq.view().to_multiset().count(v) == a.seq.view().to_multiset().filter(spec_pred).count(v) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2099MB, peak z3 RSS: 222MB, min free: 23630MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 16s

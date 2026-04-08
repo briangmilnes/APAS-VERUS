@@ -1,0 +1,55 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1425:21
+     |
+1425 |                       apply_ninject_updates(lock1, left, Ghost(pred));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1885 | /             forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+1886 | |                 0 <= updates@[k].0 < pred.source.len()
+1887 | |                 && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+1888 | |                     && pred.updates[j] == updates@[k]
+1889 | |             },
+     | |_____________- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1430:21
+     |
+1430 |                       apply_ninject_updates(lock2, right, Ghost(pred));
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1885 | /             forall|k: int| #![trigger updates@[k]] 0 <= k < updates@.len() ==> {
+1886 | |                 0 <= updates@[k].0 < pred.source.len()
+1887 | |                 && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+1888 | |                     && pred.updates[j] == updates@[k]
+1889 | |             },
+     | |_____________- failed precondition
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtEph.rs:1887:20
+     |
+1887 |                   && exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()
+     |  ____________________^
+1888 | |                     && pred.updates[j] == updates@[k]
+     | |_____________________________________________________^
+
+note: 
+
+obeys_feq_clone() ✔
+lock1.pred() == pred ✔
+forall |k|
+    let tmp%% = 0 in let tmp%% = k in let tmp%% = left.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        let tmp%% = 0;
+            let tmp%% = left.view().index(k).0;
+                let tmp%% = pred.source.len();
+                    tmp%% <= tmp%% ✔
+                    tmp%% < tmp%% ✔
+        (exists |j| ) ✘
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5154MB, peak z3 RSS: 49MB, min free: 17625MB
+Sampled CPU Usage: rust_verify: 121s, z3 children: 111s

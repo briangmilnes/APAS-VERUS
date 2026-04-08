@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1505:21
+     |
+ 419 |                 self.spec_arrayseqmtephslice_wf(),
+     |                 --------------------------------- failed precondition
+...
+1505 |             let v = inner.to_vec();
+     |                     ^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqMtEphSlice.rs:419:17
+    |
+419 |                 self.spec_arrayseqmtephslice_wf(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+inner.spec_arrayseqmtephslice_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+obeys_feq_clone() ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5948MB, peak z3 RSS: 639MB, min free: 19303MB
+Sampled CPU Usage: rust_verify: 106s, z3 children: 84s

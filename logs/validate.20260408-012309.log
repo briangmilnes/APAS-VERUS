@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap18/ArraySeqMtPer.rs:1054:25
+     |
+1054 |                         by { right_seq.lemma_spec_index(i); a.lemma_spec_index(mid as int + i); }
+     |                         ^^
+
+error[E0425]: cannot find type `ArraySeqMtPerS` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1881:30
+     |
+1881 |     impl<T: Debug> Debug for ArraySeqMtPerS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerS` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1887:34
+     |
+1887 |     impl<T: Display> Display for ArraySeqMtPerS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerIter` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1898:34
+     |
+1898 |     impl<'a, T: Debug> Debug for ArraySeqMtPerIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerIter` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1904:29
+     |
+1904 |     impl<'a, T> Display for ArraySeqMtPerIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1910:27
+     |
+1910 |     impl<'a, T> Debug for ArraySeqMtPerGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtPer.rs:1916:29
+     |
+1916 |     impl<'a, T> Display for ArraySeqMtPerGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23293MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

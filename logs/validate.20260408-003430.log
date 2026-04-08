@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeq.rs:280:13
+    |
+270 |       proof fn lemma_spec_collect_step_none<K, V>(
+    |  ___________-
+271 | |         old_dv: Seq<(K, Seq<V>)>,
+272 | |         pairs_prefix: Seq<(K, V)>,
+273 | |         k: K,
+274 | |         v: V,
+275 | |     )
+    | |_____- at the end of the function body
+...
+280 | /             spec_collect(pairs_prefix.push((k, v)))
+281 | |                 =~= old_dv.push((k, seq![v])),
+    | |_____________________________________________^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+spec_collect(old(pairs_prefix).push((old(k), old(v)))) =~= old(old_dv).push((old(k), empty().push(old(v)))) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1804MB, peak z3 RSS: 395MB, min free: 24884MB
+Sampled CPU Usage: rust_verify: 25s, z3 children: 29s

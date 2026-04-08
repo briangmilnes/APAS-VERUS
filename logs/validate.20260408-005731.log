@@ -1,0 +1,62 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap18/ArraySeqMtEph.rs:1246:25
+     |
+1246 |                         by { left_seq.lemma_spec_index(i); a.lemma_spec_index(i); }
+     |                         ^^
+
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:1998:34
+     |
+1998 |     impl<'a, T: Debug> Debug for ArraySeqMtEphIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphIter` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2004:29
+     |
+2004 |     impl<'a, T> Display for ArraySeqMtEphIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2010:27
+     |
+2010 |     impl<'a, T> Debug for ArraySeqMtEphGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2016:29
+     |
+2016 |     impl<'a, T> Display for ArraySeqMtEphGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphS` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2025:30
+     |
+2025 |     impl<T: Debug> Debug for ArraySeqMtEphS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphS` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2032:34
+     |
+2032 |     impl<T: Display> Display for ArraySeqMtEphS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphInv` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2045:23
+     |
+2045 |     impl<T> Debug for ArraySeqMtEphInv<T> {
+     |                       ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphInv` in this scope
+    --> src/Chap18/ArraySeqMtEph.rs:2051:25
+     |
+2051 |     impl<T> Display for ArraySeqMtEphInv<T> {
+     |                         ^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 9 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 8115MB, peak z3 RSS: 944MB, min free: 16944MB
+Sampled CPU Usage: rust_verify: 129s, z3 children: 128s

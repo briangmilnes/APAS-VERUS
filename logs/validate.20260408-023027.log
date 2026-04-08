@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap18/LinkedListStPer.rs:726:17
+    |
+726 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `LinkedListStPerS` in this scope
+   --> src/Chap18/LinkedListStPer.rs:906:30
+    |
+906 |     impl<T: Debug> Debug for LinkedListStPerS<T> {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerS` in this scope
+   --> src/Chap18/LinkedListStPer.rs:912:34
+    |
+912 |     impl<T: Display> Display for LinkedListStPerS<T> {
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerIter` in this scope
+   --> src/Chap18/LinkedListStPer.rs:923:34
+    |
+923 |     impl<'a, T: Debug> Debug for LinkedListStPerIter<'a, T> {
+    |                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerIter` in this scope
+   --> src/Chap18/LinkedListStPer.rs:929:29
+    |
+929 |     impl<'a, T> Display for LinkedListStPerIter<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerGhostIterator` in this scope
+   --> src/Chap18/LinkedListStPer.rs:935:27
+    |
+935 |     impl<'a, T> Debug for LinkedListStPerGhostIterator<'a, T> {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStPerGhostIterator` in this scope
+   --> src/Chap18/LinkedListStPer.rs:941:29
+    |
+941 |     impl<'a, T> Display for LinkedListStPerGhostIterator<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 22826MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

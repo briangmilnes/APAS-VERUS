@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1187:37
+     |
+1187 |                 let (left, right) = join(fa, fb);
+     |                                     ^^^^^^^^^^^^
+     |
+    ::: src/Chap02/HFSchedulerMtEph.rs:132:13
+     |
+ 132 |             fa.requires(()),
+     |             --------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap02/HFSchedulerMtEph.rs:132:13
+    |
+132 |             fa.requires(()),
+    |             ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(fa, ()) ✘
+ClosureReq(fb, ()) ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 6762MB, peak z3 RSS: 697MB, min free: 18878MB
+Sampled CPU Usage: rust_verify: 163s, z3 children: 146s

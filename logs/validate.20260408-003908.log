@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+    --> src/Chap18/ArraySeq.rs:1026:21
+     |
+1026 |                     result_vec@ =~= spec_inject(s, u.subrange(i as int, ulen as int)),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 1157MB, peak z3 RSS: 182MB, min free: 25588MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 1s

@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1056:28
+     |
+1056 |                     assert(a.seq@ =~= left_view + right_view);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+a.seq.view() =~= left_view.add(right_view) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3163MB, peak z3 RSS: 507MB, min free: 21591MB
+Sampled CPU Usage: rust_verify: 45s, z3 children: 25s

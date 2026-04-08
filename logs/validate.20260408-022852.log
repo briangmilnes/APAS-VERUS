@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/LinkedListStPer.rs:654:21
+    |
+654 |                     acc == s.take(i as int).fold_left(id, spec_f),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5220MB, peak z3 RSS: 252MB, min free: 21489MB
+Sampled CPU Usage: rust_verify: 92s, z3 children: 72s

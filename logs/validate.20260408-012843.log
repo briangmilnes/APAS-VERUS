@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1444:17
+     |
+1444 | /                 forall|i: int| #![trigger filtered.spec_index(i)] 0 <= i < filtered.spec_len()
+1445 | |                     ==> pred.ensures((&filtered.spec_index(i),), true),
+     | |______________________________________________________________________^ failed this postcondition
+...
+1449 | /             if len == 0 {
+1450 | |                 ArraySeqMtPerS { seq: Vec::new() }
+1451 | |             } else if len == 1 {
+1452 | |                 if pred(&a.seq[0]) {
+...    |
+1525 | |                 combined
+1526 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtPer.rs:1445:25
+     |
+1445 |                     ==> pred.ensures((&filtered.spec_index(i),), true),
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+filtered.spec_arrayseqmtper_wf() ✔
+filtered.spec_len() <= old(a).seq.view().len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = filtered.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (filtered.spec_index(i)), true) ✘
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2591MB, peak z3 RSS: 259MB, min free: 22937MB
+Sampled CPU Usage: rust_verify: 53s, z3 children: 48s

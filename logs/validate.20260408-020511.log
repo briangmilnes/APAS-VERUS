@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/LinkedListStEph.rs:492:21
+    |
+492 |                     seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3058MB, peak z3 RSS: 390MB, min free: 22984MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 39s

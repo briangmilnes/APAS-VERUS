@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap18/ArraySeqStEph.rs:817:17
+    |
+817 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1097:30
+     |
+1097 |     impl<T: Debug> Debug for ArraySeqStEphS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphS` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1103:34
+     |
+1103 |     impl<T: Display> Display for ArraySeqStEphS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1114:34
+     |
+1114 |     impl<'a, T: Debug> Debug for ArraySeqStEphIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphIter` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1120:29
+     |
+1120 |     impl<'a, T> Display for ArraySeqStEphIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1126:27
+     |
+1126 |     impl<'a, T> Debug for ArraySeqStEphGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStEphGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStEph.rs:1132:29
+     |
+1132 |     impl<'a, T> Display for ArraySeqStEphGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25228MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

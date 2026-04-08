@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap18/LinkedListStEph.rs:744:17
+    |
+744 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `LinkedListStEphS` in this scope
+   --> src/Chap18/LinkedListStEph.rs:924:30
+    |
+924 |     impl<T: Debug> Debug for LinkedListStEphS<T> {
+    |                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphS` in this scope
+   --> src/Chap18/LinkedListStEph.rs:930:34
+    |
+930 |     impl<T: Display> Display for LinkedListStEphS<T> {
+    |                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphIter` in this scope
+   --> src/Chap18/LinkedListStEph.rs:941:34
+    |
+941 |     impl<'a, T: Debug> Debug for LinkedListStEphIter<'a, T> {
+    |                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphIter` in this scope
+   --> src/Chap18/LinkedListStEph.rs:947:29
+    |
+947 |     impl<'a, T> Display for LinkedListStEphIter<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphGhostIterator` in this scope
+   --> src/Chap18/LinkedListStEph.rs:953:27
+    |
+953 |     impl<'a, T> Debug for LinkedListStEphGhostIterator<'a, T> {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListStEphGhostIterator` in this scope
+   --> src/Chap18/LinkedListStEph.rs:959:29
+    |
+959 |     impl<'a, T> Display for LinkedListStEphGhostIterator<'a, T> {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 3799MB, peak z3 RSS: 406MB, min free: 22519MB
+Sampled CPU Usage: rust_verify: 58s, z3 children: 38s

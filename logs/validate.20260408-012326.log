@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: assertion failed
+    --> src/Chap18/ArraySeqMtPer.rs:1111:28
+     |
+1111 |                       assert(filtered.seq@.to_multiset()
+     |  ____________________________^
+1112 | |                         =~= left.seq@.to_multiset().add(right.seq@.to_multiset()));
+     | |_________________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+filtered.seq.view().to_multiset() =~= left.seq.view().to_multiset().add(right.seq.view().to_multiset()) 
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 7466MB, peak z3 RSS: 766MB, min free: 18160MB
+Sampled CPU Usage: rust_verify: 192s, z3 children: 217s

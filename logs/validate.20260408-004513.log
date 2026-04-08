@@ -1,0 +1,49 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1729:17
+     |
+ 365 |               filtered
+     |               -------- at the end of the function body
+...
+1729 | /                 filtered.spec_len() == spec_filter_len(
+1730 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^ failed this postcondition
+
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEph.rs:1732:17
+     |
+ 365 |               filtered
+     |               -------- at the end of the function body
+...
+1732 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+1733 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+     | |__________________________________________________________________________________________________^ failed this postcondition
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtEph.rs:1729:17
+     |
+1729 | /                 filtered.spec_len() == spec_filter_len(
+1730 | |                     Seq::new(a.seq@.len(), |i: int| a.seq@[i]), spec_pred),
+     | |__________________________________________________________________________^
+1731 |                   // The result multiset equals the input multiset filtered by the spec predicate.
+1732 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+1733 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+     | |__________________________________________________________________________________________________^
+
+note: 
+
+%return.spec_arrayseqmteph_wf() ✔
+%return.spec_len() <= old(a).seq.view().len() ✔
+%return.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✘
+new(%return.spec_len(), (|i| %return.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (%return.spec_index(i)), true) ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 1290MB, peak z3 RSS: 274MB, min free: 25607MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 0s
