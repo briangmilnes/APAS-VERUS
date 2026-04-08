@@ -10,7 +10,7 @@
 
 //		Section 1. module
 
-pub mod TableCommon {
+pub mod TableSpecsAndLemmas {
 
     use vstd::prelude::*;
 
@@ -426,4 +426,4 @@ broadcast use {
     }
 
     } // verus!
-} // pub mod TableCommon
+} // pub mod TableSpecsAndLemmas

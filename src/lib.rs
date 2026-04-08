@@ -475,7 +475,7 @@ pub mod Chap41 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap42")))]
 pub mod Chap42 {
-    pub mod TableCommon;
+    pub mod TableSpecsAndLemmas;
     pub mod TableStEph;
     pub mod TableStPer;
     pub mod TableMtEph;

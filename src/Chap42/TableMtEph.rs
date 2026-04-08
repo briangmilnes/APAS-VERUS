@@ -33,7 +33,7 @@ pub mod TableMtEph {
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    pub use crate::Chap42::TableCommon::TableCommon::*;
+    pub use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::*;
     use crate::Types::Types::*;
 
     #[cfg(verus_keep_ghost)]

@@ -27,7 +27,7 @@ pub mod TableStPer {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
-    pub use crate::Chap42::TableCommon::TableCommon::*;
+    pub use crate::Chap42::TableSpecsAndLemmas::TableSpecsAndLemmas::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_plus::clone_plus::*;
     use crate::vstdplus::clone_view::clone_view::*;
