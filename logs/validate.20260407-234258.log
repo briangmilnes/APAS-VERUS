@@ -1,0 +1,102 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap06/LabDirGraphMtEph.rs:522:25
+    |
+522 |                         self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.spec_n_plus_from_set(v.view(), arcs.view()).contains(w) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:474:29
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+474 |                             self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:477:98
+    |
+197 | ...   spec_labgraphview_wf(self@),
+    |       --------------------------- recommendation not met
+...
+477 | ...           assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains...
+    |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:511:61
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+511 |                     ensures out.spec_setsteph_wf(), out@ == g_left.spec_n_plus_from_set(v_left@, left_arcs@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:515:61
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+515 |                     ensures out.spec_setsteph_wf(), out@ == g_right.spec_n_plus_from_set(v_right@, right_arcs@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:522:25
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+522 |                         self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:531:109
+    |
+197 | ...   spec_labgraphview_wf(self@),
+    |       --------------------------- recommendation not met
+...
+531 | ...       assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).co...
+    |                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:541:72
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+541 |                     assert(left_neighbors@.union(right_neighbors@) =~= self.spec_n_plus_from_set(v@, arcs@));
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:255:28
+    |
+197 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+255 |                 n_plus@ == self.spec_n_plus_from_set(v@, arcs@),
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabDirGraphMtEph.rs:256:28
+    |
+190 |             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
+    |                        --------------------------- recommendation not met
+...
+256 |                 n_plus@ <= self.spec_n_plus(v@)
+    |                            ^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1111 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 3948MB, peak z3 RSS: 610MB, min free: 21656MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 56s

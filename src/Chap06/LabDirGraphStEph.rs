@@ -287,11 +287,6 @@ verus!
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
                         }
                         return None;
                     },
@@ -334,11 +329,6 @@ verus!
                             vstd::set::axiom_set_new(pred, (from_view, to_view));
                             // Now we have: Set::new(pred).contains((from_view, to_view)) == pred((from_view, to_view))
                             // Need to show pred((from_view, to_view)) is false
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
                         }
                         return false;
                     },

@@ -338,7 +338,6 @@ pub mod LabDirGraphMtEph {
                                     lemma_map_to_set_contains_index(la_seq, (e.0, e.1, l));
                                 }
                             }
-                            assert(arcs@ =~= self.spec_arcs());
                         }
                         return arcs;
                     },
@@ -380,11 +379,6 @@ pub mod LabDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
                         }
                         return None;
                     },
@@ -422,11 +416,6 @@ pub mod LabDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| !la_view.contains((from_view, to_view, l)) by {
-                                if la_view.contains((from_view, to_view, l)) {
-                                    lemma_map_to_set_contains_index(la_seq, (from_view, to_view, l));
-                                }
-                            }
                         }
                         return false;
                     },
@@ -463,7 +452,6 @@ pub mod LabDirGraphMtEph {
         {
             let n = arcs.size();
             if n == 0 {
-                proof { assert(self.spec_n_plus_from_set(v@, arcs@) =~= Set::empty()); }
                 SetStEph::empty()
             }
             else if n == 1 {
@@ -472,29 +460,17 @@ pub mod LabDirGraphMtEph {
                     proof {
                         assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies
                             self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
-                            assert(arcs@.contains((from@, to@, label@)));
                         }
                         assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains(w) implies
                             Set::empty().insert(to@).contains(w) by {
                             let l = choose |l: L::V| arcs@.contains((v@, w, l));
-                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
                             if (v@, w, l) != (from@, to@, label@) {
-                                assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
                             }
                         }
-                        assert(Set::empty().insert(to@) =~= self.spec_n_plus_from_set(v@, arcs@));
                     }
                     SetStEph::singleton(to.clone_plus())
                 } else {
                     proof {
-                        assert forall |w: V::V| self.spec_n_plus_from_set(v@, arcs@).contains(w) implies false by {
-                            let l = choose |l: L::V| arcs@.contains((v@, w, l));
-                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                            if (v@, w, l) != (from@, to@, label@) {
-                                assert(arcs@.remove((from@, to@, label@)).contains((v@, w, l)));
-                            }
-                        }
-                        assert(self.spec_n_plus_from_set(v@, arcs@) =~= Set::empty());
                     }
                     SetStEph::empty()
                 }
@@ -532,13 +508,9 @@ pub mod LabDirGraphMtEph {
                         left_neighbors@.union(right_neighbors@).contains(w) by {
                         let l = choose |l: L::V| arcs@.contains((v@, w, l));
                         if left_arcs@.contains((v@, w, l)) {
-                            assert(left_neighbors@.contains(w));
                         } else {
-                            assert(right_arcs@.contains((v@, w, l)));
-                            assert(right_neighbors@.contains(w));
                         }
                     }
-                    assert(left_neighbors@.union(right_neighbors@) =~= self.spec_n_plus_from_set(v@, arcs@));
                 }
 
                 left_neighbors.union(&right_neighbors)
@@ -551,7 +523,6 @@ pub mod LabDirGraphMtEph {
         {
             let n = arcs.size();
             if n == 0 {
-                proof { assert(self.spec_n_minus_from_set(v@, arcs@) =~= Set::empty()); }
                 SetStEph::empty()
             }
             else if n == 1 {
@@ -560,29 +531,17 @@ pub mod LabDirGraphMtEph {
                     proof {
                         assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies
                             self.spec_n_minus_from_set(v@, arcs@).contains(u) by {
-                            assert(arcs@.contains((from@, to@, label@)));
                         }
                         assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] self.spec_n_minus_from_set(v@, arcs@).contains(u) implies
                             Set::empty().insert(from@).contains(u) by {
                             let l = choose |l: L::V| arcs@.contains((u, v@, l));
-                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
                             if (u, v@, l) != (from@, to@, label@) {
-                                assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
                             }
                         }
-                        assert(Set::empty().insert(from@) =~= self.spec_n_minus_from_set(v@, arcs@));
                     }
                     SetStEph::singleton(from.clone_plus())
                 } else {
                     proof {
-                        assert forall |u: V::V| self.spec_n_minus_from_set(v@, arcs@).contains(u) implies false by {
-                            let l = choose |l: L::V| arcs@.contains((u, v@, l));
-                            assert(arcs@.remove((from@, to@, label@)).len() == 0);
-                            if (u, v@, l) != (from@, to@, label@) {
-                                assert(arcs@.remove((from@, to@, label@)).contains((u, v@, l)));
-                            }
-                        }
-                        assert(self.spec_n_minus_from_set(v@, arcs@) =~= Set::empty());
                     }
                     SetStEph::empty()
                 }
@@ -620,13 +579,9 @@ pub mod LabDirGraphMtEph {
                         left_neighbors@.union(right_neighbors@).contains(u) by {
                         let l = choose |l: L::V| arcs@.contains((u, v@, l));
                         if left_arcs@.contains((u, v@, l)) {
-                            assert(left_neighbors@.contains(u));
                         } else {
-                            assert(right_arcs@.contains((u, v@, l)));
-                            assert(right_neighbors@.contains(u));
                         }
                     }
-                    assert(left_neighbors@.union(right_neighbors@) =~= self.spec_n_minus_from_set(v@, arcs@));
                 }
 
                 left_neighbors.union(&right_neighbors)

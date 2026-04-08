@@ -213,17 +213,6 @@ verus!
                 match it.next() {
                     None => {
                         proof {
-assert forall |t: (V::V, V::V, u64)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
-                                if edges@.contains(t) {
-                                    let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t;
-                                    lemma_seq_index_in_map_to_set(wa_seq, i);
-                                }
-                            }
-assert forall |t: (V::V, V::V, u64)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
-                                if wa_view.contains(t) {
-                                    lemma_map_to_set_contains_index(wa_seq, t);
-                                }
-                            }
                         }
                         return edges;
                     },

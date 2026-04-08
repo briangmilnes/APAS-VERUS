@@ -1,0 +1,74 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/LabUnDirGraphMtEph.rs:492:65
+    |
+492 | ...                   Set::empty().insert(a@).contains(w) by {
+    |                                                           ^^
+
+error[E0425]: cannot find type `LabUnDirGraphMtEph` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:961:68
+    |
+961 |     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Display for LabUnDirGraphMtEph<V, L> {
+    |                                                                    ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEph` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:967:66
+    |
+967 |     impl<V: StTInMtT + Hash + Ord, L: StTInMtT + Hash> Debug for LabUnDirGraphMtEph<V, L> {
+    |                                                                  ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:977:60
+    |
+977 |     impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphIter<'a, V> {
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:981:62
+    |
+981 |     impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphIter<'a, V> {
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphGhostIterator` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:985:60
+    |
+985 |     impl<'a, V: StTInMtT + Hash + Ord + 'static> Debug for LabUnDirGraphMtEphGhostIterator<'a, V> {
+    |                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphGhostIterator` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:989:62
+    |
+989 |     impl<'a, V: StTInMtT + Hash + Ord + 'static> Display for LabUnDirGraphMtEphGhostIterator<'a, V> {
+    |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphInv` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:995:20
+    |
+995 |     impl Debug for LabUnDirGraphMtEphInv {
+    |                    ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphMtEphInv` in this scope
+   --> src/Chap06/LabUnDirGraphMtEph.rs:999:22
+    |
+999 |     impl Display for LabUnDirGraphMtEphInv {
+    |                      ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LockedLabUnDirGraphMtEph` in this scope
+    --> src/Chap06/LabUnDirGraphMtEph.rs:1005:86
+     |
+1005 |     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Debug for LockedLabUnDirGraphMtEph<V, L> {
+     |                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LockedLabUnDirGraphMtEph` in this scope
+    --> src/Chap06/LabUnDirGraphMtEph.rs:1009:88
+     |
+1009 |     impl<V: StTInMtT + Hash + Ord + 'static, L: StTInMtT + Hash + 'static> Display for LockedLabUnDirGraphMtEph<V, L> {
+     |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 11 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2261MB, peak z3 RSS: 461MB, min free: 23087MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 15s

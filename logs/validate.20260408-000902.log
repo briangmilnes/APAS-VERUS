@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/UnDirGraphStEph.rs:270:49
+    |
+270 | ...                   ng@.contains(w) by {
+    |                                       ^^
+
+error[E0425]: cannot find type `UnDirGraphStEph` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:541:35
+    |
+541 |     impl<V: StT + Hash> Debug for UnDirGraphStEph<V> {
+    |                                   ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnDirGraphStEph` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:550:37
+    |
+550 |     impl<V: StT + Hash> Display for UnDirGraphStEph<V> {
+    |                                     ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnDirGraphStEphIter` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:554:39
+    |
+554 |     impl<'a, V: StT + Hash> Debug for UnDirGraphStEphIter<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnDirGraphStEphIter` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:558:41
+    |
+558 |     impl<'a, V: StT + Hash> Display for UnDirGraphStEphIter<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:562:39
+    |
+562 |     impl<'a, V: StT + Hash> Debug for UnDirGraphStEphGhostIterator<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `UnDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/UnDirGraphStEph.rs:566:41
+    |
+566 |     impl<'a, V: StT + Hash> Display for UnDirGraphStEphGhostIterator<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2550MB, peak z3 RSS: 448MB, min free: 22963MB
+Sampled CPU Usage: rust_verify: 24s, z3 children: 10s

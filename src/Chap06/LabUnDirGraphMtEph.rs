@@ -351,15 +351,6 @@ pub mod LabUnDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| 
-                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
-                                if le_view.contains((v1_view, v2_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
-                                }
-                                if le_view.contains((v2_view, v1_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
-                                }
-                            }
                         }
                         return None;
                     },
@@ -400,15 +391,6 @@ pub mod LabUnDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| 
-                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
-                                if le_view.contains((v1_view, v2_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
-                                }
-                                if le_view.contains((v2_view, v1_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
-                                }
-                            }
                         }
                         return false;
                     },
@@ -440,7 +422,6 @@ pub mod LabUnDirGraphMtEph {
             let n = edges.size();
             if n == 0 {
                 proof {
-                    assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
                 }
                 SetStEph::empty()
             }
@@ -458,23 +439,18 @@ pub mod LabUnDirGraphMtEph {
 
                         assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] Set::empty().insert(b@).contains(w) implies
                             self.spec_ng_from_set(v@, edges@).contains(w) by {
-                            assert(edges@.contains((a@, b@, label@)));
                         }
                         assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) implies
                             Set::empty().insert(b@).contains(w) by {
                             let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                            assert(edges@.remove((a@, b@, label@)).len() == 0);
                             if edges@.contains((v@, w, l)) {
                                 if (v@, w, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
                                 }
                             } else {
                                 if (w, v@, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
                                 }
                             }
                         }
-                        assert(Set::empty().insert(b@) =~= self.spec_ng_from_set(v@, edges@));
                     }
                     SetStEph::singleton(b.clone_plus())
                 } else if feq(&b, &v) {
@@ -486,24 +462,19 @@ pub mod LabUnDirGraphMtEph {
 
                         assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] Set::empty().insert(a@).contains(w) implies
                             self.spec_ng_from_set(v@, edges@).contains(w) by {
-                            assert(edges@.contains((a@, b@, label@)));
                         }
                         assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) implies
                             Set::empty().insert(a@).contains(w) by {
                             let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                            assert(edges@.remove((a@, b@, label@)).len() == 0);
                             if edges@.contains((v@, w, l)) {
                                 if (v@, w, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
                                 }
                             }
                             if edges@.contains((w, v@, l)) {
                                 if (w, v@, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
                                 }
                             }
                         }
-                        assert(Set::empty().insert(a@) =~= self.spec_ng_from_set(v@, edges@));
                     }
                     SetStEph::singleton(a.clone_plus())
                 } else {
@@ -513,21 +484,6 @@ pub mod LabUnDirGraphMtEph {
                         // (w, v@, l) in edges@ requires v@ == b@ (false)
                         // So no w satisfies the condition
 
-                        assert forall |w: V::V| self.spec_ng_from_set(v@, edges@).contains(w) implies false by {
-                            let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
-                            assert(edges@.remove((a@, b@, label@)).len() == 0);
-                            if edges@.contains((v@, w, l)) {
-                                if (v@, w, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((v@, w, l)));
-                                }
-                            }
-                            if edges@.contains((w, v@, l)) {
-                                if (w, v@, l) != (a@, b@, label@) {
-                                    assert(edges@.remove((a@, b@, label@)).contains((w, v@, l)));
-                                }
-                            }
-                        }
-                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
                     }
                     SetStEph::empty()
                 }
@@ -569,22 +525,15 @@ pub mod LabUnDirGraphMtEph {
                         let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
                         if edges@.contains((v@, w, l)) {
                             if left_edges@.contains((v@, w, l)) {
-                                assert(left_neighbors@.contains(w));
                             } else {
-                                assert(right_edges@.contains((v@, w, l)));
-                                assert(right_neighbors@.contains(w));
                             }
                         } else {
                             if left_edges@.contains((w, v@, l)) {
-                                assert(left_neighbors@.contains(w));
                             } else {
-                                assert(right_edges@.contains((w, v@, l)));
-                                assert(right_neighbors@.contains(w));
                             }
                         }
                     }
 
-                    assert(left_neighbors@.union(right_neighbors@) =~= self.spec_ng_from_set(v@, edges@));
                 }
 
                 left_neighbors.union(&right_neighbors)

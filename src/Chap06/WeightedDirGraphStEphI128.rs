@@ -175,18 +175,6 @@ verus!
             }
 
             proof {
-                assert forall |t: (V::V, V::V, i128)| edge_set@.contains(t) == edges@.contains(t)
-                by {
-                    if edge_set@.contains(t) {
-                        let j = choose |j: int| #![trigger edge_seq[j]]
-                            0 <= j < edge_seq.len() && edge_seq[j]@ == t;
-                        lemma_seq_index_in_map_to_set(edge_seq, j);
-                    }
-                    if edges@.contains(t) {
-                        lemma_map_to_set_contains_index(edge_seq, t);
-                    }
-                }
-                assert(edge_set@ =~= edges@);
             }
 
             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
@@ -230,17 +218,6 @@ verus!
                 match it.next() {
                     None => {
                         proof {
-assert forall |t: (V::V, V::V, i128)| #[trigger] edges@.contains(t) implies wa_view.contains(t) by {
-                                if edges@.contains(t) {
-                                    let i = choose |i: int| #![trigger wa_seq[i]] 0 <= i < wa_seq.len() && wa_seq[i]@ == t;
-                                    lemma_seq_index_in_map_to_set(wa_seq, i);
-                                }
-                            }
-assert forall |t: (V::V, V::V, i128)| #[trigger] wa_view.contains(t) implies edges@.contains(t) by {
-                                if wa_view.contains(t) {
-                                    lemma_map_to_set_contains_index(wa_seq, t);
-                                }
-                            }
                         }
                         return edges;
                     },

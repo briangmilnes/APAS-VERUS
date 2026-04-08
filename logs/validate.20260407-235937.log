@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/LabUnDirGraphStEph.rs:236:52
+    |
+236 | ...                   edges@.contains(e) by {
+    |                                          ^^
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:590:49
+    |
+590 |     impl<V: HashOrd, L: StT + Hash> Display for LabUnDirGraphStEph<V, L> {
+    |                                                 ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEph` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:596:47
+    |
+596 |     impl<V: HashOrd, L: StT + Hash> Debug for LabUnDirGraphStEph<V, L> {
+    |                                               ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:602:36
+    |
+602 |     impl<'a, V: HashOrd> Debug for LabUnDirGraphStEphIter<'a, V> {
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEphIter` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:606:38
+    |
+606 |     impl<'a, V: HashOrd> Display for LabUnDirGraphStEphIter<'a, V> {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:610:36
+    |
+610 |     impl<'a, V: HashOrd> Debug for LabUnDirGraphStEphGhostIterator<'a, V> {
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabUnDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/LabUnDirGraphStEph.rs:614:38
+    |
+614 |     impl<'a, V: HashOrd> Display for LabUnDirGraphStEphGhostIterator<'a, V> {
+    |                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 1892MB, peak z3 RSS: 83MB, min free: 23638MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 8s
