@@ -95,7 +95,7 @@ pub mod ConnectivityStEph {
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.3): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -119,7 +119,7 @@ pub mod ConnectivityStEph {
     ///
     /// - Alg Analysis: APAS (Ch63 Ex 63.4): Work O((n+m) lg n), Span O((n+m) lg n) (edge-set representation)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star contraction
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — agrees with APAS
     ///
     /// Arguments:
     /// - graph: The undirected graph
@@ -140,7 +140,7 @@ pub mod ConnectivityStEph {
     /// Filters out self-edges (where both endpoints map to same super-vertex).
     ///
     /// - Alg Analysis: APAS: N/A — helper function implicit in Algorithm 63.2/63.3 Line 7.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — single pass over edges
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — single pass over edges
     fn build_quotient_edges<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         partition_map: &HashMapWithViewPlus<V, V>,
@@ -193,7 +193,7 @@ pub mod ConnectivityStEph {
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.2): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn count_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (count: usize)
         requires
             spec_graphview_wf(graph@),
@@ -216,7 +216,7 @@ pub mod ConnectivityStEph {
     ///
     /// - Alg Analysis: APAS (Ch63 Alg 63.3): Work O((n+m) lg n), Span O((n+m) lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n); delegates to star_contract
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — delegates to star_contract
     pub fn connected_components_hof<V: HashOrd>(graph: &UnDirGraphStEph<V>) -> (components: (SetStEph<V>, HashMapWithViewPlus<V, V>))
         requires
             spec_graphview_wf(graph@),

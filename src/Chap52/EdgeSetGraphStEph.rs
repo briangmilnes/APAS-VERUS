@@ -89,7 +89,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty sets.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; creates empty sets.
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
@@ -99,7 +99,7 @@ broadcast use {
             ensures out.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing sets.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps existing sets.
         fn from_vertices_and_edges(v: AVLTreeSetStEph<V>, e: AVLTreeSetStEph<Pair<V, V>>) -> (out: Self)
             requires
                 v.spec_avltreesetsteph_wf(),
@@ -122,12 +122,12 @@ broadcast use {
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; returns reference.
         fn vertices(&self) -> &AVLTreeSetStEph<V>
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; returns reference.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; returns reference.
         fn edges(&self) -> &AVLTreeSetStEph<Pair<V, V>>
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n)
@@ -145,7 +145,7 @@ broadcast use {
             requires self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n), Span Theta(lg n) — agrees; AVL set insert.
         fn insert_vertex(&mut self, v: V)
             requires
                 old(self).spec_edgesetgraphsteph_wf(),
@@ -153,13 +153,13 @@ broadcast use {
             ensures self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m lg m), Span O(m lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg m), Span O(m lg m)
-        /// - Claude-Opus-4.6: Work Theta(m lg m), Span Theta(m lg m) — agrees; filter and rebuild edge set.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(m lg m), Span Theta(m lg m) — agrees; filter and rebuild edge set.
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf(), !self.spec_vertices().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
-        /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; vertex insert + edge insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; vertex insert + edge insert.
         fn insert_edge(&mut self, u: V, v: V)
             requires
                 old(self).spec_edgesetgraphsteph_wf(),
@@ -168,7 +168,7 @@ broadcast use {
             ensures self.spec_edgesetgraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(lg m), Span O(lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg m), Span O(lg m)
-        /// - Claude-Opus-4.6: Work Theta(lg m), Span Theta(lg m) — agrees; AVL set delete.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg m), Span Theta(lg m) — agrees; AVL set delete.
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_edgesetgraphsteph_wf()
             ensures self.spec_edgesetgraphsteph_wf();
@@ -319,7 +319,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)

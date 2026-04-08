@@ -106,7 +106,7 @@ pub mod GraphSearchStEph {
     pub trait GraphSearchStEphTrait<V: StT + Ord + TotalOrder> {
         /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search<G, S>(graph: &G, source: V, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -124,7 +124,7 @@ pub mod GraphSearchStEph {
 
         /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; AVL set ops add log factor.
         fn graph_search_multi<G, S>(graph: &G, sources: AVLTreeSetStEph<V>, strategy: &S, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: SearchResult<V>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -143,7 +143,7 @@ pub mod GraphSearchStEph {
 
         /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; uses SelectAll (BFS).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — sequential; uses SelectAll (BFS).
         fn reachable<G>(graph: &G, source: V, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (reachable_set: AVLTreeSetStEph<V>)
         where
             G: Fn(&V) -> AVLTreeSetStEph<V>,
@@ -338,7 +338,7 @@ pub mod GraphSearchStEph {
     /// Find all vertices reachable from source (Problem 53.2) using SelectAll (BFS).
     /// - Alg Analysis: APAS (Ch53 Thm 53.1): (no explicit cost; ≤ |V| rounds)
     /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-    /// - Claude-Opus-4.6: Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ((|V| + |E|) log |V|), Span Θ((|V| + |E|) log |V|) — delegates to graph_search with SelectAll.
     pub fn reachable<V: StT + Ord + TotalOrder, G>(
         graph: &G, source: V,
         Ghost(vertex_universe): Ghost<Set<<V as View>::V>>,

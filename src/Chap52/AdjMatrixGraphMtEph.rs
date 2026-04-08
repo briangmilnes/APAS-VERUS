@@ -284,7 +284,7 @@ broadcast use {
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — counts edges during construction.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n^2), Span Theta(n^2) — counts edges during construction.
         fn from_matrix(matrix: ArraySeqMtEphS<ArraySeqMtEphS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| 0 <= i < matrix.spec_len() ==>

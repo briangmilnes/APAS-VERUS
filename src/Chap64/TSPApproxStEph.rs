@@ -131,7 +131,7 @@ pub mod TSPApproxStEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) — DFS is inherently sequential.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DFS is inherently sequential.
     ///
     /// Arguments:
     /// - graph: Undirected graph (should be a tree)
@@ -162,7 +162,7 @@ pub mod TSPApproxStEph {
 
     /// DFS helper for Euler tour with fuel-based termination.
     /// - Alg Analysis: APAS: N/A — internal helper for euler_tour.
-    /// - Claude-Opus-4.6: Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n * m_tree), Span O(n * m_tree) — for each vertex,
     ///   scans neighbors (O(m)) and tree_edges (O(m_tree)) to find matching edges.
     fn euler_tour_dfs<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
@@ -268,7 +268,7 @@ pub mod TSPApproxStEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
     ///
     /// Arguments:
     /// - euler_tour: Euler tour with possible duplicate visits
@@ -317,7 +317,7 @@ pub mod TSPApproxStEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n), Span O(n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(n) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — agrees with APAS.
     pub fn tour_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         tour: &[V],
@@ -358,7 +358,7 @@ pub mod TSPApproxStEph {
     }
 
     /// - Alg Analysis: APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::ng.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to ng().
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to ng().
     fn get_neighbors<V: HashOrd>(graph: &LabUnDirGraphStEph<V, WrappedF64>, v: &V) -> (ng: SetStEph<V>)
         requires
             spec_labgraphview_wf(graph@),
@@ -369,7 +369,7 @@ pub mod TSPApproxStEph {
     }
 
     /// - Alg Analysis: APAS: N/A — internal helper, delegates to LabUnDirGraphStEph::get_edge_label.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — delegates to get_edge_label().
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — delegates to get_edge_label().
     fn get_edge_weight<V: HashOrd>(
         graph: &LabUnDirGraphStEph<V, WrappedF64>,
         u: &V,
@@ -400,7 +400,7 @@ pub mod TSPApproxStEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Sec 4): Work O(n+m), Span O(n+m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m)
-    /// - Claude-Opus-4.6: Work O(n+m), Span O(n+m) — agrees with APAS.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — agrees with APAS.
     ///
     /// Arguments:
     /// - graph: Complete weighted undirected graph (metric: satisfies triangle inequality)

@@ -17,7 +17,7 @@ pub mod Example44_1 {
     }
 
     /// - Alg Analysis: APAS: N/A — Example scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) — builds 5-element sequence via macro
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) — builds 5-element sequence via macro
     pub fn create_tweet_collection() -> DocumentCollection {
         DocumentCollectionLit![
             "jack" => "chess is fun",
@@ -30,7 +30,7 @@ pub mod Example44_1 {
 
     /// Creates the document index for the tweet collection.
     /// - Alg Analysis: APAS: N/A — Example scaffolding (cost dominated by make_index).
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — delegates to make_index
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — delegates to make_index
     pub fn create_tweet_index() -> DocumentIndex {
         let tweets = create_tweet_collection();
         DocumentIndex::make_index(&tweets)
@@ -39,7 +39,7 @@ pub mod Example44_1 {
     /// Example 44.2: Staged computation pattern.
     /// fw : word -> docs = find (makeIndex T)
     /// - Alg Analysis: APAS: N/A — Example scaffolding (cost dominated by make_index).
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index then returns closure
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index then returns closure
     pub fn create_tweet_finder() -> impl Fn(&Word) -> DocumentSet {
         let index = create_tweet_index();
         move |word: &Word| index.find(word)
@@ -58,7 +58,7 @@ pub mod Example44_1 {
 
     impl TweetQueryExamples {
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index via create_tweet_index
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index via create_tweet_index
         pub fn new() -> Self {
             let index = create_tweet_index();
             let index_clone = index.clone();
@@ -69,29 +69,29 @@ pub mod Example44_1 {
 
         /// Example query: searching for 'fun' should return {"jack", "mary", "peter"}.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
         pub fn search_fun(&self) -> DocumentSet { (self.fw)(&"fun".to_string()) }
 
         /// Example query: searching for 'club' should return {"mary"}.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
         pub fn search_club(&self) -> DocumentSet { (self.fw)(&"club".to_string()) }
 
         /// Example query: searching for 'food' should return {"nick", "peter"}.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
         pub fn search_food(&self) -> DocumentSet { (self.fw)(&"food".to_string()) }
 
         /// Example query: searching for 'chess' should return {"jack"}.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(log n), Span Θ(log n) — single find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(log n), Span Θ(log n) — single find
         pub fn search_chess(&self) -> DocumentSet { (self.fw)(&"chess".to_string()) }
 
         /// Complex query from textbook:
         /// toSeq (queryAnd ((fw 'fun'), queryOr ((fw 'food'), (fw 'chess'))))
         /// Expected result: ⟨'jack', 'peter'⟩
         /// - Alg Analysis: APAS: N/A — Example scaffolding; cost is 3 finds + 2 set operations + toSeq.
-        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set operations
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set operations
         pub fn complex_query_fun_and_food_or_chess(&self) -> ArraySeqStPerS<DocumentId> {
             let fun_docs = (self.fw)(&"fun".to_string());
             let food_docs = (self.fw)(&"food".to_string());
@@ -107,7 +107,7 @@ pub mod Example44_1 {
         /// size (queryAndNot ((fw 'fun'), (fw 'chess')))
         /// Expected result: 2 (mary and peter).
         /// - Alg Analysis: APAS: N/A — Example scaffolding; cost is 2 finds + queryAndNot + size.
-        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set difference
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m)) — dominated by set difference
         pub fn count_fun_but_not_chess(&self) -> usize {
             let fun_docs = (self.fw)(&"fun".to_string());
             let chess_docs = (self.fw)(&"chess".to_string());
@@ -118,7 +118,7 @@ pub mod Example44_1 {
 
         /// Additional example: documents with 'food' OR 'fun'.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
         pub fn search_food_or_fun(&self) -> DocumentSet {
             let food_docs = (self.fw)(&"food".to_string());
             let fun_docs = (self.fw)(&"fun".to_string());
@@ -128,7 +128,7 @@ pub mod Example44_1 {
 
         /// Additional example: documents with 'party' AND 'food'.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m log(1+n/m)), Span Θ(m log(1+n/m))
         pub fn search_party_and_food(&self) -> DocumentSet {
             let party_docs = (self.fw)(&"party".to_string());
             let food_docs = (self.fw)(&"food".to_string());
@@ -138,17 +138,17 @@ pub mod Example44_1 {
 
         /// Get all unique words in the tweet collection.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n)
         pub fn get_all_words(&self) -> ArraySeqStPerS<Word> { self.index.get_all_words() }
 
         /// Get word count statistics.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
         pub fn get_word_count(&self) -> usize { self.index.word_count() }
 
         /// Demonstrate query builder pattern.
         /// - Alg Analysis: APAS: N/A — Example scaffolding.
-        /// - Claude-Opus-4.6: Work dominated by 4 finds + 3 set operations
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work dominated by 4 finds + 3 set operations
         pub fn query_builder_example(&self) -> DocumentSet {
             let builder = QueryBuilder::new(&self.index);
 
@@ -163,7 +163,7 @@ pub mod Example44_1 {
     }
 
     /// - Alg Analysis: APAS: N/A — Test helper.
-    /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) — to_seq + sort
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) — to_seq + sort
     pub fn doc_set_to_sorted_vec(docs: &DocumentSet) -> Vec<DocumentId> {
         let seq = DocumentIndex::to_seq(docs);
         let mut result = Vec::new();
@@ -179,7 +179,7 @@ pub mod Example44_1 {
 
     /// Verify the expected results from the textbook examples.
     /// - Alg Analysis: APAS: N/A — Test verification helper.
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index, runs queries, compares results
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index, runs queries, compares results
     pub fn verify_textbook_examples() -> bool {
         let examples = TweetQueryExamples::new();
 
@@ -221,7 +221,7 @@ pub mod Example44_1 {
 
     /// Performance demonstration: compare indexed search vs brute force.
     /// - Alg Analysis: APAS: N/A — Example scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — dominated by index construction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — dominated by index construction
     pub fn performance_comparison_demo() -> (usize, usize) {
         let tweets = create_tweet_collection();
         let _index = create_tweet_index();
@@ -251,7 +251,7 @@ pub mod Example44_1 {
 
     /// Demonstrate the tokenization process.
     /// - Alg Analysis: APAS: N/A — Example scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to tokens()
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to tokens()
     pub fn tokenization_demo() -> ArraySeqStPerS<Word> {
         let sample_content = "I had fun in dance club today!";
         tokens(&sample_content.to_string())
@@ -259,7 +259,7 @@ pub mod Example44_1 {
 
     /// Show index statistics for the tweet collection.
     /// - Alg Analysis: APAS: N/A — Example scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(n²), Span Θ(n²) — builds index + iterates documents
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n²), Span Θ(n²) — builds index + iterates documents
     pub fn index_statistics() -> (usize, usize, usize) {
         let tweets = create_tweet_collection();
         let index = create_tweet_index();

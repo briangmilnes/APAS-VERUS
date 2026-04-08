@@ -83,7 +83,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
-    /// - Claude-Opus-4.6: Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V| + |E|), Span Θ(|V| + |E|) — Phases 1-2 are sequential loops;
     ///   only Phase 3 (build_edges_parallel) is parallel
     ///
     /// Phase 1: Build vertex-to-block mapping — sequential
@@ -145,7 +145,7 @@ pub mod EdgeContractionMtEph {
     /// Build new edge set in parallel using divide-and-conquer
     ///
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding (parallel edge routing helper)
-    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(lg |E|) — genuine divide-and-conquer parallelism
     fn build_edges_parallel<V: StT + MtT + Hash + Ord + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         vertex_map: Arc<HashMapWithViewPlus<V, V>>,
@@ -232,7 +232,7 @@ pub mod EdgeContractionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(|V| + |E|), Span O(lg |V|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(lg |V|)
-    /// - Claude-Opus-4.6: Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|^2), Span Θ(|E|) — dominated by parallel_matching_mt's
     ///   should_select_edge scanning all edges
     ///
     /// Arguments:

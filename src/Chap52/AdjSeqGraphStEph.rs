@@ -179,7 +179,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work Theta(n), Span Theta(n) — agrees; tabulate over n empty sequences.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n), Span Theta(n) — agrees; tabulate over n empty sequences.
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjseqgraphsteph_wf(),
@@ -188,7 +188,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing array.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps existing array.
         fn from_seq(adj: ArraySeqStEphS<ArraySeqStEphS<usize>>) -> (constructed: Self)
             requires
                 forall|u: int, j: int|
@@ -247,7 +247,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; single array set.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; single array set.
         fn set_neighbors(&mut self, v: usize, neighbors: ArraySeqStEphS<usize>)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
@@ -273,7 +273,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n + deg(u)), Span O(n + deg(u))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + deg(u)
-        /// - Claude-Opus-4.6: Delegates to set_edge(u, v, true).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Delegates to set_edge(u, v, true).
         fn insert_edge(&mut self, u: usize, v: usize)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),
@@ -295,7 +295,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n + deg(u)), Span O(n + deg(u))
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + deg(u)
-        /// - Claude-Opus-4.6: Delegates to set_edge(u, v, false).
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Delegates to set_edge(u, v, false).
         fn delete_edge(&mut self, u: usize, v: usize)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),

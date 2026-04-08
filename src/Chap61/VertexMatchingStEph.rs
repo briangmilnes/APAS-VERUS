@@ -71,7 +71,7 @@ pub mod VertexMatchingStEph {
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.4): Work O(|E|), Span O(|E|)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|E|), Span O(|E|)
-    /// - Claude-Opus-4.6: Work Θ(|E|), Span Θ(|E|) — agrees with APAS
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|), Span Θ(|E|) — agrees with APAS
     pub fn greedy_matching<V: StT + Hash>(graph: &UnDirGraphStEph<V>) -> (matching: SetStEph<Edge<V>>)
         requires
             spec_graphview_wf(graph@),
@@ -108,7 +108,7 @@ pub mod VertexMatchingStEph {
     /// Baseline Sequential Version of Parallel Matching
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Claude-Opus-4.6: Work Θ(|E|²), Span Θ(|E|²)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|E|²), Span Θ(|E|²)
     pub fn parallel_matching_st<V: StT + Hash>(graph: &UnDirGraphStEph<V>, seed: u64) -> (matching: SetStEph<Edge<V>>)
         requires
             valid_key_type_Edge::<V>(),

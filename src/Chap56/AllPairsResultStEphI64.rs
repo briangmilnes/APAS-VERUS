@@ -61,7 +61,7 @@ pub mod AllPairsResultStEphI64 {
         spec fn spec_predecessor_at(&self, u: int, v: int) -> usize;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — initializes n x n distance and predecessor matrices.
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_n() == n,
@@ -79,7 +79,7 @@ pub mod AllPairsResultStEphI64 {
                     empty.spec_predecessor_at(r, c) == NO_PREDECESSOR;
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two array index lookups.
         fn get_distance(&self, u: usize, v: usize) -> (dist: i64)
             ensures
                 (u as int) >= self.spec_distances_len() ==> dist == UNREACHABLE,
@@ -87,7 +87,7 @@ pub mod AllPairsResultStEphI64 {
                 (u as int) < self.spec_distances_len() && (v as int) < self.spec_distances_row_len(u as int) ==> dist == self.spec_distance_at(u as int, v as int);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_distance(&mut self, u: usize, v: usize, dist: i64)
             ensures
                 self.spec_n() == old(self).spec_n(),
@@ -113,7 +113,7 @@ pub mod AllPairsResultStEphI64 {
                     ==> self.spec_predecessor_at(r, c) == old(self).spec_predecessor_at(r, c);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — two array index lookups.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — two array index lookups.
         fn get_predecessor(&self, u: usize, v: usize) -> (pred: Option<usize>)
             ensures
                 (u as int) >= self.spec_predecessors_len() ==> pred is None,
@@ -122,7 +122,7 @@ pub mod AllPairsResultStEphI64 {
                 (u as int) < self.spec_predecessors_len() && (v as int) < self.spec_predecessors_row_len(u as int) && self.spec_predecessor_at(u as int, v as int) != NO_PREDECESSOR ==> pred == Some(self.spec_predecessor_at(u as int, v as int));
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — clones row, updates cell, replaces row.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — clones row, updates cell, replaces row.
         fn set_predecessor(&mut self, u: usize, v: usize, pred: usize)
             ensures
                 self.spec_n() == old(self).spec_n(),
@@ -148,7 +148,7 @@ pub mod AllPairsResultStEphI64 {
                     ==> self.spec_distance_at(r, c) == old(self).spec_distance_at(r, c);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(1), Span O(1) — comparison with sentinel.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — comparison with sentinel.
         fn is_reachable(&self, u: usize, v: usize) -> (b: bool)
             ensures
                 (u as int) >= self.spec_distances_len() ==> !b,
@@ -157,7 +157,7 @@ pub mod AllPairsResultStEphI64 {
                     b == (self.spec_distance_at(u as int, v as int) != UNREACHABLE);
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-        /// - Claude-Opus-4.6: Work O(n), Span O(n) — predecessor chain traversal + reversal.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — predecessor chain traversal + reversal.
         fn extract_path(&self, u: usize, v: usize) -> (path: Option<ArraySeqStPerS<usize>>)
             ensures
                 (u as int) >= self.spec_predecessors_len() ==> path is None,

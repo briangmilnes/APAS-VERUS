@@ -72,7 +72,7 @@ pub mod BellmanFordStEphI64 {
 
     /// Clamp an i128 weight to i64 range.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     // veracity: no_requires
     fn clamp_weight(w: i128) -> (clamped: i64)
         ensures
@@ -88,7 +88,7 @@ pub mod BellmanFordStEphI64 {
     /// Safe distance addition: compute d + w via i128 to avoid overflow.
     /// Returns UNREACHABLE on positive overflow, i64::MIN on negative overflow.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     fn add_distance(d: i64, w: i64) -> (sum: i64)
         requires d != UNREACHABLE,
         ensures
@@ -105,7 +105,7 @@ pub mod BellmanFordStEphI64 {
 
     /// Reconstruct predecessor array from converged distances.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(nm), Span O(nm).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(nm), Span O(nm).
     fn reconstruct_predecessors(
         graph: &WeightedDirGraphStEphI128<usize>,
         distances: &Vec<i64>,

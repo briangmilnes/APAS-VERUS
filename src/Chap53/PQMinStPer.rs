@@ -75,7 +75,7 @@ pub mod PQMinStPer {
 
         /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>, Ghost(spec_priority): Ghost<spec_fn(<V as View>::V) -> <P as View>::V>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,
@@ -101,7 +101,7 @@ pub mod PQMinStPer {
 
         /// - Alg Analysis: APAS (Ch53 PFS): (no explicit PFS cost in Chap53; PFS cost depends on priority queue implementation)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit PFS cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(|V|² + |E| log |V|), Span Θ(|V|² + |E| log |V|) — find_min uses to_seq O(|F|) per round.
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStPer<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>, Ghost(spec_priority): Ghost<spec_fn(<V as View>::V) -> <P as View>::V>) -> (search: PQMinResult<V, P>)
         where
             G: Fn(&V) -> AVLTreeSetStPer<V>,

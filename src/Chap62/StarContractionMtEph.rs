@@ -196,7 +196,7 @@ pub mod StarContractionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); parallel star_partition + quotient build
-    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O(n lg n) — star_partition has O(n + lg m) span (loops 2, 3 parallel); quotient build O(lg m) via ParaPair.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(n lg n) — star_partition has O(n + lg m) span (loops 2, 3 parallel); quotient build O(lg m) via ParaPair.
     ///
     /// Arguments:
     /// - graph: The undirected graph to contract
@@ -246,7 +246,7 @@ pub mod StarContractionMtEph {
     /// Uses ClonePreservesView for view-preserving vertex clones.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Claude-Opus-4.6: Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg m) — delegates to route_edges_parallel which uses ParaPair fork-join.
     fn build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         centers: &SetStEph<V>,
@@ -307,7 +307,7 @@ pub mod StarContractionMtEph {
     /// to prove the edge-closure postcondition: all output edges have centers as endpoints.
     ///
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Claude-Opus-4.6: Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k), Span O(lg k) — binary fork-join via ParaPair; k = end - start.
     fn route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         edges: Arc<ArraySeqStEphS<Edge<V>>>,
         partition_map: Arc<HashMapWithViewPlus<V, V>>,
@@ -413,7 +413,7 @@ pub mod StarContractionMtEph {
     ///
     /// - Alg Analysis: APAS (Ch62 Thm 62.3): Work O((n + m) lg n), Span O(lg^2 n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O(lg^2 n); delegates to star_contract_mt
-    /// - Claude-Opus-4.6: Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m) lg n), Span O((n + m) lg n) — delegates to star_contract_mt which has sequential partition.
     pub fn contract_to_vertices_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
         seed: u64,

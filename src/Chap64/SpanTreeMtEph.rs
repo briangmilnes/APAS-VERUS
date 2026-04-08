@@ -77,7 +77,7 @@ pub mod SpanTreeMtEph {
     ///
     /// - Alg Analysis: APAS (Ch64 Ex 64.2): Work O((n+m) lg n), Span O(lg² n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m)
-    /// - Claude-Opus-4.6: Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n+m) lg n), Span O((n+m) lg n) — expand closure
     ///   is sequential; parallelism comes from star_contract_mt framework.
     pub fn spanning_tree_star_contraction_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static>(
         graph: &UnDirGraphMtEph<V>,
@@ -179,7 +179,7 @@ pub mod SpanTreeMtEph {
     /// Verify that result is a valid spanning tree.
     ///
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(|V| + |E_tree|), Span O(|E_tree|).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E_tree|), Span O(|E_tree|).
     pub fn verify_spanning_tree<V: StT + MtT + Hash + Ord>(
         graph: &UnDirGraphMtEph<V>,
         tree_edges: &SetStEph<Edge<V>>,

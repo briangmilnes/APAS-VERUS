@@ -224,7 +224,7 @@ pub mod PrimStEph {
 
     /// Module-level function to create a new PQEntry.
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
     // veracity: no_requires
     fn pq_entry_new<V: HashOrd>(priority: u64, vertex: V, parent: Option<V>) -> (entry: PQEntry<V>)
         ensures entry.priority == priority, entry.vertex == vertex, entry.parent == parent,
@@ -245,7 +245,7 @@ pub mod PrimStEph {
     ///
     /// - Alg Analysis: APAS (Ch65 Alg 65.1): Work O(m lg n), Span O(m lg n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n)
-    /// - Claude-Opus-4.6: Work O(m^2 lg n), Span O(m^2 lg n) — the APAS bound assumes
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m^2 lg n), Span O(m^2 lg n) — the APAS bound assumes
     ///   O(degree) adjacency-list lookups, but LabUnDirGraphStEph stores edges in a flat
     ///   set, so ng() and get_edge_label() each cost O(m) per call. Total neighbor/weight
     ///   work across all vertices is O(nm) = O(m^2) in a dense graph. With an adjacency-list
@@ -436,7 +436,7 @@ pub mod PrimStEph {
 
     /// Compute total MST weight.
     /// - Alg Analysis: Code review (Claude Opus 4.6): matches APAS
-    /// - Claude-Opus-4.6: Work O(|MST|), Span O(|MST|) — linear scan over MST edges
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|MST|), Span O(|MST|) — linear scan over MST edges
     /// Overflow-safe: skips edges that would cause u64 overflow (never triggers for MST weights).
     pub fn mst_weight<V: StT + Hash>(mst_edges: &SetStEph<LabEdge<V, u64>>) -> (total: u64)
         requires mst_edges.spec_setsteph_wf(),
@@ -501,7 +501,7 @@ pub mod PrimStEph {
 
     impl<V: HashOrd> Ord for PQEntry<V> {
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
         fn cmp(&self, other: &Self) -> Ordering {
             std::cmp::Ord::cmp(&self.priority, &other.priority)
                 .then_with(|| std::cmp::Ord::cmp(&self.vertex, &other.vertex))
@@ -511,7 +511,7 @@ pub mod PrimStEph {
 
     impl<V: HashOrd> PartialOrd for PQEntry<V> {
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1)
         fn partial_cmp(&self, other: &Self) -> Option<Ordering> { Some(Ord::cmp(self, other)) }
     }
 

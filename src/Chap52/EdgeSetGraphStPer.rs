@@ -318,7 +318,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.1): Work O(m), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(m), Span Θ(m) — delegates to out_neighbors which is sequential.
         fn out_degree(&self, u: &V) -> usize { self.out_neighbors(u).size() }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
@@ -451,7 +451,7 @@ broadcast use {
 
     impl<V: StT + Ord + TotalOrder + ClonePreservesView + fmt::Debug> fmt::Debug for EdgeSetGraphStPer<V> {
         /// - Alg Analysis: APAS: N/A — Rust Debug trait, not in textbook.
-        /// - Claude-Opus-4.6: Work depends on graph size — outside verus!, not verified.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work depends on graph size — outside verus!, not verified.
         fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             f.debug_struct("EdgeSetGraphStPer")
                 .field("vertices", &self.vertices)

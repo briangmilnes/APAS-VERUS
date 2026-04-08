@@ -221,7 +221,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — agrees; creates empty table.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — agrees; creates empty table.
         fn empty() -> (out: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<V>(),
@@ -229,7 +229,7 @@ broadcast use {
             ensures out.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Theta(1), Span Theta(1) — wraps existing table.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(1), Span Theta(1) — wraps existing table.
         fn from_table(table: TableStEph<V, AVLTreeSetStEph<V>>) -> (out: Self)
             requires
                 table.spec_tablesteph_wf(),
@@ -253,7 +253,7 @@ broadcast use {
             ensures m as nat == self.spec_num_edges();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(|V|), Span O(|V|) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|), Span O(|V|)
-        /// - Claude-Opus-4.6: Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(|V|), Span Theta(|V|) — agrees; builds set from domain.
         fn vertices(&self) -> (verts: AVLTreeSetStEph<V>)
             requires
                 self.spec_adjtablegraphsteph_wf(),
@@ -277,19 +277,19 @@ broadcast use {
             requires self.spec_adjtablegraphsteph_wf();
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n), Span O(lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
-        /// - Claude-Opus-4.6: Work Theta(lg n), Span Theta(lg n) — agrees; table insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n), Span Theta(lg n) — agrees; table insert.
         fn insert_vertex(&mut self, v: V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), self.spec_adj().dom().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O((n + m) lg n), Span O((n + m) lg n) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O((n + m)
-        /// - Claude-Opus-4.6: Work Theta((n + m) lg n), Span Theta((n + m) lg n) — agrees; removes from all neighbor sets.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta((n + m) lg n), Span Theta((n + m) lg n) — agrees; removes from all neighbor sets.
         fn delete_vertex(&mut self, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures self.spec_adjtablegraphsteph_wf(), !self.spec_adj().dom().contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
-        /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set insert.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set insert.
         fn insert_edge(&mut self, u: V, v: V)
             requires
                 old(self).spec_adjtablegraphsteph_wf(),
@@ -301,7 +301,7 @@ broadcast use {
                 self.spec_adj()[u@].contains(v@);
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(lg n + lg m), Span O(lg n + lg m) 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n + lg m), Span O(lg n + lg m)
-        /// - Claude-Opus-4.6: Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set delete.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(lg n + lg m), Span Theta(lg n + lg m) — agrees; table find + set delete.
         fn delete_edge(&mut self, u: &V, v: &V)
             requires old(self).spec_adjtablegraphsteph_wf()
             ensures

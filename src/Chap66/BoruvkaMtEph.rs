@@ -495,7 +495,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m), Span O(log m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m)
-    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — agrees with APAS; parallel divide-and-conquer via ParaPair!.
     pub fn vertex_bridges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         start: usize,
@@ -604,7 +604,7 @@ pub mod BoruvkaMtEph {
     ///
     /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(n), Span O(log n)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n)
-    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — coin flips, filter, and remaining all O(log n) via ParaPair!.
     pub fn bridge_star_partition_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices_vec: Vec<V>,
         bridges: HashMapWithViewPlus<V, (V, WrappedF64, usize)>,
@@ -670,7 +670,7 @@ pub mod BoruvkaMtEph {
 
     /// Parallel filter: find edges from Tail->Head.
     ///
-    /// - Claude-Opus-4.6: Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(log n) — parallel divide-and-conquer via ParaPair!.
     fn filter_tail_to_head_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         vertices: Arc<Vec<V>>,
         bridges: Arc<HashMapWithViewPlus<V, (V, WrappedF64, usize)>>,
@@ -906,7 +906,7 @@ pub mod BoruvkaMtEph {
 
     /// Parallel edge re-routing: map edges to new endpoints and remove self-edges.
     ///
-    /// - Claude-Opus-4.6: Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(log m) — parallel divide-and-conquer via ParaPair!.
     fn reroute_edges_mt<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: Arc<Vec<LabeledEdge<V>>>,
         partition: Arc<HashMapWithViewPlus<V, V>>,
@@ -1061,7 +1061,7 @@ pub mod BoruvkaMtEph {
     /// Compute MST weight from edge labels.
     ///
     /// - Alg Analysis: APAS: N/A — utility function, not in prose.
-    /// - Claude-Opus-4.6: Work O(m), Span O(m) — sequential scan of edges.
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m) — sequential scan of edges.
     pub fn mst_weight<V: StTInMtT + Hash + Ord + Copy + 'static>(
         edges: &SetStEph<LabeledEdge<V>>,
         mst_labels: &SetStEph<usize>,

@@ -80,7 +80,7 @@ pub mod JohnsonMtEphI64 {
     /// d(u,v) = d'(u,v) - h(u) + h(v), using i128 to avoid overflow.
     ///
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(1), Span O(1).
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1).
     // veracity: no_requires
     fn adjust_distance(d_prime: i64, h_u: i64, h_v: i64) -> (adjusted: i64)
         ensures
@@ -148,7 +148,7 @@ pub mod JohnsonMtEphI64 {
     /// Parallel Dijkstra execution using recursive divide-and-conquer with ParaPair!
     ///
     /// - Alg Analysis: APAS: N/A — internal helper, not named in prose.
-    /// - Claude-Opus-4.6: Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k * m log n), Span O(m log n) where k = end - start — binary split with ParaPair! gives log k depth, each leaf runs Dijkstra O(m log n)
     fn parallel_dijkstra_all(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -267,7 +267,7 @@ pub mod JohnsonMtEphI64 {
     /// Add dummy source vertex s with zero-weight edges to all vertices in G.
     ///
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — iterates over vertices and edges
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — iterates over vertices and edges
     fn add_dummy_source(graph: &WeightedDirGraphStEphI128<usize>, n: usize) -> (augmented_and_idx: (WeightedDirGraphStEphI128<usize>, usize))
         requires
             n > 0,
@@ -358,7 +358,7 @@ pub mod JohnsonMtEphI64 {
     ///
     /// - Alg Analysis: APAS (Ch59 Alg 59.1): Work O(m), Span O(m)
     /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m), Span O(m)
-    /// - Claude-Opus-4.6: Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — rebuilds vertex set O(n) plus iterates edges O(m)
     fn reweight_graph(
         graph: &WeightedDirGraphStEphI128<usize>,
         potentials: &ArraySeqStEphS<i64>,
@@ -470,7 +470,7 @@ pub mod JohnsonMtEphI64 {
     /// Create result for negative cycle case.
     ///
     /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-    /// - Claude-Opus-4.6: Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — builds n×n distance and predecessor matrices
     fn create_negative_cycle_result(n: usize) -> (neg_cycle_apsp: AllPairsResultStEphI64)
         requires
             n < usize::MAX,

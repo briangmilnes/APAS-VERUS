@@ -103,13 +103,13 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- delegates to OrderedTableStEph.size
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- delegates to OrderedTableStEph.size
         fn size(&self) -> (count: usize)
             requires self.spec_augorderedtablesteph_wf(),
             ensures count == self@.dom().len(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- constructs empty base table + stores reducer
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- constructs empty base table + stores reducer
         fn empty(reducer: F, identity: V) -> (empty: Self)
             requires
                 forall|v1: &V, v2: &V| #[trigger] reducer.requires((v1, v2)),
@@ -123,7 +123,7 @@ broadcast use {
             ensures empty@ == Map::<K::V, V::V>::empty();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- wraps OrderedTableStEph.singleton
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- wraps OrderedTableStEph.singleton
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             requires
                 obeys_feq_clone::<Pair<K, V>>(),
@@ -138,7 +138,7 @@ broadcast use {
             ensures tree@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.find (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.find (linear scan)
         fn find(&self, k: &K) -> (found: Option<V>)
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -148,7 +148,7 @@ broadcast use {
                 };
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to find
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to find
         fn lookup(&self, k: &K) -> (value: Option<V>)
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>()
             ensures
@@ -158,13 +158,13 @@ broadcast use {
                 };
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(1), Span O(1)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
-        /// - Claude-Opus-4.6: Work Θ(1), Span Θ(1) -- compares size to 0
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(1), Span Θ(1) -- compares size to 0
         fn is_empty(&self) -> (is_empty: bool)
             requires self.spec_augorderedtablesteph_wf(),
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.insert (linear dup check)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.insert (linear dup check)
         fn insert<G: Fn(&V, &V) -> V>(&mut self, k: K, v: V, combine: G)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
@@ -181,7 +181,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.delete (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.delete (linear scan)
         fn delete(&mut self, k: &K) -> (updated: Option<V>)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
@@ -190,13 +190,13 @@ broadcast use {
             ensures self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.domain
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
             requires self.spec_augorderedtablesteph_wf(), obeys_feq_clone::<K>()
             ensures domain@ =~= self@.dom(), self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-        /// - Claude-Opus-4.6: Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n^2), Span Θ(n^2) -- delegates to OrderedTableStEph.tabulate (sequential insert loop)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
             requires
                 keys.spec_arraysetsteph_wf(),
@@ -220,13 +220,13 @@ broadcast use {
                         && tabulated@[k] == result@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.map (collect + rebuild)
         fn map<G: Fn(&K, &V) -> V>(&self, f: G) -> (mapped: Self)
             requires self.spec_augorderedtablesteph_wf(), forall|k: &K, v: &V| f.requires((k, v)), obeys_feq_clone::<Pair<K, V>>()
             ensures mapped@.dom() =~= self@.dom(), mapped@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- delegates to OrderedTableStEph.filter (collect + filter + rebuild)
         fn filter<G: Fn(&K, &V) -> bool>(&self, f: G, Ghost(spec_pred): Ghost<spec_fn(K::V, V::V) -> bool>) -> (filtered: Self)
             requires
                 self.spec_augorderedtablesteph_wf(),
@@ -240,13 +240,13 @@ broadcast use {
                 filtered@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n), Span O(n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
-        /// - Claude-Opus-4.6: Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.reduce (linear fold)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n), Span Θ(n) -- delegates to OrderedTableStEph.reduce (linear fold)
         fn reduce<R, G: Fn(R, &K, &V) -> R>(&self, init: R, f: G) -> (reduced: R)
             requires self.spec_augorderedtablesteph_wf(), forall|r: R, k: &K, v: &V| f.requires((r, k, v))
             ensures self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.intersection (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.intersection (linear scan)
         fn intersection<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
@@ -264,7 +264,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.union (linear merge)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.union (linear merge)
         fn union<G: Fn(&V, &V) -> V>(&mut self, other: &Self, f: G)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
@@ -287,7 +287,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.difference (linear scan)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to OrderedTableStEph.difference (linear scan)
         fn difference(&mut self, other: &Self)
             requires old(self).spec_augorderedtablesteph_wf(), other.spec_augorderedtablesteph_wf(),obeys_view_eq::<K>()
             ensures
@@ -296,7 +296,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn restrict(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_augorderedtablesteph_wf()
             ensures
@@ -305,7 +305,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n * m), Span Θ(n * m) -- linear scan over self for each key
         fn subtract(&mut self, keys: &ArraySetStEph<K>)
             requires old(self).spec_augorderedtablesteph_wf()
             ensures
@@ -314,13 +314,13 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(n log n), Span O(n log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects entries and sorts by key
         fn collect(&self) -> (collected: AVLTreeSeqStPerS<Pair<K, V>>)
             requires self.spec_augorderedtablesteph_wf()
             ensures self@.dom().finite(), collected.spec_avltreeseqstper_wf(), collected@.len() == self@.dom().len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then returns first element
         fn first_key(&self) -> (first: Option<K>)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
@@ -331,7 +331,7 @@ broadcast use {
                 first matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(v, t);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then returns last element
         fn last_key(&self) -> (last: Option<K>)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
@@ -342,7 +342,7 @@ broadcast use {
                 last matches Some(v) ==> forall|t: K| self@.dom().contains(t@) ==> #[trigger] TotalOrder::le(t, v);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then scans for predecessor
         fn previous_key(&self, k: &K) -> (predecessor: Option<K>)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
@@ -353,7 +353,7 @@ broadcast use {
                 predecessor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(t, *k) && t@ != k@ ==> TotalOrder::le(t, v);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then scans for successor
         fn next_key(&self, k: &K) -> (successor: Option<K>)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf()
@@ -364,7 +364,7 @@ broadcast use {
                 successor matches Some(v) ==> forall|t: K| #![trigger t@] self@.dom().contains(t@) && TotalOrder::le(*k, t) && t@ != k@ ==> TotalOrder::le(v, t);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then partitions by key
         fn split_key(&mut self, k: &K) -> (split: (Self, Option<V>, Self))
             where Self: Sized,
             requires old(self).spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
@@ -377,7 +377,7 @@ broadcast use {
                 split.1 matches None ==> !old(self)@.contains_key(k@);
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(m log(n/m + 1)), Span O(log n log m)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m log(n/m + 1)
-        /// - Claude-Opus-4.6: Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n + m), Span Θ(n + m) -- delegates to union (linear merge)
         fn join_key(&mut self, other: Self)
             requires
                 old(self).spec_augorderedtablesteph_wf(),
@@ -390,7 +390,7 @@ broadcast use {
                 self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n + m), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n + m), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then filters by range
         fn get_key_range(&self, k1: &K, k2: &K) -> (range: Self)
             requires self.spec_augorderedtablesteph_wf(),
             ensures
@@ -398,7 +398,7 @@ broadcast use {
                 range@.dom().subset_of(self@.dom());
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then counts elements < k
         fn rank_key(&self, k: &K) -> (rank: usize)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
@@ -408,7 +408,7 @@ broadcast use {
                 rank as int == self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, *k) && t@ != k@).len();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then indexes
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then indexes
         fn select_key(&self, i: usize) -> (selected: Option<K>)
             where K: TotalOrder
             requires self.spec_augorderedtablesteph_wf(), obeys_view_eq::<K>(),
@@ -419,7 +419,7 @@ broadcast use {
                 selected matches Some(v) ==> self@.dom().filter(|x: K::V| exists|t: K| #![trigger t@] t@ == x && TotalOrder::le(t, v) && t@ != v@).len() == i as int;
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- collects then partitions by rank
         fn split_rank_key(&mut self, i: usize) -> (split: (Self, Self))
             where Self: Sized,
             requires old(self).spec_augorderedtablesteph_wf(),
@@ -437,7 +437,7 @@ broadcast use {
             ensures self@.dom().finite();
         /// - Alg Analysis: APAS (Ch43 CS 43.2): Work O(log n), Span O(log n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n)
-        /// - Claude-Opus-4.6: Work Θ(n log n), Span Θ(n log n) -- get_key_range + calculate_reduction
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Θ(n log n), Span Θ(n log n) -- get_key_range + calculate_reduction
         fn reduce_range(&self, k1: &K, k2: &K) -> (reduced: V)
             requires self.spec_augorderedtablesteph_wf(),
             ensures self@.dom().finite();

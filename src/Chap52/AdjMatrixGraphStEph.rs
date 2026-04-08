@@ -276,7 +276,7 @@ broadcast use {
 
         /// - Alg Analysis: APAS (Ch52 CS 52.6): (no explicit new cost; matrix init is n^2)
         /// - Alg Analysis: Code review (Claude Opus 4.6): no explicit cost in APAS — N/A
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — tabulate n rows of n booleans.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n^2), Span Theta(n^2) — tabulate n rows of n booleans.
         fn new(n: usize) -> (empty: Self)
             ensures
                 empty.spec_adjmatrixgraphsteph_wf(),
@@ -285,7 +285,7 @@ broadcast use {
                     0 <= u < n && 0 <= v < n ==> !#[trigger] empty.spec_edge(u, v);
 
         /// - Alg Analysis: APAS: N/A — Verus-specific scaffolding.
-        /// - Claude-Opus-4.6: Work Theta(n^2), Span Theta(n^2) — counts edges during construction.
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work Theta(n^2), Span Theta(n^2) — counts edges during construction.
         fn from_matrix(matrix: ArraySeqStEphS<ArraySeqStEphS<bool>>) -> (constructed: Self)
             requires
                 forall|i: int| 0 <= i < matrix.spec_len() ==>
