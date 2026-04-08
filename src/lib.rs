@@ -447,6 +447,7 @@ pub mod Chap38 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap39")))]
 pub mod Chap39 {
+    pub mod BSTTreapSpecsAndLemmas;
     pub mod BSTTreapStEph;
     pub mod BSTTreapMtEph;
     pub mod BSTParaTreapMtEph;
