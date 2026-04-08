@@ -30,11 +30,11 @@ pub mod LinkedListStPer {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
-
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
-    verus! 
+    verus!
 {
 
 
@@ -79,15 +79,6 @@ pub mod LinkedListStPer {
         open spec fn view(&self) -> Seq<T::V> {
             self.seq@.map(|_i: int, t: T| t@)
         }
-    }
-
-    //		Section 6. spec fns
-
-
-    /// Definition 18.7 (iterate). Left fold: spec_iterate(s, f, x) = f(...f(f(x, s[0]), s[1])..., s[n-1]).
-    /// - Alg Analysis: Code review (Claude Opus 4.6): N/A (spec only; no runtime cost).
-    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
-        s.fold_left(start_x, f)
     }
 
     //		Section 8. traits

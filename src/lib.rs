@@ -320,6 +320,7 @@ pub mod Chap17 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap18")))]
 pub mod Chap18 {
+    pub mod ArraySeqSpecsAndLemmas;
     pub mod ArraySeq;
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
@@ -332,6 +333,7 @@ pub mod Chap18 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap19")))]
 pub mod Chap19 {
+    pub mod ArraySeqSpecsAndLemmas;
     pub mod ArraySeqStPer;
     pub mod ArraySeqStEph;
     pub mod ArraySeqMtEph;
@@ -487,6 +489,7 @@ pub mod Chap42 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap43")))]
 pub mod Chap43 {
+    pub mod OrderedSpecsAndLemmas;
     pub mod OrderedTableStEph;
     pub mod OrderedTableMtEph;
     pub mod AugOrderedTableStEph;

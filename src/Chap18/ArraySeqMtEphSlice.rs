@@ -32,8 +32,9 @@ pub mod ArraySeqMtEphSlice {
     use std::sync::Arc;
 
     use vstd::prelude::*;
+    pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
-    verus! 
+    verus!
 {
 
 
@@ -127,84 +128,6 @@ pub mod ArraySeqMtEphSlice {
         }
     }
 
-
-    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
-    /// to each position wins. Out-of-range positions are ignored.
-    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
-        decreases updates.len()
-    {
-        if updates.len() == 0 {
-            s
-        } else {
-            let rest = spec_inject(s, updates.drop_first());
-            let pos = updates[0].0 as int;
-            let val = updates[0].1;
-            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
-        }
-    }
-
-    /// Definition 18.17 (ninject). The result has the same length as `s`. For each position i,
-    /// the value is either the original `s[i]` or some `updates[j].1` where `updates[j].0 == i`.
-    pub open spec fn spec_ninject<T>(s: Seq<T>, updates: Seq<(usize, T)>, injected: Seq<T>) -> bool {
-        injected.len() == s.len()
-        && forall|i: int| #![trigger injected[i]] 0 <= i < s.len() ==> {
-            injected[i] == s[i]
-            || exists|j: int| #![trigger updates[j]] 0 <= j < updates.len()
-                && updates[j].0 == i as usize && injected[i] == updates[j].1
-        }
-    }
-
-    //		Section 7. proof fns/broadcast groups
-
-
-    /// Each element of `spec_inject(s, u)` is either the original `s[i]` or some update value.
-    proof fn lemma_spec_inject_element<T>(s: Seq<T>, u: Seq<(usize, T)>, i: int)
-        requires 0 <= i < s.len(),
-        ensures ({
-            let r = spec_inject(s, u);
-            r.len() == s.len()
-            && (r[i] == s[i]
-                || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
-                    && u[j].0 == i as usize && r[i] == u[j].1)
-        }),
-        decreases u.len(),
-    {
-        reveal(spec_inject);
-        if u.len() > 0 {
-            lemma_spec_inject_len(s, u.drop_first());
-            lemma_spec_inject_element(s, u.drop_first(), i);
-            let rest = spec_inject(s, u.drop_first());
-            let pos = u[0].0 as int;
-            let val = u[0].1;
-            if 0 <= pos < s.len() {
-                if i == pos {
-                } else {
-                    if rest[i] != s[i] {
-                        let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
-                            && u.drop_first()[j].0 == i as usize
-                            && rest[i] == u.drop_first()[j].1;
-                    }
-                }
-            } else {
-                if rest[i] != s[i] {
-                    let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
-                        && u.drop_first()[j].0 == i as usize
-                        && rest[i] == u.drop_first()[j].1;
-                }
-            }
-        }
-    }
-
-    /// The length of `spec_inject(s, u)` equals `s.len()`.
-    proof fn lemma_spec_inject_len<T>(s: Seq<T>, u: Seq<(usize, T)>)
-        ensures spec_inject(s, u).len() == s.len(),
-        decreases u.len(),
-    {
-        reveal(spec_inject);
-        if u.len() > 0 {
-            lemma_spec_inject_len(s, u.drop_first());
-        }
-    }
 
     // 9b. free functions — D&C helpers and proof fns
 

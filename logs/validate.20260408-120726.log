@@ -1,0 +1,668 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0659]: `spec_pair_key_determines_order` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:101:17
+    |
+101 |                 spec_pair_key_determines_order::<K, V>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_key_determines_order` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+note: `spec_pair_key_determines_order` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+
+error[E0659]: `spec_pair_key_determines_order` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:112:17
+    |
+112 |                 spec_pair_key_determines_order::<K, V>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_key_determines_order` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+note: `spec_pair_key_determines_order` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+
+error[E0659]: `spec_pair_key_determines_order` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:183:17
+    |
+183 |                 spec_pair_key_determines_order::<K, V>(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_key_determines_order` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+note: `spec_pair_key_determines_order` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:636:21
+    |
+636 |                     spec_key_unique_pairs_set(new_tree@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:642:25
+    |
+642 |                         spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0),
+    |                         ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_set_pair_view_generated` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:647:21
+    |
+647 |                     spec_set_pair_view_generated::<K, V>(new_tree@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_set_pair_view_generated` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+note: `spec_set_pair_view_generated` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:656:29
+    |
+656 |                     assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:657:28
+    |
+657 |                         if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+    |                            ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:674:25
+    |
+674 |                         spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_set_pair_view_generated` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:698:28
+    |
+698 |                     assert(spec_set_pair_view_generated::<K, V>(new_tree@)) by {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_set_pair_view_generated` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+note: `spec_set_pair_view_generated` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:715:17
+    |
+715 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:716:17
+    |
+716 |                 lemma_pair_set_to_map_dom_finite(self.tree.inner@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:734:32
+    |
+734 |                         assert(spec_pair_set_to_map(new_tree@).dom().contains(sorted@[j].0));
+    |                                ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:828:21
+    |
+828 |                     spec_key_unique_pairs_set(new_tree@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:829:21
+    |
+829 |                     spec_key_unique_pairs_set(old_tree),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:839:33
+    |
+839 |                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:840:32
+    |
+840 | ...                   if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+    |                          ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:861:17
+    |
+861 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:862:17
+    |
+862 |                 lemma_pair_set_to_map_dom_finite(old_tree);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:930:21
+    |
+930 |                     spec_key_unique_pairs_set(new_tree@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:931:21
+    |
+931 |                     spec_key_unique_pairs_set(old_tree),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:941:33
+    |
+941 |                         assert(!spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0)) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `spec_pair_set_to_map` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:942:32
+    |
+942 | ...                   if spec_pair_set_to_map(old_new_tree_view).dom().contains(sorted@[i as int].0) {
+    |                          ^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_set_to_map` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+note: `spec_pair_set_to_map` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `spec_pair_set_to_map` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:963:17
+    |
+963 |                 lemma_pair_set_to_map_dom_finite(new_tree@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+   --> src/Chap43/OrderedTableStPer.rs:964:17
+    |
+964 |                 lemma_pair_set_to_map_dom_finite(old_tree);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+    |
+    = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:48:13
+    |
+ 48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+   --> src/Chap43/OrderedTableStPer.rs:32:9
+    |
+ 32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1002:17
+     |
+1002 |                 lemma_pair_set_to_map_dom_finite(self.tree.inner@);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1077:21
+     |
+1077 |             proof { lemma_pair_set_to_map_dom_finite(self.tree.inner@); }
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error[E0659]: `spec_pair_key_determines_order` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1178:13
+     |
+1178 |             spec_pair_key_determines_order::<K, V>(),
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_pair_key_determines_order` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+note: `spec_pair_key_determines_order` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_pair_key_determines_order` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1210:17
+     |
+1210 |                 spec_key_unique_pairs_set(tree@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_set_pair_view_generated` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1217:17
+     |
+1217 |                 spec_set_pair_view_generated::<K, V>(tree@),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_set_pair_view_generated` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+note: `spec_set_pair_view_generated` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+
+error[E0659]: `spec_key_unique_pairs_set` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1242:24
+     |
+1242 |                 assert(spec_key_unique_pairs_set(tree@)) by {
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_key_unique_pairs_set` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+note: `spec_key_unique_pairs_set` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_key_unique_pairs_set` to disambiguate
+
+error[E0659]: `spec_set_pair_view_generated` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1269:24
+     |
+1269 |                 assert(spec_set_pair_view_generated::<K, V>(tree@)) by {
+     |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `spec_set_pair_view_generated` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+note: `spec_set_pair_view_generated` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `spec_set_pair_view_generated` to disambiguate
+
+error[E0659]: `lemma_pair_set_to_map_dom_finite` is ambiguous
+    --> src/Chap43/OrderedTableStPer.rs:1284:17
+     |
+1284 |         proof { lemma_pair_set_to_map_dom_finite(tree@); }
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ambiguous name
+     |
+     = note: ambiguous because of multiple glob imports of a name in the same module
+note: `lemma_pair_set_to_map_dom_finite` could refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:48:13
+     |
+  48 |     pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
+     |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+note: `lemma_pair_set_to_map_dom_finite` could also refer to the function imported here
+    --> src/Chap43/OrderedTableStPer.rs:32:9
+     |
+  32 |     use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     = help: consider adding an explicit import of `lemma_pair_set_to_map_dom_finite` to disambiguate
+
+error: aborting due to 33 previous errors
+
+For more information about this error, try `rustc --explain E0659`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 274MB, peak z3 RSS: 0MB, min free: 23249MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s
