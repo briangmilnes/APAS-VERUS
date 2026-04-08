@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarContractionMtEph.rs:290:24
+    |
+290 |                 assert(graph@.V.contains(edge_view.0));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarContractionMtEph.rs:291:24
+    |
+291 |                 assert(graph@.V.contains(edge_view.1));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+graph.view().V.contains(edge_view.0) 
+    function is uninterpreted
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 18s
+Sampled Memory Usage: peak rust_verify RSS: 3944MB, peak z3 RSS: 479MB, min free: 22248MB
+Sampled CPU Usage: rust_verify: 55s, z3 children: 33s

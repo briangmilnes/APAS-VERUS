@@ -1,0 +1,46 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap62/StarPartitionMtEph.rs:154:13
+    |
+154 | /             forall|j: int| start as int <= j < end as int ==>
+155 | |                 #[trigger] flips@.contains_key(vertices@[j]@),
+    | |_____________________________________________________________^ failed this postcondition
+...
+272 |           merged
+    |           ------ at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+forall |j|
+    let tmp%% = old(start) in let tmp%% = j in let tmp%% = old(end) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        flips.view().dom().contains(old(vertices).view().index(j).view()) 
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:224:52
+    |
+224 |                     #[trigger] right@.contains_key(verts_view[j]@),
+    |                                                    ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:215:53
+    |
+215 |                     #[trigger] merged@.contains_key(verts_view[j]@),
+    |                                                     ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4784MB, peak z3 RSS: 679MB, min free: 21514MB
+Sampled CPU Usage: rust_verify: 85s, z3 children: 67s

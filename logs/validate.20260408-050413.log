@@ -1,0 +1,54 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:260:28
+    |
+260 |                     assert(it_seq.contains(pair));
+    |                            ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:267:28
+    |
+267 |                     assert(pair.0@ == verts_view[j]@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+it_seq.contains(pair)
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = it_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% && it_seq.index(i) == pair) 
++---
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:224:52
+    |
+224 |                     #[trigger] right@.contains_key(verts_view[j]@),
+    |                                                    ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:215:53
+    |
+215 |                     #[trigger] merged@.contains_key(verts_view[j]@),
+    |                                                     ^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap62/StarPartitionMtEph.rs:259:56
+    |
+259 |                     let pair = choose|pair: (V, bool)| #[trigger] it_seq.contains(pair) && pair.0@ == verts_view[j]@;
+    |                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4665MB, peak z3 RSS: 511MB, min free: 21587MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 95s

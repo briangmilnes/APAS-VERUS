@@ -150,47 +150,15 @@ pub mod StarPartitionStEph {
                 // Prove inner loop invariants from outer loop inv + insert ensures.
                 proof {
                     // From insert ensures and clone_view@ == vv:
-                    assert(processed@ == pre_proc.insert(vv));
-                    assert(centers@ == pre_ctr.insert(vv));
                     // partition_map stores vc_val at key vv; vc_val@ == vv.
-                    assert(partition_map@.contains_key(vv));
-                    assert(partition_map@[vv]@ == vv);
                     // vertex was not in processed (from !processed.mem check).
-                    assert(!pre_proc.contains(vv));
 
                     // Domain invariant: processed@.contains(w) => partition_map@.contains_key(w).
-                    assert forall|w: V::V| #[trigger] processed@.contains(w)
-                        implies partition_map@.contains_key(w) by {
-                        if w == vv {
-                            assert(partition_map@.contains_key(vv));
-                        } else {
-                            assert(pre_proc.contains(w));
-                            assert(pre_pm.contains_key(w));
-                            assert(partition_map@.contains_key(w));
-                        }
-                    };
 
                     // Range invariant: partition_map@.contains_key(v) => centers@.contains(pm@[v]@).
-                    assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view)
-                        implies centers@.contains(partition_map@[v_view]@) by {
-                        if v_view == vv {
-                            assert(partition_map@[vv]@ == vv);
-                            assert(centers@.contains(vv));
-                        } else {
-                            assert(pre_pm.contains_key(v_view));
-                            assert(pre_ctr.contains(pre_pm[v_view]@));
-                            assert(partition_map@[v_view] == pre_pm[v_view]);
-                            assert(centers@.contains(pre_pm[v_view]@));
-                        }
-                    };
 
                     // Prefix invariant: prior vertices (j < vi) are still in processed.
                     // processed@ = pre_proc.insert(vv), and pre_proc already had them.
-                    assert forall|j: int| 0 <= j < vi as int
-                        implies #[trigger] processed@.contains(vert_vec@[j]@) by {
-                        assert(pre_proc.contains(vert_vec@[j]@));
-                        assert(processed@.contains(vert_vec@[j]@));
-                    };
                 }
 
                 let mut ei: usize = 0;
@@ -227,34 +195,7 @@ pub mod StarPartitionStEph {
                             partition_map.insert(b.clone_view(), vertex.clone_view());
                             let _ = processed.insert(b.clone_view());
                             proof {
-                                assert(!pre_proc_i.contains(bv));
-                                assert(processed@ == pre_proc_i.insert(bv));
-                                assert(partition_map@.contains_key(bv));
-                                assert(partition_map@[bv]@ == cv);
-                                assert forall|w: V::V| #[trigger] processed@.contains(w)
-                                    implies partition_map@.contains_key(w) by {
-                                    if w != bv {
-                                        assert(pre_proc_i.contains(w));
-                                        assert(pre_pm_i.contains_key(w));
-                                        assert(partition_map@.contains_key(w));
-                                    }
-                                };
-                                assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view)
-                                    implies centers@.contains(partition_map@[v_view]@) by {
-                                    if v_view == bv {
-                                        assert(centers@.contains(cv));
-                                    } else {
-                                        assert(pre_pm_i.contains_key(v_view));
-                                        assert(centers@.contains(pre_pm_i[v_view]@));
-                                        assert(partition_map@[v_view] == pre_pm_i[v_view]);
-                                    }
-                                };
                                 // Prefix invariant maintained (insert only adds bv, old j<vi still covered).
-                                assert forall|j: int| 0 <= j < vi as int
-                                    implies #[trigger] processed@.contains(vert_vec@[j]@) by {
-                                    assert(pre_proc_i.contains(vert_vec@[j]@));
-                                    assert(processed@.contains(vert_vec@[j]@));
-                                };
                             }
                         }
                     } else if b.clone_view() == vertex.clone_view() {
@@ -266,34 +207,7 @@ pub mod StarPartitionStEph {
                             partition_map.insert(a.clone_view(), vertex.clone_view());
                             let _ = processed.insert(a.clone_view());
                             proof {
-                                assert(!pre_proc_i.contains(av));
-                                assert(processed@ == pre_proc_i.insert(av));
-                                assert(partition_map@.contains_key(av));
-                                assert(partition_map@[av]@ == cv);
-                                assert forall|w: V::V| #[trigger] processed@.contains(w)
-                                    implies partition_map@.contains_key(w) by {
-                                    if w != av {
-                                        assert(pre_proc_i.contains(w));
-                                        assert(pre_pm_i.contains_key(w));
-                                        assert(partition_map@.contains_key(w));
-                                    }
-                                };
-                                assert forall|v_view: V::V| #[trigger] partition_map@.contains_key(v_view)
-                                    implies centers@.contains(partition_map@[v_view]@) by {
-                                    if v_view == av {
-                                        assert(centers@.contains(cv));
-                                    } else {
-                                        assert(pre_pm_i.contains_key(v_view));
-                                        assert(centers@.contains(pre_pm_i[v_view]@));
-                                        assert(partition_map@[v_view] == pre_pm_i[v_view]);
-                                    }
-                                };
                                 // Prefix invariant maintained.
-                                assert forall|j: int| 0 <= j < vi as int
-                                    implies #[trigger] processed@.contains(vert_vec@[j]@) by {
-                                    assert(pre_proc_i.contains(vert_vec@[j]@));
-                                    assert(processed@.contains(vert_vec@[j]@));
-                                };
                             }
                         }
                     }
@@ -304,21 +218,11 @@ pub mod StarPartitionStEph {
             // Prove forall j <= vi: processed@.contains(vert_vec@[j]@) (before incrementing vi).
             proof {
                 // (*vertex)@ == vert_vec@[vi as int]@ from Vec::index ensures.
-                assert((*vertex)@ == vert_vec@[vi as int]@);
                 // In both branches of the if, vertex ends up in processed:
                 // - if branch: inner loop invariant processed@.contains((*vertex)@)
                 // - else branch: mem ensures processed@.contains((*vertex)@)
-                assert(processed@.contains((*vertex)@));
                 // So processed@.contains(vert_vec@[vi as int]@).
-                assert(processed@.contains(vert_vec@[vi as int]@));
                 // Combined with the prefix invariant (j < vi from inner loop inv or outer inv):
-                assert forall|j: int| 0 <= j < vi as int + 1
-                    implies #[trigger] processed@.contains(vert_vec@[j]@) by {
-                    if j < vi as int {
-                        // From inner loop invariant or outer loop invariant for j < vi.
-                    }
-                    // j == vi as int: from processed@.contains(vert_vec@[vi as int]@) above.
-                };
             }
             vi = vi + 1;
         }
@@ -328,18 +232,10 @@ pub mod StarPartitionStEph {
             assert forall|v_view: V::V| #[trigger] graph.V@.contains(v_view)
                 implies partition_map@.contains_key(v_view) by {
                 // to_seq ensures: graph.V@.contains(v_view) ↔ vert_vec@.map(fn).contains(v_view)
-                assert(vert_vec@.map(|_i: int, t: V| t@).contains(v_view));
                 // Derive: ∃j < nv, vert_vec@[j]@ == v_view (from Seq::map open definition).
-                assert(exists|j: int| 0 <= j < nv as int && #[trigger] vert_vec@[j]@ == v_view) by {
-                    let k = vert_vec@.map(|_i: int, t: V| t@).index_of(v_view);
-                    assert(0 <= k < nv as int);
-                    assert(vert_vec@.map(|_i: int, t: V| t@)[k] == v_view);
-                    assert(vert_vec@.map(|_i: int, t: V| t@)[k] == vert_vec@[k]@);
-                };
                 // trigger on vert_vec@[j]@ avoids lambda-in-trigger error.
                 let j = choose|j: int| 0 <= j < nv as int && #[trigger] vert_vec@[j]@ == v_view;
                 // vi == nv after loop: loop invariant gives processed@.contains(vert_vec@[j]@).
-                assert(processed@.contains(vert_vec@[j]@));
                 assert(processed@.contains(v_view));
             };
         }

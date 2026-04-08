@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarContractionMtEph.rs:367:24
+    |
+367 |                 assert(graph_v_view.contains((*edges).spec_index(start as int)@.1));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarContractionMtEph.rs:368:24
+    |
+368 |                 assert(graph_v_view.contains((*u)@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+graph_v_view.contains(edges.spec_index(start).view().1) 
+    function is uninterpreted
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 3967MB, peak z3 RSS: 310MB, min free: 22317MB
+Sampled CPU Usage: rust_verify: 63s, z3 children: 57s

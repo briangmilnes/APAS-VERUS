@@ -1,0 +1,33 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:327:24
+    |
+327 |                 assert(coin_flips@.contains_key(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:328:24
+    |
+328 |                 assert(vertex_to_index@.contains_key(u@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:329:24
+    |
+329 |                 assert(vertex_to_index@.contains_key(v@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+coin_flips.view().dom().contains(v.view()) 
+    function is uninterpreted
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 5020MB, peak z3 RSS: 492MB, min free: 21705MB
+Sampled CPU Usage: rust_verify: 69s, z3 children: 38s

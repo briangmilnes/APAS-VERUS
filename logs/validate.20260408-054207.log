@@ -1,0 +1,123 @@
+Mode: isolate
+Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:802:28
+    |
+802 |                     assert(coin_flips@.contains_key(tail_v));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:803:28
+    |
+803 |                     assert(!coin_flips@[tail_v]);
+    |                            ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:804:28
+    |
+804 |                     assert(coin_flips@.contains_key(head_view));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:805:28
+    |
+805 |                     assert(coin_flips@[head_view]);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:806:28
+    |
+806 |                     assert(vertex_to_index@.contains_key(head_view));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap62/StarPartitionMtEph.rs:807:28
+    |
+807 |                     assert((vertex_to_index@[head_view] as usize) < nv);
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+coin_flips.view().dom().contains(tail_v) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:934:44
+    |
+934 | ...                   #[trigger] verts_view[the_view[s2].0 as int]@ == v_view;
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:924:40
+    |
+924 | ...                   #[trigger] verts_view[the_view[s].0 as int]@ == v_view by {
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:890:36
+    |
+890 |                         #[trigger] verts_view[the_view[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:839:36
+    |
+839 |                         #[trigger] v1@[the1@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:842:56
+    |
+842 |                     vi1@.contains_key(r@[v_view]@) && (vi1@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:859:36
+    |
+859 |                         #[trigger] v2@[the2@[s].0 as int]@ == v_view,
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+   --> src/Chap62/StarPartitionMtEph.rs:862:56
+    |
+862 |                     vi2@.contains_key(r@[v_view]@) && (vi2@[r@[v_view]@] as usize) < nv,
+    |                                                        ^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap62/StarPartitionMtEph.rs:770:32
+    |
+770 |                     #[trigger] vertices@[th_edges@[s].0 as int]@ == v_view,
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1339 verified, 1 errors
+error: aborting due to 6 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 4694MB, peak z3 RSS: 508MB, min free: 21510MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 38s

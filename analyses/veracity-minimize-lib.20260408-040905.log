@@ -1,0 +1,1703 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent1/analyses/veracity-minimize-lib.20260408-040905.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent1
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent1/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: false
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  --project:          APAS
+  --chapter:          Chap62
+
+Mode: APAS isolate Chap62 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping existing Veracity markers
+═══════════════════════════════════════════════════════════════
+
+  Found 1 existing Veracity markers
+  Cleaning up for fresh analysis...
+  ✓ Removed 0 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 21.2s. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  14215 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions
+  56 spec functions without explicit calls (excluding type variants where any is used)
+
+Phase 3: Discovering vstd broadcast groups...
+  vstd source: /home/milnes/projects/verus/source/vstd
+  Found 49 broadcast groups
+
+Phase 4: Estimating time...
+  Time per verification:           21.2s
+  Lemmas to test:                  305
+  Est. lib asserts to test:        ~260
+  Est. codebase asserts to test:   ~40
+
+  Estimation formula:
+    Phase 5/6: verification_time × num_files
+    Phase 7:   verification_time × num_lemmas (empty body test)
+    Phase 8:   verification_time × num_lemmas (comment out test)
+    Phase 9/10: verification_time × num_asserts (comment out test)
+
+  Phase 1 (verify codebase):       21.2s (done)
+  Phase 2 (analyze library):       ~0s (no verification)
+  Phase 3 (discover broadcasts):   ~0s (no verification)
+  Phase 4 (estimate time):         ~0s (no verification)
+  Phase 5 (library broadcasts):    skipped (no -L flag)
+  Phase 6 (codebase broadcasts):   skipped (no -b flag)
+  Phase 7 (dependence test):       ~1h 47m 54s (21.2s × 305 lemmas)
+  Phase 8 (necessity test):        ~1h 47m 54s (21.2s × 305 lemmas)
+  Phase 9 (library asserts):       ~0.0s (21.2s × ~260 asserts)
+  Phase 10 (codebase asserts):     ~14m 9s (21.2s × ~40 asserts)
+  ─────────────────────────────────────────
+  TOTAL ESTIMATED TIME:            ~3h 50m 18s
+
+Phase 5: Library broadcast groups...
+  Analyzing library for broadcast group recommendations...
+
+  VecQueue.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  feq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  float.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  hash_map_with_view_plus.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  hash_set_with_view_plus.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  multiset.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  seq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  seq_set.rs:
+    In use:
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  No new broadcast groups recommended for library.
+  Skipped (use -L flag to add broadcast groups)
+
+Phase 6: Codebase broadcast groups...
+  Analyzing broadcast groups per file...
+
+  src/Chap03/InsertionSortStEph.rs:
+    In use:
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap05/KleeneStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap05/MappingStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/RelationStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap06/DirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/DirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabUnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/UnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/UnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/WeightedDirGraphStEphF64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphIsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphUsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap17/MathSeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::multiset::group_multiset_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq_lib::group_filter_ensures
+
+  src/Chap18/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_2.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::arithmetic::power::group_pow_properties
+
+  src/Chap21/Algorithm21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Algorithm21_6.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Exercise21_7.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_8.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_3.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_4.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap23/BalBinTreeStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap23/PrimTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap26/ETSPMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ETSPStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/MergeSortMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/MergeSortStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/ScanDCMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ScanDCStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MCSSSpec.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap35/OrderStatSelectMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap36/QuickSortMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap38/BSTParaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap38/BSTParaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTParaTreapMtEph.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap40/BSTKeyValueStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::map_lib::group_map_union
+
+  src/Chap41/AVLTreeSetMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/AVLTreeSetStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/ArraySetEnumMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/ArraySetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/Example41_3.rs:
+    In use:
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/OrdKeyMap.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap42/TableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap43/AugOrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedSetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap45/BalancedTreePQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/BinaryHeapPQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/HeapsortExample.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/LeftistHeapPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/SortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/UnsortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap49/MinEditDistMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap50/MatrixChainMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/OptBinSearchTreeMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap51/TopDownDPMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap51/TopDownDPStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjTableGraphMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphMtPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap54/BFSMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap55/CycleDetectStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/CycleDetectStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/SCCStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/SCCStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/TopoSortStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap56/SSSPResultStPerF64.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap57/StackStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap66/BoruvkaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap66/BoruvkaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/ParaPairs.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Types.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/standards/table_of_contents_standard.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+═══════════════════════════════════════════════════════════════
+Phase 7: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 8: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+
+Phase 9: Skipped (use -a flag to enable assert minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 10: Testing codebase asserts
+═══════════════════════════════════════════════════════════════
+
+For each assert: comment out, verify. NEEDED=restored, UNNEEDED=left commented.
+
+Found 357 asserts in codebase, testing 357
+
+[1/357] assert L149 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 52.0s (incremental +13.9s)]
+[2/357] assert L151 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 50.3s (incremental +12.2s)]
+[3/357] assert L155 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[4/357] assert L157 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.6s (incremental -14.5s)]
+[5/357] assert L166 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[6/357] assert L176 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[7/357] assert L178 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[8/357] assert L181 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[9/357] assert L185 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[10/357] assert L186 in star_contract_mt_fuel<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[11/357] assert L236 in star_contract_mt<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[12/357] assert L238 in star_contract_mt<V, R, F, G> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[13/357] assert L276 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.5s (incremental ~0s)]
+[14/357] assert L280 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[15/357] assert L282 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[16/357] assert L284 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 18.9s (incremental ~0s)]
+[17/357] assert L285 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[18/357] assert L286 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[19/357] assert L287 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.0s (incremental ~0s)]
+[20/357] assert L290 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[21/357] assert L291 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[22/357] assert L293 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[23/357] assert L304 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[24/357] assert L305 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[25/357] assert L307 in build_quotient_graph_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.9s)]
+[26/357] assert L358 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[27/357] assert L360 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.6s (incremental -16.6s)]
+[28/357] assert L362 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 14s (incremental +36.7s)]
+[29/357] assert L364 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 15s (incremental +37.0s)]
+[30/357] assert L365 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.2s (incremental +20.1s)]
+[31/357] assert L366 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 56.1s (incremental +18.0s)]
+[32/357] assert L367 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 8s (incremental +30.7s)]
+[33/357] assert L368 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 13s (incremental +35.0s)]
+[34/357] assert L369 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 9s (incremental +31.0s)]
+[35/357] assert L371 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 10s (incremental +32.5s)]
+[36/357] assert L372 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 7s (incremental +29.0s)]
+[37/357] assert L378 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 4s (incremental +26.2s)]
+[38/357] assert L379 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 8s (incremental +30.4s)]
+[39/357] assert L380 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 10s (incremental +32.7s)]
+[40/357] assert L381 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[41/357] assert L385 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[42/357] assert L388 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -15.0s)]
+[43/357] assert L393 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[44/357] assert L394 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[45/357] assert L395 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.2s (incremental -12.9s)]
+[46/357] assert L396 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 6s (incremental +28.0s)]
+[47/357] assert L400 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.4s (incremental +20.3s)]
+[48/357] assert L403 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 2s (incremental +24.7s)]
+[49/357] assert L415 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.2s (incremental +18.1s)]
+[50/357] assert L416 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 2s (incremental +24.5s)]
+[51/357] assert L417 in route_edges_parallel<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarContractionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.4s (incremental -12.7s)]
+[52/357] assert L129 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.1s)]
+[53/357] assert L131 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.1s)]
+[54/357] assert L135 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.7s)]
+[55/357] assert L137 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.1s)]
+[56/357] assert L147 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[57/357] assert L157 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[58/357] assert L159 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[59/357] assert L162 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[60/357] assert L166 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[61/357] assert L167 in star_contract_fuel<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[62/357] assert L215 in star_contract<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[63/357] assert L217 in star_contract<V, R, F, G> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[64/357] assert L272 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.2s (incremental ~0s)]
+[65/357] assert L274 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[66/357] assert L276 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[67/357] assert L279 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[68/357] assert L280 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... NEEDED (restored) [initial 38.1s -> now 21.3s (incremental ~0s)]
+[69/357] assert L282 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[70/357] assert L283 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.4s (incremental -12.7s)]
+[71/357] assert L285 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 26.2s (incremental -11.9s)]
+[72/357] assert L286 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.9s)]
+[73/357] assert L294 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[74/357] assert L296 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[75/357] assert L298 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[76/357] assert L300 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[77/357] assert L305 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[78/357] assert L308 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[79/357] assert L314 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[80/357] assert L315 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[81/357] assert L316 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[82/357] assert L317 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[83/357] assert L321 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 43.3s (incremental +5.2s)]
+[84/357] assert L324 in build_quotient_graph<V: HashOrd> (src/Chap62/StarContractionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 47.8s (incremental +9.6s)]
+[85/357] assert L202 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 45.9s (incremental +7.8s)]
+[86/357] assert L231 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 45.8s (incremental +7.7s)]
+[87/357] assert L233 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 52.7s (incremental +14.6s)]
+[88/357] assert L235 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 43.7s (incremental +5.6s)]
+[89/357] assert L238 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 48.1s (incremental +10.0s)]
+[90/357] assert L250 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.9s (incremental +11.7s)]
+[91/357] assert L251 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.1s (incremental ~0s)]
+[92/357] assert L257 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.0s (incremental ~0s)]
+[93/357] assert L260 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[94/357] assert L262 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.9s)]
+[95/357] assert L263 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[96/357] assert L264 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.7s (incremental -10.4s)]
+[97/357] assert L265 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[98/357] assert L266 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[99/357] assert L267 in hash_coin_flips_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[100/357] assert L324 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 16.8s (incremental ~0s)]
+[101/357] assert L325 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[102/357] assert L326 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.1s (incremental ~0s)]
+[103/357] assert L327 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 51.8s (incremental +13.7s)]
+[104/357] assert L328 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.2s (incremental +18.1s)]
+[105/357] assert L329 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.6s (incremental +18.5s)]
+[106/357] assert L342 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 52.2s (incremental +14.0s)]
+[107/357] assert L345 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 48.1s (incremental +10.0s)]
+[108/357] assert L346 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.2s (incremental +20.0s)]
+[109/357] assert L347 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.5s (incremental +18.4s)]
+[110/357] assert L349 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 33.4s (incremental -4.8s)]
+[111/357] assert L351 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 33.6s (incremental -4.5s)]
+[112/357] assert L353 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 31.3s (incremental -6.8s)]
+[113/357] assert L354 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.8s (incremental +11.7s)]
+[114/357] assert L355 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 51.8s (incremental +13.7s)]
+[115/357] assert L363 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.8s (incremental +11.7s)]
+[116/357] assert L365 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.2s (incremental +16.1s)]
+[117/357] assert L366 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.4s (incremental +20.3s)]
+[118/357] assert L367 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.5s (incremental +18.4s)]
+[119/357] assert L368 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.1s (incremental +16.0s)]
+[120/357] assert L369 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.8s (incremental +11.7s)]
+[121/357] assert L371 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.2s (incremental +18.1s)]
+[122/357] assert L372 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.2s (incremental +16.1s)]
+[123/357] assert L373 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.9s (incremental +11.8s)]
+[124/357] assert L451 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 43.7s (incremental +5.5s)]
+[125/357] assert L452 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 6s (incremental +28.4s)]
+[126/357] assert L453 in build_th_edges_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 41.4s (incremental +3.3s)]
+[127/357] assert L543 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 6s (incremental +28.6s)]
+[128/357] assert L544 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 43.9s (incremental +5.8s)]
+[129/357] assert L551 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 0s (incremental +22.2s)]
+[130/357] assert L553 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.3s (incremental -12.8s)]
+[131/357] assert L555 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.2s (incremental ~0s)]
+[132/357] assert L556 in build_p_vec_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[133/357] assert L679 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[134/357] assert L684 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[135/357] assert L685 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 18.9s (incremental -19.2s)]
+[136/357] assert L687 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[137/357] assert L688 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.2s (incremental ~0s)]
+[138/357] assert L692 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[139/357] assert L696 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[140/357] assert L700 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.1s (incremental ~0s)]
+[141/357] assert L701 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[142/357] assert L703 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.1s (incremental -15.0s)]
+[143/357] assert L704 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.0s (incremental +17.9s)]
+[144/357] assert L709 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 1m 2s (incremental +24.2s)]
+[145/357] assert L715 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.1s (incremental +19.9s)]
+[146/357] assert L716 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.3s (incremental +20.1s)]
+[147/357] assert L717 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.1s)]
+[148/357] assert L718 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[149/357] assert L720 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.0s (incremental -19.1s)]
+[150/357] assert L721 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[151/357] assert L722 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[152/357] assert L723 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[153/357] assert L732 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[154/357] assert L735 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[155/357] assert L736 in build_vertex_to_index_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[156/357] assert L792 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 16.9s (incremental ~0s)]
+[157/357] assert L800 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[158/357] assert L801 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[159/357] assert L802 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[160/357] assert L803 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[161/357] assert L804 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.9s)]
+[162/357] assert L805 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[163/357] assert L806 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 18.9s (incremental -19.2s)]
+[164/357] assert L807 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.1s (incremental -19.1s)]
+[165/357] assert L905 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.2s (incremental ~0s)]
+[166/357] assert L912 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[167/357] assert L916 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[168/357] assert L917 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.7s (incremental -14.4s)]
+[169/357] assert L918 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.5s (incremental -12.7s)]
+[170/357] assert L920 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.5s (incremental -12.6s)]
+[171/357] assert L922 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 6.5s (incremental ~0s)]
+[172/357] assert L927 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.8s (incremental -12.3s)]
+[173/357] assert L928 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.1s)]
+[174/357] assert L929 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 43.6s (incremental +5.5s)]
+[175/357] assert L931 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.7s (incremental +1.6s)]
+[176/357] assert L935 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 29.4s (incremental -8.7s)]
+[177/357] assert L939 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 23.0s (incremental ~0s)]
+[178/357] assert L943 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 49.7s (incremental +11.6s)]
+[179/357] assert L945 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[180/357] assert L949 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[181/357] assert L953 in build_satellite_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[182/357] assert L1035 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.1s (incremental -19.0s)]
+[183/357] assert L1036 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[184/357] assert L1038 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.9s (incremental -14.2s)]
+[185/357] assert L1040 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.7s)]
+[186/357] assert L1042 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.0s (incremental -19.2s)]
+[187/357] assert L1049 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[188/357] assert L1052 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.0s (incremental ~0s)]
+[189/357] assert L1053 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[190/357] assert L1172 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.3s (incremental -12.8s)]
+[191/357] assert L1179 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[192/357] assert L1185 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.9s (incremental -14.2s)]
+[193/357] assert L1190 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 16.8s (incremental ~0s)]
+[194/357] assert L1191 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.4s (incremental -10.7s)]
+[195/357] assert L1196 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[196/357] assert L1200 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[197/357] assert L1203 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.3s (incremental ~0s)]
+[198/357] assert L1204 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.0s (incremental -19.2s)]
+[199/357] assert L1208 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[200/357] assert L1212 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[201/357] assert L1215 in build_p_vec_with_inject_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 19.2s (incremental ~0s)]
+[202/357] assert L1364 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[203/357] assert L1365 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[204/357] assert L1369 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[205/357] assert L1373 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[206/357] assert L1375 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[207/357] assert L1376 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[208/357] assert L1380 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 4.4s (incremental ~0s)]
+[209/357] assert L1385 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 55.7s (incremental +17.6s)]
+[210/357] assert L1386 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 17s (incremental +39.0s)]
+[211/357] assert L1388 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 8s (incremental +30.3s)]
+[212/357] assert L1389 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 10s (incremental +32.5s)]
+[213/357] assert L1393 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 14s (incremental +36.4s)]
+[214/357] assert L1396 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 47.8s (incremental +9.6s)]
+[215/357] assert L1400 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 46.2s (incremental +8.0s)]
+[216/357] assert L1402 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 48.0s (incremental +9.8s)]
+[217/357] assert L1403 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 24.7s (incremental -13.4s)]
+[218/357] assert L1408 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 39.5s (incremental +1.4s)]
+[219/357] assert L1412 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.1s (incremental +18.0s)]
+[220/357] assert L1416 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 52.0s (incremental +13.9s)]
+[221/357] assert L1417 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 0s (incremental +22.2s)]
+[222/357] assert L1419 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.2s (incremental +16.1s)]
+[223/357] assert L1420 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.1s (incremental +18.0s)]
+[224/357] assert L1425 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 37.4s (incremental ~0s)]
+[225/357] assert L1432 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.3s (incremental +18.2s)]
+[226/357] assert L1433 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.2s (incremental +18.1s)]
+[227/357] assert L1434 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.3s (incremental +16.1s)]
+[228/357] assert L1435 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 50.1s (incremental +12.0s)]
+[229/357] assert L1438 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.5s (incremental +16.3s)]
+[230/357] assert L1439 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.2s (incremental +18.1s)]
+[231/357] assert L1440 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.2s (incremental +16.1s)]
+[232/357] assert L1441 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.4s (incremental +20.2s)]
+[233/357] assert L1442 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 33.2s (incremental -4.9s)]
+[234/357] assert L1443 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 33.1s (incremental -5.0s)]
+[235/357] assert L1444 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.7s (incremental +1.6s)]
+[236/357] assert L1453 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 16.4s (incremental ~0s)]
+[237/357] assert L1456 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.2s (incremental -2.9s)]
+[238/357] assert L1457 in build_partition_map_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 44.7s (incremental +6.6s)]
+[239/357] assert L1544 in build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 25.5s (incremental ~0s)]
+[240/357] assert L1548 in build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 0s (incremental +21.9s)]
+[241/357] assert L1549 in build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 24.8s (incremental -13.3s)]
+[242/357] assert L1553 in build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.5s (incremental -2.6s)]
+[243/357] assert L1554 in build_centers_mt<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.4s (incremental -2.8s)]
+[244/357] assert L1582 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.8s (incremental +1.7s)]
+[245/357] assert L1583 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.6s (incremental +1.4s)]
+[246/357] assert L1584 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.4s (incremental -2.7s)]
+[247/357] assert L1585 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.6s (incremental -2.6s)]
+[248/357] assert L1587 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.4s (incremental -2.8s)]
+[249/357] assert L1588 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.3s (incremental -2.8s)]
+[250/357] assert L1589 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 37.6s (incremental -0.6s)]
+[251/357] assert L1590 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 31.5s (incremental -6.6s)]
+[252/357] assert L1605 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 20.9s (incremental ~0s)]
+[253/357] assert L1607 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 43.8s (incremental +5.6s)]
+[254/357] assert L1609 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[255/357] assert L1610 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 55.9s (incremental +17.8s)]
+[256/357] assert L1611 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.0s (incremental +15.9s)]
+[257/357] assert L1629 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 37.5s (incremental ~0s)]
+[258/357] assert L1635 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 51.9s (incremental +13.8s)]
+[259/357] assert L1636 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.5s (incremental +1.4s)]
+[260/357] assert L1637 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 31.0s (incremental ~0s)]
+[261/357] assert L1638 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 29.1s (incremental -9.0s)]
+[262/357] assert L1639 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.8s (incremental +1.6s)]
+[263/357] assert L1642 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 35.2s (incremental -2.9s)]
+[264/357] assert L1644 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.0s (incremental +15.8s)]
+[265/357] assert L1645 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.5s (incremental +18.4s)]
+[266/357] assert L1647 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.1s (incremental +16.0s)]
+[267/357] assert L1649 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 54.1s (incremental +16.0s)]
+[268/357] assert L1650 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.5s (incremental +20.4s)]
+[269/357] assert L1681 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.4s (incremental +18.3s)]
+[270/357] assert L1682 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 37.6s (incremental ~0s)]
+[271/357] assert L1687 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 39.7s (incremental +1.6s)]
+[272/357] assert L1692 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 35.3s (incremental ~0s)]
+[273/357] assert L1748 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 43.8s (incremental +5.7s)]
+[274/357] assert L1750 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.4s (incremental +20.3s)]
+[275/357] assert L1752 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 3s (incremental +25.3s)]
+[276/357] assert L1753 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 0s (incremental +22.8s)]
+[277/357] assert L1754 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 31.2s (incremental -6.9s)]
+[278/357] assert L1758 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 41.8s (incremental +3.7s)]
+[279/357] assert L1764 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 2s (incremental +24.9s)]
+[280/357] assert L1765 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.6s (incremental +20.5s)]
+[281/357] assert L1769 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 31.4s (incremental -6.7s)]
+[282/357] assert L1772 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 3s (incremental +25.0s)]
+[283/357] assert L1774 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 33.3s (incremental -4.8s)]
+[284/357] assert L1776 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.5s (incremental +18.3s)]
+[285/357] assert L1778 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 1s (incremental +23.3s)]
+[286/357] assert L1779 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 31.3s (incremental -6.8s)]
+[287/357] assert L1780 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 1m 3s (incremental +25.4s)]
+[288/357] assert L1782 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 58.6s (incremental +20.5s)]
+[289/357] assert L1783 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 56.3s (incremental +18.2s)]
+[290/357] assert L1784 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 48.1s (incremental +10.0s)]
+[291/357] assert L1786 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... NEEDED (restored) [initial 38.1s -> now 45.8s (incremental +7.7s)]
+[292/357] assert L1787 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.1s (incremental -11.0s)]
+[293/357] assert L1789 in parallel_star_partition<V: StT + MtT + Hash + Ord + ClonePreservesView + 'static> (src/Chap62/StarPartitionMtEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 45.7s (incremental +7.6s)]
+[294/357] assert L153 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 29.0s (incremental -9.1s)]
+[295/357] assert L154 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 29.3s (incremental -8.8s)]
+[296/357] assert L156 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.0s (incremental -11.1s)]
+[297/357] assert L157 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 45.8s (incremental +7.6s)]
+[298/357] assert L159 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 29.1s (incremental -9.0s)]
+[299/357] assert L162 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 50.1s (incremental +11.9s)]
+[300/357] assert L165 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 39.4s (incremental +1.3s)]
+[301/357] assert L167 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[302/357] assert L168 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[303/357] assert L169 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[304/357] assert L174 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[305/357] assert L177 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[306/357] assert L178 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[307/357] assert L180 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[308/357] assert L181 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[309/357] assert L182 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[310/357] assert L183 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.7s (incremental -12.4s)]
+[311/357] assert L189 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.1s (incremental -15.0s)]
+[312/357] assert L191 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.4s (incremental -14.7s)]
+[313/357] assert L192 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.3s (incremental -16.8s)]
+[314/357] assert L230 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.1s (incremental -15.0s)]
+[315/357] assert L231 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.5s (incremental -10.7s)]
+[316/357] assert L232 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.4s (incremental -12.7s)]
+[317/357] assert L233 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[318/357] assert L234 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.4s (incremental -12.7s)]
+[319/357] assert L237 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[320/357] assert L238 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.0s (incremental -19.2s)]
+[321/357] assert L239 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[322/357] assert L242 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[323/357] assert L245 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[324/357] assert L247 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[325/357] assert L248 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[326/357] assert L249 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[327/357] assert L253 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[328/357] assert L255 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.6s (incremental -12.6s)]
+[329/357] assert L256 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.7s (incremental -14.5s)]
+[330/357] assert L269 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[331/357] assert L270 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 18.9s (incremental -19.2s)]
+[332/357] assert L271 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[333/357] assert L272 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[334/357] assert L273 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.1s (incremental -17.0s)]
+[335/357] assert L276 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[336/357] assert L277 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.7s (incremental -14.4s)]
+[337/357] assert L278 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[338/357] assert L281 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 19.1s (incremental -19.1s)]
+[339/357] assert L284 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -16.9s)]
+[340/357] assert L286 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.0s (incremental -17.1s)]
+[341/357] assert L287 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[342/357] assert L288 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.9s (incremental -14.2s)]
+[343/357] assert L292 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.9s)]
+[344/357] assert L294 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 21.2s (incremental -17.0s)]
+[345/357] assert L295 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.6s (incremental -10.6s)]
+[346/357] assert L307 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[347/357] assert L311 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.3s (incremental -14.8s)]
+[348/357] assert L313 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.7s (incremental -12.4s)]
+[349/357] assert L315 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.5s (incremental -14.6s)]
+[350/357] assert L328 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... NEEDED (restored) [initial 38.1s -> now 21.1s (incremental ~0s)]
+[351/357] assert L331 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.5s (incremental -12.7s)]
+[352/357] assert L333 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.9s (incremental -10.2s)]
+[353/357] assert L335 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 27.7s (incremental -10.4s)]
+[354/357] assert L336 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 23.2s (incremental -14.9s)]
+[355/357] assert L337 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 25.5s (incremental -12.6s)]
+[356/357] assert L342 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... UNNEEDED (commented) [initial 38.1s -> now 26.1s (incremental -12.1s)]
+[357/357] assert L343 in sequential_star_partition<V: HashOrd> (src/Chap62/StarPartitionStEph.rs)... NEEDED (restored) [initial 38.1s -> now 21.4s (incremental ~0s)]
+
+Phase 10 Summary: 357 tested, 309 removed (commented), 48m 1s time saved
+
+Phase 11: Skipped (use -m flag to enable admit minimization)
+
+Phase 12: Skipped (use -p flag to enable proof block minimization)
+
+Phase 13: Skipped (use -t flag to enable type minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 14: Analyzing and verifying final codebase
+═══════════════════════════════════════════════════════════════
+
+  Final LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  LOC change: no change
+  (excluding manual module removal)
+
+  Verifying...
+✓ Final verification: 25.7s (was 21.2s, +4.4s (20.9% slower))
+
+═══════════════════════════════════════════════════════════════
+MINIMIZATION SUMMARY
+═══════════════════════════════════════════════════════════════
+
+Time:
+  Actual time:             3h 19m 1s
+  Estimated time:          3h 50m 18s
+  Estimation error:        -1877.3s (-13.6%)
+
+Verification:
+  Initial: 21.2s (passed)
+  Final:   25.7s (passed)
+  Change:  +4.4s (20.9% slower)
+
+Lines of Code (comments not counted):
+  Initial:      0 (spec: 0, proof: 0, exec: 0)
+  Final:        0 (spec: 0, proof: 0, exec: 0)
+  Change:  no change (excluding manual module removal)
+
+Phase 7 (dependence): 0 DEPENDENT, 0 INDEPENDENT
+Phase 8 (necessity):  0 USED, 0 UNUSED, 0 skipped
+Combined:             0 DEPENDENT BUT NEEDED (keep these)
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT LEMMAS (vstd broadcast groups can prove these)     │
+├───────────────────────────────────────────────────────────────┤
+│ (none)                                                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ UNNEEDED LEMMAS (commented out, codebase verifies without)   │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all tested lemmas are needed)                        │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ DEPENDENT BUT NEEDED (guide verification, keep for now)      │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all dependent lemmas were also unneeded)             │
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ SPEC FUNCTIONS (160 total, 56 without explicit calls)         │
+├───────────────────────────────────────────────────────────────┤
+│ checked_int.rs             -> spec_is_add_associative
+│ checked_int.rs             -> spec_is_add_commutative
+│ checked_int.rs             -> spec_is_mul_associative
+│ checked_int.rs             -> spec_is_mul_commutative
+│ checked_int.rs             -> spec_mul_distributes_over_add
+│ checked_nat.rs             -> spec_is_add_associative
+│ checked_nat.rs             -> spec_is_add_commutative
+│ checked_nat.rs             -> spec_is_mul_associative
+│ checked_nat.rs             -> spec_is_mul_commutative
+│ checked_nat.rs             -> spec_mul_distributes_over_add
+│ feq.rs                     -> feq_reflexive
+│ feq.rs                     -> feq_symmetric
+│ feq.rs                     -> feq_transitive
+│ feq.rs                     -> obeys_feq<bool, u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize> (13 variants, 0 used)
+│ feq.rs                     -> obeys_feq_clone
+│ feq.rs                     -> obeys_feq_eq
+│ feq.rs                     -> obeys_feq_full
+│ feq.rs                     -> obeys_feq_full_trigger
+│ feq.rs                     -> obeys_feq_fulls
+│ feq.rs                     -> obeys_feq_properties
+│ feq.rs                     -> obeys_feq_view
+│ feq.rs                     -> obeys_feq_view_injective
+│ feq.rs                     -> obeys_view_eq_trigger
+│ float.rs                   -> all_float_wf
+│ float.rs                   -> spec_float_sorted
+│ hash_map_with_view_plus.rs -> exec_invariant
+│ hash_map_with_view_plus.rs -> ghost_advance
+│ hash_map_with_view_plus.rs -> ghost_decrease
+│ hash_map_with_view_plus.rs -> ghost_ensures
+│ hash_map_with_view_plus.rs -> ghost_invariant
+│ hash_map_with_view_plus.rs -> ghost_iter
+│ hash_map_with_view_plus.rs -> ghost_peek_next
+│ hash_set_with_view_plus.rs -> exec_invariant
+│ hash_set_with_view_plus.rs -> ghost_advance
+│ hash_set_with_view_plus.rs -> ghost_decrease
+│ hash_set_with_view_plus.rs -> ghost_ensures
+│ hash_set_with_view_plus.rs -> ghost_invariant
+│ hash_set_with_view_plus.rs -> ghost_iter
+│ hash_set_with_view_plus.rs -> ghost_peek_next
+│ hashed_checked_u32.rs      -> valid_key_type_CheckedU32
+│ partial_order.rs           -> partial_order_ensures
+│ pervasives_plus.rs         -> comment
+│ seq.rs                     -> spec_sum_u32_fold
+└───────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────┐
+│ REMOVABLE MODULES (0 can be removed entirely)               │
+├───────────────────────────────────────────────────────────────┤
+│ (none - all modules are needed)                              │
+└───────────────────────────────────────────────────────────────┘
+
+✓ Minimization complete! Codebase still verifies.
