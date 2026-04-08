@@ -1563,7 +1563,6 @@ broadcast use {
             }
             let ghost phase1_len: int = kept@.len() as int;
             let ghost phase1_kept = kept@;
-            proof { assert(phase1_len == old_self_view.len()); }
             // Phase 2: For each other entry, scan self for match.
             // If no match, add to output (entries only in other).
             let ghost mut phase2_sources: Seq<int> = Seq::empty();
@@ -1671,16 +1670,11 @@ broadcast use {
                                 let k = choose|k: int|
                                     0 <= k < old_phase2_sources.len()
                                     && (#[trigger] old_phase2_sources[k]) == oj;
-                                assert(phase2_sources[k] == old_phase2_sources[k]);
                                 assert(phase2_sources[k] == oj);
                             }
                         } else {
-                            if found {
-                                assert(spec_entries_to_map(old_self_view).contains_key(
-                                    other.entries@[oj].0));
-                            } else {
+                            if !found {
                                 let k = phase2_sources.len() - 1;
-                                assert(phase2_sources[k] == j as int);
                                 assert(phase2_sources[k] == oj);
                             }
                         }
@@ -1726,8 +1720,6 @@ broadcast use {
                             0 <= kidx < phase2_sources.len()
                             && (#[trigger] phase2_sources[kidx]) == oj;
                         let out_idx = phase1_len + kidx;
-                        assert(other.entries@[oj].0
-                            == kept@[out_idx as int].0@);
                         assert(self.entries.spec_index(out_idx) == kept@[out_idx]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(
                             self.entries@, out_idx);
@@ -1854,25 +1846,22 @@ broadcast use {
                         assert(self.entries.spec_index(a) == kept@[a]);
                         assert(self.entries.spec_index(b) == kept@[b]);
                         if a < phase1_len && b < phase1_len {
-                            assert(kept@[a].0@ == old_self_view[a].0);
-                            assert(kept@[b].0@ == old_self_view[b].0);
+                            // Both from phase 1 — keys from old_self_view which has no dups.
+                            assert(old_self_view[a].0 != old_self_view[b].0);
                         } else if a < phase1_len && b >= phase1_len {
                             let kidx = b - phase1_len;
                             let src = phase2_sources[kidx];
-                            assert(kept@[a].0@ == old_self_view[a].0);
-                            // Phase 2 invariant: key at b is NOT in old_self.
+                            // Phase 2 entry NOT in old_self; phase 1 key IS in old_self.
                             assert(!spec_entries_to_map(old_self_view).contains_key(
                                 other.entries@[src].0));
                             assert(kept@[b].0@ == other.entries@[src].0);
-                            // Phase 1 key IS in old_self.
-                            if kept@[a].0@ == kept@[b].0@ {
-                                lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, a);
-                            }
+                            lemma_entries_to_map_contains_key::<K::V, V::V>(old_self_view, a);
                         } else {
                             let ka = a - phase1_len;
                             let kb = b - phase1_len;
-                            assert(phase2_sources[ka] < phase2_sources[kb]);
-                            assert(other.entries@[phase2_sources[ka]].0 != other.entries@[phase2_sources[kb]].0);
+                            let sa = phase2_sources[ka];
+                            let sb = phase2_sources[kb];
+                            assert(other.entries@[sa].0 != other.entries@[sb].0);
                         }
                     };
                 };
@@ -1890,24 +1879,12 @@ broadcast use {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(old_self_view, k);
                     let si = choose|si: int| 0 <= si < old_self_view.len()
                         && (#[trigger] old_self_view[si]).0 == k;
-                    assert(0 <= si && si < phase1_len);
-                    // Phase 1 invariant: other contains old_self_view[si].0 = k.
-                    assert(old_self_view[si].0 == k);
-                    assert(spec_entries_to_map(other.entries@).contains_key(k));
-                    assert(spec_entries_to_map(other.entries@).contains_key(
-                        old_self_view[si].0));
                     // Trigger the combine_idx invariant for index si.
-                    assert(0 <= si < phase1_len);
+                    assert(spec_entries_to_map(other.entries@).contains_key(k));
                     let ci = combine_idx[si];
-                    assert(0 <= ci < other.entries@.len());
-                    assert(other.entries@[ci].0 == old_self_view[si].0);
-                    // Phase 1 entries are preserved through Phase 2 appends.
-                    assert(kept@[si] == phase1_kept[si]);
                     // From Phase 1 combine invariant.
                     assert(combine.ensures(
                         (&old_self_raw[si].1, &other_raw[ci].1), phase1_kept[si].1));
-                    // Connect: old_self_raw[si].1@ == old_self_view[si].1
-                    //          other_raw[ci].1@ == other.entries@[ci].1
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, si);
                     lemma_entries_to_map_get::<K::V, V::V>(other.entries@, ci);
                     // self@[k]: Phase 2 doesn't contain k (k is in self, so Phase 2 skipped it).
@@ -1917,17 +1894,13 @@ broadcast use {
                         let kidx = idx - phase1_len;
                         assert(self.entries.spec_index(idx) == kept@[idx]);
                         let src = phase2_sources[kidx];
-                        // Phase 2 entries have keys NOT in old_self.
                         assert(!spec_entries_to_map(old_self_view).contains_key(
                             other.entries@[src].0));
                         assert(kept@[idx].0@ == other.entries@[src].0);
-                        // But k IS in old_self.
-                        assert(spec_entries_to_map(old_self_view).contains_key(k));
                     };
                     // self@[k] comes from Phase 1.
                     lemma_entries_to_map_ignore_suffix::<K::V, V::V>(
                         self.entries@, phase1_len, k);
-                    // Phase 1 prefix keys match old_self_view keys.
                     let ghost prefix = self.entries@.subrange(0, phase1_len);
                     assert(prefix[si] == self.entries@[si]);
                     assert(self.entries.spec_index(si) == kept@[si]);

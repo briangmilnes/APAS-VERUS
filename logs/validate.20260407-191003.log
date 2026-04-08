@@ -1,0 +1,34 @@
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1394:29
+     |
+1394 |                       implies spec_entries_to_map(old_self_view).dom().contains(k)
+     |  _____________________________^
+1395 | |                         || other@.dom().contains(k)
+     | |___________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1413:33
+     |
+1413 |                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1457:29
+     |
+1457 |                     implies self@[k] == other@[k]
+     |                             ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(spec_entries_to_map(old_self_view).dom().contains(k)) ==>
+    other.view().dom().contains(k) 
+        function is uninterpreted
+
+verification results:: 2413 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 38s
+Sampled Memory Usage: peak rust_verify RSS: 3451MB, peak z3 RSS: 375MB, min free: 22364MB
+Sampled CPU Usage: rust_verify: 47s, z3 children: 58s

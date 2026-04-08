@@ -1,0 +1,39 @@
+error[E0599]: no method named `lemma_view_index` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> src/Chap42/TableMtEph.rs:1695:34
+     |
+1695 |                     self.entries.lemma_view_index(si);
+     |                                  ^^^^^^^^^^^^^^^^ method not found in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<Types::Types::Pair<K, V>>`
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:73:5
+     |
+  73 |     pub struct ArraySeqMtEphS<T> {
+     |     ---------------------------- method `lemma_view_index` not found for this struct
+
+error[E0599]: no method named `lemma_view_index` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> src/Chap42/TableMtEph.rs:1713:38
+     |
+1713 |                         self.entries.lemma_view_index(si);
+     |                                      ^^^^^^^^^^^^^^^^ method not found in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<Types::Types::Pair<K, V>>`
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:73:5
+     |
+  73 |     pub struct ArraySeqMtEphS<T> {
+     |     ---------------------------- method `lemma_view_index` not found for this struct
+
+error[E0599]: no method named `lemma_view_index` found for struct `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<T>` in the current scope
+    --> src/Chap42/TableMtEph.rs:1721:38
+     |
+1721 |                         self.entries.lemma_view_index(out_idx);
+     |                                      ^^^^^^^^^^^^^^^^ method not found in `Chap19::ArraySeqMtEph::ArraySeqMtEph::ArraySeqMtEphS<Types::Types::Pair<K, V>>`
+     |
+    ::: src/Chap19/ArraySeqMtEph.rs:73:5
+     |
+  73 |     pub struct ArraySeqMtEphS<T> {
+     |     ---------------------------- method `lemma_view_index` not found for this struct
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 1122MB, peak z3 RSS: 0MB, min free: 24773MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 0s
