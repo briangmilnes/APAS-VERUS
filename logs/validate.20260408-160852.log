@@ -1,0 +1,51 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+note: automatically chose triggers for this expression:
+  --> src/Chap37/BSTSpecsAndLemmas.rs:74:13
+   |
+74 | /             forall|x: T| new_left.tree_contains(x) ==>
+75 | |                 (old_left.tree_contains(x) || (T::le(x, node_val) && x != node_val)),
+   | |____________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+  --> src/Chap37/BSTSpecsAndLemmas.rs:75:48
+   |
+75 |                 (old_left.tree_contains(x) || (T::le(x, node_val) && x != node_val)),
+   |                                                ^^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+  --> src/Chap37/BSTSpecsAndLemmas.rs:90:13
+   |
+90 | /             forall|x: T| new_right.tree_contains(x) ==>
+91 | |                 (old_right.tree_contains(x) || (T::le(node_val, x) && x != node_val)),
+   | |_____________________________________________________________________________________^
+
+note:   trigger 1 of 1:
+  --> src/Chap37/BSTSpecsAndLemmas.rs:91:49
+   |
+91 |                 (old_right.tree_contains(x) || (T::le(node_val, x) && x != node_val)),
+   |                                                 ^^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+  --> src/Chap37/BSTSpecsAndLemmas.rs:90:13
+   |
+90 | /             forall|x: T| new_right.tree_contains(x) ==>
+91 | |                 (old_right.tree_contains(x) || (T::le(node_val, x) && x != node_val)),
+   | |_____________________________________________________________________________________^
+
+verification results:: 1949 verified, 0 errors
+Elapsed: 36s
+Sampled Memory Usage: peak rust_verify RSS: 11289MB, peak z3 RSS: 796MB, min free: 12207MB
+Sampled CPU Usage: rust_verify: 267s, z3 children: 217s
