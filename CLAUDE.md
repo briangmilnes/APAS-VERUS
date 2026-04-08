@@ -157,6 +157,11 @@ minor). You bring:
 - **Always ask before `git commit`**. Show changed files, proposed message, wait for "Ready to commit?"
 - **Always ask before `git push`**. Show commits to be pushed, wait for approval.
 - **Todos need approval.** Display the plan, wait for user approval before executing.
+- **NEVER run `git clean`.** Not `git clean -f`, not `git clean -fd`, not `git clean`
+  with any flags. Untracked files (logs, analysis output, veracity results) represent
+  hours of Z3 budget and are not debris. If you need a clean worktree state, use
+  `git checkout -- .` to restore tracked files and leave untracked files alone. If
+  untracked files are genuinely in the way, ask the user which ones to remove.
 - **NEVER revert proof work without explicit user approval.** This is a HARD RULE. Do NOT
   run `git checkout --`, `git restore`, `git reset`, or manually undo changes to source
   files without FIRST stopping and asking the user: "Should I revert, or fix forward?"
