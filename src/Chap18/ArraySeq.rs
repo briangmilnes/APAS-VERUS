@@ -30,8 +30,9 @@ pub mod ArraySeq {
     use std::vec::IntoIter;
 
     use vstd::prelude::*;
+    pub use crate::Chap18::ArraySeqSpecsAndLemmas::ArraySeqSpecsAndLemmas::*;
 
-    verus! 
+    verus!
 {
 
 
@@ -96,29 +97,6 @@ pub mod ArraySeq {
 
     //		Section 6. spec fns
 
-
-    /// Definition 18.7 (iterate). Left fold over a sequence: applies f to the accumulator
-    /// and each element from left to right.  spec_iterate(s, f, start_x) = f(...f(f(start_x, s[0]), s[1])..., s[n-1]).
-    pub open spec fn spec_iterate<A, T>(s: Seq<T>, f: spec_fn(A, T) -> A, start_x: A) -> A {
-        s.fold_left(start_x, f)
-    }
-
-    /// Definition 18.16 (inject). Apply position-value updates left to right; the first update
-    /// to each position wins.  Out-of-range positions are ignored.
-    pub open spec fn spec_inject<T>(s: Seq<T>, updates: Seq<(usize, T)>) -> Seq<T>
-        decreases updates.len()
-    {
-        if updates.len() == 0 {
-            s
-        } else {
-            // Process the tail first, then apply the head on top so the
-            // leftmost (first) update to any position overwrites later ones.
-            let rest = spec_inject(s, updates.drop_first());
-            let pos = updates[0].0 as int;
-            let val = updates[0].1;
-            if 0 <= pos < s.len() { rest.update(pos, val) } else { rest }
-        }
-    }
 
     /// Definition 18.19 (iteratePrefixes). Return the exclusive prefix folds and the total.
     /// The sequence contains the accumulator state before processing each element:

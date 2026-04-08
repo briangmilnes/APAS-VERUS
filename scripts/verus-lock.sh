@@ -12,13 +12,13 @@
 # Weight policy:
 #   isolate validate: weight 1 (grabs 1 slot, ~3-4 GB RSS)
 #   full validate:    weight 2 (grabs 2 slots, ~11 GB RSS)
-#   4 slots total means: 4 isolates, or 1 full + 2 isolates, or 2 fulls.
+#   6 slots total means: 6 isolates, or 1 full + 4 isolates, or 3 fulls.
 #
 # Usage in validate.sh / ptt.sh:
 #   source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
 
 VERUS_LOCK_DIR="${VERUS_LOCK_DIR:-/tmp/verus-locks}"
-VERUS_LOCK_SLOTS="${VERUS_LOCK_SLOTS:-4}"
+VERUS_LOCK_SLOTS="${VERUS_LOCK_SLOTS:-6}"
 VERUS_LOCK_TIMEOUT="${VERUS_LOCK_TIMEOUT:-300}"
 VERUS_LOCK_WEIGHT="${VERUS_LOCK_WEIGHT:-1}"
 

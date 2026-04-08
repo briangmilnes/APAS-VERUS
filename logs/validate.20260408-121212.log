@@ -1,0 +1,817 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find function `lemma_sorted_keys_pairwise_distinct` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:615:17
+    |
+615 |                 lemma_sorted_keys_pairwise_distinct(self.tree.inner@, sorted@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_sorted_keys_pairwise_distinct` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:274:11
+    |
+274 |       proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
+    |  ___________^
+275 | |         tree: Set<(KV, VV)>,
+276 | |         sorted: Seq<(KV, VV)>,
+...   |
+311 | |         };
+312 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_sorted_keys_pairwise_distinct;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:616:17
+    |
+616 |                 lemma_key_unique_empty::<K::V, V::V>();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:332:11
+    |
+332 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+333 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+334 | |     {
+335 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:657:29
+    |
+657 | ...                   lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_insert` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:668:21
+    |
+668 |                     lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, new_val@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_insert` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:235:11
+    |
+235 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+236 | |         requires
+237 | |             spec_key_unique_pairs_set(s),
+238 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...   |
+256 | |         };
+257 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_insert;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:671:21
+    |
+671 |                     lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, new_val@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:675:25
+    |
+675 |                         lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[j].0);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:678:25
+    |
+678 |                         lemma_pair_in_set_map_contains(new_tree@, sorted@[j].0, v);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:683:21
+    |
+683 |                     lemma_pair_in_set_map_contains(self.tree.inner@, sorted@[i as int].0, sorted@[i as int].1);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:720:25
+    |
+720 |                         lemma_map_contains_pair_in_set(new_tree@, key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:724:25
+    |
+724 |                         lemma_pair_in_set_map_contains(self.tree.inner@, sorted@[j].0, sorted@[j].1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:729:25
+    |
+729 |                         lemma_map_contains_pair_in_set(self.tree.inner@, key);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:743:21
+    |
+743 |                     lemma_map_contains_pair_in_set(new_tree@, k);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:745:21
+    |
+745 |                     lemma_pair_in_set_map_contains(new_tree@, k, v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_sorted_keys_pairwise_distinct` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:801:17
+    |
+801 |                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_sorted_keys_pairwise_distinct` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:274:11
+    |
+274 |       proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
+    |  ___________^
+275 | |         tree: Set<(KV, VV)>,
+276 | |         sorted: Seq<(KV, VV)>,
+...   |
+311 | |         };
+312 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_sorted_keys_pairwise_distinct;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:802:17
+    |
+802 |                 lemma_key_unique_empty::<K::V, V::V>();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:332:11
+    |
+332 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+333 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+334 | |     {
+335 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:840:33
+    |
+840 | ...                   lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_insert` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:851:25
+    |
+851 |                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_insert` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:235:11
+    |
+235 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+236 | |         requires
+237 | |             spec_key_unique_pairs_set(s),
+238 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...   |
+256 | |         };
+257 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_insert;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:866:25
+    |
+866 |                         lemma_map_contains_pair_in_set(new_tree@, k);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:868:25
+    |
+868 |                         lemma_pair_in_set_map_contains(old_tree, k, v);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:873:25
+    |
+873 |                         lemma_map_contains_pair_in_set(old_tree, k);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:878:25
+    |
+878 |                         lemma_pair_in_set_map_contains(new_tree@, k, v);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:884:21
+    |
+884 |                     lemma_map_contains_pair_in_set(new_tree@, k);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:886:21
+    |
+886 |                     lemma_pair_in_set_map_contains(new_tree@, k, v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:887:21
+    |
+887 |                     lemma_pair_in_set_map_contains(old_tree, k, v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_sorted_keys_pairwise_distinct` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:903:17
+    |
+903 |                 lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_sorted_keys_pairwise_distinct` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:274:11
+    |
+274 |       proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
+    |  ___________^
+275 | |         tree: Set<(KV, VV)>,
+276 | |         sorted: Seq<(KV, VV)>,
+...   |
+311 | |         };
+312 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_sorted_keys_pairwise_distinct;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:904:17
+    |
+904 |                 lemma_key_unique_empty::<K::V, V::V>();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:332:11
+    |
+332 |       proof fn lemma_key_unique_empty<KV, VV>()
+    |  ___________^
+333 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+334 | |     {
+335 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:942:33
+    |
+942 | ...                   lemma_map_contains_pair_in_set(old_new_tree_view, sorted@[i as int].0);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_key_unique_insert` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:953:25
+    |
+953 |                         lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_insert` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:235:11
+    |
+235 |       proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+236 | |         requires
+237 | |             spec_key_unique_pairs_set(s),
+238 | |             !spec_pair_set_to_map(s).dom().contains(k),
+...   |
+256 | |         };
+257 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_insert;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:968:25
+    |
+968 |                         lemma_map_contains_pair_in_set(new_tree@, k);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:970:25
+    |
+970 |                         lemma_pair_in_set_map_contains(old_tree, k, v);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:975:25
+    |
+975 |                         lemma_map_contains_pair_in_set(old_tree, k);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:980:25
+    |
+980 |                         lemma_pair_in_set_map_contains(new_tree@, k, v);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_map_contains_pair_in_set` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:986:21
+    |
+986 |                     lemma_map_contains_pair_in_set(new_tree@, k);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_map_contains_pair_in_set` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:227:11
+    |
+227 |       proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
+    |  ___________^
+228 | |         requires spec_pair_set_to_map(s).contains_key(k)
+229 | |         ensures exists|v: VV| s.contains((k, v))
+...   |
+232 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_map_contains_pair_in_set;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:988:21
+    |
+988 |                     lemma_pair_in_set_map_contains(new_tree@, k, v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_pair_in_set_map_contains` in this scope
+   --> src/Chap43/OrderedTableStPer.rs:989:21
+    |
+989 |                     lemma_pair_in_set_map_contains(old_tree, k, v);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_in_set_map_contains` exists but is inaccessible
+   --> src/Chap41/OrdKeyMap.rs:212:11
+    |
+212 |       proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
+    |  ___________^
+213 | |         requires
+214 | |             s.contains((k, v)),
+215 | |             spec_key_unique_pairs_set(s),
+...   |
+223 | |         let v2 = choose|v2: VV| s.contains((k, v2));
+224 | |     }
+    | |_____^ not accessible
+help: consider importing this function through its public re-export
+    |
+ 28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_in_set_map_contains;
+    |
+
+error[E0425]: cannot find function `lemma_pair_set_to_map_len` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1002:17
+     |
+1002 |                 lemma_pair_set_to_map_len(self.tree.inner@);
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_pair_set_to_map_len` exists but is inaccessible
+    --> src/Chap41/OrdKeyMap.rs:171:11
+     |
+ 171 |       proof fn lemma_pair_set_to_map_len<KV, VV>(s: Set<(KV, VV)>)
+     |  ___________^
+ 172 | |         requires s.finite(), spec_key_unique_pairs_set(s)
+ 173 | |         ensures spec_pair_set_to_map(s).dom().len() == s.len()
+...    |
+ 208 | |         vstd::set_lib::lemma_map_size(s, proj_set, proj);
+ 209 | |     }
+     | |_____^ not accessible
+help: consider importing this function through its public re-export
+     |
+  28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_pair_set_to_map_len;
+     |
+
+error[E0425]: cannot find function `lemma_key_unique_empty` in this scope
+    --> src/Chap43/OrderedTableStPer.rs:1193:13
+     |
+1193 |             lemma_key_unique_empty::<K::V, V::V>();
+     |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+note: function `crate::Chap41::OrdKeyMap::OrdKeyMap::lemma_key_unique_empty` exists but is inaccessible
+    --> src/Chap41/OrdKeyMap.rs:332:11
+     |
+ 332 |       proof fn lemma_key_unique_empty<KV, VV>()
+     |  ___________^
+ 333 | |         ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
+ 334 | |     {
+ 335 | |     }
+     | |_____^ not accessible
+help: consider importing this function through its public re-export
+     |
+  28 +     use crate::Chap43::OrderedTableStEph::OrderedTableStEph::lemma_key_unique_empty;
+     |
+
+error: aborting due to 37 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 377MB, peak z3 RSS: 0MB, min free: 23433MB
+Sampled CPU Usage: rust_verify: 6s, z3 children: 0s

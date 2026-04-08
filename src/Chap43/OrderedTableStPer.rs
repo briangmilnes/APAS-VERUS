@@ -29,7 +29,7 @@ pub mod OrderedTableStPer {
     use std::vec::IntoIter;
 
     use crate::Chap38::BSTParaStEph::BSTParaStEph::*;
-    use crate::Chap41::OrdKeyMap::OrdKeyMap::*;
+    use crate::Chap41::OrdKeyMap::OrdKeyMap::{OrdKeyMap, OrdKeyMapTrait};
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::*;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap41::ArraySetStEph::ArraySetStEph::*;
@@ -45,6 +45,7 @@ pub mod OrderedTableStPer {
     use vstd::std_specs::cmp::OrdSpec;
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
+    pub use crate::Chap43::OrderedSpecsAndLemmas::OrderedSpecsAndLemmas::*;
 
     verus! 
 {
@@ -76,181 +77,6 @@ broadcast use {
         type V = Map<K::V, V::V>;
 
         open spec fn view(&self) -> Self::V { self.tree@ }
-    }
-
-    //		Section 6. spec fns
-
-
-    /// Convert a set of (key, value) pairs to a map.
-    /// With key uniqueness, each key maps to a unique value via `choose`.
-    pub open spec fn spec_pair_set_to_map<KV, VV>(s: Set<(KV, VV)>) -> Map<KV, VV> {
-        Map::new(
-            |k: KV| exists|v: VV| s.contains((k, v)),
-            |k: KV| choose|v: VV| s.contains((k, v)),
-        )
-    }
-
-    /// Every element in the set has a Pair preimage under View.
-    pub open spec fn spec_set_pair_view_generated<K: View, V: View>(s: Set<(K::V, V::V)>) -> bool {
-        forall|elem: (K::V, V::V)| s.contains(elem) ==> exists|p: Pair<K, V>| (#[trigger] p@) == elem
-    }
-
-    /// Key uniqueness for a set of pairs: no two pairs share the same first component.
-    /// Nested quantifiers break the symmetric trigger loop that the flat form causes.
-    pub open spec fn spec_key_unique_pairs_set<KV, VV>(s: Set<(KV, VV)>) -> bool {
-        forall|k: KV, v: VV| #[trigger] s.contains((k, v)) ==>
-            forall|v2: VV| s.contains((k, v2)) ==> v == v2
-    }
-
-    /// Pair ordering is determined by key ordering when keys differ.
-    pub open spec fn spec_pair_key_determines_order<K: StT + Ord + TotalOrder, V: StT + Ord>() -> bool {
-        forall|p1: Pair<K, V>, p2: Pair<K, V>|
-            p1.0.cmp_spec(&p2.0) != Equal ==>
-            (#[trigger] p1.cmp_spec(&p2)) == p1.0.cmp_spec(&p2.0)
-    }
-
-    //		Section 7. proof fns/broadcast groups
-
-
-    /// The domain of spec_pair_set_to_map is finite when the source set is finite.
-    pub proof fn lemma_pair_set_to_map_dom_finite<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite()
-        ensures spec_pair_set_to_map(s).dom().finite()
-    {
-        let dom_set = spec_pair_set_to_map(s).dom();
-        let proj = |p: (KV, VV)| -> KV { p.0 };
-        let proj_set = s.map(proj);
-        assert forall|k: KV| dom_set.contains(k)
-            implies #[trigger] proj_set.contains(k)
-        by {
-            let v: VV = choose|v: VV| s.contains((k, v));
-            assert(s.contains((k, v)));
-            assert(proj((k, v)) == k);
-        };
-        s.lemma_map_finite(proj);
-        vstd::set_lib::lemma_len_subset(dom_set, proj_set);
-    }
-
-    /// The domain length equals the set length when keys are unique.
-    proof fn lemma_pair_set_to_map_len<KV, VV>(s: Set<(KV, VV)>)
-        requires s.finite(), spec_key_unique_pairs_set(s)
-        ensures spec_pair_set_to_map(s).dom().len() == s.len()
-    {
-
-        lemma_pair_set_to_map_dom_finite(s);
-        let dom_set = spec_pair_set_to_map(s).dom();
-        let proj = |p: (KV, VV)| -> KV { p.0 };
-        let proj_set = s.map(proj);
-        assert(dom_set =~= proj_set) by {
-            assert forall|k: KV| dom_set.contains(k)
-                implies #[trigger] proj_set.contains(k)
-            by {
-                let v: VV = choose|v: VV| s.contains((k, v));
-                assert(s.contains((k, v)));
-            };
-            assert forall|k: KV| proj_set.contains(k)
-                implies #[trigger] dom_set.contains(k)
-            by {
-                let p: (KV, VV) = choose|p: (KV, VV)| #[trigger] s.contains(p) && p.0 == k;
-                assert(s.contains((k, p.1)));
-            };
-        };
-        assert(vstd::relations::injective_on(proj, s)) by {
-            assert forall|x1: (KV, VV), x2: (KV, VV)|
-                s.contains(x1) && s.contains(x2) && #[trigger] proj(x1) == #[trigger] proj(x2)
-                implies x1 == x2
-            by {};
-        };
-        vstd::set_lib::lemma_map_size(s, proj_set, proj);
-    }
-
-    /// If a pair is in the set, the map contains that key with that value.
-    proof fn lemma_pair_in_set_map_contains<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
-        requires
-            s.contains((k, v)),
-            spec_key_unique_pairs_set(s),
-        ensures
-            spec_pair_set_to_map(s).contains_key(k),
-            spec_pair_set_to_map(s)[k] == v,
-    {
-
-        let m = spec_pair_set_to_map(s);
-        assert(m.dom().contains(k));
-        let v2 = choose|v2: VV| s.contains((k, v2));
-        assert(s.contains((k, v2)));
-        assert(v2 == v);
-    }
-
-    /// If the map contains a key, a pair with that key exists in the set.
-    proof fn lemma_map_contains_pair_in_set<KV, VV>(s: Set<(KV, VV)>, k: KV)
-        requires spec_pair_set_to_map(s).contains_key(k)
-        ensures exists|v: VV| s.contains((k, v))
-    {
-    }
-
-    /// Key uniqueness is preserved by set insert when the key is fresh.
-    proof fn lemma_key_unique_insert<KV, VV>(s: Set<(KV, VV)>, k: KV, v: VV)
-        requires
-            spec_key_unique_pairs_set(s),
-            !spec_pair_set_to_map(s).dom().contains(k),
-        ensures
-            spec_key_unique_pairs_set(s.insert((k, v)))
-    {
-
-        assert forall|k2: KV, v1: VV, v2: VV|
-            s.insert((k, v)).contains((k2, v1)) && s.insert((k, v)).contains((k2, v2))
-            implies v1 == v2
-        by {
-            if k2 == k {
-                if s.contains((k2, v1)) {
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
-                }
-                if s.contains((k2, v2)) {
-                    assert(spec_pair_set_to_map(s).dom().contains(k));
-                }
-            } else {
-            }
-        };
-    }
-
-    /// In-order traversal keys are pairwise distinct.
-    proof fn lemma_sorted_keys_pairwise_distinct<KV, VV>(
-        tree: Set<(KV, VV)>,
-        sorted: Seq<(KV, VV)>,
-    )
-        requires
-            tree.finite(),
-            spec_key_unique_pairs_set(tree),
-            forall|v: (KV, VV)| tree.contains(v) <==> sorted.contains(v),
-            sorted.len() == tree.len(),
-        ensures
-            sorted.no_duplicates(),
-            forall|i: int, j: int|
-                0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
-                ==> (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0,
-    {
-
-        assert(sorted.to_set() =~= tree) by {
-            assert forall|v: (KV, VV)| sorted.to_set().contains(v) <==> #[trigger] tree.contains(v) by {};
-        };
-        sorted.lemma_no_dup_set_cardinality();
-        assert forall|i: int, j: int|
-            0 <= i < sorted.len() && 0 <= j < sorted.len() && i != j
-            implies (#[trigger] sorted[i]).0 != (#[trigger] sorted[j]).0
-        by {
-            if sorted[i].0 == sorted[j].0 {
-                assert(tree.contains(sorted[i]));
-                assert(tree.contains(sorted[j]));
-                assert(sorted[i] == sorted[j]);
-            }
-        };
-    }
-
-    /// Key uniqueness holds trivially for the empty set.
-    proof fn lemma_key_unique_empty<KV, VV>()
-        ensures spec_key_unique_pairs_set(Set::<(KV, VV)>::empty())
-    {
-
     }
 
     //		Section 8. traits
