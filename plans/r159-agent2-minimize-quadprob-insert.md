@@ -120,10 +120,20 @@ minimal proof pattern. The only difference is the probe function
 `scripts/validate.sh isolate Chap47` — 12 seconds per run.
 Full `scripts/validate.sh` before pushing. Then `scripts/rtt.sh`.
 
+## STEP LIMIT
+
+**STEP 15.** You have at most 15 edit/validate iterations across ALL THREE
+functions. That's roughly 5 per function. If a function won't minimize further
+after 5 attempts, stop and report what's irreducible.
+
+Do NOT spend 10 iterations on one function chasing the last 3 asserts.
+Get the big wins (strip tautologies, remove redundant case splits) and move on.
+
 ## Target
 
-Reduce `insert` from 228 lines / 128 asserts to under 80 lines / 20 asserts
-across all three hash table variants. Report line count and assert count
+Reduce each `insert` function's assert count by 30-50%. Don't chase perfection.
+Quadratic probing has real modular arithmetic — some of those `spec_tri_probe`
+assertions may be genuinely needed. Report line count and assert count
 before/after for each.
 
 ## Rules
