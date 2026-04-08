@@ -126,6 +126,7 @@ broadcast use {
             spec_seq_sorted_per(s.push(v)),
     {
         let new_s = s.push(v);
+        // Veracity: NEEDED assert
         assert forall|i: int, j: int| 0 <= i < j < new_s.len()
             implies #[trigger] TotalOrder::le(new_s[i], new_s[j]) by {
             if j < s.len() as int {
@@ -149,9 +150,12 @@ broadcast use {
             a =~= b,
     {
         lemma_reveal_view_injective::<T>();
+        // Veracity: NEEDED assert
         assert(b.map_values(|t: T| t@).len() == b.len());
+        // Veracity: NEEDED assert
         assert forall|k: int| 0 <= k < a.len()
             implies #[trigger] a[k] == b[k] by {
+            // Veracity: NEEDED assert
             assert(a.map_values(|t: T| t@)[k] == b.map_values(|t: T| t@)[k]);
         };
     }
@@ -435,7 +439,9 @@ broadcast use {
         {
             let in_ord = self.tree.in_order();
             let result = AVLTreeSeqStPerS::from_vec(in_ord.seq);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(result@ =~= in_ord@);
             }
             result
@@ -475,6 +481,7 @@ broadcast use {
             {
                 let r = seq.nth(i);
                 let elem = r.clone();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_cloned_view_eq(*r, elem);
                     lemma_size_lt_usize_max::<T>(&seq.root);
@@ -482,11 +489,14 @@ broadcast use {
                 }
                 let ghost old_view = constructed@;
                 constructed = constructed.insert(elem);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|v: <T as View>::V|
                         #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
                         if !old_view.contains(v) {
+                            // Veracity: NEEDED assert
                             assert(v == seq@[i as int]);
                         } else {
                             let j = choose|j: int| 0 <= j < i && seq@[j] == v;
@@ -495,6 +505,7 @@ broadcast use {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
             constructed
@@ -534,6 +545,7 @@ broadcast use {
         ) -> (filtered: Self)
         {
             let filtered_tree = self.tree.filter(f, Ghost(spec_pred));
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_subset(filtered_tree@, self@);
             }
@@ -545,6 +557,7 @@ broadcast use {
         fn intersection(&self, other: &Self) -> (common: Self)
         {
             let common_tree = self.tree.intersect(&other.tree);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_intersect::<T::V>(self@, other@);
             }
@@ -556,6 +569,7 @@ broadcast use {
         fn union(&self, other: &Self) -> (combined: Self)
         {
             let combined_tree = self.tree.union(&other.tree);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_union::<T::V>(self@, other@);
             }
@@ -567,6 +581,7 @@ broadcast use {
         fn difference(&self, other: &Self) -> (remaining: Self)
         {
             let remaining_tree = self.tree.difference(&other.tree);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::set_lib::lemma_len_difference::<T::V>(self@, other@);
             }
@@ -652,7 +667,9 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn clone_wf(&self) -> (cloned: Self) {
             let r = AVLTreeSetStPer { tree: self.tree.clone() };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(r.tree.spec_bstparasteph_wf());
             }
             r
@@ -678,6 +695,7 @@ broadcast use {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             proof {
                 assume(self.spec_avltreesetstper_wf());
                 assume(other.spec_avltreesetstper_wf());
@@ -685,6 +703,7 @@ broadcast use {
                 assume(view_ord_consistent::<T>());
             }
             let equal = self.size() == other.size() && self.difference(other).size() == 0;
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }

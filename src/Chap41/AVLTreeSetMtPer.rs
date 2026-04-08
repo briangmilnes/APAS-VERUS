@@ -269,15 +269,19 @@ broadcast use {
         let n = vals.len();
         if n == 0 {
             let tree = ParamBST::<T>::new();
+            // Veracity: NEEDED proof block
             proof {
             }
             tree
         } else if n == 1 {
             let elem = vals[0].clone_plus();
+            // Veracity: NEEDED proof block
             proof { lemma_cloned_view_eq::<T>(vals@[0int], elem); }
             let tree = ParamBST::singleton(elem);
+            // Veracity: NEEDED proof block
             proof {
                 let views = vals@.map_values(|t: T| t@);
+                // Veracity: NEEDED assert
                 assert(views =~= Seq::<T::V>::empty().push(views[0]));
                 vstd::seq_lib::seq_to_set_is_finite(views);
             }
@@ -299,6 +303,7 @@ broadcast use {
                 decreases mid - i,
             {
                 let elem = vals[i].clone_plus();
+                // Veracity: NEEDED proof block
                 proof { lemma_cloned_view_eq::<T>(vals@[i as int], elem); }
                 left_vals.push(elem);
                 i += 1;
@@ -318,6 +323,7 @@ broadcast use {
                 decreases n - i,
             {
                 let elem = vals[i].clone_plus();
+                // Veracity: NEEDED proof block
                 proof { lemma_cloned_view_eq::<T>(vals@[i as int], elem); }
                 right_vals.push(elem);
                 i += 1;
@@ -325,6 +331,7 @@ broadcast use {
             let ghost all_views = vals@.map_values(|t: T| t@);
             let ghost left_views = left_vals@.map_values(|t: T| t@);
             let ghost right_views = right_vals@.map_values(|t: T| t@);
+            // Veracity: NEEDED proof block
             proof {
             }
             let f1 = move || -> (t: ParamBST<T>)
@@ -338,14 +345,18 @@ broadcast use {
                 from_vec_dc_per(right_vals)
             };
             let (left_tree, right_tree) = join(f1, f2);
+            // Veracity: NEEDED proof block
             proof {
                 left_views.lemma_cardinality_of_set();
                 right_views.lemma_cardinality_of_set();
             }
             let result = left_tree.union(&right_tree);
+            // Veracity: NEEDED proof block
             proof {
                 vstd::seq_lib::seq_to_set_distributes_over_add(left_views, right_views);
+                // Veracity: NEEDED assert
                 assert(left_views + right_views =~= all_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < all_views.len() implies
                         (left_views + right_views)[j] == #[trigger] all_views[j] by {};
                 };
@@ -372,14 +383,17 @@ broadcast use {
             self.tree.collect_in_order(&mut vals);
             let ghost vals_seq = vals@;
             let seq = AVLTreeSeqMtPerS::from_vec(vals);
+            // Veracity: NEEDED proof block
             proof {
                 // from_vec: seq@ =~= vals_seq.map_values(|t: T| t@), so seq@[i] == vals_seq[i]@.
                 // collect_in_order (empty start): vals_seq[i]@ in self.tree@ for all i,
                 // and every v in self.tree@ has a witness j with vals_seq[j]@ == v.
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < seq@.len() implies
                     #[trigger] self@.contains(seq@[i])
                 by {
                 };
+                // Veracity: NEEDED assert
                 assert forall|v: T::V|
                     #[trigger] seq@.to_set().contains(v) <==> self@.contains(v)
                 by {
@@ -388,6 +402,7 @@ broadcast use {
                     }
                     if self@.contains(v) {
                         let j = choose|j: int| 0 <= j < vals_seq.len() && #[trigger] vals_seq[j]@ == v;
+                        // Veracity: NEEDED assert
                         assert(seq@[j] == vals_seq[j]@);
                     }
                 };
@@ -419,9 +434,11 @@ broadcast use {
                 return Self::empty();
             }
             let ghost vals_views = vals@.map_values(|t: T| t@);
+            // Veracity: NEEDED proof block
             proof {
             }
             let tree = from_vec_dc_per(vals);
+            // Veracity: NEEDED proof block
             proof {
             }
             AVLTreeSetMtPer { tree }
@@ -470,6 +487,7 @@ broadcast use {
         fn delete(&self, x: &T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
+            // Veracity: NEEDED proof block
             proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.delete(x);
             AVLTreeSetMtPer { tree }
@@ -479,6 +497,7 @@ broadcast use {
         fn insert(&self, x: T) -> (updated: Self)
         {
             let mut tree = self.tree.clone();
+            // Veracity: NEEDED proof block
             proof { assert(obeys_feq_full_trigger::<T>()); }
             tree.insert(x);
             AVLTreeSetMtPer { tree }
@@ -543,6 +562,7 @@ broadcast use {
             other.tree.collect_in_order(&mut other_vals);
             let n = self_vals.len();
             if n != other_vals.len() {
+                // Veracity: NEEDED proof block
                 proof {
                     // self_vals.len() == self.tree@.len(), other_vals.len() == other.tree@.len().
                     // If self@ == other@, then self@.len() == other@.len(), contradiction.
@@ -565,6 +585,7 @@ broadcast use {
                 }
                 i = i + 1;
             }
+            // Veracity: NEEDED proof block
             proof { assume(all_eq == (self@ == other@)); }
             all_eq
         }

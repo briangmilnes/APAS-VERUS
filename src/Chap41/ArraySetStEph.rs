@@ -96,6 +96,7 @@ pub mod ArraySetStEph {
             let tail = s.subrange(1, s.len() as int);
             lemma_filter_remove::<V>(tail, v);
             let pred = |e: V| e != v;
+            // Veracity: NEEDED assert
             assert(s =~= seq![head] + tail);
             Seq::filter_distributes_over_add(seq![head], tail, pred);
             if head == v {
@@ -162,6 +163,7 @@ pub mod ArraySetStEph {
             let head = s[0];
             let tail = s.subrange(1, s.len() as int);
             lemma_filter_to_set_intersect(tail, set);
+            // Veracity: NEEDED assert
             assert(s =~= seq![head] + tail);
             Seq::filter_distributes_over_add(seq![head], tail, pred);
             reveal(Seq::filter);
@@ -185,6 +187,7 @@ pub mod ArraySetStEph {
             let head = s[0];
             let tail = s.subrange(1, s.len() as int);
             lemma_filter_to_set_difference(tail, set);
+            // Veracity: NEEDED assert
             assert(s =~= seq![head] + tail);
             Seq::filter_distributes_over_add(seq![head], tail, pred);
             reveal(Seq::filter);
@@ -363,6 +366,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn size(&self) -> (count: usize)
         {
+            // Veracity: NEEDED proof block
             proof {
                 self.elements@.unique_seq_to_set();
             }
@@ -373,6 +377,7 @@ pub mod ArraySetStEph {
         fn to_seq(&self) -> (seq: ArraySeqStEphS<T>)
         {
             let seq = self.elements.clone();
+            // Veracity: NEEDED proof block
             proof {
                 // obeys_feq_clone follows from obeys_feq_full in wf.
                 lemma_seq_map_cloned_view_eq(
@@ -389,6 +394,7 @@ pub mod ArraySetStEph {
             let empty = ArraySetStEph {
                 elements: ArraySeqStEphS::empty(),
             };
+            // Veracity: NEEDED assert
             assert(obeys_feq_full_trigger::<T>());
             empty
         }
@@ -401,9 +407,12 @@ pub mod ArraySetStEph {
             v.push(x);
             let ghost v_snapshot = v@;
             let elements = ArraySeqStEphS::from_vec(v);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(elements@[0] == elements.spec_index(0)@);
                 Seq::<<T as View>::V>::empty().lemma_push_to_set_commute(x_view);
+                // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<T>());
             }
             ArraySetStEph { elements }
@@ -429,16 +438,20 @@ pub mod ArraySetStEph {
             {
                 let r = seq.nth(i);
                 let elem = r.clone();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_cloned_view_eq(*r, elem);
                 }
                 let ghost old_view = constructed@;
                 constructed.insert(elem);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|v: <T as View>::V|
                         #[trigger] constructed@.contains(v) implies
                         (exists|j: int| 0 <= j < i + 1 && seq@[j] == v) by {
                         if !old_view.contains(v) {
+                            // Veracity: NEEDED assert
                             assert(v == seq@[i as int]);
                         } else {
                             let j = choose|j: int| 0 <= j < i && seq@[j] == v;
@@ -447,6 +460,7 @@ pub mod ArraySetStEph {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
             constructed
@@ -456,6 +470,7 @@ pub mod ArraySetStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n)
         fn find(&self, x: &T) -> (found: bool)
         {
+            // Veracity: NEEDED assert
             assert(obeys_feq_full_trigger::<T>());
             let n = self.elements.length();
             let mut i: usize = 0;
@@ -468,6 +483,7 @@ pub mod ArraySetStEph {
             {
                 let elem = self.elements.nth(i);
                 if feq(elem, x) {
+                    // Veracity: NEEDED proof block
                     proof {
                         let ii = i as int;
                         lemma_seq_index_in_map_to_set(self.elements.seq@, ii);
@@ -476,6 +492,7 @@ pub mod ArraySetStEph {
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
             false
@@ -520,16 +537,20 @@ pub mod ArraySetStEph {
                 let elem = self.elements.nth(i);
                 if f(elem) {
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
+                        // Veracity: NEEDED assert
                         assert(!rv_views.contains(cv)) by {
                             if rv_views.contains(cv) {
                                 let k = choose|k: int| 0 <= k < rv_views.len() && rv_views[k] == cv;
                                 let m = choose|m: int| 0 <= m < i && old_view.subrange(0, i as int)[m] == cv;
+                                // Veracity: NEEDED assert
                                 assert(old_view[m] == old_view[i as int]);
                             }
                         };
@@ -537,12 +558,14 @@ pub mod ArraySetStEph {
                         rv_views = rv_views.push(cv);
                         lemma_push_preserves_no_dups(rv_views.drop_last(), cv);
                         let ghost next_sub = old_view.subrange(0, (i + 1) as int);
+                        // Veracity: NEEDED assert
                         assert forall|j: int| #![trigger rv_views[j]]
                             0 <= j < rv_views.len()
                             implies next_sub.to_set().contains(rv_views[j]) by {
                             if j < rv_views.len() - 1 {
                                 let m = choose|m: int| 0 <= m < i && old_view.subrange(0, i as int)[m] == rv_views[j];
                             } else {
+                                // Veracity: NEEDED assert
                                 assert(next_sub[i as int] == cv);
                             }
                         };
@@ -550,6 +573,7 @@ pub mod ArraySetStEph {
                         // completeness: elements at indices < i+1 satisfying spec_pred are in rv_views
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         let ghost next_sub = old_view.subrange(0, (i + 1) as int);
                         // completeness: spec_pred(old_view[i]) is false, so invariant extends
@@ -558,11 +582,15 @@ pub mod ArraySetStEph {
                 i += 1;
             }
             let filtered = ArraySetStEph { elements: ArraySeqStEphS::from_vec(result_vec) };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(filtered.elements@ =~= rv_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len()
                         implies filtered.elements@[j] == rv_views[j] by {
+                        // Veracity: NEEDED assert
                         assert(filtered.elements.spec_index(j) == result_vec@[j]);
                     };
                 };
@@ -606,22 +634,27 @@ pub mod ArraySetStEph {
                 let ghost prefix = old_view.subrange(0, i as int);
                 let ghost next_prefix = old_view.subrange(0, (i + 1) as int);
                 let ghost filt = |e: <T as View>::V| other_set.contains(e);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(next_prefix =~= prefix.push(old_view[i as int]));
                     Seq::filter_distributes_over_add(prefix, seq![old_view[i as int]], filt);
                 }
                 if other.find(elem) {
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         rv_views = rv_views.push(cv);
                         reveal(Seq::filter);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(Seq::filter);
                     }
@@ -631,12 +664,17 @@ pub mod ArraySetStEph {
             let common = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(old_view.subrange(0, n as int) =~= old_view);
+                // Veracity: NEEDED assert
                 assert(common.elements@ =~= rv_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len()
                         implies common.elements@[j] == rv_views[j] by {
+                        // Veracity: NEEDED assert
                         assert(common.elements.spec_index(j) == result_vec@[j]);
                     };
                 };
@@ -679,22 +717,27 @@ pub mod ArraySetStEph {
                 let ghost prefix = old_view.subrange(0, i as int);
                 let ghost next_prefix = old_view.subrange(0, (i + 1) as int);
                 let ghost filt = |e: <T as View>::V| !other_set.contains(e);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(next_prefix =~= prefix.push(old_view[i as int]));
                     Seq::filter_distributes_over_add(prefix, seq![old_view[i as int]], filt);
                 }
                 if !other.find(elem) {
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         rv_views = rv_views.push(cv);
                         reveal(Seq::filter);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(Seq::filter);
                     }
@@ -704,12 +747,17 @@ pub mod ArraySetStEph {
             let remaining = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(old_view.subrange(0, n as int) =~= old_view);
+                // Veracity: NEEDED assert
                 assert(remaining.elements@ =~= rv_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len()
                         implies remaining.elements@[j] == rv_views[j] by {
+                        // Veracity: NEEDED assert
                         assert(remaining.elements.spec_index(j) == result_vec@[j]);
                     };
                 };
@@ -747,16 +795,19 @@ pub mod ArraySetStEph {
             {
                 let elem = self.elements.nth(i);
                 let cloned_elem = elem.clone();
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_cloned_view_eq(*elem, cloned_elem);
                 }
                 let ghost cv = cloned_elem@;
                 result_vec.push(cloned_elem);
+                // Veracity: NEEDED proof block
                 proof {
                     rv_views = rv_views.push(cv);
                 }
                 i += 1;
             }
+            // Veracity: NEEDED proof block
             proof {
             }
 
@@ -782,22 +833,27 @@ pub mod ArraySetStEph {
                 let ghost prefix = other_view.subrange(0, j as int);
                 let ghost next_prefix = other_view.subrange(0, (j + 1) as int);
                 let ghost filt = |e: <T as View>::V| !self_set.contains(e);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(next_prefix =~= prefix.push(other_view[j as int]));
                     Seq::filter_distributes_over_add(prefix, seq![other_view[j as int]], filt);
                 }
                 if !self.find(elem) {
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         rv_views = rv_views.push(cv);
                         reveal(Seq::filter);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(Seq::filter);
                     }
@@ -807,12 +863,17 @@ pub mod ArraySetStEph {
             let combined = ArraySetStEph {
                 elements: ArraySeqStEphS::from_vec(result_vec),
             };
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(other_view.subrange(0, other_len as int) =~= other_view);
+                // Veracity: NEEDED assert
                 assert(combined.elements@ =~= rv_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|k: int| #![trigger rv_views[k]]
                         0 <= k < rv_views.len()
                         implies combined.elements@[k] == rv_views[k] by {
+                        // Veracity: NEEDED assert
                         assert(combined.elements.spec_index(k) == result_vec@[k]);
                     };
                 };
@@ -862,22 +923,27 @@ pub mod ArraySetStEph {
                 let ghost prefix = old_view.subrange(0, i as int);
                 let ghost next_prefix = old_view.subrange(0, (i + 1) as int);
                 let ghost filt = |e: <T as View>::V| e != x_view;
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(next_prefix =~= prefix.push(old_view[i as int]));
                     Seq::filter_distributes_over_add(prefix, seq![old_view[i as int]], filt);
                 }
                 if !feq(elem, x) {
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     result_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         rv_views = rv_views.push(cv);
                         reveal(Seq::filter);
                     }
                 } else {
+                    // Veracity: NEEDED proof block
                     proof {
                         reveal(Seq::filter);
                     }
@@ -885,13 +951,18 @@ pub mod ArraySetStEph {
                 i += 1;
             }
             self.elements = ArraySeqStEphS::from_vec(result_vec);
+            // Veracity: NEEDED proof block
             proof {
                 let ghost filt = |e: <T as View>::V| e != x_view;
+                // Veracity: NEEDED assert
                 assert(old_view.subrange(0, n as int) =~= old_view);
+                // Veracity: NEEDED assert
                 assert(self.elements@ =~= rv_views) by {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| #![trigger rv_views[j]]
                         0 <= j < rv_views.len()
                         implies self.elements@[j] == rv_views[j] by {
+                        // Veracity: NEEDED assert
                         assert(self.elements.spec_index(j) == result_vec@[j]);
                     };
                 };
@@ -925,26 +996,33 @@ pub mod ArraySetStEph {
                 {
                     let elem = self.elements.nth(i);
                     let cloned_elem = elem.clone();
+                    // Veracity: NEEDED proof block
                     proof {
                         lemma_cloned_view_eq(*elem, cloned_elem);
                     }
                     let ghost cv = cloned_elem@;
                     new_vec.push(cloned_elem);
+                    // Veracity: NEEDED proof block
                     proof {
                         rv_views = rv_views.push(cv);
                     }
                     i += 1;
                 }
                 new_vec.push(x);
+                // Veracity: NEEDED proof block
                 proof {
                     rv_views = rv_views.push(x_view);
                 }
                 self.elements = ArraySeqStEphS::from_vec(new_vec);
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(self.elements@ =~= rv_views) by {
+                        // Veracity: NEEDED assert
                         assert forall|j: int| #![trigger rv_views[j]]
                             0 <= j < rv_views.len()
                             implies self.elements@[j] == rv_views[j] by {
+                            // Veracity: NEEDED assert
                             assert(self.elements.spec_index(j) == new_vec@[j]);
                         };
                     };
@@ -953,9 +1031,11 @@ pub mod ArraySetStEph {
                     vstd::seq_lib::seq_to_set_is_finite(self.elements@);
                 }
             }
+            // Veracity: NEEDED proof block
             proof {
                 if old(self)@.contains(x@) {
                 }
+                // Veracity: NEEDED assert
                 assert(self.spec_arraysetsteph_wf());
             }
         }
@@ -980,6 +1060,7 @@ pub mod ArraySetStEph {
         fn eq(&self, other: &Self) -> (equal: bool)
             ensures equal == (self@ == other@)
         {
+            // Veracity: NEEDED proof block
             proof {
                 assume(self.spec_arraysetsteph_wf());
                 assume(other.spec_arraysetsteph_wf());
@@ -1004,6 +1085,7 @@ pub mod ArraySetStEph {
                 }
                 all_found
             };
+            // Veracity: NEEDED proof block
             proof { assume(equal == (self@ == other@)); }
             equal
         }
@@ -1016,6 +1098,7 @@ pub mod ArraySetStEph {
             let cloned = ArraySetStEph {
                 elements: self.elements.clone(),
             };
+            // Veracity: NEEDED proof block
             proof {
                 assume(obeys_feq_clone::<T>());
                 lemma_seq_map_cloned_view_eq(
