@@ -97,15 +97,16 @@ structure — same three code paths, same obligations. Apply the same
 minimal proof pattern. The only difference is the probe function
 (linear vs double hash vs quadratic).
 
-## What to keep (almost certainly needed)
+## What to keep (DO NOT TOUCH)
 
-- `lemma_table_to_map_update_insert(...)` — library lemma, Z3 can't derive
-- `lemma_reveal_view_injective::<Key>()` — reveals view injectivity
-- `lemma_small_mod(...)` — arithmetic lemma for initial probe
-- The `assert forall ... by { ... }` blocks for no-dup and probe-chain
-  preservation — but check if the BODIES of these blocks can be simplified.
-  The `assert forall` header is needed (it's the proof obligation).
-  The `by` body may have redundant case analysis.
+- ALL lemma calls (`lemma_table_to_map_update_insert`, `lemma_reveal_view_injective`,
+  `lemma_small_mod`, etc.) — library lemmas, Z3 can't derive these.
+- ALL `assert forall ... by { ... }` headers — these ARE the proof obligations.
+  You may simplify the `by` BODIES but not remove the `assert forall` itself.
+- ALL modular arithmetic assertions involving `spec_tri_probe`, `%`, triangular
+  numbers — these are real math, not slop. Quadratic probing correctness depends
+  on `i*(i+1)/2 mod m` properties. Leave them.
+- ALL `choose` expressions — these provide existential witnesses Z3 can't guess.
 
 ## What to remove (almost certainly unneeded)
 
@@ -144,5 +145,12 @@ before/after for each.
 - If you can't get below 20 asserts, that's fine — report what's irreducible.
 
 ## When done
+
+Report for each function:
+- Assert count before/after
+- Line count before/after
+- Isolate validation time before/after (from the Elapsed line)
+- Which asserts were removed and why
+- Which asserts are irreducible and why
 
 RCP.
