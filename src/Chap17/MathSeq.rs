@@ -414,17 +414,10 @@ pub mod MathSeq {
                     let not_seen = !seen.contains(&x);
                     if not_seen {
                         proof {
-                            assert(!seen@.contains(x@));
-                            assert(!out@.map(|_j: int, t: T| t@).contains(x@));
 
                             lemma_map_not_contains_implies_all_ne(out@, x@);
 
-                            assert forall|j: int| 0 <= j < out@.len() implies out@[j] != x by {
-                                assert(out@[j]@ != x@);
-                            }
 
-                            assert(seq![x].no_duplicates());
-                            assert(out@.disjoint(seq![x]));
                             vstd::seq_lib::lemma_no_dup_in_concat(out@, seq![x]);
                         }
                         let ghost old_seen = seen@;
@@ -433,40 +426,28 @@ pub mod MathSeq {
                         let x_clone = x.clone();
                         proof {
                             lemma_cloned_view_eq(x, x_clone);
-                            assert(x_clone@ == x@);
                         }
                         seen.insert(x_clone);
                         out.push(x);
                         proof {
-                            assert(seen@ =~= old_seen.insert(x@));
-                            assert(out@ =~= old_out.push(x));
 
                             let f = |t: T| t@;
                             old_out.lemma_push_map_commute(f, x);
                             let new_mapped = out@.map_values(f);
-                            assert(new_mapped =~= old_out_mapped.push(x@));
                             assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
 
                             assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
                                 if v == x@ {
-                                    assert(new_mapped.last() == x@);
-                                    assert(new_mapped.contains(x@));
-                                    assert(seen@.contains(x@));
                                 } else {
-                                    assert(seen@.contains(v) <==> old_seen.contains(v));
                                     if old_out_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
                                         assert(new_mapped[wit] == v);
-                                        assert(new_mapped.contains(v));
                                     }
                                     if new_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
                                         if wit < old_out_mapped.len() {
                                             assert(old_out_mapped[wit] == v);
-                                            assert(old_out_mapped.contains(v));
                                         } else {
-                                            assert(new_mapped[wit] == x@);
-                                            assert(false);
                                         }
                                     }
                                 }
@@ -506,10 +487,6 @@ pub mod MathSeq {
                         if old_count < usize::MAX {
                             counts.insert(x, old_count + 1);
                             proof {
-                                assert forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len()
-                                    implies counts@.contains_key(order@[idx]@) by {
-                                    assert(old_counts.contains_key(order@[idx]@));
-                                }
                             }
                         }
                     } else {
@@ -520,15 +497,6 @@ pub mod MathSeq {
                         counts.insert(x2, 1);
                         order.push(x);
                         proof {
-                            assert(counts@.contains_key(x@));
-                            assert(order@ =~= old_order.push(x));
-                            assert forall|idx: int| #![trigger order@[idx]@] 0 <= idx < order@.len()
-                                implies counts@.contains_key(order@[idx]@) by {
-                                if idx < old_order.len() {
-                                    assert(order@[idx] == old_order[idx]);
-                                    assert(old_counts.contains_key(old_order[idx]@));
-                                }
-                            }
                         }
                     }
                     i = i + 1;
@@ -554,9 +522,7 @@ pub mod MathSeq {
                 {
                     let x = order[j].clone();
                     proof {
-                        assert(final_counts.contains_key(order@[j as int]@));
                         assert(cloned(order@[j as int], x));
-                        assert(counts@.contains_key(x@));
                     }
                     let opt_count = counts.get(&x);
                     let count = *opt_count.unwrap();

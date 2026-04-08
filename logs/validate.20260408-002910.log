@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap17
+error: assertion failed
+   --> src/Chap17/MathSeq.rs:450:52
+    |
+450 | ...                   assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap17/MathSeq.rs:450:52
+    |
+450 | ...                   assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
+    |                                              ^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+seen.view().contains(v) == out.view().map((|_j, t| t.view())).contains(v)
+|   seen.view().contains(v) ==>
+|       out.view().map((|_j, t| t.view())).contains(v) ✘
+|       |   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = out.view().map((|_j, t| t.view())).len() in tmp%% <= tmp%% && tmp%% < tmp%% && out.view().map((|_j, t| t.view())).index(i) == v) 
+|       +---
+|   out.view().map((|_j, t| t.view())).contains(v) ==>
+|       seen.view().contains(v) ✘
+|           function is uninterpreted
++---
+
+verification results:: 720 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 669MB, peak z3 RSS: 279MB, min free: 25007MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

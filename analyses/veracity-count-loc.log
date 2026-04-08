@@ -1,32 +1,12 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-     385/      76/     326/      64 DirGraphMtEph.rs
-     153/      98/     221/      51 DirGraphStEph.rs
-     226/     140/     263/      59 LabDirGraphMtEph.rs
-     120/      77/     184/      43 LabDirGraphStEph.rs
-     199/     169/     250/      70 LabUnDirGraphMtEph.rs
-     119/      72/     169/      54 LabUnDirGraphStEph.rs
-     233/      83/     193/      64 UnDirGraphMtEph.rs
-     134/      52/     113/      52 UnDirGraphStEph.rs
-      26/      62/     136/      23 WeightedDirGraphStEphF64.rs
-      38/      98/     226/      23 WeightedDirGraphStEphI128.rs
-      38/      84/     223/      23 WeightedDirGraphStEphI16.rs
-      38/      84/     223/      23 WeightedDirGraphStEphI32.rs
-      38/      84/     223/      23 WeightedDirGraphStEphI64.rs
-      38/      84/     223/      23 WeightedDirGraphStEphI8.rs
-      38/      84/     223/      23 WeightedDirGraphStEphIsize.rs
-      38/      85/     223/      23 WeightedDirGraphStEphU128.rs
-      38/      85/     223/      23 WeightedDirGraphStEphU16.rs
-      38/      85/     223/      23 WeightedDirGraphStEphU32.rs
-      38/      85/     223/      23 WeightedDirGraphStEphU64.rs
-      38/      85/     223/      23 WeightedDirGraphStEphU8.rs
-      38/      85/     223/      23 WeightedDirGraphStEphUsize.rs
+     153/      81/     221/      82 MathSeq.rs
 --------------------------------------------
     spec    proof     exec     rust
-   2,051/   1,857/   4,534/     756 Total
-  12,974 total lines
-21 files analyzed
-71ms
+     153/      81/     221/      82 Total
+     817 total lines
+1 files analyzed
+7ms
 
 Proof Lines Per Function
 ========================
@@ -34,55 +14,35 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |   3,778 |     573 |   3,205 |       0 |   4,534 |    0.83 |
+|   1 | root       |     229 |      59 |     170 |       0 |     221 |    1.04 |
 
-1 chapters, 3,778 proof lines, 4,534 exec lines, ratio 0.83
-3,778 min  3,778 max  3778.0 avg  3778.0 median (proof lines)
+1 chapters, 229 proof lines, 221 exec lines, ratio 1.04
+229 min  229 max  229.0 avg  229.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | DirGraphMtEph                  |     419 |     105 |     314 |       0 |     326 |   1.29 |
-|   2 | root       | LabUnDirGraphMtEph             |     358 |      77 |     281 |       0 |     250 |   1.43 |
-|   3 | root       | LabDirGraphMtEph               |     348 |      81 |     267 |       0 |     263 |   1.32 |
-|   4 | root       | UnDirGraphMtEph                |     298 |      80 |     218 |       0 |     193 |   1.54 |
-|   5 | root       | DirGraphStEph                  |     236 |      56 |     180 |       0 |     221 |   1.07 |
-|   6 | root       | LabDirGraphStEph               |     192 |      55 |     137 |       0 |     184 |   1.04 |
-|   7 | root       | LabUnDirGraphStEph             |     188 |      53 |     135 |       0 |     169 |   1.11 |
-|   8 | root       | UnDirGraphStEph                |     179 |      54 |     125 |       0 |     113 |   1.58 |
-|   9 | root       | WeightedDirGraphStEphI128      |     135 |       1 |     134 |       0 |     226 |   0.60 |
-|  10 | root       | WeightedDirGraphStEphU128      |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  11 | root       | WeightedDirGraphStEphU16       |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  12 | root       | WeightedDirGraphStEphU32       |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  13 | root       | WeightedDirGraphStEphU64       |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  14 | root       | WeightedDirGraphStEphU8        |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  15 | root       | WeightedDirGraphStEphUsize     |     122 |       1 |     121 |       0 |     223 |   0.55 |
-|  16 | root       | WeightedDirGraphStEphI16       |     121 |       1 |     120 |       0 |     223 |   0.54 |
-|  17 | root       | WeightedDirGraphStEphI32       |     121 |       1 |     120 |       0 |     223 |   0.54 |
-|  18 | root       | WeightedDirGraphStEphI64       |     121 |       1 |     120 |       0 |     223 |   0.54 |
-|  19 | root       | WeightedDirGraphStEphI8        |     121 |       1 |     120 |       0 |     223 |   0.54 |
-|  20 | root       | WeightedDirGraphStEphIsize     |     121 |       1 |     120 |       0 |     223 |   0.54 |
-|  21 | root       | WeightedDirGraphStEphF64       |      88 |       0 |      88 |       0 |     136 |   0.65 |
+|   1 | root       | MathSeq                        |     229 |      59 |     170 |       0 |     221 |   1.04 |
 
-21 modules, 3,778 proof lines, 4,534 exec lines, ratio 0.83
-88 min  419 max  179.9 avg  122.0 median (proof lines)
+1 modules, 229 proof lines, 221 exec lines, ratio 1.04
+229 min  229 max  229.0 avg  229.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  540 exec functions total, 446 with proof lines
-  3,205 total proof lines in exec fns
-  1 min  117 max  7.2 avg  4.0 median
+  41 exec functions total, 26 with proof lines
+  170 total proof lines in exec fns
+  1 min  53 max  6.5 avg  3.5 median
 
 Per proof function:
   0 proof functions
 
 Grand total:
-  755 total functions, 649 with proof lines (86%)
-  3,778 total proof lines, 4,534 exec lines, ratio 0.83
-  1 min  117 max  5.8 avg  3.0 median (proof lines per fn)
+  66 total functions, 47 with proof lines (71%)
+  229 total proof lines, 221 exec lines, ratio 1.04
+  1 min  53 max  4.9 avg  3.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
 |   # | Chap       | Module                         | Function |  Kind |  Lines |
 | --- | ---------- | ------------------------------ | -------- | ----- | ------ |
-|   1 | root       | LabUnDirGraphMtEph             | ng_par   |  exec |    117 |
+|   1 | root       | MathSeq                        | range    |  exec |     53 |
 
 1 functions over 50 proof lines
