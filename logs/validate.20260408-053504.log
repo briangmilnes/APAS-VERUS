@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: assertion failed
+   --> src/Chap27/ScanContractStEph.rs:101:20
+    |
+101 |             assert(s.fold_left(id, f) == f(s[0], s[1]));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.fold_left(id, f) == f(s.index(0), s.index(1)) 
+
+verification results:: 944 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 4012MB, peak z3 RSS: 563MB, min free: 22364MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 21s

@@ -70,8 +70,6 @@ pub mod ScanContractMtEph {
     {
         let s = seq![a, b];
         reveal_with_fuel(Seq::fold_left, 3);
-        assert(s.drop_last() =~= seq![a]);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
     }
 
     /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
@@ -80,7 +78,6 @@ pub mod ScanContractMtEph {
         ensures seq![a].fold_left(id, f) == a,
     {
         reveal_with_fuel(Seq::fold_left, 2);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
     }
 
     /// Contraction lemma: for an even-length sequence, folding the original equals
@@ -102,12 +99,9 @@ pub mod ScanContractMtEph {
         let b = Seq::new(half, |i: int| f(s[2 * i], s[2 * i + 1]));
 
         if n == 2 {
-            assert(s =~= seq![s[0], s[1]]);
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == f(s[0], s[1]));
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
-            assert(b.fold_left(id, f) == f(s[0], s[1]));
         } else {
             let s_tail = s.subrange(2, n as int);
             let b_tail = b.subrange(1, b.len() as int);
@@ -117,15 +111,10 @@ pub mod ScanContractMtEph {
             assert(s_head =~= seq![s[0], s[1]]);
 
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
 
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
-            assert(s.fold_left(id, f) == f(b[0], s_tail_result));
 
-            assert(s_tail.len() >= 2 && s_tail.len() % 2 == 0) by {
-                assert(s_tail.len() == n - 2);
-            }
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -133,19 +122,11 @@ pub mod ScanContractMtEph {
 
             lemma_contraction_even::<T>(s_tail, f, id);
             let b_tail_result = b_tail.fold_left(id, f);
-            assert(s_tail_result == b_tail_result);
-            assert(s.fold_left(id, f) == f(b[0], b_tail_result));
 
             lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
-            assert(b_tail.fold_left(b[0], f) == f(b[0], b_tail_result));
-            assert(s.fold_left(id, f) == b_tail.fold_left(b[0], f));
 
             b.lemma_fold_left_split(id, f, 1);
-            assert(b.subrange(0, 1) =~= seq![b[0]]);
-            assert(b.subrange(1, b.len() as int) =~= b_tail);
             lemma_fold_left_singleton::<T>(b[0], f, id);
-            assert(b.fold_left(id, f) == b_tail.fold_left(b[0], f));
-            assert(s.fold_left(id, f) == b.fold_left(id, f));
         }
     }
 
@@ -185,8 +166,6 @@ pub mod ScanContractMtEph {
             lemma_prefix_contraction::<T>(s, b_seq, f, id, j);
         } else {
             reveal(Seq::fold_left);
-            assert(s.take(0) =~= Seq::<T>::empty());
-            assert(b_seq.take(0) =~= Seq::<T>::empty());
         }
     }
 
@@ -202,7 +181,6 @@ pub mod ScanContractMtEph {
         let take_2j1 = s.take(2 * j + 1);
         take_2j1.lemma_fold_left_split(id, f, 2 * j);
         assert(take_2j1.subrange(0, 2 * j) =~= s.take(2 * j));
-        assert(take_2j1.subrange(2 * j, 2 * j + 1) =~= seq![s[2 * j]]);
         reveal(Seq::fold_left);
     }
 
@@ -221,12 +199,9 @@ pub mod ScanContractMtEph {
                 == s.take(2 * half).fold_left(id, f),
     {
         b_seq.lemma_fold_left_split(id, f, half - 1);
-        assert(b_seq.subrange(0, half - 1) =~= b_seq.take(half - 1));
-        assert(b_seq.subrange(half - 1, half) =~= seq![b_seq[half - 1]]);
         reveal(Seq::fold_left);
 
         lemma_prefix_contraction::<T>(s, b_seq, f, id, half);
-        assert(b_seq.take(half) =~= b_seq);
     }
 
     //		Section 8. traits
@@ -311,7 +286,6 @@ pub mod ScanContractMtEph {
             // Base case: empty
             if n == 0 {
                 proof {
-                    assert(s =~= Seq::<T>::empty());
                 }
                 return ArraySeqMtEphS { seq: Vec::new() };
             }
@@ -321,7 +295,6 @@ pub mod ScanContractMtEph {
                 let mut v: Vec<T> = Vec::with_capacity(1);
                 v.push(id);
                 proof {
-                    assert(s.take(0) =~= Seq::<T>::empty());
                 }
                 return ArraySeqMtEphS { seq: v };
             }
@@ -329,7 +302,6 @@ pub mod ScanContractMtEph {
             // f(id, id) == id by left identity, producing an owned T without clone.
             let id_for_recurse = call_f(&f, &id, &id);
             proof {
-                assert(id_for_recurse == id);
             }
 
             // Contract: b[i] = f(a[2i], a[2i+1]) — parallel via join
@@ -338,12 +310,10 @@ pub mod ScanContractMtEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
-                assert(b.spec_len() == half as nat);
                 assert forall|j: int| #![trigger b_seq[j]] 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
                 } by {
-                    assert(b_seq[j] == b.spec_index(j));
                 }
             }
 
@@ -351,13 +321,10 @@ pub mod ScanContractMtEph {
             let c = Self::scan_contract_parallel(&b, Arc::clone(&f), Ghost(spec_f), id_for_recurse);
 
             proof {
-                assert(c.spec_len() == half as nat);
                 let ghost b_view = Seq::new(b.spec_len(), |j: int| b.spec_index(j));
-                assert(b_view =~= b_seq);
                 assert forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int implies
                     c.spec_index(k) == b_seq.take(k).fold_left(id, spec_f)
                 by {
-                    assert(id_for_recurse == id);
                 }
             }
 
@@ -365,12 +332,10 @@ pub mod ScanContractMtEph {
             let result_vec = Self::expand_scan_parallel(a, &b, &c, &f, Ghost(spec_f), &id, n, half);
             let scanned = ArraySeqMtEphS { seq: result_vec };
             proof {
-                assert(scanned.spec_len() == n as nat);
                 assert forall|k: int| #![trigger scanned.spec_index(k)]
                     0 <= k < n as int implies
                     scanned.spec_index(k) == s.take(k).fold_left(id, spec_f)
                 by {
-                    assert(scanned.spec_index(k) == result_vec@[k]);
                 }
             }
             scanned
@@ -420,14 +385,12 @@ pub mod ScanContractMtEph {
                 let even_val = call_f(f, id, c.nth(j));
                 proof {
                     lemma_expand_even::<T>(s, b_seq, spec_f, *id, j as int);
-                    assert(even_val == s.take(2 * j as int).fold_left(*id, spec_f));
                 }
                 result_vec.push(even_val);
 
                 let odd_val = call_f(f, c.nth(j), a.nth(2 * j));
                 proof {
                     lemma_expand_odd::<T>(s, spec_f, *id, j as int);
-                    assert(odd_val == s.take(2 * j as int + 1).fold_left(*id, spec_f));
                 }
                 result_vec.push(odd_val);
 
@@ -438,8 +401,6 @@ pub mod ScanContractMtEph {
                 let last_val = call_f(f, c.nth(half - 1), b.nth(half - 1));
                 proof {
                     lemma_expand_odd_tail::<T>(s, b_seq, spec_f, *id, half as int);
-                    assert(s.take((n - 1) as int) =~= s.take(2 * half as int));
-                    assert(last_val == s.take((n - 1) as int).fold_left(*id, spec_f));
                 }
                 result_vec.push(last_val);
             }

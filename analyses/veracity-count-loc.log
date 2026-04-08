@@ -1,13 +1,15 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-     279/      80/     161/      93 BalBinTreeStEph.rs
-     187/      85/     360/      59 PrimTreeSeqStPer.rs
+      35/     111/      57/       4 ReduceContractMtEph.rs
+      25/     130/      73/       3 ReduceContractStEph.rs
+      70/     164/     116/       4 ScanContractMtEph.rs
+      69/     164/     144/       3 ScanContractStEph.rs
 --------------------------------------------
     spec    proof     exec     rust
-     466/     165/     521/     152 Total
-   2,069 total lines
-2 files analyzed
-22ms
+     199/     569/     390/      14 Total
+   1,665 total lines
+4 files analyzed
+8ms
 
 Proof Lines Per Function
 ========================
@@ -15,34 +17,43 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |     613 |     206 |     327 |      80 |     521 |    1.18 |
+|   1 | root       |     768 |       0 |     251 |     517 |     390 |    1.97 |
 
-1 chapters, 613 proof lines, 521 exec lines, ratio 1.18
-613 min  613 max  613.0 avg  613.0 median (proof lines)
+1 chapters, 768 proof lines, 390 exec lines, ratio 1.97
+768 min  768 max  768.0 avg  768.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | BalBinTreeStEph                |     342 |     151 |     111 |      80 |     161 |   2.12 |
-|   2 | root       | PrimTreeSeqStPer               |     271 |      55 |     216 |       0 |     360 |   0.75 |
+|   1 | root       | ScanContractMtEph              |     234 |       0 |      72 |     162 |     116 |   2.02 |
+|   2 | root       | ScanContractStEph              |     233 |       0 |      71 |     162 |     144 |   1.62 |
+|   3 | root       | ReduceContractStEph            |     155 |       0 |      52 |     103 |      73 |   2.12 |
+|   4 | root       | ReduceContractMtEph            |     146 |       0 |      56 |      90 |      57 |   2.56 |
 
-2 modules, 613 proof lines, 521 exec lines, ratio 1.18
-271 min  342 max  306.5 avg  306.5 median (proof lines)
+4 modules, 768 proof lines, 390 exec lines, ratio 1.97
+146 min  234 max  192.0 avg  194.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  69 exec functions total, 58 with proof lines
-  327 total proof lines in exec fns
-  1 min  20 max  5.6 avg  4.0 median
+  13 exec functions total, 13 with proof lines
+  251 total proof lines in exec fns
+  7 min  45 max  19.3 avg  11.0 median
 
 Per proof function:
-  2 proof functions
-  80 total proof lines in proof fns
-  39 min  41 max  40.0 avg  40.0 median
+  24 proof functions
+  517 total proof lines in proof fns
+  7 min  72 max  21.5 avg  13.0 median
 
 Grand total:
-  146 total functions, 126 with proof lines (86%)
-  613 total proof lines, 521 exec lines, ratio 1.18
-  1 min  41 max  4.9 avg  3.0 median (proof lines per fn)
+  37 total functions, 37 with proof lines (100%)
+  768 total proof lines, 390 exec lines, ratio 1.97
+  7 min  72 max  20.8 avg  12.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-  (none)
+|   # | Chap       | Module                         | Function               |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | ---------------------- | ----- | ------ |
+|   1 | root       | ReduceContractStEph            | lemma_contraction_even | proof |     72 |
+|   2 | root       | ReduceContractMtEph            | lemma_contraction_even | proof |     63 |
+|   3 | root       | ScanContractMtEph              | lemma_contraction_even | proof |     63 |
+|   4 | root       | ScanContractStEph              | lemma_contraction_even | proof |     63 |
+
+4 functions over 50 proof lines

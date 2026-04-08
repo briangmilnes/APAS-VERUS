@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: postcondition not satisfied
+   --> src/Chap27/ScanContractStEph.rs:194:13
+    |
+188 |     proof fn lemma_expand_odd<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T, j: int)
+    |           ----------------------------------------------------------------------- at the end of the function body
+...
+194 |             f(s.take(2 * j).fold_left(id, f), s[2 * j]) == s.take(2 * j + 1).fold_left(id, f),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+
+note: diagnostics via expansion
+
+note: 
+
+old(f)(old(s).subrange(0, 2 * old(j)).fold_left(old(id), old(f)), old(s).index(2 * old(j))) == old(s).subrange(0, 2 * old(j) + 1).fold_left(old(id), old(f)) 
+
+verification results:: 944 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2980MB, peak z3 RSS: 361MB, min free: 23190MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 25s

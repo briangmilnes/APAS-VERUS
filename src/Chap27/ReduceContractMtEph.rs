@@ -69,8 +69,6 @@ pub mod ReduceContractMtEph {
     {
         let s = seq![a, b];
         reveal_with_fuel(Seq::fold_left, 3);
-        assert(s.drop_last() =~= seq![a]);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
     }
 
     /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
@@ -79,7 +77,6 @@ pub mod ReduceContractMtEph {
         ensures seq![a].fold_left(id, f) == a,
     {
         reveal_with_fuel(Seq::fold_left, 2);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
     }
 
     /// Contraction lemma: for an even-length sequence, folding the original equals
@@ -101,12 +98,9 @@ pub mod ReduceContractMtEph {
         let b = Seq::new(half, |i: int| f(s[2 * i], s[2 * i + 1]));
 
         if n == 2 {
-            assert(s =~= seq![s[0], s[1]]);
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == f(s[0], s[1]));
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
-            assert(b.fold_left(id, f) == f(s[0], s[1]));
         } else {
             let s_tail = s.subrange(2, n as int);
             let b_tail = b.subrange(1, b.len() as int);
@@ -116,15 +110,10 @@ pub mod ReduceContractMtEph {
             assert(s_head =~= seq![s[0], s[1]]);
 
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
 
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
-            assert(s.fold_left(id, f) == f(b[0], s_tail_result));
 
-            assert(s_tail.len() >= 2 && s_tail.len() % 2 == 0) by {
-                assert(s_tail.len() == n - 2);
-            }
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -132,19 +121,12 @@ pub mod ReduceContractMtEph {
 
             lemma_contraction_even::<T>(s_tail, f, id);
             let b_tail_result = b_tail.fold_left(id, f);
-            assert(s_tail_result == b_tail_result);
-            assert(s.fold_left(id, f) == f(b[0], b_tail_result));
 
             lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
-            assert(b_tail.fold_left(b[0], f) == f(b[0], b_tail_result));
-            assert(s.fold_left(id, f) == b_tail.fold_left(b[0], f));
 
             b.lemma_fold_left_split(id, f, 1);
             assert(b.subrange(0, 1) =~= seq![b[0]]);
-            assert(b.subrange(1, b.len() as int) =~= b_tail);
             lemma_fold_left_singleton::<T>(b[0], f, id);
-            assert(b.fold_left(id, f) == b_tail.fold_left(b[0], f));
-            assert(s.fold_left(id, f) == b.fold_left(id, f));
         }
     }
 
@@ -207,11 +189,9 @@ pub mod ReduceContractMtEph {
         // Clone array into Arc for sharing between closures
         let a_cloned = a.clone();
         proof {
-            assert(a_cloned.seq@.len() == a.seq@.len());
             assert forall|i: int| 0 <= i < a.spec_len() implies
                 a_cloned.spec_index(i) == a.spec_index(i)
             by {
-                assert(cloned::<T>(a.seq@[i], a_cloned.seq@[i]));
                 axiom_cloned_implies_eq_owned(a.seq@[i], a_cloned.seq@[i]);
             }
         }
@@ -255,9 +235,6 @@ pub mod ReduceContractMtEph {
                     },
                 decreases mid_half - i,
             {
-                assert(2 * (i as int) + 1 < a_left.spec_len()) by {
-                    assert(i < mid_half);
-                }
                 let combined = call_f(&f_left, a_left.nth(2 * i), a_left.nth(2 * i + 1));
                 v.push(combined);
                 i += 1;
@@ -302,9 +279,6 @@ pub mod ReduceContractMtEph {
                 decreases count - i,
             {
                 let idx = mid_half + i;
-                assert(2 * (idx as int) + 1 < a_right.spec_len()) by {
-                    assert(idx < half);
-                }
                 let combined = call_f(&f_right, a_right.nth(2 * idx), a_right.nth(2 * idx + 1));
                 v.push(combined);
                 i += 1;
@@ -325,17 +299,13 @@ pub mod ReduceContractMtEph {
 
         proof {
             // b_vec@ == left_snap + right_snap (from vstd Vec::append spec)
-            assert(b_vec@ =~= left_snap + right_snap);
-            assert(b.spec_len() == half as nat);
             assert forall|j: int| #![trigger b.spec_index(j)] 0 <= j < half as int implies {
                 &&& 2 * j + 1 < a.spec_len()
                 &&& b.spec_index(j) == spec_f(a.spec_index(2 * j), a.spec_index(2 * j + 1))
             } by {
                 if j < mid_half as int {
-                    assert(b.spec_index(j) == left_snap[j]);
                 } else {
                     let j2 = j - mid_half as int;
-                    assert(b.spec_index(j) == right_snap[j2]);
                 }
             }
         }
@@ -359,7 +329,6 @@ pub mod ReduceContractMtEph {
             // Base case: empty
             if n == 0 {
                 proof {
-                    assert(s =~= Seq::<T>::empty());
                 }
                 return id;
             }
@@ -369,7 +338,6 @@ pub mod ReduceContractMtEph {
                 let reduced = call_f(&f, &id, a.nth(0));
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
-                    assert(s.drop_last() =~= Seq::<T>::empty());
                 }
                 return reduced;
             }
@@ -380,18 +348,15 @@ pub mod ReduceContractMtEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
-                assert(b.spec_len() == half as nat);
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
                 } by {
-                    assert(b_seq[j] == b.spec_index(j));
                 }
             }
 
             // Recurse on contracted sequence
             let id_copy = call_f(&f, &id, &id);
-            proof { assert(id_copy == id); }
             let contracted_result = Self::reduce_contract_parallel(&b, Arc::clone(&f), Ghost(spec_f), id_copy);
 
             // Expand: handle odd-length sequences
@@ -403,10 +368,6 @@ pub mod ReduceContractMtEph {
                     let s_last_part = s.subrange((n - 1) as int, n as int);
 
                     s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
-                    assert(s_last_part =~= seq![s[(n - 1) as int]]);
-                    assert(s_even.len() >= 2 && s_even.len() % 2 == 0) by {
-                        assert(s_even.len() == n - 1);
-                    }
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
