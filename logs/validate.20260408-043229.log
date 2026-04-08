@@ -1,0 +1,57 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap21/Exercise21_8.rs:227:26
+    |
+227 |                 requires n >= 2int, k as int * k as int <= n as int,
+    |                          ^
+
+error[E0432]: unresolved import `crate::Chap21::Exercise21_8::Exercise21_8::spec_is_prime`
+  --> src/Chap21/Algorithm21_6.rs:28:9
+   |
+28 |     use crate::Chap21::Exercise21_8::Exercise21_8::spec_is_prime;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `spec_is_prime` in `Chap21::Exercise21_8::Exercise21_8`
+
+error[E0425]: cannot find function `spec_is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:58:21
+   |
+58 |                 ==> spec_is_prime(#[trigger] primes.spec_index(i) as int),
+   |                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:59:49
+   |
+59 |             forall|p: int| 2 <= p < n as int && spec_is_prime(p) ==>
+   |                                                 ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:74:29
+   |
+74 |             ensures keep == spec_is_prime(*x as int),
+   |                             ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:75:11
+   |
+75 |         { is_prime(*x) };
+   |           ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:76:66
+   |
+76 |         let ghost spec_pred: spec_fn(usize) -> bool = |x: usize| spec_is_prime(x as int);
+   |                                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `spec_is_prime` in this scope
+  --> src/Chap21/Algorithm21_5.rs:86:56
+   |
+86 |             assert forall|p: int| 2 <= p < n as int && spec_is_prime(p) implies
+   |                                                        ^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 8 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2477MB, peak z3 RSS: 130MB, min free: 24048MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 4s

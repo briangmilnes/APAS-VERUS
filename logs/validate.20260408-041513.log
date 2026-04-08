@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: precondition not satisfied
+   --> src/Chap21/Algorithm21_2.rs:106:36
+    |
+106 |                     let flat_mid = ArraySeqStPerS::flatten(&mid);
+    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqStPer.rs:347:17
+    |
+347 |                 obeys_feq_clone::<T>(),
+    |                 ---------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:60:61
+   |
+60 |         &&& forall|x: T, y: T|  #[trigger] cloned(x, y) ==> x.eq_spec(&y)
+   |                                                             ^^^^^^^^^^^^^
+61 |         &&& forall|x: &T, y: T| #[trigger] cloned(*x, y) ==> x.eq_spec(&y)
+62 |         &&& forall|x: T, y: T|  #[trigger] strictly_cloned(x, y) ==> x.eq_spec(&y)
+   |                                                                      ^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_clone()
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       cloned(x, y) ==>
+|           x.eq_spec(y) ✔
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✘
+|               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   forall |x, y|
+|       strictly_cloned(x, y) ==>
+|           x.eq_spec(y) ✔
++---
+
+verification results:: 1360 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4041MB, peak z3 RSS: 672MB, min free: 21900MB
+Sampled CPU Usage: rust_verify: 68s, z3 children: 67s

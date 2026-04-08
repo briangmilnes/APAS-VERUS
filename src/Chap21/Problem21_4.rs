@@ -133,8 +133,6 @@ pub mod Problem21_4 {
                     {
                         let y = *b.nth(j);
                         proof {
-                            assert(a.seq@[i as int] == x);
-                            assert(b.seq@[j as int] == y);
                         }
                         Pair(x, y)
                     }),
@@ -156,17 +154,11 @@ pub mod Problem21_4 {
 
             let ghost pred = |p: Pair<usize, usize>|
                 a.seq@.contains(p.0) && b.seq@.contains(p.1);
-            assert forall|i: int, j: int|
-                0 <= i < mapped.len() && 0 <= j < mapped[i].len()
-                implies #[trigger] pred(mapped[i][j]) by {
-                assert(mapped[i][j] == nested.seq@[i].seq@[j]);
-            }
             lemma_flatten_all(mapped, pred);
             assert forall|k: int| 0 <= k < pairs.seq@.len() implies (
                 a.seq@.contains((#[trigger] pairs.seq@[k]).0)
                 && b.seq@.contains(pairs.seq@[k].1)
             ) by {
-                assert(pairs.seq@[k] == mapped.flatten()[k]);
                 assert(pred(mapped.flatten()[k]));
             }
         }

@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error[E0425]: cannot find value `nonlinear_arith` in this scope
+   --> src/Chap21/Problem21_3.rs:139:29
+    |
+139 |                         by (nonlinear_arith);
+    |                             ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `by` in this scope
+   --> src/Chap21/Problem21_3.rs:139:25
+    |
+139 |                         by (nonlinear_arith);
+    |                         ^^
+    |
+help: a local variable with a similar name exists
+    |
+139 -                         by (nonlinear_arith);
+139 +                         y (nonlinear_arith);
+    |
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3127MB, peak z3 RSS: 338MB, min free: 23300MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 40s

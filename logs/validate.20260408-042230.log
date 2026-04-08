@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: assertion failed
+  --> src/Chap21/Algorithm21_5.rs:93:24
+   |
+93 |                 assert(all_seq.to_multiset().count(p as usize) > 0);
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+all_seq.to_multiset().count(clip(usize, p)) > 0 
+
+verification results:: 1360 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3479MB, peak z3 RSS: 195MB, min free: 22895MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 26s

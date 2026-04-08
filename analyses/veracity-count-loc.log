@@ -1,15 +1,23 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-     319/     396/     690/      48 ArraySeqMtEph.rs
-     404/     281/     772/      63 ArraySeqMtEphSlice.rs
-     245/     178/     418/      48 ArraySeqStEph.rs
-     239/     193/     427/      48 ArraySeqStPer.rs
+      25/      33/      84/       3 Algorithm21_1.rs
+       7/      25/      51/       7 Algorithm21_2.rs
+       8/      20/      23/       3 Algorithm21_5.rs
+       8/      24/      76/       3 Algorithm21_6.rs
+      11/      23/      30/       5 Exercise21_5.rs
+       0/       0/       0/       3 Exercise21_6.rs
+      13/      16/      50/       5 Exercise21_7.rs
+      38/     122/      39/       5 Exercise21_8.rs
+      17/      46/       0/       3 Exercise21_9.rs
+       9/       0/      44/       3 Problem21_1.rs
+      11/      53/      65/       5 Problem21_3.rs
+      12/      28/      89/       5 Problem21_4.rs
 --------------------------------------------
     spec    proof     exec     rust
-   1,207/   1,048/   2,307/     207 Total
-   6,281 total lines
-4 files analyzed
-53ms
+     159/     390/     551/      50 Total
+   1,764 total lines
+12 files analyzed
+12ms
 
 Proof Lines Per Function
 ========================
@@ -17,40 +25,48 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |   2,227 |     276 |   1,624 |     327 |   2,307 |    0.97 |
+|   1 | root       |     551 |      20 |     331 |     200 |     551 |    1.00 |
 
-1 chapters, 2,227 proof lines, 2,307 exec lines, ratio 0.97
-2,227 min  2,227 max  2227.0 avg  2227.0 median (proof lines)
+1 chapters, 551 proof lines, 551 exec lines, ratio 1.00
+551 min  551 max  551.0 avg  551.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | ArraySeqMtEph                  |     710 |      65 |     540 |     105 |     690 |   1.03 |
-|   2 | root       | ArraySeqMtEphSlice             |     672 |      93 |     431 |     148 |     772 |   0.87 |
-|   3 | root       | ArraySeqStPer                  |     427 |      59 |     331 |      37 |     427 |   1.00 |
-|   4 | root       | ArraySeqStEph                  |     418 |      59 |     322 |      37 |     418 |   1.00 |
+|   1 | root       | Exercise21_8                   |     158 |       8 |      77 |      73 |      39 |   4.05 |
+|   2 | root       | Problem21_3                    |      64 |       0 |      64 |       0 |      65 |   0.98 |
+|   3 | root       | Exercise21_9                   |      63 |       3 |       0 |      60 |       0 |      - |
+|   4 | root       | Algorithm21_1                  |      56 |       4 |      22 |      30 |      84 |   0.67 |
+|   5 | root       | Problem21_4                    |      44 |       0 |      44 |       0 |      89 |   0.49 |
+|   6 | root       | Exercise21_5                   |      34 |       0 |      12 |      22 |      30 |   1.13 |
+|   7 | root       | Algorithm21_2                  |      32 |       0 |      32 |       0 |      51 |   0.63 |
+|   8 | root       | Algorithm21_6                  |      32 |       0 |      17 |      15 |      76 |   0.42 |
+|   9 | root       | Exercise21_7                   |      29 |       5 |      24 |       0 |      50 |   0.58 |
+|  10 | root       | Algorithm21_5                  |      28 |       0 |      28 |       0 |      23 |   1.22 |
+|  11 | root       | Problem21_1                    |      11 |       0 |      11 |       0 |      44 |   0.25 |
 
-4 modules, 2,227 proof lines, 2,307 exec lines, ratio 0.97
-418 min  710 max  556.8 avg  549.5 median (proof lines)
+11 modules, 551 proof lines, 551 exec lines, ratio 1.00
+11 min  158 max  50.1 avg  34.0 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  223 exec functions total, 172 with proof lines
-  1,624 total proof lines in exec fns
-  1 min  105 max  9.4 avg  7.0 median
+  15 exec functions total, 15 with proof lines
+  331 total proof lines in exec fns
+  1 min  75 max  22.1 avg  16.0 median
 
 Per proof function:
-  21 proof functions
-  327 total proof lines in proof fns
-  4 min  38 max  15.6 avg  15.0 median
+  12 proof functions
+  200 total proof lines in proof fns
+  5 min  28 max  16.7 avg  18.0 median
 
 Grand total:
-  334 total functions, 274 with proof lines (82%)
-  2,227 total proof lines, 2,307 exec lines, ratio 0.97
-  1 min  105 max  8.1 avg  5.0 median (proof lines per fn)
+  33 total functions, 33 with proof lines (100%)
+  551 total proof lines, 551 exec lines, ratio 1.00
+  1 min  75 max  16.7 avg  12.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
-|   # | Chap       | Module                         | Function  |  Kind |  Lines |
-| --- | ---------- | ------------------------------ | --------- | ----- | ------ |
-|   1 | root       | ArraySeqMtEph                  | filter_dc |  exec |    105 |
+|   # | Chap       | Module                         | Function       |  Kind |  Lines |
+| --- | ---------- | ------------------------------ | -------------- | ----- | ------ |
+|   1 | root       | Exercise21_8                   | is_prime       |  exec |     75 |
+|   2 | root       | Problem21_3                    | points3d_loops |  exec |     64 |
 
-1 functions over 50 proof lines
+2 functions over 50 proof lines

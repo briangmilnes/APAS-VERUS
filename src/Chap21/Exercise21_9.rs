@@ -54,7 +54,6 @@ pub mod Exercise21_9 {
         lemma_div_exact(m, d0);
         let q = m / d0;
         // m == d0 * q, q >= 1 since m >= 2 and d0 < m
-        assert(m == d0 * q);
         assert(q >= 2) by (nonlinear_arith)
             requires m == d0 * q, d0 < m, d0 >= 2, m > 1;
         if d0 * d0 <= m {
@@ -93,7 +92,6 @@ pub mod Exercise21_9 {
         let d = choose|d: int| 2 <= d && d * d <= m && #[trigger] (m % d) == 0;
         lemma_div_exact(m, d);
         let q = m / d;
-        assert(m == d * q);
         // q >= 2 because m == d*q, d >= 2, and m is composite (has divisor < m).
         // If q == 1 then m == d, but d divides m and d < m (from the small divisor
         // being chosen with d*d <= m and m composite implies m >= 4).
@@ -104,7 +102,6 @@ pub mod Exercise21_9 {
         assert(d * d <= n) by (nonlinear_arith)
             requires d * d <= m, m <= n;
         // Witness: i = d, j = q
-        assert(d * q == m);
     }
 
     } // verus!

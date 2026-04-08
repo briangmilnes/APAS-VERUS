@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:284:38
+    |
+284 | ...                   requires i <= k as int, i >= 2;
+    |                                ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:284:53
+    |
+284 | ...                   requires i <= k as int, i >= 2;
+    |                                               ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:283:32
+    |
+283 |                         assert(i * i <= k as int * k as int) by (nonlinear_arith)
+    |                                ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:283:36
+    |
+283 |                         assert(i * i <= k as int * k as int) by (nonlinear_arith)
+    |                                    ^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 1565MB, peak z3 RSS: 256MB, min free: 24630MB
+Sampled CPU Usage: rust_verify: 20s, z3 children: 10s

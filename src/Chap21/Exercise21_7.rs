@@ -132,9 +132,6 @@ pub mod Exercise21_7 {
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == fb_len as int by {}
             lemma_flatten_uniform_len(mapped, fb_len as int);
-            assert(pairs.seq@.len() == fa_len as int * fb_len as int);
-            assert(fa_len <= a.seq@.len());
-            assert(fb_len <= b.seq@.len());
             assert(fa_len as int * fb_len as int <= a.seq@.len() as int * b.seq@.len() as int)
                 by (nonlinear_arith)
                 requires

@@ -86,15 +86,9 @@ pub mod Algorithm21_5 {
             assert forall|p: int| 2 <= p < n as int && spec_is_prime(p) implies
                 filt_seq.contains(#[trigger] (p as usize)) by {
                 let idx = (p - 2) as int;
-                assert(0 <= idx < all.seq@.len());
-                assert(all.spec_index(idx) == p as usize);
                 assert(all_seq[idx] == p as usize);
                 all_seq.to_multiset_ensures();
-                assert(all_seq.to_multiset().count(p as usize) > 0);
-                assert(spec_pred(p as usize));
                 // axiom_filter_count: m.filter(f).count(v) == if f(v) { m.count(v) } else { 0 }
-                assert(all_seq.to_multiset().filter(spec_pred).count(p as usize)
-                    == all_seq.to_multiset().count(p as usize));
                 assert(filt_seq.to_multiset().count(p as usize) > 0);
                 filt_seq.to_multiset_ensures();
             }

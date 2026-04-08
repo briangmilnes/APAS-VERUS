@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:262:24
+    |
+262 |                     if i >= k as int + 1 {
+    |                        ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:264:38
+    |
+264 | ...                   requires i >= k as int + 1, i >= 2;
+    |                                ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:264:57
+    |
+264 | ...                   requires i >= k as int + 1, i >= 2;
+    |                                                   ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:263:32
+    |
+263 |                         assert(i * i >= (k as int + 1) * (k as int + 1)) by (nonlinear_arith)
+    |                                ^ not found in this scope
+
+error[E0425]: cannot find value `i` in this scope
+   --> src/Chap21/Exercise21_8.rs:263:36
+    |
+263 |                         assert(i * i >= (k as int + 1) * (k as int + 1)) by (nonlinear_arith)
+    |                                    ^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2637MB, peak z3 RSS: 392MB, min free: 23616MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 26s

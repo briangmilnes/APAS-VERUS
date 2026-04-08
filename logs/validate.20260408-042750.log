@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap21/Exercise21_5.rs:114:62
+    |
+114 |                 (#[trigger] mapped[i]).len() == n as int - i by {}
+    |                                                              ^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24955MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

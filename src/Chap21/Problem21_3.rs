@@ -132,12 +132,9 @@ pub mod Problem21_3 {
                 }
                 // After inner: added n elements, v.len() == v_len_mid + n
                 proof {
-                    assert(v@.len() == v_len_mid + n as int);
-                    assert(v_len_mid == v_len_before + (y as int - 1) * n as int);
                     // (y - 1) * n + n == y * n
                     assert((y as int - 1) * n as int + n as int == y as int * n as int)
                         by (nonlinear_arith);
-                    assert(v@.len() == v_len_before + y as int * n as int);
                     // Overflow: v.len() <= nnn
                     assert(y as int * n as int <= n as int * n as int)
                         by (nonlinear_arith)
@@ -150,14 +147,12 @@ pub mod Problem21_3 {
             }
             // After middle: v.len() == v_len_before + n * n == (x+1) * nn
             proof {
-                assert(v@.len() == v_len_before + n as int * n as int);
                 assert((x as int + 1) * nn as int == x as int * nn as int + nn as int)
                     by (nonlinear_arith);
             }
             x = x + 1;
         }
         proof {
-            assert(v@.len() == n as int * nn as int);
             assert(n as int * nn as int == n as int * n as int * n as int)
                 by (nonlinear_arith)
                 requires nn == n as int * n as int;

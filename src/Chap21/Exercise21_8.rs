@@ -73,10 +73,8 @@ pub mod Exercise21_8 {
             lemma_divisor_count_nonneg(n, from + 1, to);
             if n % from == 0 {
                 // count = 1 + rest >= 1, contradicting 0.
-                assert(spec_divisor_count(n, from, to) >= 1);
             } else {
                 // count = rest = spec_divisor_count(n, from+1, to) == 0.
-                assert(spec_divisor_count(n, from + 1, to) == 0);
                 lemma_zero_count_means_no_divisors(n, from + 1, to);
             }
         }
@@ -95,7 +93,6 @@ pub mod Exercise21_8 {
         decreases to - from,
     {
         if from < to {
-            assert(n % from != 0);
             lemma_no_divisors_means_zero_count(n, from + 1, to);
         }
     }
@@ -127,7 +124,6 @@ pub mod Exercise21_8 {
             let s_prev = Seq::new((k - 1) as nat, |i: int| (n % (i + 1) == 0));
             let pred = |v: bool| v;
             assert(s.drop_last() =~= s_prev);
-            assert(s.last() == (n % (k as int) == 0));
 
             // Unfold spec_divisor_count from the top: range [1, k+1) = [1, k) ++ {k}
             // spec_divisor_count(n, 1, k+1) steps down from k to k-1 at the end
@@ -153,7 +149,6 @@ pub mod Exercise21_8 {
             // count(n, from, from) = 0 (base case).
             // So count(n, from, from+1) = (if n%from==0 {1} else {0}) + 0.
             assert(spec_divisor_count(n, from + 1, to) == 0);
-            assert(spec_divisor_count(n, from, to - 1) == 0);
         } else {
             lemma_divisor_count_split_last(n, from + 1, to);
             // IH: count(n, from+1, to) = count(n, from+1, to-1) + last
@@ -221,16 +216,12 @@ pub mod Exercise21_8 {
             // We manually reason about the count.
 
             // 1 always divides n (n >= 2 > 0).
-            assert(n as int % 1 == 0) by (nonlinear_arith) requires n >= 2;
             // k = isqrt(n) >= 1 when n >= 2: if k == 0 then (k+1)^2 = 1 > n, contradicting n >= 2.
             assert(1 < k as int + 1) by (nonlinear_arith)
                 requires n >= 2int, k as int * k as int <= n as int,
                          (k as int + 1) * (k as int + 1) > n as int;
-            assert(n as int % 1 == 0);
 
             // Unfold: spec_divisor_count(n, 1, k+1) = 1 + spec_divisor_count(n, 2, k+1)
-            assert(spec_divisor_count(n as int, 1, k as int + 1) ==
-                   1 + spec_divisor_count(n as int, 2, k as int + 1));
 
             lemma_divisor_count_nonneg(n as int, 2, k as int + 1);
 
@@ -251,7 +242,6 @@ pub mod Exercise21_8 {
             if prime {
                 // ones.length() == 1, so divisor_count(n, 1, k+1) == 1.
                 // Therefore divisor_count(n, 2, k+1) == 0.
-                assert(spec_divisor_count(n as int, 2, k as int + 1) == 0);
                 lemma_zero_count_means_no_divisors(n as int, 2, k as int + 1);
                 // forall i: 2 <= i < k+1 ==> n%i != 0
 
@@ -270,7 +260,6 @@ pub mod Exercise21_8 {
                 // ones.length() != 1, so divisor_count(n, 1, k+1) != 1.
                 // Since dc = 1 + dc2 and dc2 >= 0, dc >= 1. So dc > 1, meaning dc2 > 0.
                 let ghost dc2 = spec_divisor_count(n as int, 2, k as int + 1);
-                assert(dc2 > 0);
 
                 // dc2 > 0 means there exists some i in [2, k+1) dividing n.
                 // Prove by contradiction: if no such i existed, dc2 == 0.
@@ -282,10 +271,8 @@ pub mod Exercise21_8 {
                     {
                         assert(i * i <= k as int * k as int) by (nonlinear_arith)
                             requires i <= k as int, i >= 2;
-                        assert(k as int * k as int <= n as int);
                     }
                     lemma_no_divisors_means_zero_count(n as int, 2, k as int + 1);
-                    assert(dc2 == 0);  // Contradiction with dc2 > 0.
                 }
             }
         }

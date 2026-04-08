@@ -76,7 +76,6 @@ pub mod Algorithm21_2 {
                 {
                     proof {
                         // Trigger Pair feq axioms for the nested Pair type.
-                        assert(Pair_feq_trigger::<usize, usize>());
                         assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
                     }
                     // For each y in 0..n, tabulate z values.
@@ -117,7 +116,6 @@ pub mod Algorithm21_2 {
             );
 
         proof {
-            assert(Pair_feq_trigger::<usize, usize>());
             assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
         }
         let flattened = ArraySeqStPerS::flatten(&outer);

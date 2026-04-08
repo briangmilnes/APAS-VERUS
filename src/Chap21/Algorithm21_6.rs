@@ -45,9 +45,7 @@ pub mod Algorithm21_6 {
         ensures !spec_is_prime(a * b)
     {
         let c = a * b;
-        assert(a * b >= 4) by (nonlinear_arith) requires a >= 2, b >= 2;
         if a * a <= c {
-            assert(c == a * b);
             assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
         } else {
             assert(b * b <= a * b) by (nonlinear_arith)
@@ -94,7 +92,6 @@ pub mod Algorithm21_6 {
                         assert forall|j0: usize| j0 < len implies
                             #[trigger] (i as int * (j0 as int + 2)) <= n as int by
                         {
-                            assert(j0 as int + 2 <= limit as int);
                             assert(i as int * limit as int <= n as int) by (nonlinear_arith)
                                 requires limit == n / i, i >= 2;
                             assert(i as int * (j0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)

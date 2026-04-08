@@ -1,0 +1,44 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error[E0425]: cannot find value `j0` in this scope
+  --> src/Chap21/Algorithm21_6.rs:97:36
+   |
+97 | ...                   assert(j0 as int + 2 <= limit as int);
+   |                              ^^
+   |
+help: a local variable with a similar name exists
+   |
+97 -                             assert(j0 as int + 2 <= limit as int);
+97 +                             assert(i0 as int + 2 <= limit as int);
+   |
+
+error[E0425]: cannot find value `j0` in this scope
+   --> src/Chap21/Algorithm21_6.rs:101:42
+    |
+101 | ...                   requires j0 as int + 2 <= limit as int, i >= 2;
+    |                                ^^
+    |
+help: a local variable with a similar name exists
+    |
+101 -                                 requires j0 as int + 2 <= limit as int, i >= 2;
+101 +                                 requires i0 as int + 2 <= limit as int, i >= 2;
+    |
+
+error[E0425]: cannot find value `j0` in this scope
+   --> src/Chap21/Algorithm21_6.rs:100:48
+    |
+100 | ...                   assert(i as int * (j0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)
+    |                                          ^^
+    |
+help: a local variable with a similar name exists
+    |
+100 -                             assert(i as int * (j0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)
+100 +                             assert(i as int * (i0 as int + 2) <= i as int * limit as int) by (nonlinear_arith)
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24108MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s
