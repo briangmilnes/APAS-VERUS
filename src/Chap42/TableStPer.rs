@@ -810,61 +810,17 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             // Veracity: NEEDED proof block
             proof {
-                // Prove subset directly: any key in filtered map is also in self map.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger]
-                    spec_entries_to_map(entries@).dom().contains(k)
-                    implies spec_entries_to_map(self_view).dom().contains(k)
+                // Bridge: connect view-level entries to kept via spec_index.
+                assert forall|j: int| 0 <= j < sources.len() implies
+                    0 <= #[trigger] sources[j] < self_view.len()
+                    && entries@[j] == self_view[sources[j]]
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
-                    let i = choose|i: int| 0 <= i < entries@.len()
-                        && (#[trigger] entries@[i]).0 == k;
-                    // Veracity: NEEDED assert
-                    assert(entries.spec_index(i) == kept@[i]);
-                    let s = sources[i];
-                    // Veracity: NEEDED assert
-                    assert(self_view[s].0 == kept@[i].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
+                    assert(entries.spec_index(j) == kept@[j]);
                 };
-                // Prove no duplicate keys: sources are strictly increasing
-                // and map to original keys which have no dups.
-                // Veracity: NEEDED assert
-                assert(spec_keys_no_dups(entries@)) by {
-                    // Veracity: NEEDED assert
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < entries@.len()
-                        implies (#[trigger] entries@[j1]).0 != (#[trigger] entries@[j2]).0
-                    by {
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j1) == kept@[j1]);
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j2) == kept@[j2]);
-                        // Veracity: NEEDED assert
-                        assert(sources[j1] < sources[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
-                    };
-                };
-                // Value preservation.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger]
-                    spec_entries_to_map(entries@).contains_key(k)
-                    implies spec_entries_to_map(entries@)[k]
-                        == spec_entries_to_map(self_view)[k]
-                by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < entries@.len()
-                        && (#[trigger] entries@[idx]).0 == k;
-                    // Veracity: NEEDED assert
-                    assert(entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    lemma_entries_to_map_get::<K::V, V::V>(entries@, idx);
-                    lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
-                    // Veracity: NEEDED assert
-                    assert(kept@[idx].1@ == self_view[s].1);
-                };
+                lemma_subseq_no_dups::<K::V, V::V>(self_view, entries@, sources);
+                lemma_subseq_dom_forward::<K::V, V::V>(self_view, entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(self_view, entries@, sources);
                 // Completeness: every key satisfying spec_pred was kept.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V|
                     spec_entries_to_map(self_view).dom().contains(k)
                     && spec_pred(k, spec_entries_to_map(self_view)[k])
@@ -874,15 +830,8 @@ pub mod TableStPer {
                     let si = choose|si: int| 0 <= si < self_view.len()
                         && (#[trigger] self_view[si]).0 == k;
                     lemma_entries_to_map_get::<K::V, V::V>(self_view, si);
-                    // Veracity: NEEDED assert
-                    assert(spec_pred(self_view[si].0, self_view[si].1));
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
-                    // Veracity: NEEDED assert
                     assert(entries.spec_index(j) == kept@[j]);
-                    // Veracity: NEEDED assert
-                    assert(kept@[j].0@ == self_view[si].0);
-                    // Veracity: NEEDED assert
-                    assert(entries@[j].0 == k);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                 };
             }
@@ -1036,24 +985,14 @@ pub mod TableStPer {
                     assert(entries.spec_index(j) == kept@[j]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                 };
-                // Prove no duplicate keys via strictly increasing self_srcs.
-                // Veracity: NEEDED assert
-                assert(spec_keys_no_dups(entries@)) by {
-                    // Veracity: NEEDED assert
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < entries@.len()
-                        implies (#[trigger] entries@[j1]).0 != (#[trigger] entries@[j2]).0
-                    by {
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j1) == kept@[j1]);
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j2) == kept@[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_srcs[j1] < self_srcs[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_view[self_srcs[j1]].0 != self_view[self_srcs[j2]].0);
-                    };
+                // No duplicate keys.
+                assert forall|j: int| 0 <= j < self_srcs.len() implies
+                    0 <= #[trigger] self_srcs[j] < self_view.len()
+                    && entries@[j].0 == self_view[self_srcs[j]].0
+                by {
+                    assert(entries.spec_index(j) == kept@[j]);
                 };
+                lemma_subseq_no_dups::<K::V, V::V>(self_view, entries@, self_srcs);
                 // Value: combine.ensures postcondition.
                 // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger]
@@ -1414,8 +1353,16 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             // Veracity: NEEDED proof block
             proof {
+                // Bridge: connect view-level entries to kept via spec_index.
+                assert forall|j: int| 0 <= j < sources.len() implies
+                    0 <= #[trigger] sources[j] < self_view.len()
+                    && entries@[j] == self_view[sources[j]]
+                by {
+                    assert(entries.spec_index(j) == kept@[j]);
+                };
+                lemma_subseq_no_dups::<K::V, V::V>(self_view, entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(self_view, entries@, sources);
                 // Forward: result keys are in self \ other.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger]
                     spec_entries_to_map(entries@).dom().contains(k)
                     implies self@.dom().contains(k)
@@ -1424,15 +1371,11 @@ pub mod TableStPer {
                     lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
                     let idx = choose|idx: int| 0 <= idx < entries@.len()
                         && (#[trigger] entries@[idx]).0 == k;
-                    // Veracity: NEEDED assert
                     assert(entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
-                    // Veracity: NEEDED assert
-                    assert(self_view[s].0 == kept@[idx].0@);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
                 };
                 // Backward: keys in self \ other are in result.
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| #[trigger]
                     self@.dom().contains(k) && !other@.dom().contains(k)
                     implies spec_entries_to_map(entries@).dom().contains(k)
@@ -1441,45 +1384,8 @@ pub mod TableStPer {
                     let si = choose|si: int| 0 <= si < self_view.len()
                         && (#[trigger] self_view[si]).0 == k;
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
-                    // Veracity: NEEDED assert
                     assert(entries.spec_index(j) == kept@[j]);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
-                };
-                // Prove no duplicate keys via strictly increasing sources.
-                // Veracity: NEEDED assert
-                assert(spec_keys_no_dups(entries@)) by {
-                    // Veracity: NEEDED assert
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < entries@.len()
-                        implies (#[trigger] entries@[j1]).0 != (#[trigger] entries@[j2]).0
-                    by {
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j1) == kept@[j1]);
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j2) == kept@[j2]);
-                        // Veracity: NEEDED assert
-                        assert(sources[j1] < sources[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
-                    };
-                };
-                // Value preservation.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger]
-                    spec_entries_to_map(entries@).contains_key(k)
-                    implies spec_entries_to_map(entries@)[k]
-                        == spec_entries_to_map(self_view)[k]
-                by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < entries@.len()
-                        && (#[trigger] entries@[idx]).0 == k;
-                    // Veracity: NEEDED assert
-                    assert(entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    lemma_entries_to_map_get::<K::V, V::V>(entries@, idx);
-                    lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
-                    // Veracity: NEEDED assert
-                    assert(kept@[idx].1@ == self_view[s].1);
                 };
             }
             TableStPer { entries }
@@ -2573,68 +2479,36 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             // Veracity: NEEDED proof block
             proof {
+                // Bridge: connect view-level entries to kept via spec_index.
+                assert forall|j: int| 0 <= j < sources.len() implies
+                    0 <= #[trigger] sources[j] < self_view.len()
+                    && entries@[j] == self_view[sources[j]]
+                by {
+                    assert(entries.spec_index(j) == kept@[j]);
+                };
+                lemma_subseq_no_dups::<K::V, V::V>(self_view, entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(self_view, entries@, sources);
+                // Dom equivalence: result = self ∩ keys@.
                 let ghost result_dom = spec_entries_to_map(entries@).dom();
                 let ghost target_dom = spec_entries_to_map(self_view).dom().intersect(keys@);
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
-                        // Forward: result key must be in self and in keys.
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
                         let idx = choose|idx: int| 0 <= idx < entries@.len()
                             && (#[trigger] entries@[idx]).0 == k;
-                        // Veracity: NEEDED assert
                         assert(entries.spec_index(idx) == kept@[idx]);
                         let s = sources[idx];
-                        // Veracity: NEEDED assert
-                        assert(self_view[s].0 == kept@[idx].0@);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
                     }
                     if spec_entries_to_map(self_view).dom().contains(k) && keys@.contains(k) {
-                        // Backward: key in self ∩ keys must be in result.
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
                         let si = choose|si: int| 0 <= si < self_view.len()
                             && (#[trigger] self_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
-                        // Veracity: NEEDED assert
                         assert(entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                     }
-                };
-                // Veracity: NEEDED assert
-                assert(spec_keys_no_dups(entries@)) by {
-                    // Veracity: NEEDED assert
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < entries@.len()
-                        implies (#[trigger] entries@[j1]).0 != (#[trigger] entries@[j2]).0
-                    by {
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j1) == kept@[j1]);
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j2) == kept@[j2]);
-                        // Veracity: NEEDED assert
-                        assert(sources[j1] < sources[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
-                    };
-                };
-                // Value preservation.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger]
-                    spec_entries_to_map(entries@).contains_key(k)
-                    implies spec_entries_to_map(entries@)[k]
-                        == spec_entries_to_map(self_view)[k]
-                by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < entries@.len()
-                        && (#[trigger] entries@[idx]).0 == k;
-                    // Veracity: NEEDED assert
-                    assert(entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    lemma_entries_to_map_get::<K::V, V::V>(entries@, idx);
-                    lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
-                    // Veracity: NEEDED assert
-                    assert(kept@[idx].1@ == self_view[s].1);
                 };
             }
             TableStPer { entries }
@@ -2701,68 +2575,36 @@ pub mod TableStPer {
             let entries = ArraySeqStPerS::from_vec(kept);
             // Veracity: NEEDED proof block
             proof {
+                // Bridge: connect view-level entries to kept via spec_index.
+                assert forall|j: int| 0 <= j < sources.len() implies
+                    0 <= #[trigger] sources[j] < self_view.len()
+                    && entries@[j] == self_view[sources[j]]
+                by {
+                    assert(entries.spec_index(j) == kept@[j]);
+                };
+                lemma_subseq_no_dups::<K::V, V::V>(self_view, entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(self_view, entries@, sources);
+                // Dom equivalence: result = self \ keys@.
                 let ghost result_dom = spec_entries_to_map(entries@).dom();
                 let ghost target_dom = spec_entries_to_map(self_view).dom().difference(keys@);
-                // Veracity: NEEDED assert
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
-                        // Forward: result key is in self and not in keys.
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
                         let idx = choose|idx: int| 0 <= idx < entries@.len()
                             && (#[trigger] entries@[idx]).0 == k;
-                        // Veracity: NEEDED assert
                         assert(entries.spec_index(idx) == kept@[idx]);
                         let s = sources[idx];
-                        // Veracity: NEEDED assert
-                        assert(self_view[s].0 == kept@[idx].0@);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self_view, s);
                     }
                     if spec_entries_to_map(self_view).dom().contains(k) && !keys@.contains(k) {
-                        // Backward: key in self \ keys is in result.
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(self_view, k);
                         let si = choose|si: int| 0 <= si < self_view.len()
                             && (#[trigger] self_view[si]).0 == k;
                         let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
-                        // Veracity: NEEDED assert
                         assert(entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(entries@, j);
                     }
-                };
-                // Veracity: NEEDED assert
-                assert(spec_keys_no_dups(entries@)) by {
-                    // Veracity: NEEDED assert
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < entries@.len()
-                        implies (#[trigger] entries@[j1]).0 != (#[trigger] entries@[j2]).0
-                    by {
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j1) == kept@[j1]);
-                        // Veracity: NEEDED assert
-                        assert(entries.spec_index(j2) == kept@[j2]);
-                        // Veracity: NEEDED assert
-                        assert(sources[j1] < sources[j2]);
-                        // Veracity: NEEDED assert
-                        assert(self_view[sources[j1]].0 != self_view[sources[j2]].0);
-                    };
-                };
-                // Value preservation.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger]
-                    spec_entries_to_map(entries@).contains_key(k)
-                    implies spec_entries_to_map(entries@)[k]
-                        == spec_entries_to_map(self_view)[k]
-                by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < entries@.len()
-                        && (#[trigger] entries@[idx]).0 == k;
-                    // Veracity: NEEDED assert
-                    assert(entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    lemma_entries_to_map_get::<K::V, V::V>(entries@, idx);
-                    lemma_entries_to_map_get::<K::V, V::V>(self_view, s);
-                    // Veracity: NEEDED assert
-                    assert(kept@[idx].1@ == self_view[s].1);
                 };
             }
             TableStPer { entries }

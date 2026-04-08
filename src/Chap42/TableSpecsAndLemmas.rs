@@ -425,5 +425,116 @@ broadcast use {
         }
     }
 
+    // If original has no duplicate keys and filtered is a strictly-increasing
+    // subsequence of original (via sources), then filtered has no duplicate keys.
+    pub proof fn lemma_subseq_no_dups<KV, VV>(
+        original: Seq<(KV, VV)>,
+        filtered: Seq<(KV, VV)>,
+        sources: Seq<int>,
+    )
+        requires
+            spec_keys_no_dups(original),
+            filtered.len() == sources.len(),
+            forall|j: int| 0 <= j < sources.len() ==>
+                0 <= #[trigger] sources[j] < original.len()
+                && filtered[j].0 == original[sources[j]].0,
+            forall|j1: int, j2: int| 0 <= j1 < j2 < sources.len()
+                ==> sources[j1] < sources[j2],
+        ensures spec_keys_no_dups(filtered),
+    {
+        assert forall|a: int, b: int|
+            0 <= a < b < filtered.len()
+            implies (#[trigger] filtered[a]).0 != (#[trigger] filtered[b]).0
+        by {
+            assert(sources[a] < sources[b]);
+            assert(filtered[a].0 == original[sources[a]].0);
+            assert(filtered[b].0 == original[sources[b]].0);
+        };
+    }
+
+    // If filtered is a strictly-increasing subsequence of original (via sources),
+    // then every key in spec_entries_to_map(filtered) is also in spec_entries_to_map(original).
+    pub proof fn lemma_subseq_dom_forward<KV, VV>(
+        original: Seq<(KV, VV)>,
+        filtered: Seq<(KV, VV)>,
+        sources: Seq<int>,
+    )
+        requires
+            filtered.len() == sources.len(),
+            forall|j: int| 0 <= j < sources.len() ==>
+                0 <= #[trigger] sources[j] < original.len()
+                && filtered[j].0 == original[sources[j]].0,
+        ensures
+            spec_entries_to_map(filtered).dom().subset_of(spec_entries_to_map(original).dom()),
+    {
+        assert forall|k: KV| spec_entries_to_map(filtered).dom().contains(k)
+            implies spec_entries_to_map(original).dom().contains(k)
+        by {
+            lemma_entries_to_map_key_in_seq(filtered, k);
+            let idx = choose|idx: int| 0 <= idx < filtered.len()
+                && (#[trigger] filtered[idx]).0 == k;
+            let s = sources[idx];
+            lemma_entries_to_map_contains_key(original, s);
+        };
+    }
+
+    // If original has no duplicate keys and filtered is a strictly-increasing
+    // subsequence of original (via sources), then for every key in the filtered
+    // map, the value agrees with the original map.
+    pub proof fn lemma_subseq_value_agrees<KV, VV>(
+        original: Seq<(KV, VV)>,
+        filtered: Seq<(KV, VV)>,
+        sources: Seq<int>,
+    )
+        requires
+            spec_keys_no_dups(original),
+            filtered.len() == sources.len(),
+            forall|j: int| 0 <= j < sources.len() ==>
+                0 <= #[trigger] sources[j] < original.len()
+                && filtered[j] == original[sources[j]],
+            forall|j1: int, j2: int| 0 <= j1 < j2 < sources.len()
+                ==> sources[j1] < sources[j2],
+        ensures
+            forall|k: KV| spec_entries_to_map(filtered).contains_key(k) ==> (
+                spec_entries_to_map(original).contains_key(k)
+                && #[trigger] spec_entries_to_map(filtered)[k]
+                    == spec_entries_to_map(original)[k]
+            ),
+    {
+        // First establish dom forward.
+        lemma_subseq_dom_forward(original, filtered, sources);
+        assert forall|k: KV| spec_entries_to_map(filtered).contains_key(k)
+            implies spec_entries_to_map(original).contains_key(k)
+                && #[trigger] spec_entries_to_map(filtered)[k]
+                    == spec_entries_to_map(original)[k]
+        by {
+            // filtered[j] == original[sources[j]], and sources is monotone,
+            // so all original entries with key k that appear in filtered are
+            // exactly those at sources positions. Since original has no dups,
+            // there is exactly one entry with key k at sources[j] for some j.
+            lemma_entries_to_map_key_in_seq(filtered, k);
+            let j = choose|j: int| 0 <= j < filtered.len()
+                && (#[trigger] filtered[j]).0 == k;
+            let s = sources[j];
+            // All original entries with key k are covered by sources.
+            assert forall|i: int| 0 <= i < original.len()
+                && (#[trigger] original[i]).0 == k
+                implies exists|jj: int| 0 <= jj < sources.len() && sources[jj] == i
+            by {
+                // original has no dups, so i == s is the only entry with key k.
+                assert(original[s].0 == k);
+                if i != s {
+                    if i < s {
+                        assert(original[i].0 != original[s].0);
+                    } else {
+                        assert(original[s].0 != original[i].0);
+                    }
+                }
+                assert(i == s);
+            };
+            lemma_entries_to_map_subseq_value(original, filtered, sources, k);
+        };
+    }
+
     } // verus!
 } // pub mod TableSpecsAndLemmas

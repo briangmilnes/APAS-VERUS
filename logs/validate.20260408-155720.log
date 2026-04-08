@@ -1,0 +1,166 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap42/TableStEph.rs:203:17
+     |
+ 203 |                   self@.dom() =~= old(self)@.dom().difference(other@.dom()),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1456 |               proof {
+     |  ___________________-
+1457 | |                 // Bridge: connect view-level entries to kept via spec_index.
+1458 | |                 assert forall|j: int| 0 <= j < sources.len() implies
+1459 | |                     0 <= #[trigger] sources[j] < old_self_view.len()
+...    |
+1480 | |                 };
+1481 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableStEph.rs:203:17
+    |
+203 |                 self@.dom() =~= old(self)@.dom().difference(other@.dom()),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablesteph_wf() ✔
+self.view().dom() =~= old(self).view().dom().difference(old(other).view().dom()) ✘
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+error: postcondition not satisfied
+    --> src/Chap42/TableStEph.rs:234:21
+     |
+ 234 |               ensures self@ =~= old(self)@.remove(key@), self.spec_tablesteph_wf();
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1629 |               proof {
+     |  ___________________-
+1630 | |                 let ghost result_map = spec_entries_to_map(self.entries@);
+1631 | |                 let ghost target_map = old_map.remove(key@);
+...    |
+1653 | |                 };
+1654 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableStEph.rs:234:21
+    |
+234 |             ensures self@ =~= old(self)@.remove(key@), self.spec_tablesteph_wf();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.view() =~= old(self).view().remove(old(key).view()) ✘
+self.spec_tablesteph_wf() ✔
+
+error: postcondition not satisfied
+    --> src/Chap42/TableStEph.rs:312:17
+     |
+ 312 |                   self@.dom() =~= old(self)@.dom().intersect(keys@),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2353 |               proof {
+     |  ___________________-
+2354 | |                 // Bridge: connect view-level entries to kept via spec_index.
+2355 | |                 assert forall|j: int| 0 <= j < sources.len() implies
+2356 | |                     0 <= #[trigger] sources[j] < old_view.len()
+...    |
+2376 | |                 };
+2377 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableStEph.rs:312:17
+    |
+312 |                 self@.dom() =~= old(self)@.dom().intersect(keys@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablesteph_wf() ✔
+self.view().dom() =~= old(self).view().dom().intersect(old(keys).view()) ✘
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+error: postcondition not satisfied
+    --> src/Chap42/TableStEph.rs:323:17
+     |
+ 323 |                   self@.dom() =~= old(self)@.dom().difference(keys@),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+2437 |               proof {
+     |  ___________________-
+2438 | |                 // Bridge: connect view-level entries to kept via spec_index.
+2439 | |                 assert forall|j: int| 0 <= j < sources.len() implies
+2440 | |                     0 <= #[trigger] sources[j] < old_view.len()
+...    |
+2460 | |                 };
+2461 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap42/TableStEph.rs:323:17
+    |
+323 |                 self@.dom() =~= old(self)@.dom().difference(keys@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_tablesteph_wf() ✔
+self.view().dom() =~= old(self).view().dom().difference(old(keys).view()) ✘
+forall |k|
+    self.view().dom().contains(k) ==>
+        self.view().index(k) == old(self).view().index(k) ✔
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:2366:17
+     |
+2366 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap42/TableStEph.rs:2367:72
+     |
+2367 |                     spec_entries_to_map(old_view).dom().contains(k) && keys@.contains(k)
+     |                                                                        ^^^^^^^^^^^^^^^^^
+
+note: automatically chose triggers for this expression:
+    --> src/Chap42/TableStEph.rs:2450:17
+     |
+2450 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+note:   trigger 1 of 1:
+    --> src/Chap42/TableStEph.rs:2451:73
+     |
+2451 |                     spec_entries_to_map(old_view).dom().contains(k) && !keys@.contains(k)
+     |                                                                         ^^^^^^^^^^^^^^^^^
+
+note: Verus printed one or more automatically chosen quantifier triggers
+      because it had low confidence in the chosen triggers.
+      To suppress these messages, do one of the following:
+        (1) manually annotate a single desired trigger using #[trigger]
+            (example: forall|i: int, j: int| f(i) && #[trigger] g(i) && #[trigger] h(j)),
+        (2) manually annotate multiple desired triggers using #![trigger ...]
+            (example: forall|i: int| #![trigger f(i)] #![trigger g(i)] f(i) && g(i)),
+        (3) accept the automatically chosen trigger using #![auto]
+            (example: forall|i: int, j: int| #![auto] f(i) && g(i) && h(j))
+        (4) use the --triggers-mode silent command-line option to suppress all printing of triggers.
+      (Note: triggers are used by the underlying SMT theorem prover to instantiate quantifiers;
+      the theorem prover instantiates a quantifier whenever some expression matches the
+      pattern specified by one of the quantifier's triggers.)
+    --> src/Chap42/TableStEph.rs:2450:17
+     |
+2450 |                 assert forall|k: K::V|
+     |                 ^^^^^^
+
+verification results:: 2388 verified, 4 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 2438MB, peak z3 RSS: 427MB, min free: 21359MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 45s
