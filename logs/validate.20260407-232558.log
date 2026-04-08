@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/SetMtEph.rs:942:24
+    |
+942 |                 assert(self@.contains(element_ref@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(element_ref.view()) 
+    function is uninterpreted
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1339MB, peak z3 RSS: 52MB, min free: 23840MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 4s

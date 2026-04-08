@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap17
+error: assertion failed
+   --> src/Chap17/MathSeq.rs:559:32
+    |
+559 |                         assert(counts@.contains_key(x@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+counts.view().dom().contains(x.view()) 
+    function is uninterpreted
+
+verification results:: 720 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1900MB, peak z3 RSS: 445MB, min free: 24553MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 17s

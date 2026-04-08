@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: postcondition not satisfied
+    --> src/Chap19/ArraySeqMtEphSlice.rs:993:17
+     |
+ 993 |                   reduced == a.spec_backing_seq().fold_left(id, spec_f),
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+ 997 | /             if len == 1 {
+ 998 | |                 let elem = a.nth_cloned(0);
+ 999 | |                 proof {
+1000 | |                     let s = a.spec_backing_seq();
+...    |
+1080 | |                 combined
+1081 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+reduced == old(a).spec_backing_seq().fold_left(old(id), old(spec_f)) 
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 5026MB, peak z3 RSS: 377MB, min free: 21351MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 40s

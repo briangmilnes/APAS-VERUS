@@ -286,15 +286,6 @@ verus!
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| 
-                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
-                                if le_view.contains((v1_view, v2_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
-                                }
-                                if le_view.contains((v2_view, v1_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
-                                }
-                            }
                         }
                         return None;
                     },
@@ -336,15 +327,6 @@ verus!
                 match it.next() {
                     None => {
                         proof {
-                            assert forall |l: L::V| 
-                                !(le_view.contains((v1_view, v2_view, l)) || le_view.contains((v2_view, v1_view, l))) by {
-                                if le_view.contains((v1_view, v2_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v1_view, v2_view, l));
-                                }
-                                if le_view.contains((v2_view, v1_view, l)) {
-                                    lemma_map_to_set_contains_index(le_seq, (v2_view, v1_view, l));
-                                }
-                            }
                         }
                         return false;
                     },

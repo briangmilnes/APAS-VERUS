@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/WeightedDirGraphStEphU64.rs:262:145
+    |
+262 | ...   (exists |w: u64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
+    |                                                                                                                       ^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1533MB, peak z3 RSS: 399MB, min free: 25084MB
+Sampled CPU Usage: rust_verify: 19s, z3 children: 13s

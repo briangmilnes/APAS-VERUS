@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/LinkedListStPer.rs:216:17
+    |
+216 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+217 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^ failed this postcondition
+...
+499 |               filtered
+    |               -------- at the end of the function body
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap18/LinkedListStPer.rs:459:9
+    |
+459 | / ...   fn filter<F: Fn(&T) -> bool>(a: &LinkedListStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: L...
+460 | | ...       where T: Clone + Eq
+    | |_____________________________^
+
+note: diagnostics via expansion
+   --> src/Chap18/LinkedListStPer.rs:216:17
+    |
+216 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+217 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^
+
+note: 
+
+%return.spec_linkedliststper_wf() ✔
+%return.spec_len() <= old(a).seq.view().len() ✔
+%return.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✔
+new(%return.spec_len(), (|i| %return.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘ [rlimit exceeded]
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (%return.spec_index(i)), true) ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 34s
+Sampled Memory Usage: peak rust_verify RSS: 6230MB, peak z3 RSS: 1047MB, min free: 19620MB
+Sampled CPU Usage: rust_verify: 117s, z3 children: 128s

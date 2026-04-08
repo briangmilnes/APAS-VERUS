@@ -155,8 +155,6 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                         0 <= w <= j as int &&
                             spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
                     lemma_range_sum_via_prefix(a.seq@, w, (j + 1) as int);
-                    assert(total as int - min_p as int ==
-                        spec_range_sum(a.seq@, w, (j + 1) as int));
                 }
                 let mcsse_j = total - min_p;
 
@@ -179,7 +177,6 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                         0 <= w <= j as int &&
                             spec_prefix_sum(a.seq@, w) == spec_min_prefix_sum(a.seq@, j as int);
                     lemma_range_sum_via_prefix(a.seq@, witness, (j + 1) as int);
-                    assert(spec_range_sum(a.seq@, witness, (j + 1) as int) == mcsse_j as int);
                 }
 
                 global_max = max_with_neginf(global_max, Some(mcsse_j));
@@ -197,7 +194,6 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                                 // Covered by outer loop invariant (previous iterations)
                             } else {
                                 // hi == j+1
-                                assert(spec_range_sum(a.seq@, lo, hi) <= mcsse_j as int);
                             }
                         };
                     }

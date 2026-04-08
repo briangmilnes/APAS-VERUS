@@ -1,0 +1,28 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: postcondition not satisfied
+   --> src/Chap21/Exercise21_8.rs:144:17
+    |
+144 |           ensures spec_divisor_count(n, from, to) ==
+    |  _________________^
+145 | |             spec_divisor_count(n, from, to - 1) +
+146 | |             if n % (to - 1) == 0 { 1int } else { 0int },
+    | |_______________________________________________________^ failed this postcondition
+...
+149 | /         if from == to - 1 {
+...   |
+164 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_divisor_count(old(n), old(from), old(to)) == spec_divisor_count(old(n), old(from), old(to) - 1) + if old(n) % (old(to) - 1) == 0 { 1 } else { 0 } 
+
+verification results:: 1359 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 5312MB, peak z3 RSS: 871MB, min free: 20446MB
+Sampled CPU Usage: rust_verify: 97s, z3 children: 104s

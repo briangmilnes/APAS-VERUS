@@ -357,7 +357,6 @@ pub mod LinkedListStEph {
                 seq.push(self.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
                 i += 1;
@@ -445,7 +444,6 @@ pub mod LinkedListStEph {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -465,7 +463,6 @@ pub mod LinkedListStEph {
                 seq.push(b.seq[j].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(b.seq[j as int], last));
                     axiom_cloned_implies_eq_owned(b.seq[j as int], last);
                 }
                 j += 1;
@@ -510,7 +507,6 @@ pub mod LinkedListStEph {
             }
             let filtered = LinkedListStEphS { seq };
             proof {
-                assert(a.seq@.subrange(0, a.seq@.len() as int) =~= a.seq@);
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
                 assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
             }
@@ -549,14 +545,11 @@ pub mod LinkedListStEph {
                     seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(inner.seq[j as int], last));
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
                     }
                     j += 1;
                 }
                 proof {
-                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: LinkedListStEphS<T>| inner.seq@);
                     assert(a.seq@.take(i as int + 1).map_values(|inner: LinkedListStEphS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
@@ -565,7 +558,6 @@ pub mod LinkedListStEph {
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(outer_len as int) =~= a.seq@);
             }
             LinkedListStEphS { seq }
         }
@@ -592,14 +584,12 @@ pub mod LinkedListStEph {
                     seq.push(item.clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(item, last));
                         axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
                         axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                     }
                 }
@@ -636,20 +626,16 @@ pub mod LinkedListStEph {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(s.take(len as int) =~= s);
             }
             acc
         }
@@ -674,20 +660,16 @@ pub mod LinkedListStEph {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(s.take(len as int) =~= s);
             }
             acc
         }
@@ -717,14 +699,11 @@ pub mod LinkedListStEph {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 let cloned = acc.clone();
@@ -735,14 +714,12 @@ pub mod LinkedListStEph {
                 i += 1;
             }
             proof {
-                assert(s.take(len as int) =~= s);
             }
             let scanned_seq = LinkedListStEphS { seq };
             proof {
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(scanned_seq.spec_index(i) == seq@[i]);
                 }
             }
             (scanned_seq, acc)

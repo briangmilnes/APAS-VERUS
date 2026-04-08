@@ -1,0 +1,35 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqMtPer.rs:239:17
+    |
+239 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+240 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^ failed this postcondition
+...
+530 |               filtered
+    |               -------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqMtPer.rs:239:17
+    |
+239 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+240 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^
+
+note: 
+
+%return.spec_arrayseqmtper_wf() ✔
+%return.spec_len() <= old(a).seq.view().len() ✔
+%return.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✔
+new(%return.spec_len(), (|i| %return.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (%return.spec_index(i)), true) ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 5756MB, peak z3 RSS: 567MB, min free: 19963MB
+Sampled CPU Usage: rust_verify: 108s, z3 children: 70s

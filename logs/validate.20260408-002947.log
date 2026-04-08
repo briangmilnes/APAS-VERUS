@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap17
+error: assertion failed
+   --> src/Chap17/MathSeq.rs:466:52
+    |
+466 | ...                   assert(old_out_mapped.contains(v));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+old_out_mapped.contains(v)
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = old_out_mapped.len() in tmp%% <= tmp%% && tmp%% < tmp%% && old_out_mapped.index(i) == v) 
++---
+
+verification results:: 720 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 645MB, peak z3 RSS: 202MB, min free: 25225MB
+Sampled CPU Usage: rust_verify: 4s, z3 children: 0s

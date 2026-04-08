@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap19/ArraySeqStPer.rs:978:21
+    |
+978 |                     seq@ =~= a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@).flatten(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5352MB, peak z3 RSS: 467MB, min free: 21320MB
+Sampled CPU Usage: rust_verify: 85s, z3 children: 57s

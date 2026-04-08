@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: postcondition not satisfied
+   --> src/Chap27/ReduceContractMtEph.rs:172:17
+    |
+172 |                   reduced == Seq::new(a.spec_len(), |i: int| a.spec_index(i)).fold_left(id, spec_f);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+398 | /             if n % 2 == 1 {
+399 | |                 let last = a.nth(n - 1);
+400 | |                 let reduced = call_f(&f, &contracted_result, last);
+401 | |                 proof {
+...   |
+425 | |                 contracted_result
+426 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == new(old(a).spec_len(), (|i| old(a).spec_index(i))).fold_left(old(id), old(spec_f)) 
+
+verification results:: 944 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2316MB, peak z3 RSS: 514MB, min free: 24177MB
+Sampled CPU Usage: rust_verify: 23s, z3 children: 4s

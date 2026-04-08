@@ -344,7 +344,6 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
         fn from_vec(v: Vec<T>) -> SetMtEph<T> {
-                      assert(obeys_feq_full_trigger::<T>());
             let mut s: SetMtEph<T> = SetMtEph::empty();
             let ghost v_seq: Seq<T> = v@;
 
@@ -397,12 +396,10 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> SetMtEph<T> {
-        assert(obeys_feq_full_trigger::<T>());
          SetMtEph { elements: HashSetWithViewPlus::new() } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
         fn singleton(x: T) -> (s: SetMtEph<T>) {
-                      assert(obeys_feq_full_trigger::<T>());
             let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
             SetMtEph { elements: s }
@@ -660,8 +657,6 @@ verus!
                     // From wait's ensures: handle.predicate(thread_result)
                     // From spawn loop invariant: handle.predicate(ret) ==> (ret@.finite() && forall av, bv: ...)
                     // Therefore: thread_result@.finite() && forall av, bv: ret@.contains((av, bv)) <==> ...
-                    assert(thread_result@.finite());
-                    assert(forall |av: T::V, bv: U::V| thread_result@.contains((av, bv)) <==> (av == a_view && s2_view.contains(bv)));
 
                     // Prove a_view is not in the joined_views.
                     assert(!joined_views.contains(a_view)) by {
@@ -673,19 +668,6 @@ verus!
                         }
                     }
 
-                    assert(product@.disjoint(thread_result@)) by {
-                        assert forall |p: (T::V, U::V)| !(product@.contains(p) && thread_result@.contains(p)) by {
-                            if product@.contains(p) && thread_result@.contains(p) {
-                                let (av, bv) = p;
-                                // From product: joined_views.contains(av)
-                                assert(joined_views.contains(av));
-                                // From thread_result: av == a_view
-                                assert(av == a_view);
-                                // Contradiction: a_view not in joined_views
-                                assert(false);
-                            }
-                        }
-                    }
                 }
 
                 product = product.disjoint_union(&thread_result);
@@ -702,13 +684,7 @@ verus!
                     assert forall |v: T::V| s1_view.contains(v) implies joined_views.contains(v) by {
                         lemma_map_to_set_contains_index(it_seq, v);
                         let j = choose |j: int| #![trigger it_seq[j]] 0 <= j < it_seq.len() && v == it_seq[j]@;
-                        assert(0 <= j < n as int);
                         assert(v == spawned_views[j]);
-                    }
-                    assert forall |v: T::V| joined_views.contains(v) implies s1_view.contains(v) by {
-                        let j = choose |j: int| 0 <= j < n && v == spawned_views[j];
-                        assert(v == it_seq[j]@);
-                        lemma_seq_index_in_map_to_set(it_seq, j);
                     }
                 }
             }
@@ -884,11 +860,6 @@ verus!
             {
                 proof {
                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
-                    assert(!iter_seq.take(iter.pos).contains(*x)) by {
-                        if iter_seq.take(iter.pos).contains(*x) {
-                            let j = choose |j: int| 0 <= j < iter.pos && iter_seq.take(iter.pos)[j] == *x;
-                        }
-                    };
                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
                         lemma_reveal_view_injective::<T>();
                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
@@ -918,14 +889,6 @@ verus!
             // And self@.len() > 0 implies s.len() > 0 (bijection)
             proof {
                 // s.len() > 0 because self@.len() > 0 and iter ensures bijection
-                assert(s.len() > 0) by {
-                    // Every element in self@ exists in s (from iter ensures)
-                    // self@ is non-empty, so s must be non-empty
-                    if s.len() == 0 {
-                        // Then forall kv, self@.contains(kv) ==> exists k: s.contains(k) && k@ == kv
-                        // But s is empty, so no such k exists, contradiction with self@.len() > 0
-                    }
-                }
             }
 
             let opt = it.next();
@@ -935,11 +898,8 @@ verus!
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
                 assert(s.contains(*element_ref)) by {
-                    assert(s[0] == *element_ref);
-                    assert(0 <= 0 < s.len());
                 }
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)
-                assert(self@.contains(element_ref@));
             }
 
             let result = element_ref.clone_plus();
@@ -1143,7 +1103,6 @@ verus!
     impl<T: StT + Hash> LockedSetMtEphTrait<T> for LockedSetMtEph<T> {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — creates empty set under RwLock.
         fn empty() -> (s: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             let inner = SetMtEph::empty();
             let ghost view = inner@;
             LockedSetMtEph {

@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap21/Problem21_3.rs:147:25
+    |
+147 |                         requires v_len_before == x as int * nn as int, nn == n as int * n as int;
+    |                         ^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3377MB, peak z3 RSS: 535MB, min free: 21800MB
+Sampled CPU Usage: rust_verify: 54s, z3 children: 48s

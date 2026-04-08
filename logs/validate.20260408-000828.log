@@ -1,0 +1,105 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap06/UnDirGraphMtEph.rs:446:21
+    |
+446 |                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
+    |                     ^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap06/UnDirGraphMtEph.rs:446:80
+    |
+446 |                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+447 |                         <==> neighbors@.contains(w) by {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+self.spec_ng_of_vertices_from_set(verts.view()).contains(w) == neighbors.view().contains(w)
+|   self.spec_ng_of_vertices_from_set(verts.view()).contains(w) ==>
+|       neighbors.view().contains(w) ✘
+|           function is uninterpreted
+|   neighbors.view().contains(w) ==>
+|       self.spec_ng_of_vertices_from_set(verts.view()).contains(w) ✘
+|           function is uninterpreted
++---
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:434:61
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+434 |                     ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:438:61
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+438 |                     ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:448:28
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+448 |                         if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:449:117
+    |
+188 | ...   recommends spec_graphview_wf(self@), self@.V.contains(v)
+    |                  ------------------------ recommendation not met
+...
+449 | ...                   let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && self.spec_ng(v).contai...
+    |                                                                                                               ^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:459:131
+    |
+188 | ...ds spec_graphview_wf(self@), self@.V.contains(v)
+    |       ------------------------ recommendation not met
+...
+459 | ...            let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).con...
+    |                                                                                                                  ^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:462:133
+    |
+188 | ...ds spec_graphview_wf(self@), self@.V.contains(v)
+    |       ------------------------ recommendation not met
+...
+462 | ...            let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).co...
+    |                                                                                                                    ^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:446:80
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+446 |                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
+    |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:262:31
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+262 |                 neighbors@ == self.spec_ng_of_vertices_from_set(verts@),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1111 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 3424MB, peak z3 RSS: 346MB, min free: 22015MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 26s

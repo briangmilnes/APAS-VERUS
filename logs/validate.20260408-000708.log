@@ -1,0 +1,62 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap06/UnDirGraphMtEph.rs:262:17
+    |
+262 |                   neighbors@ == self.spec_ng_of_vertices_from_set(verts@),
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+400 | /             if n == 0 {
+401 | |                 SetStEph::empty()
+402 | |             }
+403 | |             else if n == 1 {
+...   |
+468 | |                 neighbors
+469 | |             }
+    | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap06/UnDirGraphMtEph.rs:262:17
+    |
+262 |                 neighbors@ == self.spec_ng_of_vertices_from_set(verts@),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_setsteph_wf() ✔
+%return.view() =~= old(self).spec_ng_of_vertices_from_set(old(verts).view()) ✘
+%return.view().subset_of(old(self).view().V) ✔
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:434:61
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+434 |                     ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_of_vertices_from_set(left_verts@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:438:61
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+438 |                     ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_of_vertices_from_set(right_verts@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/UnDirGraphMtEph.rs:262:31
+    |
+126 |             recommends spec_graphview_wf(self@), subverts <= self@.V
+    |                        ------------------------ recommendation not met
+...
+262 |                 neighbors@ == self.spec_ng_of_vertices_from_set(verts@),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1111 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 3758MB, peak z3 RSS: 594MB, min free: 21673MB
+Sampled CPU Usage: rust_verify: 70s, z3 children: 75s

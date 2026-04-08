@@ -1,0 +1,207 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/LabDirGraphStEph.rs:433:71
+    |
+433 | ...                   self.spec_n_minus(v_view).contains(u) by {
+    |                                                             ^^
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:610:52
+    |
+610 |     impl<V: StT + Hash, L: StT + Hash> Display for LabDirGraphStEph<V, L> {
+    |                                                    ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:616:50
+    |
+616 |     impl<V: StT + Hash, L: StT + Hash> Debug for LabDirGraphStEph<V, L> {
+    |                                                  ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEphIter` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:622:39
+    |
+622 |     impl<'a, V: StT + Hash> Debug for LabDirGraphStEphIter<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEphIter` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:626:41
+    |
+626 |     impl<'a, V: StT + Hash> Display for LabDirGraphStEphIter<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:630:39
+    |
+630 |     impl<'a, V: StT + Hash> Debug for LabDirGraphStEphGhostIterator<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/LabDirGraphStEph.rs:634:41
+    |
+634 |     impl<'a, V: StT + Hash> Display for LabDirGraphStEphGhostIterator<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphU32.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphU32<V> = LabDirGraphStEph<V, u32>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphU8.rs:55:43
+   |
+55 |     pub type WeightedDirGraphStEphU8<V> = LabDirGraphStEph<V, u8>;
+   |                                           ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphU16.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphU16<V> = LabDirGraphStEph<V, u16>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphU64.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphU64<V> = LabDirGraphStEph<V, u64>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphU128.rs:55:45
+   |
+55 |     pub type WeightedDirGraphStEphU128<V> = LabDirGraphStEph<V, u128>;
+   |                                             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphUsize.rs:55:46
+   |
+55 |     pub type WeightedDirGraphStEphUsize<V> = LabDirGraphStEph<V, usize>;
+   |                                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphI8.rs:55:43
+   |
+55 |     pub type WeightedDirGraphStEphI8<V> = LabDirGraphStEph<V, i8>;
+   |                                           ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphI16.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphI16<V> = LabDirGraphStEph<V, i16>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphI32.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphI32<V> = LabDirGraphStEph<V, i32>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphI64.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphI64<V> = LabDirGraphStEph<V, i64>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphI128.rs:55:45
+   |
+55 |     pub type WeightedDirGraphStEphI128<V> = LabDirGraphStEph<V, i128>;
+   |                                             ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphIsize.rs:55:46
+   |
+55 |     pub type WeightedDirGraphStEphIsize<V> = LabDirGraphStEph<V, isize>;
+   |                                              ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LabDirGraphStEph` in this scope
+  --> src/Chap06/WeightedDirGraphStEphF64.rs:55:44
+   |
+55 |     pub type WeightedDirGraphStEphF64<V> = LabDirGraphStEph<V, WrappedF64>;
+   |                                            ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphU32.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphU8.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphU16.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphU64.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphU128.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphUsize.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphI8.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphI16.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphI32.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphI64.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphI128.rs:192:13
+    |
+192 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphIsize.rs:175:13
+    |
+175 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `LabDirGraphStEph`
+   --> src/Chap06/WeightedDirGraphStEphF64.rs:167:13
+    |
+167 |             LabDirGraphStEph::from_vertices_and_labeled_arcs(vertices, edge_set)
+    |             ^^^^^^^^^^^^^^^^ use of undeclared type `LabDirGraphStEph`
+
+error: aborting due to 33 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2278MB, peak z3 RSS: 358MB, min free: 23134MB
+Sampled CPU Usage: rust_verify: 29s, z3 children: 15s

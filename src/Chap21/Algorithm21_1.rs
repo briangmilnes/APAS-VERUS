@@ -78,13 +78,9 @@ pub mod Algorithm21_1 {
     {
         if k > 0 {
             lemma_sum_inner_lens_uniform(ss, k - 1, m);
-            assert(sum_inner_lens(ss, k - 1) == (k - 1) * m);
-            assert(ss[k - 1].seq@.len() == m);
-            assert(sum_inner_lens(ss, k) == sum_inner_lens(ss, k - 1) + ss[k - 1].seq@.len() as int);
             assert((k - 1) * m + m == k * m) by (nonlinear_arith)
                 requires k > 0;
         } else {
-            assert(sum_inner_lens(ss, k) == 0);
             assert(k * m == 0) by (nonlinear_arith)
                 requires k == 0;
         }
@@ -197,13 +193,8 @@ pub mod Algorithm21_1 {
 
         proof {
             // Each inner sequence has length n-1.
-            assert forall|i: int| 0 <= i < n implies (#[trigger] inner.seq@[i]).seq@.len() == n - 1 by {
-                // From tabulate's ensures: result.seq@.len() == length
-                // and the closure ensures row.seq@.len() == n - 1
-            }
             // Therefore sum_inner_lens(inner, n) == n * (n-1).
             lemma_sum_inner_lens_uniform(inner.seq@, n as int, (n - 1) as int);
-            assert(sum_inner_lens(inner.seq@, n as int) == n as int * (n as int - 1));
         }
 
         flatten_inner(&inner)

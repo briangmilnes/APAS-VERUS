@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: assertion failed
+   --> src/Chap21/Exercise21_8.rs:254:24
+    |
+254 |                 assert(spec_divisor_count(n as int, 2, k as int + 1) == 0);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap21/Exercise21_8.rs:273:24
+    |
+273 |                 assert(dc2 > 0);
+    |                        ^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+dc2 > 0 
+
+verification results:: 1358 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 4662MB, peak z3 RSS: 597MB, min free: 21653MB
+Sampled CPU Usage: rust_verify: 102s, z3 children: 104s

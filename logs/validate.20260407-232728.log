@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap05/SetStEph.rs:724:21
+    |
+724 |                     first@.disjoint(second@),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap05/SetStEph.rs:726:21
+    |
+726 |                     first@.len() == if iter.pos <= n { iter.pos } else { n as int },
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap05/SetStEph.rs:727:21
+    |
+727 |                     second@.len() == if iter.pos <= n { 0 } else { iter.pos - n },
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1851MB, peak z3 RSS: 124MB, min free: 23653MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 16s

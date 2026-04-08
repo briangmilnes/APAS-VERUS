@@ -331,41 +331,23 @@ pub mod UnDirGraphMtEph {
             let n = edges.size();
             if n == 0 {
                 proof {
-                    assert forall |w: V::V| !(edges@.contains((v@, w)) || edges@.contains((w, v@))) by {}
-                    assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
                 }
                 SetStEph::empty()
             }
             else if n == 1 {
                 let Edge(a, b) = edges.choose();
                 proof {
-                    assert(edges@.len() == 1);
-                    assert(edges@.contains((a@, b@)));
-                    assert forall |e: (V::V, V::V)| edges@.contains(e) implies e == (a@, b@) by {
-                        if edges@.contains(e) && e != (a@, b@) {
-                            let s_minus = edges@.remove((a@, b@));
-                            assert(s_minus.contains(e));
-                            assert(edges@.len() == s_minus.len() + 1);
-                        }
-                    }
-                    assert(edges@ =~= Set::empty().insert((a@, b@)));
                 }
                 if feq(&a, &v) {
                     proof {
-                        assert forall |w: V::V| self.spec_ng_from_set(v@, edges@).contains(w) <==> w == b@ by {}
-                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(b@));
                     }
                     SetStEph::singleton(b.clone_plus())
                 } else if feq(&b, &v) {
                     proof {
-                        assert forall |w: V::V| self.spec_ng_from_set(v@, edges@).contains(w) <==> w == a@ by {}
-                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty().insert(a@));
                     }
                     SetStEph::singleton(a.clone_plus())
                 } else {
                     proof {
-                        assert forall |w: V::V| !self.spec_ng_from_set(v@, edges@).contains(w) by {}
-                        assert(self.spec_ng_from_set(v@, edges@) =~= Set::empty());
                     }
                     SetStEph::empty()
                 }
@@ -404,23 +386,6 @@ pub mod UnDirGraphMtEph {
                 let u = verts.choose();
                 let neighbors = self.ng(&u);
                 proof {
-                    assert(verts@.len() == 1);
-                    assert(verts@.contains(u@));
-                    assert forall |v_any: V::V| verts@.contains(v_any) implies v_any == u@ by {
-                        if verts@.contains(v_any) && v_any != u@ {
-                            let s_minus_u = verts@.remove(u@);
-                            assert(s_minus_u.contains(v_any));
-                            assert(verts@.len() == s_minus_u.len() + 1);
-                        }
-                    }
-                    assert(verts@ =~= Set::empty().insert(u@));
-                    assert forall |w: V::V| self.spec_ng_of_vertices_from_set(verts@).contains(w)
-                        <==> self.spec_ng(u@).contains(w) by {
-                        if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
-                            let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && self.spec_ng(v).contains(w);
-                            assert(v_wit == u@);
-                        }
-                    }
                 }
                 neighbors
             }
@@ -442,16 +407,12 @@ pub mod UnDirGraphMtEph {
 
                 let neighbors = left_neighbors.union(&right_neighbors);
                 proof {
-                    assert(verts@ =~= left_verts@.union(right_verts@));
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
                         <==> neighbors@.contains(w) by {
                         if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
                             let v_wit: V::V = choose |v: V::V| #![trigger verts@.contains(v)] verts@.contains(v) && self.spec_ng(v).contains(w);
-                            assert(left_verts@.contains(v_wit) || right_verts@.contains(v_wit));
                             if left_verts@.contains(v_wit) {
-                                assert(self.spec_ng_of_vertices_from_set(left_verts@).contains(w));
                             } else {
-                                assert(self.spec_ng_of_vertices_from_set(right_verts@).contains(w));
                             }
                         }
                         if neighbors@.contains(w) {
@@ -826,7 +787,6 @@ pub mod UnDirGraphMtEph {
             let e_eq = self.E == other.E;
             proof {
                 if v_eq && e_eq {
-                    assert(self@ =~= other@);
                 }
             }
             v_eq && e_eq

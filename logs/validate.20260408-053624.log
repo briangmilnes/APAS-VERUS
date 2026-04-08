@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: assertion failed
+   --> src/Chap27/ScanContractStEph.rs:130:20
+    |
+130 |             assert(s_tail_result == b_tail_result);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s_tail_result == b_tail_result 
+
+verification results:: 944 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3509MB, peak z3 RSS: 277MB, min free: 22991MB
+Sampled CPU Usage: rust_verify: 37s, z3 children: 11s

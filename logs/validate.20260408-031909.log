@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+    --> src/Chap19/ArraySeqMtEph.rs:1608:73
+     |
+1608 |                     assert forall|i: int| 0 <= i < a_view.len() implies f.ensures((&a_view[i],), #[trigger] result.seq@[i]) by {
+     |                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ClosureEns(f, (a_view.index(i)), result.seq.view().index(i)) 
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1588:113
+     |
+1588 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_len ==> f1.ensures((&left_view[i],), r.seq@[i]),
+     |                                                                                                                 ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap19/ArraySeqMtEph.rs:1600:115
+     |
+1600 |                         forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_len ==> f2.ensures((&right_view[i],), r.seq@[i]),
+     |                                                                                                                   ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 3572MB, peak z3 RSS: 348MB, min free: 21988MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 43s

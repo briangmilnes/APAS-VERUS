@@ -1,0 +1,120 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: assertion failed
+   --> src/Chap06/LabUnDirGraphMtEph.rs:556:25
+    |
+556 |                         self.spec_ng_from_set(v@, edges@).contains(w) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.spec_ng_from_set(v.view(), edges.view()).contains(w) 
+    function is uninterpreted
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:460:29
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+460 |                             self.spec_ng_from_set(v@, edges@).contains(w) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:463:97
+    |
+121 | ...   spec_labgraphview_wf(self@),
+    |       --------------------------- recommendation not met
+...
+463 | ...           assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) ...
+    |                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:488:29
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+488 |                             self.spec_ng_from_set(v@, edges@).contains(w) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:491:97
+    |
+121 | ...   spec_labgraphview_wf(self@),
+    |       --------------------------- recommendation not met
+...
+491 | ...           assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) ...
+    |                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:544:61
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+544 |                     ensures out.spec_setsteph_wf(), out@ == g_left.spec_ng_from_set(v_left@, left_edges@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:548:61
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+548 |                     ensures out.spec_setsteph_wf(), out@ == g_right.spec_ng_from_set(v_right@, right_edges@)
+    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:556:25
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+556 |                         self.spec_ng_from_set(v@, edges@).contains(w) by {
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:567:109
+    |
+121 | ...   spec_labgraphview_wf(self@),
+    |       --------------------------- recommendation not met
+...
+567 | ...       assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] self.spec_ng_from_set(v@, edges@).co...
+    |                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:587:72
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+587 |                     assert(left_neighbors@.union(right_neighbors@) =~= self.spec_ng_from_set(v@, edges@));
+    |                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:233:31
+    |
+121 |                 spec_labgraphview_wf(self@),
+    |                 --------------------------- recommendation not met
+...
+233 |                 neighbors@ == self.spec_ng_from_set(v@, edges@),
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap06/LabUnDirGraphMtEph.rs:234:31
+    |
+205 |             recommends spec_labgraphview_wf(self@), self@.V.contains(v)
+    |                        --------------------------- recommendation not met
+...
+234 |                 neighbors@ <= self.spec_ng(v@)
+    |                               ^^^^^^^^^^^^^^^^
+
+verification results:: 1111 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 3258MB, peak z3 RSS: 221MB, min free: 22331MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 23s

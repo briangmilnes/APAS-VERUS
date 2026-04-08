@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/MappingStEph.rs:295:32
+    |
+295 |                         assert(the_seq.to_set().contains(pi));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+the_seq.to_set().contains(pi) 
+    function is uninterpreted
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2601MB, peak z3 RSS: 547MB, min free: 22874MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 22s

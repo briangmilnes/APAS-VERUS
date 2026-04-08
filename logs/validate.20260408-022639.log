@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/LinkedListStPer.rs:514:21
+    |
+514 |                     seq@ =~= a.seq@.take(i as int).map_values(|inner: LinkedListStPerS<T>| inner.seq@).flatten(),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 5156MB, peak z3 RSS: 50MB, min free: 21382MB
+Sampled CPU Usage: rust_verify: 95s, z3 children: 70s

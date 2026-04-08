@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+  --> src/Chap21/Exercise21_9.rs:66:26
+   |
+66 |                 requires d0 * d0 > m, m == d0 * q, d0 >= 2, q >= 2;
+   |                          ^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 4020MB, peak z3 RSS: 150MB, min free: 22505MB
+Sampled CPU Usage: rust_verify: 52s, z3 children: 22s

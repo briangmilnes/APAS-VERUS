@@ -156,7 +156,6 @@ pub mod ArraySeqMtEph {
                         let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
                             && u.drop_first()[j].0 == i as usize
                             && rest[i] == u.drop_first()[j].1;
-                        assert(u[j + 1] == u.drop_first()[j]);
                     }
                 }
             } else {
@@ -164,7 +163,6 @@ pub mod ArraySeqMtEph {
                     let j = choose|j: int| #![trigger u.drop_first()[j]] 0 <= j < u.drop_first().len()
                         && u.drop_first()[j].0 == i as usize
                         && rest[i] == u.drop_first()[j].1;
-                    assert(u[j + 1] == u.drop_first()[j]);
                 }
             }
         }
@@ -243,7 +241,6 @@ pub mod ArraySeqMtEph {
                 seq.push(self.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(self.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
                 i += 1;
@@ -271,7 +268,6 @@ pub mod ArraySeqMtEph {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -319,7 +315,6 @@ pub mod ArraySeqMtEph {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -339,7 +334,6 @@ pub mod ArraySeqMtEph {
                 seq.push(b.seq[j].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(b.seq[j as int], last));
                     axiom_cloned_implies_eq_owned(b.seq[j as int], last);
                 }
                 j += 1;
@@ -387,14 +381,12 @@ pub mod ArraySeqMtEph {
                     seq.push(item.clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(item, last));
                         axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
                         axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                     }
                 }
@@ -429,7 +421,6 @@ pub mod ArraySeqMtEph {
                 result_vec.push(elem);
                 k += 1;
             }
-            assert(result_vec@ =~= s);
 
             let mut i: usize = ulen;
             while i > 0
@@ -456,19 +447,15 @@ pub mod ArraySeqMtEph {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
-                    assert(sub.len() > 0);
-                    assert(sub[0] == u[i as int]);
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
             }
 
             proof {
-                assert(u.subrange(0, ulen as int) =~= u);
             }
             let injected = ArraySeqMtEphS { seq: result_vec };
             proof {
-                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
                 assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
                 by { a.lemma_spec_index(j); }
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
@@ -529,20 +516,16 @@ pub mod ArraySeqMtEph {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
-                assert(s.take(len as int) =~= s);
             }
             acc
         }
@@ -579,14 +562,11 @@ pub mod ArraySeqMtEph {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 let cloned = acc.clone();
@@ -597,14 +577,12 @@ pub mod ArraySeqMtEph {
                 i += 1;
             }
             proof {
-                assert(s.take(len as int) =~= s);
             }
             let scanned_seq = ArraySeqMtEphS { seq };
             proof {
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(scanned_seq.spec_index(i) == seq@[i]);
                 }
             }
             (scanned_seq, acc)
@@ -668,14 +646,11 @@ pub mod ArraySeqMtEph {
                     seq.push(inner.seq[j].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(inner.seq[j as int], last));
                         axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                        assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
                     }
                     j += 1;
                 }
                 proof {
-                    assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@);
                     assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
@@ -684,7 +659,6 @@ pub mod ArraySeqMtEph {
                 i += 1;
             }
             proof {
-                assert(a.seq@.take(outer_len as int) =~= a.seq@);
             }
             ArraySeqMtEphS { seq }
         }
@@ -829,7 +803,6 @@ pub mod ArraySeqMtEph {
                 s.lemma_fold_left_split(id, f, n);
                 s.lemma_fold_left_split(x, f, n);
 
-                assert(tail =~= seq![a_last]);
                 reveal_with_fuel(Seq::fold_left, 2);
 
                 let lid = s1.fold_left(id, f);
@@ -837,7 +810,6 @@ pub mod ArraySeqMtEph {
 
                 Self::lemma_monoid_fold_left(s1, f, id, x);
 
-                assert(f(x, f(lid, a_last)) == f(f(x, lid), a_last));
             }
         }
 
@@ -863,19 +835,15 @@ pub mod ArraySeqMtEph {
             let len = a.seq.len();
             if len == 0 {
                 proof {
-                    assert(s =~= Seq::<T>::empty());
                     reveal_with_fuel(Seq::fold_left, 1);
                 }
                 id
             } else if len == 1 {
                 let element = a.seq[0].clone();
                 proof {
-                    assert(cloned(a.seq[0 as int], element));
                     axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
-                    assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
-                    assert(spec_f(id, s[0]) == s[0]);  // left identity
                 }
                 element
             } else {
@@ -952,7 +920,6 @@ pub mod ArraySeqMtEph {
             let len = a.seq.len();
             if len == 0 {
                 proof {
-                    assert(s =~= Seq::<T>::empty());
                     reveal_with_fuel(Seq::fold_left, 1);
                 }
                 id
@@ -961,9 +928,7 @@ pub mod ArraySeqMtEph {
                 proof {
                     axiom_cloned_implies_eq_owned(a.seq[0 as int], element);
                     a.lemma_spec_index(0);
-                    assert(s =~= seq![a.spec_index(0)]);
                     reveal_with_fuel(Seq::fold_left, 2);
-                    assert(spec_f(id, s[0]) == s[0]);
                 }
                 element
             } else {
@@ -1091,11 +1056,6 @@ pub mod ArraySeqMtEph {
                     {
                         let r = Self::map_dc(&left_seq, &f1);
                         proof {
-                            assert forall|i: int| #![trigger r.seq@[i]] 0 <= i < left_ghost_len@ as int implies
-                                f1.ensures((&left_view[i],), r.seq@[i])
-                            by {
-                                assert(left_view[i] == left_seq.seq@[i]);
-                            }
                         }
                         r
                     },
@@ -1107,11 +1067,6 @@ pub mod ArraySeqMtEph {
                     {
                         let r = Self::map_dc(&right_seq, &f2);
                         proof {
-                            assert forall|i: int| #![trigger r.seq@[i]] 0 <= i < right_ghost_len@ as int implies
-                                f2.ensures((&right_view[i],), r.seq@[i])
-                            by {
-                                assert(right_view[i] == right_seq.seq@[i]);
-                            }
                         }
                         r
                     },
@@ -1128,16 +1083,11 @@ pub mod ArraySeqMtEph {
                         mapped.lemma_spec_index(i);
                         if i < mid as int {
                             left.lemma_spec_index(i);
-                            assert(mapped.spec_index(i) == left.seq@[i]);
-                            assert(f1.ensures((&left_view[i],), left.seq@[i]));
-                            assert(left_view[i] == a_view[i]);
                             a.lemma_spec_index(i);
                         } else {
                             let j = i - mid as int;
                             right.lemma_spec_index(j);
-                            assert(right_view[j] == a_view[mid as int + j]);
                             a.lemma_spec_index(i);
-                            assert(f2.ensures((&right_view[j],), right.seq@[j]));
                         }
                     }
                 }
@@ -1170,12 +1120,7 @@ pub mod ArraySeqMtEph {
             if len == 0 {
                 let filtered = ArraySeqMtEphS::<T> { seq: Vec::new() };
                 proof {
-                    assert(a.seq@ =~= Seq::<T>::empty());
                     broadcast use vstd::multiset::group_multiset_axioms;
-                    assert forall|v: T| #[trigger] a.seq@.to_multiset().filter(spec_pred).count(v) == 0nat by {}
-                    assert(a.seq@.to_multiset().filter(spec_pred) =~= Multiset::<T>::empty());
-                    assert(filtered.seq@.to_multiset() =~= Multiset::<T>::empty());
-                    assert(filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred));
                 }
                 filtered
             } else if len == 1 {
@@ -1187,17 +1132,13 @@ pub mod ArraySeqMtEph {
                         broadcast use vstd::seq_lib::group_to_multiset_ensures;
                         broadcast use vstd::multiset::group_multiset_axioms;
                         reveal_with_fuel(spec_filter_len, 2);
-                        assert(a.seq@.drop_last() =~= Seq::<T>::empty());
                     }
                     let mut seq = Vec::with_capacity(1);
                     seq.push(elem);
                     let filtered = ArraySeqMtEphS { seq };
                     proof {
                         broadcast use vstd::multiset::group_multiset_axioms;
-                        assert(filtered.seq@ =~= seq![elem]);
                         assert(filtered.seq@ =~= a.seq@);
-                        assert forall|v: T| #[trigger] filtered.seq@.to_multiset().count(v)
-                            == a.seq@.to_multiset().filter(spec_pred).count(v) by {}
                     }
                     filtered
                 } else {
@@ -1205,12 +1146,7 @@ pub mod ArraySeqMtEph {
                     proof {
                         broadcast use vstd::seq_lib::group_to_multiset_ensures;
                         broadcast use vstd::multiset::group_multiset_axioms;
-                        assert(!spec_pred(a.seq@[0 as int]));
                         reveal_with_fuel(spec_filter_len, 2);
-                        assert(a.seq@.drop_last() =~= Seq::<T>::empty());
-                        assert forall|v: T| #[trigger] a.seq@.to_multiset().filter(spec_pred).count(v) == 0nat by {}
-                        assert(a.seq@.to_multiset().filter(spec_pred) =~= Multiset::<T>::empty());
-                        assert(filtered.seq@.to_multiset() =~= Multiset::<T>::empty());
                     }
                     filtered
                 }
@@ -1319,11 +1255,6 @@ pub mod ArraySeqMtEph {
                     // Step 4: = (left_view + right_view).to_multiset().filter(spec_pred)
                     // Step 5: = a.seq@.to_multiset().filter(spec_pred)
                     vstd::seq_lib::lemma_multiset_commutative(left.seq@, right.seq@);
-                    assert(filtered.seq@.to_multiset()
-                        =~= left.seq@.to_multiset().add(right.seq@.to_multiset()));
-                    assert(left.seq@.to_multiset().add(right.seq@.to_multiset())
-                        =~= left_view.to_multiset().filter(spec_pred).add(right_view.to_multiset().filter(spec_pred)));
-                    assert(filtered.seq@.to_multiset() =~= a.seq@.to_multiset().filter(spec_pred));
 
                     // Prove pred.ensures for all filtered elements.
                     assert forall|i: int| #![trigger filtered.spec_index(i)]
@@ -1368,9 +1299,7 @@ pub mod ArraySeqMtEph {
                 broadcast use group_feq_axioms;
                 assert forall|i: int| 0 <= i < a.seq@.len() implies #[trigger] buf@[i] == a.seq@[i]
                 by {
-                    assert(cloned(a.seq@[i], buf@[i]));
                 }
-                assert(buf@ =~= a.seq@);
             }
             let lock = Arc::new(RwLock::<Vec<T>, ArraySeqMtEphInv<T>>::new(buf, Ghost(pred)));
 
@@ -1434,24 +1363,18 @@ pub mod ArraySeqMtEph {
             // Extract injected. The lock invariant gives us spec_ninject.
             let (result_vec, write_handle) = lock.acquire_write();
             proof {
-                assert(pred.inv(result_vec));
-                assert(pred.updates =~= updates@);
-                assert(pred.source =~= a.seq@);
             }
             let r = result_vec.clone();
             proof {
                 broadcast use group_feq_axioms;
                 assert forall|i: int| 0 <= i < result_vec@.len() implies #[trigger] r@[i] == result_vec@[i]
                 by {
-                    assert(cloned(result_vec@[i], r@[i]));
                 }
-                assert(r@ =~= result_vec@);
             }
             write_handle.release_write(result_vec);
 
             let injected = ArraySeqMtEphS { seq: r };
             proof {
-                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= r@);
             }
             injected
         }
@@ -1922,8 +1845,6 @@ pub mod ArraySeqMtEph {
                             && pred.updates[j].0 == p as usize && buf@[p] == pred.updates[j].1
                     } by {
                         if p == pos as int {
-                            assert(pred.updates[witness].0 == pos as usize);
-                            assert(buf@[p] == pred.updates[witness].1);
                         }
                     }
                 }

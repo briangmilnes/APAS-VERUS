@@ -1171,7 +1171,6 @@ pub mod DirGraphMtEph {
             let a_eq = self.A == other.A;
             proof {
                 if v_eq && a_eq {
-                    assert(self@ =~= other@);
                 }
             }
             v_eq && a_eq

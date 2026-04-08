@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap21/Algorithm21_2.rs:110:70
+    |
+110 | ...                   (#[trigger] mapped[i]).len() == n as int by {}
+    |                                                                ^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2412MB, peak z3 RSS: 305MB, min free: 23884MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 10s

@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap21 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap21/Problem21_3.rs:121:33
+    |
+121 | ...                   v_len_mid == v_len_before + (y as int - 1) * n as int,
+    |                       ^^^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2048MB, peak z3 RSS: 381MB, min free: 24401MB
+Sampled CPU Usage: rust_verify: 26s, z3 children: 13s

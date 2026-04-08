@@ -114,7 +114,6 @@ broadcast use {
         reveal_with_fuel(spec_max_ending_at, 2);
         if j == 0 {
             lemma_range_sum_single(s, 0);
-            assert(spec_range_sum(s, 0, 1) == spec_max_ending_at(s, 0));
         } else {
             lemma_max_ending_at_achieved(s, j - 1);
             let prev = spec_max_ending_at(s, j - 1) + s[j] as int;
@@ -248,7 +247,6 @@ broadcast use {
                             #![trigger spec_range_sum(a.seq@, lo, (i as int) + 1)]
                             0 <= lo <= i as int &&
                                 spec_range_sum(a.seq@, lo, (i as int) + 1) == spec_max_ending_at(a.seq@, i as int);
-                        assert(spec_range_sum(a.seq@, lo_new, (i + 1) as int) == global_max as int);
                     }
                 }
 

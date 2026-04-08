@@ -68,8 +68,6 @@ pub mod ReduceContractStEph {
     {
         let s = seq![a, b];
         reveal_with_fuel(Seq::fold_left, 3);
-        assert(s.drop_last() =~= seq![a]);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
         // fold_left([a, b], id, f) = f(fold_left([a], id, f), b)
         //                          = f(f(fold_left([], id, f), a), b)
         //                          = f(f(id, a), b) = f(a, b)
@@ -83,7 +81,6 @@ pub mod ReduceContractStEph {
         ensures seq![a].fold_left(id, f) == a,
     {
         reveal_with_fuel(Seq::fold_left, 2);
-        assert(seq![a].drop_last() =~= Seq::<T>::empty());
     }
 
     /// Contraction lemma: for an even-length sequence, folding the original equals
@@ -109,10 +106,8 @@ pub mod ReduceContractStEph {
         if n == 2 {
             assert(s =~= seq![s[0], s[1]]);
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == f(s[0], s[1]));
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
-            assert(b.fold_left(id, f) == f(s[0], s[1]));
         } else {
             let s_tail = s.subrange(2, n as int);
             let b_tail = b.subrange(1, b.len() as int);
@@ -124,17 +119,12 @@ pub mod ReduceContractStEph {
 
             // (B) s_head.fold_left(id, f) == f(s[0], s[1]) == b[0]
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
 
             // (C) Factor out b[0]
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
-            assert(s.fold_left(id, f) == f(b[0], s_tail_result));
 
             // (D) b_tail corresponds to contraction of s_tail
-            assert(s_tail.len() >= 2 && s_tail.len() % 2 == 0) by {
-                assert(s_tail.len() == n - 2);
-            }
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -143,23 +133,16 @@ pub mod ReduceContractStEph {
             // (E) Induction: s_tail.fold_left(id, f) == b_tail.fold_left(id, f)
             lemma_contraction_even::<T>(s_tail, f, id);
             let b_tail_result = b_tail.fold_left(id, f);
-            assert(s_tail_result == b_tail_result);
-            assert(s.fold_left(id, f) == f(b[0], b_tail_result));
 
             // (F) Factor b[0] back in: f(b[0], b_tail_result) == b_tail.fold_left(b[0], f)
             lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
-            assert(b_tail.fold_left(b[0], f) == f(b[0], b_tail_result));
-            assert(s.fold_left(id, f) == b_tail.fold_left(b[0], f));
 
             // (G) Connect b_tail.fold_left(b[0], f) to b.fold_left(id, f) via split at 1
             b.lemma_fold_left_split(id, f, 1);
             assert(b.subrange(0, 1) =~= seq![b[0]]);
-            assert(b.subrange(1, b.len() as int) =~= b_tail);
             lemma_fold_left_singleton::<T>(b[0], f, id);
             // b.fold_left(id, f) == b_tail.fold_left(seq![b[0]].fold_left(id, f), f)
             //                     == b_tail.fold_left(b[0], f)
-            assert(b.fold_left(id, f) == b_tail.fold_left(b[0], f));
-            assert(s.fold_left(id, f) == b.fold_left(id, f));
         }
     }
 
@@ -205,7 +188,6 @@ pub mod ReduceContractStEph {
             // Base case: empty
             if n == 0 {
                 proof {
-                    assert(s =~= Seq::<T>::empty());
                 }
                 return id;
             }
@@ -215,7 +197,6 @@ pub mod ReduceContractStEph {
                 let reduced = f(&id, a.nth(0));
                 proof {
                     reveal_with_fuel(Seq::fold_left, 2);
-                    assert(s.drop_last() =~= Seq::<T>::empty());
                 }
                 return reduced;
             }
@@ -241,9 +222,6 @@ pub mod ReduceContractStEph {
                     forall|x: T, y: T, ret: T| f.ensures((&x, &y), ret) ==> ret == spec_f(x, y),
                 decreases half - i,
             {
-                assert(2 * (i as int) + 1 < n as int) by {
-                    assert(i < half);
-                }
                 let left = a.nth(2 * i);
                 let right = a.nth(2 * i + 1);
                 let combined = f(left, right);
@@ -254,12 +232,10 @@ pub mod ReduceContractStEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
-                assert(b.spec_len() == half as nat);
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
                 } by {
-                    assert(b_seq[j] == b_vec@[j]);
                 }
             }
 
@@ -276,15 +252,11 @@ pub mod ReduceContractStEph {
 
                     // s.fold_left(id, f) == s_last_part.fold_left(s_even.fold_left(id, f), f)
                     s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
-                    assert(s_last_part =~= seq![s[(n - 1) as int]]);
 
                     // s_last_part has one element, fold equals f(acc, s[n-1])
                     reveal(Seq::fold_left);
 
                     // s_even.fold_left(id, f) == b_seq.fold_left(id, f) by contraction
-                    assert(s_even.len() >= 2 && s_even.len() % 2 == 0) by {
-                        assert(s_even.len() == n - 1);
-                    }
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),

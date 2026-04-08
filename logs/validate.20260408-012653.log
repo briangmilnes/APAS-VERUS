@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap18/ArraySeqMtPer.rs:1401:51
+     |
+1401 |                 let (left_mapped, right_mapped) = join(fa, fb);
+     |                                                   ^^^^^^^^^^^^
+     |
+    ::: src/Chap02/HFSchedulerMtEph.rs:133:13
+     |
+ 133 |             fb.requires(()),
+     |             --------------- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap02/HFSchedulerMtEph.rs:133:13
+    |
+133 |             fb.requires(()),
+    |             ^^^^^^^^^^^^^^^
+
+note: 
+
+ClosureReq(fa, ()) ✔
+ClosureReq(fb, ()) ✘
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtPer.rs:1382:59
+     |
+1382 | ...                   ==> f1.ensures((&left_g[i],), r.seq@[i]),
+     |                                                     ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtPer.rs:1396:60
+     |
+1396 | ...                   ==> f2.ensures((&right_g[i],), r.seq@[i]),
+     |                                                      ^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4397MB, peak z3 RSS: 685MB, min free: 21018MB
+Sampled CPU Usage: rust_verify: 72s, z3 children: 41s

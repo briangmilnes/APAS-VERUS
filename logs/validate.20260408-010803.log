@@ -1,0 +1,69 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1204:17
+     |
+1204 | /                 forall|i: int| #![trigger tabulated@[i]]
+1205 | |                     0 <= i < count ==> f.ensures(((start as int + i) as usize,), tabulated@[i]),
+     | |_______________________________________________________________________________________________^ failed this postcondition
+...
+1208 | /             if count == 0 {
+1209 | |                 Vec::new()
+1210 | |             } else if count == 1 {
+1211 | |                 let mut v: Vec<T> = Vec::with_capacity(1);
+...    |
+1287 | |                 left_v
+1288 | |             }
+     | |_____________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1205:40
+     |
+1205 |                     0 <= i < count ==> f.ensures(((start as int + i) as usize,), tabulated@[i]),
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tabulated.view().len() == old(count) ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = old(count) in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(f), (clip(usize, old(start) + i)), tabulated.view().index(i)) ✘
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1268:44
+     |
+1268 | ...                   ==> f.ensures(((right_start as int + j) as usize,), right_v@[j]),
+     |                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met: value may be out of range of the target type (use `#[verifier::truncate]` on the cast to silence this warning)
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1262:44
+     |
+1262 | ...                   ==> f.ensures(((start as int + j) as usize,), left_v@[j]),
+     |                                      ^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1231:94
+     |
+1231 | ...                   0 <= i < left_len ==> f1.ensures(((start as int + i) as usize,), r@[i]),
+     |                                                                                        ^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap18/ArraySeqMtEphSlice.rs:1245:101
+     |
+1245 | ...                   0 <= i < right_len ==> f2.ensures(((right_start as int + i) as usize,), r@[i]),
+     |                                                                                               ^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 6617MB, peak z3 RSS: 440MB, min free: 18746MB
+Sampled CPU Usage: rust_verify: 123s, z3 children: 83s

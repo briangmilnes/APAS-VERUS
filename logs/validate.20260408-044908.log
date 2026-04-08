@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap23
+error: invariant not satisfied at end of loop body
+   --> src/Chap23/PrimTreeSeqStPer.rs:437:21
+    |
+437 |                     seq@.len() == spec_filter_len(a.seq@.subrange(0, i as int), spec_pred),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 757 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 5618MB, peak z3 RSS: 442MB, min free: 20690MB
+Sampled CPU Usage: rust_verify: 90s, z3 children: 86s

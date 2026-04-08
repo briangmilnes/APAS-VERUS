@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/MappingStEph.rs:370:40
+    |
+370 | ...                   assert(mapped.to_set().contains(p@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+mapped.to_set().contains(p.view()) 
+    function is uninterpreted
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2040MB, peak z3 RSS: 274MB, min free: 23492MB
+Sampled CPU Usage: rust_verify: 18s, z3 children: 6s

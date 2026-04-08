@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap05/KleeneStPer.rs:208:21
+    |
+208 |             ensures member == in_star(self@, viewed(s@));
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+258 |                     return false;
+    |                     ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/KleeneStPer.rs:208:21
+    |
+208 |             ensures member == in_star(self@, viewed(s@));
+    |                     ^^^^^^    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == in_star(old(self).view(), viewed(old(s).view()))
+|   %return ==>
+|       in_star(old(self).view(), viewed(old(s).view())) ✘
+|       |   forall |i|
+|       |       let tmp%% = 0 in let tmp%% = i in let tmp%% = viewed(old(s).view()).len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+|       |           old(self).view().contains(viewed(old(s).view()).index(i)) 
+|       |               function is uninterpreted
+|       +---
+|   in_star(old(self).view(), viewed(old(s).view())) ==>
+|       %return ✘
++---
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 1389MB, peak z3 RSS: 52MB, min free: 24305MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 4s

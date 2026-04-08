@@ -1,0 +1,72 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/DirGraphStEph.rs:418:67
+    |
+418 | ...                   self.spec_n_minus(v_view).contains(u) by {
+    |                                                             ^^
+
+error[E0425]: cannot find type `DirGraphStEph` in this scope
+   --> src/Chap06/DirGraphStEph.rs:757:35
+    |
+757 |     impl<V: StT + Hash> Debug for DirGraphStEph<V> {
+    |                                   ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DirGraphStEph` in this scope
+   --> src/Chap06/DirGraphStEph.rs:766:37
+    |
+766 |     impl<V: StT + Hash> Display for DirGraphStEph<V> {
+    |                                     ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DirGraphStEphIter` in this scope
+   --> src/Chap06/DirGraphStEph.rs:770:39
+    |
+770 |     impl<'a, V: StT + Hash> Debug for DirGraphStEphIter<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DirGraphStEphIter` in this scope
+   --> src/Chap06/DirGraphStEph.rs:774:41
+    |
+774 |     impl<'a, V: StT + Hash> Display for DirGraphStEphIter<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `DirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/DirGraphStEph.rs:778:39
+    |
+778 |     impl<'a, V: StT + Hash> Debug for DirGraphStEphGhostIterator<'a, V> {
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:826:5
+    |
+826 |     pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
+    |     --------------------------------------------------- similarly named struct `SetStEphGhostIterator` defined here
+    |
+help: a struct with a similar name exists
+    |
+778 -     impl<'a, V: StT + Hash> Debug for DirGraphStEphGhostIterator<'a, V> {
+778 +     impl<'a, V: StT + Hash> Debug for SetStEphGhostIterator<'a, V> {
+    |
+
+error[E0425]: cannot find type `DirGraphStEphGhostIterator` in this scope
+   --> src/Chap06/DirGraphStEph.rs:782:41
+    |
+782 |     impl<'a, V: StT + Hash> Display for DirGraphStEphGhostIterator<'a, V> {
+    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap05/SetStEph.rs:826:5
+    |
+826 |     pub struct SetStEphGhostIterator<'a, T: StT + Hash> {
+    |     --------------------------------------------------- similarly named struct `SetStEphGhostIterator` defined here
+    |
+help: a struct with a similar name exists
+    |
+782 -     impl<'a, V: StT + Hash> Display for DirGraphStEphGhostIterator<'a, V> {
+782 +     impl<'a, V: StT + Hash> Display for SetStEphGhostIterator<'a, V> {
+    |
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 2165MB, peak z3 RSS: 309MB, min free: 23171MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 23s

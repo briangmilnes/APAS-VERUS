@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap18/ArraySeqStEph.rs:243:17
+    |
+243 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+244 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^ failed this postcondition
+...
+570 |               filtered
+    |               -------- at the end of the function body
+
+note: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap18/ArraySeqStEph.rs:530:9
+    |
+530 | / ...   fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Arr...
+531 | | ...       where T: Clone + Eq
+    | |_____________________________^
+
+note: diagnostics via expansion
+   --> src/Chap18/ArraySeqStEph.rs:243:17
+    |
+243 | /                 Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)).to_multiset()
+244 | |                     =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]).to_multiset().filter(spec_pred),
+    | |__________________________________________________________________________________________________^
+
+note: 
+
+%return.spec_arrayseqsteph_wf() ✔
+%return.spec_len() <= old(a).seq.view().len() ✔
+%return.spec_len() == spec_filter_len(new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))), old(spec_pred)) ✔
+new(%return.spec_len(), (|i| %return.spec_index(i))).to_multiset() =~= new(old(a).seq.view().len(), (|i| old(a).seq.view().index(i))).to_multiset().filter(old(spec_pred)) ✘ [rlimit exceeded]
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.spec_len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        ClosureEns(old(pred), (%return.spec_index(i)), true) ✔
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 38s
+Sampled Memory Usage: peak rust_verify RSS: 5277MB, peak z3 RSS: 1079MB, min free: 20249MB
+Sampled CPU Usage: rust_verify: 102s, z3 children: 115s

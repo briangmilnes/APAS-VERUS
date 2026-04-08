@@ -1,0 +1,24 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+    --> src/Chap18/ArraySeq.rs:1211:17
+     |
+1211 |                 collected.seq.deep_view() =~= spec_collect(pairs.seq@.take(i as int)),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap18/ArraySeq.rs:1246:85
+     |
+1246 | ...                   implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
+     |                                                                           ^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 7s
+Sampled Memory Usage: peak rust_verify RSS: 2256MB, peak z3 RSS: 421MB, min free: 23900MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 32s

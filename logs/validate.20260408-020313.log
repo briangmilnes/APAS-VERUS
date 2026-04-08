@@ -1,0 +1,75 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap18/ArraySeqStPer.rs:796:17
+    |
+796 |                 by {
+    |                 ^^
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1058:49
+     |
+1058 |     impl<'a, T> std::iter::IntoIterator for &'a ArraySeqStPerS<T> {
+     |                                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1060:25
+     |
+1060 |         type IntoIter = ArraySeqStPerIter<'a, T>;
+     |                         ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1061:48
+     |
+1061 |         fn into_iter(self) -> Self::IntoIter { ArraySeqStPerIter { inner: self.seq.iter() } }
+     |                                                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1064:41
+     |
+1064 |     impl<T> std::iter::IntoIterator for ArraySeqStPerS<T> {
+     |                                         ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1071:30
+     |
+1071 |     impl<T: Debug> Debug for ArraySeqStPerS<T> {
+     |                              ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerS` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1077:34
+     |
+1077 |     impl<T: Display> Display for ArraySeqStPerS<T> {
+     |                                  ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1088:34
+     |
+1088 |     impl<'a, T: Debug> Debug for ArraySeqStPerIter<'a, T> {
+     |                                  ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerIter` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1094:29
+     |
+1094 |     impl<'a, T> Display for ArraySeqStPerIter<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1100:27
+     |
+1100 |     impl<'a, T> Debug for ArraySeqStPerGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqStPerGhostIterator` in this scope
+    --> src/Chap18/ArraySeqStPer.rs:1106:29
+     |
+1106 |     impl<'a, T> Display for ArraySeqStPerGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 11 previous errors
+
+Some errors have detailed explanations: E0422, E0425.
+For more information about an error, try `rustc --explain E0422`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 21191MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

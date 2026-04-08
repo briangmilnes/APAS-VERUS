@@ -1,0 +1,251 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap05/SetMtEph.rs:370:29
+    |
+370 |                     implies self@.contains(#[trigger] inner@.1[j]@)
+    |                             ^^^^
+
+error[E0425]: cannot find type `SetMtEph` in this scope
+    --> src/Chap05/SetMtEph.rs:1257:47
+     |
+1257 |     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
+     |                                               ^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1257:13
+     |
+1257 |     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1257:19
+     |
+1257 |     impl<T: StT + Hash> std::fmt::Display for SetMtEph<T> {
+     |                   ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEph` in this scope
+    --> src/Chap05/SetMtEph.rs:1263:45
+     |
+1263 |     impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
+     |                                             ^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1263:13
+     |
+1263 |     impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1263:19
+     |
+1263 |     impl<T: StT + Hash> std::fmt::Debug for SetMtEph<T> {
+     |                   ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+    --> src/Chap05/SetMtEph.rs:1269:49
+     |
+1269 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphIter<'a, T> {
+     |                                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1269:17
+     |
+1269 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphIter<'a, T> {
+     |                 ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1269:23
+     |
+1269 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphIter<'a, T> {
+     |                       ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEphIter` in this scope
+    --> src/Chap05/SetMtEph.rs:1275:51
+     |
+1275 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphIter<'a, T> {
+     |                                                   ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1275:17
+     |
+1275 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphIter<'a, T> {
+     |                 ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1275:23
+     |
+1275 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphIter<'a, T> {
+     |                       ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEphGhostIterator` in this scope
+    --> src/Chap05/SetMtEph.rs:1281:49
+     |
+1281 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphGhostIterator<'a, T> {
+     |                                                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1281:17
+     |
+1281 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphGhostIterator<'a, T> {
+     |                 ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1281:23
+     |
+1281 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetMtEphGhostIterator<'a, T> {
+     |                       ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEphGhostIterator` in this scope
+    --> src/Chap05/SetMtEph.rs:1287:51
+     |
+1287 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphGhostIterator<'a, T> {
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1287:17
+     |
+1287 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphGhostIterator<'a, T> {
+     |                 ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1287:23
+     |
+1287 |     impl<'a, T: StT + Hash> std::fmt::Display for SetMtEphGhostIterator<'a, T> {
+     |                       ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `SetMtEphInv` in this scope
+    --> src/Chap05/SetMtEph.rs:1295:30
+     |
+1295 |     impl std::fmt::Debug for SetMtEphInv {
+     |                              ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetMtEphInv` in this scope
+    --> src/Chap05/SetMtEph.rs:1301:32
+     |
+1301 |     impl std::fmt::Display for SetMtEphInv {
+     |                                ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LockedSetMtEph` in this scope
+    --> src/Chap05/SetMtEph.rs:1309:45
+     |
+1309 |     impl<T: StT + Hash> std::fmt::Debug for LockedSetMtEph<T> {
+     |                                             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1309:13
+     |
+1309 |     impl<T: StT + Hash> std::fmt::Debug for LockedSetMtEph<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1309:19
+     |
+1309 |     impl<T: StT + Hash> std::fmt::Debug for LockedSetMtEph<T> {
+     |                   ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find type `LockedSetMtEph` in this scope
+    --> src/Chap05/SetMtEph.rs:1315:47
+     |
+1315 |     impl<T: StT + Hash> std::fmt::Display for LockedSetMtEph<T> {
+     |                                               ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetMtEph.rs:1315:13
+     |
+1315 |     impl<T: StT + Hash> std::fmt::Display for LockedSetMtEph<T> {
+     |             ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  39 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetMtEph.rs:1315:19
+     |
+1315 |     impl<T: StT + Hash> std::fmt::Display for LockedSetMtEph<T> {
+     |                   ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  39 +     use std::hash::Hash;
+     |
+
+error: aborting due to 27 previous errors
+
+Some errors have detailed explanations: E0404, E0405, E0425.
+For more information about an error, try `rustc --explain E0404`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25088MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

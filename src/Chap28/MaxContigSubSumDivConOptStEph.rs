@@ -194,7 +194,6 @@ broadcast use {
                 1 <= hi <= left.len() as int &&
                 spec_range_sum(left, 0, hi) == p_left;
             lemma_range_sum_subseq(s, left, 0, 0, hi_pl);
-            assert(spec_range_sum(s, 0, hi_pl) == p);
         } else {
             // p = t_left + p_right, achieved by the whole left + a prefix of right.
             let hi_pr: int = choose|hi: int|
@@ -204,7 +203,6 @@ broadcast use {
             lemma_range_sum_subseq(s, left, 0, 0, mid);
             lemma_range_sum_subseq(s, right, mid, 0, hi_pr);
             lemma_range_sum_split(s, 0, mid, mid + hi_pr);
-            assert(spec_range_sum(s, 0, mid + hi_pr) == p);
         }
         // Part (b): p is maximal.
         assert forall|hi: int|
@@ -231,7 +229,6 @@ broadcast use {
                 0 <= lo < right.len() as int &&
                 spec_range_sum(right, lo, right.len() as int) == s_right;
             lemma_range_sum_subseq(s, right, mid, lo_sr, n - mid);
-            assert(spec_range_sum(s, mid + lo_sr, n) == ss);
         } else {
             // ss = s_left + t_right, achieved by a suffix of left + whole right.
             let lo_sl: int = choose|lo: int|
@@ -241,7 +238,6 @@ broadcast use {
             lemma_range_sum_subseq(s, left, 0, lo_sl, mid);
             lemma_range_sum_subseq(s, right, mid, 0, n - mid);
             lemma_range_sum_split(s, lo_sl, mid, n);
-            assert(spec_range_sum(s, lo_sl, n) == ss);
         }
         // Part (b): ss is maximal.
         assert forall|lo: int|
@@ -319,7 +315,6 @@ broadcast use {
             proof {
                 lemma_range_sum_single(a.seq@, 0);
                 // val == a.seq@[0], range_sum(a, 0, 1) == val
-                assert(spec_range_sum(a.seq@, 0, 1) == val as int);
             }
             return (Some(val), val, val, val);
         }

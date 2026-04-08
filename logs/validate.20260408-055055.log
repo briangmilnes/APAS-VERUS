@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: postcondition not satisfied
+   --> src/Chap28/MCSSSpec.rs:227:13
+    |
+227 | /             exists|j: int| #![trigger spec_prefix_sum(s, j)]
+228 | |                 0 <= j <= k && spec_prefix_sum(s, j) == spec_min_prefix_sum(s, k),
+    | |_________________________________________________________________________________^ failed this postcondition
+...
+232 | /         if k == 0 {
+233 | | // Veracity: TESTING assert             assert(spec_prefix_sum(s, 0) == spec_min_prefix_sum(s, 0));
+234 | |         } else {
+235 | |             lemma_min_prefix_sum_achieved(s, k - 1);
+...   |
+241 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |j| ) 
+
+verification results:: 966 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4639MB, peak z3 RSS: 547MB, min free: 21731MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 71s

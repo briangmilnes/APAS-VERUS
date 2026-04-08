@@ -260,9 +260,7 @@ pub mod ArraySeq {
     {
         lemma_find_key_index_bounds(old_dv, k, idx);
         let extended = pairs_prefix.push((k, v));
-        assert(extended.len() > 0);
         assert(extended.drop_last() =~= pairs_prefix);
-        assert(extended.last() == (k, v));
         reveal(spec_collect);
     }
 
@@ -281,9 +279,7 @@ pub mod ArraySeq {
                 =~= old_dv.push((k, seq![v])),
     {
         let extended = pairs_prefix.push((k, v));
-        assert(extended.len() > 0);
         assert(extended.drop_last() =~= pairs_prefix);
-        assert(extended.last() == (k, v));
         reveal(spec_collect);
     }
 
@@ -686,7 +682,6 @@ pub mod ArraySeq {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -714,7 +709,6 @@ pub mod ArraySeq {
                 seq.push(a.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(a.seq[i as int], last));
                     crate::vstdplus::feq::feq::axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                 }
                 i += 1;
@@ -734,7 +728,6 @@ pub mod ArraySeq {
                 seq.push(b.seq[j].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(b.seq[j as int], last));
                     crate::vstdplus::feq::feq::axiom_cloned_implies_eq_owned(b.seq[j as int], last);
                 }
                 j += 1;
@@ -779,7 +772,6 @@ pub mod ArraySeq {
                 }
             }
             // The full subrange equals the original sequence.
-            assert(a.seq@.subrange(0, a.seq.len() as int) =~= a.seq@);
             let filtered = ArraySeqS { seq };
             proof {
                 // Bridge from the concrete seq@ to the abstract Seq::new(spec_len, spec_index).
@@ -811,14 +803,12 @@ pub mod ArraySeq {
                     seq.push(item.clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(item, last));
                         crate::vstdplus::feq::feq::axiom_cloned_implies_eq_owned(item, last);
                     }
                 } else {
                     seq.push(a.seq[i].clone());
                     proof {
                         let ghost last = seq@[seq@.len() - 1 as int];
-                        assert(cloned(a.seq[i as int], last));
                         crate::vstdplus::feq::feq::axiom_cloned_implies_eq_owned(a.seq[i as int], last);
                     }
                 }
@@ -857,22 +847,18 @@ pub mod ArraySeq {
                 proof {
                     a.lemma_spec_index(i as int);
                     // take(i+1) == take(i).push(s[i]).
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
                 // At loop exit, i == len so take(len) == s.
-                assert(s.take(len as int) =~= s);
             }
             acc
         }
@@ -899,22 +885,18 @@ pub mod ArraySeq {
                 proof {
                     a.lemma_spec_index(i as int);
                     // take(i+1) == take(i).push(s[i]).
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 i += 1;
             }
             proof {
                 // At loop exit, i == len so take(len) == s.
-                assert(s.take(len as int) =~= s);
             }
             acc
         }
@@ -947,15 +929,12 @@ pub mod ArraySeq {
                 proof {
                     a.lemma_spec_index(i as int);
                     // take(i+1) == take(i).push(s[i]).
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 let cloned = acc.clone();
@@ -968,7 +947,6 @@ pub mod ArraySeq {
             }
             proof {
                 // At loop exit, i == len so take(len) == s.
-                assert(s.take(len as int) =~= s);
             }
             let scanned_seq = ArraySeqS { seq };
             proof {
@@ -976,7 +954,6 @@ pub mod ArraySeq {
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(scanned_seq.spec_index(i) == seq@[i]);
                 }
             }
             (scanned_seq, acc)
@@ -1009,7 +986,6 @@ pub mod ArraySeq {
                 result_vec.push(elem);
                 k += 1;
             }
-            assert(result_vec@ =~= s);
 
             // Apply updates in reverse so the first update to each position wins.
             let mut i: usize = ulen;
@@ -1038,20 +1014,16 @@ pub mod ArraySeq {
                 proof {
                     // Help the solver unfold spec_inject one step.
                     let ghost sub = u.subrange(i as int, ulen as int);
-                    assert(sub.len() > 0);
-                    assert(sub[0] == u[i as int]);
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
             }
 
             proof {
-                assert(u.subrange(0, ulen as int) =~= u);
             }
             let injected = ArraySeqS { seq: result_vec };
             proof {
                 // Bridge result to the abstract ensures form.
-                assert(Seq::new(injected.spec_len(), |i: int| injected.spec_index(i)) =~= result_vec@);
                 assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
                 by { a.lemma_spec_index(j); }
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
@@ -1084,14 +1056,11 @@ pub mod ArraySeq {
             {
                 proof {
                     a.lemma_spec_index(i as int);
-                    assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
                 }
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
-                    assert(t.len() > 0);
                     assert(t.drop_last() =~= s.take(i as int));
-                    assert(t.last() == s[i as int]);
                     reveal(Seq::fold_left);
                 }
                 let cloned = acc.clone();
@@ -1106,7 +1075,6 @@ pub mod ArraySeq {
                 assert forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
-                    assert(scanned.spec_index(i) == seq@[i]);
                 }
             }
             scanned
@@ -1132,7 +1100,6 @@ pub mod ArraySeq {
                 seq.push(self.seq[i].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(self.seq[i as int], last));
                     crate::vstdplus::feq::feq::axiom_cloned_implies_eq_owned(self.seq[i as int], last);
                 }
                 i += 1;
@@ -1212,10 +1179,8 @@ pub mod ArraySeq {
             decreases plen - i,
             {
                 proof {
-                    assert(pairs.seq@.take(i as int + 1) =~= pairs.seq@.take(i as int).push(pairs.seq@[i as int]));
                     let ghost t = pairs.seq@.take(i as int + 1);
                     assert(t.drop_last() =~= pairs.seq@.take(i as int));
-                    assert(t.last() == pairs.seq@[i as int]);
                     reveal(spec_collect);
                 }
                 let ghost old_collected_dv = collected.seq.deep_view();
@@ -1229,9 +1194,6 @@ pub mod ArraySeq {
                     Some(idx) => {
                         proof {
                             lemma_find_key_some(&collected.seq, k, idx);
-                            assert(old_collected_dv =~= collected.seq.deep_view());
-                            assert(k.deep_view() == k);
-                            assert(spec_find_key_index(old_collected_dv, k) == Some(idx as int));
                             lemma_spec_collect_step_some(old_collected_dv, pairs.seq@.take(i as int), k, v, idx as int);
                         }
                         let ghost new_collected_dv = old_collected_dv.remove(idx as int).insert(idx as int, (k, old_collected_dv[idx as int].1.push(v)));
@@ -1240,8 +1202,6 @@ pub mod ArraySeq {
                         collected.seq.insert(idx, entry);
                         proof {
                             lemma_deep_view_len(&collected.seq);
-                            assert(k.deep_view() == k);
-                            assert(v.deep_view() == v);
                             assert forall|j: int| 0 <= j < collected.seq.deep_view().len()
                                 implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
                             by {
@@ -1252,17 +1212,12 @@ pub mod ArraySeq {
                     None => {
                         proof {
                             lemma_find_key_none(&collected.seq, k);
-                            assert(old_collected_dv =~= collected.seq.deep_view());
-                            assert(k.deep_view() == k);
-                            assert(spec_find_key_index(old_collected_dv, k) == None::<int>);
                             lemma_spec_collect_step_none(old_collected_dv, pairs.seq@.take(i as int), k, v);
                         }
                         let ghost new_collected_dv = old_collected_dv.push((k, seq![v]));
                         collected.seq.push((k, ArraySeqS { seq: vec![v] }));
                         proof {
                             lemma_deep_view_len(&collected.seq);
-                            assert(v.deep_view() == v);
-                            assert(k.deep_view() == k);
                             assert forall|j: int| 0 <= j < collected.seq.deep_view().len()
                                 implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
                             by {
@@ -1274,7 +1229,6 @@ pub mod ArraySeq {
                 i += 1;
             }
             proof {
-                assert(pairs.seq@.take(plen as int) =~= pairs.seq@);
             }
             collected
         }
@@ -1380,14 +1334,11 @@ pub mod ArraySeq {
                 seq.push(inner.seq[j].clone());
                 proof {
                     let ghost last = seq@[seq@.len() - 1 as int];
-                    assert(cloned(inner.seq[j as int], last));
                     axiom_cloned_implies_eq_owned(inner.seq[j as int], last);
-                    assert(inner.seq@.take(j as int + 1) =~= inner.seq@.take(j as int).push(inner.seq@[j as int]));
                 }
                 j += 1;
             }
             proof {
-                assert(inner.seq@.take(inner_len as int) =~= inner.seq@);
                 let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@);
                 assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqS<T>| inner.seq@)
                     =~= prefix.push(a.seq@[i as int].seq@));
@@ -1396,7 +1347,6 @@ pub mod ArraySeq {
             i += 1;
         }
         proof {
-            assert(a.seq@.take(outer_len as int) =~= a.seq@);
         }
         ArraySeqS { seq }
     }
@@ -1451,22 +1401,18 @@ pub mod ArraySeq {
             seq.push(cloned);
             proof {
                 a.lemma_spec_index(i as int);
-                assert(s.take(i as int + 1) =~= s.take(i as int).push(s[i as int]));
             }
             acc = f(&acc, &a.seq[i]);
             proof {
                 // Help the solver unfold fold_left on take(i+1).
                 let ghost t = s.take(i as int + 1);
-                assert(t.len() > 0);
                 assert(t.drop_last() =~= s.take(i as int));
-                assert(t.last() == s[i as int]);
                 reveal(Seq::fold_left);
             }
             i += 1;
         }
         proof {
             // At loop exit, take(len) == s.
-            assert(s.take(len as int) =~= s);
         }
         let prefixes = ArraySeqS { seq };
         proof {
@@ -1474,7 +1420,6 @@ pub mod ArraySeq {
             assert forall|i: int| #![trigger prefixes.spec_index(i)] 0 <= i < a.spec_len() implies
                 prefixes.spec_index(i) == spec_iterate_prefixes(s, spec_f, start_x).0[i]
             by {
-                assert(prefixes.spec_index(i) == seq@[i]);
             }
         }
         (prefixes, acc)

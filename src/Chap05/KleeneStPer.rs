@@ -91,14 +91,6 @@ verus!
         ensures
             in_star(alphabet, s1.add(s2)),
     {
-        assert forall|i: int| 0 <= i < s1.add(s2).len()
-            implies alphabet.contains(#[trigger] s1.add(s2)[i]) by {
-            if i < s1.len() {
-                assert(s1.add(s2)[i] == s1[i]);
-            } else {
-                assert(s1.add(s2)[i] == s2[i - s1.len()]);
-            }
-        };
     }
 
     /// Exercise 5.1: Σ+ is closed under string concatenation.
@@ -110,7 +102,6 @@ verus!
             in_plus(alphabet, s1.add(s2)),
     {
         lemma_star_closed_under_concat(alphabet, s1, s2);
-        assert(s1.add(s2).len() > 0);
     }
 
     /// PTT: Σ* always contains the empty sequence.
@@ -166,9 +157,6 @@ verus!
             in_plus(alphabet, s1.add(s2)),
     {
         lemma_star_closed_under_concat(alphabet, s1, s2);
-        assert(s1.add(s2).len() > 0) by {
-            assert(s2.len() > 0);
-        };
     }
 
     /// PTT: Σ+ string concatenated with Σ* string yields Σ+ string.
@@ -180,9 +168,6 @@ verus!
             in_plus(alphabet, s1.add(s2)),
     {
         lemma_star_closed_under_concat(alphabet, s1, s2);
-        assert(s1.add(s2).len() > 0) by {
-            assert(s1.len() > 0);
-        };
     }
 
     //		Section 8. traits
@@ -253,17 +238,12 @@ verus!
                 decreases s.len() - i,
             {
                 if !self.alphabet.mem(&s[i]) {
-                    assert(!self.alphabet@.contains(s@[i as int]@));
                     assert(viewed::<T>(s@)[i as int] == s@[i as int]@);
                     return false;
                 }
                 i += 1;
             }
             proof {
-                assert forall|j: int| 0 <= j < viewed::<T>(s@).len()
-                    implies self@.contains(#[trigger] viewed::<T>(s@)[j]) by {
-                    assert(viewed::<T>(s@)[j] == s@[j]@);
-                };
             }
             true
         }
@@ -271,11 +251,9 @@ verus!
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|s|), Span O(|s|) — length check + delegates to mem_star.
         fn mem_plus(&self, s: &[T]) -> (member: bool) {
             if s.len() == 0 {
-                proof { assert(viewed::<T>(s@).len() == 0); }
                 false
             } else {
                 let r = self.mem_star(s);
-                proof { assert(viewed::<T>(s@).len() > 0); }
                 r
             }
         }

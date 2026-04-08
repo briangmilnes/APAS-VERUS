@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap19 Chap27 Chap02
+error: postcondition not satisfied
+   --> src/Chap27/ScanContractMtEph.rs:94:13
+    |
+ 94 | /             s.fold_left(id, f) == Seq::new(
+ 95 | |                 (s.len() / 2) as nat,
+ 96 | |                 |i: int| f(s[2 * i], s[2 * i + 1]),
+ 97 | |             ).fold_left(id, f),
+    | |______________________________^ failed this postcondition
+...
+104 | /         if n == 2 {
+105 | | // Veracity: UNNEEDED assert             assert(s =~= seq![s[0], s[1]]);
+106 | |             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+...   |
+148 | |             assert(s.fold_left(id, f) == b.fold_left(id, f));
+149 | |         }
+    | |_________- at the end of the function body
+
+error: assertion failed
+   --> src/Chap27/ScanContractMtEph.rs:120:20
+    |
+120 |             assert(s.fold_left(id, f) == s_tail.fold_left(b[0], f));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.fold_left(id, f) == s_tail.fold_left(b.index(0), f) 
+
+verification results:: 944 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4788MB, peak z3 RSS: 525MB, min free: 21694MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 62s

@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap06/WeightedDirGraphStEphI128.rs:370:21
+    |
+370 |                     sum@ == wa_seq.take(it@.0 as int).fold_left(0int, |acc: int, e: LabEdge<V, i128>| acc + e@.2 as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1111 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 2547MB, peak z3 RSS: 326MB, min free: 22982MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 48s

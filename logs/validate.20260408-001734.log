@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap06 Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap06/WeightedDirGraphStEphI8.rs:269:56
+    |
+269 | ...                   neighbors@.contains(p) by {
+    |                                              ^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1556MB, peak z3 RSS: 300MB, min free: 25020MB
+Sampled CPU Usage: rust_verify: 15s, z3 children: 7s

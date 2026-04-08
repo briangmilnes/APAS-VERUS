@@ -1,0 +1,13 @@
+Mode: isolate
+Isolate: including Chap19 Chap28 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap28/MaxContigSubSumReducedMcsseStEph.rs:193:25
+    |
+193 |                         implies
+    |                         ^^^^^^^
+
+error: aborting due to 1 previous error
+
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 23814MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

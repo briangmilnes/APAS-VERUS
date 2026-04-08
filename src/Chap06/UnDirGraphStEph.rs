@@ -335,11 +335,8 @@ verus!
                             // u comes from iterator at position (it@.0 - 1)
                             // u == u_seq[it@.0 - 1], so u@ is in the mapped set
                             let idx = (it@.0 - 1) as int;
-                            assert(u_seq[idx] == u);
                             lemma_seq_index_in_map_to_set(u_seq, idx);
-                            assert(vertices_view.contains(u@));
                             // vertices@ <= self@.V, so u@ is in self@.V
-                            assert(self@.V.contains(u@));
                         }
                         let ng_u = self.ng(u);
                         neighbors = neighbors.union(&ng_u);
@@ -506,7 +503,6 @@ verus!
             let e_eq = self.E == other.E;
             proof {
                 if v_eq && e_eq {
-                    assert(self@ =~= other@);
                 }
             }
             v_eq && e_eq

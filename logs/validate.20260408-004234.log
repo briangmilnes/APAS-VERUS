@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap18/ArraySeq.rs:1267:41
+     |
+1267 | ...                   implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
+     |                               ^
+
+error[E0425]: cannot find type `ArraySeqS` in this scope
+    --> src/Chap18/ArraySeq.rs:1672:30
+     |
+1672 |     impl<T: Debug> Debug for ArraySeqS<T> {
+     |                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqS` in this scope
+    --> src/Chap18/ArraySeq.rs:1678:34
+     |
+1678 |     impl<T: Display> Display for ArraySeqS<T> {
+     |                                  ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqIter` in this scope
+    --> src/Chap18/ArraySeq.rs:1689:34
+     |
+1689 |     impl<'a, T: Debug> Debug for ArraySeqIter<'a, T> {
+     |                                  ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqIter` in this scope
+    --> src/Chap18/ArraySeq.rs:1695:29
+     |
+1695 |     impl<'a, T> Display for ArraySeqIter<'a, T> {
+     |                             ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqGhostIterator` in this scope
+    --> src/Chap18/ArraySeq.rs:1701:27
+     |
+1701 |     impl<'a, T> Debug for ArraySeqGhostIterator<'a, T> {
+     |                           ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqGhostIterator` in this scope
+    --> src/Chap18/ArraySeq.rs:1707:29
+     |
+1707 |     impl<'a, T> Display for ArraySeqGhostIterator<'a, T> {
+     |                             ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 25096MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

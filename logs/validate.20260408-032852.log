@@ -1,0 +1,50 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: unexpected token, expected `;`
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1577:46
+     |
+1577 |                     0 <= i < left.len as int implies {
+     |                                              ^^^^^^^
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1820:50
+     |
+1820 |     impl<T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceS<T> {
+     |                                                  ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceS` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1828:54
+     |
+1828 |     impl<T: std::fmt::Display> std::fmt::Display for ArraySeqMtEphSliceS<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1843:54
+     |
+1843 |     impl<'a, T: std::fmt::Debug> std::fmt::Debug for ArraySeqMtEphSliceIter<'a, T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceIter` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1849:39
+     |
+1849 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceIter<'a, T> {
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1855:37
+     |
+1855 |     impl<'a, T> std::fmt::Debug for ArraySeqMtEphSliceGhostIterator<'a, T> {
+     |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ArraySeqMtEphSliceGhostIterator` in this scope
+    --> src/Chap19/ArraySeqMtEphSlice.rs:1861:39
+     |
+1861 |     impl<'a, T> std::fmt::Display for ArraySeqMtEphSliceGhostIterator<'a, T> {
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 20223MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

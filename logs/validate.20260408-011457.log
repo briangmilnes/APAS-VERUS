@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap18/ArraySeqMtPer.rs:667:21
+    |
+667 |                     acc == s.take(i as int).fold_left(seed, spec_f),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1087 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 4895MB, peak z3 RSS: 262MB, min free: 21026MB
+Sampled CPU Usage: rust_verify: 58s, z3 children: 4s

@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap19 Chap02
+error: assertion failed
+   --> src/Chap19/ArraySeqStEph.rs:141:20
+    |
+141 |             assert(ss.flatten() =~= prefix.flatten() + last);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ss.flatten() =~= prefix.flatten().add(last) 
+
+verification results:: 907 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 6275MB, peak z3 RSS: 617MB, min free: 20055MB
+Sampled CPU Usage: rust_verify: 118s, z3 children: 84s

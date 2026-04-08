@@ -324,7 +324,6 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — iterates vec, O(1) hash insert each.
         fn from_vec(v: Vec<T>) -> (s: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             let mut s: SetStEph<T> = SetStEph::empty();
             let ghost v_seq: Seq<T> = v@;
 
@@ -376,12 +375,10 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> SetStEph<T> {
-        assert(obeys_feq_full_trigger::<T>());
          SetStEph { elements: HashSetWithViewPlus::new() } }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — one allocation + one insert.
         fn singleton(x: T) -> (s: SetStEph<T>) {
-                      assert(obeys_feq_full_trigger::<T>());
             let mut s = HashSetWithViewPlus::new();
             let _ = s.insert(x);
             SetStEph { elements: s }
@@ -728,11 +725,6 @@ verus!
             {
                 proof { 
                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
-                    assert(!iter_seq.take(iter.pos).contains(*x)) by {
-                        if iter_seq.take(iter.pos).contains(*x) {
-                            let j = choose |j: int| 0 <= j < iter.pos && iter_seq.take(iter.pos)[j] == *x;
-                        }
-                    };
                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
                         lemma_reveal_view_injective::<T>();
                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
@@ -762,11 +754,6 @@ verus!
 
             proof {
                 // s.len() > 0 because self@.len() > 0 and iter ensures bijection
-                assert(s.len() > 0) by {
-                    if s.len() == 0 {
-                        // Contradiction: self@ is non-empty but s is empty
-                    }
-                }
             }
 
             let opt = it.next();
@@ -776,11 +763,8 @@ verus!
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
                 assert(s.contains(*element_ref)) by {
-                    assert(s[0] == *element_ref);
-                    assert(0 <= 0 < s.len());
                 }
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)
-                assert(self@.contains(element_ref@));
             }
 
             let result = element_ref.clone_plus();

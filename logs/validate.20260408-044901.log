@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap23
+error: invariant not satisfied at end of loop body
+   --> src/Chap23/PrimTreeSeqStPer.rs:438:21
+    |
+438 |                     seq@.to_multiset() =~= a.seq@.subrange(0, i as int).to_multiset().filter(spec_pred),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 757 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 4334MB, peak z3 RSS: 736MB, min free: 22007MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 41s

@@ -109,14 +109,12 @@ broadcast use {
                 0 <= lo < hi <= left.len() as int &&
                 spec_range_sum(left, lo, hi) == m_left;
             lemma_range_sum_subseq(s, left, 0, lo_l, hi_l);
-            assert(spec_range_sum(s, lo_l, hi_l) == m_left);
         } else if m_right >= crossing {
             let (lo_r, hi_r) = choose|lo: int, hi: int|
                 #![trigger spec_range_sum(right, lo, hi)]
                 0 <= lo < hi <= right.len() as int &&
                 spec_range_sum(right, lo, hi) == m_right;
             lemma_range_sum_subseq(s, right, mid, lo_r, hi_r);
-            assert(spec_range_sum(s, mid + lo_r, mid + hi_r) == m_right);
         } else {
             let lo_s: int = choose|lo: int|
                 #![trigger spec_range_sum(left, lo, left.len() as int)]
@@ -129,7 +127,6 @@ broadcast use {
             lemma_range_sum_subseq(s, left, 0, lo_s, mid);
             lemma_range_sum_subseq(s, right, mid, 0, hi_p);
             lemma_range_sum_split(s, lo_s, mid, mid + hi_p);
-            assert(spec_range_sum(s, lo_s, mid + hi_p) == crossing);
         }
 
         // Part (b): max_sum is maximal.
@@ -247,7 +244,6 @@ broadcast use {
                     #![trigger spec_prefix_sum(a.seq@, j)]
                     0 <= j < n as int && min_prefix as int == spec_prefix_sum(a.seq@, j);
                 lemma_range_sum_via_prefix(a.seq@, lo_w, n as int);
-                assert(spec_range_sum(a.seq@, lo_w, a.seq@.len() as int) == total - min_prefix as int);
             }
 
             // (b) Maximal: for all lo in 0..n: range_sum(a, lo, n) <= total - min_prefix.

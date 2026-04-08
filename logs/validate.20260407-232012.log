@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: precondition not satisfied
+   --> src/Chap05/MappingStEph.rs:456:17
+    |
+456 |                 vstd::set_lib::lemma_map_size(s, self@.dom(), proj);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1187:8
+    |
+    = note: failed precondition
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1187:8
+
+note: 
+
+s.finite() ✔
+injective_on(proj, s) ✔
+s.map(proj) == tmp% ✘
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 897MB, peak z3 RSS: 52MB, min free: 23249MB
+Sampled CPU Usage: rust_verify: 8s, z3 children: 4s

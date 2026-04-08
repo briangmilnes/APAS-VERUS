@@ -58,7 +58,6 @@ pub mod Exercise21_5 {
         if n > 0 {
             assert forall|i: int| 0 <= i < ss.drop_first().len() implies
                 (#[trigger] ss.drop_first()[i]).len() == (n - 1) - i by {
-                assert(ss.drop_first()[i] == ss[i + 1]);
             }
             lemma_inner_lens_sum_triangular(ss.drop_first(), n - 1);
             assert(spec_inner_lens_sum(ss) * 2 == n * (n + 1)) by (nonlinear_arith)

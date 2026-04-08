@@ -327,8 +327,6 @@ verus!
                     Some(u) => {
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
-                            assert(vertices_view.contains(u@));
-                            assert(self@.V.contains(u@));
                         }
                         let ng_u = self.ng(u);
                         neighbors = neighbors.union(&ng_u);
@@ -487,8 +485,6 @@ verus!
                     Some(u) => {
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
-                            assert(vertices_view.contains(u@));
-                            assert(self@.V.contains(u@));
                         }
                         let plus_u = self.n_plus(u);
                         out_neighbors = out_neighbors.union(&plus_u);
@@ -543,8 +539,6 @@ verus!
                     Some(u) => {
                         proof {
                             lemma_seq_index_in_map_to_set(u_seq, it@.0 - 1);
-                            assert(vertices_view.contains(u@));
-                            assert(self@.V.contains(u@));
                         }
                         let minus_u = self.n_minus(u);
                         in_neighbors = in_neighbors.union(&minus_u);
@@ -721,7 +715,6 @@ verus!
             let a_eq = self.A == other.A;
             proof {
                 if v_eq && a_eq {
-                    assert(self@ =~= other@);
                 }
             }
             v_eq && a_eq
