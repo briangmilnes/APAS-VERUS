@@ -1,0 +1,55 @@
+Mode: isolate
+Isolate: including Chap19 Chap06 Chap05 Chap02 Chap58 Chap56
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqStEph.rs:186:21
+    |
+186 |             ensures len as int == self.spec_len();
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+470 |             self.seq.len()
+    |             -------------- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+%return == old(self).spec_len() 
+
+error: postcondition not satisfied
+   --> src/Chap19/ArraySeqStEph.rs:194:21
+    |
+194 |             ensures *nth_elem == self.spec_index(index as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+475 |             &self.seq[index]
+    |              --------------- at the end of the function body
+
+error: precondition not satisfied
+   --> src/Chap19/ArraySeqStEph.rs:475:14
+    |
+475 |             &self.seq[index]
+    |              ^^^^^^^^^^^^^^^
+    |
+   --> vstd/std_specs/vec.rs:53:8
+    |
+    = note: failed precondition
+
+note: 
+
+%return == old(self).spec_index(old(index)) 
+
+note: recommendation not met
+   --> src/Chap19/ArraySeqStEph.rs:194:34
+    |
+156 |             recommends i < self.spec_len();
+    |                        ------------------- recommendation not met
+...
+194 |             ensures *nth_elem == self.spec_index(index as int);
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1452 verified, 2 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 3129MB, peak z3 RSS: 291MB, min free: 23189MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 610s

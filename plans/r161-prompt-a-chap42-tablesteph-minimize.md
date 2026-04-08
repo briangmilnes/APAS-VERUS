@@ -5,7 +5,8 @@
 1. **NEVER modify `~/projects/verus/`.** Not a single file.
 2. **NEVER run `rm -rf` on any directory.**
 3. **NEVER run PTTs.** Skip `scripts/ptt.sh` entirely.
-4. **NEVER delete `target/` or any subdirectory.**
+4. **NEVER run RTTs.** Skip `scripts/rtt.sh` entirely.
+5. **NEVER delete `target/` or any subdirectory.**
 
 ## Setup
 
@@ -29,9 +30,20 @@ For each function:
 ## What to keep
 
 - ALL lemma calls, `choose` expressions, `assert forall` headers.
-- Hash table index arithmetic proofs (modular arithmetic is real math).
+- ALL `lemma_entries_to_map_*` calls — Z3 cannot chain through `spec_entries_to_map`.
 - Key-value mapping proofs connecting entries to the Map view.
 - Well-formedness maintenance through insert/delete.
+- The `spec_index → kept@` bridge assert after `from_vec` — load-bearing.
+
+## Prior art from R160 (union was already minimized)
+
+R160 minimized `union` in this file. Key findings that apply to ALL remaining functions:
+- `spec_index` asserts MUST be placed **unconditionally before** if/else branches.
+  Z3 processes branches independently and cannot hoist facts from siblings.
+- `ArraySeqStEphS::lemma_view_index` bridges `spec_index` to the view — keep these.
+- Choose-equality restatements are usually redundant (Z3 derives from choose condition).
+- Length tautologies (`len == i + 1`, `len < usize::MAX`) are usually removable.
+- Duplicate bounds assertions established earlier in the block are removable.
 
 ## What to remove
 
@@ -42,24 +54,23 @@ For each function:
 
 | # | Function | Proof Lines | Asserts | Priority |
 |---|----------|-------------|---------|----------|
-| 1 | union | 239 | ~70 | First — biggest |
-| 2 | insert_wf | 191 | ~55 | |
-| 3 | insert | 141 | ~45 | |
-| 4 | delete_wf | 95 | ~30 | |
-| 5 | intersection | 90 | ~30 | |
-| 6 | difference | 81 | ~25 | |
-| 7 | filter | 78 | ~25 | |
-| 8 | delete | 67 | ~20 | |
-| 9 | restrict | 66 | ~20 | |
-| 10 | subtract | 66 | ~20 | |
-| 11 | tabulate | 59 | ~18 | |
+| 1 | insert_wf | 191 | ~55 | First — biggest remaining |
+| 2 | insert | 141 | ~45 | |
+| 3 | delete_wf | 95 | ~30 | |
+| 4 | intersection | 90 | ~30 | |
+| 5 | difference | 81 | ~25 | |
+| 6 | filter | 78 | ~25 | |
+| 7 | delete | 67 | ~20 | |
+| 8 | restrict | 66 | ~20 | |
+| 9 | subtract | 66 | ~20 | |
+| 10 | tabulate | 59 | ~18 | |
 
-334 asserts total. Start with union. Apply patterns to the rest.
+~288 asserts remaining (union already minimized in R160). Start with insert_wf.
 
 ## Validation
 
 `scripts/validate.sh isolate Chap42` — 94 seconds per run.
-Full `scripts/validate.sh` before pushing. Then `scripts/rtt.sh`.
+Full `scripts/validate.sh` before pushing.
 
 ## Report
 

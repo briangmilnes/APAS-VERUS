@@ -3,9 +3,6 @@
 
 set -uo pipefail
 
-# Acquire one of N exclusive slots (default 2) so concurrent agents don't OOM.
-source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
-
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 VERUS=~/projects/verus/source/target-verus/release/verus
 
@@ -67,6 +64,14 @@ case "$MODE" in
         ;;
 esac
 
+# Acquire lock slots: full=2 (heavy), isolate/other=1 (light).
+if [ "$MODE" = "full" ]; then
+    export VERUS_LOCK_WEIGHT=2
+else
+    export VERUS_LOCK_WEIGHT=1
+fi
+source "$(dirname "${BASH_SOURCE[0]}")/verus-lock.sh"
+
 TIME_FLAG=()
 if $USE_TIME; then
     TIME_FLAG=(--time)
@@ -85,6 +90,11 @@ LOGFILE="$LOGDIR/validate.$(date +%Y%m%d-%H%M%S).log"
 
 cd "$PROJECT_ROOT"
 START_SEC=$(date +%s)
+# Log mode and chapter info into the log file so agent logs are self-describing.
+echo "Mode: $MODE" >> "$LOGFILE"
+if [ "$MODE" = "isolate" ]; then
+    echo "Isolate: including $ALL_CHAPS" >> "$LOGFILE"
+fi
 echo "Starting verification at $(date '+%H:%M:%S')"
 
 # Memory monitor: sample peak RSS of rust_verify and z3 children every 2s.
@@ -127,7 +137,7 @@ MONITOR_PID=$!
 VERUS_EXTRA_ARGS="${VERUS_EXTRA_ARGS:-}"
 timeout 300 "$VERUS" --crate-type=lib src/lib.rs --multiple-errors 20 --expand-errors \
     --num-threads 8 \
-    "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" "${PROFILE_FLAG[@]}" $VERUS_EXTRA_ARGS 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee "$LOGFILE"
+    "${CFG_FLAG[@]}" "${TIME_FLAG[@]}" "${PROFILE_FLAG[@]}" $VERUS_EXTRA_ARGS 2>&1 | sed 's/\x1b\[[0-9;]*m//g' | tee -a "$LOGFILE"
 RC=${PIPESTATUS[0]}
 
 kill "$MONITOR_PID" 2>/dev/null; wait "$MONITOR_PID" 2>/dev/null

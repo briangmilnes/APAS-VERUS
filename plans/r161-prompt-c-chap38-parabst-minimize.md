@@ -5,7 +5,8 @@
 1. **NEVER modify `~/projects/verus/`.** Not a single file.
 2. **NEVER run `rm -rf` on any directory.**
 3. **NEVER run PTTs.** Skip `scripts/ptt.sh` entirely.
-4. **NEVER delete `target/` or any subdirectory.**
+4. **NEVER run RTTs.** Skip `scripts/rtt.sh` entirely.
+5. **NEVER delete `target/` or any subdirectory.**
 
 ## Setup
 
@@ -56,7 +57,7 @@ Start with difference. Apply patterns to the rest.
 ## Validation
 
 `scripts/validate.sh isolate Chap38` — estimated 20 seconds per run.
-Full `scripts/validate.sh` before pushing. Then `scripts/rtt.sh`.
+Full `scripts/validate.sh` before pushing.
 
 ## Report
 
