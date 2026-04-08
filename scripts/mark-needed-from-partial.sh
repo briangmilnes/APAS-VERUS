@@ -30,14 +30,19 @@ for f in "${CHAPDIR}"/*.rs; do
     FNAME=$(basename "$f")
 
     # Step 1: Restore TESTING lines (uncomment the code).
-    # Format: // Veracity: TESTING assert    assert(foo);
-    #      or // Veracity: TESTING <code>
+    # Format: <indent>// Veracity: TESTING assert    assert(foo);
+    #      or <indent>// Veracity: TESTING proof block    proof {
+    #      or <indent>// Veracity: TESTING admit    admit();
+    # The kind word(s) + whitespace before the original code must all be stripped.
     TESTING_COUNT=$(grep -c "// Veracity: TESTING" "$f" || true)
     if [ "$TESTING_COUNT" -gt 0 ]; then
-        # Strip the // Veracity: TESTING prefix, preserving indentation and code.
-        # The format is: <indent>// Veracity: TESTING <kind>    <original code>
-        # We need to extract the original code after the marker+kind.
-        sed -i 's|^\([[:space:]]*\)// Veracity: TESTING[^[:space:]]* *|\1|' "$f"
+        # Strip: // Veracity: TESTING <kind> <whitespace>
+        # Kind can be "assert", "admit", or "proof block" (two words).
+        # After the kind there are multiple spaces before the original code.
+        sed -i 's|^\([[:space:]]*\)// Veracity: TESTING proof block  *|\1|;
+                 s|^\([[:space:]]*\)// Veracity: TESTING assert  *|\1|;
+                 s|^\([[:space:]]*\)// Veracity: TESTING admit  *|\1|;
+                 s|^\([[:space:]]*\)// Veracity: TESTING[[:space:]]*|\1|' "$f"
         TOTAL_TESTING=$((TOTAL_TESTING + TESTING_COUNT))
         echo "  $FNAME: restored $TESTING_COUNT TESTING lines"
     fi
