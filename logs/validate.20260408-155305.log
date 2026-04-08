@@ -1,0 +1,39 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap42/TableSpecsAndLemmas.rs:498:13
+    |
+484 | /     pub proof fn lemma_subseq_value_agrees<KV, VV>(
+485 | |         original: Seq<(KV, VV)>,
+486 | |         filtered: Seq<(KV, VV)>,
+487 | |         sources: Seq<int>,
+488 | |     )
+    | |_____- at the end of the function body
+...
+498 | /             forall|k: KV| spec_entries_to_map(filtered).contains_key(k) ==> (
+499 | |                 spec_entries_to_map(original).contains_key(k)
+500 | |                 && #[trigger] spec_entries_to_map(filtered)[k]
+501 | |                     == spec_entries_to_map(original)[k]
+502 | |             ),
+    | |_____________^ failed this postcondition
+
+note: diagnostics via expansion
+   --> src/Chap42/TableSpecsAndLemmas.rs:499:17
+    |
+499 |                 spec_entries_to_map(original).contains_key(k)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+forall |k|
+    spec_entries_to_map(old(filtered)).dom().contains(k) ==>
+        spec_entries_to_map(old(original)).dom().contains(k) ✘
+            function is uninterpreted
+        spec_entries_to_map(old(filtered)).index(k) == spec_entries_to_map(old(original)).index(k) ✔
+
+verification results:: 2391 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 2140MB, peak z3 RSS: 395MB, min free: 21611MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 41s

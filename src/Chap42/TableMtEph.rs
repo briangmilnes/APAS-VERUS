@@ -782,43 +782,17 @@ broadcast use {
             }
             self.entries = ArraySeqMtEphS::from_vec(kept);
             proof {
-                assert forall|k: K::V|
-                    #[trigger] self@.dom().contains(k)
-                    implies spec_entries_to_map(old_view).dom().contains(k)
+                // Bridge: connect view-level entries to kept via spec_index.
+                assert forall|j: int| 0 <= j < sources.len() implies
+                    0 <= #[trigger] sources[j] < old_view.len()
+                    && self.entries@[j] == old_view[sources[j]]
                 by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    assert(old_view[s].0 == kept@[idx].0@);
-                    lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
+                    assert(self.entries.spec_index(j) == kept@[j]);
                 };
-                assert(spec_keys_no_dups(self.entries@)) by {
-                    assert forall|j1: int, j2: int|
-                        0 <= j1 < j2 < self.entries@.len()
-                        implies (#[trigger] self.entries@[j1]).0
-                            != (#[trigger] self.entries@[j2]).0
-                    by {
-                        assert(self.entries.spec_index(j1) == kept@[j1]);
-                        assert(self.entries.spec_index(j2) == kept@[j2]);
-                        assert(sources[j1] < sources[j2]);
-                        assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
-                    };
-                };
-                assert forall|k: K::V|
-                    #[trigger] self@.contains_key(k)
-                    implies self@[k] == spec_entries_to_map(old_view)[k]
-                by {
-                    lemma_entries_to_map_key_in_seq::<K::V, V::V>(self.entries@, k);
-                    let idx = choose|idx: int| 0 <= idx < self.entries@.len()
-                        && (#[trigger] self.entries@[idx]).0 == k;
-                    assert(self.entries.spec_index(idx) == kept@[idx]);
-                    let s = sources[idx];
-                    lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
-                    lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
-                    assert(kept@[idx].1@ == old_view[s].1);
-                };
+                lemma_subseq_no_dups::<K::V, V::V>(old_view, self.entries@, sources);
+                lemma_subseq_dom_forward::<K::V, V::V>(old_view, self.entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(old_view, self.entries@, sources);
+                // Completeness: every key satisfying spec_pred was kept.
                 assert forall|k: K::V|
                     spec_entries_to_map(old_view).dom().contains(k)
                     && spec_pred(k, spec_entries_to_map(old_view)[k])
@@ -828,11 +802,8 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
-                    assert(spec_pred(old_view[si].0, old_view[si].1));
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
                     assert(self.entries.spec_index(j) == kept@[j]);
-                    assert(kept@[j].0@ == old_view[si].0);
-                    assert(self.entries@[j].0 == k);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                 };
             }
@@ -980,20 +951,13 @@ broadcast use {
                     }
                 };
                 // No duplicate keys in result.
-                assert(spec_keys_no_dups(self.entries@)) by {
-                    assert forall|a: int, b: int|
-                        0 <= a < b < self.entries@.len()
-                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
-                    by {
-                        assert(self.entries.spec_index(a) == kept@[a]);
-                        assert(self.entries.spec_index(b) == kept@[b]);
-                        let sa = self_srcs[a];
-                        let sb = self_srcs[b];
-                        // self_srcs is strictly increasing.
-                        assert(sa < sb);
-                        assert(old_self_view[sa].0 != old_self_view[sb].0);
-                    };
+                assert forall|j: int| 0 <= j < self_srcs.len() implies
+                    0 <= #[trigger] self_srcs[j] < old_self_view.len()
+                    && self.entries@[j].0 == old_self_view[self_srcs[j]].0
+                by {
+                    assert(self.entries.spec_index(j) == kept@[j]);
                 };
+                lemma_subseq_no_dups::<K::V, V::V>(old_self_view, self.entries@, self_srcs);
                 // Combine ensures: for each key k in result, witness v1, v2, r.
                 assert forall|k: K::V| #[trigger] self@.contains_key(k) implies
                     (exists|v1: V, v2: V, r: V|
@@ -1566,16 +1530,19 @@ broadcast use {
             }
             self.entries = ArraySeqMtEphS::from_vec(kept);
             proof {
-                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
-                let ghost target_dom = spec_entries_to_map(old_self_view).dom().difference(
-                    other@.dom());
-                // View-level subsequence connection.
+                // Bridge: connect view-level entries to kept via spec_index.
                 assert forall|j: int| 0 <= j < sources.len() implies
                     0 <= #[trigger] sources[j] < old_self_view.len()
                     && self.entries@[j] == old_self_view[sources[j]]
                 by {
                     assert(self.entries.spec_index(j) == kept@[j]);
                 };
+                lemma_subseq_no_dups::<K::V, V::V>(old_self_view, self.entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(old_self_view, self.entries@, sources);
+                // Dom equivalence: result = old \ other.
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_self_view).dom().difference(
+                    other@.dom());
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
@@ -1595,24 +1562,6 @@ broadcast use {
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
-                };
-                assert forall|k: K::V|
-                    #[trigger] self@.contains_key(k)
-                    implies self@[k] == spec_entries_to_map(old_self_view)[k]
-                by {
-                    lemma_entries_to_map_subseq_value::<K::V, V::V>(
-                        old_self_view, self.entries@, sources, k);
-                };
-                // Prove wf: no_dups from subsequence of old no-dup entries.
-                assert(spec_keys_no_dups(self.entries@)) by {
-                    assert forall|a: int, b: int|
-                        0 <= a < b < self.entries@.len()
-                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
-                    by {
-                        assert(sources[a] < sources[b]);
-                        assert(self.entries@[a] == old_self_view[sources[a]]);
-                        assert(self.entries@[b] == old_self_view[sources[b]]);
-                    };
                 };
             }
         }
@@ -2033,15 +1982,18 @@ broadcast use {
             }
             self.entries = ArraySeqMtEphS::from_vec(kept);
             proof {
-                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
-                let ghost target_dom = spec_entries_to_map(old_view).dom().intersect(keys@);
-                // View-level subsequence connection.
+                // Bridge: connect view-level entries to kept via spec_index.
                 assert forall|j: int| 0 <= j < sources.len() implies
                     0 <= #[trigger] sources[j] < old_view.len()
                     && self.entries@[j] == old_view[sources[j]]
                 by {
                     assert(self.entries.spec_index(j) == kept@[j]);
                 };
+                lemma_subseq_no_dups::<K::V, V::V>(old_view, self.entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(old_view, self.entries@, sources);
+                // Dom equivalence: result = old ∩ keys@.
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_view).dom().intersect(keys@);
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
@@ -2060,24 +2012,6 @@ broadcast use {
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
-                };
-                assert forall|k: K::V|
-                    #[trigger] self@.contains_key(k)
-                    implies self@[k] == spec_entries_to_map(old_view)[k]
-                by {
-                    lemma_entries_to_map_subseq_value::<K::V, V::V>(
-                        old_view, self.entries@, sources, k);
-                };
-                // Prove wf: no_dups from subsequence of old no-dup entries.
-                assert(spec_keys_no_dups(self.entries@)) by {
-                    assert forall|a: int, b: int|
-                        0 <= a < b < self.entries@.len()
-                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
-                    by {
-                        assert(sources[a] < sources[b]);
-                        assert(self.entries@[a] == old_view[sources[a]]);
-                        assert(self.entries@[b] == old_view[sources[b]]);
-                    };
                 };
             }
         }
@@ -2140,15 +2074,18 @@ broadcast use {
             }
             self.entries = ArraySeqMtEphS::from_vec(kept);
             proof {
-                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
-                let ghost target_dom = spec_entries_to_map(old_view).dom().difference(keys@);
-                // View-level subsequence connection.
+                // Bridge: connect view-level entries to kept via spec_index.
                 assert forall|j: int| 0 <= j < sources.len() implies
                     0 <= #[trigger] sources[j] < old_view.len()
                     && self.entries@[j] == old_view[sources[j]]
                 by {
                     assert(self.entries.spec_index(j) == kept@[j]);
                 };
+                lemma_subseq_no_dups::<K::V, V::V>(old_view, self.entries@, sources);
+                lemma_subseq_value_agrees::<K::V, V::V>(old_view, self.entries@, sources);
+                // Dom equivalence: result = old \ keys@.
+                let ghost result_dom = spec_entries_to_map(self.entries@).dom();
+                let ghost target_dom = spec_entries_to_map(old_view).dom().difference(keys@);
                 assert forall|k: K::V| result_dom.contains(k) == target_dom.contains(k)
                 by {
                     if result_dom.contains(k) {
@@ -2167,24 +2104,6 @@ broadcast use {
                         assert(self.entries.spec_index(j) == kept@[j]);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                     }
-                };
-                assert forall|k: K::V|
-                    #[trigger] self@.contains_key(k)
-                    implies self@[k] == old_map[k]
-                by {
-                    lemma_entries_to_map_subseq_value::<K::V, V::V>(
-                        old_view, self.entries@, sources, k);
-                };
-                // Prove wf: no_dups from subsequence of old no-dup entries.
-                assert(spec_keys_no_dups(self.entries@)) by {
-                    assert forall|a: int, b: int|
-                        0 <= a < b < self.entries@.len()
-                        implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
-                    by {
-                        assert(sources[a] < sources[b]);
-                        assert(self.entries@[a] == old_view[sources[a]]);
-                        assert(self.entries@[b] == old_view[sources[b]]);
-                    };
                 };
             }
         }
