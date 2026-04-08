@@ -86,9 +86,6 @@ pub mod OrderStatSelectMtEph {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
-        assert(reflexive(leq)) by {
-            assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
-        };
         assert(antisymmetric(leq)) by {
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
@@ -178,12 +175,10 @@ pub mod OrderStatSelectMtEph {
         }
         proof {
             let ghost target = a_orig + b@;
-            assert(a@.len() == target.len());
             assert forall|k: int| 0 <= k < a@.len()
                 implies a@[k] == #[trigger] target[k] by
             {
                 if k < alen as int {
-                    assert(a@[k] == a_orig[k]);
                 } else {
                     let kp = k - alen as int;
                     assert(a@[alen as int + kp] == b@[kp]);
@@ -222,12 +217,9 @@ pub mod OrderStatSelectMtEph {
         } else if n == 1 {
             let elem = a.nth_cloned(0);
             proof {
-                assert(spec_slice_elements(*a).len() == 1);
-                assert(spec_slice_elements(*a)[0] == elem);
             }
             match TotalOrder::cmp(&elem, pivot) {
                 core::cmp::Ordering::Less => {
-                    proof { assert(T::le(elem, *pivot)); assert(elem != *pivot); }
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     proof {
@@ -244,7 +236,6 @@ pub mod OrderStatSelectMtEph {
                     (Vec::new(), v, Vec::new())
                 }
                 core::cmp::Ordering::Greater => {
-                    proof { assert(T::le(*pivot, elem)); assert(elem != *pivot); }
                     let mut v: Vec<T> = Vec::new();
                     v.push(elem);
                     proof {
@@ -312,15 +303,12 @@ pub mod OrderStatSelectMtEph {
 
             proof {
                 let ghost ea = spec_slice_elements(*a);
-                assert(ea.len() == left_elems.len() + right_elems.len());
                 assert forall|k: int| 0 <= k < ea.len()
                     implies ea[k] == #[trigger] (left_elems + right_elems)[k] by
                 {
                     if k < left_elems.len() {
-                        assert(left_half.spec_index(k) == a.spec_index(k));
                     } else {
                         let kp = k - left_elems.len();
-                        assert(right_half.spec_index(kp) == a.spec_index(mid as int + kp));
                     }
                 };
                 assert(ea =~= left_elems + right_elems);
@@ -330,8 +318,6 @@ pub mod OrderStatSelectMtEph {
                 vstd::seq_lib::lemma_multiset_commutative(e1_pre, e2@);
                 vstd::seq_lib::lemma_multiset_commutative(r1_pre, r2@);
 
-                assert(ea.to_multiset() =~=
-                    l1@.to_multiset().add(r1@.to_multiset()).add(e1@.to_multiset()));
             }
 
             (l1, e1, r1)
@@ -388,21 +374,16 @@ pub mod OrderStatSelectMtEph {
             ci = ci + 1;
         }
 
-        proof { assert(data@ =~= s); }
 
         let ghost data_view = data@;
         let slice_a = ArraySeqMtEphSliceS::from_vec(data);
 
         proof {
             let ghost se = spec_slice_elements(slice_a);
-            assert(se.len() == s.len());
             assert forall|i: int| 0 <= i < s.len()
                 implies se[i] == #[trigger] s[i] by
             {
-                assert(slice_a.spec_index(i) == data_view[i]);
-                assert(data_view[i] == s[i]);
             };
-            assert(se =~= s);
         }
 
         let (left, eq_vec, right) = partition_three_dc(&slice_a, &pivot);
@@ -417,22 +398,21 @@ pub mod OrderStatSelectMtEph {
             // Pivot is in s at index pivot_idx, so s.to_multiset().count(pivot) >= 1.
             assert(s[pivot_idx as int] == pivot);
             assert(s.to_multiset().count(pivot) >= 1nat) by {
-                assert(s.contains(pivot));
             };
 
             // All pivot elements go into eq_vec. Elements in left and right are != pivot.
             // So eq_vec.to_multiset().count(pivot) == s.to_multiset().count(pivot) >= 1.
-            assert(left@.to_multiset().count(pivot) == 0nat) by {
-                if left@.len() > 0 {
-                    assert forall|j: int| 0 <= j < left@.len() implies left@[j] != pivot by {};
-                }
-                if left@.to_multiset().count(pivot) > 0 {
-                    assert(left@.to_multiset().count(pivot) > 0);
-                    assert(left@.contains(pivot));
-                    let idx = choose|idx: int| 0 <= idx < left@.len() && left@[idx] == pivot;
-                    assert(left@[idx] != pivot);
-                }
-            };
+// Veracity: TESTING assert             assert(left@.to_multiset().count(pivot) == 0nat) by {
+// Veracity: TESTING assert                 if left@.len() > 0 {
+// Veracity: TESTING assert                     assert forall|j: int| 0 <= j < left@.len() implies left@[j] != pivot by {};
+// Veracity: TESTING assert                 }
+// Veracity: TESTING assert                 if left@.to_multiset().count(pivot) > 0 {
+// Veracity: TESTING assert                     assert(left@.to_multiset().count(pivot) > 0);
+// Veracity: TESTING assert                     assert(left@.contains(pivot));
+// Veracity: TESTING assert                     let idx = choose|idx: int| 0 <= idx < left@.len() && left@[idx] == pivot;
+// Veracity: TESTING assert                     assert(left@[idx] != pivot);
+// Veracity: TESTING assert                 }
+// Veracity: TESTING assert             };
 
             assert(right@.to_multiset().count(pivot) == 0nat) by {
                 if right@.to_multiset().count(pivot) > 0 {
