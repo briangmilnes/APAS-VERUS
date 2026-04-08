@@ -26,7 +26,7 @@ pub mod CycleDetectStPer {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+    use crate::Chap55::DFSSpecsAndLemmas::DFSSpecsAndLemmas::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_usize_per_view_eq_spec_index, lemma_graph_per_view_bridge};
     #[cfg(verus_keep_ghost)]
     use crate::Chap55::TopoSortStPer::TopoSortStPer::{spec_is_dag_per, spec_has_edge_per, spec_is_path_per};
     #[cfg(verus_keep_ghost)]
@@ -94,28 +94,6 @@ broadcast use vstd::seq::group_seq_axioms;
     }
 
     //		Section 7. proof fns/broadcast groups
-
-
-    /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
-    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
-        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
-    {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
-    }
-
-    /// Bridge: persistent graph adjacency list view at vertex equals spec_index view.
-    proof fn lemma_graph_per_view_bridge(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
-        neighbors: &ArraySeqStPerS<usize>,
-        vertex: int,
-    )
-        requires
-            0 <= vertex < graph@.len(),
-            *neighbors == graph.spec_index(vertex),
-        ensures
-            neighbors@ =~= graph@[vertex],
-    {
-    }
 
 
     /// If a path has a repeated vertex, the graph (persistent) is not a DAG.

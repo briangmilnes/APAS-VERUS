@@ -26,7 +26,9 @@ pub mod DFSStEph {
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     use crate::Chap41::AVLTreeSetStEph::AVLTreeSetStEph::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len};
+    use crate::Chap55::DFSSpecsAndLemmas::DFSSpecsAndLemmas::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_bool_view_eq_spec_index, lemma_usize_view_eq_spec_index, lemma_graph_view_bridge};
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_toposortsteph_wf, spec_reachable, spec_has_edge, spec_is_path};
     use crate::Types::Types::*;
 
     verus! 
@@ -46,35 +48,6 @@ broadcast use vstd::seq::group_seq_axioms;
     pub struct DFSStEph;
 
     //		Section 7. proof fns/broadcast groups
-
-
-    /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
-        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
-    {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
-    }
-
-    /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
-    proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
-        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
-    {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
-    }
-
-    /// Bridge: for graph adjacency list, the view at vertex equals the spec_index view.
-    proof fn lemma_graph_view_bridge(
-        graph: &ArraySeqStEphS<ArraySeqStEphS<usize>>,
-        neighbors: &ArraySeqStEphS<usize>,
-        vertex: int,
-    )
-        requires
-            0 <= vertex < graph@.len(),
-            *neighbors == graph.spec_index(vertex),
-        ensures
-            neighbors@ =~= graph@[vertex],
-    {
-    }
 
 
     /// A vertex is trivially reachable from itself.

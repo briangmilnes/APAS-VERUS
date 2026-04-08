@@ -601,6 +601,7 @@ pub mod Chap53 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap54")))]
 pub mod Chap54 {
+    pub mod BFSSpecsAndLemmas;
     pub mod BFSStEph;
     pub mod BFSStPer;
     pub mod BFSMtEph;
@@ -609,6 +610,7 @@ pub mod Chap54 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap55")))]
 pub mod Chap55 {
+    pub mod DFSSpecsAndLemmas;
     pub mod DFSStEph;
     pub mod DFSStPer;
     pub mod TopoSortStEph;

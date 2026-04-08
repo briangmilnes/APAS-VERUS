@@ -1,0 +1,322 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:421:21
+    |
+421 | /                     forall|j: int| #![trigger next_verts@[j]] 0 <= j < next_verts@.len() ==>
+422 | |                         next_verts@[j] < n,
+    | |__________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:423:21
+    |
+423 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+424 | |                         (updates@[j]).0 < n
+425 | |                         && (updates@[j]).1 == next_dist
+426 | |                         && distances.spec_index((updates@[j]).0 as int) == UNREACHABLE,
+    | |______________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:430:21
+    |
+430 |                 if *distances.nth(v) == UNREACHABLE {
+    |                     ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:255:22
+    |
+255 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+v < distances.spec_len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:574:21
+    |
+574 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+575 | |                         (updates@[j]).0 < n
+576 | |                         && (updates@[j]).1 < n
+577 | |                         && parents.spec_index((updates@[j]).0 as int) == NO_PARENT,
+    | |__________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:581:21
+    |
+581 |                 if *parents.nth(v) == NO_PARENT {
+    |                     ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:255:22
+    |
+255 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < parents.spec_len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:423:21
+    |
+423 | /                     forall|j: int| 0 <= j < next_verts@.len() ==>
+424 | |                         #[trigger] next_verts@[j] < n,
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:425:21
+    |
+425 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+426 | |                         updates@[j].0 < n
+427 | |                         && updates@[j].1 == next_dist
+428 | |                         && distances.spec_index(updates@[j].0 as int) == UNREACHABLE,
+    | |____________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:432:21
+    |
+432 |                 if *distances.nth(v) == UNREACHABLE {
+    |                     ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:147:22
+    |
+147 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < distances.spec_len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:585:21
+    |
+585 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+586 | |                         updates@[j].0 < n
+587 | |                         && updates@[j].1 < n
+588 | |                         && parents.spec_index(updates@[j].0 as int) == NO_PARENT,
+    | |________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:592:21
+    |
+592 |                 if *parents.nth(v) == NO_PARENT {
+    |                     ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:147:22
+    |
+147 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < parents.spec_len() 
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSStEph.rs:327:29
+    |
+327 | ...                   dist < n,
+    |                       ^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:329:29
+    |
+329 | / ...                   forall|j: int| 0 <= j < queue@.len() ==>
+330 | | ...                       (#[trigger] queue@[j]) < n,
+    | |____________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:341:29
+    |
+341 |                         if *distances.nth(v) == UNREACHABLE {
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:191:22
+    |
+191 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:344:41
+    |
+344 | ...                   let _ = distances.set(v, dist + 1);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:173:22
+    |
+173 |             requires index < old(self).spec_len()
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:348:37
+    |
+189 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+348 | /                                     lemma_set_preserves_bounded(
+349 | |                                         &distances, &pre_inner_set,
+350 | |                                         v as int, (dist + 1) as usize, n as int,
+351 | |                                     );
+    | |_____________________________________^
+
+note: 
+
+v < distances.spec_len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:444:29
+    |
+444 | ...                   forall|j: int| 0 <= j < queue@.len() ==> (#[trigger] queue@[j]) < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:451:29
+    |
+451 | ...                   forall|j: int| 0 <= j < order@.len() ==> (#[trigger] order@[j]) < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:458:29
+    |
+458 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:191:22
+    |
+191 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:460:37
+    |
+460 | ...                   let _ = parents.set(v, u);
+    |                               ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:173:22
+    |
+173 |             requires index < old(self).spec_len()
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:465:33
+    |
+152 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+465 | /                                 lemma_set_preserves_parents_bounded(
+466 | |                                     &parents, &pre_inner,
+467 | |                                     v as int, u, n as int,
+468 | |                                 );
+    | |_________________________________^
+
+note: 
+
+v < parents.spec_len() 
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSStPer.rs:317:29
+    |
+317 | ...                   dist < n,
+    |                       ^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:319:29
+    |
+319 | / ...                   forall|j: int| 0 <= j < queue@.len() ==>
+320 | | ...                       #[trigger] queue@[j] < n,
+    | |__________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:331:29
+    |
+331 |                         if *distances.nth(v) == UNREACHABLE {
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:179:22
+    |
+179 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:334:45
+    |
+334 | ...                   distances = ArraySeqStPerS::update(&old_d_inner, v, dist + 1);
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:274:17
+    |
+274 |                 index < a.seq@.len(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:338:37
+    |
+188 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+338 | /                                     lemma_update_preserves_bounded(
+339 | |                                         &distances, &old_d_inner,
+340 | |                                         v as int, (dist + 1) as usize, n as int,
+341 | |                                     );
+    | |_____________________________________^
+
+note: 
+
+v < distances.spec_len() 
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:434:29
+    |
+434 | ...                   forall|j: int| 0 <= j < queue@.len() ==> #[trigger] queue@[j] < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:441:29
+    |
+441 | ...                   forall|j: int| 0 <= j < order@.len() ==> #[trigger] order@[j] < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:448:29
+    |
+448 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:179:22
+    |
+179 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:450:39
+    |
+450 | ...                   parents = ArraySeqStPerS::update(&old_p_inner, v, u);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:274:17
+    |
+274 |                 index < a.seq@.len(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:455:33
+    |
+152 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+455 | /                                 lemma_update_preserves_parents_bounded(
+456 | |                                     &parents, &old_p_inner,
+457 | |                                     v as int, u, n as int,
+458 | |                                 );
+    | |_________________________________^
+
+note: 
+
+v < parents.spec_len() 
+
+verification results:: 1360 verified, 10 errors
+error: aborting due to 30 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1051MB, peak z3 RSS: 309MB, min free: 23660MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 11s
