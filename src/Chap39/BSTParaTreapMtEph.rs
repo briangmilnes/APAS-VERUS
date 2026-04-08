@@ -5,11 +5,9 @@
 
 //  Table of Contents
 //	Section 1. module
-//	Section 2. imports
+//	Section 2. imports (pub use BSTTreapSpecsAndLemmas::*)
 //	Section 3. broadcast use
 //	Section 4a. type definitions
-//	Section 6a. spec fns
-//	Section 7a. proof fns/broadcast groups
 //	Section 9a. impls
 //	Section 4b. type definitions
 //	Section 4c. type definitions
@@ -45,6 +43,7 @@ pub mod BSTParaTreapMtEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::OrdSpec;
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    pub use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::*;
     use crate::Types::Types::*;
     use crate::vstdplus::clone_view::clone_view::ClonePreservesView;
     use crate::vstdplus::smart_ptrs::smart_ptrs::arc_deref;
@@ -64,163 +63,6 @@ pub mod BSTParaTreapMtEph {
     /// so the type_invariant can fully characterise the locked value.
     pub struct BSTParaTreapMtEphInv<T: MtKey> {
         pub ghost contents: Set<<T as View>::V>,
-    }
-
-    //		Section 6a. spec fns
-
-
-    /// View-consistent ordering: elements with equal views compare Equal.
-    pub open spec fn view_ord_consistent<T: MtKey>() -> bool {
-        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
-    }
-
-    //		Section 7a. proof fns/broadcast groups
-
-
-    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    pub proof fn lemma_cmp_antisymmetry<T: MtKey>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Greater,
-        ensures b.cmp_spec(&a) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec antisymmetry: Less(a,b) implies Greater(b,a).
-    pub proof fn lemma_cmp_antisymmetry_less<T: MtKey>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Less,
-        ensures b.cmp_spec(&a) == Greater,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
-    pub proof fn lemma_cmp_transitivity<T: MtKey>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Less,
-        ensures a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
-    pub proof fn lemma_cmp_eq_subst<T: MtKey>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Equal,
-        ensures a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
-    pub proof fn lemma_cmp_equal_congruent<T: MtKey>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Equal,
-        ensures a.cmp_spec(&c) == b.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
-    pub proof fn lemma_cmp_equal_congruent_right<T: MtKey>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            b.cmp_spec(&c) == Equal,
-        ensures a.cmp_spec(&b) == a.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// After join(lr, key, right), every element is greater than lk.
-    /// Hypotheses: lr > lk, right > key, lk ∈ left, all left < key.
-    proof fn lemma_joined_right_gt_lk<T: MtKey>(
-        lrv: Set<T::V>,
-        right_v: Set<T::V>,
-        key: T,
-        joined_v: Set<T::V>,
-        lk: T,
-        left_v: Set<T::V>,
-    )
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            joined_v =~= lrv.union(right_v).insert(key@),
-            forall|t: T| (#[trigger] lrv.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
-            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
-            left_v.contains(lk@),
-            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
-        ensures
-            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&lk) == Greater,
-    {
-        // Veracity: NEEDED assert
-        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&lk) == Greater by {
-            if lrv.contains(t@) {
-                // t ∈ lr: expose ensures t.cmp(&lk) == Greater ✓
-            } else if right_v.contains(t@) {
-                // t > key (req); lk < key (lk ∈ left, req); key < t → lk < t.
-                lemma_cmp_antisymmetry(t, key);      // key.cmp(&t) == Less
-                lemma_cmp_transitivity(lk, key, t);  // lk.cmp(&t) == Less
-                lemma_cmp_antisymmetry_less(lk, t);  // t.cmp(&lk) == Greater
-            } else {
-                // t@ == key@
-                lemma_cmp_equal_congruent_right(lk, t, key);  // lk.cmp(&t) == lk.cmp(&key) == Less
-                lemma_cmp_antisymmetry_less(lk, t);           // t.cmp(&lk) == Greater
-            }
-        }
-    }
-
-    /// After join(left, key, rl), every element is less than rk.
-    /// Hypotheses: left < key, rl < rk, rk ∈ right, all right > key.
-    proof fn lemma_joined_left_lt_rk<T: MtKey>(
-        left_v: Set<T::V>,
-        rlv: Set<T::V>,
-        key: T,
-        joined_v: Set<T::V>,
-        rk: T,
-        right_v: Set<T::V>,
-    )
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            joined_v =~= left_v.union(rlv).insert(key@),
-            forall|t: T| (#[trigger] left_v.contains(t@)) ==> t.cmp_spec(&key) == Less,
-            forall|t: T| (#[trigger] rlv.contains(t@)) ==> t.cmp_spec(&rk) == Less,
-            right_v.contains(rk@),
-            forall|t: T| (#[trigger] right_v.contains(t@)) ==> t.cmp_spec(&key) == Greater,
-        ensures
-            forall|t: T| (#[trigger] joined_v.contains(t@)) ==> t.cmp_spec(&rk) == Less,
-    {
-        // Veracity: NEEDED assert
-        assert forall|t: T| (#[trigger] joined_v.contains(t@)) implies t.cmp_spec(&rk) == Less by {
-            if left_v.contains(t@) {
-                // t < key (req); key < rk (antisymmetry of rk > key).
-                lemma_cmp_antisymmetry(rk, key);     // key.cmp(&rk) == Less
-                lemma_cmp_transitivity(t, key, rk);  // t.cmp(&rk) == Less
-            } else if rlv.contains(t@) {
-                // t ∈ rl: expose ensures t.cmp(&rk) == Less ✓
-            } else {
-                // t@ == key@; key < rk from above.
-                lemma_cmp_antisymmetry(rk, key);        // key.cmp(&rk) == Less
-                lemma_cmp_equal_congruent(t, key, rk);  // t.cmp(&rk) == key.cmp(&rk) == Less
-            }
-        }
     }
 
     //		Section 9a. impls
