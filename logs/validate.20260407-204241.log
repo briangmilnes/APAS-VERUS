@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:2188:28
+     |
+2188 |                     assert(sv_idx == idx);
+     |                            ^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+sv_idx == idx 
+
+note: recommendation not met
+    --> src/Chap42/TableStEph.rs:2063:55
+     |
+2063 |             let ghost old_stored_at_key: Pair<K, V> = old_exec_seq[match_index as int];
+     |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+verification results:: 2413 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 3563MB, peak z3 RSS: 597MB, min free: 18336MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 59s

@@ -647,7 +647,6 @@ broadcast use {
                         if old_keys.contains(k) {
                             let j = choose|j: int| 0 <= j < i as int
                                 && (#[trigger] self.entries@[j]).0 == k;
-                            assert(j < i as int + 1);
                         } else {
                             assert(self.entries@[i as int].0 == k);
                         }
@@ -711,17 +710,13 @@ broadcast use {
                     implies (#[trigger] seq@[j]).0 == key_seq@[j]
                 by {
                     assert(seq.spec_index(j) == entries@[j]);
-                    assert(entries@[j].0@ == key_seq@[j]);
                 };
                 // No duplicate keys since key_seq has no duplicates.
                 assert(spec_keys_no_dups(seq@)) by {
                     assert forall|i: int, j: int|
                         0 <= i < j < seq@.len()
                         implies (#[trigger] seq@[i]).0 != (#[trigger] seq@[j]).0
-                    by {
-                        assert(seq@[i].0 == key_seq@[i]);
-                        assert(seq@[j].0 == key_seq@[j]);
-                    };
+                    by {};
                 };
                 // Domain matches keys@.
                 assert forall|k: K::V|
@@ -731,12 +726,11 @@ broadcast use {
                         lemma_entries_to_map_key_in_seq::<K::V, V::V>(seq@, k);
                         let j = choose|j: int| 0 <= j < seq@.len()
                             && (#[trigger] seq@[j]).0 == k;
-                        assert(key_seq@[j] == k);
+                        let _ = j;
                     }
                     if keys@.contains(k) {
                         let j = choose|j: int| 0 <= j < key_seq@.len()
                             && key_seq@[j] == k;
-                        assert(seq@[j].0 == k);
                         lemma_entries_to_map_contains_key::<K::V, V::V>(seq@, j);
                     }
                 };
@@ -752,9 +746,7 @@ broadcast use {
                         && (#[trigger] seq@[j]).0 == k;
                     assert(seq.spec_index(j) == entries@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(seq@, j);
-                    assert(f.ensures((&key_seq.seq@[j],), entries@[j].1));
                     assert(key_seq.seq@[j]@ == key_seq@[j]);
-                    assert(seq@[j].1 == entries@[j].1@);
                 };
             }
             TableStEph { entries: seq }
@@ -800,11 +792,7 @@ broadcast use {
                     assert forall|a: int, b: int|
                         0 <= a < b < self.entries@.len()
                         implies (#[trigger] self.entries@[a]).0 != (#[trigger] self.entries@[b]).0
-                    by {
-                        assert(self.entries@[a].0 == old_entries[a].0);
-                        assert(self.entries@[b].0 == old_entries[b].0);
-                        assert(old_entries[a].0 != old_entries[b].0);
-                    };
+                    by {};
                 };
                 // Closure ensures postcondition.
                 assert forall|k: K::V|
@@ -820,9 +808,6 @@ broadcast use {
                     assert(self.entries.spec_index(j) == mapped@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_entries, j);
-                    assert(f.ensures((&old_raw[j].1,), mapped@[j].1));
-                    assert(old_raw[j].1@ == old_entries[j].1);
-                    assert(mapped@[j].1@ == self.entries@[j].1);
                 };
             }
         }
@@ -881,11 +866,6 @@ broadcast use {
                             }
                         };
                     }
-                } else {
-                    proof {
-                        // f returned false, so spec_pred is false for this entry.
-                        assert(!spec_pred(old_view[i as int].0, old_view[i as int].1));
-                    }
                 }
                 i += 1;
             }
@@ -900,7 +880,6 @@ broadcast use {
                         && (#[trigger] self.entries@[idx]).0 == k;
                     assert(self.entries.spec_index(idx) == kept@[idx]);
                     let s = sources[idx];
-                    assert(old_view[s].0 == kept@[idx].0@);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, s);
                 };
                 // No duplicate keys.
@@ -913,7 +892,6 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
-                        assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
                     };
                 };
                 // Value preservation.
@@ -928,7 +906,6 @@ broadcast use {
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
-                    assert(kept@[idx].1@ == old_view[s].1);
                 };
                 // Completeness: every key satisfying spec_pred was kept.
                 assert forall|k: K::V|
@@ -940,10 +917,8 @@ broadcast use {
                     let si = choose|si: int| 0 <= si < old_view.len()
                         && (#[trigger] old_view[si]).0 == k;
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
-                    assert(spec_pred(old_view[si].0, old_view[si].1));
                     let j = choose|j: int| 0 <= j < sources.len() && sources[j] == si;
                     assert(self.entries.spec_index(j) == kept@[j]);
-                    assert(kept@[j].0@ == old_view[si].0);
                     assert(self.entries@[j].0 == k);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, j);
                 };
@@ -1094,7 +1069,6 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(self_srcs[j1] < self_srcs[j2]);
-                        assert(old_self_view[self_srcs[j1]].0 != old_self_view[self_srcs[j2]].0);
                     };
                 };
                 // Value preservation: combine.ensures postcondition.
@@ -1117,9 +1091,6 @@ broadcast use {
                     lemma_entries_to_map_get::<K::V, V::V>(other_view, s2);
                     assert(combine.ensures(
                         (&old_self_raw[s1].1, &other_raw[s2].1), kept@[idx].1));
-                    assert(old_self_raw[s1].1@ == old_self_view[s1].1);
-                    assert(other_raw[s2].1@ == other_view[s2].1);
-                    assert(kept@[idx].1@ == self.entries@[idx].1);
                 };
             }
         }
@@ -1417,7 +1388,6 @@ broadcast use {
                         assert(self.entries.spec_index(b) == kept@[b]);
                         if a < phase1_len && b < phase1_len {
                             // Both from phase 1 — keys from old_self_view which has no dups.
-                            assert(old_self_view[a].0 != old_self_view[b].0);
                         } else if a < phase1_len && b >= phase1_len {
                             // a from phase 1 (key in old_self), b from phase 2 (key NOT in old_self).
                             let kidx_b = b - phase1_len;
@@ -1432,7 +1402,6 @@ broadcast use {
                             let kidx_b = b - phase1_len;
                             let sa = phase2_sources[kidx_a];
                             let sb = phase2_sources[kidx_b];
-                            assert(other.entries@[sa].0 != other.entries@[sb].0);
                         }
                     };
                 };
@@ -1470,7 +1439,6 @@ broadcast use {
                     assert(self.entries.spec_index(out_idx) == kept@[out_idx]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, out_idx);
                     lemma_entries_to_map_get::<K::V, V::V>(other.entries@, oj);
-                    assert(kept@[out_idx].1@ == other.entries@[oj].1);
                 };
                 // Value: key in both => combined.
                 assert forall|k: K::V|
@@ -1496,8 +1464,6 @@ broadcast use {
                     }
                     let oj = phase1_matches[si];
                     lemma_entries_to_map_get::<K::V, V::V>(other.entries@, oj);
-                    assert(combine.ensures(
-                        (&old_self_raw[si].1, &other_raw[oj].1), kept@[si].1));
                 };
             }
         }
@@ -1633,8 +1599,6 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
-                        assert(old_self_view[sources[j1]].0
-                            != old_self_view[sources[j2]].0);
                     };
                 };
                 // Value preservation.
@@ -1649,7 +1613,6 @@ broadcast use {
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_self_view, s);
-                    assert(kept@[idx].1@ == old_self_view[s].1);
                 };
             }
         }
@@ -1911,8 +1874,6 @@ broadcast use {
                     self.entries.lemma_view_index(match_index as int);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, match_index as int);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, match_index as int);
-                    // old_entry is the exec Pair at match_index in old entries.
-                    assert(old_entry == old_exec_seq[match_index as int]);
                 }
                 final_value = combine(&old_entry.1, &value);
             } else {
@@ -1924,8 +1885,6 @@ broadcast use {
                 let last = (self.entries@.len() - 1) as int;
                 assert(self.entries.spec_index(last) == all@[last]);
                 self.entries.lemma_view_index(last);
-                assert(self.entries@[last].0 == key_view);
-                assert(self.entries@[last].1 == all@[last].1@);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
                 // Domain backward: old keys + key@ are in result.
                 assert forall|k: K::V|
@@ -1966,11 +1925,9 @@ broadcast use {
                         assert(self.entries.spec_index(b) == all@[b]);
                         if a < src.len() as int && b < src.len() as int {
                             assert(src[a] < src[b]);
-                            assert(old_view[src[a]].0 != old_view[src[b]].0);
                         } else if a < src.len() as int && b == last {
                             assert(all@[a].0@ != key_view);
                         } else if a == last {
-                            // a == last < b is impossible since last is the largest index.
                         }
                     };
                 };
@@ -1986,7 +1943,6 @@ broadcast use {
                     assert(self.entries.spec_index(j) == all@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
-                    assert(all@[j].1@ == old_view[si].1);
                 };
                 // Value for new key.
                 lemma_entries_to_map_get::<K::V, V::V>(self.entries@, last);
@@ -1995,45 +1951,21 @@ broadcast use {
                 }
                 // Prove spec_stored_value for the inserted key.
                 // Key is at position last in new entries.
-                assert(0 <= last < self.entries.seq@.len() as int);
-                assert((#[trigger] self.entries.seq@[last]).0@ == key_view);
-                // By spec_keys_no_dups, last is the unique index with key_view.
-                // Therefore spec_stored_value(key@) == self.entries.seq@[last].1.
                 let ghost chosen_i = choose|i: int| 0 <= i < self.entries.seq@.len()
                     && (#[trigger] self.entries.seq@[i]).0@ == key_view;
-                assert(self.entries.seq@[chosen_i].0@ == key_view);
-                assert(self.entries.seq@[last].0@ == key_view);
-                // Uniqueness from no_dups: entries@[chosen_i].0 == entries@[last].0
-                // means chosen_i == last (since no two distinct indices share a key).
                 if chosen_i != last {
                     assert(self.entries@[chosen_i].0 == key_view);
-                    assert(self.entries@[last].0 == key_view);
-                    // This contradicts spec_keys_no_dups
                 }
                 assert(chosen_i == last);
                 assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
                 // Prove the existing-key spec_stored_value ensures.
                 if match_index < n as usize {
-                    // match_index is the unique index for key in old entries.
-                    assert(old_exec_seq[match_index as int].0@ == key_view);
-                    // Prove old(self).spec_stored_value(key@) == old_stored_at_key.1.
-                    // old_stored_at_key == old_exec_seq[match_index], and match_index
-                    // is the unique index in old entries with this key.
                     let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[i]).0@ == key_view;
-                    assert(old_exec_seq[old_chosen].0@ == key_view);
-                    assert(old_exec_seq[match_index as int].0@ == key_view);
                     if old_chosen != match_index as int {
                         assert(old_view[old_chosen].0 == key_view);
-                        assert(old_view[match_index as int].0 == key_view);
                     }
                     assert(old_chosen == match_index as int);
-                    // Now old(self).spec_stored_value(key_view) == old_stored_at_key.1.
-                    // And final_value is combine(&old_stored_at_key.1, &value).
-                    // And self.spec_stored_value(key_view) == final_value.
-                    // Provide the existential witnesses.
-                    assert(combine.ensures((&old_stored_at_key.1, &value), final_value));
-                    assert(old_stored_at_key.1@ == old_map[key_view]);
                 }
             }
         }
@@ -2099,11 +2031,8 @@ broadcast use {
                         let ghost chosen = choose|idx: int| 0 <= idx < old_exec_seq.len()
                             && (#[trigger] old_exec_seq[idx]).0@ == k_at_i;
                         // old_exec_seq[i].0@ == old_view[i].0 == k_at_i
-                        assert(old_exec_seq[i as int].0@ == k_at_i);
-                        // By no_dups uniqueness: chosen == i.
                         if chosen != i as int {
                             assert(old_view[chosen].0 == k_at_i);
-                            assert(old_view[i as int].0 == k_at_i);
                         }
                         assert(chosen == i as int);
                     }
@@ -2139,15 +2068,12 @@ broadcast use {
                     self.entries.lemma_view_index(match_index as int);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, match_index as int);
                     lemma_entries_to_map_contains_key::<K::V, V::V>(old_view, match_index as int);
-                    assert(old_entry == old_exec_seq[match_index as int]);
                     // Prove old_entry.1.spec_wf() for the combine-preserves-wf requires.
                     let ghost k_at_m = old_view[match_index as int].0;
                     let ghost chosen = choose|idx: int| 0 <= idx < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[idx]).0@ == k_at_m;
-                    assert(old_exec_seq[match_index as int].0@ == k_at_m);
                     if chosen != match_index as int {
                         assert(old_view[chosen].0 == k_at_m);
-                        assert(old_view[match_index as int].0 == k_at_m);
                     }
                     assert(chosen == match_index as int);
                 }
@@ -2161,8 +2087,6 @@ broadcast use {
                 let last = (self.entries@.len() - 1) as int;
                 assert(self.entries.spec_index(last) == all@[last]);
                 self.entries.lemma_view_index(last);
-                assert(self.entries@[last].0 == key_view);
-                assert(self.entries@[last].1 == all@[last].1@);
                 lemma_entries_to_map_contains_key::<K::V, V::V>(self.entries@, last);
                 // Domain backward: old keys + key@ are in result.
                 assert forall|k: K::V|
@@ -2203,7 +2127,6 @@ broadcast use {
                         assert(self.entries.spec_index(b) == all@[b]);
                         if a < src.len() as int && b < src.len() as int {
                             assert(src[a] < src[b]);
-                            assert(old_view[src[a]].0 != old_view[src[b]].0);
                         } else if a < src.len() as int && b == last {
                             assert(all@[a].0@ != key_view);
                         } else if a == last {
@@ -2222,7 +2145,6 @@ broadcast use {
                     assert(self.entries.spec_index(j) == all@[j]);
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, j);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, si);
-                    assert(all@[j].1@ == old_view[si].1);
                 };
                 // Value for new key.
                 lemma_entries_to_map_get::<K::V, V::V>(self.entries@, last);
@@ -2230,12 +2152,8 @@ broadcast use {
                     lemma_entries_to_map_no_key::<K::V, V::V>(old_view, key_view);
                 }
                 // Prove spec_stored_value for the inserted key.
-                assert(0 <= last < self.entries.seq@.len() as int);
-                assert((#[trigger] self.entries.seq@[last]).0@ == key_view);
                 let ghost chosen_i = choose|i: int| 0 <= i < self.entries.seq@.len()
                     && (#[trigger] self.entries.seq@[i]).0@ == key_view;
-                assert(self.entries.seq@[chosen_i].0@ == key_view);
-                assert(self.entries.seq@[last].0@ == key_view);
                 if chosen_i != last {
                     assert(self.entries@[chosen_i].0 == key_view);
                     assert(self.entries@[last].0 == key_view);
@@ -2244,18 +2162,12 @@ broadcast use {
                 assert(self.spec_stored_value(key_view) == self.entries.seq@[last].1);
                 // Prove the existing-key spec_stored_value ensures.
                 if match_index < n as usize {
-                    assert(old_exec_seq[match_index as int].0@ == key_view);
                     let ghost old_chosen = choose|i: int| 0 <= i < old_exec_seq.len()
                         && (#[trigger] old_exec_seq[i]).0@ == key_view;
-                    assert(old_exec_seq[old_chosen].0@ == key_view);
-                    assert(old_exec_seq[match_index as int].0@ == key_view);
                     if old_chosen != match_index as int {
                         assert(old_view[old_chosen].0 == key_view);
-                        assert(old_view[match_index as int].0 == key_view);
                     }
                     assert(old_chosen == match_index as int);
-                    assert(combine.ensures((&old_stored_at_key.1, &value), final_value));
-                    assert(old_stored_at_key.1@ == old_map[key_view]);
                 }
                 // Prove stored-value wf for all keys.
                 assert forall|k: K::V| #[trigger] self@.contains_key(k)
@@ -2271,13 +2183,11 @@ broadcast use {
                     // sv_idx is the unique index with key k in new entries.
                     // idx also has key k. By no_dups, sv_idx == idx.
                     assert(self.entries@[sv_idx].0 == k);
-                    assert(self.entries@[idx].0 == k);
                     if sv_idx != idx {
                         // Contradicts spec_keys_no_dups
                     }
                     assert(sv_idx == idx);
                     assert(self.spec_stored_value(k) == self.entries.seq@[idx].1);
-                    assert(self.entries.seq@[idx] == all@[idx]);
                     // all@[idx].1.spec_wf() — from loop invariant or final_value wf.
                     if idx == last {
                         // final_value case: wf from combine or value.
@@ -2286,10 +2196,6 @@ broadcast use {
                             // && old_v.spec_wf() && value.spec_wf() ==> final_value.spec_wf()
                             assert(combine.ensures((&old_stored_at_key.1, &value), final_value));
                             assert(old_stored_at_key.1.spec_wf());
-                            assert(value.spec_wf());
-                        } else {
-                            assert(final_value == value);
-                            assert(value.spec_wf());
                         }
                     } else {
                         // Non-key entry: wf from loop invariant.
@@ -2345,10 +2251,8 @@ broadcast use {
                         let ghost k_at_i = old_view[i as int].0;
                         let ghost chosen = choose|idx: int| 0 <= idx < old_exec_seq.len()
                             && (#[trigger] old_exec_seq[idx]).0@ == k_at_i;
-                        assert(old_exec_seq[i as int].0@ == k_at_i);
                         if chosen != i as int {
                             assert(old_view[chosen].0 == k_at_i);
-                            assert(old_view[i as int].0 == k_at_i);
                         }
                         assert(chosen == i as int);
                     }
@@ -2433,7 +2337,6 @@ broadcast use {
                     let ghost sv_idx = choose|i: int| 0 <= i < self.entries.seq@.len()
                         && (#[trigger] self.entries.seq@[i]).0@ == k;
                     assert(self.entries@[sv_idx].0 == k);
-                    assert(self.entries@[idx].0 == k);
                     if sv_idx != idx {}
                     assert(sv_idx == idx);
                     assert(self.spec_stored_value(k) == self.entries.seq@[idx].1);
@@ -2527,7 +2430,6 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
-                        assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
                     };
                 };
                 // Value preservation.
@@ -2542,7 +2444,6 @@ broadcast use {
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
-                    assert(kept@[idx].1@ == old_view[s].1);
                 };
             }
         }
@@ -2631,7 +2532,6 @@ broadcast use {
                         assert(self.entries.spec_index(j1) == kept@[j1]);
                         assert(self.entries.spec_index(j2) == kept@[j2]);
                         assert(sources[j1] < sources[j2]);
-                        assert(old_view[sources[j1]].0 != old_view[sources[j2]].0);
                     };
                 };
                 // Value preservation.
@@ -2646,7 +2546,6 @@ broadcast use {
                     let s = sources[idx];
                     lemma_entries_to_map_get::<K::V, V::V>(self.entries@, idx);
                     lemma_entries_to_map_get::<K::V, V::V>(old_view, s);
-                    assert(kept@[idx].1@ == old_view[s].1);
                 };
             }
         }

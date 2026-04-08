@@ -1,0 +1,120 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap42/TableStEph.rs:860:37
+    |
+860 | ...                   implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = sources.len() in tmp%% <= tmp%% && tmp%% < tmp%% && sources.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1021:37
+     |
+1021 | ...                   implies exists|j: int| 0 <= j < self_srcs.len() && self_srcs[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = self_srcs.len() in tmp%% <= tmp%% && tmp%% < tmp%% && self_srcs.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1551:37
+     |
+1551 | ...                   implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = sources.len() in tmp%% <= tmp%% && tmp%% < tmp%% && sources.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1736:37
+     |
+1736 | ...                   implies exists|j: int| 0 <= j < src.len() && src[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = src.len() in tmp%% <= tmp%% && tmp%% < tmp%% && src.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:1853:37
+     |
+1853 | ...                   implies exists|j: int| 0 <= j < src.len() && src[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = src.len() in tmp%% <= tmp%% && tmp%% < tmp%% && src.index(j) == si) 
+
+note: recommendation not met
+    --> src/Chap42/TableStEph.rs:1866:55
+     |
+1866 |             let ghost old_stored_at_key: Pair<K, V> = old_exec_seq[match_index as int];
+     |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:2047:37
+     |
+2047 | ...                   implies exists|j: int| 0 <= j < src.len() && src[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = src.len() in tmp%% <= tmp%% && tmp%% < tmp%% && src.index(j) == si) 
+
+note: recommendation not met
+    --> src/Chap42/TableStEph.rs:2060:55
+     |
+2060 |             let ghost old_stored_at_key: Pair<K, V> = old_exec_seq[match_index as int];
+     |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq.rs:62:12
+     |
+     = note: recommendation not met
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:2272:37
+     |
+2272 | ...                   implies exists|j: int| 0 <= j < src.len() && src[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = src.len() in tmp%% <= tmp%% && tmp%% < tmp%% && src.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:2388:37
+     |
+2388 | ...                   implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = sources.len() in tmp%% <= tmp%% && tmp%% < tmp%% && sources.index(j) == si) 
+
+error: assertion failed
+    --> src/Chap42/TableStEph.rs:2488:37
+     |
+2488 | ...                   implies exists|j: int| 0 <= j < sources.len() && sources[j] == si
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+(exists |j| let tmp%% = 0 in let tmp%% = j in let tmp%% = sources.len() in tmp%% <= tmp%% && tmp%% < tmp%% && sources.index(j) == si) 
+
+verification results:: 2405 verified, 9 errors
+error: aborting due to 9 previous errors
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 2334MB, peak z3 RSS: 360MB, min free: 20423MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 40s
