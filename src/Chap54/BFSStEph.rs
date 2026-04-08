@@ -164,9 +164,7 @@ pub mod BFSStEph {
             parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
         by {
             if j == v {
-                assert(parents.spec_index(j) == new_val);
             } else {
-                assert(parents.spec_index(j) == old_parents.spec_index(j));
             }
         }
     }
@@ -206,9 +204,7 @@ pub mod BFSStEph {
             distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
         by {
             if j == v {
-                assert(distances.spec_index(j) == new_val);
             } else {
-                assert(distances.spec_index(j) == old_distances.spec_index(j));
             }
         }
     }

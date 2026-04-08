@@ -140,9 +140,7 @@ pub mod BFSMtEph {
             parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
         by {
             if j == v {
-                assert(parents.spec_index(j) == new_val);
             } else {
-                assert(parents.spec_index(j) == old_parents.spec_index(j));
             }
         }
     }
@@ -164,7 +162,6 @@ pub mod BFSMtEph {
         implies
             copy.spec_index(j) == NO_PARENT || copy.spec_index(j) < n
         by {
-            assert(copy.spec_index(j) == original.spec_index(j));
         }
     }
 
@@ -202,9 +199,7 @@ pub mod BFSMtEph {
             distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
         by {
             if j == v {
-                assert(distances.spec_index(j) == new_val);
             } else {
-                assert(distances.spec_index(j) == old_distances.spec_index(j));
             }
         }
     }
@@ -229,8 +224,6 @@ pub mod BFSMtEph {
         implies
             copy.spec_index(u).spec_index(i) < copy.spec_len()
         by {
-            assert(copy.spec_index(u).spec_index(i) == original.spec_index(u).spec_index(i));
-            assert(original.spec_index(u).spec_index(i) < original.spec_len());
         }
     }
 
@@ -251,7 +244,6 @@ pub mod BFSMtEph {
         implies
             copy.spec_index(j) == UNREACHABLE || copy.spec_index(j) < n
         by {
-            assert(copy.spec_index(j) == original.spec_index(j));
         }
     }
 
@@ -751,8 +743,6 @@ pub mod BFSMtEph {
                     assert forall|j: int| #![trigger distance_updates@[j]] 0 <= j < distance_updates@.len()
                     implies (distance_updates@[j]).0 != source
                     by {
-                        assert(distances.spec_index((distance_updates@[j]).0 as int) == UNREACHABLE);
-                        assert(distances.spec_index(source as int) == 0usize);
                     }
                 }
 
@@ -791,14 +781,12 @@ pub mod BFSMtEph {
                             &distances, &pre_inner_set,
                             v as int, d as usize, n as int,
                         );
-                        assert(distances.spec_index(source as int) == pre_inner_set.spec_index(source as int));
                         assert forall|w: int| 0 <= w < distances.spec_len()
                             && distances.spec_index(w) != UNREACHABLE
                             && w != source as int
                         implies distances.spec_index(w) > 0usize
                         by {
                             if w == v as int {
-                                assert(distances.spec_index(w) == d);
                             } else {
                                 assert(distances.spec_index(w)
                                     == pre_inner_set.spec_index(w));
@@ -926,13 +914,6 @@ pub mod BFSMtEph {
                             &parents, &pre_inner,
                             v as int, u, n as int,
                         );
-                        assert(parents.spec_index(source as int) == source) by {
-                            if v as int == source as int {
-                                assert(pre_inner.spec_index(source as int) == source);
-                                assert(source < n);
-                                assert(n < usize::MAX);
-                            }
-                        };
                     }
                 }
 
