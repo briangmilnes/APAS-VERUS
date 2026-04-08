@@ -2,13 +2,12 @@
 //! REVIEWED: NO
 
 //! Ephemeral AVL-balanced binary search tree with coarse RwLock for multi-threaded access.
-//! Layer 1 (verified algorithms on BalBinTree) in sections 7/9.
+//! Layer 1 (verified algorithms on BalBinTree) in sections 8/9.
 //! Layer 2 (locked wrapper with ghost shadow) in section 11.
 
 //  Table of Contents
 //	Section 1. module
 //	Section 2. imports
-//	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
 //	Section 4a. type definitions
@@ -43,74 +42,12 @@ pub mod BSTAVLMtEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::{avl_balanced, tree_is_avl};
     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::{lemma_bst_deep, lemma_max_plus_one};
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::feq::feq::obeys_feq_clone;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-
-    //		Section 7. proof fns/broadcast groups
-
-
-    proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
-        requires tree.tree_is_bst(),
-        ensures
-            match tree {
-                BalBinTree::Leaf => true,
-                BalBinTree::Node(node) =>
-                    node.left.tree_is_bst()
-                    && node.right.tree_is_bst()
-                    && (forall|x: T| (#[trigger] node.left.tree_contains(x)) ==>
-                        T::le(x, node.value) && x != node.value)
-                    && (forall|x: T| (#[trigger] node.right.tree_contains(x)) ==>
-                        T::le(node.value, x) && x != node.value)
-                    && match node.left {
-                        BalBinTree::Leaf => true,
-                        BalBinTree::Node(lnode) =>
-                            lnode.left.tree_is_bst()
-                            && lnode.right.tree_is_bst()
-                            && (forall|x: T| (#[trigger] lnode.left.tree_contains(x)) ==>
-                                T::le(x, lnode.value) && x != lnode.value)
-                            && (forall|x: T| (#[trigger] lnode.right.tree_contains(x)) ==>
-                                T::le(lnode.value, x) && x != lnode.value)
-                    }
-                    && match node.right {
-                        BalBinTree::Leaf => true,
-                        BalBinTree::Node(rnode) =>
-                            rnode.left.tree_is_bst()
-                            && rnode.right.tree_is_bst()
-                            && (forall|x: T| (#[trigger] rnode.left.tree_contains(x)) ==>
-                                T::le(x, rnode.value) && x != rnode.value)
-                            && (forall|x: T| (#[trigger] rnode.right.tree_contains(x)) ==>
-                                T::le(rnode.value, x) && x != rnode.value)
-                    }
-            }
-    {
-        match tree {
-            BalBinTree::Leaf => {},
-            BalBinTree::Node(node) => {
-                // Veracity: NEEDED assert
-                assert(node.left.tree_is_bst());
-                // Veracity: NEEDED assert
-                assert(node.right.tree_is_bst());
-                match node.left {
-                    BalBinTree::Leaf => {},
-                    BalBinTree::Node(lnode) => {
-                    },
-                }
-                match node.right {
-                    BalBinTree::Leaf => {},
-                    BalBinTree::Node(rnode) => {
-                    },
-                }
-            },
-        }
-    }
-
-    proof fn lemma_max_plus_one(a: nat, b: nat)
-        ensures
-            (if a >= b { a + 1 } else { b }) <= (if a >= b { a } else { b }) + 1,
-    {
-    }
 
     //		Section 8. traits
 

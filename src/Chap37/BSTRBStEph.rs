@@ -9,7 +9,6 @@
 //	Section 2. imports
 //	Section 4. type definitions
 //	Section 5. view impls
-//	Section 7. proof fns/broadcast groups
 //	Section 8. traits
 //	Section 9. impls
 //	Section 13. macros
@@ -34,6 +33,8 @@ pub mod BSTRBStEph {
     #[cfg(verus_keep_ghost)]
     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced;
     use crate::Chap23::BalBinTreeStEph::BalBinTreeStEph::BalBinTreeTrait;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::lemma_bst_deep;
     use crate::vstdplus::total_order::total_order::TotalOrder;
 
     //		Section 4. type definitions
@@ -52,63 +53,9 @@ pub mod BSTRBStEph {
         open spec fn view(&self) -> BalBinTree<T> { self.root }
     }
 
-    //		Section 7. proof fns/broadcast groups
-
-
     // The RB color invariant cannot be expressed on BalBinTree since it lacks a color
     // field. The BST ordering invariant and rotation correctness are fully verified.
     // To model colors, BalBinTree would need a per-node color tag or a ghost color map.
-
-
-    /// Decomposes tree_is_bst two levels deep. Reused from BSTAVLStEph pattern.
-    proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)
-        requires tree.tree_is_bst(),
-        ensures
-            match tree {
-                BalBinTree::Leaf => true,
-                BalBinTree::Node(node) =>
-                    node.left.tree_is_bst()
-                    && node.right.tree_is_bst()
-                    && (forall|x: T| (#[trigger] node.left.tree_contains(x)) ==>
-                        T::le(x, node.value) && x != node.value)
-                    && (forall|x: T| (#[trigger] node.right.tree_contains(x)) ==>
-                        T::le(node.value, x) && x != node.value)
-                    && match node.left {
-                        BalBinTree::Leaf => true,
-                        BalBinTree::Node(lnode) =>
-                            lnode.left.tree_is_bst()
-                            && lnode.right.tree_is_bst()
-                            && (forall|x: T| (#[trigger] lnode.left.tree_contains(x)) ==>
-                                T::le(x, lnode.value) && x != lnode.value)
-                            && (forall|x: T| (#[trigger] lnode.right.tree_contains(x)) ==>
-                                T::le(lnode.value, x) && x != lnode.value)
-                    }
-                    && match node.right {
-                        BalBinTree::Leaf => true,
-                        BalBinTree::Node(rnode) =>
-                            rnode.left.tree_is_bst()
-                            && rnode.right.tree_is_bst()
-                            && (forall|x: T| (#[trigger] rnode.left.tree_contains(x)) ==>
-                                T::le(x, rnode.value) && x != rnode.value)
-                            && (forall|x: T| (#[trigger] rnode.right.tree_contains(x)) ==>
-                                T::le(rnode.value, x) && x != rnode.value)
-                    }
-            }
-    {
-        match tree {
-            BalBinTree::Leaf => {},
-            BalBinTree::Node(node) => {
-                match node.left {
-                    BalBinTree::Leaf => {},
-                    BalBinTree::Node(_) => {},
-                }
-                match node.right {
-                    BalBinTree::Leaf => {},
-                    BalBinTree::Node(_) => {},
-                }
-            },
-        }
-    }
 
     //		Section 8. traits
 
