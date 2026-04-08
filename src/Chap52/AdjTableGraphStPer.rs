@@ -145,7 +145,7 @@ broadcast use {
             requires self.spec_adjtablegraphstper_wf();
         /// Work Theta(|V| + |E|), Span Theta(|V| + |E|)
         /// - Alg Analysis: APAS (Ch52 CS 52.3): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — DIFFERS: APAS assumes cached; impl sums degrees sequentially
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n+m), Span O(n+m) — ACCEPTED DIFFERENCE: APAS assumes cached; impl sums degrees sequentially
         fn num_edges(&self) -> (m: usize)
             requires self.spec_adjtablegraphstper_wf(), self.spec_num_edges() <= usize::MAX as nat
             ensures m as nat == self.spec_num_edges();

@@ -90,7 +90,7 @@ pub mod ScanDCStPer {
         /// Algorithm 26.5: Exclusive prefix scan via divide and conquer.
         /// Returns (prefixes, total) where prefixes[i] = f(id, a[0], ..., a[i-1]).
         /// - Alg Analysis: APAS (Ch26 Alg 26.5): Work O(n lg n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn scan_dc<F: Fn(&usize, &usize) -> usize>(a: &ArraySeqStPerS<usize>, f: &F, Ghost(spec_f): Ghost<spec_fn(usize, usize) -> usize>, id: usize) -> (scanned: (ArraySeqStPerS<usize>, usize))
             requires
                 a.spec_len() <= usize::MAX,

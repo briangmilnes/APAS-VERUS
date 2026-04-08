@@ -281,7 +281,7 @@ pub mod ETSPStEph {
         /// Solve the planar Euclidean TSP using divide-and-conquer heuristic.
         /// Returns a tour as a sequence of directed edges forming a cycle through all points.
         /// - Alg Analysis: APAS (Ch26 Alg 26.7): Work O(n^2), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn etsp(points: &Vec<Point>) -> (tour: Vec<Edge>)
             requires
                 points@.len() >= 2,

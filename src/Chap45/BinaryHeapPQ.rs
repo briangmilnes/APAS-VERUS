@@ -1172,7 +1172,7 @@ pub mod BinaryHeapPQ {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: append copies persistent array O(n), then bubble_up O(log n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: append copies persistent array O(n), then bubble_up O(log n).
             fn insert(&self, element: T) -> Self {
                 let single_seq = ArraySeqStPerS::singleton(element);
                 let new_elements = ArraySeqStPerS::append(&self.elements, &single_seq);
@@ -1236,7 +1236,7 @@ pub mod BinaryHeapPQ {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(log n), Span O(log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: rebuild array O(n), then bubble_down O(log n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: rebuild array O(n), then bubble_down O(log n).
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -1483,14 +1483,14 @@ pub mod BinaryHeapPQ {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O((m+n) log(m+n)), Span O((m+n) log(m+n)).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — DIFFERS: from_seq O(m), then meld O(m+n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m+n), Span O(m+n) — ACCEPTED DIFFERENCE: from_seq O(m), then meld O(m+n).
             fn insert_all(&self, elements: &ArraySeqStPerS<T>) -> Self {
                 let other = Self::from_seq(elements);
                 self.meld(&other)
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: n iterations of delete_min each O(n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: n iterations of delete_min each O(n).
             #[verifier::exec_allows_no_decreases_clause]
             fn extract_all_sorted(&self) -> ArraySeqStPerS<T> {
                 let mut result = ArraySeqStPerS::empty();
@@ -1684,7 +1684,7 @@ pub mod BinaryHeapPQ {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: extract_all_sorted O(n^2), then linear copy.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: extract_all_sorted O(n^2), then linear copy.
             fn to_sorted_vec(&self) -> Vec<T> {
                 let sorted_seq = self.extract_all_sorted();
                 let n = sorted_seq.length();

@@ -117,13 +117,13 @@ pub mod LinkedListStEph {
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(i), Span O(i)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: Vec-backed, O(1) random access not O(i) traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: Vec-backed, O(1) random access not O(i) traversal
         fn nth(&self, index: usize) -> (nth_elem: &T)
             requires index < self.spec_len()
             ensures *nth_elem == self.spec_index(index as int);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(i), Span O(i)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — DIFFERS: Vec-backed, O(j) clone loop not O(start+j) traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: Vec-backed, O(j) clone loop not O(start+j) traversal
         fn subseq_copy(&self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -177,7 +177,7 @@ pub mod LinkedListStEph {
                 forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() ==> f.ensures((&a.seq@[i],), mapped.seq@[i]);
 
         /// - Alg Analysis: APAS (Ch20 CS 20.7): Work O(|a|), Span O(|a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: Vec-backed, copies both sequences not just a
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: Vec-backed, copies both sequences not just a
         fn append(a: &LinkedListStEphS<T>, b: &LinkedListStEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -219,7 +219,7 @@ pub mod LinkedListStEph {
                 flattened.seq@ =~= a.seq@.map_values(|inner: LinkedListStEphS<T>| inner.seq@).flatten();
 
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: clones full array, not O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: clones full array, not O(1)
         fn update(a: &LinkedListStEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires

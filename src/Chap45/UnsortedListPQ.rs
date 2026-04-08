@@ -106,7 +106,7 @@ broadcast use {
                             #[trigger] TotalOrder::le(*min_elem.unwrap(), self.spec_seq()[j]);
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(1), Span O(1)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: persistent array append copies entire array
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: persistent array append copies entire array
             fn insert(&self, element: T) -> (pq: Self)
                 requires
                     obeys_feq_clone::<T>(),
@@ -307,7 +307,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: append copies persistent array.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: append copies persistent array.
             fn insert(&self, element: T) -> (pq: Self) {
                 let single_seq = ArraySeqStPerS::singleton(element);
                 let pq = UnsortedListPQ {

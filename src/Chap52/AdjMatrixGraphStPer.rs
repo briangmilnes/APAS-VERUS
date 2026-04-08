@@ -165,7 +165,7 @@ broadcast use {
 
         /// Work Theta(n), Span Theta(n)
         /// - Alg Analysis: APAS (Ch52 CS 52.6): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: APAS says O(1); persistent seq requires row copy
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: APAS says O(1); persistent seq requires row copy
         fn set_edge(&self, u: usize, v: usize, exists: bool) -> (updated: Self)
             requires
                 self.spec_adjmatrixgraphstper_wf(),

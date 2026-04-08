@@ -157,7 +157,7 @@ broadcast use {
         /// Compute MCSS using divide-and-conquer (Algorithm 28.17).
         /// Returns None for empty sequence (representing -infinity).
         /// - Alg Analysis: APAS (Ch28 Alg 28.17): Work O(n lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn max_contig_sub_sum_divcon(a: &ArraySeqStEphS<i32>) -> (mcss: Option<i32>)
             requires
                 sums_fit_i32(a.seq@),

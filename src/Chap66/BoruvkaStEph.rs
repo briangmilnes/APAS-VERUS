@@ -149,7 +149,7 @@ pub mod BoruvkaStEph {
         /// Borůvka's MST algorithm.
         /// APAS: Work O(m log n), Span O(m log n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
         fn boruvka_mst<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,
@@ -173,7 +173,7 @@ pub mod BoruvkaStEph {
         /// - Alg Analysis: APAS (Ch66 Alg 66.1): Work O(m lg n), Span O(lg^3 n)
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(lg^3 n)
         /// - Alg Analysis: APAS (Ch66 Alg 66.3): Work O(m lg n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — DIFFERS: sequential, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m lg n), Span O(m lg n) — ACCEPTED DIFFERENCE: sequential, span = work
         fn boruvka_mst_with_seed<V: HashOrd + Copy>(
             vertices: &SetStEph<V>,
             edges: &SetStEph<LabeledEdge<V>>,

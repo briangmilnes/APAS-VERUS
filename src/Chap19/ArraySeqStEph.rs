@@ -184,7 +184,7 @@ pub mod ArraySeqStEph {
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — DIFFERS: Vec-backed, copies elements sequentially
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(length), Span O(length) — ACCEPTED DIFFERENCE: Vec-backed, copies elements sequentially
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -223,7 +223,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.4 (append). append a b = tabulate (select(a,b)) (|a|+|b|).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: sequential tabulate, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: sequential tabulate, span = work
         fn append(a: &ArraySeqStEphS<T>, b: &ArraySeqStEphS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -237,7 +237,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.5 (filter). filter f a = flatten (map (deflate f) a).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| * (1 + W(f))), Span O(|a| * (1 + S(f))) — DIFFERS: sequential map+flatten, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| * (1 + W(f))), Span O(|a| * (1 + S(f))) — ACCEPTED DIFFERENCE: sequential map+flatten, span = work
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStEphS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
             where T: Clone + Eq
             requires
@@ -256,7 +256,7 @@ pub mod ArraySeqStEph {
         /// - Algorithm 19.6 (update). Ephemeral: clone then set (O(n) clone + O(1) set).
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: clone entire Vec + set, sequential
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: clone entire Vec + set, sequential
         fn update(a: &ArraySeqStEphS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -272,7 +272,7 @@ pub mod ArraySeqStEph {
         ///   the ordering of `updates` takes effect when positions collide.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: sequential clone + loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: sequential clone + loop
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -333,7 +333,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.9 (reduce). reduce f id a = if |a|=0 then id else if |a|=1 then a[0] else f(reduce f id b, reduce f id c).
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) — DIFFERS: delegates to reduce_iter (sequential), span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f)), Span O(Sigma S(f)) — ACCEPTED DIFFERENCE: delegates to reduce_iter (sequential), span = work
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone + Eq
             requires
@@ -346,7 +346,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.10 (scan). Prefix-reduce returning partial sums and total.
         /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — DIFFERS: sequential loop, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a|), Span O(|a|) — ACCEPTED DIFFERENCE: sequential loop, span = work
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStEphS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStEphS<T>, T))
             where T: Clone
             requires
@@ -361,7 +361,7 @@ pub mod ArraySeqStEph {
 
         /// - Algorithm 19.3 (map). map f a = tabulate (lambda i.f(a[i])) |a|.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(Sigma S(f(x))) — DIFFERS: sequential tabulate, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(x))), Span O(Sigma S(f(x))) — ACCEPTED DIFFERENCE: sequential tabulate, span = work
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStEphS<T>, f: &F) -> (mapped: ArraySeqStEphS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -371,7 +371,7 @@ pub mod ArraySeqStEph {
 
         /// - Primitive: tabulate. Build a sequence by applying `f` to each index.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(i))), Span O(Sigma S(f(i))) — DIFFERS: sequential loop, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Sigma W(f(i))), Span O(Sigma S(f(i))) — ACCEPTED DIFFERENCE: sequential loop, span = work
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStEphS<T>)
             requires
                 length <= usize::MAX,
@@ -383,7 +383,7 @@ pub mod ArraySeqStEph {
         /// - Primitive: flatten. Concatenate a sequence of sequences.
         /// - Alg Analysis: APAS (Ch19 Alg 19.15): Work O(|a| + sum |a[i]|), Span O(lg |a|)
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + sum |a[i]|), Span O(|a| + sum |a[i]|) — DIFFERS: nested sequential loops, span = work
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + sum |a[i]|), Span O(|a| + sum |a[i]|) — ACCEPTED DIFFERENCE: nested sequential loops, span = work
         fn flatten(a: &ArraySeqStEphS<ArraySeqStEphS<T>>) -> (flattened: ArraySeqStEphS<T>)
             where T: Clone + Eq
             requires

@@ -47,7 +47,7 @@ pub mod ScanContractStEph {
         /// Exclusive scan using contraction: contract→solve→expand.
         /// Returns prefixes where result[i] = fold_left(input[0..i], id, spec_f).
         /// - Alg Analysis: APAS (Ch27 Alg 27.3): Work O(n), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential contraction/expansion loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential contraction/expansion loops
         fn scan_contract<F: Fn(&T, &T) -> T>(
             a: &ArraySeqStEphS<T>,
             f: &F,

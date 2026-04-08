@@ -641,7 +641,7 @@ broadcast use {
                     pq.spec_size() == self.spec_size() + other.spec_size(),
                     pq@ =~= self@.add(other@);
             /// - Alg Analysis: APAS (Ch45 cost table, leftist heap): Work O(n), Span O(lg^2 n)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: sequential reduce, APAS Span O(lg^2 n) assumes parallel
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: sequential reduce, APAS Span O(lg^2 n) assumes parallel
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self)
                 requires obeys_feq_clone::<T>(),
                 ensures
@@ -902,7 +902,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n), Span O(n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — DIFFERS: sequential insert, not reduce-based.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) — ACCEPTED DIFFERENCE: sequential insert, not reduce-based.
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let n = seq.length();
                 let mut pq = Self::empty();

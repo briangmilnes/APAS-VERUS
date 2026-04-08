@@ -312,7 +312,7 @@ pub mod BSTParaStEph {
                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
                 };
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: parametric impl wraps node without rebalancing
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: parametric impl wraps node without rebalancing
         fn join_mid(exposed: Exposed<T>) -> (joined: Self)
             requires
                 exposed matches Exposed::Node(l, k, r) ==> {
@@ -328,7 +328,7 @@ pub mod BSTParaStEph {
                 exposed is Leaf ==> joined@ == Set::<<T as View>::V>::empty(),
                 exposed matches Exposed::Node(l, k, r) ==> joined@ =~= l@.union(r@).insert(k@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(lg(|t1|+|t2|)), Span O(lg(|t1|+|t2|))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — DIFFERS: delegates to join_mid which is O(1) in parametric impl
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — ACCEPTED DIFFERENCE: delegates to join_mid which is O(1) in parametric impl
         fn join_m(left: Self, key: T, right: Self) -> (tree: Self)
             requires
                 left@.finite(), right@.finite(),
@@ -426,7 +426,7 @@ pub mod BSTParaStEph {
                 forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
             ensures joined@.finite(), joined@ =~= self@.union(other@);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn union(&self, other: &Self) -> (combined: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
@@ -434,21 +434,21 @@ pub mod BSTParaStEph {
                 self@.len() + other@.len() <= usize::MAX as nat,
             ensures combined@ == self@.union(other@), combined@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn intersect(&self, other: &Self) -> (common: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures common@ == self@.intersect(other@), common@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(m * lg(n/m)), Span O(lg n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — DIFFERS: sequential recursion, no parallel split
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(m * lg(n/m)), Span O(m * lg(n/m)) — ACCEPTED DIFFERENCE: sequential recursion, no parallel split
         fn difference(&self, other: &Self) -> (remaining: Self)
             requires
                 vstd::laws_cmp::obeys_cmp_spec::<T>(),
                 view_ord_consistent::<T>(),
             ensures remaining@ == self@.difference(other@), remaining@.finite();
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential tree traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — ACCEPTED DIFFERENCE: sequential tree traversal
         fn filter<F: Fn(&T) -> bool>(
             &self,
             predicate: F,
@@ -469,7 +469,7 @@ pub mod BSTParaStEph {
                 forall|v: T::V| self@.contains(v) && spec_pred(v)
                     ==> #[trigger] filtered@.contains(v);
         /// - Alg Analysis: APAS (Ch38 CS 38.11): Work O(Σ W(f(x))), Span O(lg |t| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — DIFFERS: sequential tree traversal
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ W(f(x))), Span O(n + max S(f(x))) — ACCEPTED DIFFERENCE: sequential tree traversal
         /// Requires `op` to be associative with identity `base`.
         fn reduce<F: Fn(T, T) -> T>(&self, op: F, base: T) -> (reduced: T)
             requires

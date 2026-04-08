@@ -219,7 +219,7 @@ broadcast use {
                     ==> #[trigger] self.spec_neighbor(u as int, j) != v;
 
         /// - Alg Analysis: APAS (Ch52 CS 52.5): Work O(n), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + d_g(u)), Span O(n + d_g(u)) — DIFFERS: APAS says O(n), O(1); impl rebuilds neighbor list sequentially
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + d_g(u)), Span O(n + d_g(u)) — ACCEPTED DIFFERENCE: APAS says O(n), O(1); impl rebuilds neighbor list sequentially
         fn set_edge(&mut self, u: usize, v: usize, exists: bool)
             requires
                 old(self).spec_adjseqgraphsteph_wf(),

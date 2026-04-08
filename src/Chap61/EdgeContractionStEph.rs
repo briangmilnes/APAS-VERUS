@@ -57,7 +57,7 @@ pub mod EdgeContractionStEph {
         /// Sequential edge contraction algorithm.
         /// APAS: Work O(|E|), Span O(|E|)
         /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — DIFFERS: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
         fn edge_contract<V: HashOrd>(
             graph: &UnDirGraphStEph<V>,
             matching: &SetStEph<Edge<V>>,
@@ -81,7 +81,7 @@ pub mod EdgeContractionStEph {
     /// Unmatched vertices form singleton blocks.
     ///
     /// - Alg Analysis: APAS (Ch61 Alg 61.6): Work O(n), Span O(lg^2 n)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — DIFFERS: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V| + |E|), Span O(|V| + |E|) — ACCEPTED DIFFERENCE: sequential loops over matching + vertices + edges; APAS Alg 61.6 is full recursive contraction
     pub fn edge_contract<V: HashOrd>(
         graph: &UnDirGraphStEph<V>,
         matching: &SetStEph<Edge<V>>,

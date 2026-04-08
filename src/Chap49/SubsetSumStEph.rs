@@ -97,7 +97,7 @@ pub mod SubsetSumStEph {
 
         /// Solve subset sum for the given target.
         /// - Alg Analysis: APAS (Ch49 Alg 49.2): Work O(k * |S|), Span O(|S|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — DIFFERS: sequential DP table fill, APAS Span O(|S|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k·|S|), Span O(k·|S|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|) assumes parallel
         fn subset_sum(&mut self, target: i32) -> (found: bool)
         where
             T: Into<i32> + Copy
@@ -129,7 +129,7 @@ pub mod SubsetSumStEph {
 
     /// Recursive memoized subset sum solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(k*|S|), Span O(|S|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(k*|S|), Span O(k*|S|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|) assumes parallel
     fn subset_sum_rec<T: StT + Into<i32> + Copy>(
         table: &mut SubsetSumStEphS<T>,
         i: usize,

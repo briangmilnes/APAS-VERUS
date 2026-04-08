@@ -109,7 +109,7 @@ pub mod MinEditDistStEph {
 
         /// Compute minimum edit distance.
         /// - Alg Analysis: APAS (Ch49 Alg 49.5): Work O(|S| * |T|), Span O(|S| + |T|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — DIFFERS: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|·|T|), Span O(|S|·|T|) — ACCEPTED DIFFERENCE: sequential DP table fill, APAS Span O(|S|+|T|) assumes parallel
         fn min_edit_distance(&mut self) -> (dist: usize)
             requires old(self).spec_source_len() + old(self).spec_target_len() < usize::MAX,
             ensures
@@ -159,7 +159,7 @@ pub mod MinEditDistStEph {
 
     /// Recursive memoized minimum edit distance solver.
     /// - Alg Analysis: APAS (Ch49 ref): Work O(|S|*|T|), Span O(|S|+|T|)
-    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — DIFFERS: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
+    /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|S|*|T|), Span O(|S|*|T|) — ACCEPTED DIFFERENCE: sequential recursive memoized, Span = Work; APAS Span O(|S|+|T|) assumes parallel diagonal
     fn min_edit_distance_rec<T: StT>(
         table: &mut MinEditDistStEphS<T>,
         i: usize,

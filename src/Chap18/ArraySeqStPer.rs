@@ -133,7 +133,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.12 (subseq). Extract a contiguous subsequence.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — DIFFERS: sequential clone loop, not O(1) slice
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(j), Span O(j) — ACCEPTED DIFFERENCE: sequential clone loop, not O(1) slice
         fn subseq(a: &Self, start: usize, length: usize) -> (subseq: Self)
             where T: Clone + Eq
             requires
@@ -174,7 +174,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.13 (append). Concatenate two sequences.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — DIFFERS: span O(|a|+|b|) not O(1), sequential loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|a| + |b|), Span O(|a| + |b|) — ACCEPTED DIFFERENCE: span O(|a|+|b|) not O(1), sequential loops
         fn append(a: &ArraySeqStPerS<T>, b: &ArraySeqStPerS<T>) -> (appended: Self)
             where T: Clone + Eq
             requires
@@ -188,7 +188,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.14 (filter). Keep elements satisfying `pred`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(lg |a| + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential loop
         /// - The multiset postcondition captures predicate satisfaction, provenance,
         ///   and completeness in a single statement.
         fn filter<F: Fn(&T) -> bool>(a: &ArraySeqStPerS<T>, pred: &F, Ghost(spec_pred): Ghost<spec_fn(T) -> bool>) -> (filtered: Self)
@@ -211,7 +211,7 @@ pub mod ArraySeqStPer {
         /// - Definition 18.16 (update). Return a copy with the index replaced by the new value.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a|), Span O(1)
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(1), Span O(1)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: clones full array, not O(1)
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: clones full array, not O(1)
         fn update(a: &ArraySeqStPerS<T>, index: usize, item: T) -> (updated: Self)
             where T: Clone + Eq
             requires
@@ -227,7 +227,7 @@ pub mod ArraySeqStPer {
         ///   the ordering of `updates` takes effect when positions collide.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + |b|), Span O(lg(degree(b)))
         /// - Alg Analysis: APAS (Ch22 CS 22.2): Work O(|b|), Span O(lg(degree(b)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — DIFFERS: span O(n+m) not O(lg degree), sequential loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n + m), Span O(n + m) — ACCEPTED DIFFERENCE: span O(n+m) not O(lg degree), sequential loops
         fn inject(a: &Self, updates: &Vec<(usize, T)>) -> (injected: Self)
             where T: Clone + Eq
             requires
@@ -264,7 +264,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.18 (reduce). Combine elements using associative `f` and identity `id`.
         /// - Alg Analysis: APAS (Ch20 CS 20.4): Work O(1 + Sigma W(f)), Span O(lg |a| * max S(f))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential fold
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential fold
         fn reduce<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (reduced: T)
             where T: Clone
             requires
@@ -277,7 +277,7 @@ pub mod ArraySeqStPer {
 
         /// - Definition 18.19 (scan). Prefix-reduce returning inclusive prefix sums and total.
         /// - Alg Analysis: APAS (Ch20 CS 20.5): Work O(|a|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(lg n), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(lg n), sequential loop
         fn scan<F: Fn(&T, &T) -> T>(a: &ArraySeqStPerS<T>, f: &F, Ghost(spec_f): Ghost<spec_fn(T, T) -> T>, id: T) -> (scanned: (ArraySeqStPerS<T>, T))
             where T: Clone + Eq
             requires
@@ -294,7 +294,7 @@ pub mod ArraySeqStPer {
 
         /// Algorithm 18.4 (map). Transform each element via `f`.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(x))), Span O(1 + max S(f(x)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(1), sequential loop
         fn map<U: Clone, F: Fn(&T) -> U>(a: &ArraySeqStPerS<T>, f: &F) -> (mapped: ArraySeqStPerS<U>)
             requires
                 forall|i: int| 0 <= i < a.seq@.len() ==> #[trigger] f.requires((&a.seq@[i],)),
@@ -304,7 +304,7 @@ pub mod ArraySeqStPer {
 
         /// Algorithm 18.3 (tabulate). Build a sequence by applying `f` to each index.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(1 + Sigma W(f(i))), Span O(1 + max S(f(i)))
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: span O(n) not O(1), sequential loop
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: span O(n) not O(1), sequential loop
         fn tabulate<F: Fn(usize) -> T>(f: &F, length: usize) -> (tab_seq: ArraySeqStPerS<T>)
             requires
                 length <= usize::MAX,
@@ -315,7 +315,7 @@ pub mod ArraySeqStPer {
 
         /// Definition 18.15 (flatten). Concatenate a sequence of sequences.
         /// - Alg Analysis: APAS (Ch20 CS 20.2): Work O(|a| + sum |a[i]|), Span O(lg |a|)
-        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — DIFFERS: span O(Σ|a_i|) not O(lg|a|), sequential nested loops
+        /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(Σ|a_i|), Span O(Σ|a_i|) — ACCEPTED DIFFERENCE: span O(Σ|a_i|) not O(lg|a|), sequential nested loops
         fn flatten(a: &ArraySeqStPerS<ArraySeqStPerS<T>>) -> (flattened: ArraySeqStPerS<T>)
             where T: Clone + Eq
             requires

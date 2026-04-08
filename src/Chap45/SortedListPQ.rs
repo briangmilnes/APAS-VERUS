@@ -175,7 +175,7 @@ broadcast use {
                     Self::spec_sorted(pq.spec_seq());
 
             /// - Alg Analysis: APAS (Ch45 cost table): Work O(1), Span O(1)
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: persistent array drops first element by copying
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: persistent array drops first element by copying
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>))
                 requires
                     obeys_feq_clone::<T>(),
@@ -557,7 +557,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — DIFFERS: subseq_copy rebuilds without first element.
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) — ACCEPTED DIFFERENCE: subseq_copy rebuilds without first element.
             fn delete_min(&self) -> (min_and_rest: (Self, Option<T>)) {
                 if self.elements.length() == 0 {
                     return (self.clone(), None);
@@ -821,7 +821,7 @@ broadcast use {
             }
 
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
-            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: n calls to insert, each O(n).
+            /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — ACCEPTED DIFFERENCE: n calls to insert, each O(n).
             fn from_seq(seq: &ArraySeqStPerS<T>) -> (pq: Self) {
                 let n = seq.length();
                 let mut pq = Self::empty();
