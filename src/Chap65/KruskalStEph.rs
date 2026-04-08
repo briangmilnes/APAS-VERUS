@@ -171,6 +171,7 @@ pub mod KruskalStEph {
         let ghost initial_dom = uf@.parent.dom();
 
         // Establish opaque wf for the loop invariant.
+        // Veracity: NEEDED proof block
         proof { assert(opaque_spec_unionfindsteph_wf(uf)) by { reveal(opaque_spec_unionfindsteph_wf); }; }
 
         let mut i: usize = 0;
@@ -197,6 +198,7 @@ pub mod KruskalStEph {
             let edge = edges_vec[i].clone_view();
 
             // Prove endpoints are in UF domain.
+            // Veracity: NEEDED proof block
             proof {
                 lemma_sorted_edge_in_uf::<V>(
                     edges_vec@[i as int], pre_sort, edge_seq, mapped_es,
@@ -287,6 +289,7 @@ pub mod KruskalStEph {
             }
 
             // Prove outer invariant for i+1.
+            // Veracity: NEEDED proof block
             proof {
                 let new_i = i as int + 1;
                 // Prefix [0..new_i) sorted.
@@ -347,6 +350,7 @@ pub mod KruskalStEph {
 
         // Bridge: all graph vertices are now in UF.
         // After while: vi >= vertex_seq.len(), so all vertex_seq elements are in UF.
+        // Veracity: NEEDED proof block
         proof {
             let mapped_vs = vertex_seq@.map(|_i: int, t: V| t@);
                 uf@.parent.contains_key(v)

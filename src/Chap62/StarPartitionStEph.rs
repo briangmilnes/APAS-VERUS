@@ -148,6 +148,7 @@ pub mod StarPartitionStEph {
                 let _ = processed.insert(vc_proc);
 
                 // Prove inner loop invariants from outer loop inv + insert ensures.
+                // Veracity: NEEDED proof block
                 proof {
                     // From insert ensures and clone_view@ == vv:
                     // partition_map stores vc_val at key vv; vc_val@ == vv.
@@ -194,6 +195,7 @@ pub mod StarPartitionStEph {
                             let ghost cv: V::V = (*vertex)@;
                             partition_map.insert(b.clone_view(), vertex.clone_view());
                             let _ = processed.insert(b.clone_view());
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Prefix invariant maintained (insert only adds bv, old j<vi still covered).
                             }
@@ -206,6 +208,7 @@ pub mod StarPartitionStEph {
                             let ghost cv: V::V = (*vertex)@;
                             partition_map.insert(a.clone_view(), vertex.clone_view());
                             let _ = processed.insert(a.clone_view());
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Prefix invariant maintained.
                             }
@@ -216,6 +219,7 @@ pub mod StarPartitionStEph {
             }
 
             // Prove forall j <= vi: processed@.contains(vert_vec@[j]@) (before incrementing vi).
+            // Veracity: NEEDED proof block
             proof {
                 // (*vertex)@ == vert_vec@[vi as int]@ from Vec::index ensures.
                 // In both branches of the if, vertex ends up in processed:
@@ -228,7 +232,9 @@ pub mod StarPartitionStEph {
         }
 
         // Post-loop: connect graph.V@ to partition_map domain via to_seq ensures.
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             assert forall|v_view: V::V| #[trigger] graph.V@.contains(v_view)
                 implies partition_map@.contains_key(v_view) by {
                 // to_seq ensures: graph.V@.contains(v_view) ↔ vert_vec@.map(fn).contains(v_view)
@@ -236,6 +242,7 @@ pub mod StarPartitionStEph {
                 // trigger on vert_vec@[j]@ avoids lambda-in-trigger error.
                 let j = choose|j: int| 0 <= j < nv as int && #[trigger] vert_vec@[j]@ == v_view;
                 // vi == nv after loop: loop invariant gives processed@.contains(vert_vec@[j]@).
+                // Veracity: NEEDED assert
                 assert(processed@.contains(v_view));
             };
         }

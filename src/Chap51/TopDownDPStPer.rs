@@ -215,6 +215,7 @@ pub mod TopDownDPStPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct construction.
         fn new(s: ArraySeqStPerS<char>, t: ArraySeqStPerS<char>) -> (dp: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStPerS {
                 seq_s: s,
@@ -258,6 +259,7 @@ pub mod TopDownDPStPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — struct reconstruction with empty memo.
         fn clear_memo(self) -> (dp: Self) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             TopDownDPStPerS {
                 seq_s: self.seq_s,
@@ -269,6 +271,7 @@ pub mod TopDownDPStPer {
         /// Compute MED using top-down memoization (Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — top-down DP with memoization; St sequential.
         fn med_memoized(&self) -> (distance: usize) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -305,6 +308,7 @@ pub mod TopDownDPStPer {
                 } else {
                     let del_cost = self.med_recursive(i - 1, j, memo);
                     let ins_cost = self.med_recursive(i, j - 1, memo);
+                    // Veracity: NEEDED proof block
                     proof {
                         self.lemma_spec_med_bounded((i - 1) as nat, j as nat);
                         self.lemma_spec_med_bounded(i as nat, (j - 1) as nat);
@@ -319,7 +323,9 @@ pub mod TopDownDPStPer {
 
             let ghost pre_memo = memo@;
             memo.insert(Pair(i, j), result);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
                 implies
                     memo@[(a, b)] as nat == self.spec_med(a as nat, b as nat)
@@ -374,6 +380,7 @@ pub mod TopDownDPStPer {
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+            // Veracity: NEEDED proof block
             proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }

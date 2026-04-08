@@ -1,0 +1,195 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: expected parentheses
+   --> src/Chap43/OrderedSetStPer.rs:481:28
+    |
+481 | assert                     assert(!right@.contains(key@));
+    |                            ^^^^^^
+
+error[E0425]: cannot find type `OrderedSetStPer` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1119:51
+     |
+1119 |     impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStPer<T> {
+     |                                                   ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStPer` defined here
+     |
+help: a struct with a similar name exists
+     |
+1119 -     impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStPer<T> {
+1119 +     impl<T: StT + Ord + TotalOrder> PartialEq for AVLTreeSetStPer<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPer` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1125:52
+     |
+1125 |     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPer<T> {
+     |                                                    ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStPer` defined here
+     |
+help: a struct with a similar name exists
+     |
+1125 -     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPer<T> {
+1125 +     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSetStPer<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPer` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1137:54
+     |
+1137 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPer<T> {
+     |                                                      ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStPer.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStPer<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStPer` defined here
+     |
+help: a struct with a similar name exists
+     |
+1137 -     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPer<T> {
+1137 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSetStPer<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPerIter` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1149:65
+     |
+1149 |     impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
+     |                                                                 ^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:953:5
+     |
+ 953 |     pub struct AVLTreeSeqStPerIter<'a, T: StT> {
+     |     ------------------------------------------ similarly named struct `AVLTreeSeqStPerIter` defined here
+     |
+help: a struct with a similar name exists
+     |
+1149 -     impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for OrderedSetStPerIter<T> {
+1149 +     impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for AVLTreeSeqStPerIter<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPerIter` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1155:54
+     |
+1155 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerIter<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:953:5
+     |
+ 953 |     pub struct AVLTreeSeqStPerIter<'a, T: StT> {
+     |     ------------------------------------------ similarly named struct `AVLTreeSeqStPerIter` defined here
+     |
+help: a struct with a similar name exists
+     |
+1155 -     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerIter<T> {
+1155 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSeqStPerIter<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPerGhostIterator` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1161:52
+     |
+1161 |     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPerGhostIterator<T> {
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:961:5
+     |
+ 961 |     pub struct AVLTreeSeqStPerGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStPerGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1161 -     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStPerGhostIterator<T> {
+1161 +     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSeqStPerGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPerGhostIterator` in this scope
+    --> src/Chap43/OrderedSetStPer.rs:1167:54
+     |
+1167 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerGhostIterator<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:961:5
+     |
+ 961 |     pub struct AVLTreeSeqStPerGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStPerGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1167 -     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStPerGhostIterator<T> {
+1167 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSeqStPerGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStPer` in this scope
+  --> src/Chap43/Example43_1.rs:33:20
+   |
+33 |         let set_a: OrderedSetStPer<String> = OrderedSetStPerLit![
+   |                    ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `from_sorted_elements` in module `$crate::Chap43::OrderedSetStPer::OrderedSetStPer`
+    --> src/Chap43/OrderedSetStPer.rs:1113:63
+     |
+1113 |               $crate::Chap43::OrderedSetStPer::OrderedSetStPer::from_sorted_elements(vec![$($elem),+])
+     |                                                                 ^^^^^^^^^^^^^^^^^^^^ not found in `$crate::Chap43::OrderedSetStPer::OrderedSetStPer`
+     |
+    ::: src/Chap43/Example43_1.rs:33:46
+     |
+  33 |           let set_a: OrderedSetStPer<String> = OrderedSetStPerLit![
+     |  ______________________________________________-
+  34 | |             "artie".to_string(),
+  35 | |             "burt".to_string(),
+  36 | |             "finn".to_string(),
+...    |
+  40 | |             "tina".to_string()
+  41 | |         ];
+     | |_________- in this macro invocation
+     |
+     = note: this error originates in the macro `OrderedSetStPerLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider importing this function
+    -->  src/Chap43/Example43_1.rs:6:5
+     |
+   6 +     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::from_sorted_elements;
+     |
+
+error[E0425]: cannot find type `OrderedSetStPer` in this scope
+   --> src/Chap43/Example43_1.rs:179:22
+    |
+179 |         let int_set: OrderedSetStPer<i32> = OrderedSetStPerLit![1, 3, 5, 7, 9, 11, 13];
+    |                      ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `from_sorted_elements` in module `$crate::Chap43::OrderedSetStPer::OrderedSetStPer`
+    --> src/Chap43/OrderedSetStPer.rs:1113:63
+     |
+1113 |             $crate::Chap43::OrderedSetStPer::OrderedSetStPer::from_sorted_elements(vec![$($elem),+])
+     |                                                               ^^^^^^^^^^^^^^^^^^^^ not found in `$crate::Chap43::OrderedSetStPer::OrderedSetStPer`
+     |
+    ::: src/Chap43/Example43_1.rs:179:45
+     |
+ 179 |         let int_set: OrderedSetStPer<i32> = OrderedSetStPerLit![1, 3, 5, 7, 9, 11, 13];
+     |                                             ------------------------------------------ in this macro invocation
+     |
+     = note: this error originates in the macro `OrderedSetStPerLit` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider importing this function
+    -->  src/Chap43/Example43_1.rs:6:5
+     |
+   6 +     use crate::Chap43::OrderedSetStEph::OrderedSetStEph::from_sorted_elements;
+     |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStPer`
+   --> src/Chap43/Example43_1.rs:160:26
+    |
+160 |         let joined_set = OrderedSetStPer::join(&left_split, &right_split);
+    |                          ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStPer`
+
+error: aborting due to 13 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1954MB, peak z3 RSS: 0MB, min free: 19459MB
+Sampled CPU Usage: rust_verify: 44s, z3 children: 61s

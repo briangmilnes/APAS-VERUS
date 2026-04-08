@@ -145,12 +145,17 @@ pub mod StarContractionMtEph {
     {
         if graph.sizeE() == 0 || fuel == 0 {
             let verts = graph.vertices();
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(verts.spec_setsteph_wf());
             }
             let result = base(verts);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert(verts.spec_setsteph_wf() && base.ensures((verts,), result));
+                // Veracity: NEEDED assert
                 assert(verts@ == graph@.V && verts.spec_setsteph_wf() && base.ensures((verts,), result));
             }
             return result;
@@ -167,12 +172,17 @@ pub mod StarContractionMtEph {
         // Prove expand's guarded requires: v, e, c are wf; r_inv(r) from induction.
         let verts = graph.vertices();
         let eds = graph.edges();
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             assert(verts.spec_setsteph_wf());
+            // Veracity: NEEDED assert
             assert(eds.spec_setsteph_wf());
+            // Veracity: NEEDED assert
             assert(centers.spec_setsteph_wf());
         }
         let result = expand(verts, eds, &centers, &partition_map, r);
+        // Veracity: NEEDED proof block
         proof {
         }
         result
@@ -221,6 +231,7 @@ pub mod StarContractionMtEph {
     {
         let fuel = graph.sizeV();
         let result = star_contract_mt_fuel(graph, seed, base, expand, fuel, Ghost(r_inv));
+        // Veracity: NEEDED proof block
         proof {
             if graph@.A.is_empty() {
                 // Callee's existential now holds; re-assert for Z3 stability.
@@ -259,14 +270,18 @@ pub mod StarContractionMtEph {
 
         // Establish that all edges in the array are graph edges with endpoints in graph@.V.
         // Uses spec_index (returns exec Edge<V>) to avoid view-of-view confusion.
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             assert forall |j: int| 0 <= j < n_edges as int implies
                 graph@.V.contains(#[trigger] (*edges_arc).spec_index(j)@.0) &&
                 graph@.V.contains((*edges_arc).spec_index(j)@.1) by {
                 // Arc::new ensures: *edges_arc == edges_seq, so spec_index matches.
                 // from_vec postcondition: edges_seq.spec_index(j) == edges_vec@[j]
                 // to_seq postcondition: graph.E@.contains(edges_vec@[j]@)
+                // Veracity: NEEDED assert
                 assert(edges_vec@.map(|_i: int, t: Edge<V>| t@)[j] == edges_vec@[j]@);
+                // Veracity: NEEDED assert
                 assert(graph@.A.contains(edges_vec@[j]@));
                 // spec_graphview_wf: endpoints are vertices
                 let edge_view = edges_vec@[j]@;
@@ -279,6 +294,7 @@ pub mod StarContractionMtEph {
         );
 
         let quotient = UnDirGraphMtEph { V: centers.clone(), E: quotient_edges };
+        // Veracity: NEEDED proof block
         proof {
             // Finiteness: proved from spec_setsteph_wf.
             // Edge closure: from route_edges_parallel postcondition.
@@ -328,17 +344,20 @@ pub mod StarContractionMtEph {
             let Edge(u, v) = edge;
 
             // Prove u and v are graph vertices so partition_map covers them.
+            // Veracity: NEEDED proof block
             proof {
                 // nth ensures: *edge == (*edges).spec_index(start as int)
                 // spec_index(start)@ == (*edge)@
                 // (*edge)@ == ((*u)@, (*v)@) from Edge<V> view
                 // From requires: graph_v_view.contains(spec_index(start)@.0)
+                // Veracity: NEEDED assert
                 assert(graph_v_view.contains((*edges).spec_index(start as int)@.0));
                 // spec_valid_partition_map part 1: all graph vertices are in partition_map
             }
 
             let u_center = if let Some(val) = partition_map.get(u) {
                 let c = val.clone_view();
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 c
@@ -348,6 +367,7 @@ pub mod StarContractionMtEph {
 
             let v_center = if let Some(val) = partition_map.get(v) {
                 let c = val.clone_view();
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 c
@@ -363,6 +383,7 @@ pub mod StarContractionMtEph {
                 };
                 let mut new_edges: SetStEph<Edge<V>> = SetLit![];
                 let _ = new_edges.insert(new_edge);
+                // Veracity: NEEDED proof block
                 proof {
                     // new_edge has endpoints from {u_center, v_center} ⊆ centers_view
                 }

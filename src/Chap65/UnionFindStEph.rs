@@ -223,6 +223,7 @@ pub mod UnionFindStEph {
                 elements: Vec::new(),
                 roots: Ghost(Map::empty()),
             };
+            // Veracity: NEEDED proof block
             proof {
                 // Reveal spec_unionfindsteph_wf then sub-predicates — all vacuously true on empty maps.
                 reveal(spec_unionfindsteph_wf);
@@ -252,6 +253,7 @@ pub mod UnionFindStEph {
                 let v2 = v.clone();
                 let v3 = v.clone();
 
+                // Veracity: NEEDED proof block
                 proof { lemma_three_clones_eq(v, v1, v2, v3); }
 
                 self.parent.insert(v1, v2);
@@ -260,6 +262,7 @@ pub mod UnionFindStEph {
                 self.elements.push(v);
                 self.roots = Ghost(self.roots@.insert(v_view, v_view));
 
+                // Veracity: NEEDED proof block
                 proof { lemma_insert_preserves_wf(*self, *old(self), v); }
             }
         }
@@ -275,16 +278,19 @@ pub mod UnionFindStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(alpha(n)), Span O(alpha(n)) — matches APAS amortized
         #[verifier::rlimit(30)]
         fn union(&mut self, u: &V, v: &V) {
+            // Veracity: NEEDED proof block
             proof { lemma_wf_type_axioms(&*old(self)); }
             let root_u = find_root_loop(self, u);
             let root_v = find_root_loop(self, v);
             if !feq(&root_u, &root_v) {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_root_rank_lt_elements(self, root_u@);
                     lemma_root_rank_lt_elements(self, root_v@);
                 }
                 let ghost mid_uf = *self;
                 let info = union_merge(self, root_u, root_v);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_prove_union_result(
                         &*self, &mid_uf,
@@ -294,6 +300,7 @@ pub mod UnionFindStEph {
                     );
                 }
             } else {
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_wf_parent_dom_eq_roots_dom(self);
                     lemma_union_result_identity(self.roots@, u@, v@);
@@ -315,6 +322,7 @@ pub mod UnionFindStEph {
         #[verifier::rlimit(30)]
         fn num_sets(&mut self) -> (count: usize) {
             broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+            // Veracity: NEEDED proof block
             proof { reveal(spec_unionfindsteph_wf); reveal(spec_elements_forward); }
             let mut roots_set = HashSetWithViewPlus::<V>::new();
             let mut i: usize = 0;
@@ -326,6 +334,7 @@ pub mod UnionFindStEph {
                 decreases self.elements@.len() - i,
             {
                 let v = self.elements[i].clone();
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 let root = find_root_loop(self, &v);
@@ -1552,6 +1561,7 @@ pub mod UnionFindStEph {
             uf@.roots[root@] == root@,
     {
         broadcast use crate::vstdplus::feq::feq::group_feq_axioms;
+        // Veracity: NEEDED proof block
         proof {
             reveal(spec_unionfindsteph_wf);
             reveal(spec_parent_closed);
@@ -1561,11 +1571,13 @@ pub mod UnionFindStEph {
             reveal(spec_self_parent_is_root);
         }
         let mut current = v.clone();
+        // Veracity: NEEDED proof block
         proof {
         }
 
         // Read first parent for the while condition.
         let mut p = uf.parent.get(&current).unwrap().clone();
+        // Veracity: NEEDED proof block
         proof {
             let ghost pv = uf.parent@[current@];
         }
@@ -1582,12 +1594,14 @@ pub mod UnionFindStEph {
                 uf@.parent.contains_key(p@),
             decreases uf@.rank[uf@.roots[v@]] - uf@.rank[current@],
         {
+            // Veracity: NEEDED proof block
             proof {
                 // p@ != current@, so non-root.
             }
 
             current = p;
             p = uf.parent.get(&current).unwrap().clone();
+            // Veracity: NEEDED proof block
             proof {
                 let ghost pv = uf.parent@[current@];
             }
@@ -1597,6 +1611,7 @@ pub mod UnionFindStEph {
         // Invariant: p@ == parent[current@]@. So parent[current@]@ == current@.
         // wf self-parent: roots[current@] == current@. Invariant: roots[current@] == roots[v@].
         // Therefore current@ == roots[v@].
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -1666,6 +1681,7 @@ pub mod UnionFindStEph {
 
         let ru1 = root_u.clone();
         let rv1 = root_v.clone();
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -1674,14 +1690,17 @@ pub mod UnionFindStEph {
         let ghost winner_v: V;
 
         if rank_u < rank_v {
+            // Veracity: NEEDED proof block
             proof { winner_view = root_v_view; loser_view = root_u_view; winner_v = rv1; }
             uf.parent.insert(ru1, rv1);
         } else {
+            // Veracity: NEEDED proof block
             proof { winner_view = root_u_view; loser_view = root_v_view; winner_v = ru1; }
             uf.parent.insert(rv1, ru1);
             if rank_u == rank_v {
                 let ru2 = root_u.clone();
                 let ghost elem_len = uf.elements.len();
+                // Veracity: NEEDED proof block
                 proof {
                     // rank_u < elements.len() (from requires). elements.len() is usize,
                     // so rank_u < usize::MAX, and rank_u + 1 <= usize::MAX.
@@ -1742,6 +1761,7 @@ pub mod UnionFindStEph {
         let ghost root_v_view = root_v@;
         let ghost mid_roots = uf.roots@;
 
+        // Veracity: NEEDED proof block
         proof {
             lemma_union_merge_exec_pre(&mid_uf, root_u_view, root_v_view);
         }
@@ -1751,6 +1771,7 @@ pub mod UnionFindStEph {
 
         let ru1 = root_u.clone();
         let rv1 = root_v.clone();
+        // Veracity: NEEDED proof block
         proof {
         }
 
@@ -1759,14 +1780,17 @@ pub mod UnionFindStEph {
         let ghost winner_v: V;
 
         if rank_u < rank_v {
+            // Veracity: NEEDED proof block
             proof { winner_view = root_v_view; loser_view = root_u_view; winner_v = rv1; }
             uf.parent.insert(ru1, rv1);
         } else {
+            // Veracity: NEEDED proof block
             proof { winner_view = root_u_view; loser_view = root_v_view; winner_v = ru1; }
             uf.parent.insert(rv1, ru1);
             if rank_u == rank_v {
                 let ru2 = root_u.clone();
                 let ghost elem_len = uf.elements.len();
+                // Veracity: NEEDED proof block
                 proof {
                 }
                 uf.rank.insert(ru2, rank_u + 1);
@@ -1785,6 +1809,7 @@ pub mod UnionFindStEph {
 
         let info = Ghost(UnionMergeInfo { winner_view, loser_view, winner_val: winner_v });
 
+        // Veracity: NEEDED proof block
         proof {
             // Prove opaque roots predicate in isolated proof context (no Map =~=).
             lemma_prove_roots_changed(
@@ -1820,6 +1845,7 @@ pub mod UnionFindStEph {
             uf@.parent.dom() =~= old(uf)@.parent.dom(),
             uf@.elements =~= old(uf)@.elements,
     {
+        // Veracity: NEEDED proof block
         proof { lemma_wf_type_axioms(&*old(uf)); }
         let root_u = find_root_loop(uf, u);
         let root_v = find_root_loop(uf, v);
@@ -1842,10 +1868,12 @@ pub mod UnionFindStEph {
             uf@.parent.dom() =~= old(uf)@.parent.dom(),
             uf@.elements =~= old(uf)@.elements,
     {
+        // Veracity: NEEDED proof block
         proof { lemma_wf_type_axioms(&*old(uf)); }
         let root_u = find_root_loop(uf, u);
         let root_v = find_root_loop(uf, v);
         if !feq(&root_u, &root_v) {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_root_rank_lt_elements(uf, root_u@);
                 lemma_root_rank_lt_elements(uf, root_v@);
@@ -1871,10 +1899,12 @@ pub mod UnionFindStEph {
             uf@.parent.dom() =~= old(uf)@.parent.dom(),
             uf@.elements =~= old(uf)@.elements,
     {
+        // Veracity: NEEDED proof block
         proof { lemma_wf_type_axioms(&*old(uf)); }
         let root_u = find_root_loop(uf, u);
         let root_v = find_root_loop(uf, v);
         if !feq(&root_u, &root_v) {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_root_rank_lt_elements(uf, root_u@);
                 lemma_root_rank_lt_elements(uf, root_v@);

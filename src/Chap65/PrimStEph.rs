@@ -184,6 +184,7 @@ pub mod PrimStEph {
                 Ordering::Greater
             } else {
                 let vc = TotalOrder::cmp(&self.vertex, &other.vertex);
+                // Veracity: NEEDED proof block
                 proof {
                     if TotalOrder::le(self.vertex, other.vertex) && TotalOrder::le(other.vertex, self.vertex) {
                         V::antisymmetric(self.vertex, other.vertex);
@@ -194,6 +195,7 @@ pub mod PrimStEph {
                     Ordering::Greater => Ordering::Greater,
                     Ordering::Equal => {
                         // self.vertex == other.vertex.
+                        // Veracity: NEEDED proof block
                         proof { V::reflexive(self.vertex); }
                         match (&self.parent, &other.parent) {
                             (None, None) => Ordering::Equal,
@@ -201,6 +203,7 @@ pub mod PrimStEph {
                             (Some(_), None) => Ordering::Greater,
                             (Some(a), Some(b)) => {
                                 let pc = TotalOrder::cmp(a, b);
+                                // Veracity: NEEDED proof block
                                 proof {
                                     if TotalOrder::le(*a, *b) && TotalOrder::le(*b, *a) {
                                         V::antisymmetric(*a, *b);
@@ -268,6 +271,7 @@ pub mod PrimStEph {
         let ghost DA_rev = graph@.A.map(|e: (V::V, V::V, u64)| (e.1, e.0));
         let ghost DA = DA_fwd.union(DA_rev);
 
+        // Veracity: NEEDED proof block
         proof {
             graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.0, e.1));
             graph@.A.lemma_map_finite(|e: (V::V, V::V, u64)| (e.1, e.0));
@@ -336,7 +340,9 @@ pub mod PrimStEph {
                 let neighbors = graph.ng(&u);
 
                 // Prove neighbors.spec_setsteph_wf() so we can call iter().
+                // Veracity: NEEDED proof block
                 proof {
+                    // Veracity: NEEDED assert
                     assert(neighbors.spec_setsteph_wf()) by {
                             implies graph@.V.contains(w)
                         by {
@@ -353,6 +359,7 @@ pub mod PrimStEph {
                 let mut it = neighbors.iter();
 
                 // Every element in ng(u) is a directed adjacency pair (u@, v@) in DA.
+                // Veracity: NEEDED proof block
                 proof {
                         implies DA.contains((u@, (#[trigger] it@.1[j])@))
                     by {
@@ -398,6 +405,7 @@ pub mod PrimStEph {
                     match it.next() {
                         None => break,
                         Some(v) => {
+                            // Veracity: NEEDED proof block
                             proof {
                                 // Current element is at position it@.0 - 1 (after next() advanced).
                                 let ghost pos = (it@.0 - 1) as int;
@@ -467,6 +475,7 @@ pub mod PrimStEph {
             ensures cloned@ == self@,
         {
             let cloned = PQEntry { priority: self.priority, vertex: self.vertex.clone(), parent: self.parent.clone() };
+            // Veracity: NEEDED proof block
             proof { assume(cloned@ == self@); }
             cloned
         }

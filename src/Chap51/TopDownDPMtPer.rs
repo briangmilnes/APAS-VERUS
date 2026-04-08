@@ -102,6 +102,7 @@ pub mod TopDownDPMtPer {
         /// Compute MED using sequential top-down memoization (Algorithm 51.4).
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n*m) — sequential memo threading despite Mt name.
         fn med_memoized_concurrent(&self) -> (distance: usize) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -112,6 +113,7 @@ pub mod TopDownDPMtPer {
         /// Compute MED with parallel subproblem exploration.
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n*m), Span O(n+m) — fork-join on delete/insert subproblems; Mt parallel.
         fn med_memoized_parallel(&self) -> (distance: usize) {
+            // Veracity: NEEDED proof block
             proof { let _ = Pair_feq_trigger::<usize, usize>(); }
             let s_len = self.seq_s.length();
             let t_len = self.seq_t.length();
@@ -275,6 +277,7 @@ pub mod TopDownDPMtPer {
             } else {
                 let del_cost = med_recursive_sequential(seq_s, seq_t, memo, i - 1, j);
                 let ins_cost = med_recursive_sequential(seq_s, seq_t, memo, i, j - 1);
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_spec_med_fn_bounded(seq_s@, seq_t@, (i - 1) as nat, j as nat);
                     lemma_spec_med_fn_bounded(seq_s@, seq_t@, i as nat, (j - 1) as nat);
@@ -290,7 +293,9 @@ pub mod TopDownDPMtPer {
         let ghost s = seq_s@;
         let ghost t = seq_t@;
         let ghost pre_memo = memo@;
+        // Veracity: NEEDED proof block
         proof {
+            // Veracity: NEEDED assert
             assert forall|a: usize, b: usize| #[trigger] pre_memo.contains_key((a, b))
             implies
                 pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
@@ -298,6 +303,7 @@ pub mod TopDownDPMtPer {
             };
         }
         memo.insert(Pair(i, j), result);
+        // Veracity: NEEDED assert
         assert forall|a: usize, b: usize| #[trigger] memo@.contains_key((a, b))
         implies
             memo@[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
@@ -338,6 +344,7 @@ pub mod TopDownDPMtPer {
             };
             handle.release_read();
             if let Some(result) = found {
+                // Veracity: NEEDED proof block
                 proof { lemma_spec_med_fn_bounded(seq_s@, seq_t@, i as nat, j as nat); }
                 if result <= i + j {
                     return result;
@@ -360,14 +367,18 @@ pub mod TopDownDPMtPer {
                 let t1 = seq_t.clone();
                 let memo1 = clone_arc_rwlock(memo);
 
+                // Veracity: NEEDED assert
                 assert(memo1.pred().seq_s == s1@);
+                // Veracity: NEEDED assert
                 assert(memo1.pred().seq_t == t1@);
 
                 let s2 = seq_s.clone();
                 let t2 = seq_t.clone();
                 let memo2 = clone_arc_rwlock(memo);
 
+                // Veracity: NEEDED assert
                 assert(memo2.pred().seq_s == s2@);
+                // Veracity: NEEDED assert
                 assert(memo2.pred().seq_t == t2@);
 
                 let ghost s_view = seq_s@;
@@ -397,6 +408,7 @@ pub mod TopDownDPMtPer {
                 };
                 let (del_cost, ins_cost) = join(f1, f2);
 
+                // Veracity: NEEDED proof block
                 proof {
                     lemma_spec_med_fn_bounded(seq_s@, seq_t@, (i - 1) as nat, j as nat);
                     lemma_spec_med_fn_bounded(seq_s@, seq_t@, i as nat, (j - 1) as nat);
@@ -415,7 +427,9 @@ pub mod TopDownDPMtPer {
             let (mut current, write_handle) = rwlock.acquire_write();
             let ghost pre_insert = current@;
             current.insert(Pair(i, j), dist);
+            // Veracity: NEEDED proof block
             proof {
+                // Veracity: NEEDED assert
                 assert forall|a: usize, b: usize| #[trigger] current@.contains_key((a, b))
                 implies
                     current@[(a, b)] as nat == spec_med_fn(seq_s@, seq_t@, a as nat, b as nat)
@@ -483,6 +497,7 @@ pub mod TopDownDPMtPer {
             ensures eq == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)
         {
             let r = self.seq_s == other.seq_s && self.seq_t == other.seq_t;
+            // Veracity: NEEDED proof block
             proof { assume(r == (self.seq_s@ == other.seq_s@ && self.seq_t@ == other.seq_t@)); }
             r
         }

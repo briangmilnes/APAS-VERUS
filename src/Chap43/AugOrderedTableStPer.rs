@@ -507,6 +507,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
@@ -515,9 +516,6 @@ broadcast use {
         fn empty(reducer: F, identity: V) -> (empty: Self)
             ensures empty@ == Map::<K::V, V::V>::empty(), empty.spec_augorderedtablestper_wf()
         {
-                      assert(obeys_feq_full_trigger::<K>());
-           assert(obeys_feq_full_trigger::<V>());
-           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableStPer::empty();
             let r = Self {
                 base_table: base,
@@ -525,6 +523,7 @@ broadcast use {
                 reducer,
                 identity,
             };
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
             r
         }
@@ -533,9 +532,6 @@ broadcast use {
         fn singleton(k: K, v: V, reducer: F, identity: V) -> (tree: Self)
             ensures tree.spec_augorderedtablestper_wf()
         {
-                      assert(obeys_feq_full_trigger::<K>());
-           assert(obeys_feq_full_trigger::<V>());
-           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base = OrderedTableStPer::singleton(k, v.clone());
             let r = Self {
                 base_table: base,
@@ -543,6 +539,7 @@ broadcast use {
                 reducer,
                 identity,
             };
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
             r
         }
@@ -550,6 +547,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n) -- delegates to base_table find
         fn find(&self, k: &K) -> (found: Option<V>)
         {
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             self.base_table.find(k)
         }
@@ -566,6 +564,7 @@ broadcast use {
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
+            // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(&r);
             }
@@ -585,6 +584,7 @@ broadcast use {
                 reducer: clone_fn2(&self.reducer),
                 identity: self.identity.clone(),
             };
+            // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(&r);
             }
@@ -594,6 +594,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
@@ -601,9 +602,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base tabulate + recalculate
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
         {
-                      assert(obeys_feq_full_trigger::<K>());
-           assert(obeys_feq_full_trigger::<V>());
-           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base_table = OrderedTableStPer::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 

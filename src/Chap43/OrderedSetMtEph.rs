@@ -71,7 +71,6 @@ pub mod OrderedSetMtEph {
         requires inner.spec_orderedsetsteph_wf(), inner@.finite()
         ensures s@ == inner@, s.spec_orderedsetmteph_wf()
     {
-              assert(obeys_feq_full_trigger::<T>());
         let ghost view = inner@;
         OrderedSetMtEph {
             locked_set: RwLock::new(inner, Ghost(OrderedSetMtEphInv)),
@@ -314,10 +313,12 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) -- RwLock wrapper
         fn size(&self) -> (count: usize) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let count = inner.size();
+            // Veracity: NEEDED proof block
             proof { assume(count == self@.len()); }
             read_handle.release_read();
             count
@@ -325,7 +326,6 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn empty() -> (empty: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::empty();
             let ghost view = inner@;
             OrderedSetMtEph {
@@ -336,7 +336,6 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn singleton(x: T) -> (tree: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             let inner = OrderedSetStEph::singleton(x);
             let ghost view = inner@;
             OrderedSetMtEph {
@@ -347,10 +346,12 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, BST search
         fn find(&self, x: &T) -> (found: bool) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let found = inner.find(x);
+            // Veracity: NEEDED proof block
             proof { assume(found == self@.contains(x@)); }
             read_handle.release_read();
             found
@@ -358,10 +359,12 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap insert
         fn insert(&mut self, x: T) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost x_view = x@;
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(locked_val@.len() + 1 < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.insert(x);
             write_handle.release_write(locked_val);
@@ -370,6 +373,7 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(log n), Span O(log n) -- RwLock wrapper, treap delete
         fn delete(&mut self, x: &T) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost x_view = x@;
@@ -394,6 +398,7 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST intersection
         fn intersection(&mut self, other: &Self) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost other_view = other.ghost_locked_set@;
@@ -408,12 +413,14 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST union
         fn union(&mut self, other: &Self) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); use_type_invariant(other); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost other_view = other.ghost_locked_set@;
             let other_read = other.locked_set.acquire_read();
             let other_ref = other_read.borrow();
             let (mut locked_val, write_handle) = self.locked_set.acquire_write();
+            // Veracity: NEEDED proof block
             proof { assume(locked_val@.len() + other_ref@.len() < usize::MAX as nat); } // RWLOCK_GHOST
             locked_val.union(other_ref);
             write_handle.release_write(locked_val);
@@ -423,6 +430,7 @@ pub mod OrderedSetMtEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- RwLock wrapper, BST difference
         fn difference(&mut self, other: &Self) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(&*self); }
             let ghost old_view = self.ghost_locked_set@;
             let ghost other_view = other.ghost_locked_set@;
@@ -438,17 +446,18 @@ pub mod OrderedSetMtEph {
         #[verifier::loop_isolation(false)]
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- in_order traversal + vec copy
         fn to_seq(&self) -> (seq: ArraySeqStPerS<T>) {
+            // Veracity: NEEDED proof block
             proof { use_type_invariant(self); }
             let read_handle = self.locked_set.acquire_read();
             let inner = read_handle.borrow();
             let avl_seq = inner.to_seq();
+            // Veracity: NEEDED proof block
             proof { assume(inner@ =~= self@); }
             read_handle.release_read();
             use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::AVLTreeSeqStPerTrait;
             let len = avl_seq.length();
             let mut elements: Vec<T> = Vec::new();
             let mut i: usize = 0;
-            proof { assert(obeys_feq_full_trigger::<T>()); }
             while i < len
                 invariant
                     avl_seq.spec_avltreeseqstper_wf(),

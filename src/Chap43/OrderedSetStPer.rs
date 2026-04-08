@@ -113,7 +113,6 @@ broadcast use {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(a@ == b@);
     }
 
     //		Section 8. traits
@@ -429,29 +428,22 @@ broadcast use {
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, key, right) => {
+                // Veracity: NEEDED proof block
                 proof {
-                    assert(!left@.contains(key@));
-                    assert(!right@.contains(key@));
-                    assert(!left@.union(right@).contains(key@));
                     vstd::set_lib::lemma_len_subset(right@, left@.union(right@));
                 }
                 if right.is_empty() {
+                    // Veracity: NEEDED proof block
                     proof {
-                        assert forall|t: T| (#[trigger] tree@.contains(t@))
-                            implies t.cmp_spec(&key) == Less || key@ == t@ by {
-                            if left@.contains(t@) {
-                            } else {
-                            }
-                        };
                     }
                     Some(key)
                 } else {
                     let max_right = tree_max_key(&right);
+                    // Veracity: NEEDED proof block
                     proof {
                         let mr = max_right.unwrap();
-                        assert(right@.contains(mr@));
-                        assert(tree@.contains(mr@));
                         lemma_cmp_antisymmetry(mr, key);
+                        // Veracity: NEEDED assert
                         assert forall|t: T| (#[trigger] tree@.contains(t@))
                             implies t.cmp_spec(&mr) == Less || mr@ == t@ by {
                             if left@.contains(t@) {
@@ -484,8 +476,8 @@ broadcast use {
         match tree.expose() {
             Exposed::Leaf => None,
             Exposed::Node(left, key, right) => {
+                // Veracity: NEEDED proof block
                 proof {
-                    assert(!left@.contains(key@));
                     assert(!right@.contains(key@));
                     assert(!left@.union(right@).contains(key@));
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);

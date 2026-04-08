@@ -499,6 +499,7 @@ broadcast use {
         fn size(&self) -> (count: usize)
             ensures count == self@.dom().len(), self@.dom().finite()
         {
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             self.base_table.size()
         }
@@ -514,6 +515,7 @@ broadcast use {
                 reducer,
                 identity,
             };
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
             r
         }
@@ -529,6 +531,7 @@ broadcast use {
                 reducer,
                 identity,
             };
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(&r); }
             r
         }
@@ -559,6 +562,7 @@ broadcast use {
         fn is_empty(&self) -> (is_empty: bool)
             ensures is_empty == self@.dom().is_empty(), self@.dom().finite()
         {
+            // Veracity: NEEDED proof block
             proof {
                 lemma_aug_view(self);
                 lemma_pair_set_to_map_dom_finite(self.base_table.tree.inner@);
@@ -571,6 +575,7 @@ broadcast use {
         {
             self.base_table.insert(k, v, combine);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
         }
 
@@ -580,6 +585,7 @@ broadcast use {
         {
             let updated = self.base_table.delete(k);
             self.cached_reduction = calculate_reduction(&self.base_table, &self.reducer, &self.identity);
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             updated
         }
@@ -587,6 +593,7 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n), Span O(n) -- delegates to base_table domain
         fn domain(&self) -> (domain: ArraySetStEph<K>)
         {
+            // Veracity: NEEDED proof block
             proof { lemma_aug_view(self); }
             self.base_table.domain()
         }
@@ -594,9 +601,6 @@ broadcast use {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n log n), Span O(n log n) -- base tabulate O(n log n) + recalculate O(n)
         fn tabulate<G: Fn(&K) -> V>(f: G, keys: &ArraySetStEph<K>, reducer: F, identity: V) -> (tabulated: Self)
         {
-                      assert(obeys_feq_full_trigger::<K>());
-           assert(obeys_feq_full_trigger::<V>());
-           assert(obeys_feq_full_trigger::<Pair<K, V>>());
             let base_table = OrderedTableStEph::tabulate(f, keys);
             let cached_reduction = calculate_reduction(&base_table, &reducer, &identity);
 
