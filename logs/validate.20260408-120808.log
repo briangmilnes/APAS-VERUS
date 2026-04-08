@@ -1,0 +1,844 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap54
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:163:9
+    |
+163 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:60:13
+    |
+ 60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+    |             -------------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/Chap54/BFSSpecsAndLemmas.rs:60:43
+   |
+60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == UNREACHABLE() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:185:9
+    |
+185 |           lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:88:13
+    |
+ 88 | /             forall|j: int| 0 <= j < n && j != v ==>
+ 89 | |                 #[trigger] distances[j] == old_distances[j],
+    | |___________________________________________________________- failed precondition
+
+note: diagnostics via expansion
+  --> src/Chap54/BFSSpecsAndLemmas.rs:89:17
+   |
+89 |                 #[trigger] distances[j] == old_distances[j],
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_distances_bounded(tmp%, n) ✔
+
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:201:13
+    |
+201 |             spec_bfsmteph_wf(copy),
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+202 |     {
+203 |         assert forall|u: int, i: int|
+    |         ------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap54/BFSMtEph.rs:206:13
+    |
+206 |             copy.spec_index(u).spec_index(i) < copy.spec_len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+copy.spec_index(u).spec_index(i) < copy.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:224:9
+    |
+224 |           lemma_bfs_copy_preserves_bounded(original@, copy@, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:111:13
+    |
+111 | /             forall|i: int| 0 <= i < original.len() ==>
+112 | |                 #[trigger] copy[i] == original[i],
+    | |_________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSSpecsAndLemmas.rs:112:17
+    |
+112 |                 #[trigger] copy[i] == original[i],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_bfs_distances_bounded(tmp%, n) ✔
+tmp%.len() == tmp%.len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == tmp%.index(i) ✘
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:405:21
+    |
+405 | /                     forall|j: int| #![trigger next_verts@[j]] 0 <= j < next_verts@.len() ==>
+406 | |                         next_verts@[j] < n,
+    | |__________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:407:21
+    |
+407 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+408 | |                         (updates@[j]).0 < n
+409 | |                         && (updates@[j]).1 == next_dist
+410 | |                         && distances.spec_index((updates@[j]).0 as int) == UNREACHABLE,
+    | |______________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:414:21
+    |
+414 |                 if *distances.nth(v) == UNREACHABLE {
+    |                     ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:255:22
+    |
+255 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < distances.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:114:9
+    |
+114 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:69:13
+    |
+ 69 |             forall|i: int| 0 <= i < n ==> #[trigger] parents[i] == NO_PARENT,
+    |             ---------------------------------------------------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/Chap54/BFSSpecsAndLemmas.rs:69:43
+   |
+69 |             forall|i: int| 0 <= i < n ==> #[trigger] parents[i] == NO_PARENT,
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == NO_PARENT() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:136:9
+    |
+136 |           lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:136:13
+    |
+136 | /             forall|j: int| 0 <= j < n && j != v ==>
+137 | |                 #[trigger] parents[j] == old_parents[j],
+    | |_______________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSSpecsAndLemmas.rs:137:17
+    |
+137 |                 #[trigger] parents[j] == old_parents[j],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_parents_bounded(tmp%, n) ✔
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:152:9
+    |
+152 |           lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:159:13
+    |
+159 | /             forall|i: int| 0 <= i < original.len() ==>
+160 | |                 #[trigger] copy[i] == original[i],
+    | |_________________________________________________- failed precondition
+
+note: diagnostics via expansion
+   --> src/Chap54/BFSSpecsAndLemmas.rs:160:17
+    |
+160 |                 #[trigger] copy[i] == original[i],
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_bfs_parents_bounded(tmp%, n) ✔
+tmp%.len() == tmp%.len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == tmp%.index(i) ✘
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtEph.rs:558:21
+    |
+558 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+559 | |                         (updates@[j]).0 < n
+560 | |                         && (updates@[j]).1 < n
+561 | |                         && parents.spec_index((updates@[j]).0 as int) == NO_PARENT,
+    | |__________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtEph.rs:565:21
+    |
+565 |                 if *parents.nth(v) == NO_PARENT {
+    |                     ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqMtEph.rs:255:22
+    |
+255 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < parents.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:162:9
+    |
+162 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:60:13
+    |
+ 60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+    |             -------------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == UNREACHABLE() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:184:9
+    |
+184 |           lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:88:13
+    |
+ 88 | /             forall|j: int| 0 <= j < n && j != v ==>
+ 89 | |                 #[trigger] distances[j] == old_distances[j],
+    | |___________________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_distances_bounded(tmp%, n) ✔
+
+error: postcondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:201:13
+    |
+201 |             spec_bfsmtper_wf(copy),
+    |             ^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+202 |     {
+203 |         assert forall|u: int, i: int|
+    |         ------ at the end of the function body
+
+error: assertion failed
+   --> src/Chap54/BFSMtPer.rs:206:13
+    |
+206 |             copy.spec_index(u).spec_index(i) < copy.spec_len()
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: 
+
+copy.spec_index(u).spec_index(i) < copy.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:225:9
+    |
+225 |           lemma_bfs_copy_preserves_bounded(original@, copy@, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:111:13
+    |
+111 | /             forall|i: int| 0 <= i < original.len() ==>
+112 | |                 #[trigger] copy[i] == original[i],
+    | |_________________________________________________- failed precondition
+
+note: 
+
+spec_bfs_distances_bounded(tmp%, n) ✔
+tmp%.len() == tmp%.len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == tmp%.index(i) ✘
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:407:21
+    |
+407 | /                     forall|j: int| 0 <= j < next_verts@.len() ==>
+408 | |                         #[trigger] next_verts@[j] < n,
+    | |_____________________________________________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:409:21
+    |
+409 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+410 | |                         updates@[j].0 < n
+411 | |                         && updates@[j].1 == next_dist
+412 | |                         && distances.spec_index(updates@[j].0 as int) == UNREACHABLE,
+    | |____________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:416:21
+    |
+416 |                 if *distances.nth(v) == UNREACHABLE {
+    |                     ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:147:22
+    |
+147 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < distances.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:113:9
+    |
+113 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:69:13
+    |
+ 69 |             forall|i: int| 0 <= i < n ==> #[trigger] parents[i] == NO_PARENT,
+    |             ---------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == NO_PARENT() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:135:9
+    |
+135 |           lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:136:13
+    |
+136 | /             forall|j: int| 0 <= j < n && j != v ==>
+137 | |                 #[trigger] parents[j] == old_parents[j],
+    | |_______________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_parents_bounded(tmp%, n) ✔
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:151:9
+    |
+151 |           lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:159:13
+    |
+159 | /             forall|i: int| 0 <= i < original.len() ==>
+160 | |                 #[trigger] copy[i] == original[i],
+    | |_________________________________________________- failed precondition
+
+note: 
+
+spec_bfs_parents_bounded(tmp%, n) ✔
+tmp%.len() == tmp%.len() ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = tmp%.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == tmp%.index(i) ✘
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSMtPer.rs:569:21
+    |
+569 | /                     forall|j: int| #![trigger updates@[j]] 0 <= j < updates@.len() ==>
+570 | |                         updates@[j].0 < n
+571 | |                         && updates@[j].1 < n
+572 | |                         && parents.spec_index(updates@[j].0 as int) == NO_PARENT,
+    | |________________________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSMtPer.rs:576:21
+    |
+576 |                 if *parents.nth(v) == NO_PARENT {
+    |                     ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap18/ArraySeqMtPer.rs:147:22
+    |
+147 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+note: 
+
+v < parents.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:171:9
+    |
+171 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:60:13
+    |
+ 60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+    |             -------------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == UNREACHABLE() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:194:9
+    |
+194 |           lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:88:13
+    |
+ 88 | /             forall|j: int| 0 <= j < n && j != v ==>
+ 89 | |                 #[trigger] distances[j] == old_distances[j],
+    | |___________________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_distances_bounded(tmp%, n) ✔
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSStEph.rs:321:29
+    |
+321 | ...                   dist < n,
+    |                       ^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:323:29
+    |
+323 | / ...                   forall|j: int| 0 <= j < queue@.len() ==>
+324 | | ...                       (#[trigger] queue@[j]) < n,
+    | |____________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:335:29
+    |
+335 |                         if *distances.nth(v) == UNREACHABLE {
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:191:22
+    |
+191 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:338:41
+    |
+338 | ...                   let _ = distances.set(v, dist + 1);
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:173:22
+    |
+173 |             requires index < old(self).spec_len()
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:342:37
+    |
+185 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+342 | /                                     lemma_set_preserves_bounded(
+343 | |                                         &distances, &pre_inner_set,
+344 | |                                         v as int, (dist + 1) as usize, n as int,
+345 | |                                     );
+    | |_____________________________________^
+
+note: 
+
+v < distances.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:138:9
+    |
+138 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:69:13
+    |
+ 69 |             forall|i: int| 0 <= i < n ==> #[trigger] parents[i] == NO_PARENT,
+    |             ---------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == NO_PARENT() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:160:9
+    |
+160 |           lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:136:13
+    |
+136 | /             forall|j: int| 0 <= j < n && j != v ==>
+137 | |                 #[trigger] parents[j] == old_parents[j],
+    | |_______________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_parents_bounded(tmp%, n) ✔
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:438:29
+    |
+438 | ...                   forall|j: int| 0 <= j < queue@.len() ==> (#[trigger] queue@[j]) < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStEph.rs:445:29
+    |
+445 | ...                   forall|j: int| 0 <= j < order@.len() ==> (#[trigger] order@[j]) < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:452:29
+    |
+452 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:191:22
+    |
+191 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:454:37
+    |
+454 | ...                   let _ = parents.set(v, u);
+    |                               ^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStEph.rs:173:22
+    |
+173 |             requires index < old(self).spec_len()
+    |                      ---------------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStEph.rs:459:33
+    |
+151 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+459 | /                                 lemma_set_preserves_parents_bounded(
+460 | |                                     &parents, &pre_inner,
+461 | |                                     v as int, u, n as int,
+462 | |                                 );
+    | |_________________________________^
+
+note: 
+
+v < parents.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:171:9
+    |
+171 |         lemma_bfs_all_unreachable(distances@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:60:13
+    |
+ 60 |             forall|i: int| 0 <= i < n ==> #[trigger] distances[i] == UNREACHABLE,
+    |             -------------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == UNREACHABLE() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:193:9
+    |
+193 |           lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:88:13
+    |
+ 88 | /             forall|j: int| 0 <= j < n && j != v ==>
+ 89 | |                 #[trigger] distances[j] == old_distances[j],
+    | |___________________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_distances_bounded(tmp%, n) ✔
+
+error: invariant not satisfied before loop
+   --> src/Chap54/BFSStPer.rs:311:29
+    |
+311 | ...                   dist < n,
+    |                       ^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:313:29
+    |
+313 | / ...                   forall|j: int| 0 <= j < queue@.len() ==>
+314 | | ...                       #[trigger] queue@[j] < n,
+    | |__________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:325:29
+    |
+325 |                         if *distances.nth(v) == UNREACHABLE {
+    |                             ^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:179:22
+    |
+179 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:328:45
+    |
+328 | ...                   distances = ArraySeqStPerS::update(&old_d_inner, v, dist + 1);
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:274:17
+    |
+274 |                 index < a.seq@.len(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:332:37
+    |
+184 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+332 | /                                     lemma_update_preserves_bounded(
+333 | |                                         &distances, &old_d_inner,
+334 | |                                         v as int, (dist + 1) as usize, n as int,
+335 | |                                     );
+    | |_____________________________________^
+
+note: 
+
+v < distances.spec_len() 
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:138:9
+    |
+138 |         lemma_bfs_all_no_parent(parents@, n);
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:69:13
+    |
+ 69 |             forall|i: int| 0 <= i < n ==> #[trigger] parents[i] == NO_PARENT,
+    |             ---------------------------------------------------------------- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+forall |i|
+    let tmp%% = 0 in let tmp%% = i in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        tmp%.index(i) == NO_PARENT() ✘
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:160:9
+    |
+160 |           lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap54/BFSSpecsAndLemmas.rs:136:13
+    |
+136 | /             forall|j: int| 0 <= j < n && j != v ==>
+137 | |                 #[trigger] parents[j] == old_parents[j],
+    | |_______________________________________________________- failed precondition
+
+note: 
+
+tmp%.len() == n ✔
+tmp%.len() == n ✔
+let tmp%% = 0;
+    let tmp%% = v;
+        let tmp%% = n;
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_val < n ✔
+tmp%.index(v) == new_val ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = n in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == v) ==>
+        tmp%.index(j) == tmp%.index(j) ✘
+spec_bfs_parents_bounded(tmp%, n) ✔
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:428:29
+    |
+428 | ...                   forall|j: int| 0 <= j < queue@.len() ==> #[trigger] queue@[j] < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap54/BFSStPer.rs:435:29
+    |
+435 | ...                   forall|j: int| 0 <= j < order@.len() ==> #[trigger] order@[j] < n,
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:442:29
+    |
+442 |                         if *parents.nth(v) == NO_PARENT && order.len() < n {
+    |                             ^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:179:22
+    |
+179 |             requires index < self.spec_len()
+    |                      ----------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:444:39
+    |
+444 | ...                   parents = ArraySeqStPerS::update(&old_p_inner, v, u);
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap19/ArraySeqStPer.rs:274:17
+    |
+274 |                 index < a.seq@.len(),
+    |                 -------------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap54/BFSStPer.rs:449:33
+    |
+151 |               0 <= v < n,
+    |               ---------- failed precondition
+...
+449 | /                                 lemma_update_preserves_parents_bounded(
+450 | |                                     &parents, &old_p_inner,
+451 | |                                     v as int, u, n as int,
+452 | |                                 );
+    | |_________________________________^
+
+note: 
+
+v < parents.spec_len() 
+
+verification results:: 1338 verified, 32 errors
+error: aborting due to 54 previous errors
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 1047MB, peak z3 RSS: 222MB, min free: 22331MB
+Sampled CPU Usage: rust_verify: 13s, z3 children: 12s

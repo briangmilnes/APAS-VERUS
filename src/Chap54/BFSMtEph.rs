@@ -31,6 +31,7 @@ pub mod BFSMtEph {
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
     use crate::Chap02::HFSchedulerMtEph::HFSchedulerMtEph::join;
+    use crate::Chap54::BFSSpecsAndLemmas::BFSSpecsAndLemmas::*;
 
     verus! 
 {
@@ -40,8 +41,7 @@ pub mod BFSMtEph {
 
     pub type T<N> = ArraySeqMtEphS<ArraySeqMtEphS<N>>;
 
-    pub const UNREACHABLE: usize = usize::MAX;
-    pub const NO_PARENT: usize = usize::MAX;
+    // UNREACHABLE and NO_PARENT imported from BFSSpecsAndLemmas.
 
     //		Section 4a. type definitions
 
@@ -114,7 +114,10 @@ pub mod BFSMtEph {
             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
         ensures
             spec_parents_bounded(parents, n),
-    {}
+    {
+        assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        lemma_bfs_all_no_parent(parents@, n);
+    }
 
     proof fn lemma_set_preserves_parents_bounded(
         parents: &ArraySeqMtEphS<usize>,
@@ -135,14 +138,9 @@ pub mod BFSMtEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        assert forall|j: int| 0 <= j < parents.spec_len()
-        implies
-            parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
-        by {
-            if j == v {
-            } else {
-            }
-        }
+        assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
+        lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
 
     proof fn lemma_copy_preserves_parents_bounded(
@@ -158,11 +156,9 @@ pub mod BFSMtEph {
         ensures
             spec_parents_bounded(copy, n),
     {
-        assert forall|j: int| 0 <= j < copy.spec_len()
-        implies
-            copy.spec_index(j) == NO_PARENT || copy.spec_index(j) < n
-        by {
-        }
+        assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
+        lemma_bfs_copy_preserves_parents_bounded(original@, copy@, n);
     }
 
     proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqMtEphS<usize>, n: int)
@@ -173,6 +169,8 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(distances, n),
     {
+        assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        lemma_bfs_all_unreachable(distances@, n);
     }
 
     proof fn lemma_set_preserves_bounded(
@@ -194,14 +192,9 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        assert forall|j: int| 0 <= j < distances.spec_len()
-        implies
-            distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
-        by {
-            if j == v {
-            } else {
-            }
-        }
+        assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
+        lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
 
     proof fn lemma_copy_preserves_wf(
@@ -220,10 +213,16 @@ pub mod BFSMtEph {
             spec_bfsmteph_wf(copy),
     {
         assert forall|u: int, i: int|
-            0 <= u < copy.spec_len() && 0 <= i < copy.spec_index(u).spec_len()
+            0 <= u < copy@.len() && 0 <= i < copy@[u].len()
         implies
-            copy.spec_index(u).spec_index(i) < copy.spec_len()
+            #[trigger] copy@[u][i] < copy@.len()
         by {
+            assert(copy@.len() == copy.spec_len() as int);
+            assert(copy@[u].len() == copy.spec_index(u).spec_len() as int);
+            assert(copy@[u][i] == copy.spec_index(u).spec_index(i));
+            assert(original@.len() == original.spec_len() as int);
+            assert(original@[u].len() == original.spec_index(u).spec_len() as int);
+            assert(original@[u][i] == original.spec_index(u).spec_index(i));
         }
     }
 
@@ -240,11 +239,9 @@ pub mod BFSMtEph {
         ensures
             spec_distances_bounded(copy, n),
     {
-        assert forall|j: int| 0 <= j < copy.spec_len()
-        implies
-            copy.spec_index(j) == UNREACHABLE || copy.spec_index(j) < n
-        by {
-        }
+        assert forall|i: int| 0 <= i < original@.len() implies #[trigger] original@[i] == original.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < copy@.len() implies #[trigger] copy@[i] == copy.spec_index(i) by {};
+        lemma_bfs_copy_preserves_bounded(original@, copy@, n);
     }
 
     //		Section 8b. traits

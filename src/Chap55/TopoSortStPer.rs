@@ -26,7 +26,7 @@ pub mod TopoSortStPer {
     use crate::Chap19::ArraySeqStPer::ArraySeqStPer::*;
     use crate::Chap37::AVLTreeSeqStPer::AVLTreeSeqStPer::{AVLTreeSeqStPerS, AVLTreeSeqStPerTrait};
     #[cfg(verus_keep_ghost)]
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_all_true_num_false_zero};
+    use crate::Chap55::DFSSpecsAndLemmas::DFSSpecsAndLemmas::{spec_num_false, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_all_false_num_false_eq_len, lemma_all_true_num_false_zero, lemma_usize_per_view_eq_spec_index, lemma_graph_per_view_bridge};
     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::{CycleDetectStPer, CycleDetectStPerTrait};
     #[cfg(verus_keep_ghost)]
     use crate::Chap55::CycleDetectStPer::CycleDetectStPer::spec_cycledetectstper_wf;
@@ -153,27 +153,6 @@ pub mod TopoSortStPer {
 
     //		Section 7. proof fns/broadcast groups
 
-
-    /// Bridge: for ArraySeqStPerS<usize>, view index equals spec_index.
-    proof fn lemma_usize_per_view_eq_spec_index(a: &ArraySeqStPerS<usize>)
-        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
-    {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
-    }
-
-    /// Bridge: persistent graph adjacency list view at vertex.
-    proof fn lemma_graph_per_view_bridge(
-        graph: &ArraySeqStPerS<ArraySeqStPerS<usize>>,
-        neighbors: &ArraySeqStPerS<usize>,
-        vertex: int,
-    )
-        requires
-            0 <= vertex < graph@.len(),
-            *neighbors == graph.spec_index(vertex),
-        ensures
-            neighbors@ =~= graph@[vertex],
-    {
-    }
 
     /// A single edge implies reachability (persistent version).
     proof fn lemma_edge_implies_reachable_per(

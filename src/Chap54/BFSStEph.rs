@@ -32,6 +32,7 @@ pub mod BFSStEph {
     use vstd::prelude::*;
     use crate::Types::Types::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    use crate::Chap54::BFSSpecsAndLemmas::BFSSpecsAndLemmas::*;
 
     verus! 
 {
@@ -41,8 +42,7 @@ pub mod BFSStEph {
 
     pub type T<N> = ArraySeqStEphS<ArraySeqStEphS<N>>;
 
-    pub const UNREACHABLE: usize = usize::MAX;
-    pub const NO_PARENT: usize = usize::MAX;
+    // UNREACHABLE and NO_PARENT imported from BFSSpecsAndLemmas.
 
     //		Section 4a. type definitions
 
@@ -138,7 +138,10 @@ pub mod BFSStEph {
             forall|i: int| 0 <= i < n ==> #[trigger] parents.spec_index(i) == NO_PARENT,
         ensures
             spec_parents_bounded(parents, n),
-    {}
+    {
+        assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        lemma_bfs_all_no_parent(parents@, n);
+    }
 
     proof fn lemma_set_preserves_parents_bounded(
         parents: &ArraySeqStEphS<usize>,
@@ -159,14 +162,9 @@ pub mod BFSStEph {
         ensures
             spec_parents_bounded(parents, n),
     {
-        assert forall|j: int| 0 <= j < parents.spec_len()
-        implies
-            parents.spec_index(j) == NO_PARENT || parents.spec_index(j) < n
-        by {
-            if j == v {
-            } else {
-            }
-        }
+        assert forall|i: int| 0 <= i < parents@.len() implies #[trigger] parents@[i] == parents.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < old_parents@.len() implies #[trigger] old_parents@[i] == old_parents.spec_index(i) by {};
+        lemma_bfs_update_preserves_parents_bounded(parents@, old_parents@, v, new_val, n);
     }
 
     proof fn lemma_tabulate_all_unreachable(distances: &ArraySeqStEphS<usize>, n: int)
@@ -177,9 +175,11 @@ pub mod BFSStEph {
         ensures
             spec_distances_bounded(distances, n),
     {
+        assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        lemma_bfs_all_unreachable(distances@, n);
     }
 
-    /// Prove that after a point update, the bounded-distances property is preserved.
+    /// After a point update, the bounded-distances property is preserved.
     proof fn lemma_set_preserves_bounded(
         distances: &ArraySeqStEphS<usize>,
         old_distances: &ArraySeqStEphS<usize>,
@@ -199,14 +199,9 @@ pub mod BFSStEph {
         ensures
             spec_distances_bounded(distances, n),
     {
-        assert forall|j: int| 0 <= j < distances.spec_len()
-        implies
-            distances.spec_index(j) == UNREACHABLE || distances.spec_index(j) < n
-        by {
-            if j == v {
-            } else {
-            }
-        }
+        assert forall|i: int| 0 <= i < distances@.len() implies #[trigger] distances@[i] == distances.spec_index(i) by {};
+        assert forall|i: int| 0 <= i < old_distances@.len() implies #[trigger] old_distances@[i] == old_distances.spec_index(i) by {};
+        lemma_bfs_update_preserves_bounded(distances@, old_distances@, v, new_val, n);
     }
 
     //		Section 8b. traits
