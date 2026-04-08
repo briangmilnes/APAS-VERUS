@@ -29,6 +29,7 @@ pub mod AdjTableGraphMtPer {
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::ArraySeqStPerBaseTrait;
     use crate::Chap43::OrderedSetMtEph::OrderedSetMtEph::OrderedSetMtEphTrait;
     use crate::Chap43::OrderedTableMtPer::OrderedTableMtPer::*;
+    use crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::*;
     use crate::Types::Types::*;
     use crate::vstdplus::total_order::total_order::TotalOrder;
     #[cfg(verus_keep_ghost)]
@@ -74,71 +75,8 @@ broadcast use {
         open spec fn view(&self) -> Self::V { *self }
     }
 
-    //		Section 6. spec fns
-
-
-    /// Sum of all neighbor set sizes across all vertices in the adjacency map.
-    /// Local copy — standalone rule forbids importing from StEph.
-    /// Total function: returns 0 for infinite domains; sums set sizes for finite domains.
-    pub closed spec fn spec_sum_adj_sizes<VV>(m: Map<VV, Set<VV>>) -> nat
-        decreases if m.dom().finite() { m.dom().len() as int } else { 0int }
-    {
-        if !m.dom().finite() || m.dom().is_empty() {
-            0
-        } else {
-            let k = m.dom().choose();
-            m[k].len() + spec_sum_adj_sizes(m.remove(k))
-        }
-    }
-
     //		Section 7. proof fns/broadcast groups
 
-
-    /// Extract any key from the recursive sum: decompose at k regardless of choose() order.
-    /// Local copy — standalone rule forbids importing from StEph.
-    pub proof fn lemma_sum_adj_remove<VV>(m: Map<VV, Set<VV>>, k: VV)
-        requires m.dom().finite(), m.dom().contains(k)
-        ensures spec_sum_adj_sizes(m) == m[k].len() + spec_sum_adj_sizes(m.remove(k))
-        decreases m.dom().len()
-    {
-        reveal(spec_sum_adj_sizes);
-        let chosen = m.dom().choose();
-        if chosen == k {
-            // Definition picks k directly.
-        } else {
-            // Definition picks chosen != k.
-            lemma_sum_adj_remove(m.remove(chosen), k);
-            lemma_sum_adj_remove(m.remove(k), chosen);
-            assert(m.remove(chosen).remove(k) =~= m.remove(k).remove(chosen));
-        }
-    }
-
-    /// If every value set in m1 is no larger than the corresponding set in m2
-    /// (same domain), then the sum of sizes is no larger.
-    pub proof fn lemma_sum_adj_sizes_monotone<VV>(m1: Map<VV, Set<VV>>, m2: Map<VV, Set<VV>>)
-        requires
-            m1.dom().finite(),
-            m1.dom() =~= m2.dom(),
-            forall|k: VV| #[trigger] m1.dom().contains(k) ==> m1[k].len() <= m2[k].len(),
-        ensures
-            spec_sum_adj_sizes(m1) <= spec_sum_adj_sizes(m2)
-        decreases m1.dom().len()
-    {
-        reveal(spec_sum_adj_sizes);
-        if m1.dom().is_empty() {
-        } else {
-            let k = m1.dom().choose();
-            lemma_sum_adj_remove(m1, k);
-            lemma_sum_adj_remove(m2, k);
-            assert(m1.remove(k).dom() =~= m2.remove(k).dom());
-            assert forall|j: VV| #[trigger] m1.remove(k).dom().contains(j)
-                implies m1.remove(k)[j].len() <= m2.remove(k)[j].len()
-            by {
-                assert(m1.dom().contains(j));
-            };
-            lemma_sum_adj_sizes_monotone(m1.remove(k), m2.remove(k));
-        }
-    }
 
     //		Section 8. traits
 

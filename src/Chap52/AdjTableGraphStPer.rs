@@ -31,11 +31,7 @@ pub mod AdjTableGraphStPer {
     use crate::Chap42::TableStPer::TableStPer::*;
     use crate::vstdplus::clone_plus::clone_plus::ClonePlus;
     use crate::vstdplus::total_order::total_order::TotalOrder;
-    #[cfg(verus_keep_ghost)]
-    use crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::{
-        spec_sum_adj_sizes, spec_sum_entry_sizes,
-        lemma_sum_adj_remove, lemma_sum_entry_sizes_monotone,
-    };
+    use crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::*;
     #[cfg(verus_keep_ghost)]
     use crate::Chap42::TableStEph::TableStEph::spec_entries_to_map as steph_entries_to_map;
     use crate::Types::Types::*;
@@ -110,7 +106,7 @@ broadcast use {
     {
         lemma_entries_to_map_eq::<VV, Set<VV>>(entries.subrange(0, n));
         lemma_keys_no_dups_eq::<VV, Set<VV>>(entries);
-        crate::Chap52::AdjTableGraphStEph::AdjTableGraphStEph::lemma_sum_entry_sizes_eq::<VV>(entries, n);
+        crate::Chap52::AdjTableGraphSpecsAndLemmas::AdjTableGraphSpecsAndLemmas::lemma_sum_entry_sizes_eq::<VV>(entries, n);
     }
 
     //		Section 8. traits

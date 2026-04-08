@@ -566,6 +566,7 @@ pub mod Chap51 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap52")))]
 pub mod Chap52 {
+    pub mod AdjTableGraphSpecsAndLemmas;
     pub mod AdjSeqGraphStEph;
     pub mod AdjSeqGraphStPer;
     pub mod AdjSeqGraphMtEph;
