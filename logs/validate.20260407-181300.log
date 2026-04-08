@@ -1,0 +1,56 @@
+error: invariant not satisfied before loop
+    --> src/Chap41/OrdKeyMap.rs:3072:21
+     |
+3072 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/OrdKeyMap.rs:3428:21
+     |
+3428 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/OrdKeyMap.rs:3587:21
+     |
+3587 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied before loop
+    --> src/Chap41/OrdKeyMap.rs:3977:21
+     |
+3977 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+    --> src/Chap41/OrdKeyMap.rs:4009:36
+     |
+4009 | ...                   v1@ == self_map[kv] && v2@ == other_map[kv]
+     |                              ^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+note: recommendation not met
+    --> src/Chap41/OrdKeyMap.rs:4068:44
+     |
+4068 | ...                   v1@ == self_map[kv] && v2@ == other_map[kv]
+     |                              ^^^^^^^^^^^^
+     |
+    --> vstd/map.rs:72:12
+     |
+     = note: recommendation not met
+
+error: invariant not satisfied before loop
+    --> src/Chap41/OrdKeyMap.rs:4162:21
+     |
+4162 |                     obeys_view_eq::<K>(),
+     |                     ^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2275 verified, 5 errors
+error: aborting due to 5 previous errors
+
+Elapsed: 270s
+Sampled Memory Usage: peak rust_verify RSS: 23236MB, peak z3 RSS: 1060MB, min free: 299MB
+Sampled CPU Usage: rust_verify: 655s, z3 children: 531s

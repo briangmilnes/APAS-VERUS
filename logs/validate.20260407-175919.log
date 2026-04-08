@@ -1,0 +1,174 @@
+error: postcondition not satisfied
+    --> src/Chap41/OrdKeyMap.rs:1124:13
+     |
+1124 |               parts.1 matches None ==> !spec_pair_set_to_map(tree@).contains_key(k@),
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1145 | /         match tree.expose() {
+1146 | |             Exposed::Leaf => {
+1147 | |                 proof {
+1148 | |                     if spec_pair_set_to_map(tree@).contains_key(k@) {
+...    |
+1491 | |         }
+     | |_________- at the end of the function body
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1188:40
+     |
+1188 | ...                   assert(root_pair.0 == *k);
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1201:40
+     |
+1201 | ...                   assert(root_pair.0 == *k);
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1316:44
+     |
+1316 | ...                   assert(p.0 == root_pair.0);
+     |                              ^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap41/OrdKeyMap.rs:1124:39
+     |
+1124 |             parts.1 matches None ==> !spec_pair_set_to_map(tree@).contains_key(k@),
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+let tmp%% = parts.1;
+    tmp%% is Some && true ==>
+        let v = tmp%%.0;
+            spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view()) ✔
+            v.view() == spec_pair_set_to_map(old(tree).view()).index(old(k).view()) ✔
+    !(tmp%% is Some && true) ==>
+        true ✔
+let tmp%% = parts.1;
+    tmp%% is None ==>
+        !(spec_pair_set_to_map(old(tree).view()).dom().contains(old(k).view())) ✘
+            function is uninterpreted
+    !(tmp%% is None) ==>
+        true ✔
+parts.0.view().finite() ✔
+parts.2.view().finite() ✔
+forall |p|
+    parts.0.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Less ✔
+forall |p|
+    parts.2.view().contains(p.view()) ==>
+        p.0.cmp_spec(old(k)) == Greater ✔
+parts.0.view().subset_of(old(tree).view()) ✔
+parts.2.view().subset_of(old(tree).view()) ✔
+parts.0.view().disjoint(parts.2.view()) ✔
+!(spec_pair_set_to_map(parts.0.view()).dom().contains(old(k).view())) ✔
+!(spec_pair_set_to_map(parts.2.view()).dom().contains(old(k).view())) ✔
+forall |kv, vv|
+    old(tree).view().contains((kv, vv)) ==>
+        !(parts.0.view().contains((kv, vv)) || parts.2.view().contains((kv, vv))) ==>
+            kv == old(k).view() ✔
+spec_key_unique_pairs_set(parts.0.view()) ✔
+spec_key_unique_pairs_set(parts.2.view()) ✔
+spec_set_pair_view_generated(parts.0.view()) ✔
+spec_set_pair_view_generated(parts.2.view()) ✔
+parts.0.spec_bstparasteph_wf() ✔
+parts.2.spec_bstparasteph_wf() ✔
+clip(nat, parts.0.view().len() + parts.2.view().len()) <= old(tree).view().len() ✔
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1569:52
+     |
+1569 | ...                   assert(lp.0 == lk);
+     |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1570:52
+     |
+1570 | ...                   assert(root_pair.0 == t);
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1592:52
+     |
+1592 | ...                   assert(lp.0 == lk);
+     |                              ^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1593:52
+     |
+1593 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1614:49
+     |
+1614 | ...                   implies TotalOrder::le(key, t) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1632:52
+     |
+1632 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1663:52
+     |
+1663 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1666:52
+     |
+1666 | ...                   assert(root_pair.0 == *k);
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1693:44
+     |
+1693 | ...                   assert(root_pair.0 == *k);
+     |                              ^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1698:49
+     |
+1698 | ...                   implies TotalOrder::le(key, t) by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1711:52
+     |
+1711 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1730:56
+     |
+1730 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1766:48
+     |
+1766 | ...                   assert(tp.0 == t);
+     |                              ^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap41/OrdKeyMap.rs:1772:48
+     |
+1772 | ...                   assert(root_pair.0 == t);
+     |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+lp.0 == lk 
+
+verification results:: 2278 verified, 2 errors
+error: aborting due to 18 previous errors
+
+Elapsed: 66s
+Sampled Memory Usage: peak rust_verify RSS: 13881MB, peak z3 RSS: 921MB, min free: 10022MB
+Sampled CPU Usage: rust_verify: 409s, z3 children: 392s

@@ -1,0 +1,31 @@
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:746:33
+    |
+746 | ...                   t.cmp_spec(key) == Less by {};
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:748:33
+    |
+748 | ...                   t.cmp_spec(key) == Greater by {};
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:748:52
+    |
+748 | ...                   t.cmp_spec(key) == Greater by {};
+    |                                          ^^^^^^^
+
+note: 
+
+t.cmp_spec(key) == Greater
+|   !(t.cmp_spec(key) is Less) ✘
+|   !(t.cmp_spec(key) is Equal) ✔
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 3938MB, peak z3 RSS: 412MB, min free: 17855MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 63s

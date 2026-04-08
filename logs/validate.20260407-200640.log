@@ -1,0 +1,30 @@
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1181:40
+     |
+1181 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1184:40
+     |
+1184 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTParaTreapMtEph.rs:1181:58
+     |
+1181 | ...                   assert(av.contains(x) && bv.contains(x));
+     |                                                ^^^^^^^^^^^^^^
+
+note: 
+
+av.contains(x) ✔
+bv.contains(x) ✘
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 1062MB, peak z3 RSS: 248MB, min free: 24541MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 9s
