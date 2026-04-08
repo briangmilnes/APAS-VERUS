@@ -1,0 +1,2001 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent5/analyses/veracity-minimize-lib.20260408-012840.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent5
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent5/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: false
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  --project:          APAS
+  --chapter:          Chap41
+
+Mode: APAS isolate Chap41 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping existing Veracity markers
+═══════════════════════════════════════════════════════════════
+
+  Found 1 existing Veracity markers
+  Cleaning up for fresh analysis...
+  ✓ Removed 0 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 42.7s. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  14215 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions
+  56 spec functions without explicit calls (excluding type variants where any is used)
+
+Phase 3: Discovering vstd broadcast groups...
+  vstd source: /home/milnes/projects/verus/source/vstd
+  Found 49 broadcast groups
+
+Phase 4: Estimating time...
+  Time per verification:           42.7s
+  Lemmas to test:                  305
+  Est. lib asserts to test:        ~260
+  Est. codebase asserts to test:   ~80
+
+  Estimation formula:
+    Phase 5/6: verification_time × num_files
+    Phase 7:   verification_time × num_lemmas (empty body test)
+    Phase 8:   verification_time × num_lemmas (comment out test)
+    Phase 9/10: verification_time × num_asserts (comment out test)
+
+  Phase 1 (verify codebase):       42.7s (done)
+  Phase 2 (analyze library):       ~0s (no verification)
+  Phase 3 (discover broadcasts):   ~0s (no verification)
+  Phase 4 (estimate time):         ~0s (no verification)
+  Phase 5 (library broadcasts):    skipped (no -L flag)
+  Phase 6 (codebase broadcasts):   skipped (no -b flag)
+  Phase 7 (dependence test):       ~3h 37m 9s (42.7s × 305 lemmas)
+  Phase 8 (necessity test):        ~3h 37m 9s (42.7s × 305 lemmas)
+  Phase 9 (library asserts):       ~0.0s (42.7s × ~260 asserts)
+  Phase 10 (codebase asserts):     ~56m 57s (42.7s × ~80 asserts)
+  ─────────────────────────────────────────
+  TOTAL ESTIMATED TIME:            ~8h 12m 0s
+
+Phase 5: Library broadcast groups...
+  Analyzing library for broadcast group recommendations...
+
+  VecQueue.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  feq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  float.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  hash_map_with_view_plus.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  hash_set_with_view_plus.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  multiset.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  seq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  seq_set.rs:
+    In use:
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  No new broadcast groups recommended for library.
+  Skipped (use -L flag to add broadcast groups)
+
+Phase 6: Codebase broadcast groups...
+  Analyzing broadcast groups per file...
+
+  src/Chap03/InsertionSortStEph.rs:
+    In use:
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap05/KleeneStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap05/MappingStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/RelationStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap06/DirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/DirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabUnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/UnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/UnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/WeightedDirGraphStEphF64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphIsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphUsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap17/MathSeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::multiset::group_multiset_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq_lib::group_filter_ensures
+
+  src/Chap18/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_2.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::arithmetic::power::group_pow_properties
+
+  src/Chap21/Algorithm21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Algorithm21_6.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Exercise21_7.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_8.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_3.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_4.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap23/BalBinTreeStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap23/PrimTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap26/ETSPMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ETSPStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/MergeSortMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/MergeSortStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/ScanDCMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ScanDCStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MCSSSpec.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap35/OrderStatSelectMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap36/QuickSortMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap38/BSTParaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap38/BSTParaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTParaTreapMtEph.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap40/BSTKeyValueStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::map_lib::group_map_union
+
+  src/Chap41/AVLTreeSetMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/AVLTreeSetStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/ArraySetEnumMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/ArraySetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/Example41_3.rs:
+    In use:
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/OrdKeyMap.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap42/TableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap43/AugOrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedSetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap45/BalancedTreePQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/BinaryHeapPQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/HeapsortExample.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/LeftistHeapPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/SortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/UnsortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap49/MinEditDistMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap50/MatrixChainMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/OptBinSearchTreeMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap51/TopDownDPMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap51/TopDownDPStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjTableGraphMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphMtPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap54/BFSMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap55/CycleDetectStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/CycleDetectStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/SCCStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/SCCStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/TopoSortStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap56/SSSPResultStPerF64.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap57/StackStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap66/BoruvkaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap66/BoruvkaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/ParaPairs.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Types.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/standards/table_of_contents_standard.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+═══════════════════════════════════════════════════════════════
+Phase 7: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 8: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+
+Phase 9: Skipped (use -a flag to enable assert minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 10: Testing codebase asserts
+═══════════════════════════════════════════════════════════════
+
+For each assert: comment out, verify. NEEDED=restored, UNNEEDED=left commented.
+
+Found 1163 asserts in codebase, testing 1163
+
+[1/1163] assert L263 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.9s (incremental -33.5s)]
+[2/1163] assert L272 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 25s (incremental -1.9s)]
+[3/1163] assert L273 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 25s (incremental ~0s)]
+[4/1163] assert L321 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 29s (incremental +2.1s)]
+[5/1163] assert L322 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[6/1163] assert L323 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[7/1163] assert L325 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.8s (incremental -47.6s)]
+[8/1163] assert L326 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[9/1163] assert L329 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[10/1163] assert L330 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.4s)]
+[11/1163] assert L331 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[12/1163] assert L333 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.2s)]
+[13/1163] assert L334 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -55.9s)]
+[14/1163] assert L354 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.9s (incremental -48.6s)]
+[15/1163] assert L355 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.5s)]
+[16/1163] assert L358 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.1s (incremental -53.3s)]
+[17/1163] assert L363 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 35.7s (incremental ~0s)]
+[18/1163] assert L364 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[19/1163] assert L365 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[20/1163] assert L368 in from_vec_dc<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.1s (incremental -47.3s)]
+[21/1163] assert L388 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 39.6s (incremental ~0s)]
+[22/1163] assert L397 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 20.9s (incremental ~0s)]
+[23/1163] assert L400 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 32s (incremental +4.6s)]
+[24/1163] assert L402 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 17s (incremental ~0s)]
+[25/1163] assert L407 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 23s (incremental -4.3s)]
+[26/1163] assert L411 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 27s (incremental +0.6s)]
+[27/1163] assert L414 in to_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 21s (incremental -5.6s)]
+[28/1163] assert L435 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 33s (incremental +6.4s)]
+[29/1163] assert L461 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 26s (incremental ~0s)]
+[30/1163] assert L462 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 28s (incremental +1.0s)]
+[31/1163] assert L463 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 5s (incremental ~0s)]
+[32/1163] assert L465 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 34s (incremental +6.9s)]
+[33/1163] assert L471 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 31s (incremental +4.3s)]
+[34/1163] assert L472 in from_seq (src/Chap41/AVLTreeSetMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 27s (incremental +0.1s)]
+[35/1163] assert L519 in delete (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[36/1163] assert L526 in insert (src/Chap41/AVLTreeSetMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[37/1163] assert L273 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.3s (incremental -45.2s)]
+[38/1163] assert L282 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[39/1163] assert L283 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 33.8s (incremental ~0s)]
+[40/1163] assert L331 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.2s)]
+[41/1163] assert L332 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -55.9s)]
+[42/1163] assert L333 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.9s (incremental -47.5s)]
+[43/1163] assert L335 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[44/1163] assert L336 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[45/1163] assert L339 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.7s)]
+[46/1163] assert L340 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[47/1163] assert L341 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.3s (incremental -53.1s)]
+[48/1163] assert L343 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[49/1163] assert L344 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[50/1163] assert L361 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[51/1163] assert L362 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.2s (incremental -51.2s)]
+[52/1163] assert L365 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[53/1163] assert L370 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[54/1163] assert L371 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[55/1163] assert L372 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[56/1163] assert L375 in from_vec_dc_per<T: StTInMtT + Ord + TotalOrder + 'static> (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.4s)]
+[57/1163] assert L403 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 6.4s (incremental ~0s)]
+[58/1163] assert L406 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[59/1163] assert L408 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 29.7s (incremental ~0s)]
+[60/1163] assert L413 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.8s (incremental -55.6s)]
+[61/1163] assert L417 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 31.5s (incremental ~0s)]
+[62/1163] assert L420 in to_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[63/1163] assert L440 in from_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.5s (incremental -50.9s)]
+[64/1163] assert L447 in from_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[65/1163] assert L452 in from_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.7s (incremental -55.8s)]
+[66/1163] assert L456 in from_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.2s (incremental -45.2s)]
+[67/1163] assert L457 in from_seq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[68/1163] assert L505 in delete (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 32.0s (incremental ~0s)]
+[69/1163] assert L514 in insert (src/Chap41/AVLTreeSetMtPer.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[70/1163] assert L582 in eq (src/Chap41/AVLTreeSetMtPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[71/1163] assert L136 in lemma_inorder_values_maps_to_views<T: StT> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.4s)]
+[72/1163] assert L160 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.9s (incremental ~0s)]
+[73/1163] assert L163 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.5s)]
+[74/1163] assert L164 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[75/1163] assert L166 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.9s)]
+[76/1163] assert L167 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[77/1163] assert L171 in lemma_push_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[78/1163] assert L187 in lemma_subseq_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.2s)]
+[79/1163] assert L189 in lemma_subseq_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.8s)]
+[80/1163] assert L190 in lemma_subseq_sorted<T: TotalOrder> (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.2s (incremental -47.3s)]
+[81/1163] assert L547 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[82/1163] assert L548 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[83/1163] assert L550 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 40.3s (incremental ~0s)]
+[84/1163] assert L552 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.2s (incremental -46.2s)]
+[85/1163] assert L554 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[86/1163] assert L557 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.0s (incremental -47.4s)]
+[87/1163] assert L561 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[88/1163] assert L563 in to_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[89/1163] assert L571 in empty (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.0s (incremental -47.5s)]
+[90/1163] assert L578 in singleton (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[91/1163] assert L585 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.4s)]
+[92/1163] assert L612 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.4s)]
+[93/1163] assert L615 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.2s)]
+[94/1163] assert L618 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[95/1163] assert L622 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[96/1163] assert L625 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[97/1163] assert L632 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[98/1163] assert L636 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[99/1163] assert L639 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.7s (incremental -50.7s)]
+[100/1163] assert L641 in from_seq (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[101/1163] assert L690 in intersection (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[102/1163] assert L702 in union (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.7s)]
+[103/1163] assert L714 in difference (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.8s (incremental -50.6s)]
+[104/1163] assert L834 in clone_wf (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[105/1163] assert L835 in clone_wf (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.3s (incremental -51.1s)]
+[106/1163] assert L836 in clone_wf (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[107/1163] assert L838 in clone_wf (src/Chap41/AVLTreeSetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[108/1163] assert L115 in lemma_inorder_values_maps_to_views_per<T: StT> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.9s (incremental -47.6s)]
+[109/1163] assert L137 in lemma_push_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 57.2s (incremental ~0s)]
+[110/1163] assert L140 in lemma_push_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.9s (incremental -30.5s)]
+[111/1163] assert L143 in lemma_push_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.7s)]
+[112/1163] assert L146 in lemma_push_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.8s)]
+[113/1163] assert L163 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 3s (incremental -24.2s)]
+[114/1163] assert L164 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 56.6s (incremental ~0s)]
+[115/1163] assert L165 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.3s (incremental -29.1s)]
+[116/1163] assert L166 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 59.2s (incremental ~0s)]
+[117/1163] assert L168 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.5s (incremental -32.9s)]
+[118/1163] assert L169 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 3s (incremental -23.6s)]
+[119/1163] assert L170 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.3s)]
+[120/1163] assert L171 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 57.3s (incremental ~0s)]
+[121/1163] assert L172 in lemma_map_view_feq_implies_ext_eq_per<T: View + Eq + Clone> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -22.5s)]
+[122/1163] assert L186 in lemma_subseq_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 48.3s (incremental -39.2s)]
+[123/1163] assert L188 in lemma_subseq_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.4s (incremental -29.1s)]
+[124/1163] assert L189 in lemma_subseq_sorted_per<T: TotalOrder> (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 1s (incremental -26.3s)]
+[125/1163] assert L461 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.5s (incremental -28.9s)]
+[126/1163] assert L462 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 52.2s (incremental -35.2s)]
+[127/1163] assert L464 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 45.6s (incremental ~0s)]
+[128/1163] assert L465 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.0s (incremental -33.4s)]
+[129/1163] assert L467 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 57.1s (incremental -30.3s)]
+[130/1163] assert L469 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.6s (incremental -32.9s)]
+[131/1163] assert L472 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.2s (incremental -33.3s)]
+[132/1163] assert L474 in to_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -26.7s)]
+[133/1163] assert L482 in empty (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.3s (incremental -33.1s)]
+[134/1163] assert L489 in singleton (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 52.2s (incremental -35.3s)]
+[135/1163] assert L496 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.6s (incremental -28.8s)]
+[136/1163] assert L524 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -26.7s)]
+[137/1163] assert L527 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.1s (incremental -29.3s)]
+[138/1163] assert L530 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 24.8s (incremental ~0s)]
+[139/1163] assert L534 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... NEEDED (restored) [initial 1m 27s -> now 47.8s (incremental ~0s)]
+[140/1163] assert L537 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 27s (incremental +0.1s)]
+[141/1163] assert L544 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 29s (incremental +2.5s)]
+[142/1163] assert L548 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 25s (incremental -2.0s)]
+[143/1163] assert L551 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 29s (incremental +2.3s)]
+[144/1163] assert L553 in from_seq (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.6s (incremental -32.8s)]
+[145/1163] assert L606 in intersection (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -25.3s)]
+[146/1163] assert L618 in union (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.9s (incremental -39.5s)]
+[147/1163] assert L630 in difference (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[148/1163] assert L716 in clone_wf (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[149/1163] assert L717 in clone_wf (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[150/1163] assert L718 in clone_wf (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[151/1163] assert L720 in clone_wf (src/Chap41/AVLTreeSetStPer.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[152/1163] assert L152 in lemma_bounded_usize_set_finite (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[153/1163] assert L157 in lemma_bounded_usize_set_finite (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.6s (incremental ~0s)]
+[154/1163] assert L173 in lemma_view_finite (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[155/1163] assert L359 in new (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 37.0s (incremental ~0s)]
+[156/1163] assert L363 in new (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[157/1163] assert L364 in new (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[158/1163] assert L368 in new (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[159/1163] assert L394 in size (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[160/1163] assert L395 in size (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.4s)]
+[161/1163] assert L401 in size (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.8s (incremental -55.7s)]
+[162/1163] assert L405 in size (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[163/1163] assert L408 in size (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.8s)]
+[164/1163] assert L413 in size (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 33.7s (incremental ~0s)]
+[165/1163] assert L452 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.8s)]
+[166/1163] assert L453 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[167/1163] assert L462 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[168/1163] assert L465 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[169/1163] assert L470 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[170/1163] assert L474 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.4s (incremental ~0s)]
+[171/1163] assert L478 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.7s (incremental ~0s)]
+[172/1163] assert L480 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.5s)]
+[173/1163] assert L481 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[174/1163] assert L484 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[175/1163] assert L485 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[176/1163] assert L489 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.4s)]
+[177/1163] assert L492 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.2s (incremental -51.3s)]
+[178/1163] assert L497 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[179/1163] assert L498 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[180/1163] assert L501 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[181/1163] assert L509 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[182/1163] assert L511 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.5s (incremental ~0s)]
+[183/1163] assert L512 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[184/1163] assert L515 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 32.6s (incremental ~0s)]
+[185/1163] assert L519 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[186/1163] assert L524 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.4s (incremental -51.1s)]
+[187/1163] assert L525 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.4s)]
+[188/1163] assert L528 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[189/1163] assert L529 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[190/1163] assert L532 in to_seq (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.7s (incremental -55.7s)]
+[191/1163] assert L629 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 8.8s (incremental ~0s)]
+[192/1163] assert L633 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[193/1163] assert L663 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[194/1163] assert L673 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 32.5s (incremental ~0s)]
+[195/1163] assert L674 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.9s)]
+[196/1163] assert L678 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.1s)]
+[197/1163] assert L687 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.4s (incremental ~0s)]
+[198/1163] assert L694 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[199/1163] assert L695 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[200/1163] assert L698 in filter<F: Fn (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[201/1163] assert L737 in intersection (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[202/1163] assert L743 in intersection (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[203/1163] assert L744 in intersection (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.6s (incremental -50.9s)]
+[204/1163] assert L745 in intersection (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[205/1163] assert L749 in intersection (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[206/1163] assert L788 in difference (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[207/1163] assert L794 in difference (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[208/1163] assert L795 in difference (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[209/1163] assert L796 in difference (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[210/1163] assert L800 in difference (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[211/1163] assert L839 in union (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[212/1163] assert L845 in union (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.4s)]
+[213/1163] assert L846 in union (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -54.0s)]
+[214/1163] assert L847 in union (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.6s (incremental -48.9s)]
+[215/1163] assert L851 in union (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[216/1163] assert L888 in delete (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 8.9s (incremental ~0s)]
+[217/1163] assert L899 in delete (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.2s)]
+[218/1163] assert L907 in delete (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.9s)]
+[219/1163] assert L913 in delete (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[220/1163] assert L937 in insert (src/Chap41/ArraySetEnumMtEph.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[221/1163] assert L946 in insert (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[222/1163] assert L950 in insert (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[223/1163] assert L955 in insert (src/Chap41/ArraySetEnumMtEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[224/1163] assert L97 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -27.4s)]
+[225/1163] assert L98 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.7s)]
+[226/1163] assert L100 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.2s (incremental -49.2s)]
+[227/1163] assert L105 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 32.1s (incremental ~0s)]
+[228/1163] assert L107 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[229/1163] assert L109 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.1s (incremental -47.3s)]
+[230/1163] assert L110 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.0s (incremental -47.4s)]
+[231/1163] assert L111 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.4s)]
+[232/1163] assert L113 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[233/1163] assert L114 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[234/1163] assert L115 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[235/1163] assert L116 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[236/1163] assert L119 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[237/1163] assert L120 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[238/1163] assert L121 in lemma_filter_remove<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[239/1163] assert L135 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[240/1163] assert L139 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[241/1163] assert L142 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.6s (incremental -39.8s)]
+[242/1163] assert L143 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -22.7s)]
+[243/1163] assert L144 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -27.0s)]
+[244/1163] assert L145 in lemma_push_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 49.8s (incremental -37.7s)]
+[245/1163] assert L161 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 49.9s (incremental -37.6s)]
+[246/1163] assert L165 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 51.9s (incremental -35.6s)]
+[247/1163] assert L166 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 55.9s (incremental -31.5s)]
+[248/1163] assert L168 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 8s (incremental -18.5s)]
+[249/1163] assert L170 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.5s (incremental -28.9s)]
+[250/1163] assert L171 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 1s (incremental -26.3s)]
+[251/1163] assert L176 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 15s (incremental -12.2s)]
+[252/1163] assert L178 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 17s (incremental -10.4s)]
+[253/1163] assert L180 in lemma_filter_in_original<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[254/1163] assert L196 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.1s (incremental -31.3s)]
+[255/1163] assert L197 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 11s (incremental -16.4s)]
+[256/1163] assert L199 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 13s (incremental -14.0s)]
+[257/1163] assert L206 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 8s (incremental -18.9s)]
+[258/1163] assert L209 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 9s (incremental -18.3s)]
+[259/1163] assert L211 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 6s (incremental -20.9s)]
+[260/1163] assert L212 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -23.2s)]
+[261/1163] assert L213 in lemma_filter_preserves_no_dups<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 8s (incremental -18.8s)]
+[262/1163] assert L232 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.7s)]
+[263/1163] assert L233 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.5s (incremental -39.9s)]
+[264/1163] assert L234 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 51.9s (incremental -35.6s)]
+[265/1163] assert L237 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 2s (incremental ~0s)]
+[266/1163] assert L241 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 14s (incremental -12.7s)]
+[267/1163] assert L242 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.6s)]
+[268/1163] assert L243 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.3s (incremental -29.2s)]
+[269/1163] assert L244 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.3s)]
+[270/1163] assert L250 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -22.6s)]
+[271/1163] assert L251 in lemma_filter_to_set_intersect<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.3s (incremental -33.1s)]
+[272/1163] assert L267 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -25.3s)]
+[273/1163] assert L268 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -27.2s)]
+[274/1163] assert L269 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.3s (incremental -29.1s)]
+[275/1163] assert L272 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 52.2s (incremental ~0s)]
+[276/1163] assert L276 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[277/1163] assert L277 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[278/1163] assert L278 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[279/1163] assert L279 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.7s (incremental -52.8s)]
+[280/1163] assert L285 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[281/1163] assert L286 in lemma_filter_to_set_difference<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.6s)]
+[282/1163] assert L301 in lemma_subseq_no_dups_subset<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.7s)]
+[283/1163] assert L304 in lemma_subseq_no_dups_subset<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.9s)]
+[284/1163] assert L306 in lemma_subseq_no_dups_subset<V> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[285/1163] assert L492 in empty (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[286/1163] assert L503 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[287/1163] assert L504 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[288/1163] assert L507 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[289/1163] assert L508 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[290/1163] assert L509 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[291/1163] assert L510 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[292/1163] assert L512 in singleton (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[293/1163] assert L513 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.6s (incremental -48.8s)]
+[294/1163] assert L515 in singleton (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[295/1163] assert L516 in singleton (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.9s (incremental ~0s)]
+[296/1163] assert L524 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -56.0s)]
+[297/1163] assert L548 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[298/1163] assert L551 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[299/1163] assert L554 in from_seq (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 10.7s (incremental ~0s)]
+[300/1163] assert L558 in from_seq (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[301/1163] assert L561 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[302/1163] assert L568 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.5s)]
+[303/1163] assert L572 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[304/1163] assert L575 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[305/1163] assert L577 in from_seq (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[306/1163] assert L588 in find (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[307/1163] assert L609 in find (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[308/1163] assert L610 in find (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[309/1163] assert L611 in find (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[310/1163] assert L657 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.1s (incremental -53.3s)]
+[311/1163] assert L658 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.3s (incremental -56.1s)]
+[312/1163] assert L663 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[313/1163] assert L666 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.0s (incremental -51.4s)]
+[314/1163] assert L667 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[315/1163] assert L669 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.7s (incremental ~0s)]
+[316/1163] assert L670 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.7s)]
+[317/1163] assert L671 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[318/1163] assert L678 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 32.0s (incremental ~0s)]
+[319/1163] assert L682 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[320/1163] assert L684 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.5s)]
+[321/1163] assert L686 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.7s (incremental -55.8s)]
+[322/1163] assert L687 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[323/1163] assert L691 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[324/1163] assert L695 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[325/1163] assert L696 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[326/1163] assert L698 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[327/1163] assert L699 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[328/1163] assert L703 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[329/1163] assert L707 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.7s)]
+[330/1163] assert L709 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[331/1163] assert L710 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[332/1163] assert L712 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.8s)]
+[333/1163] assert L719 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -56.0s)]
+[334/1163] assert L722 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[335/1163] assert L724 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[336/1163] assert L727 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.6s)]
+[337/1163] assert L730 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[338/1163] assert L738 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[339/1163] assert L739 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[340/1163] assert L740 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[341/1163] assert L741 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[342/1163] assert L744 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[343/1163] assert L748 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.5s)]
+[344/1163] assert L749 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[345/1163] assert L752 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[346/1163] assert L753 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[347/1163] assert L755 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.6s)]
+[348/1163] assert L761 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[349/1163] assert L763 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.9s)]
+[350/1163] assert L766 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[351/1163] assert L768 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.5s (incremental -41.9s)]
+[352/1163] assert L769 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 8s (incremental -18.7s)]
+[353/1163] assert L773 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 8s (incremental -19.0s)]
+[354/1163] assert L776 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.2s (incremental -29.2s)]
+[355/1163] assert L778 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -25.1s)]
+[356/1163] assert L779 in filter<F: PredSt<T>> (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.2s (incremental -29.2s)]
+[357/1163] assert L818 in intersection (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 51.8s (incremental ~0s)]
+[358/1163] assert L825 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 6s (incremental -21.1s)]
+[359/1163] assert L826 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 10s (incremental -16.9s)]
+[360/1163] assert L833 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.9s (incremental -33.6s)]
+[361/1163] assert L837 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.3s (incremental -29.2s)]
+[362/1163] assert L838 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.6s (incremental -28.9s)]
+[363/1163] assert L840 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.9s (incremental -33.6s)]
+[364/1163] assert L849 in intersection (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 47.9s (incremental ~0s)]
+[365/1163] assert L850 in intersection (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.7s (incremental ~0s)]
+[366/1163] assert L851 in intersection (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[367/1163] assert L852 in intersection (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.8s (incremental ~0s)]
+[368/1163] assert L855 in intersection (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[369/1163] assert L898 in difference (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[370/1163] assert L905 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[371/1163] assert L906 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.4s (incremental -49.0s)]
+[372/1163] assert L913 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.8s)]
+[373/1163] assert L917 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[374/1163] assert L918 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[375/1163] assert L920 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.4s (incremental -54.0s)]
+[376/1163] assert L929 in difference (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.7s (incremental ~0s)]
+[377/1163] assert L930 in difference (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 28.0s (incremental ~0s)]
+[378/1163] assert L931 in difference (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[379/1163] assert L932 in difference (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[380/1163] assert L935 in difference (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[381/1163] assert L979 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -54.0s)]
+[382/1163] assert L985 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.3s (incremental -51.1s)]
+[383/1163] assert L1011 in union (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[384/1163] assert L1018 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.6s (incremental -51.8s)]
+[385/1163] assert L1019 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.0s (incremental -53.4s)]
+[386/1163] assert L1026 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 51.7s (incremental -35.7s)]
+[387/1163] assert L1027 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -25.1s)]
+[388/1163] assert L1032 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.4s)]
+[389/1163] assert L1033 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.3s)]
+[390/1163] assert L1035 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[391/1163] assert L1044 in union (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 10s (incremental ~0s)]
+[392/1163] assert L1045 in union (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 8s (incremental ~0s)]
+[393/1163] assert L1046 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 14s (incremental -12.8s)]
+[394/1163] assert L1047 in union (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[395/1163] assert L1050 in union (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[396/1163] assert L1067 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[397/1163] assert L1071 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 34.1s (incremental -53.4s)]
+[398/1163] assert L1072 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[399/1163] assert L1073 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -55.9s)]
+[400/1163] assert L1074 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 55.8s (incremental -31.6s)]
+[401/1163] assert L1077 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.4s (incremental -50.1s)]
+[402/1163] assert L1081 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[403/1163] assert L1082 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.0s (incremental -31.4s)]
+[404/1163] assert L1083 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.2s (incremental -33.2s)]
+[405/1163] assert L1087 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.1s (incremental -31.3s)]
+[406/1163] assert L1088 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[407/1163] assert L1090 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.6s (incremental -47.8s)]
+[408/1163] assert L1091 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.0s (incremental -33.4s)]
+[409/1163] assert L1092 in union (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.4s (incremental -31.1s)]
+[410/1163] assert L1129 in delete (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 48.0s (incremental ~0s)]
+[411/1163] assert L1136 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.3s (incremental -31.2s)]
+[412/1163] assert L1137 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.6s (incremental -32.9s)]
+[413/1163] assert L1144 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.1s (incremental -31.4s)]
+[414/1163] assert L1148 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.5s (incremental -29.0s)]
+[415/1163] assert L1149 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[416/1163] assert L1151 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.8s (incremental -49.7s)]
+[417/1163] assert L1159 in delete (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[418/1163] assert L1160 in delete (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[419/1163] assert L1161 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[420/1163] assert L1162 in delete (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[421/1163] assert L1165 in delete (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 32.1s (incremental ~0s)]
+[422/1163] assert L1168 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -22.4s)]
+[423/1163] assert L1170 in delete (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.3s)]
+[424/1163] assert L1207 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[425/1163] assert L1215 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.8s)]
+[426/1163] assert L1219 in insert (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[427/1163] assert L1220 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[428/1163] assert L1221 in insert (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[429/1163] assert L1224 in insert (src/Chap41/ArraySetStEph.rs)... NEEDED (restored) [initial 1m 27s -> now 29.7s (incremental ~0s)]
+[430/1163] assert L1227 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.5s)]
+[431/1163] assert L1230 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[432/1163] assert L1231 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -55.9s)]
+[433/1163] assert L1233 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.5s (incremental -55.9s)]
+[434/1163] assert L1238 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 36.1s (incremental -51.4s)]
+[435/1163] assert L1240 in insert (src/Chap41/ArraySetStEph.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.6s)]
+[436/1163] assert L38 in example_41_1_array_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[437/1163] assert L50 in example_41_1_array_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.3s (incremental -31.2s)]
+[438/1163] assert L56 in example_41_1_array_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[439/1163] assert L65 in example_41_1_array_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.4s)]
+[440/1163] assert L71 in example_41_1_array_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.4s (incremental -50.0s)]
+[441/1163] assert L87 in example_41_1_avl_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[442/1163] assert L99 in example_41_1_avl_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[443/1163] assert L105 in example_41_1_avl_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[444/1163] assert L114 in example_41_1_avl_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.4s)]
+[445/1163] assert L120 in example_41_1_avl_set_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[446/1163] assert L134 in example_41_3_from_seq_demonstration_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.9s (incremental -33.5s)]
+[447/1163] assert L148 in example_41_3_from_seq_demonstration_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.1s (incremental -33.3s)]
+[448/1163] assert L161 in additional_set_operations_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.3s (incremental -33.1s)]
+[449/1163] assert L170 in additional_set_operations_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[450/1163] assert L177 in additional_set_operations_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[451/1163] assert L183 in additional_set_operations_impl (src/Chap41/Example41_3.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.6s (incremental -28.9s)]
+[452/1163] assert L124 in lemma_view_gen_subset<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 54.4s (incremental -33.1s)]
+[453/1163] assert L126 in lemma_view_gen_subset<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.3s (incremental -50.1s)]
+[454/1163] assert L140 in lemma_view_gen_insert<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.6s (incremental -49.8s)]
+[455/1163] assert L143 in lemma_view_gen_insert<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.8s (incremental -43.6s)]
+[456/1163] assert L145 in lemma_view_gen_insert<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.6s (incremental -47.8s)]
+[457/1163] assert L161 in lemma_view_gen_union<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 1s (incremental -26.3s)]
+[458/1163] assert L163 in lemma_view_gen_union<K: View, V: View> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 0s (incremental -26.4s)]
+[459/1163] assert L176 in lemma_pair_set_to_map_dom_finite<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.2s (incremental ~0s)]
+[460/1163] assert L180 in lemma_pair_set_to_map_dom_finite<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.6s)]
+[461/1163] assert L181 in lemma_pair_set_to_map_dom_finite<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.7s (incremental -45.7s)]
+[462/1163] assert L197 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 58.7s (incremental ~0s)]
+[463/1163] assert L198 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.3s (incremental ~0s)]
+[464/1163] assert L202 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 3s (incremental -24.1s)]
+[465/1163] assert L204 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.3s (incremental ~0s)]
+[466/1163] assert L208 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 56.5s (incremental ~0s)]
+[467/1163] assert L212 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 1s (incremental ~0s)]
+[468/1163] assert L213 in lemma_pair_set_to_map_len<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.1s (incremental ~0s)]
+[469/1163] assert L233 in lemma_pair_in_set_map_contains<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 3s (incremental -24.0s)]
+[470/1163] assert L237 in lemma_pair_in_set_map_contains<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 3s (incremental -24.4s)]
+[471/1163] assert L238 in lemma_pair_in_set_map_contains<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.3s (incremental -31.1s)]
+[472/1163] assert L257 in lemma_key_unique_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[473/1163] assert L263 in lemma_key_unique_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[474/1163] assert L266 in lemma_key_unique_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[475/1163] assert L286 in lemma_cmp_equal_congruent<T: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.7s)]
+[476/1163] assert L307 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.7s (incremental ~0s)]
+[477/1163] assert L308 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.8s)]
+[478/1163] assert L313 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[479/1163] assert L318 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[480/1163] assert L319 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.6s (incremental ~0s)]
+[481/1163] assert L321 in lemma_sorted_keys_pairwise_distinct<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[482/1163] assert L369 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.7s (incremental ~0s)]
+[483/1163] assert L377 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.8s)]
+[484/1163] assert L380 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.9s (incremental -53.6s)]
+[485/1163] assert L383 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.7s)]
+[486/1163] assert L386 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[487/1163] assert L392 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[488/1163] assert L395 in lemma_key_unique_disjoint_union<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.8s (incremental -33.7s)]
+[489/1163] assert L414 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 24.9s (incremental ~0s)]
+[490/1163] assert L420 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 56.2s (incremental -31.2s)]
+[491/1163] assert L423 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 25.0s (incremental ~0s)]
+[492/1163] assert L427 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 48.0s (incremental ~0s)]
+[493/1163] assert L430 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 50.2s (incremental ~0s)]
+[494/1163] assert L434 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 8.6s (incremental ~0s)]
+[495/1163] assert L439 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.6s)]
+[496/1163] assert L440 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[497/1163] assert L442 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[498/1163] assert L445 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.2s (incremental -49.3s)]
+[499/1163] assert L447 in lemma_set_to_map_insert<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.6s (incremental -55.9s)]
+[500/1163] assert L465 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 35.4s (incremental ~0s)]
+[501/1163] assert L469 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.3s (incremental -29.2s)]
+[502/1163] assert L471 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 4s (incremental -22.8s)]
+[503/1163] assert L472 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 1s (incremental -26.4s)]
+[504/1163] assert L473 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 58.4s (incremental -29.0s)]
+[505/1163] assert L474 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.2s (incremental -50.2s)]
+[506/1163] assert L475 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.6s)]
+[507/1163] assert L477 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.9s)]
+[508/1163] assert L480 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 2s (incremental -24.6s)]
+[509/1163] assert L483 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.2s (incremental ~0s)]
+[510/1163] assert L486 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 9s (incremental -18.2s)]
+[511/1163] assert L488 in lemma_set_to_map_remove_pair<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 6s (incremental -20.5s)]
+[512/1163] assert L526 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 5s (incremental ~0s)]
+[513/1163] assert L527 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 41.8s (incremental ~0s)]
+[514/1163] assert L534 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 1m 11s (incremental -16.0s)]
+[515/1163] assert L537 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 40.2s (incremental ~0s)]
+[516/1163] assert L541 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 1m 3s (incremental ~0s)]
+[517/1163] assert L544 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.8s (incremental ~0s)]
+[518/1163] assert L547 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.0s (incremental ~0s)]
+[519/1163] assert L552 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.9s (incremental ~0s)]
+[520/1163] assert L553 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.3s (incremental -45.1s)]
+[521/1163] assert L556 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[522/1163] assert L558 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.6s)]
+[523/1163] assert L561 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -44.9s)]
+[524/1163] assert L565 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 48.9s (incremental -38.5s)]
+[525/1163] assert L567 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.4s (incremental -47.0s)]
+[526/1163] assert L571 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.1s (incremental -44.3s)]
+[527/1163] assert L572 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 37.9s (incremental -49.5s)]
+[528/1163] assert L575 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.3s)]
+[529/1163] assert L577 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[530/1163] assert L578 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -44.9s)]
+[531/1163] assert L581 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.9s)]
+[532/1163] assert L583 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.8s (incremental -53.6s)]
+[533/1163] assert L586 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[534/1163] assert L587 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.9s (incremental -46.5s)]
+[535/1163] assert L590 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.7s (incremental -53.7s)]
+[536/1163] assert L592 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.2s (incremental -47.2s)]
+[537/1163] assert L593 in lemma_set_to_map_union_root<KV, VV> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[538/1163] assert L998 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.1s)]
+[539/1163] assert L999 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[540/1163] assert L1001 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[541/1163] assert L1002 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[542/1163] assert L1004 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[543/1163] assert L1005 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[544/1163] assert L1006 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 32.0s (incremental ~0s)]
+[545/1163] assert L1010 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.6s (incremental ~0s)]
+[546/1163] assert L1011 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[547/1163] assert L1013 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[548/1163] assert L1014 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.6s (incremental ~0s)]
+[549/1163] assert L1015 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.9s (incremental ~0s)]
+[550/1163] assert L1019 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[551/1163] assert L1020 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[552/1163] assert L1022 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 32.1s (incremental ~0s)]
+[553/1163] assert L1025 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[554/1163] assert L1026 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.9s (incremental ~0s)]
+[555/1163] assert L1028 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.5s (incremental ~0s)]
+[556/1163] assert L1039 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.9s (incremental -47.5s)]
+[557/1163] assert L1040 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.4s)]
+[558/1163] assert L1041 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.7s (incremental -48.7s)]
+[559/1163] assert L1042 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.2s (incremental -47.2s)]
+[560/1163] assert L1050 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.9s (incremental -51.5s)]
+[561/1163] assert L1051 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.2s (incremental -49.3s)]
+[562/1163] assert L1055 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.4s (incremental -49.0s)]
+[563/1163] assert L1061 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -46.9s)]
+[564/1163] assert L1062 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.2s (incremental -47.3s)]
+[565/1163] assert L1063 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.2s (incremental -46.3s)]
+[566/1163] assert L1065 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.1s (incremental -47.3s)]
+[567/1163] assert L1067 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.4s)]
+[568/1163] assert L1068 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[569/1163] assert L1077 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.3s)]
+[570/1163] assert L1078 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.9s (incremental -42.5s)]
+[571/1163] assert L1082 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.6s (incremental -43.8s)]
+[572/1163] assert L1088 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[573/1163] assert L1089 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[574/1163] assert L1090 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.1s (incremental -44.4s)]
+[575/1163] assert L1092 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.8s (incremental -44.6s)]
+[576/1163] assert L1094 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.2s)]
+[577/1163] assert L1095 in ordkeymap_find<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.5s)]
+[578/1163] assert L1161 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.7s)]
+[579/1163] assert L1176 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.1s (incremental ~0s)]
+[580/1163] assert L1178 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.6s (incremental ~0s)]
+[581/1163] assert L1180 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 32.0s (incremental ~0s)]
+[582/1163] assert L1181 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[583/1163] assert L1186 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.4s (incremental ~0s)]
+[584/1163] assert L1188 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.7s (incremental ~0s)]
+[585/1163] assert L1190 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.4s (incremental ~0s)]
+[586/1163] assert L1191 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.8s (incremental -44.6s)]
+[587/1163] assert L1195 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.4s (incremental -46.0s)]
+[588/1163] assert L1200 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.0s (incremental -44.4s)]
+[589/1163] assert L1204 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.1s (incremental -45.3s)]
+[590/1163] assert L1209 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[591/1163] assert L1219 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.4s)]
+[592/1163] assert L1221 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.4s (incremental -47.1s)]
+[593/1163] assert L1223 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.3s)]
+[594/1163] assert L1224 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 48.9s (incremental -38.6s)]
+[595/1163] assert L1227 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -44.9s)]
+[596/1163] assert L1235 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.9s (incremental -46.6s)]
+[597/1163] assert L1236 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.6s (incremental -43.9s)]
+[598/1163] assert L1238 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -46.9s)]
+[599/1163] assert L1241 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.2s (incremental -40.2s)]
+[600/1163] assert L1242 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.3s)]
+[601/1163] assert L1243 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.7s (incremental -46.7s)]
+[602/1163] assert L1245 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.4s (incremental -49.1s)]
+[603/1163] assert L1249 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 49.1s (incremental -38.3s)]
+[604/1163] assert L1250 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.8s (incremental -46.7s)]
+[605/1163] assert L1254 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 49.3s (incremental -38.1s)]
+[606/1163] assert L1256 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.0s (incremental -49.4s)]
+[607/1163] assert L1258 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.6s)]
+[608/1163] assert L1263 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.4s (incremental -43.0s)]
+[609/1163] assert L1272 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 38.6s (incremental ~0s)]
+[610/1163] assert L1276 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.6s (incremental -41.8s)]
+[611/1163] assert L1278 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.2s (incremental -45.2s)]
+[612/1163] assert L1279 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.6s (incremental -44.8s)]
+[613/1163] assert L1288 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.1s (incremental -46.4s)]
+[614/1163] assert L1293 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.6s)]
+[615/1163] assert L1300 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.8s)]
+[616/1163] assert L1303 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.7s)]
+[617/1163] assert L1305 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -47.0s)]
+[618/1163] assert L1308 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.2s (incremental -42.2s)]
+[619/1163] assert L1324 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 46.8s (incremental -40.6s)]
+[620/1163] assert L1326 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.0s (incremental -40.5s)]
+[621/1163] assert L1328 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 53.2s (incremental -34.2s)]
+[622/1163] assert L1329 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.7s (incremental -42.7s)]
+[623/1163] assert L1332 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.8s (incremental -46.6s)]
+[624/1163] assert L1340 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.0s (incremental -46.5s)]
+[625/1163] assert L1341 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.4s (incremental -47.0s)]
+[626/1163] assert L1342 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.6s (incremental -43.9s)]
+[627/1163] assert L1345 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.6s)]
+[628/1163] assert L1348 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 52.2s (incremental -35.2s)]
+[629/1163] assert L1349 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.5s (incremental -40.0s)]
+[630/1163] assert L1351 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.4s)]
+[631/1163] assert L1354 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.9s)]
+[632/1163] assert L1355 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.1s (incremental -42.3s)]
+[633/1163] assert L1359 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.8s)]
+[634/1163] assert L1361 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.5s (incremental -44.0s)]
+[635/1163] assert L1363 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[636/1163] assert L1369 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.6s (incremental -41.8s)]
+[637/1163] assert L1372 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.0s (incremental -40.5s)]
+[638/1163] assert L1374 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.5s (incremental -48.9s)]
+[639/1163] assert L1375 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 48.2s (incremental -39.3s)]
+[640/1163] assert L1381 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[641/1163] assert L1386 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.5s (incremental -43.9s)]
+[642/1163] assert L1389 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.2s (incremental -47.2s)]
+[643/1163] assert L1401 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -45.0s)]
+[644/1163] assert L1404 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.5s (incremental -42.9s)]
+[645/1163] assert L1406 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.8s (incremental -45.6s)]
+[646/1163] assert L1409 in ordkeymap_split<K: StT + Ord, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.3s (incremental -45.2s)]
+[647/1163] assert L1464 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.7s)]
+[648/1163] assert L1482 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 11.0s (incremental ~0s)]
+[649/1163] assert L1492 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.3s (incremental -49.2s)]
+[650/1163] assert L1494 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.9s (incremental -44.6s)]
+[651/1163] assert L1495 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.0s (incremental -44.4s)]
+[652/1163] assert L1502 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.8s (incremental ~0s)]
+[653/1163] assert L1504 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.7s)]
+[654/1163] assert L1505 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.4s (incremental ~0s)]
+[655/1163] assert L1508 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.5s (incremental -45.9s)]
+[656/1163] assert L1510 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.8s (incremental -48.6s)]
+[657/1163] assert L1511 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 47.1s (incremental -40.3s)]
+[658/1163] assert L1528 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[659/1163] assert L1540 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -45.0s)]
+[660/1163] assert L1542 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.9s (incremental -46.5s)]
+[661/1163] assert L1543 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.6s (incremental -44.9s)]
+[662/1163] assert L1559 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[663/1163] assert L1567 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 46.5s (incremental -40.9s)]
+[664/1163] assert L1569 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.8s (incremental -46.6s)]
+[665/1163] assert L1570 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.6s (incremental -46.8s)]
+[666/1163] assert L1587 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 33.9s (incremental ~0s)]
+[667/1163] assert L1589 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.7s (incremental -46.8s)]
+[668/1163] assert L1590 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.5s (incremental ~0s)]
+[669/1163] assert L1594 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[670/1163] assert L1602 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.4s (incremental -47.0s)]
+[671/1163] assert L1604 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.3s (incremental -47.1s)]
+[672/1163] assert L1605 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.4s (incremental -44.0s)]
+[673/1163] assert L1616 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.6s (incremental -44.8s)]
+[674/1163] assert L1618 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -45.0s)]
+[675/1163] assert L1619 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[676/1163] assert L1639 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 10.9s (incremental ~0s)]
+[677/1163] assert L1647 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.4s (incremental ~0s)]
+[678/1163] assert L1649 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -44.9s)]
+[679/1163] assert L1650 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.2s (incremental ~0s)]
+[680/1163] assert L1665 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.4s (incremental ~0s)]
+[681/1163] assert L1672 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.1s (incremental ~0s)]
+[682/1163] assert L1674 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.5s (incremental -43.9s)]
+[683/1163] assert L1675 in ordkeymap_next<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 32.0s (incremental ~0s)]
+[684/1163] assert L1738 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.4s (incremental -47.0s)]
+[685/1163] assert L1756 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[686/1163] assert L1766 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[687/1163] assert L1768 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.6s (incremental -44.8s)]
+[688/1163] assert L1769 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.7s (incremental -44.8s)]
+[689/1163] assert L1776 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.1s (incremental ~0s)]
+[690/1163] assert L1778 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 46.9s (incremental -40.6s)]
+[691/1163] assert L1779 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 38.7s (incremental ~0s)]
+[692/1163] assert L1782 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.0s (incremental -47.4s)]
+[693/1163] assert L1784 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -46.9s)]
+[694/1163] assert L1785 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.9s (incremental -46.5s)]
+[695/1163] assert L1802 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.5s (incremental ~0s)]
+[696/1163] assert L1814 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[697/1163] assert L1816 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.6s (incremental -46.8s)]
+[698/1163] assert L1817 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.5s (incremental -44.9s)]
+[699/1163] assert L1833 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.8s (incremental ~0s)]
+[700/1163] assert L1841 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.7s (incremental -46.7s)]
+[701/1163] assert L1843 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.1s (incremental -49.3s)]
+[702/1163] assert L1844 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -47.0s)]
+[703/1163] assert L1861 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 38.6s (incremental ~0s)]
+[704/1163] assert L1863 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.4s (incremental -45.0s)]
+[705/1163] assert L1864 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.1s (incremental ~0s)]
+[706/1163] assert L1868 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 6.6s (incremental ~0s)]
+[707/1163] assert L1876 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.8s (incremental -42.6s)]
+[708/1163] assert L1878 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.8s)]
+[709/1163] assert L1879 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 49.4s (incremental -38.0s)]
+[710/1163] assert L1890 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 38.2s (incremental -49.2s)]
+[711/1163] assert L1892 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 45.2s (incremental -42.2s)]
+[712/1163] assert L1893 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 43.0s (incremental -44.4s)]
+[713/1163] assert L1913 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 8.7s (incremental ~0s)]
+[714/1163] assert L1926 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 38.6s (incremental ~0s)]
+[715/1163] assert L1928 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 42.7s (incremental ~0s)]
+[716/1163] assert L1929 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.6s (incremental ~0s)]
+[717/1163] assert L1939 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 39.0s (incremental ~0s)]
+[718/1163] assert L1953 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 41.4s (incremental ~0s)]
+[719/1163] assert L1955 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 44.0s (incremental ~0s)]
+[720/1163] assert L1956 in ordkeymap_prev<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[721/1163] assert L2009 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.6s (incremental -46.8s)]
+[722/1163] assert L2010 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 40.5s (incremental -47.0s)]
+[723/1163] assert L2011 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.6s (incremental ~0s)]
+[724/1163] assert L2021 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 44.6s (incremental -42.8s)]
+[725/1163] assert L2036 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 37.4s (incremental ~0s)]
+[726/1163] assert L2037 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[727/1163] assert L2049 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.5s (incremental ~0s)]
+[728/1163] assert L2051 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 41.7s (incremental -45.8s)]
+[729/1163] assert L2052 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.9s (incremental ~0s)]
+[730/1163] assert L2061 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.0s (incremental ~0s)]
+[731/1163] assert L2079 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.5s (incremental ~0s)]
+[732/1163] assert L2080 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.6s (incremental ~0s)]
+[733/1163] assert L2090 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[734/1163] assert L2092 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 39.9s (incremental -47.5s)]
+[735/1163] assert L2093 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[736/1163] assert L2100 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.7s (incremental ~0s)]
+[737/1163] assert L2106 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 36.5s (incremental ~0s)]
+[738/1163] assert L2108 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 42.2s (incremental -45.2s)]
+[739/1163] assert L2109 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 34.1s (incremental ~0s)]
+[740/1163] assert L2131 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[741/1163] assert L2132 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[742/1163] assert L2143 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[743/1163] assert L2150 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[744/1163] assert L2152 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.8s (incremental -51.6s)]
+[745/1163] assert L2153 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[746/1163] assert L2169 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.5s (incremental ~0s)]
+[747/1163] assert L2173 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[748/1163] assert L2174 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.8s (incremental ~0s)]
+[749/1163] assert L2177 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[750/1163] assert L2178 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.4s (incremental -54.0s)]
+[751/1163] assert L2180 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.4s (incremental -54.1s)]
+[752/1163] assert L2181 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.4s (incremental -54.0s)]
+[753/1163] assert L2187 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[754/1163] assert L2188 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[755/1163] assert L2192 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.3s (incremental ~0s)]
+[756/1163] assert L2193 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[757/1163] assert L2197 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[758/1163] assert L2198 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[759/1163] assert L2203 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.8s)]
+[760/1163] assert L2208 in ordkeymap_rank<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 25.2s (incremental ~0s)]
+[761/1163] assert L2260 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.7s (incremental -51.7s)]
+[762/1163] assert L2281 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.3s (incremental ~0s)]
+[763/1163] assert L2282 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.7s (incremental ~0s)]
+[764/1163] assert L2291 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.4s (incremental -56.0s)]
+[765/1163] assert L2293 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 31.3s (incremental -56.1s)]
+[766/1163] assert L2294 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 35.5s (incremental -51.9s)]
+[767/1163] assert L2302 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.2s (incremental ~0s)]
+[768/1163] assert L2304 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.6s (incremental -53.9s)]
+[769/1163] assert L2305 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.5s (incremental ~0s)]
+[770/1163] assert L2308 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.8s (incremental ~0s)]
+[771/1163] assert L2310 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... UNNEEDED (commented) [initial 1m 27s -> now 33.5s (incremental -53.9s)]
+[772/1163] assert L2311 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.2s (incremental ~0s)]
+[773/1163] assert L2320 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 27.4s (incremental ~0s)]
+[774/1163] assert L2339 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 29.4s (incremental ~0s)]
+[775/1163] assert L2340 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... NEEDED (restored) [initial 1m 27s -> now 31.3s (incremental ~0s)]
+[776/1163] assert L2350 in ordkeymap_select<K: StT + Ord + TotalOrder, V: StT + Ord> (src/Chap41/OrdKeyMap.rs)... 

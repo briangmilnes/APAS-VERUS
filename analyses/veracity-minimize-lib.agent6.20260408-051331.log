@@ -1,0 +1,1974 @@
+Verus Library Minimizer
+=======================
+This minimizer is only possible due to the phenomenal speed of verification
+in Verus. Thanks Verus team!
+
+Logging to: /home/milnes/projects/APAS-VERUS-agent6/analyses/veracity-minimize-lib.20260408-051331.log
+
+Arguments:
+  -c, --codebase:     /home/milnes/projects/APAS-VERUS-agent6
+  -l, --library:      /home/milnes/projects/APAS-VERUS-agent6/src/vstdplus
+  -F, --file:         (all files)
+  -n, --dry-run:      false
+  -b, --broadcasts:   false
+  -L, --lib-broadcasts: false
+  -N, --max-lemmas:   all
+  -a, --asserts:      true
+  -A, --max-asserts:  all
+  -p, --proof-blocks: false
+  -P, --max-proof-blocks: all
+  -e, --exclude:      (none)
+  -f, --fail-fast:    false
+  --danger:           false
+  --no-lib-min:       true
+  --project:          APAS
+  --chapter:          Chap39
+
+Mode: APAS isolate Chap39 (estimated 10-30s per iteration)
+
+═══════════════════════════════════════════════════════════════════════════════
+IMPORTANT: No code will be harmed in the improving of your codebase!
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Codebase is in git and committed. Proceeding safely.
+
+Veracity will repeatedly comment things in and out using // Veracity: lines
+to test and improve your use of vstd. All changes are reversible comments.
+You will need to review each // Veracity: line and decide what to keep.
+
+Phases:
+  Phase 0:  Strip existing Veracity markers (if any)
+  Phase 1:  Analyze and verify codebase
+  Phase 2:  Analyze library structure (lemmas, modules, call sites, spec fns)
+  Phase 3:  Discover vstd broadcast groups from verus installation
+  Phase 4:  Estimate time for testing
+  Phase 5:  Apply broadcast groups to library (-L flag)
+  Phase 6:  Apply broadcast groups to codebase (-b flag)
+  Phase 7:  Test lemma dependence on vstd (can vstd prove it alone?)
+  Phase 8:  Test lemma necessity (can codebase verify without it?)
+  Phase 9:  Test library asserts (can we remove any?)
+  Phase 10: Test codebase asserts (can we remove any?)
+  Phase 11: Test admits (can we remove any? -m flag)
+  Phase 12: Test proof {} blocks (-p flag)
+  Phase 13: Test types (are they used? -t flag)
+  Phase 14: Analyze and verify final codebase
+
+Comment markers inserted:
+  // Veracity: added broadcast group  - Phase 5/6: Inserted broadcast use block
+  // Veracity: DEPENDENT              - Phase 7: Lemma proven by vstd broadcast groups
+  // Veracity: INDEPENDENT            - Phase 7: Lemma provides unique proof logic
+  // Veracity: USED                   - Phase 8: Lemma required, restored after test
+  // Veracity: UNUSED                 - Phase 8: Lemma not needed, left commented out
+  // Veracity: UNNEEDED assert        - Phase 9/10: Assert not needed, left commented
+  // Veracity: UNNEEDED admit         - Phase 11: Admit not needed, left commented
+  // Veracity: UNNEEDED proof block   - Phase 12: Proof block not needed, left commented
+  // Veracity: TYPE USED              - Phase 13: Type is used (verified by removal test)
+  // Veracity: TYPE UNUSED            - Phase 13: Type not used, left commented out
+  // Veracity: UNNEEDED               - Phase 8: Call site not needed, left commented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 0: Stripping existing Veracity markers
+═══════════════════════════════════════════════════════════════
+
+  Found 1 existing Veracity markers
+  Cleaning up for fresh analysis...
+  ✓ Removed 0 markers
+
+═══════════════════════════════════════════════════════════════
+Phase 1: Analyzing and verifying codebase
+═══════════════════════════════════════════════════════════════
+
+  Initial LOC (comments not counted):
+    Spec:       0
+    Proof:      0
+    Exec:       0
+    Total:      0
+
+  Verifying...
+  ✓ Verification passed in 19.2s. Continuing.
+
+Phase 2: Analyzing library structure...
+  Scanning library for proof functions (lemmas)...
+  Found 305 proof functions
+  In 13 modules
+  Checking which library modules are used in codebase...
+  13 modules used in codebase
+  0 modules NOT used in codebase
+  Scanning for lemma call sites...
+  703 call sites in library
+  14215 call sites in codebase (outside library)
+  Scanning library for spec functions...
+  Found 160 spec functions
+  56 spec functions without explicit calls (excluding type variants where any is used)
+
+Phase 3: Discovering vstd broadcast groups...
+  vstd source: /home/milnes/projects/verus/source/vstd
+  Found 49 broadcast groups
+
+Phase 4: Estimating time...
+  Time per verification:           19.2s
+  Lemmas to test:                  305
+  Est. lib asserts to test:        ~260
+  Est. codebase asserts to test:   ~40
+
+  Estimation formula:
+    Phase 5/6: verification_time × num_files
+    Phase 7:   verification_time × num_lemmas (empty body test)
+    Phase 8:   verification_time × num_lemmas (comment out test)
+    Phase 9/10: verification_time × num_asserts (comment out test)
+
+  Phase 1 (verify codebase):       19.2s (done)
+  Phase 2 (analyze library):       ~0s (no verification)
+  Phase 3 (discover broadcasts):   ~0s (no verification)
+  Phase 4 (estimate time):         ~0s (no verification)
+  Phase 5 (library broadcasts):    skipped (no -L flag)
+  Phase 6 (codebase broadcasts):   skipped (no -b flag)
+  Phase 7 (dependence test):       ~1h 37m 31s (19.2s × 305 lemmas)
+  Phase 8 (necessity test):        ~1h 37m 31s (19.2s × 305 lemmas)
+  Phase 9 (library asserts):       ~0.0s (19.2s × ~260 asserts)
+  Phase 10 (codebase asserts):     ~12m 47s (19.2s × ~40 asserts)
+  ─────────────────────────────────────────
+  TOTAL ESTIMATED TIME:            ~3h 28m 10s
+
+Phase 5: Library broadcast groups...
+  Analyzing library for broadcast group recommendations...
+
+  VecQueue.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  feq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  float.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  hash_map_with_view_plus.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  hash_set_with_view_plus.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  multiset.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  seq.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  seq_set.rs:
+    In use:
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  No new broadcast groups recommended for library.
+  Skipped (use -L flag to add broadcast groups)
+
+Phase 6: Codebase broadcast groups...
+  Analyzing broadcast groups per file...
+
+  src/Chap03/InsertionSortStEph.rs:
+    In use:
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap05/KleeneStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap05/MappingStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/RelationStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap05/SetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::laws_eq::group_laws_eq
+      ✓ vstd::laws_cmp::group_laws_cmp
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap06/DirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/DirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/LabUnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/LabUnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/UnDirGraphMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap06/UnDirGraphStEph.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap06/WeightedDirGraphStEphF64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphI8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphIsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU128.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU16.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU32.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU64.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphU8.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap06/WeightedDirGraphStEphUsize.rs:
+    In use:
+      ✓ vstd::std_specs::hash::group_hash_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap17/MathSeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeq.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::multiset::group_multiset_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::seq_lib::group_filter_ensures
+
+  src/Chap18/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap18/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap18/LinkedListStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap19/ArraySeqMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::std_specs::slice::group_slice_axioms
+      ✓ vstd::slice::group_slice_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap19/ArraySeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Algorithm21_2.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::arithmetic::power::group_pow_properties
+
+  src/Chap21/Algorithm21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Algorithm21_6.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_5.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap21/Exercise21_7.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Exercise21_8.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_1.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_3.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap21/Problem21_4.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap23/BalBinTreeStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap23/PrimTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/DivConReduceStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap26/ETSPMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ETSPStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/MergeSortMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/MergeSortStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap26/ScanDCMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap26/ScanDCStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ReduceContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap27/ScanContractStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MCSSSpec.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumDivConStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumIterStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap28/MaxContigSubSumOptStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap35/OrderStatSelectMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectMtPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap35/OrderStatSelectStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap36/QuickSortMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortMtEphSlice.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap36/QuickSortStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vec::group_vec_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::multiset::group_multiset_axioms
+
+  src/Chap37/AVLTreeSeqMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap37/AVLTreeSeqStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap38/BSTParaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap38/BSTParaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTParaTreapMtEph.rs:
+    In use:
+      ✓ vstd::set_lib::group_set_properties
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap39/BSTTreapStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_properties
+
+  src/Chap40/BSTKeyValueStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::map_lib::group_map_union
+
+  src/Chap41/AVLTreeSetMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/AVLTreeSetStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/AVLTreeSetStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/ArraySetEnumMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/ArraySetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_lib_default
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap41/Example41_3.rs:
+    In use:
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap41/OrdKeyMap.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap42/TableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap42/TableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap43/AugOrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/AugOrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedSetMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedSetStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+      ✓ vstd::laws_cmp::group_laws_cmp
+
+  src/Chap43/OrderedTableMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+
+  src/Chap43/OrderedTableStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap43/OrderedTableStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap45/BalancedTreePQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/BinaryHeapPQ.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/HeapsortExample.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap45/LeftistHeapPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/SortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap45/UnsortedListPQ.rs:
+    In use:
+      ✓ vstd::multiset::group_multiset_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::std_specs::vec::group_vec_axioms
+
+  src/Chap49/MinEditDistMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/MinEditDistStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap49/SubsetSumStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap50/MatrixChainMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/MatrixChainStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap50/OptBinSearchTreeMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap50/OptBinSearchTreeStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap51/TopDownDPMtEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::std_specs::hash::group_hash_axioms
+
+  src/Chap51/TopDownDPStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap51/TopDownDPStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap52/AdjMatrixGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjMatrixGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphMtPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjSeqGraphStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap52/AdjTableGraphMtPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStEph.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/AdjTableGraphStPer.rs:
+    In use:
+      ✓ vstd::map::group_map_axioms
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphMtPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap52/EdgeSetGraphStPer.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Chap54/BFSMtEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStEph.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap54/BFSStPer.rs:
+    In use:
+      ✓ vstd::std_specs::vecdeque::group_vec_dequeue_axioms
+
+  src/Chap55/CycleDetectStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/CycleDetectStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/DFSStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+  src/Chap55/SCCStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/SCCStPer.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+
+  src/Chap55/TopoSortStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap56/SSSPResultStPerF64.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap57/StackStEph.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+
+  src/Chap66/BoruvkaMtEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/Chap66/BoruvkaStEph.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+
+  src/ParaPairs.rs:
+    In use:
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/Types.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+      ✓ vstd::seq_lib::group_seq_properties
+      ✓ vstd::seq_lib::group_to_multiset_ensures
+      ✓ vstd::set::group_set_axioms
+      ✓ vstd::set_lib::group_set_lib_default
+
+  src/standards/table_of_contents_standard.rs:
+    In use:
+      ✓ vstd::seq::group_seq_axioms
+
+═══════════════════════════════════════════════════════════════
+Phase 7: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+Phase 8: Skipped (--no-lib-min)
+═══════════════════════════════════════════════════════════════
+
+
+Phase 9: Skipped (use -a flag to enable assert minimization)
+
+═══════════════════════════════════════════════════════════════
+Phase 10: Testing codebase asserts
+═══════════════════════════════════════════════════════════════
+
+For each assert: comment out, verify. NEEDED=restored, UNNEEDED=left commented.
+
+Found 852 asserts in codebase, testing 852
+
+[1/852] assert L137 in lemma_cmp_equal_congruent<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 49.7s (incremental +19.1s)]
+[2/852] assert L150 in lemma_cmp_equal_congruent_right<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.1s (incremental +23.5s)]
+[3/852] assert L174 in lemma_joined_right_gt_lk<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 47.9s (incremental +17.3s)]
+[4/852] assert L184 in lemma_joined_right_gt_lk<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 58.2s (incremental +27.7s)]
+[5/852] assert L212 in lemma_joined_left_lt_rk<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 0s (incremental +30.2s)]
+[6/852] assert L213 in lemma_joined_left_lt_rk<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 52.0s (incremental +21.4s)]
+[7/852] assert L222 in lemma_joined_left_lt_rk<T: MtKey> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.1s (incremental +23.6s)]
+[8/852] assert L303 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 51.9s (incremental +21.3s)]
+[9/852] assert L304 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.1s (incremental +23.5s)]
+[10/852] assert L313 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 52.2s (incremental +21.6s)]
+[11/852] assert L314 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 43.8s (incremental +13.2s)]
+[12/852] assert L315 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 6s (incremental +35.8s)]
+[13/852] assert L317 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 41.4s (incremental +10.8s)]
+[14/852] assert L318 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 2s (incremental +32.1s)]
+[15/852] assert L319 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 2s (incremental +32.0s)]
+[16/852] assert L321 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 48.0s (incremental +17.5s)]
+[17/852] assert L322 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.8s)]
+[18/852] assert L325 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[19/852] assert L327 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[20/852] assert L328 in expose_internal<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[21/852] assert L427 in make_node<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[22/852] assert L428 in make_node<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[23/852] assert L431 in make_node<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.9s)]
+[24/852] assert L436 in make_node<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[25/852] assert L437 in make_node<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.4s)]
+[26/852] assert L489 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[27/852] assert L491 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[28/852] assert L493 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[29/852] assert L495 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[30/852] assert L497 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[31/852] assert L509 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[32/852] assert L523 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.5s)]
+[33/852] assert L524 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[34/852] assert L525 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[35/852] assert L528 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[36/852] assert L530 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[37/852] assert L545 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[38/852] assert L546 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.8s)]
+[39/852] assert L547 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[40/852] assert L549 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[41/852] assert L572 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.7s (incremental ~0s)]
+[42/852] assert L573 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[43/852] assert L588 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[44/852] assert L590 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[45/852] assert L591 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[46/852] assert L592 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 18.9s (incremental -11.6s)]
+[47/852] assert L595 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[48/852] assert L597 in join_with_priority<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[49/852] assert L625 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[50/852] assert L640 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.8s (incremental ~0s)]
+[51/852] assert L641 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[52/852] assert L643 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[53/852] assert L644 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[54/852] assert L649 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[55/852] assert L650 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[56/852] assert L658 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[57/852] assert L661 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[58/852] assert L664 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[59/852] assert L665 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[60/852] assert L669 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[61/852] assert L679 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[62/852] assert L683 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.2s)]
+[63/852] assert L696 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 12.6s (incremental ~0s)]
+[64/852] assert L697 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.5s (incremental ~0s)]
+[65/852] assert L699 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.7s (incremental ~0s)]
+[66/852] assert L700 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[67/852] assert L706 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[68/852] assert L707 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[69/852] assert L713 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 12.7s (incremental ~0s)]
+[70/852] assert L716 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[71/852] assert L719 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 43.6s (incremental +13.0s)]
+[72/852] assert L720 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 35.4s (incremental +4.8s)]
+[73/852] assert L724 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 23.3s (incremental ~0s)]
+[74/852] assert L734 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 33.3s (incremental +2.7s)]
+[75/852] assert L739 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 43.9s (incremental +13.4s)]
+[76/852] assert L745 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 25.1s (incremental ~0s)]
+[77/852] assert L749 in split_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 29.4s (incremental ~0s)]
+[78/852] assert L786 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 33.3s (incremental +2.8s)]
+[79/852] assert L787 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 52.0s (incremental +21.4s)]
+[80/852] assert L788 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 51.9s (incremental +21.4s)]
+[81/852] assert L791 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 46.5s (incremental +16.0s)]
+[82/852] assert L794 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.1s (incremental +23.5s)]
+[83/852] assert L801 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 58.4s (incremental +27.8s)]
+[84/852] assert L802 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 48.2s (incremental +17.6s)]
+[85/852] assert L803 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 47.7s (incremental +17.2s)]
+[86/852] assert L810 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 43.8s (incremental +13.3s)]
+[87/852] assert L811 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 24.7s (incremental ~0s)]
+[88/852] assert L812 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 0s (incremental +29.8s)]
+[89/852] assert L816 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.0s (incremental +23.5s)]
+[90/852] assert L817 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 56.2s (incremental +25.6s)]
+[91/852] assert L820 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 6.7s (incremental ~0s)]
+[92/852] assert L823 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[93/852] assert L826 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[94/852] assert L827 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[95/852] assert L829 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[96/852] assert L830 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[97/852] assert L833 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[98/852] assert L834 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[99/852] assert L836 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[100/852] assert L837 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[101/852] assert L855 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[102/852] assert L856 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[103/852] assert L857 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[104/852] assert L858 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[105/852] assert L860 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[106/852] assert L861 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.8s)]
+[107/852] assert L863 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[108/852] assert L865 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[109/852] assert L867 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[110/852] assert L869 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[111/852] assert L873 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[112/852] assert L879 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[113/852] assert L880 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[114/852] assert L887 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[115/852] assert L888 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.9s)]
+[116/852] assert L893 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[117/852] assert L895 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[118/852] assert L896 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[119/852] assert L897 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[120/852] assert L901 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[121/852] assert L902 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[122/852] assert L907 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[123/852] assert L908 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.7s)]
+[124/852] assert L909 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.4s)]
+[125/852] assert L910 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[126/852] assert L915 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[127/852] assert L916 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[128/852] assert L921 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[129/852] assert L923 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.5s)]
+[130/852] assert L925 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[131/852] assert L926 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[132/852] assert L935 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[133/852] assert L936 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[134/852] assert L938 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[135/852] assert L942 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[136/852] assert L943 in join_pair_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[137/852] assert L977 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[138/852] assert L978 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[139/852] assert L979 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[140/852] assert L982 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.2s (incremental ~0s)]
+[141/852] assert L983 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[142/852] assert L984 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[143/852] assert L990 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[144/852] assert L991 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[145/852] assert L992 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[146/852] assert L993 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[147/852] assert L1011 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[148/852] assert L1012 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[149/852] assert L1014 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.2s (incremental -13.3s)]
+[150/852] assert L1015 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[151/852] assert L1024 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[152/852] assert L1031 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.0s (incremental -9.6s)]
+[153/852] assert L1032 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[154/852] assert L1034 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[155/852] assert L1036 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.1s)]
+[156/852] assert L1043 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.7s (incremental ~0s)]
+[157/852] assert L1044 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.4s (incremental ~0s)]
+[158/852] assert L1049 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[159/852] assert L1051 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[160/852] assert L1057 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[161/852] assert L1059 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[162/852] assert L1060 in union_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[163/852] assert L1099 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[164/852] assert L1100 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.2s (incremental ~0s)]
+[165/852] assert L1101 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[166/852] assert L1104 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.2s (incremental ~0s)]
+[167/852] assert L1105 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[168/852] assert L1106 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[169/852] assert L1114 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[170/852] assert L1115 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[171/852] assert L1135 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[172/852] assert L1143 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.2s (incremental ~0s)]
+[173/852] assert L1144 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 12.7s (incremental ~0s)]
+[174/852] assert L1150 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[175/852] assert L1155 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[176/852] assert L1156 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.3s (incremental ~0s)]
+[177/852] assert L1162 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.1s)]
+[178/852] assert L1168 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 32.4s (incremental +1.8s)]
+[179/852] assert L1172 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 40.2s (incremental +9.7s)]
+[180/852] assert L1173 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[181/852] assert L1175 in intersect_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[182/852] assert L1224 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[183/852] assert L1225 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[184/852] assert L1226 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 21.4s (incremental ~0s)]
+[185/852] assert L1229 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[186/852] assert L1230 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.3s (incremental ~0s)]
+[187/852] assert L1231 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[188/852] assert L1235 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.6s (incremental -10.9s)]
+[189/852] assert L1236 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[190/852] assert L1237 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[191/852] assert L1238 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[192/852] assert L1252 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[193/852] assert L1257 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[194/852] assert L1260 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[195/852] assert L1261 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.1s)]
+[196/852] assert L1263 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[197/852] assert L1264 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[198/852] assert L1268 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[199/852] assert L1272 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[200/852] assert L1278 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[201/852] assert L1280 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[202/852] assert L1283 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[203/852] assert L1286 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[204/852] assert L1292 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[205/852] assert L1294 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[206/852] assert L1297 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[207/852] assert L1301 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[208/852] assert L1305 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[209/852] assert L1306 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[210/852] assert L1308 in difference_inner<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[211/852] assert L1367 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[212/852] assert L1375 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[213/852] assert L1383 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[214/852] assert L1391 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[215/852] assert L1395 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[216/852] assert L1397 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[217/852] assert L1401 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[218/852] assert L1408 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[219/852] assert L1410 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[220/852] assert L1421 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[221/852] assert L1424 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[222/852] assert L1426 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[223/852] assert L1431 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[224/852] assert L1437 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[225/852] assert L1439 in filter_inner<T: MtKey + ClonePreservesView, F: Pred<T>> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[226/852] assert L1495 in reduce_inner<T: MtKey + ClonePreservesView, F> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[227/852] assert L1496 in reduce_inner<T: MtKey + ClonePreservesView, F> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[228/852] assert L1497 in reduce_inner<T: MtKey + ClonePreservesView, F> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[229/852] assert L1498 in reduce_inner<T: MtKey + ClonePreservesView, F> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[230/852] assert L1539 in collect_in_order<T: MtKey + ClonePreservesView> (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.4s)]
+[231/852] assert L1814 in insert (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[232/852] assert L1819 in insert (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[233/852] assert L1820 in insert (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[234/852] assert L1822 in insert (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[235/852] assert L1832 in delete (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[236/852] assert L1837 in delete (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[237/852] assert L1838 in delete (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[238/852] assert L1840 in delete (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.5s)]
+[239/852] assert L1841 in delete (src/Chap39/BSTParaTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[240/852] assert L1861 in find (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[241/852] assert L1862 in find (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[242/852] assert L1863 in find (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[243/852] assert L1864 in find (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[244/852] assert L2002 in clone (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[245/852] assert L2005 in clone (src/Chap39/BSTParaTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[246/852] assert L298 in singleton (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.0s)]
+[247/852] assert L299 in singleton (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[248/852] assert L300 in singleton (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[249/852] assert L301 in singleton (src/Chap39/BSTSetTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.2s (incremental ~0s)]
+[250/852] assert L339 in insert (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[251/852] assert L351 in delete (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[252/852] assert L352 in delete (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.2s (incremental -13.4s)]
+[253/852] assert L354 in delete (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[254/852] assert L355 in delete (src/Chap39/BSTSetTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[255/852] assert L357 in delete (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[256/852] assert L358 in delete (src/Chap39/BSTSetTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[257/852] assert L139 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[258/852] assert L142 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.0s)]
+[259/852] assert L146 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[260/852] assert L150 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[261/852] assert L151 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.3s (incremental -6.3s)]
+[262/852] assert L152 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[263/852] assert L162 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[264/852] assert L164 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 22.0s (incremental ~0s)]
+[265/852] assert L165 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[266/852] assert L166 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[267/852] assert L167 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[268/852] assert L172 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[269/852] assert L175 in rotate_left<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[270/852] assert L214 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.2s (incremental ~0s)]
+[271/852] assert L217 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[272/852] assert L221 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[273/852] assert L225 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[274/852] assert L226 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[275/852] assert L227 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.4s (incremental ~0s)]
+[276/852] assert L237 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[277/852] assert L239 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.3s (incremental ~0s)]
+[278/852] assert L240 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 26.0s (incremental -4.6s)]
+[279/852] assert L241 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[280/852] assert L242 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.2s (incremental ~0s)]
+[281/852] assert L247 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[282/852] assert L250 in rotate_right<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[283/852] assert L282 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 6.6s (incremental ~0s)]
+[284/852] assert L294 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.5s (incremental -5.1s)]
+[285/852] assert L299 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[286/852] assert L303 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.2s (incremental -6.4s)]
+[287/852] assert L304 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.4s)]
+[288/852] assert L308 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[289/852] assert L311 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.4s (incremental -7.1s)]
+[290/852] assert L327 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.6s)]
+[291/852] assert L332 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[292/852] assert L336 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[293/852] assert L337 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.0s)]
+[294/852] assert L341 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[295/852] assert L344 in insert_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[296/852] assert L385 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[297/852] assert L397 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[298/852] assert L400 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[299/852] assert L405 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[300/852] assert L407 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[301/852] assert L417 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[302/852] assert L420 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[303/852] assert L425 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[304/852] assert L427 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[305/852] assert L462 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[306/852] assert L468 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[307/852] assert L469 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[308/852] assert L470 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[309/852] assert L472 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[310/852] assert L480 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[311/852] assert L483 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[312/852] assert L486 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[313/852] assert L490 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[314/852] assert L492 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[315/852] assert L494 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.1s)]
+[316/852] assert L506 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[317/852] assert L512 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[318/852] assert L513 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[319/852] assert L514 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 41.5s (incremental +10.9s)]
+[320/852] assert L516 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 41.5s (incremental +11.0s)]
+[321/852] assert L524 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 52.0s (incremental +21.4s)]
+[322/852] assert L527 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 27.0s (incremental -3.5s)]
+[323/852] assert L530 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 54.2s (incremental +23.6s)]
+[324/852] assert L534 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.9s (incremental -5.7s)]
+[325/852] assert L536 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 48.2s (incremental +17.6s)]
+[326/852] assert L538 in delete_link<T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[327/852] assert L576 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[328/852] assert L577 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[329/852] assert L578 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.3s (incremental -7.3s)]
+[330/852] assert L579 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[331/852] assert L594 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[332/852] assert L595 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[333/852] assert L596 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[334/852] assert L597 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[335/852] assert L605 in find_link<'a, T: StTInMtT + Ord + IsLtTransitive> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.2s)]
+[336/852] assert L693 in height_link<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[337/852] assert L694 in height_link<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[338/852] assert L695 in height_link<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[339/852] assert L696 in height_link<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[340/852] assert L834 in lemma_contains_implies_in_set<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[341/852] assert L837 in lemma_contains_implies_in_set<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[342/852] assert L891 in lemma_size_wf_child_bounded<T: StTInMtT + Ord> (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.4s)]
+[343/852] assert L1174 in lemma_size_wf_child_bounded (src/Chap39/BSTTreapMtEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 18.9s (incremental -11.6s)]
+[344/852] assert L757 in lemma_height_le_size (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[345/852] assert L768 in lemma_size_wf_child_bounded (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[346/852] assert L769 in lemma_size_wf_child_bounded (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[347/852] assert L770 in lemma_size_wf_child_bounded (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.8s)]
+[348/852] assert L771 in lemma_size_wf_child_bounded (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.8s)]
+[349/852] assert L897 in rotate_left (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[350/852] assert L900 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[351/852] assert L905 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[352/852] assert L910 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[353/852] assert L911 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[354/852] assert L912 in rotate_left (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[355/852] assert L923 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[356/852] assert L926 in rotate_left (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 15.1s (incremental ~0s)]
+[357/852] assert L927 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -9.0s)]
+[358/852] assert L928 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[359/852] assert L929 in rotate_left (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[360/852] assert L934 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[361/852] assert L937 in rotate_left (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[362/852] assert L967 in rotate_right (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[363/852] assert L970 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[364/852] assert L975 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.9s)]
+[365/852] assert L980 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[366/852] assert L981 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.6s)]
+[367/852] assert L982 in rotate_right (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 15.1s (incremental ~0s)]
+[368/852] assert L993 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.1s)]
+[369/852] assert L995 in rotate_right (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.2s (incremental ~0s)]
+[370/852] assert L996 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[371/852] assert L997 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[372/852] assert L998 in rotate_right (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[373/852] assert L1003 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[374/852] assert L1006 in rotate_right (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[375/852] assert L1049 in height_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.3s (incremental -7.2s)]
+[376/852] assert L1050 in height_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.6s)]
+[377/852] assert L1051 in height_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[378/852] assert L1052 in height_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[379/852] assert L1075 in insert_link (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[380/852] assert L1089 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.4s (incremental -7.2s)]
+[381/852] assert L1094 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[382/852] assert L1098 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.0s (incremental -6.6s)]
+[383/852] assert L1099 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.1s)]
+[384/852] assert L1103 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[385/852] assert L1106 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.1s (incremental -6.4s)]
+[386/852] assert L1118 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[387/852] assert L1129 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.1s)]
+[388/852] assert L1134 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[389/852] assert L1138 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -6.9s)]
+[390/852] assert L1139 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[391/852] assert L1143 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[392/852] assert L1146 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[393/852] assert L1157 in insert_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -6.9s)]
+[394/852] assert L1185 in delete_link (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[395/852] assert L1198 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[396/852] assert L1201 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.1s)]
+[397/852] assert L1206 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[398/852] assert L1208 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.6s)]
+[399/852] assert L1219 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.0s)]
+[400/852] assert L1222 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.0s)]
+[401/852] assert L1227 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[402/852] assert L1229 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.7s)]
+[403/852] assert L1265 in delete_link (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[404/852] assert L1271 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.7s)]
+[405/852] assert L1272 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 10s (incremental +39.6s)]
+[406/852] assert L1273 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 11s (incremental +40.8s)]
+[407/852] assert L1275 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 15s (incremental +44.9s)]
+[408/852] assert L1281 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 21s (incremental +50.9s)]
+[409/852] assert L1286 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 21s (incremental +51.4s)]
+[410/852] assert L1289 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 6s (incremental +36.3s)]
+[411/852] assert L1292 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[412/852] assert L1296 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[413/852] assert L1298 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.8s (incremental -8.8s)]
+[414/852] assert L1300 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[415/852] assert L1310 in delete_link (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 6.6s (incremental ~0s)]
+[416/852] assert L1316 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[417/852] assert L1317 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[418/852] assert L1318 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[419/852] assert L1320 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[420/852] assert L1326 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.4s (incremental -5.1s)]
+[421/852] assert L1331 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[422/852] assert L1334 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.2s)]
+[423/852] assert L1337 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[424/852] assert L1341 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -6.9s)]
+[425/852] assert L1343 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[426/852] assert L1345 in delete_link (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.2s)]
+[427/852] assert L1378 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[428/852] assert L1379 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[429/852] assert L1380 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[430/852] assert L1381 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[431/852] assert L1395 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 20.6s (incremental ~0s)]
+[432/852] assert L1396 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[433/852] assert L1397 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[434/852] assert L1398 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[435/852] assert L1407 in find_link<'a> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[436/852] assert L1548 in param_insert (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.7s)]
+[437/852] assert L1549 in param_insert (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[438/852] assert L1551 in param_insert (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[439/852] assert L1567 in param_delete (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[440/852] assert L1568 in param_delete (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[441/852] assert L1570 in param_delete (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.0s (incremental -6.5s)]
+[442/852] assert L1571 in param_delete (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[443/852] assert L1593 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[444/852] assert L1594 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.3s (incremental -7.2s)]
+[445/852] assert L1599 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[446/852] assert L1600 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[447/852] assert L1609 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.3s (incremental -6.2s)]
+[448/852] assert L1610 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[449/852] assert L1613 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[450/852] assert L1615 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.4s)]
+[451/852] assert L1618 in param_find (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.6s (incremental ~0s)]
+[452/852] assert L1623 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[453/852] assert L1625 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.0s)]
+[454/852] assert L1627 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[455/852] assert L1628 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 26.0s (incremental -4.6s)]
+[456/852] assert L1629 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[457/852] assert L1640 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.7s)]
+[458/852] assert L1641 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[459/852] assert L1644 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -7.0s)]
+[460/852] assert L1645 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -9.0s)]
+[461/852] assert L1648 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 22.5s (incremental -8.0s)]
+[462/852] assert L1650 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.4s (incremental -7.1s)]
+[463/852] assert L1652 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[464/852] assert L1653 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.4s (incremental -7.1s)]
+[465/852] assert L1654 in param_find (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 9s (incremental +38.5s)]
+[466/852] assert L1877 in lemma_cmp_equal_congruent_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 7s (incremental +36.8s)]
+[467/852] assert L1890 in lemma_cmp_equal_congruent_right_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 49.4s (incremental +18.9s)]
+[468/852] assert L1913 in lemma_joined_right_gt_lk_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 27.4s (incremental ~0s)]
+[469/852] assert L1920 in lemma_joined_right_gt_lk_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.0s (incremental -5.6s)]
+[470/852] assert L1947 in lemma_joined_left_lt_rk_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 29.8s (incremental -0.7s)]
+[471/852] assert L1948 in lemma_joined_left_lt_rk_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 23.1s (incremental ~0s)]
+[472/852] assert L1954 in lemma_joined_left_lt_rk_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 44.3s (incremental +13.7s)]
+[473/852] assert L1978 in lemma_wf_view_inhabited_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 27.3s (incremental -3.3s)]
+[474/852] assert L1982 in lemma_wf_view_inhabited_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 45.9s (incremental +15.4s)]
+[475/852] assert L1997 in lemma_wf_view_all_inhabited_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 25.5s (incremental ~0s)]
+[476/852] assert L2033 in lemma_wf_size_eq_view_len<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 48.0s (incremental +17.5s)]
+[477/852] assert L2127 in make_node_treap_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 27.1s (incremental -3.5s)]
+[478/852] assert L2227 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 32.0s (incremental +1.5s)]
+[479/852] assert L2229 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 56.6s (incremental +26.1s)]
+[480/852] assert L2230 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 50.4s (incremental +19.8s)]
+[481/852] assert L2231 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.9s (incremental -5.6s)]
+[482/852] assert L2232 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 50.7s (incremental +20.2s)]
+[483/852] assert L2233 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 0s (incremental +29.8s)]
+[484/852] assert L2239 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 11s (incremental +41.1s)]
+[485/852] assert L2240 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 19s (incremental +49.2s)]
+[486/852] assert L2241 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 15s (incremental +44.9s)]
+[487/852] assert L2244 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 13s (incremental +43.1s)]
+[488/852] assert L2246 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 16s (incremental +45.6s)]
+[489/852] assert L2259 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 19s (incremental +48.5s)]
+[490/852] assert L2261 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 15s (incremental +45.3s)]
+[491/852] assert L2262 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 18s (incremental +47.7s)]
+[492/852] assert L2263 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 19s (incremental +49.4s)]
+[493/852] assert L2264 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 27s (incremental +56.7s)]
+[494/852] assert L2265 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 21s (incremental +51.4s)]
+[495/852] assert L2270 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 7s (incremental +36.9s)]
+[496/852] assert L2272 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 18s (incremental +48.1s)]
+[497/852] assert L2273 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 15s (incremental +44.9s)]
+[498/852] assert L2274 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 20s (incremental +50.4s)]
+[499/852] assert L2277 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 5s (incremental +34.6s)]
+[500/852] assert L2279 in join_with_priority_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 16s (incremental +45.7s)]
+[501/852] assert L2314 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 26s (incremental +55.9s)]
+[502/852] assert L2327 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 26s (incremental +56.4s)]
+[503/852] assert L2328 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 18s (incremental +48.0s)]
+[504/852] assert L2330 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 16s (incremental +45.8s)]
+[505/852] assert L2331 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 12s (incremental +41.7s)]
+[506/852] assert L2332 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 13s (incremental +42.9s)]
+[507/852] assert L2334 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 20s (incremental +50.0s)]
+[508/852] assert L2336 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 35.5s (incremental +4.9s)]
+[509/852] assert L2337 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 20s (incremental +49.8s)]
+[510/852] assert L2339 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 20s (incremental +50.4s)]
+[511/852] assert L2340 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 16s (incremental +45.9s)]
+[512/852] assert L2346 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 22s (incremental +51.9s)]
+[513/852] assert L2348 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 27s (incremental +57.2s)]
+[514/852] assert L2351 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[515/852] assert L2353 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 31.1s (incremental +0.6s)]
+[516/852] assert L2355 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[517/852] assert L2356 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 21.3s (incremental ~0s)]
+[518/852] assert L2359 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.7s (incremental -4.8s)]
+[519/852] assert L2362 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[520/852] assert L2363 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 25.7s (incremental ~0s)]
+[521/852] assert L2366 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[522/852] assert L2367 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[523/852] assert L2375 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 29.4s (incremental -1.1s)]
+[524/852] assert L2379 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[525/852] assert L2391 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.3s (incremental ~0s)]
+[526/852] assert L2392 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.4s (incremental ~0s)]
+[527/852] assert L2394 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.8s)]
+[528/852] assert L2395 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 21.4s (incremental ~0s)]
+[529/852] assert L2396 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[530/852] assert L2398 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[531/852] assert L2400 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 30.6s (incremental +0.1s)]
+[532/852] assert L2401 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[533/852] assert L2403 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 26.2s (incremental -4.4s)]
+[534/852] assert L2404 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[535/852] assert L2410 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.8s)]
+[536/852] assert L2412 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.8s)]
+[537/852] assert L2415 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[538/852] assert L2417 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[539/852] assert L2419 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.3s (incremental -6.3s)]
+[540/852] assert L2420 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 22.1s (incremental ~0s)]
+[541/852] assert L2423 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 26.3s (incremental -4.3s)]
+[542/852] assert L2426 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.7s)]
+[543/852] assert L2427 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 25.6s (incremental ~0s)]
+[544/852] assert L2430 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[545/852] assert L2431 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[546/852] assert L2439 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -7.0s)]
+[547/852] assert L2444 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.3s (incremental -6.3s)]
+[548/852] assert L2453 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.3s (incremental -7.2s)]
+[549/852] assert L2454 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[550/852] assert L2458 in split_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.7s (incremental ~0s)]
+[551/852] assert L2495 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.8s (incremental -4.7s)]
+[552/852] assert L2496 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[553/852] assert L2499 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 29.9s (incremental -0.6s)]
+[554/852] assert L2500 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[555/852] assert L2501 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 28.2s (incremental -2.4s)]
+[556/852] assert L2504 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[557/852] assert L2516 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.6s)]
+[558/852] assert L2517 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[559/852] assert L2518 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.7s (incremental -4.8s)]
+[560/852] assert L2519 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -8.9s)]
+[561/852] assert L2520 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[562/852] assert L2523 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.8s (incremental -8.7s)]
+[563/852] assert L2524 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[564/852] assert L2525 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.8s (incremental -6.8s)]
+[565/852] assert L2528 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 15.0s (incremental ~0s)]
+[566/852] assert L2531 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 23.7s (incremental ~0s)]
+[567/852] assert L2533 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[568/852] assert L2534 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.4s (incremental ~0s)]
+[569/852] assert L2536 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 22.2s (incremental ~0s)]
+[570/852] assert L2538 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.8s (incremental ~0s)]
+[571/852] assert L2540 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[572/852] assert L2545 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 27.9s (incremental -2.6s)]
+[573/852] assert L2546 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[574/852] assert L2547 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.6s)]
+[575/852] assert L2549 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[576/852] assert L2550 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.5s (incremental -7.0s)]
+[577/852] assert L2552 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[578/852] assert L2553 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 22.0s (incremental -8.6s)]
+[579/852] assert L2560 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[580/852] assert L2561 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -8.9s)]
+[581/852] assert L2562 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 21.7s (incremental ~0s)]
+[582/852] assert L2563 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 21.5s (incremental ~0s)]
+[583/852] assert L2564 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 30.4s (incremental ~0s)]
+[584/852] assert L2567 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.3s (incremental ~0s)]
+[585/852] assert L2568 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 23.5s (incremental ~0s)]
+[586/852] assert L2569 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 24.7s (incremental ~0s)]
+[587/852] assert L2574 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[588/852] assert L2575 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.7s)]
+[589/852] assert L2576 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[590/852] assert L2578 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.8s)]
+[591/852] assert L2579 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[592/852] assert L2581 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.8s (incremental ~0s)]
+[593/852] assert L2583 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[594/852] assert L2584 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[595/852] assert L2586 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[596/852] assert L2587 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[597/852] assert L2589 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.8s)]
+[598/852] assert L2590 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -9.0s)]
+[599/852] assert L2598 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -6.9s)]
+[600/852] assert L2599 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.3s)]
+[601/852] assert L2600 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.8s (incremental -6.7s)]
+[602/852] assert L2601 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[603/852] assert L2602 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.0s (incremental -6.6s)]
+[604/852] assert L2603 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[605/852] assert L2604 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.3s)]
+[606/852] assert L2605 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[607/852] assert L2606 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.9s)]
+[608/852] assert L2607 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[609/852] assert L2608 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.2s (incremental -6.4s)]
+[610/852] assert L2609 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.1s (incremental -13.5s)]
+[611/852] assert L2611 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.3s (incremental -7.3s)]
+[612/852] assert L2613 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[613/852] assert L2614 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.9s (incremental -4.7s)]
+[614/852] assert L2616 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[615/852] assert L2619 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.8s (incremental -6.7s)]
+[616/852] assert L2620 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[617/852] assert L2622 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.7s)]
+[618/852] assert L2627 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.6s)]
+[619/852] assert L2628 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.7s)]
+[620/852] assert L2630 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.6s (incremental -9.0s)]
+[621/852] assert L2635 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[622/852] assert L2636 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.8s)]
+[623/852] assert L2640 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[624/852] assert L2641 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.9s (incremental -8.7s)]
+[625/852] assert L2642 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[626/852] assert L2643 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[627/852] assert L2651 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.1s (incremental ~0s)]
+[628/852] assert L2652 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 22.1s (incremental -8.4s)]
+[629/852] assert L2653 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.6s)]
+[630/852] assert L2655 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[631/852] assert L2656 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[632/852] assert L2657 in join_pair_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.9s)]
+[633/852] assert L2688 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 55.1s (incremental +24.5s)]
+[634/852] assert L2689 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[635/852] assert L2692 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[636/852] assert L2693 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 53.1s (incremental +22.6s)]
+[637/852] assert L2694 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 24.2s (incremental -6.3s)]
+[638/852] assert L2700 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.2s (incremental ~0s)]
+[639/852] assert L2701 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.4s (incremental ~0s)]
+[640/852] assert L2702 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 1m 5s (incremental +34.9s)]
+[641/852] assert L2703 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 3s (incremental +33.4s)]
+[642/852] assert L2706 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 26.7s (incremental ~0s)]
+[643/852] assert L2707 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 1m 0s (incremental +29.5s)]
+[644/852] assert L2708 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[645/852] assert L2709 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 19.2s (incremental ~0s)]
+[646/852] assert L2714 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.7s)]
+[647/852] assert L2715 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[648/852] assert L2716 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.7s (incremental -8.8s)]
+[649/852] assert L2717 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[650/852] assert L2718 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[651/852] assert L2719 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[652/852] assert L2721 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[653/852] assert L2722 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[654/852] assert L2724 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 29.0s (incremental -1.6s)]
+[655/852] assert L2725 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[656/852] assert L2727 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.8s (incremental -6.8s)]
+[657/852] assert L2728 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.7s (incremental -6.8s)]
+[658/852] assert L2730 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[659/852] assert L2731 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 25.2s (incremental -5.3s)]
+[660/852] assert L2738 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[661/852] assert L2739 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.6s (incremental -7.0s)]
+[662/852] assert L2740 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[663/852] assert L2741 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.3s (incremental -11.3s)]
+[664/852] assert L2743 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 26.3s (incremental -4.3s)]
+[665/852] assert L2744 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[666/852] assert L2746 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.3s (incremental -9.2s)]
+[667/852] assert L2747 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[668/852] assert L2748 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[669/852] assert L2749 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.9s (incremental ~0s)]
+[670/852] assert L2755 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[671/852] assert L2756 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[672/852] assert L2757 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.4s (incremental -9.2s)]
+[673/852] assert L2758 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[674/852] assert L2763 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.0s)]
+[675/852] assert L2764 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.8s (incremental -8.8s)]
+[676/852] assert L2766 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.0s)]
+[677/852] assert L2767 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.5s (incremental -9.1s)]
+[678/852] assert L2769 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 23.9s (incremental -6.7s)]
+[679/852] assert L2770 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[680/852] assert L2771 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[681/852] assert L2777 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[682/852] assert L2778 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 17.0s (incremental ~0s)]
+[683/852] assert L2779 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[684/852] assert L2782 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[685/852] assert L2784 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[686/852] assert L2785 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[687/852] assert L2787 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[688/852] assert L2788 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[689/852] assert L2789 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[690/852] assert L2793 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[691/852] assert L2794 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.7s)]
+[692/852] assert L2795 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[693/852] assert L2796 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[694/852] assert L2797 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[695/852] assert L2798 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[696/852] assert L2799 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[697/852] assert L2801 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.5s (incremental -11.1s)]
+[698/852] assert L2802 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[699/852] assert L2804 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.5s)]
+[700/852] assert L2805 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[701/852] assert L2806 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[702/852] assert L2807 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[703/852] assert L2808 in union_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 18.9s (incremental -11.6s)]
+[704/852] assert L2843 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.9s (incremental -15.7s)]
+[705/852] assert L2844 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[706/852] assert L2858 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[707/852] assert L2859 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.2s (incremental -9.4s)]
+[708/852] assert L2860 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[709/852] assert L2861 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[710/852] assert L2864 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[711/852] assert L2865 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[712/852] assert L2866 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[713/852] assert L2867 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.8s)]
+[714/852] assert L2870 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[715/852] assert L2871 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[716/852] assert L2873 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[717/852] assert L2874 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[718/852] assert L2882 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[719/852] assert L2886 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[720/852] assert L2888 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[721/852] assert L2890 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 16.9s (incremental ~0s)]
+[722/852] assert L2891 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[723/852] assert L2893 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.4s)]
+[724/852] assert L2900 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 12.6s (incremental -18.0s)]
+[725/852] assert L2902 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.4s (incremental -11.2s)]
+[726/852] assert L2906 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 12.6s (incremental -17.9s)]
+[727/852] assert L2907 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[728/852] assert L2908 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[729/852] assert L2910 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 14.8s (incremental ~0s)]
+[730/852] assert L2917 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[731/852] assert L2919 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 21.1s (incremental -9.4s)]
+[732/852] assert L2925 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[733/852] assert L2926 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.0s (incremental -11.5s)]
+[734/852] assert L2928 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[735/852] assert L2929 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.7s)]
+[736/852] assert L2931 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[737/852] assert L2935 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.8s (incremental -13.7s)]
+[738/852] assert L2938 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.3s)]
+[739/852] assert L2939 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.8s (incremental -15.8s)]
+[740/852] assert L2940 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 17.0s (incremental -13.6s)]
+[741/852] assert L2941 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 14.7s (incremental -15.8s)]
+[742/852] assert L2943 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[743/852] assert L2944 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[744/852] assert L2946 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 18.9s (incremental -11.6s)]
+[745/852] assert L2947 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.1s (incremental -11.5s)]
+[746/852] assert L2948 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 16.9s (incremental -13.6s)]
+[747/852] assert L2949 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... NEEDED (restored) [initial 30.6s -> now 4.5s (incremental ~0s)]
+[748/852] assert L2952 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... UNNEEDED (commented) [initial 30.6s -> now 19.2s (incremental -11.4s)]
+[749/852] assert L2953 in intersect_inner_st<T: StT + Ord + IsLtTransitive> (src/Chap39/BSTTreapStEph.rs)... 
