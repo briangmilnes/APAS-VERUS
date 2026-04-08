@@ -1,0 +1,16 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: this file contains an unclosed delimiter
+    --> src/Chap37/BSTAVLMtEph.rs:1168:10
+     |
+  27 | pub mod BSTAVLMtEph {
+     |                     - unclosed delimiter
+...
+1168 | } // mod
+     |         ^
+
+error: aborting due to 1 previous error
+
+Elapsed: 0s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 26180MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

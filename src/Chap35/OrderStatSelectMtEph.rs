@@ -402,17 +402,17 @@ pub mod OrderStatSelectMtEph {
 
             // All pivot elements go into eq_vec. Elements in left and right are != pivot.
             // So eq_vec.to_multiset().count(pivot) == s.to_multiset().count(pivot) >= 1.
-// Veracity: TESTING assert             assert(left@.to_multiset().count(pivot) == 0nat) by {
-// Veracity: TESTING assert                 if left@.len() > 0 {
-// Veracity: TESTING assert                     assert forall|j: int| 0 <= j < left@.len() implies left@[j] != pivot by {};
-// Veracity: TESTING assert                 }
-// Veracity: TESTING assert                 if left@.to_multiset().count(pivot) > 0 {
-// Veracity: TESTING assert                     assert(left@.to_multiset().count(pivot) > 0);
-// Veracity: TESTING assert                     assert(left@.contains(pivot));
-// Veracity: TESTING assert                     let idx = choose|idx: int| 0 <= idx < left@.len() && left@[idx] == pivot;
-// Veracity: TESTING assert                     assert(left@[idx] != pivot);
-// Veracity: TESTING assert                 }
-// Veracity: TESTING assert             };
+            assert(left@.to_multiset().count(pivot) == 0nat) by {
+                if left@.len() > 0 {
+                    assert forall|j: int| 0 <= j < left@.len() implies left@[j] != pivot by {};
+                }
+                if left@.to_multiset().count(pivot) > 0 {
+                    assert(left@.to_multiset().count(pivot) > 0);
+                    assert(left@.contains(pivot));
+                    let idx = choose|idx: int| 0 <= idx < left@.len() && left@[idx] == pivot;
+                    assert(left@[idx] != pivot);
+                }
+            };
 
             assert(right@.to_multiset().count(pivot) == 0nat) by {
                 if right@.to_multiset().count(pivot) > 0 {

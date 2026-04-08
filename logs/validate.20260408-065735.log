@@ -1,0 +1,52 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1266:52
+     |
+1266 | ...                   assert(link_contains(orig_root_right, x));
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap37/BSTSplayMtEph.rs:90:21
+   |
+90 |             None => false,
+   |                     ^^^^^
+...
+93 |                 || link_contains(node.right, target),
+   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+link_contains(orig_root_right, x)
+|   let tmp%% = orig_root_right;
+|       tmp%% is None ==>
+|           false ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == x || link_contains(node.left, x)) ==>
+|                   link_contains(node.right, x)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✘
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   link_contains(node.right, x)
+|                   |                   |   let tmp%% = node.right;
+|                   |                   |       tmp%% is None ==>
+|                   |                   |           false ✘
+|                   |                   |       !(tmp%% is None) ==>
+|                   |                   |           let node = tmp%%.0;
+|                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   |                   link_contains(node.right, x) ✘
+|                   |                   |                       reached fuel limit for recursion
+|                   |                   +---
+|                   +---
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 21s
+Sampled Memory Usage: peak rust_verify RSS: 3899MB, peak z3 RSS: 455MB, min free: 22183MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 48s

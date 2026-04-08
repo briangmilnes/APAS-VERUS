@@ -1,0 +1,41 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap37/BSTSplayStEph.rs:1197:17
+     |
+1197 |                   min.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(*min.unwrap(), x);
+     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1488 | /         match self {
+1489 | |             | None => None,
+1490 | |             | Some(node) => match node.left {
+1491 | |                 | None => {
+...    |
+1528 | |             },
+1529 | |         }
+     | |_________- at the end of the function body
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTSplayStEph.rs:1197:85
+     |
+1197 |                 min.is_some() ==> forall|x: T| #[trigger] self.link_contains(x) ==> T::le(*min.unwrap(), x);
+     |                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+old(self).link_is_some() ==>
+    %return is Some ✔
+%return is Some ==>
+    old(self).link_contains(%return.0) ✔
+%return is Some ==>
+    forall |x|
+        old(self).link_contains(x) ==>
+            %return.0.le(x) ✘
+                trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 4389MB, peak z3 RSS: 478MB, min free: 16532MB
+Sampled CPU Usage: rust_verify: 106s, z3 children: 98s

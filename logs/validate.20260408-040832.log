@@ -1,0 +1,78 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap37/BSTPlainStEph.rs:377:33
+    |
+377 | ...                   by {
+    |                       ^^
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTRBMtEph.rs:44:9
+   |
+44 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTBBAlphaMtEph.rs:42:9
+   |
+42 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTBBAlphaStEph.rs:34:9
+   |
+34 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved imports `crate::Chap37::BSTPlainStEph::BSTPlainStEph::lemma_node_contains`, `crate::Chap37::BSTPlainStEph::BSTPlainStEph::lemma_bst_left`, `crate::Chap37::BSTPlainStEph::BSTPlainStEph::lemma_bst_right`
+  --> src/Chap37/BSTBBAlphaStEph.rs:36:55
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
+   |                                                       ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^ no `lemma_bst_right` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+   |                                                       |                    |
+   |                                                       |                    no `lemma_bst_left` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+   |                                                       no `lemma_node_contains` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTRBStEph.rs:33:9
+   |
+33 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTAVLMtEph.rs:45:9
+   |
+45 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTAVLStEph.rs:33:9
+   |
+33 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0432]: unresolved import `crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns`
+  --> src/Chap37/BSTPlainMtEph.rs:42:9
+   |
+42 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::BSTSpecFns;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BSTSpecFns` in `Chap37::BSTPlainStEph::BSTPlainStEph`
+
+error[E0425]: cannot find type `BSTPlainStEph` in this scope
+   --> src/Chap37/BSTPlainStEph.rs:902:50
+    |
+902 |     impl<T: std::fmt::Debug> std::fmt::Debug for BSTPlainStEph<T> {
+    |                                                  ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTPlainStEph` in this scope
+   --> src/Chap37/BSTPlainStEph.rs:910:72
+    |
+910 |     impl<T: std::fmt::Debug + std::fmt::Display> std::fmt::Display for BSTPlainStEph<T> {
+    |                                                                        ^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 11 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 2705MB, peak z3 RSS: 0MB, min free: 23728MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 11s

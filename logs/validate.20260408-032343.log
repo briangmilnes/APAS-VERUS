@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTPlainMtEph.rs:178:53
+    |
+178 |   ...                   assert forall|x: T| r.tree_contains(x) ==
+    |  ___________________________________________^
+179 | | ...                       (node.tree_contains(x) || x == value)
+    | |_______________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTPlainStEph.rs:263:43
+    |
+263 |                 BalBinTree::Node(node) => BSTSpecFns::tree_contains(*node, value),
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/BSTPlainMtEph.rs:178:53
+    |
+178 | ...                   assert forall|x: T| r.tree_contains(x) ==
+    |                                           ^^^^^^^^^^^^^^^^^^
+179 | ...                       (node.tree_contains(x) || x == value)
+    |                                                     ^^^^^^^^^^
+
+note: 
+
+r.tree_contains(x) == (node.tree_contains(x) || x == value)
+|   r.tree_contains(x) ==>
+|       !(node.tree_contains(x)) ==>
+|           x == value ✘
+|   node.tree_contains(x) || x == value ==>
+|       r.tree_contains(x) ✘
+|       |   let tmp%% = r;
+|       |       tmp%% is Leaf ==>
+|       |           false ✔
+|       |       !(tmp%% is Leaf) ==>
+|       |           let node = tmp%%.0;
+|       |               node.tree_contains(x) ✘
+|       |                   reached fuel limit for recursion
+|       +---
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 6762MB, peak z3 RSS: 1006MB, min free: 19115MB
+Sampled CPU Usage: rust_verify: 133s, z3 children: 138s

@@ -1,0 +1,63 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/BSTAVLMtEph.rs:168:17
+    |
+168 | /                 !self.spec_right().spec_is_leaf() ==> ({
+169 | |                     let sl = self.spec_left();
+170 | |                     let sr = self.spec_right();
+171 | |                     let srl = sr.spec_left();
+...   |
+191 | |                     }))
+192 | |                 }),
+    | |__________________^ failed this postcondition
+...
+373 | /         match self {
+374 | |             BalBinTree::Node(x_box) => {
+375 | |                 let BalBinNode { left: l, value: x_val, right: right_tree } = *x_box;
+376 | |                 let ghost old_right = right_tree;
+...   |
+451 | |             BalBinTree::Leaf => { proof { assert(false); } BalBinTree::Leaf }
+452 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/BSTAVLMtEph.rs:177:25
+    |
+177 |                     &&& rotated.spec_height() == (1 + if new_lh >= rr_h { new_lh } else { rr_h })
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+181 |                         ==> rotated.avl_balanced_spec())
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.tree_is_bst() ✔
+%return.spec_size() == old(self).spec_size() ✔
+forall |x|
+    %return.tree_contains(x) == old(self).tree_contains(x) ✔
+!(old(self).spec_right().spec_is_leaf()) ==>
+    let sl = old(self).spec_left();
+        let sr = old(self).spec_right();
+            let srl = sr.spec_left();
+                let srr = sr.spec_right();
+                    let rl_h = srl.spec_height();
+                        let l_h = sl.spec_height();
+                            let rr_h = srr.spec_height();
+                                let new_lh = clip(nat, 1 + if l_h >= rl_h { l_h } else { rl_h });
+                                    %return.spec_height() == clip(nat, 1 + if new_lh >= rr_h { new_lh } else { rr_h }) ✘
+                                    sl.avl_balanced_spec() && srl.avl_balanced_spec() && srr.avl_balanced_spec() && l_h - rl_h >= 0 - 1 && l_h - rl_h <= 1 && new_lh - rr_h >= 0 - 1 && new_lh - rr_h <= 1 ==>
+                                        %return.avl_balanced_spec() ✘
+                                            trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+                                    !(%return.spec_is_leaf()) ✔
+                                    %return.spec_right().spec_height() == rr_h ✔
+                                    %return.spec_right().avl_balanced_spec() == srr.avl_balanced_spec() ✔
+                                    %return.spec_left().spec_height() == new_lh ✔
+                                    %return.spec_left().avl_balanced_spec() == (sl.avl_balanced_spec() && srl.avl_balanced_spec() && let lh = l_h in let rh = rl_h in 0 - 1 <= lh - rh && lh - rh <= 1) ✔
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 2256MB, peak z3 RSS: 646MB, min free: 24299MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 42s

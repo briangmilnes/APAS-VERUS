@@ -1,0 +1,70 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:589:48
+    |
+589 | ...                   assert(link_contains(orig_root_left, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayMtEph.rs:708:37
+    |
+708 | ...                   (TotalOrder::le(x, lr_key) && x != lr_key)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+  --> src/Chap37/BSTSplayMtEph.rs:90:21
+   |
+90 |             None => false,
+   |                     ^^^^^
+
+note: 
+
+link_contains(orig_root_left, x)
+|   let tmp%% = orig_root_left;
+|       tmp%% is None ==>
+|           false ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == x || link_contains(node.left, x)) ==>
+|                   link_contains(node.right, x)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✘
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   link_contains(node.right, x)
+|                   |                   |   let tmp%% = node.right;
+|                   |                   |       tmp%% is None ==>
+|                   |                   |           false ✘
+|                   |                   |       !(tmp%% is None) ==>
+|                   |                   |           let node = tmp%%.0;
+|                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   |                   link_contains(node.right, x)
+|                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |           false ✘
+|                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   |                   |                   link_contains(node.right, x)
+|                   |                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |                   |           false ✘
+|                   |                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
+|                   |                   |                   |                   |                   link_contains(node.right, x) 
+|                   |                   |                   |                   +---
+|                   |                   |                   +---
+|                   |                   +---
+|                   +---
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 5372MB, peak z3 RSS: 673MB, min free: 21257MB
+Sampled CPU Usage: rust_verify: 98s, z3 children: 81s

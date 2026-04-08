@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+    --> src/Chap37/AVLTreeSeqStEph.rs:1116:5
+     |
+1116 |     fn insert_at_link(self, index: usize, value: T, next_key: &mut usize) -> (inserted: Self)
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 2566MB, peak z3 RSS: 385MB, min free: 23701MB
+Sampled CPU Usage: rust_verify: 31s, z3 children: 35s

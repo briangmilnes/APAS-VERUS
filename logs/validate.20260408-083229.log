@@ -1,0 +1,64 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:873:44
+    |
+873 | ...                   assert(spec_contains_link(&orig_root_right, x));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap37/BSTSplayStEph.rs:1020:21
+     |
+1020 |             None => false,
+     |                     ^^^^^
+
+note: 
+
+spec_contains_link(orig_root_right, x)
+|   let tmp%% = orig_root_right;
+|       tmp%% is None ==>
+|           false ✔
+|       !(tmp%% is None) ==>
+|           let node = tmp%%.0;
+|               !(node.key == x || spec_contains_link(node.left, x)) ==>
+|                   spec_contains_link(node.right, x)
+|                   |   let tmp%% = node.right;
+|                   |       tmp%% is None ==>
+|                   |           false ✘
+|                   |       !(tmp%% is None) ==>
+|                   |           let node = tmp%%.0;
+|                   |               !(node.key == x || spec_contains_link(node.left, x)) ==>
+|                   |                   spec_contains_link(node.right, x)
+|                   |                   |   let tmp%% = node.right;
+|                   |                   |       tmp%% is None ==>
+|                   |                   |           false ✘
+|                   |                   |       !(tmp%% is None) ==>
+|                   |                   |           let node = tmp%%.0;
+|                   |                   |               !(node.key == x || spec_contains_link(node.left, x)) ==>
+|                   |                   |                   spec_contains_link(node.right, x)
+|                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |           false ✘
+|                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |               !(node.key == x || spec_contains_link(node.left, x)) ==>
+|                   |                   |                   |                   spec_contains_link(node.right, x)
+|                   |                   |                   |                   |   let tmp%% = node.right;
+|                   |                   |                   |                   |       tmp%% is None ==>
+|                   |                   |                   |                   |           false ✘
+|                   |                   |                   |                   |       !(tmp%% is None) ==>
+|                   |                   |                   |                   |           let node = tmp%%.0;
+|                   |                   |                   |                   |               !(node.key == x || spec_contains_link(node.left, x)) ==>
+|                   |                   |                   |                   |                   spec_contains_link(node.right, x) 
+|                   |                   |                   |                   +---
+|                   |                   |                   +---
+|                   |                   +---
+|                   +---
++---
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 7181MB, peak z3 RSS: 710MB, min free: 15640MB
+Sampled CPU Usage: rust_verify: 165s, z3 children: 157s

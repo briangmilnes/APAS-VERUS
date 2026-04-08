@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:837:37
+    |
+837 | ...                   (T::le(rl_key, x) && x != rl_key)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:933:37
+    |
+933 | ...                   (T::le(x, right_key) && x != right_key)
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+x.le(right_key) ✔
+!(x == right_key) ✔
+
+    NOTE: Verus failed to prove an assertion even though all of its
+    sub-assertions succeeded. This is usually unexpected, and it may
+    indicate that the proof is "flaky". It might also be a result
+    of additional expressions in the triggering context in the expanded
+    version.
+verification results:: 1957 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 5480MB, peak z3 RSS: 810MB, min free: 19834MB
+Sampled CPU Usage: rust_verify: 104s, z3 children: 89s

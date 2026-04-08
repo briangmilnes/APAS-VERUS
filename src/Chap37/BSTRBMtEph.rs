@@ -442,7 +442,6 @@ pub mod BSTRBMtEph {
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
-                    assert(link_contains(old_h_right, x_key));
                     assert(TotalOrder::le(h_key, x_key) && x_key != h_key);
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key) by {};
@@ -450,7 +449,6 @@ pub mod BSTRBMtEph {
                         (TotalOrder::le(x_key, z) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(h_key, z) && z != h_key) by {
-                        assert(link_contains(old_h_right, z));
                     };
                 }
                 h.right = x.left.take();
@@ -463,11 +461,6 @@ pub mod BSTRBMtEph {
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
-                    assert(x.key == x_key);
-                    assert(x.right == old_x_right);
-                    assert(spec_is_bst_link(old_h_left));
-                    assert(spec_is_bst_link(old_x_left));
-                    assert(spec_is_bst_link(old_x_right));
                     assert forall|z: T| #[trigger] link_contains(x.left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key)
                     by {
@@ -477,17 +470,7 @@ pub mod BSTRBMtEph {
                             T::transitive(z, h_key, x_key);
                             if z == x_key { T::antisymmetric(h_key, x_key); }
                         } else {
-                            assert(link_contains(old_x_left, z));
                         }
-                    };
-                    assert(spec_is_bst_link(x.left)) by {
-                        reveal_with_fuel(spec_is_bst_link, 2);
-                    };
-                    assert(spec_is_bst_link(*self)) by {
-                        reveal_with_fuel(spec_is_bst_link, 2);
-                    };
-                    assert forall|z: T| link_contains(*self, z) <==> link_contains(old_link, z) by {
-                        reveal_with_fuel(link_contains, 4);
                     };
                     // Size preservation: rotation rearranges subtrees, no nodes added/removed.
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
@@ -524,7 +507,6 @@ pub mod BSTRBMtEph {
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 2);
                     reveal_with_fuel(link_contains, 2);
-                    assert(link_contains(old_h_left, x_key));
                     assert(TotalOrder::le(x_key, h_key) && x_key != h_key);
                     assert forall|z: T| link_contains(old_x_left, z) implies
                         (TotalOrder::le(z, x_key) && z != x_key) by {};
@@ -532,7 +514,6 @@ pub mod BSTRBMtEph {
                         (TotalOrder::le(x_key, z) && z != x_key) by {};
                     assert forall|z: T| link_contains(old_x_right, z) implies
                         (TotalOrder::le(z, h_key) && z != h_key) by {
-                        assert(link_contains(old_h_left, z));
                     };
                 }
                 h.left = x.right.take();
@@ -545,11 +526,6 @@ pub mod BSTRBMtEph {
                 proof {
                     reveal_with_fuel(spec_is_bst_link, 3);
                     reveal_with_fuel(link_contains, 4);
-                    assert(x.key == x_key);
-                    assert(x.left == old_x_left);
-                    assert(spec_is_bst_link(old_h_right));
-                    assert(spec_is_bst_link(old_x_left));
-                    assert(spec_is_bst_link(old_x_right));
                     assert forall|z: T| #[trigger] link_contains(x.right, z) implies
                         (TotalOrder::le(x_key, z) && z != x_key)
                     by {
@@ -559,17 +535,7 @@ pub mod BSTRBMtEph {
                             T::transitive(x_key, h_key, z);
                             if z == x_key { T::antisymmetric(x_key, h_key); }
                         } else {
-                            assert(link_contains(old_x_right, z));
                         }
-                    };
-                    assert(spec_is_bst_link(x.right)) by {
-                        reveal_with_fuel(spec_is_bst_link, 2);
-                    };
-                    assert(spec_is_bst_link(*self)) by {
-                        reveal_with_fuel(spec_is_bst_link, 2);
-                    };
-                    assert forall|z: T| link_contains(*self, z) <==> link_contains(old_link, z) by {
-                        reveal_with_fuel(link_contains, 4);
                     };
                     assert(link_spec_size(*self) == link_spec_size(old_link)) by {
                         reveal_with_fuel(link_spec_size, 3);
@@ -592,8 +558,6 @@ pub mod BSTRBMtEph {
             let ghost orig_right = node.right;
             proof {
                 reveal_with_fuel(spec_is_bst_link, 2);
-                assert(spec_is_bst_link(orig_left));
-                assert(spec_is_bst_link(orig_right));
             }
             node.color = match node.color {
                 | Color::Red => Color::Black,
@@ -618,12 +582,6 @@ pub mod BSTRBMtEph {
                 reveal_with_fuel(spec_is_bst_link, 3);
                 reveal_with_fuel(link_contains, 3);
                 // Children's key/left/right unchanged (only color modified).
-                assert forall|z: T| #[trigger] link_contains(node.left, z) <==> link_contains(orig_left, z) by {
-                    reveal_with_fuel(link_contains, 3);
-                };
-                assert forall|z: T| #[trigger] link_contains(node.right, z) <==> link_contains(orig_right, z) by {
-                    reveal_with_fuel(link_contains, 3);
-                };
                 assert forall|z: T| #[trigger] link_contains(node.left, z) implies
                     (TotalOrder::le(z, node_key) && z != node_key) by {
                     assert(link_contains(orig_left, z));
@@ -631,10 +589,6 @@ pub mod BSTRBMtEph {
                 assert forall|z: T| #[trigger] link_contains(node.right, z) implies
                     (TotalOrder::le(node_key, z) && z != node_key) by {
                     assert(link_contains(orig_right, z));
-                };
-                assert(spec_is_bst_link(*self));
-                assert forall|z: T| link_contains(*self, z) <==> link_contains(old_link, z) by {
-                    reveal_with_fuel(link_contains, 3);
                 };
                 // Size preservation: flip_colors only changes colors, not structure.
                 assert(link_spec_size(*self) == link_spec_size(old_link)) by {
@@ -662,9 +616,6 @@ pub mod BSTRBMtEph {
         }
         let ghost after_rl = *self;
         proof {
-            assert forall|z: T| link_contains(after_rl, z) <==> link_contains(before_rl, z) by {
-                assert(after_rl.spec_contains(z) <==> before_rl.spec_contains(z));
-            };
         }
 
         // Check rotate_right condition.
@@ -685,9 +636,6 @@ pub mod BSTRBMtEph {
         }
         let ghost after_rr = *self;
         proof {
-            assert forall|z: T| link_contains(after_rr, z) <==> link_contains(before_rr, z) by {
-                assert(after_rr.spec_contains(z) <==> before_rr.spec_contains(z));
-            };
         }
 
         // Check flip condition.
@@ -703,9 +651,6 @@ pub mod BSTRBMtEph {
         }
         let ghost after_fl = *self;
         proof {
-            assert forall|z: T| link_contains(after_fl, z) <==> link_contains(before_fl, z) by {
-                assert(after_fl.spec_contains(z) <==> before_fl.spec_contains(z));
-            };
         }
 
         // Update size via take/put-back.
@@ -719,16 +664,6 @@ pub mod BSTRBMtEph {
             reveal_with_fuel(link_contains, 2);
             // Chain containment equivalences through each step.
             // Trait ensures uses spec_contains; bridge to link_contains via open unfolding.
-            assert forall|z: T| link_contains(*self, z) <==> link_contains(old_link, z) by {
-                // rotate_left preserves containment (trait ensures → spec_contains → link_contains).
-                assert(after_rl.spec_contains(z) <==> old_link.spec_contains(z));
-                // rotate_right preserves containment.
-                assert(after_rr.spec_contains(z) <==> after_rl.spec_contains(z));
-                // flip_colors preserves containment.
-                assert(after_fl.spec_contains(z) <==> after_rr.spec_contains(z));
-                // update only changes size, not key/left/right, so containment is preserved.
-                reveal_with_fuel(link_contains, 2);
-            };
         }
     }
 
@@ -766,7 +701,6 @@ pub mod BSTRBMtEph {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(node.left.spec_contains(x) ==>
                                         (old_left.spec_contains(x) || x == value));
-                                    assert(x == value);
                                 }
                             };
                             assert forall|x: T| link_contains(*old(self), x) implies
@@ -783,7 +717,6 @@ pub mod BSTRBMtEph {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(old_left.spec_contains(x) ==>
                                         node.left.spec_contains(x));
-                                    assert(link_contains(node.left, x));
                                 }
                             };
                             assert forall|x: T| link_contains(*self, x) implies
@@ -791,7 +724,6 @@ pub mod BSTRBMtEph {
                             by {
                                 reveal_with_fuel(link_contains, 2);
                                 if node.key == x {
-                                    assert(node_key == x);
                                 } else if link_contains(node.left, x) {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(node.left.spec_contains(x) ==>
@@ -817,7 +749,6 @@ pub mod BSTRBMtEph {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(node.right.spec_contains(x) ==>
                                         (old_right.spec_contains(x) || x == value));
-                                    assert(x == value);
                                 }
                             };
                             assert forall|x: T| link_contains(*old(self), x) implies
@@ -834,7 +765,6 @@ pub mod BSTRBMtEph {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(old_right.spec_contains(x) ==>
                                         node.right.spec_contains(x));
-                                    assert(link_contains(node.right, x));
                                 }
                             };
                             assert forall|x: T| link_contains(*self, x) implies
@@ -842,7 +772,6 @@ pub mod BSTRBMtEph {
                             by {
                                 reveal_with_fuel(link_contains, 2);
                                 if node.key == x {
-                                    assert(node_key == x);
                                 } else if link_contains(node.right, x) {
                                     // Bridge: trait ensures via spec_contains.
                                     assert(node.right.spec_contains(x) ==>
@@ -928,8 +857,6 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         // Bridge: trait ensures uses spec_contains → link_contains.
-                        assert(node.left.spec_contains(*min.unwrap()));
-                        assert(link_contains(node.left, *min.unwrap()));
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(*min.unwrap(), x) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -975,8 +902,6 @@ pub mod BSTRBMtEph {
                         reveal_with_fuel(spec_is_bst_link, 2);
                         reveal_with_fuel(link_contains, 2);
                         // Bridge: trait ensures uses spec_contains → link_contains.
-                        assert(node.right.spec_contains(*max.unwrap()));
-                        assert(link_contains(node.right, *max.unwrap()));
                         assert forall|x: T| #[trigger] link_contains(*self, x) implies TotalOrder::le(x, *max.unwrap()) by {
                             reveal_with_fuel(spec_is_bst_link, 2);
                             reveal_with_fuel(link_contains, 2);
@@ -1044,8 +969,6 @@ pub mod BSTRBMtEph {
             | Some(node) => {
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
-                    assert(link_spec_size(node.left) <= usize::MAX as nat);
-                    assert(link_spec_size(node.right) <= usize::MAX as nat);
                 }
                 let left_vals = node.left.filter_parallel(predicate);
                 let mut right_vals = node.right.filter_parallel(predicate);
@@ -1070,8 +993,6 @@ pub mod BSTRBMtEph {
             | Some(node) => {
                 proof {
                     reveal_with_fuel(link_spec_size, 2);
-                    assert(link_spec_size(node.left) <= usize::MAX as nat);
-                    assert(link_spec_size(node.right) <= usize::MAX as nat);
                 }
                 let id_left = identity.clone();
                 let left_acc = node.left.reduce_parallel(op, id_left);
@@ -1091,8 +1012,6 @@ pub mod BSTRBMtEph {
             | Some(node) => {
                 proof {
                     // link_height = 1 + max(left, right), so children have height < usize::MAX.
-                    assert(link_height(node.left) < usize::MAX as nat);
-                    assert(link_height(node.right) < usize::MAX as nat);
                 }
                 1 + node.left.height_rec().max(node.right.height_rec())
             }
@@ -1138,8 +1057,6 @@ pub mod BSTRBMtEph {
         update(&mut node);
         proof {
             reveal_with_fuel(link_spec_size, 2);
-            assert(link_spec_size(node.left) <= mid as nat);
-            assert(link_spec_size(node.right) <= (values@.len() - mid - 1) as nat);
         }
         Some(node)
     }
@@ -1292,7 +1209,6 @@ pub mod BSTRBMtEph {
             proof {
                 // build_balanced ensures link_spec_size(link) <= values@.len().
                 // vlen: usize = values.len(), so values@.len() <= usize::MAX.
-                assert(link_spec_size(ghost_link) <= vlen as nat);
                 // spec_is_bst_link requires sorted input — cannot prove here.
                 assume(spec_is_bst_link(ghost_link));
             }
@@ -1325,8 +1241,6 @@ pub mod BSTRBMtEph {
                     reveal_with_fuel(link_contains, 2);
                     reveal_with_fuel(spec_is_bst_link, 2);
                     // Bridge from trait ensures (spec_contains) to link_contains.
-                    assert(after_insert.spec_contains(value));
-                    assert(link_contains(after_insert, value));
                     assert forall|x: T| link_contains(after_insert, x) implies
                         (link_contains(old_ghost, x) || x == value)
                     by {
@@ -1341,15 +1255,10 @@ pub mod BSTRBMtEph {
                                 after_insert.spec_contains(x));
                         }
                     };
-                    assert(spec_is_bst_link(new_root));
-                    assert(link_contains(new_root, value));
                     assert forall|x: T| link_contains(new_root, x) <==>
                         link_contains(after_insert, x)
                     by { reveal_with_fuel(link_contains, 2); };
                     // Size bound: insert adds at most 1, color change preserves size.
-                    assert(link_spec_size(after_insert) <= sz as nat + 1);
-                    assert(link_spec_size(new_root) == link_spec_size(after_insert));
-                    assert(link_spec_size(new_root) <= usize::MAX as nat);
                     // Bridge to BalBinTree view.
                     lemma_link_to_bbt_size::<T>(new_root);
                     lemma_link_to_bbt_size::<T>(old_ghost);

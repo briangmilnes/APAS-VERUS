@@ -125,7 +125,6 @@ pub mod AVLTreeSeqStEph {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
@@ -169,7 +168,6 @@ pub mod AVLTreeSeqStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn subseq_copy(&self, start: usize, length: usize) -> (sub: Self) {
             assert(self.spec_avltreeseqsteph_wf());
-            assert(obeys_feq_full::<T>());
             let n = self.length();
             let s = if start < n { start } else { n };
             let sum = start.wrapping_add(length);
@@ -194,7 +192,6 @@ pub mod AVLTreeSeqStEph {
                 let elem = self.nth(i);
                 let val = elem.clone_plus();
                 proof {
-                    assert(cloned(*elem, val));
                     lemma_cloned_view_eq::<T>(*elem, val);
                 }
                 vals.push(val);
@@ -203,30 +200,23 @@ pub mod AVLTreeSeqStEph {
             let tree = AVLTreeSeqStEphS::from_vec(vals);
             proof {
                 let expected = spec_subseq(self.spec_seq(), start as nat, length as nat);
-                assert(expected =~= self.spec_seq().subrange(s as int, e as int));
-                assert(tree.spec_seq().len() == (e - s) as nat);
-                assert(expected.len() == (e - s) as nat);
-                assert(tree.spec_seq() =~= expected);
             }
             tree
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new_root() -> (tree: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(lg n), Span O(lg n)
         fn update(&mut self, index: usize, item: T) {
             assert(self.spec_avltreeseqsteph_wf());
-            assert((index as int) < self.spec_seq().len());
             let _ = self.set(index, item);
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn from_vec(values: Vec<T>) -> (tree: AVLTreeSeqStEphS<T>) {
-                      assert(obeys_feq_full_trigger::<T>());
             broadcast use Seq::<_>::lemma_push_map_commute;
             let length = values.len();
             let mut t = AVLTreeSeqStEphS { root: None, next_key: 0 };
@@ -248,20 +238,14 @@ pub mod AVLTreeSeqStEph {
                 proof { lemma_size_eq_inorder_len::<T>(&t.root); }
                 let cloned_val: T = values[i].clone_plus();
                 proof {
-                    assert(cloned(values@[i as int], cloned_val));
                     lemma_cloned_view_eq::<T>(values@[i as int], cloned_val);
                 }
                 t.root = t.root.take().insert_at_link(i, cloned_val, &mut t.next_key);
                 proof {
-                    assert(old_seq.len() == i as int);
-                    assert(values@.take(i as int + 1) =~= values@.take(i as int).push(values@[i as int]));
-                    assert(values@.take(i as int + 1).map_values(|v: T| v@) =~=
-                        values@.take(i as int).map_values(|v: T| v@).push(values@[i as int]@));
                 }
                 i += 1;
             }
             proof {
-                assert(values@.take(length as int) =~= values@);
             }
             t
         }
@@ -285,7 +269,6 @@ pub mod AVLTreeSeqStEph {
                 let elem = self.nth(i);
                 let val = elem.clone_plus();
                 proof {
-                    assert(cloned(*elem, val));
                     lemma_cloned_view_eq::<T>(*elem, val);
                 }
                 vals.push(val);
@@ -315,15 +298,12 @@ pub mod AVLTreeSeqStEph {
             let node = self.root.take().insert_at_link(len, value, &mut self.next_key);
             self.root = node;
             proof {
-                assert(spec_inorder(self.root) =~= old_inorder.insert(len as int, value@));
-                assert(old_inorder.insert(old_inorder.len() as int, value@) =~= old_inorder.push(value@));
             }
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn contains_value(&self, target: &T) -> (found: bool) {
             assert(self.spec_avltreeseqsteph_wf());
-            assert(obeys_feq_full::<T>());
             let n = self.length();
             let ghost seq = self.spec_seq();
             let mut i: usize = 0;
@@ -340,7 +320,6 @@ pub mod AVLTreeSeqStEph {
                 let elem = self.nth(i);
                 let eq = feq(elem, target);
                 if eq {
-                    assert(seq[i as int] == target@);
                     return true;
                 }
                 i += 1;
@@ -357,7 +336,6 @@ pub mod AVLTreeSeqStEph {
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
         fn delete_value(&mut self, target: &T) -> (deleted: bool) {
             assert(self.spec_avltreeseqsteph_wf());
-            assert(obeys_feq_full::<T>());
             let len = self.length();
             let ghost old_seq = self.spec_seq();
             let mut found_index: usize = len;
@@ -401,7 +379,6 @@ pub mod AVLTreeSeqStEph {
                     let elem = self.nth(j);
                     let val = elem.clone_plus();
                     proof {
-                        assert(cloned(*elem, val));
                         lemma_cloned_view_eq::<T>(*elem, val);
                     }
                     out_vec.push(val);
@@ -423,7 +400,6 @@ pub mod AVLTreeSeqStEph {
                     let elem = self.nth(k);
                     let val = elem.clone_plus();
                     proof {
-                        assert(cloned(*elem, val));
                         lemma_cloned_view_eq::<T>(*elem, val);
                     }
                     out_vec.push(val);
@@ -431,19 +407,7 @@ pub mod AVLTreeSeqStEph {
                 }
                 *self = AVLTreeSeqStEphS::from_vec(out_vec);
                 proof {
-                    assert(self.spec_seq().len() == (len - 1) as nat);
                     let expected = old_seq.subrange(0, idx as int) + old_seq.subrange(idx as int + 1, len as int);
-                    assert(expected.len() == (len - 1) as nat);
-                    assert forall|m: int| 0 <= m < expected.len() implies (#[trigger] self.spec_seq()[m]) == expected[m] by {
-                        if m < idx as int {
-                            assert(expected[m] == old_seq[m]);
-                            assert(out_vec@[m]@ == old_seq[m]);
-                        } else {
-                            assert(expected[m] == old_seq[m + 1]);
-                            assert(out_vec@[m]@ == old_seq[m + 1]);
-                        }
-                    }
-                    assert(self.spec_seq() =~= expected);
                 }
                 true
             } else {
@@ -990,7 +954,6 @@ pub mod AVLTreeSeqStEph {
             assert(spec_avltreeseqsteph_wf(old_x.right));
         }
         let b = x.right.take();
-        proof { assert(b == old_x.right); }
         y.left = b;
         proof {
             assert(spec_avltreeseqsteph_wf(y.left));
@@ -1024,7 +987,6 @@ pub mod AVLTreeSeqStEph {
             assert(spec_avltreeseqsteph_wf(old_y.right));
         }
         let b = y.left.take();
-        proof { assert(b == old_y.left); }
         x.right = b;
         proof {
             assert(spec_avltreeseqsteph_wf(x.left));
@@ -1051,14 +1013,11 @@ pub mod AVLTreeSeqStEph {
         let hr = n.right.h_fn();
         if hl > hr.saturating_add(1) {
             proof {
-                if n.left is None { assert(spec_cached_height(&n.left) == 0); }
-                assert(n.left is Some);
             }
             if n.left.as_ref().unwrap().right.h_fn() > n.left.as_ref().unwrap().left.h_fn() {
                 let left = n.left.take().unwrap();
                 proof {
                     let lrh = spec_cached_height(&left.right);
-                    if left.right is None { assert(lrh == 0); }
                     assert(left.right is Some);
                 }
                 n.left = Some(left.rotate_left_fn());
@@ -1069,15 +1028,11 @@ pub mod AVLTreeSeqStEph {
         }
         if hr > hl.saturating_add(1) {
             proof {
-                if n.right is None { assert(spec_cached_height(&n.right) == 0); }
-                assert(n.right is Some);
             }
             if n.right.as_ref().unwrap().left.h_fn() > n.right.as_ref().unwrap().right.h_fn() {
                 let right = n.right.take().unwrap();
                 proof {
                     let rlh = spec_cached_height(&right.left);
-                    if right.left is None { assert(rlh == 0); }
-                    assert(right.left is Some);
                 }
                 n.right = Some(right.rotate_right_fn());
                 n.update_meta();
@@ -1144,10 +1099,7 @@ pub mod AVLTreeSeqStEph {
                     n.left = n.left.take().insert_at_link(index, value, next_key);
                     proof {
                         assert(spec_avltreeseqsteph_wf(n.left));
-                        assert(n.right == old_right);
                         assert(spec_avltreeseqsteph_wf(n.right));
-                        assert(spec_inorder(n.left)
-                            =~= spec_inorder(old_n.left).insert(index as int, value@));
                     }
                 } else {
                     let ghost old_left = n.left;
@@ -1156,11 +1108,7 @@ pub mod AVLTreeSeqStEph {
                     );
                     proof {
                         assert(spec_avltreeseqsteph_wf(n.right));
-                        assert(n.left == old_left);
                         assert(spec_avltreeseqsteph_wf(n.left));
-                        assert(spec_inorder(n.right)
-                            =~= spec_inorder(old_n.right).insert(
-                                (index - left_size - 1) as int, value@));
                     }
                 }
                 Some(n.rebalance_fn())
@@ -1245,10 +1193,8 @@ pub mod AVLTreeSeqStEph {
             if !eq {
                 return false;
             }
-            assert(seq_a[i as int] == seq_b[i as int]);
             i += 1;
         }
-        assert(seq_a =~= seq_b);
         true
     }
 
@@ -1257,7 +1203,6 @@ pub mod AVLTreeSeqStEph {
     fn clone_link(&self) -> (copy: Self)
         decreases *self,
     {
-              assert(obeys_feq_full_trigger::<T>());
         match self {
             None => None,
             Some(node) => {
@@ -1397,7 +1342,6 @@ pub mod AVLTreeSeqStEph {
                 copy@ == self@,
                 self.spec_avltreeseqsteph_wf() ==> copy.spec_avltreeseqsteph_wf(),
         {
-                      assert(obeys_feq_full_trigger::<T>());
             AVLTreeSeqStEphS {
                 root: self.root.clone_link(),
                 next_key: self.next_key,

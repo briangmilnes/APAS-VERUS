@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTRBStEph.rs:367:36
+    |
+367 | ...                   assert(x_val != y_val);
+    |                              ^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTRBStEph.rs:378:33
+    |
+378 | ...                   #[trigger] T::le(z, y_val) && z != y_val
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBStEph.rs:381:37
+    |
+381 | ...                   T::transitive(z, x_val, y_val);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/total_order.rs:42:13
+    |
+ 42 |             Self::le(y, z),
+    |             -------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap37/BSTRBStEph.rs:383:41
+    |
+383 | ...                   T::antisymmetric(x_val, y_val);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/total_order.rs:49:13
+    |
+ 49 |             Self::le(x, y),
+    |             -------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+!(x_val == y_val) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 4548MB, peak z3 RSS: 720MB, min free: 21671MB
+Sampled CPU Usage: rust_verify: 82s, z3 children: 99s

@@ -1,0 +1,35 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqStPer.rs:314:63
+    |
+314 |             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqstper_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+782 |             AVLTreeSeqStPerS { root: None }
+    |             ------------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStPer.rs:314:63
+    |
+314 |             ensures tree.spec_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseqstper_wf();
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_seq() =~= empty() ✔
+%return.spec_avltreeseqstper_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+error: function body check: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap37/AVLTreeSeqStPer.rs:586:5
+    |
+586 |     fn build_balanced_from_slice<T: StT>(a: &[T]) -> (link: Link<T>)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 1956 verified, 2 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1893MB, peak z3 RSS: 635MB, min free: 24603MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 29s

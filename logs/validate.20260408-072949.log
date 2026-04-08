@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap37/BSTSplayMtEph.rs:1789:17
+     |
+1789 |                 exists|k: int| 0 <= k < values@.len() && values@[k] == x
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |k| let tmp%% = 0 in let tmp%% = k in let tmp%% = values.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && values.view().index(k) == x) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 5219MB, peak z3 RSS: 1007MB, min free: 20140MB
+Sampled CPU Usage: rust_verify: 95s, z3 children: 105s

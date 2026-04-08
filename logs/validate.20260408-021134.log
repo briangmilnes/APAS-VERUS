@@ -1,0 +1,41 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap37/BSTAVLStEph.rs:943:29
+    |
+943 | ...                   by {
+    |                       ^^
+
+error[E0432]: unresolved import `crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced`
+  --> src/Chap37/BSTRBStEph.rs:35:9
+   |
+35 |     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `avl_balanced` in `Chap37::BSTAVLStEph::BSTAVLStEph`
+
+error[E0432]: unresolved imports `crate::Chap37::BSTAVLStEph::BSTAVLStEph::avl_balanced`, `crate::Chap37::BSTAVLStEph::BSTAVLStEph::tree_is_avl`
+  --> src/Chap37/BSTAVLMtEph.rs:44:51
+   |
+44 |     use crate::Chap37::BSTAVLStEph::BSTAVLStEph::{avl_balanced, tree_is_avl};
+   |                                                   ^^^^^^^^^^^^  ^^^^^^^^^^^ no `tree_is_avl` in `Chap37::BSTAVLStEph::BSTAVLStEph`
+   |                                                   |
+   |                                                   no `avl_balanced` in `Chap37::BSTAVLStEph::BSTAVLStEph`
+
+error[E0425]: cannot find type `BSTAVLStEph` in this scope
+    --> src/Chap37/BSTAVLStEph.rs:1164:50
+     |
+1164 |     impl<T: std::fmt::Debug> std::fmt::Debug for BSTAVLStEph<T> {
+     |                                                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BSTAVLStEph` in this scope
+    --> src/Chap37/BSTAVLStEph.rs:1172:72
+     |
+1172 |     impl<T: std::fmt::Debug + std::fmt::Display> std::fmt::Display for BSTAVLStEph<T> {
+     |                                                                        ^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 5 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 5197MB, peak z3 RSS: 733MB, min free: 21058MB
+Sampled CPU Usage: rust_verify: 88s, z3 children: 63s

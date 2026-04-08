@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeqMtPer.rs:261:17
+    |
+261 | /                 out@.map_values(|t: T| t@) =~=
+262 | |                     old(out)@.map_values(|t: T| t@) + (*self).link_inorder(),
+    | |____________________________________________________________________________^ failed this postcondition
+...
+637 | /         if let Some(n) = self {
+638 | |             let ghost old_out_views = out@.map_values(|t: T| t@);
+639 | |             n.left.inorder_collect(out);
+640 | |             let ghost after_left_views = out@.map_values(|t: T| t@);
+...   |
+652 | |             n.right.inorder_collect(out);
+653 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+out.view().map_values((|t| t.view())) =~= old(out).view().map_values((|t| t.view())).add(old(self).link_inorder()) 
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 19s
+Sampled Memory Usage: peak rust_verify RSS: 3748MB, peak z3 RSS: 608MB, min free: 21754MB
+Sampled CPU Usage: rust_verify: 66s, z3 children: 55s

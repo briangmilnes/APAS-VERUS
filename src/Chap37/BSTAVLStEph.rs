@@ -393,9 +393,6 @@ pub mod BSTAVLStEph {
                             };
 
                             assert(old_left.tree_contains(x_val));
-                            assert(x_val != y_val) by {
-                                assert(old_left.tree_contains(x_val));
-                            };
 
                             assert(right_sub.tree_is_bst());
 
@@ -404,7 +401,6 @@ pub mod BSTAVLStEph {
                             by {
                                 if old_lr.tree_contains(z) {
                                 } else if z == y_val {
-                                    assert(x_val != y_val);
                                 } else if old_r.tree_contains(z) {
                                     T::transitive(x_val, y_val, z);
                                     if z == x_val {
@@ -416,17 +412,9 @@ pub mod BSTAVLStEph {
                             assert forall|z: T| r.tree_contains(z) ==
                                 tree_ghost.tree_contains(z)
                             by {
-                                assert(r.tree_contains(z) ==
-                                    (x_val == z
-                                    || old_ll.tree_contains(z)
-                                    || right_sub.tree_contains(z)));
                                 assert(right_sub.tree_contains(z) ==
                                     (y_val == z
                                     || old_lr.tree_contains(z)
-                                    || old_r.tree_contains(z)));
-                                assert(tree_ghost.tree_contains(z) ==
-                                    (y_val == z
-                                    || old_left.tree_contains(z)
                                     || old_r.tree_contains(z)));
                                 assert(old_left.tree_contains(z) ==
                                     (x_val == z
@@ -436,12 +424,6 @@ pub mod BSTAVLStEph {
 
                             // Height: r = Node(x, ll, right_sub) where
                             // right_sub = Node(y, lr, old_r)
-                            assert(right_sub.spec_height() == 1 + if old_lr.spec_height()
-                                >= old_r.spec_height() { old_lr.spec_height() }
-                                else { old_r.spec_height() });
-                            assert(r.spec_height() == 1 + if old_ll.spec_height()
-                                >= right_sub.spec_height() { old_ll.spec_height() }
-                                else { right_sub.spec_height() });
 
                             // AVL balance: unfold avl_balanced on the constructed nodes
                             assert(avl_balanced(right_sub) <==>
@@ -457,7 +439,6 @@ pub mod BSTAVLStEph {
                                     -1 <= lh - rh && lh - rh <= 1
                                 }));
 
-                            assert(r.tree_is_bst());
                         }
                         r
                     }
@@ -511,9 +492,6 @@ pub mod BSTAVLStEph {
                             };
 
                             assert(old_right.tree_contains(y_val));
-                            assert(x_val != y_val) by {
-                                assert(old_right.tree_contains(y_val));
-                            };
 
                             assert(left_sub.tree_is_bst());
 
@@ -526,7 +504,6 @@ pub mod BSTAVLStEph {
                                         T::antisymmetric(x_val, y_val);
                                     }
                                 } else if z == x_val {
-                                    assert(x_val != y_val);
                                 } else if old_rl.tree_contains(z) {
                                 }
                             };
@@ -534,18 +511,10 @@ pub mod BSTAVLStEph {
                             assert forall|z: T| r.tree_contains(z) ==
                                 tree_ghost.tree_contains(z)
                             by {
-                                assert(r.tree_contains(z) ==
-                                    (y_val == z
-                                    || left_sub.tree_contains(z)
-                                    || old_rr.tree_contains(z)));
                                 assert(left_sub.tree_contains(z) ==
                                     (x_val == z
                                     || old_l.tree_contains(z)
                                     || old_rl.tree_contains(z)));
-                                assert(tree_ghost.tree_contains(z) ==
-                                    (x_val == z
-                                    || old_l.tree_contains(z)
-                                    || old_right.tree_contains(z)));
                                 assert(old_right.tree_contains(z) ==
                                     (y_val == z
                                     || old_rl.tree_contains(z)
@@ -554,20 +523,8 @@ pub mod BSTAVLStEph {
 
                             // Height: r = Node(y, left_sub, rr) where
                             // left_sub = Node(x, old_l, rl)
-                            assert(left_sub.spec_height() == 1 + if old_l.spec_height()
-                                >= old_rl.spec_height() { old_l.spec_height() }
-                                else { old_rl.spec_height() });
-                            assert(r.spec_height() == 1 + if left_sub.spec_height()
-                                >= old_rr.spec_height() { left_sub.spec_height() }
-                                else { old_rr.spec_height() });
 
                             // AVL balance: unfold avl_balanced on the constructed nodes
-                            assert(avl_balanced(left_sub) <==>
-                                (avl_balanced(old_l) && avl_balanced(old_rl) && {
-                                    let lh = old_l.spec_height() as int;
-                                    let rh = old_rl.spec_height() as int;
-                                    -1 <= lh - rh && lh - rh <= 1
-                                }));
                             assert(avl_balanced(r) <==>
                                 (avl_balanced(left_sub) && avl_balanced(old_rr) && {
                                     let lh = left_sub.spec_height() as int;
@@ -631,8 +588,6 @@ pub mod BSTAVLStEph {
                             by {
                                 assert(intermediate.tree_contains(x) ==
                                     (v == x || new_left.tree_contains(x) || right.tree_contains(x)));
-                                assert(tree_ghost.tree_contains(x) ==
-                                    (v == x || left.tree_contains(x) || right.tree_contains(x)));
                             };
                         }
                         let result = intermediate.rotate_right();
@@ -648,41 +603,17 @@ pub mod BSTAVLStEph {
                                                     let lrr_h = tg_lr.right.spec_height();
                                                     let r_h = tg.right.spec_height();
 
-                                                    assert(ll_h == r_h);
 
                                                     // lr.h = left_rh = ll_h + 1 = r_h + 1
-                                                    assert(tg_l.right.spec_height() == r_h + 1);
 
                                                     // Unfold lr height: 1 + max(lrl_h, lrr_h) = r_h + 1
-                                                    assert(tg_l.right.spec_height() ==
-                                                        1 + if lrl_h >= lrr_h { lrl_h } else { lrr_h });
 
                                                     // max(lrl_h, lrr_h) = r_h; both <= r_h
-                                                    assert(lrl_h <= r_h);
-                                                    assert(lrr_h <= r_h);
 
                                                     // avl(lr): |lrl_h - lrr_h| <= 1
                                                     assert(avl_balanced(tg_l.right));
 
-                                                    assert(lrl_h as int >= r_h as int - 1) by {
-                                                        if lrl_h >= lrr_h {
-                                                            assert(lrl_h == r_h);
-                                                        } else {
-                                                            assert(lrr_h == r_h);
-                                                        }
-                                                    };
-                                                    assert(lrr_h as int >= r_h as int - 1) by {
-                                                        if lrr_h >= lrl_h {
-                                                            assert(lrr_h == r_h);
-                                                        } else {
-                                                            assert(lrl_h == r_h);
-                                                        }
-                                                    };
 
-                                                    assert(ll_h as int - lrl_h as int >= 0);
-                                                    assert(ll_h as int - lrl_h as int <= 1);
-                                                    assert(lrr_h as int - r_h as int >= -1);
-                                                    assert(lrr_h as int - r_h as int <= 0);
                                                 },
                                                 _ => { assert(false); },
                                             }
@@ -705,19 +636,8 @@ pub mod BSTAVLStEph {
                                             let lr_h = tg_l.right.spec_height();
                                             let r_h = tg.right.spec_height();
 
-                                            assert(ll_h >= lr_h);
-                                            assert(ll_h as int == r_h as int + 1) by {
-                                                assert(tg.left.spec_height() as int > tg.right.spec_height() as int + 1);
-                                                assert(tg.left.spec_height() as int <= tg.right.spec_height() as int + 2);
-                                            };
-                                            assert(lr_h >= r_h);
-                                            assert(lr_h <= r_h + 1);
 
                                             let new_rh: nat = 1 + if lr_h >= r_h { lr_h } else { r_h };
-                                            assert(lr_h as int - r_h as int >= -1);
-                                            assert(lr_h as int - r_h as int <= 1);
-                                            assert(ll_h as int - new_rh as int >= -1);
-                                            assert(ll_h as int - new_rh as int <= 1);
                                         },
                                         _ => { assert(false); },
                                     }
@@ -752,8 +672,6 @@ pub mod BSTAVLStEph {
                             by {
                                 assert(intermediate.tree_contains(x) ==
                                     (v == x || left.tree_contains(x) || new_right.tree_contains(x)));
-                                assert(tree_ghost.tree_contains(x) ==
-                                    (v == x || left.tree_contains(x) || right.tree_contains(x)));
                             };
                         }
                         let result = intermediate.rotate_left();
@@ -769,41 +687,17 @@ pub mod BSTAVLStEph {
                                                     let rlr_h = tg_rl.right.spec_height();
                                                     let l_h = tg.left.spec_height();
 
-                                                    assert(rr_h == l_h);
 
                                                     // rl.h = right_lh = rr_h + 1 = l_h + 1
-                                                    assert(tg_r.left.spec_height() == l_h + 1);
 
                                                     // Unfold rl height: 1 + max(rll_h, rlr_h) = l_h + 1
-                                                    assert(tg_r.left.spec_height() ==
-                                                        1 + if rll_h >= rlr_h { rll_h } else { rlr_h });
 
                                                     // max(rll_h, rlr_h) = l_h; both <= l_h
-                                                    assert(rll_h <= l_h);
-                                                    assert(rlr_h <= l_h);
 
                                                     // avl(rl): |rll_h - rlr_h| <= 1
                                                     assert(avl_balanced(tg_r.left));
 
-                                                    assert(rll_h as int >= l_h as int - 1) by {
-                                                        if rll_h >= rlr_h {
-                                                            assert(rll_h == l_h);
-                                                        } else {
-                                                            assert(rlr_h == l_h);
-                                                        }
-                                                    };
-                                                    assert(rlr_h as int >= l_h as int - 1) by {
-                                                        if rlr_h >= rll_h {
-                                                            assert(rlr_h == l_h);
-                                                        } else {
-                                                            assert(rll_h == l_h);
-                                                        }
-                                                    };
 
-                                                    assert(rr_h as int - rlr_h as int >= 0);
-                                                    assert(rr_h as int - rlr_h as int <= 1);
-                                                    assert(rll_h as int - l_h as int >= -1);
-                                                    assert(rll_h as int - l_h as int <= 0);
                                                 },
                                                 _ => { assert(false); },
                                             }
@@ -826,19 +720,8 @@ pub mod BSTAVLStEph {
                                             let rr_h = tg_r.right.spec_height();
                                             let l_h = tg.left.spec_height();
 
-                                            assert(rr_h >= rl_h);
-                                            assert(rr_h as int == l_h as int + 1) by {
-                                                assert(tg.right.spec_height() as int > tg.left.spec_height() as int + 1);
-                                                assert(tg.right.spec_height() as int <= tg.left.spec_height() as int + 2);
-                                            };
-                                            assert(rl_h >= l_h);
-                                            assert(rl_h <= l_h + 1);
 
                                             let new_lh: nat = 1 + if l_h >= rl_h { l_h } else { rl_h };
-                                            assert(l_h as int - rl_h as int >= -1);
-                                            assert(l_h as int - rl_h as int <= 1);
-                                            assert(new_lh as int - rr_h as int >= -1);
-                                            assert(new_lh as int - rr_h as int <= 1);
                                         },
                                         _ => { assert(false); },
                                     }
@@ -883,15 +766,12 @@ pub mod BSTAVLStEph {
                             right: right,
                         }));
                         proof {
-                            assert(new_left.tree_is_bst());
-                            assert(old_right.tree_is_bst());
 
                             assert forall|x: T| new_left.tree_contains(x) implies
                                 #[trigger] T::le(x, node_val) && x != node_val
                             by {
                                 if old_left.tree_contains(x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
 
@@ -906,20 +786,11 @@ pub mod BSTAVLStEph {
                                     (node_val == x
                                     || new_left.tree_contains(x)
                                     || old_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
                             };
 
                             lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
-                            assert(r.spec_height() <= node.spec_height() + 1);
-                            assert(r.spec_height() <= usize::MAX);
 
-                            assert(avl_balanced(new_left));
-                            assert(avl_balanced(old_right));
 
-                            assert(r.spec_height() >= node.spec_height());
                         }
                         r.rebalance()
                     }
@@ -931,8 +802,6 @@ pub mod BSTAVLStEph {
                             right: new_right,
                         }));
                         proof {
-                            assert(old_left.tree_is_bst());
-                            assert(new_right.tree_is_bst());
 
                             assert forall|x: T| old_left.tree_contains(x) implies
                                 #[trigger] T::le(x, node_val) && x != node_val
@@ -943,7 +812,6 @@ pub mod BSTAVLStEph {
                             by {
                                 if old_right.tree_contains(x) {
                                 } else {
-                                    assert(x == value);
                                 }
                             };
 
@@ -954,20 +822,11 @@ pub mod BSTAVLStEph {
                                     (node_val == x
                                     || old_left.tree_contains(x)
                                     || new_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
                             };
 
                             lemma_max_plus_one(old_left.spec_height(), old_right.spec_height());
-                            assert(r.spec_height() <= node.spec_height() + 1);
-                            assert(r.spec_height() <= usize::MAX);
 
-                            assert(avl_balanced(old_left));
-                            assert(avl_balanced(new_right));
 
-                            assert(r.spec_height() >= node.spec_height());
                         }
                         r.rebalance()
                     }
@@ -981,19 +840,9 @@ pub mod BSTAVLStEph {
                             assert forall|x: T| r.tree_contains(x) ==
                                 (node.tree_contains(x) || x == value)
                             by {
-                                assert(r.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                                assert(node.tree_contains(x) ==
-                                    (node_val == x
-                                    || old_left.tree_contains(x)
-                                    || old_right.tree_contains(x)));
-                                assert(value == node_val);
                             };
                         }
                         proof {
-                            assert(avl_balanced(r));
                         }
                         r
                     }

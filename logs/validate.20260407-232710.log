@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap37/AVLTreeSeq.rs:351:74
+    |
+351 |             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+839 |             AVLTreeS { root: None, next_key: 0 }
+    |             ------------------------------------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeq.rs:351:74
+    |
+351 |             ensures tree.spec_avltreeseq_seq() =~= Seq::<T::V>::empty(), tree.spec_avltreeseq_wf();
+    |                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.spec_avltreeseq_seq() =~= empty() ✔
+%return.spec_avltreeseq_wf() ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 1957 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 2398MB, peak z3 RSS: 369MB, min free: 22963MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 37s

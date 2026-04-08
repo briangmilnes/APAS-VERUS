@@ -376,7 +376,6 @@ pub mod AVLTreeSeqMtPer {
             node.left == left,
             node.right == right,
     {
-              assert(obeys_feq_full_trigger::<T>());
         let hl = left.height_fn();
         let hr = right.height_fn();
         let sz = 1 + left.size_fn() + right.size_fn();
@@ -398,19 +397,13 @@ pub mod AVLTreeSeqMtPer {
             assert(spec_avltreeseqmtper_wf(y.right));
             assert(spec_avltreeseqmtper_wf(x.left));
             assert(spec_avltreeseqmtper_wf(x.right));
-            assert(1 + spec_cached_size(&x.right) + spec_cached_size(&y.right) <= usize::MAX as nat);
-            assert(1 + spec_nat_max(
-                spec_cached_height(&x.right), spec_cached_height(&y.right)) <= usize::MAX as nat);
         }
         let t2 = x.right.clone();
         let y_val = y.value.clone_plus();
         let new_y = mk(y_val, t2, y.right.clone());
         proof {
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&Some(new_y)) <= usize::MAX as nat);
             lemma_height_le_size::<T>(&x.left);
             lemma_height_le_size::<T>(&Some(new_y));
-            assert(1 + spec_nat_max(
-                spec_cached_height(&x.left), spec_cached_height(&Some(new_y))) <= usize::MAX as nat);
         }
         let x_val = x.value.clone_plus();
         let result = mk(x_val, x.left.clone(), Some(new_y));
@@ -430,19 +423,13 @@ pub mod AVLTreeSeqMtPer {
             assert(spec_avltreeseqmtper_wf(x.right));
             assert(spec_avltreeseqmtper_wf(y.left));
             assert(spec_avltreeseqmtper_wf(y.right));
-            assert(1 + spec_cached_size(&x.left) + spec_cached_size(&y.left) <= usize::MAX as nat);
-            assert(1 + spec_nat_max(
-                spec_cached_height(&x.left), spec_cached_height(&y.left)) <= usize::MAX as nat);
         }
         let t2 = y.left.clone();
         let x_val = x.value.clone_plus();
         let new_x = mk(x_val, x.left.clone(), t2);
         proof {
-            assert(1 + spec_cached_size(&Some(new_x)) + spec_cached_size(&y.right) <= usize::MAX as nat);
             lemma_height_le_size::<T>(&Some(new_x));
             lemma_height_le_size::<T>(&y.right);
-            assert(1 + spec_nat_max(
-                spec_cached_height(&Some(new_x)), spec_cached_height(&y.right)) <= usize::MAX as nat);
         }
         let y_val = y.value.clone_plus();
         let result = mk(y_val, Some(new_x), y.right.clone());
@@ -459,21 +446,15 @@ pub mod AVLTreeSeqMtPer {
         let hr = n.right.height_fn();
         if hl > hr.saturating_add(1) {
             proof {
-                assert(spec_cached_height(&n.left) > 0);
-                assert(n.left.is_some());
             }
             let left = n.left.as_ref().unwrap().clone();
             let ghost left_size = spec_cached_size(&Some(left));
             proof {
-                assert(left_size == spec_cached_size(&n.left));
             }
             if left.right.height_fn() > left.left.height_fn() {
-                proof { assert(left.right.is_some()); }
                 let rotated = left.rotate_left();
                 let n_val = n.value.clone_plus();
                 proof {
-                    assert(spec_cached_size(&Some(rotated)) == left_size);
-                    assert(1 + left_size + spec_cached_size(&n.right) <= usize::MAX as nat);
                     lemma_height_le_size::<T>(&Some(rotated));
                     lemma_height_le_size::<T>(&n.right);
                 }
@@ -486,21 +467,15 @@ pub mod AVLTreeSeqMtPer {
         }
         if hr > hl.saturating_add(1) {
             proof {
-                assert(spec_cached_height(&n.right) > 0);
-                assert(n.right.is_some());
             }
             let right = n.right.as_ref().unwrap().clone();
             let ghost right_size = spec_cached_size(&Some(right));
             proof {
-                assert(right_size == spec_cached_size(&n.right));
             }
             if right.left.height_fn() > right.right.height_fn() {
-                proof { assert(right.left.is_some()); }
                 let rotated = right.rotate_right();
                 let n_val = n.value.clone_plus();
                 proof {
-                    assert(spec_cached_size(&Some(rotated)) == right_size);
-                    assert(1 + spec_cached_size(&n.left) + right_size <= usize::MAX as nat);
                     lemma_height_le_size::<T>(&n.left);
                     lemma_height_le_size::<T>(&Some(rotated));
                 }
@@ -525,7 +500,6 @@ pub mod AVLTreeSeqMtPer {
         decreases a.len(),
     {
         if a.is_empty() {
-            assert(a@.map_values(|t: T| t@) =~= Seq::<T::V>::empty());
             return None;
         }
         let mid = a.len() / 2;
@@ -547,9 +521,6 @@ pub mod AVLTreeSeqMtPer {
             let left_seq = left_slice@;
             let right_seq = right_slice@;
             let full_seq = a@;
-            assert(left_seq =~= full_seq.subrange(0, mid as int));
-            assert(right_seq =~= full_seq.subrange(mid as int + 1, full_seq.len() as int));
-            assert(full_seq =~= left_seq + seq![full_seq[mid as int]] + right_seq);
         }
         Some(node)
     }
@@ -638,7 +609,6 @@ pub mod AVLTreeSeqMtPer {
             let ghost old_out_views = out@.map_values(|t: T| t@);
             n.left.inorder_collect(out);
             let ghost after_left_views = out@.map_values(|t: T| t@);
-            assert(after_left_views =~= old_out_views + spec_inorder(n.left));
             let val = n.value.clone();
             proof {
                 assert(obeys_feq_full_trigger::<T>());
@@ -646,7 +616,6 @@ pub mod AVLTreeSeqMtPer {
             }
             out.push(val);
             let ghost after_push_views = out@.map_values(|t: T| t@);
-            assert(after_push_views =~= after_left_views.push(n.value@));
             assert(after_push_views =~=
                 old_out_views + spec_inorder(n.left) + seq![n.value@]);
             n.right.inorder_collect(out);
@@ -687,10 +656,8 @@ pub mod AVLTreeSeqMtPer {
             if !eq {
                 return false;
             }
-            assert(seq_a[i as int] == seq_b[i as int]);
             i += 1;
         }
-        assert(seq_a =~= seq_b);
         true
     }
 
@@ -714,7 +681,6 @@ pub mod AVLTreeSeqMtPer {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1)
         fn new() -> (tree: Self) {
-                      assert(obeys_feq_full_trigger::<T>());
             Self::empty()
         }
 
