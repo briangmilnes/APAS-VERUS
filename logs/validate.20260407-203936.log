@@ -1,0 +1,31 @@
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:816:70
+    |
+816 |                         slv.contains(s@) && rlv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                      ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:819:70
+    |
+819 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                      ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:819:88
+    |
+819 |                         srv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {};
+    |                                                                                        ^^^^
+
+note: 
+
+s.cmp_spec(o) == Less
+|   !(s.cmp_spec(o) is Equal) ✘
+|   !(s.cmp_spec(o) is Greater) ✘
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 1556MB, peak z3 RSS: 344MB, min free: 20501MB
+Sampled CPU Usage: rust_verify: 16s, z3 children: 11s

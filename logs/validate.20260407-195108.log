@@ -1,0 +1,51 @@
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:991:21
+    |
+991 |                     vstd::set_lib::lemma_len_subset(blv, b@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1099:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:992:21
+    |
+992 |                     vstd::set_lib::lemma_len_subset(brv, b@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1099:8
+    |
+    = note: failed precondition
+
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1066:72
+     |
+1066 | ...                   else { assert(blv.contains(x)); assert(b@.contains(x)); }
+     |                                                              ^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTParaTreapMtEph.rs:1071:72
+     |
+1071 | ...                   else { assert(brv.contains(x)); assert(b@.contains(x)); }
+     |                                                              ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+tmp%.finite() ✔
+blv.subset_of(tmp%) ✘
+|   forall |a|
+|       blv.contains(a) ==>
+|           tmp%.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1250MB, peak z3 RSS: 246MB, min free: 24896MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 9s

@@ -1,0 +1,59 @@
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:652:39
+    |
+457 |             left@.len() + right@.len() < usize::MAX as nat,
+    |             ---------------------------------------------- failed precondition
+...
+652 |                         let rebuilt = join_with_priority(lr, root_key, priority, right);
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:682:36
+    |
+682 | ...                   assert(llv.disjoint(rebuilt@));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: precondition not satisfied
+   --> src/Chap39/BSTParaTreapMtEph.rs:706:39
+    |
+457 |             left@.len() + right@.len() < usize::MAX as nat,
+    |             ---------------------------------------------- failed precondition
+...
+706 |                         let rebuilt = join_with_priority(left, root_key, priority, rl);
+    |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:737:36
+    |
+737 | ...                   assert(rebuilt@.disjoint(rrv));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap39/BSTParaTreapMtEph.rs:457:13
+    |
+457 |             left@.len() + right@.len() < usize::MAX as nat,
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+lr.view().finite() ✔
+right.view().finite() ✔
+lr.view().disjoint(right.view()) ✔
+!(lr.view().contains(root_key.view())) ✔
+!(right.view().contains(root_key.view())) ✔
+clip(nat, lr.view().len() + right.view().len()) < UnsignedMax.Exec(usize::BITS) ✘
+forall |t|
+    lr.view().contains(t.view()) ==>
+        t.cmp_spec(root_key) == Less ✔
+forall |t|
+    right.view().contains(t.view()) ==>
+        t.cmp_spec(root_key) == Greater ✔
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 1054MB, peak z3 RSS: 256MB, min free: 23733MB
+Sampled CPU Usage: rust_verify: 12s, z3 children: 11s

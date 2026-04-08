@@ -1,0 +1,25 @@
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:992:83
+    |
+992 |                         assert forall|x: T::V| #[trigger] blv.contains(x) implies b@.contains(x) by {};
+    |                                                                                   ^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap39/BSTParaTreapMtEph.rs:995:83
+    |
+995 |                         assert forall|x: T::V| #[trigger] brv.contains(x) implies b@.contains(x) by {};
+    |                                                                                   ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+b.view().contains(x) 
+    function is uninterpreted
+
+verification results:: 1306 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1058MB, peak z3 RSS: 257MB, min free: 24640MB
+Sampled CPU Usage: rust_verify: 10s, z3 children: 9s
