@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+    --> src/Chap45/BinaryHeapPQ.rs:1313:25
+     |
+1313 |                         new_elements@[0] == self@[n as int - 1],
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+    --> src/Chap45/BinaryHeapPQ.rs:1317:25
+     |
+1317 |                         new_elements.seq@[0] == last_element,
+     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 4681MB, peak z3 RSS: 550MB, min free: 19039MB
+Sampled CPU Usage: rust_verify: 113s, z3 children: 108s

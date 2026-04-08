@@ -265,7 +265,6 @@ broadcast use {
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time empty construction.
             fn empty() -> Self {
-                              assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::empty(),
                 }
@@ -274,7 +273,6 @@ broadcast use {
             /// - Alg Analysis: APAS (Ch45 ref): Work O(1), Span O(1).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — matches APAS; constant-time singleton construction.
             fn singleton(element: T) -> Self {
-                              assert(obeys_feq_full_trigger::<T>());
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::singleton(element),
                 }
@@ -319,8 +317,6 @@ broadcast use {
                     // vals@.len() = n + 1 = self@.len() + 1 < usize::MAX (from requires).
                     // n = old_vals.len(), and old_vals.map_values(..) =~= self.elements.spec_seq()
                     // (from values_in_order ensures), so n == self@.len() as nat.
-                    assert(n as nat == self@.len());
-                    assert(vals@.len() < usize::MAX);
                 }
                 let result = BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(vals),
@@ -340,11 +336,8 @@ broadcast use {
                         implies #[trigger] vals@.map_values(view_fn)[k]
                             == self@.insert(pos as int, element@)[k] by {
                         if k < pos as int {
-                            assert(vals@[k] == old_vals[k]);
                         } else if k == pos as int {
-                            assert(vals@[k] == element);
                         } else {
-                            assert(vals@[k] == old_vals[(k - 1) as int]);
                         }
                     }
                     assert(result@ =~= self@.insert(pos as int, element@));
@@ -432,9 +425,6 @@ broadcast use {
                     // n1 = self.elements.length() ensures n1 as nat == self@.len().
                     // n2 = other.elements.length() ensures n2 as nat == other@.len().
                     // values@.len() = n1 + n2 = self@.len() + other@.len() < usize::MAX (from requires).
-                    assert(n1 as nat == self@.len());
-                    assert(n2 as nat == other@.len());
-                    assert(values@.len() < usize::MAX);
                 }
                 BalancedTreePQ {
                     elements: AVLTreeSeqStPerS::from_vec(values),
@@ -444,7 +434,6 @@ broadcast use {
             /// - Alg Analysis: APAS (Ch45 ref): Work O(n log n), Span O(n log n).
             /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n^2), Span O(n^2) — DIFFERS: n calls to insert, each O(n).
             fn from_seq(seq: &AVLTreeSeqStPerS<T>) -> Self {
-                              assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
                 let n = seq.length();
                 proof {
@@ -462,7 +451,6 @@ broadcast use {
                 {
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
-                        assert(result@.len() + 1 < usize::MAX as nat);
                     }
                     result = result.insert(seq.nth(i).clone());
                 }
@@ -511,7 +499,6 @@ broadcast use {
                     // n - 1 <= usize::MAX - 1 < usize::MAX.
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
-                    assert(values@.len() < usize::MAX);
                 }
                 let remaining = AVLTreeSeqStPerS::from_vec(values);
                 (BalancedTreePQ { elements: remaining }, Some(max_element))
@@ -523,7 +510,6 @@ broadcast use {
                 proof {
                     // other@.len() == elements@.len() (from from_seq ensures).
                     // self@.len() + elements@.len() < usize::MAX (from requires).
-                    assert(self@.len() + other@.len() < usize::MAX as nat);
                 }
                 self.meld(&other)
             }
@@ -549,13 +535,10 @@ broadcast use {
                     let current = self.elements.nth(i);
                     let eq = feq(current, element);
                     if eq {
-                        assert(self@[i as int] == element@);
                         return true;
                     }
-                    assert(self@[i as int] != element@);
                     i = i + 1;
                 }
-                assert(self@.subrange(0, n as int) =~= self@);
                 false
             }
 
@@ -582,7 +565,6 @@ broadcast use {
                     // values@.len() <= n < usize::MAX (from wf).
                     lemma_size_lt_usize_max::<T>(&self.elements.root);
                     lemma_size_eq_inorder_len::<T>(&self.elements.root);
-                    assert(values@.len() < usize::MAX);
                 }
                 (BalancedTreePQ { elements: AVLTreeSeqStPerS::from_vec(values) }, found)
             }
@@ -614,7 +596,6 @@ broadcast use {
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(n lg n), Span O(n lg n)
             fn from_vec(elements: Vec<T>) -> Self {
-                              assert(obeys_feq_full_trigger::<T>());
                 let mut result = Self::empty();
                 let n = elements.len();
                 #[cfg_attr(verus_keep_ghost, verifier::loop_isolation(false))]
@@ -627,7 +608,6 @@ broadcast use {
                 {
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
-                        assert(result@.len() + 1 < usize::MAX as nat);
                     }
                     result = result.insert(elements[i].clone());
                 }
@@ -722,8 +702,6 @@ broadcast use {
                 {
                     proof {
                         // left@.len() <= i < n < usize::MAX and right@.len() <= i < n < usize::MAX.
-                        assert(left@.len() + 1 < usize::MAX as nat);
-                        assert(right@.len() + 1 < usize::MAX as nat);
                     }
                     let current = self.elements.nth(i);
                     if *current < *element {
@@ -766,7 +744,6 @@ broadcast use {
                 {
                     proof {
                         // result@.len() <= i < n < usize::MAX → result@.len() + 1 < usize::MAX.
-                        assert(result@.len() + 1 < usize::MAX as nat);
                     }
                     let current = self.elements.nth(i);
                     if predicate(current) {
@@ -800,7 +777,6 @@ broadcast use {
                 {
                     proof {
                         // result@.len() = i < n < usize::MAX → result@.len() + 1 < usize::MAX.
-                        assert(result@.len() + 1 < usize::MAX as nat);
                     }
                     let current = self.elements.nth(i);
                     let mapped_val = f(current);
@@ -818,7 +794,6 @@ broadcast use {
             fn default() -> (d: Self)
                 ensures d@.len() == 0, d.spec_balancedtreepq_wf()
             {
-            assert(obeys_feq_full_trigger::<T>());
              Self::empty() }
         }
 

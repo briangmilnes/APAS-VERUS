@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/BinaryHeapPQ.rs:460:33
+    |
+460 |                         implies #[trigger] result@[m] == sv[m] by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+result.view().index(m) == sv.index(m) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 7137MB, peak z3 RSS: 984MB, min free: 17761MB
+Sampled CPU Usage: rust_verify: 139s, z3 children: 170s

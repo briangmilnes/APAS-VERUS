@@ -1,0 +1,24 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap45/BinaryHeapPQ.rs:626:21
+    |
+626 |                     BinaryHeapPQ::<T>::spec_is_exec_heap_except(v@, idx as int),
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: recommendation not met
+   --> src/Chap45/BinaryHeapPQ.rs:717:41
+    |
+717 | ...                   implies #[trigger] view_seq[k] == v@[k]@ by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 6404MB, peak z3 RSS: 1046MB, min free: 18625MB
+Sampled CPU Usage: rust_verify: 135s, z3 children: 150s

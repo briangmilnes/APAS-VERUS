@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1361:37
+     |
+1361 | ...                   implies #[trigger] new_elements.seq@[m] == self.elements.seq@[m] by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_elements.seq.view().index(m) == self.elements.seq.view().index(m) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 5701MB, peak z3 RSS: 490MB, min free: 17972MB
+Sampled CPU Usage: rust_verify: 160s, z3 children: 164s

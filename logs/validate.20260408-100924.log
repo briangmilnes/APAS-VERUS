@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:881:36
+    |
+881 | ...                   assert(s[0] == *key);
+    |                              ^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:882:36
+    |
+882 | ...                   assert(s.contains(*key));
+    |                              ^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+s.index(0) == key 
+
+note: recommendation not met
+   --> src/Chap45/LeftistHeapPQ.rs:881:36
+    |
+881 | ...                   assert(s[0] == *key);
+    |                              ^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 20s
+Sampled Memory Usage: peak rust_verify RSS: 4338MB, peak z3 RSS: 523MB, min free: 19414MB
+Sampled CPU Usage: rust_verify: 56s, z3 children: 57s

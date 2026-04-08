@@ -1,0 +1,29 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap45/BinaryHeapPQ.rs:627:21
+    |
+627 | /                     idx > 0 ==> (
+628 | |                         (2 * (idx as int) + 1 < n as int ==>
+629 | |                             TotalOrder::le(v@[((idx as int) - 1) / 2], v@[2 * (idx as int) + 1]))
+630 | |                         && (2 * (idx as int) + 2 < n as int ==>
+631 | |                             TotalOrder::le(v@[((idx as int) - 1) / 2], v@[2 * (idx as int) + 2]))
+632 | |                     ),
+    | |_____________________^
+
+note: recommendation not met
+   --> src/Chap45/BinaryHeapPQ.rs:717:41
+    |
+717 | ...                   implies #[trigger] view_seq[k] == v@[k]@ by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5480MB, peak z3 RSS: 484MB, min free: 20030MB
+Sampled CPU Usage: rust_verify: 120s, z3 children: 95s

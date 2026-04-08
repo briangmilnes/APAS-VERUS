@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:863:24
+    |
+863 |                 assert(pq.root.spec_seq() =~= Seq::empty().push(element) + Seq::<T>::empty() + Seq::<T>::empty());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+pq.root.spec_seq() =~= empty().push(element).add(empty()).add(empty()) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 3289MB, peak z3 RSS: 633MB, min free: 20761MB
+Sampled CPU Usage: rust_verify: 60s, z3 children: 67s

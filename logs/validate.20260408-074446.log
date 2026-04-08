@@ -1,0 +1,27 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/BinaryHeapPQ.rs:155:24
+    |
+155 |                 assert(TotalOrder::le(seq[p], seq[left]));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap45/BinaryHeapPQ.rs:158:24
+    |
+158 |                 assert(TotalOrder::le(seq[p], seq[right]));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+seq.index(p).le(seq.index(right)) 
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 22s
+Sampled Memory Usage: peak rust_verify RSS: 5528MB, peak z3 RSS: 565MB, min free: 20048MB
+Sampled CPU Usage: rust_verify: 106s, z3 children: 94s

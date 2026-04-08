@@ -1,0 +1,47 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:281:21
+     |
+ 281 | /                     self@.len() > 0 ==> self@.to_multiset() =~=
+ 282 | |                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+     | |______________________________________________________________________________________^ failed this postcondition
+...
+1277 |                       return (empty_pq, Some(min_element));
+     |                       ------------------------------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:281:41
+    |
+281 |                       self@.len() > 0 ==> self@.to_multiset() =~=
+    |  _________________________________________^
+282 | |                         min_and_rest.0@.to_multiset().insert(min_and_rest.1.unwrap()@),
+    | |______________________________________________________________________________________^
+
+note: 
+
+old(self).view().len() > 0 ==>
+    %return.1 is Some ✔
+old(self).view().len() > 0 ==>
+    %return.0.view().len() == old(self).view().len() - 1 ✔
+old(self).view().len() == 0 ==>
+    %return.1 is None ✔
+old(self).view().len() == 0 ==>
+    %return.0.view().len() == 0 ✔
+old(self).view().len() > 0 ==>
+    old(self).view().to_multiset() =~= %return.0.view().to_multiset().insert(%return.1.0.view()) ✘
+old(self).view().len() > 0 ==>
+    spec_is_exec_heap(%return.0.spec_seq()) ✔
+old(self).view().len() > 0 ==>
+    %return.1.0 == old(self).spec_seq().index(0) ✔
+old(self).view().len() > 0 ==>
+    forall |i|
+        let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.0.spec_seq().len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+            %return.1.0.le(%return.0.spec_seq().index(i)) ✔
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 5976MB, peak z3 RSS: 432MB, min free: 14962MB
+Sampled CPU Usage: rust_verify: 168s, z3 children: 178s

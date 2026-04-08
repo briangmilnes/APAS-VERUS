@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1214:33
+     |
+1214 |                         implies #[trigger] ne_seq[k] == orig[k] by {
+     |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+ne_seq.index(k) == orig.index(k) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 30s
+Sampled Memory Usage: peak rust_verify RSS: 5659MB, peak z3 RSS: 392MB, min free: 16845MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 106s
