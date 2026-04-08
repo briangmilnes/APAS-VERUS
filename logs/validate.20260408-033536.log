@@ -1,0 +1,46 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: precondition not satisfied
+   --> src/Chap53/PQMinStPer.rs:299:29
+    |
+299 |             let entry_ref = frontier_seq.nth(0);
+    |                             ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:332:54
+    |
+332 |             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      -------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:316:24
+    |
+316 |                 assert(frontier@.contains(frontier_seq@[0 as int]));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStPer.rs:332:54
+    |
+332 |             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+frontier_seq.spec_avltreeseqstper_wf() ✔
+0 < frontier_seq.spec_seq().len() ✘
+
+note: recommendation not met
+   --> src/Chap53/PQMinStPer.rs:316:43
+    |
+316 |                 assert(frontier@.contains(frontier_seq@[0 as int]));
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2337 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 28s
+Sampled Memory Usage: peak rust_verify RSS: 5344MB, peak z3 RSS: 733MB, min free: 21015MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 61s

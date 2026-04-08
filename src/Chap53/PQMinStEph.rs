@@ -144,16 +144,12 @@ pub mod PQMinStEph {
         fn pq_min<G, PF>(graph: &G, source: V, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
-        assert(obeys_feq_full_trigger::<P>());
-        assert(obeys_feq_full_trigger::<V>());
          pq_min(graph, source, priority_fn, Ghost(vertex_universe)) }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|V|^2 + |E| log |V|), Span O(|V|^2 + |E| log |V|) — delegates to free fn pq_min_multi; St sequential.
         fn pq_min_multi<G, PF>(graph: &G, sources: AVLTreeSetStEph<V>, priority_fn: &PF, Ghost(vertex_universe): Ghost<Set<<V as View>::V>>) -> (search: PQMinResult<V, P>)
         where G: Fn(&V) -> AVLTreeSetStEph<V>, PF: Fn(&V) -> P,
         {
-        assert(obeys_feq_full_trigger::<P>());
-        assert(obeys_feq_full_trigger::<V>());
          pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe)) }
     }
 
@@ -187,16 +183,8 @@ pub mod PQMinStEph {
             spec_pqminsteph_wf_generic(&search),
             search.visited@.contains(source@),
     {
-              assert(obeys_feq_full_trigger::<P>());
-       assert(obeys_feq_full_trigger::<V>());
         let sources = AVLTreeSetStEph::singleton(source);
         proof {
-            assert(sources@.subset_of(vertex_universe)) by {
-                assert forall|a: <V as View>::V| sources@.contains(a)
-                    implies #[trigger] vertex_universe.contains(a) by {
-                    assert(sources@ == Set::<<V as View>::V>::empty().insert(source@));
-                }
-            }
         }
         pq_min_multi(graph, sources, priority_fn, Ghost(vertex_universe))
     }
@@ -223,7 +211,6 @@ pub mod PQMinStEph {
             }
             let entry_ref = seq.nth(0);
             let v = entry_ref.1.clone();
-            proof { assert(cloned(entry_ref.1, v)); }
             Some(v)
         }
     }
@@ -333,16 +320,11 @@ pub mod PQMinStEph {
             let visited_new = visited.union(&AVLTreeSetStEph::singleton(v_for_visited));
             // Maintain visited@.subset_of(vertex_universe): v@ ∈ vertex_universe from frontier entry.
             proof {
-                assert(obeys_feq_full_trigger::<V>());
                 // v was clone_plus'd from entry_ref.1, so cloned(entry_ref.1, v).
                 // feq chain: entry_ref.1 == v, hence v@ == entry_ref@.1 == seq@[0].1.
                 assert(frontier@.contains(seq@[0 as int]));
-                assert(vertex_universe.contains(v@));
                 // v_for_visited was clone_plus'd from v, so v == v_for_visited.
                 // visited_new@ = visited@ ∪ {v_for_visited@} = visited@ ∪ {v@}.
-                assert forall|a: <V as View>::V| visited_new@.contains(a)
-                    implies #[trigger] vertex_universe.contains(a) by {
-                }
             }
 
             let neighbors = graph(&v);
@@ -352,10 +334,6 @@ pub mod PQMinStEph {
             let mut i: usize = 0;
             // Establish neighbor vertices ∈ vertex_universe before inner loop.
             proof {
-                assert forall|j: int| 0 <= j < neighbors_seq@.len()
-                    implies vertex_universe.contains(#[trigger] neighbors_seq@[j]) by {
-                    assert(neighbors@.contains(neighbors_seq@[j]));
-                }
             }
             while i < nlen
                 invariant
@@ -407,42 +385,16 @@ pub mod PQMinStEph {
                         // Canonical form + priority witness invariants give existential
                         // ensures terms; view-det multi-trigger fires on both, yielding
                         // e1.0.0 == e2.0.0, combined with e1.0.1 == e2.0.1 gives e1 == e2.
-                        assert(vstd::relations::injective_on(proj, frontier_updated@)) by {
-                            assert forall|e1: ((<P as View>::V, <V as View>::V), <V as View>::V),
-                                           e2: ((<P as View>::V, <V as View>::V), <V as View>::V)|
-                                frontier_updated@.contains(e1) && frontier_updated@.contains(e2)
-                                && #[trigger] proj(e1) == #[trigger] proj(e2)
-                                implies e1 == e2 by {
-                            }
-                        };
                         // Image of projection is subset of vertex_universe.
                         let image = frontier_updated@.map(proj);
-                        assert(image.subset_of(vertex_universe)) by {
-                            assert forall|v: <V as View>::V| image.contains(v)
-                                implies #[trigger] vertex_universe.contains(v) by {
-                                let wit: ((<P as View>::V, <V as View>::V), <V as View>::V) =
-                                    choose|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
-                                        #[trigger] frontier_updated@.contains(e) && e.1 == v;
-                                assert(frontier_updated@.contains(wit));
-                            }
-                        };
                         vstd::set_lib::lemma_map_size(frontier_updated@, image, proj);
                         vstd::set_lib::lemma_len_subset(image, vertex_universe);
                     }
                     frontier_updated = frontier_updated.union(&AVLTreeSetStEph::singleton(neighbor_entry));
                     // Maintain all frontier invariants after union.
                     proof {
-                        assert(obeys_feq_full_trigger::<V>());
                         assert(obeys_feq_full_trigger::<P>());
                         // clone_plus gives view equality.
-                        assert(neighbor_clone2@ == neighbor@);
-                        assert(neighbor_clone1@ == neighbor@);
-                        assert(neighbor_p_clone@ == neighbor_p@);
-                        assert(neighbor_entry@.1 == neighbor@);
-                        assert(neighbor_entry@.0.1 == neighbor@);
-                        assert(neighbor_entry@.0.0 == neighbor_p@);
-                        assert(vertex_universe.contains(neighbors_seq@[i as int]));
-                        assert(vertex_universe.contains(neighbor_entry@.1));
                         // Vertex universe membership.
                         assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                             #[trigger] frontier_updated@.contains(e)
@@ -462,7 +414,6 @@ pub mod PQMinStEph {
                                 v_ref@ == e.1 && priority_fn.ensures((v_ref,), p_val) && p_val@ == e.0.0) by {
                             if old_fu.contains(e) {
                             } else {
-                                assert(priority_fn.ensures((neighbor,), neighbor_p));
                             }
                         }
                     }
@@ -503,7 +454,6 @@ pub mod PQMinStEph {
             let vp = Pair(vref.clone(), p);
             proof {
                 lemma_wf_implies_len_bound_steph(visited_seq);
-                assert(priorities@.len() + 1 < usize::MAX as nat);
             }
             let ghost old_pri = priorities@;
             priorities = priorities.union(&AVLTreeSetStEph::singleton(vp));
@@ -556,10 +506,6 @@ pub mod PQMinStEph {
         // Establish sources_seq vertices ∈ vertex_universe.
         proof {
             lemma_wf_implies_len_bound_steph(sources_seq);
-            assert forall|j: int| 0 <= j < sources_seq@.len()
-                implies vertex_universe.contains(#[trigger] sources_seq@[j]) by {
-                assert(sources@.contains(sources_seq@[j]));
-            }
         }
         while i < slen
             invariant
@@ -601,23 +547,13 @@ pub mod PQMinStEph {
             let entry = Pair(Pair(p_clone, v_clone1), v_clone2);
             proof {
                 lemma_wf_implies_len_bound_steph(sources_seq);
-                assert(initial_frontier@.len() + 1 < usize::MAX as nat);
             }
             let ghost old_if = initial_frontier@;
             initial_frontier = initial_frontier.union(&AVLTreeSetStEph::singleton(entry));
             proof {
                 vstd::set_lib::lemma_len_union(old_if, Set::empty().insert(entry@));
                 // clone_plus gives view equality.
-                assert(obeys_feq_full_trigger::<V>());
                 assert(obeys_feq_full_trigger::<P>());
-                assert(v_clone1@ == v@);
-                assert(v_clone2@ == v@);
-                assert(p_clone@ == p@);
-                assert(entry@.1 == v@);
-                assert(entry@.0.1 == v@);
-                assert(entry@.0.0 == p@);
-                assert(vertex_universe.contains(sources_seq@[i as int]));
-                assert(vertex_universe.contains(entry@.1));
                 // Vertex universe membership.
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     #[trigger] initial_frontier@.contains(e)
@@ -631,14 +567,12 @@ pub mod PQMinStEph {
                     if old_if.contains(e) {}
                 }
                 // Priority witness.
-                assert(priority_fn.ensures((v,), p));
                 assert forall|e: ((<P as View>::V, <V as View>::V), <V as View>::V)|
                     initial_frontier@.contains(e)
                     implies (exists|v_ref: &V, p_val: P|
                         v_ref@ == e.1 && priority_fn.ensures((v_ref,), p_val) && p_val@ == e.0.0) by {
                     if old_if.contains(e) {
                     } else {
-                        assert(priority_fn.ensures((v,), p));
                     }
                 }
             }
