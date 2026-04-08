@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: unexpected token, expected `;`
+   --> src/Chap53/PQMinStEph.rs:461:29
+    |
+461 | ...                   implies (exists|v_ref: &V, p_val: P|
+    |                       ^^^^^^^
+
+error[E0425]: cannot find type `PQMinResult` in this scope
+   --> src/Chap53/PQMinStEph.rs:675:84
+    |
+675 |     impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Debug for PQMinResult<V, P> {
+    |                                                                                    ^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 24 +     use crate::Chap53::PQMinStPer::PQMinStPer::PQMinResult;
+    |
+
+error[E0425]: cannot find type `PQMinResult` in this scope
+   --> src/Chap53/PQMinStEph.rs:685:86
+    |
+685 |     impl<V: StT + Ord + TotalOrder, P: StT + Ord + TotalOrder> std::fmt::Display for PQMinResult<V, P> {
+    |                                                                                      ^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this struct
+    |
+ 24 +     use crate::Chap53::PQMinStPer::PQMinStPer::PQMinResult;
+    |
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2907MB, peak z3 RSS: 361MB, min free: 23479MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 9s

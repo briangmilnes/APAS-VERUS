@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/LeftistHeapPQ.rs:861:24
+    |
+861 |                 assert(pq.root.spec_rank_bounded());
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap45/LeftistHeapPQ.rs:236:28
+    |
+236 |                         && LeftistHeapNodeSpec::spec_rank_bounded(&*left)
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+pq.root.spec_rank_bounded()
+|   let tmp%% = pq.root;
+|       tmp%% is Leaf ==>
+|           true ✔
+|       !(tmp%% is Leaf) ==>
+|           let rank = tmp%%.rank;
+|               let left = tmp%%.left;
+|                   let right = tmp%%.right;
+|                       rank <= clip(nat, clip(nat, 1 + left.spec_size()) + right.spec_size()) ✔
+|                       left.spec_rank_bounded() ✘
+|                           reached fuel limit for recursion
+|                       right.spec_rank_bounded() ✔
++---
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 23s
+Sampled Memory Usage: peak rust_verify RSS: 3501MB, peak z3 RSS: 450MB, min free: 20577MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 66s

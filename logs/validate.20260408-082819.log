@@ -1,0 +1,30 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap45/BinaryHeapPQ.rs:899:56
+    |
+899 | ...                   implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(v@, j) by {
+    |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_exec_heap_inv_at(v.view(), j) 
+
+note: recommendation not met
+   --> src/Chap45/BinaryHeapPQ.rs:856:41
+    |
+856 | ...                   implies #[trigger] view_seq[k] == v@[k]@ by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 6222MB, peak z3 RSS: 805MB, min free: 18606MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 140s

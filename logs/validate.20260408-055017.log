@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/ParaHashTableStEph.rs:284:20
+    |
+284 |             assert(spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value));
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_table_to_map(updated) =~= spec_table_to_map(table).insert(key, value) 
+
+note: recommendation not met
+   --> src/Chap47/ParaHashTableStEph.rs:269:20
+    |
+269 |             assert(updated.last() == table.last());
+    |                    ^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/ParaHashTableStEph.rs:255:20
+    |
+255 |             assert(updated.drop_last() =~= table.drop_last());
+    |                    ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 2798MB, peak z3 RSS: 251MB, min free: 24121MB
+Sampled CPU Usage: rust_verify: 30s, z3 children: 14s

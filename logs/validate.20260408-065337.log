@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/StructChainedHashTable.rs:568:33
+    |
+568 | / ...                   (table.spec_hash@)(nk) as int % (table.current_size as int)
+569 | | ...                       == (i as int)
+    | |_______________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+table.spec_hash(nk) % table.current_size == i 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 17s
+Sampled Memory Usage: peak rust_verify RSS: 4451MB, peak z3 RSS: 634MB, min free: 21546MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 90s

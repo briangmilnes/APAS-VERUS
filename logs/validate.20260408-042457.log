@@ -1,22 +1,6 @@
 Mode: isolate
-Isolate: including Chap18 Chap19 Chap21 Chap02
-error: assertion failed
-  --> src/Chap21/Algorithm21_5.rs:87:17
-   |
-87 |                 filt_seq.contains(#[trigger] (p as usize)) by {
-   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
-
-note: diagnostics via expansion
-
-note: 
-
-filt_seq.contains(clip(usize, p))
-|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = filt_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% && filt_seq.index(i) == clip(usize, p)) 
-+---
-
-verification results:: 1360 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 14s
-Sampled Memory Usage: peak rust_verify RSS: 4115MB, peak z3 RSS: 753MB, min free: 21841MB
-Sampled CPU Usage: rust_verify: 78s, z3 children: 77s
+Isolate: including Chap47 Chap18 Chap02
+verification results:: 1257 verified, 0 errors
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 4118MB, peak z3 RSS: 734MB, min free: 21942MB
+Sampled CPU Usage: rust_verify: 79s, z3 children: 79s

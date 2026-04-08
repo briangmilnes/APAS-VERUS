@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:485:29
+    |
+485 |                     implies !(#[trigger] table.table@[j] is Empty) by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(table.table.view().index(j) is Empty) 
+
+verification results:: 1254 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3965MB, peak z3 RSS: 463MB, min free: 22469MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 12s

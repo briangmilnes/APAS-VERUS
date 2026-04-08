@@ -1,20 +1,6 @@
 Mode: isolate
-Isolate: including Chap19 Chap28 Chap02
-error: expected `by`
-   --> src/Chap28/MaxContigSubSumDivConOptStEph.rs:335:13
-    |
-335 |             lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
-    |             ^^^^^^^^^^^^^^^^^^^^^
-
-error[E0432]: unresolved import `crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine`
-  --> src/Chap28/MaxContigSubSumDivConOptMtEph.rs:26:9
-   |
-26 |     use crate::Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph::lemma_strength_combine;
-   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `lemma_strength_combine` in `Chap28::MaxContigSubSumDivConOptStEph::MaxContigSubSumDivConOptStEph`
-
-error: aborting due to 2 previous errors
-
-For more information about this error, try `rustc --explain E0432`.
-Elapsed: 3s
-Sampled Memory Usage: peak rust_verify RSS: 2268MB, peak z3 RSS: 366MB, min free: 24209MB
-Sampled CPU Usage: rust_verify: 36s, z3 children: 22s
+Isolate: including Chap47 Chap18 Chap02
+verification results:: 1254 verified, 0 errors
+Elapsed: 14s
+Sampled Memory Usage: peak rust_verify RSS: 4233MB, peak z3 RSS: 577MB, min free: 22409MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 44s

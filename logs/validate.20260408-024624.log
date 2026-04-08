@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: precondition not satisfied
+   --> src/Chap53/GraphSearchStPer.rs:188:33
+    |
+188 |                 let first_ref = seq.nth(0);
+    |                                 ^^^^^^^^^^
+    |
+   ::: src/Chap37/AVLTreeSeqStPer.rs:332:54
+    |
+332 |             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      -------------------------------------- failed precondition
+
+error: assertion failed
+   --> src/Chap53/GraphSearchStPer.rs:192:24
+    |
+192 |                 assert(frontier@.contains(first@));
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+   --> src/Chap37/AVLTreeSeqStPer.rs:332:54
+    |
+332 |             requires self.spec_avltreeseqstper_wf(), (index as int) < self.spec_seq().len(),
+    |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+seq.spec_avltreeseqstper_wf() ✔
+0 < seq.spec_seq().len() ✘
+
+verification results:: 2337 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 7500MB, peak z3 RSS: 896MB, min free: 18557MB
+Sampled CPU Usage: rust_verify: 154s, z3 children: 181s

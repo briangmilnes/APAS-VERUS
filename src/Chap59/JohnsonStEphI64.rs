@@ -134,19 +134,13 @@ pub mod JohnsonStEphI64 {
             decreases (max_val + 1) - i,
         {
             proof {
-                assert(!vertices@.contains(i));
             }
             let _ = vertices.insert(i);
             proof {
-                assert(vertices@.len() == (i + 1) as nat);
-                assert(forall|k: usize| vertices@.contains(k) <==> k < i + 1);
             }
             i = i + 1;
         }
         proof {
-            assert(i == max_val + 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k < max_val + 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k <= max_val);
         }
         vertices
     }
@@ -273,9 +267,6 @@ pub mod JohnsonStEphI64 {
     {
         let vertices = build_vertex_set(n - 1);
         proof {
-            assert(vertices@.len() == n as nat);
-            assert(forall|k: usize| vertices@.contains(k) <==> k <= n - 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k < n);
         }
 
         let mut edges = SetStEph::<WeightedEdge<usize, i128>>::empty();
@@ -324,7 +315,6 @@ pub mod JohnsonStEphI64 {
 
         let result = WeightedDirGraphStEphI128::from_weighed_edges(vertices, edges);
         proof {
-            assert(result@.V.len() == n as nat);
             // Prove edges@.len() <= graph@.A.len():
             // At loop exit: edges@.len() <= it@.0 == arcs_seq.len().
             // The view function on LabEdge<usize, i128> is injective (identity).
@@ -339,11 +329,8 @@ pub mod JohnsonStEphI64 {
             mapped.unique_seq_to_set();
             // mapped.to_set() =~= arcs_seq.map(|i, k| k@).to_set() =~= graph@.A.
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, i128>| k@));
-            assert(mapped.to_set() =~= graph@.A);
             // Therefore arcs_seq.len() == graph@.A.len().
-            assert(arcs_seq.len() == graph@.A.len());
             // And edges@.len() <= arcs_seq.len() from loop invariant.
-            assert(result@.A.len() <= graph@.A.len());
         }
         result
     }
@@ -402,14 +389,9 @@ pub mod JohnsonStEphI64 {
             apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
-        assert(n as nat == graph@.V.len());
-        assert(n > 0);
-        assert(n < usize::MAX);
 
         // Phase 1: Bellman-Ford on augmented graph to compute potentials.
         let augmented = add_dummy_source(graph, n);
-        assert(augmented@.V.len() == (n + 1) as nat);
-        assert(n < augmented@.V.len());
 
         let bf_result = match bellman_ford(&augmented, n) {
             Ok(sssp) => sssp,
@@ -433,7 +415,6 @@ pub mod JohnsonStEphI64 {
 
         // Phase 2: Reweight graph edges.
         let reweighted = reweight_graph(graph, &potentials, n);
-        assert(reweighted@.V.len() == n as nat);
         assert(spec_labgraphview_wf(reweighted@));
 
         // Phase 3: Run Dijkstra from each vertex, adjust distances back.

@@ -1,6 +1,26 @@
 Mode: isolate
-Isolate: including Chap62 Chap19 Chap06 Chap05 Chap02
-verification results:: 1340 verified, 0 errors
-Elapsed: 22s
-Sampled Memory Usage: peak rust_verify RSS: 5211MB, peak z3 RSS: 604MB, min free: 21510MB
-Sampled CPU Usage: rust_verify: 101s, z3 children: 97s
+Isolate: including Chap47 Chap18 Chap02
+error: expected delimiter
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:260:46
+    |
+260 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+    |                                ^
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:885:30
+    |
+885 |     impl std::fmt::Debug for LinProbFlatHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinProbFlatHashTableStEph` in this scope
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:891:32
+    |
+891 |     impl std::fmt::Display for LinProbFlatHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 3561MB, peak z3 RSS: 632MB, min free: 22478MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 55s

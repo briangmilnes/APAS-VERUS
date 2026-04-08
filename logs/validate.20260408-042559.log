@@ -1,31 +1,6 @@
 Mode: isolate
-Isolate: including Chap18 Chap19 Chap21 Chap02
-error: postcondition not satisfied
-  --> src/Chap21/Algorithm21_6.rs:45:17
-   |
-45 |           ensures !spec_is_prime(a * b)
-   |                   ^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
-...
-49 | /         if a * a <= c {
-50 | | // Veracity: UNNEEDED assert             assert(c == a * b);
-51 | |             assert((a * b) % a == 0) by (nonlinear_arith) requires a >= 2;
-52 | |         } else {
-...  |
-56 | |         }
-   | |_________- at the end of the function body
-
-note: diagnostics via expansion
-
-note: 
-
-spec_is_prime(old(a) * old(b))
-|   old(a) * old(b) >= 2 ==>
-|       !(forall |i| (2 <= i && i * i <= old(a) * old(b) ==> !(old(a) * old(b) % i == 0))) 
-+---
-
-verification results:: 1358 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 11s
-Sampled Memory Usage: peak rust_verify RSS: 2689MB, peak z3 RSS: 678MB, min free: 23483MB
-Sampled CPU Usage: rust_verify: 36s, z3 children: 24s
+Isolate: including Chap47 Chap18 Chap02
+verification results:: 1256 verified, 0 errors
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 2677MB, peak z3 RSS: 573MB, min free: 23512MB
+Sampled CPU Usage: rust_verify: 35s, z3 children: 23s

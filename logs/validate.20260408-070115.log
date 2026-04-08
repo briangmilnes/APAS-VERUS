@@ -1,6 +1,16 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 28s
-Sampled Memory Usage: peak rust_verify RSS: 4544MB, peak z3 RSS: 678MB, min free: 21519MB
-Sampled CPU Usage: rust_verify: 99s, z3 children: 95s
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/StructChainedHashTable.rs:808:25
+    |
+808 | /                         new_table@ =~= spec_seq_pairs_to_map::<Key, Value>(
+809 | |                             pairs@.subrange(0, m as int)
+810 | |                         ),
+    | |_________________________^
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 2989MB, peak z3 RSS: 585MB, min free: 23017MB
+Sampled CPU Usage: rust_verify: 62s, z3 children: 67s

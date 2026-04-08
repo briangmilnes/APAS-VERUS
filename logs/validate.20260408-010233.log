@@ -1,0 +1,14 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap58 Chap59 Chap56 Chap57
+error[E0422]: cannot find struct, variant or union type `by` in this scope
+   --> src/Chap59/JohnsonMtEphF64.rs:465:13
+    |
+465 |             by {};
+    |             ^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0422`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 4718MB, peak z3 RSS: 432MB, min free: 20868MB
+Sampled CPU Usage: rust_verify: 64s, z3 children: 40s

@@ -1,0 +1,48 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^ failed this postcondition
+    |
+   ::: src/Chap47/StructChainedHashTable.rs:383:17
+    |
+383 | /                 if !existed {
+384 | |                     table.num_elements = table.num_elements + 1;
+385 | |                 }
+    | |_________________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:484:17
+    |
+484 | /                 exists |s: int| #[trigger] spec_other_slots_preserved(
+485 | |                     old(table).table@, table.table@, s);
+    | |_______________________________________________________^
+
+note: 
+
+table.view() =~= old(table).view().insert(old(key), old(value)) ✔
+spec_parahashtablesteph_wf(table) ✔
+table.spec_hash =~= old(table).spec_hash ✔
+table.current_size == old(table).current_size ✔
+table.num_elements <= old(table).num_elements + 1 ✔
+(exists |s| spec_other_slots_preserved(old(table).table.view(), table.table.view(), s)) ✘
+
+note: recommendation not met
+   --> src/Chap47/StructChainedHashTable.rs:360:50
+    |
+360 |                         old_table, index as int, table.table@[index as int], key, value);
+    |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4434MB, peak z3 RSS: 386MB, min free: 21533MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 38s

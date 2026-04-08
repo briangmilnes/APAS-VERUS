@@ -129,13 +129,9 @@ pub mod StructChainedHashTable {
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
-                            assert(spec_chain_to_map(nn).insert(key, value).insert(nk, nv)
-                                =~= spec_chain_to_map(nn).insert(nk, nv).insert(key, value));
                             // Uniqueness: nk not in updated's map domain.
                             // spec_chain_to_map(updated) == spec_chain_to_map(nn).insert(key, value)
                             // nk ∉ spec_chain_to_map(nn).dom() (from unique(chain)) and nk != key.
-                            assert(spec_chain_to_map(updated).dom() =~=
-                                spec_chain_to_map(nn).dom().insert(key));
                         }
                         (out, existed)
                     }
@@ -214,8 +210,6 @@ pub mod StructChainedHashTable {
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
-                            assert(spec_chain_to_map(nn).insert(*key, nv).remove(*key)
-                                =~= spec_chain_to_map(nn).remove(*key));
                         }
                         (new_next, true)
                     } else {
@@ -223,11 +217,7 @@ pub mod StructChainedHashTable {
                         proof {
                             reveal_with_fuel(spec_chain_to_map, 2);
                             reveal_with_fuel(spec_chain_keys_unique, 2);
-                            assert(spec_chain_to_map(nn).insert(nk, nv).remove(*key)
-                                =~= spec_chain_to_map(nn).remove(*key).insert(nk, nv));
                             // nk ∉ dom(spec_chain_to_map(new_next)): remove can only shrink domain.
-                            assert(spec_chain_to_map(new_next).dom() =~=
-                                spec_chain_to_map(nn).dom().remove(*key));
                         }
                         (out, tail_deleted)
                     }
@@ -350,8 +340,6 @@ pub mod StructChainedHashTable {
                 table.table.set(index, entry);
 
                 proof {
-                    assert(table.table@[index as int].spec_entry_to_map()
-                        =~= old_table[index as int].spec_entry_to_map().insert(key, value));
 
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(key) by {}
@@ -359,24 +347,14 @@ pub mod StructChainedHashTable {
                     lemma_table_to_map_update_insert::<Key, Value, ChainList<Key, Value>>(
                         old_table, index as int, table.table@[index as int], key, value);
 
-                    assert(table.table@.len() == table.current_size as int);
-                    assert(table.current_size > 0);
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j != index as int {
-                            assert(table.table@[j] == old_table[j]);
                         }
                     }
                     // Chain uniqueness preserved.
-                    assert forall |j: int| 0 <= j < table.table@.len()
-                        implies spec_chain_keys_unique(#[trigger] table.table@[j].head) by {
-                        if j != index as int {
-                            assert(table.table@[j] == old_table[j]);
-                        }
-                    }
                     // One-slot modification witness for trait ensures.
-                    assert(old_table =~= old(table).table@);
                     assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
 
@@ -401,12 +379,6 @@ pub mod StructChainedHashTable {
                             table.table@, index as int, *key);
                     } else {
                         // Key not in this bucket. By wf, not in any other bucket either.
-                        assert forall |j: int| 0 <= j < table.table@.len()
-                            implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
-                            if j == index as int {
-                            } else {
-                            }
-                        }
                         lemma_table_to_map_not_contains::<Key, Value, ChainList<Key, Value>>(
                             table.table@, *key);
                     }
@@ -430,8 +402,6 @@ pub mod StructChainedHashTable {
                 table.table.set(index, entry);
 
                 proof {
-                    assert(table.table@[index as int].spec_entry_to_map()
-                        =~= old_table[index as int].spec_entry_to_map().remove(*key));
 
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
@@ -439,24 +409,14 @@ pub mod StructChainedHashTable {
                     lemma_table_to_map_update_remove::<Key, Value, ChainList<Key, Value>>(
                         old_table, index as int, table.table@[index as int], *key);
 
-                    assert(table.table@.len() == table.current_size as int);
-                    assert(table.current_size > 0);
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j == index as int {
-                            assert(!old_table[j].spec_entry_to_map().dom().contains(k));
                         } else {
-                            assert(table.table@[j] == old_table[j]);
                         }
                     }
                     // Chain uniqueness preserved.
-                    assert forall |j: int| 0 <= j < table.table@.len()
-                        implies spec_chain_keys_unique(#[trigger] table.table@[j].head) by {
-                        if j != index as int {
-                            assert(table.table@[j] == old_table[j]);
-                        }
-                    }
 
                     // Prove found == old(table)@.dom().contains(*key).
                     if found {
@@ -561,44 +521,23 @@ pub mod StructChainedHashTable {
                             reveal_with_fuel(spec_chain_keys_unique, 2);
 
                             // nk is in entry[i] (from the chain partition).
-                            assert(spec_chain_to_map(original_chain).dom().contains(nk));
                             assert(table.table@[i as int].spec_entry_to_map().dom().contains(nk));
                             // By wf contrapositive: i == hash(nk) % size.
-                            assert(
-                                (table.spec_hash@)(nk) as int % (table.current_size as int)
-                                    == (i as int)
-                            );
                             // nk not in old_outer (which has keys from buckets < i only).
-                            assert(!old_outer_pairs_map.dom().contains(nk));
 
                             // Update ghost state.
                             inner_collected = old_inner.insert(nk, nv);
                             pairs_map = pairs_map.insert(nk, nv);
 
                             // Maintain pairs_map =~= spec_seq_pairs_to_map(pairs@).
-                            assert(pairs@ =~= old_pairs.push((nk, nv)));
                             assert(pairs@.drop_last() =~= old_pairs);
-                            assert(pairs@.last() == (nk, nv));
 
                             // Maintain pairs_map =~= old_outer.upr(inner_collected).
                             // M.upr(N).insert(k,v) =~= M.upr(N.insert(k,v)).
-                            assert(
-                                old_outer_pairs_map.union_prefer_right(old_inner).insert(nk, nv)
-                                =~= old_outer_pairs_map.union_prefer_right(
-                                    old_inner.insert(nk, nv)
-                                )
-                            );
 
                             // Maintain chain partition invariant.
                             // inner.insert(nk,nv).upr(chain_to_map(nn))
                             //   = inner.upr(chain_to_map(nn)).insert(nk,nv)  [nk ∉ chain_to_map(nn)]
-                            assert(
-                                old_inner.insert(nk, nv)
-                                    .union_prefer_right(spec_chain_to_map(nn))
-                                =~= old_inner
-                                    .union_prefer_right(spec_chain_to_map(nn))
-                                    .insert(nk, nv)
-                            );
 
                             // Maintain inner/current disjointness.
                             assert forall |k: Key|
@@ -611,11 +550,6 @@ pub mod StructChainedHashTable {
                                     // k ∈ old_inner, k ∉ chain_to_map(old_current).
                                     // chain_to_map(nn) ⊂ chain_to_map(old_current),
                                     // so k ∉ chain_to_map(nn).
-                                    assert(
-                                        spec_chain_to_map(nn).dom().contains(k) ==>
-                                        spec_chain_to_map(nn)
-                                            .insert(nk, nv).dom().contains(k)
-                                    );
                                 }
                             }
                         }
@@ -628,10 +562,6 @@ pub mod StructChainedHashTable {
                         reveal_with_fuel(spec_chain_to_map, 1);
                         // inner_collected.upr(Map::empty()) =~= inner_collected
                         //   =~= chain_to_map(original_chain).
-                        assert(inner_collected =~= spec_chain_to_map(original_chain));
-                        assert(pairs_map =~= old_outer_pairs_map.union_prefer_right(
-                            spec_chain_to_map(original_chain)
-                        ));
 
                         // Re-establish outer forward invariant at i+1.
                         assert forall |k: Key| #[trigger] pairs_map.dom().contains(k) implies (
@@ -650,15 +580,9 @@ pub mod StructChainedHashTable {
                                 // k from bucket i. hash(k)%size == i.
                                 assert(table.table@[i as int]
                                     .spec_entry_to_map().dom().contains(k));
-                                assert(bucket == i as int);
                                 // pairs_map[k] via upr: inner_collected wins.
-                                assert(pairs_map[k] == inner_collected[k]);
-                                assert(inner_collected[k] ==
-                                    spec_chain_to_map(original_chain)[k]);
                             } else {
                                 // k from old_outer. Preserved.
-                                assert(old_outer_pairs_map.dom().contains(k));
-                                assert(pairs_map[k] == old_outer_pairs_map[k]);
                             }
                         }
 
@@ -669,10 +593,8 @@ pub mod StructChainedHashTable {
                             implies pairs_map.dom().contains(k)
                         by {
                             if j < (i as int) {
-                                assert(old_outer_pairs_map.dom().contains(k));
                             } else {
                                 // j == i. k in entry[i] = chain_to_map(original_chain).
-                                assert(inner_collected.dom().contains(k));
                             }
                         }
                     }
@@ -691,8 +613,6 @@ pub mod StructChainedHashTable {
                         if pairs_map.dom().contains(k) {
                             let bucket = (table.spec_hash@)(k) as int
                                 % (table.current_size as int);
-                            assert(table.table@[bucket]
-                                .spec_entry_to_map().dom().contains(k));
                             assert forall |jj: int|
                                 0 <= jj < table.table@.len() && jj != bucket
                                 implies !#[trigger] table.table@[jj]
@@ -736,7 +656,6 @@ pub mod StructChainedHashTable {
                             Key, Value, ChainList<Key, Value>,
                         >(table.table@, bucket, k);
                     }
-                    assert(pairs_map =~= table@);
                 }
 
                 // Phase 2: create new empty table.
@@ -763,7 +682,6 @@ pub mod StructChainedHashTable {
                         lemma_table_to_map_push_empty::<Key, Value, ChainList<Key, Value>>(
                             old_vec, new_table_vec@.last(),
                         );
-                        assert(new_table_vec@ =~= old_vec.push(new_table_vec@.last()));
                     }
                     k = k + 1;
                 }
@@ -788,10 +706,6 @@ pub mod StructChainedHashTable {
                         implies !#[trigger] new_table.table@[j]
                             .spec_entry_to_map().dom().contains(kk)
                     by {}
-                    assert(new_table@ =~= Map::<Key, Value>::empty());
-                    assert(spec_seq_pairs_to_map::<Key, Value>(
-                        pairs@.subrange(0, 0int)
-                    ) =~= Map::<Key, Value>::empty());
                 }
 
                 // Phase 3: reinsert all collected pairs.
@@ -820,10 +734,6 @@ pub mod StructChainedHashTable {
                             pairs@.subrange(0, (m + 1) as int).drop_last()
                             =~= pairs@.subrange(0, m as int)
                         );
-                        assert(
-                            pairs@.subrange(0, (m + 1) as int).last()
-                            == pairs@[m as int]
-                        );
                     }
                     m = m + 1;
                 }
@@ -831,7 +741,6 @@ pub mod StructChainedHashTable {
                 proof {
                     assert(pairs@.subrange(0, pairs@.len() as int) =~= pairs@);
                     // new_table@ =~= spec_seq_pairs_to_map(pairs@) =~= pairs_map =~= table@.
-                    assert(new_table@ =~= table@);
                 }
 
                 new_table

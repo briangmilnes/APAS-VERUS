@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap45/BinaryHeapPQ.rs:602:17
+    |
+602 |                 heaped@.to_multiset() =~= heap@.to_multiset(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+764 |             ArraySeqStPerS { seq: v }
+    |             ------------------------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:602:17
+    |
+602 |                 heaped@.to_multiset() =~= heap@.to_multiset(),
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+heaped.seq.view().len() == old(heap).seq.view().len() ✔
+spec_is_exec_heap(heaped.seq.view()) ✔
+heaped.view().to_multiset() =~= old(heap).view().to_multiset() ✘
+heaped.seq.view().to_multiset() =~= old(heap).seq.view().to_multiset() ✔
+
+note: recommendation not met
+   --> src/Chap45/BinaryHeapPQ.rs:717:41
+    |
+717 | ...                   implies #[trigger] view_seq[k] == v@[k]@ by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 7421MB, peak z3 RSS: 818MB, min free: 17626MB
+Sampled CPU Usage: rust_verify: 179s, z3 children: 190s

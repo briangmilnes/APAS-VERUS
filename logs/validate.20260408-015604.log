@@ -1,6 +1,14 @@
 Mode: isolate
-Isolate: including Chap18 Chap02
-verification results:: 1088 verified, 0 errors
-Elapsed: 9s
-Sampled Memory Usage: peak rust_verify RSS: 2062MB, peak z3 RSS: 150MB, min free: 24427MB
-Sampled CPU Usage: rust_verify: 34s, z3 children: 31s
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap58 Chap59 Chap56 Chap57
+error[E0422]: cannot find struct, variant or union type `by` in this scope
+   --> src/Chap59/JohnsonStEphI64.rs:334:13
+    |
+334 |             by {};
+    |             ^^ not found in this scope
+
+error: aborting due to 1 previous error
+
+For more information about this error, try `rustc --explain E0422`.
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 1896MB, peak z3 RSS: 128MB, min free: 24512MB
+Sampled CPU Usage: rust_verify: 32s, z3 children: 31s

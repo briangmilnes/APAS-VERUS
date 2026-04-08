@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:337:41
+    |
+337 | ...                   implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: while loop: Resource limit (rlimit) exceeded; consider rerunning with --profile for more details
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:215:13
+    |
+215 |             while attempt < m
+    |             ^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+!(spec_flat_has_key(table.table.view().index(j), k)) 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4329MB, peak z3 RSS: 724MB, min free: 21699MB
+Sampled CPU Usage: rust_verify: 74s, z3 children: 72s

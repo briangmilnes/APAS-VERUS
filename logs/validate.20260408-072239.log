@@ -1,0 +1,42 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap45/BalancedTreePQ.rs:340:33
+    |
+340 |                         implies #[trigger] vals@.map_values(view_fn)[k]
+    |                                 ^
+
+error[E0432]: unresolved import `crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ`
+  --> src/Chap45/HeapsortExample.rs:31:9
+   |
+31 |     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `BalancedTreePQ` in `Chap45::BalancedTreePQ::BalancedTreePQ`
+   |
+help: consider importing one of these modules instead
+   |
+31 -     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+31 +     use crate::Chap45::BalancedTreePQ;
+   |
+31 -     use crate::Chap45::BalancedTreePQ::BalancedTreePQ::BalancedTreePQ;
+31 +     use crate::Chap45::BalancedTreePQ::BalancedTreePQ;
+   |
+
+error[E0425]: cannot find type `BalancedTreePQ` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:872:75
+    |
+872 |     impl<T: StT + Ord + TotalOrder + std::fmt::Debug> std::fmt::Debug for BalancedTreePQ<T> {
+    |                                                                           ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `BalancedTreePQ` in this scope
+   --> src/Chap45/BalancedTreePQ.rs:878:49
+    |
+878 |     impl<T: StT + Ord + TotalOrder> Display for BalancedTreePQ<T> {
+    |                                                 ^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 4 previous errors
+
+Some errors have detailed explanations: E0425, E0432.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 3516MB, peak z3 RSS: 231MB, min free: 22818MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 31s

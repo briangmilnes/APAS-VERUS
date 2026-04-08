@@ -1,21 +1,60 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-    --> src/Chap37/BSTSplayMtEph.rs:1531:88
-     |
-1531 |                         assert forall|x: T| #[trigger] link_contains(*link, x) implies TotalOrder::le(node.key, x) by {
-     |                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap47/VecChainedHashTableStEph.rs:565:25
+    |
+565 |                         implies !#[trigger] new_table.table@[idx]
+    |                         ^^^^^^^
 
-note: diagnostics via expansion
+error[E0425]: cannot find type `VecChainedHashTableStEph` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:623:30
+    |
+623 |       impl std::fmt::Debug for VecChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:165:9
+    |
+165 | / ...   pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, ...
+166 | | ...       ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+167 | | ...   {
+168 | | ...       /// Computes the hash index for a key.
+...   |
+176 | | ...               index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);
+177 | | ...   }
+    | |_______- similarly named trait `ChainedHashTable` defined here
+    |
+help: a trait with a similar name exists
+    |
+623 -     impl std::fmt::Debug for VecChainedHashTableStEph {
+623 +     impl std::fmt::Debug for ChainedHashTable {
+    |
 
-note: 
+error[E0425]: cannot find type `VecChainedHashTableStEph` in this scope
+   --> src/Chap47/VecChainedHashTableStEph.rs:629:32
+    |
+629 |       impl std::fmt::Display for VecChainedHashTableStEph {
+    |                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap47/ChainedHashTable.rs:165:9
+    |
+165 | / ...   pub trait ChainedHashTable<Key: StT, Value: StT, Entry: EntryTrait<Key, Value>, Metrics: Default, H: Fn(&Key, ...
+166 | | ...       ParaHashTableStEphTrait<Key, Value, Entry, Metrics, H>
+167 | | ...   {
+168 | | ...       /// Computes the hash index for a key.
+...   |
+176 | | ...               index as nat == (table.spec_hash@)(*key) % (table.current_size as nat);
+177 | | ...   }
+    | |_______- similarly named trait `ChainedHashTable` defined here
+    |
+help: a trait with a similar name exists
+    |
+629 -     impl std::fmt::Display for VecChainedHashTableStEph {
+629 +     impl std::fmt::Display for ChainedHashTable {
+    |
 
-node.key.le(x) 
-    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+error: aborting due to 3 previous errors
 
-verification results:: 1957 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 18s
-Sampled Memory Usage: peak rust_verify RSS: 5095MB, peak z3 RSS: 782MB, min free: 20832MB
-Sampled CPU Usage: rust_verify: 75s, z3 children: 65s
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 3s
+Sampled Memory Usage: peak rust_verify RSS: 2390MB, peak z3 RSS: 0MB, min free: 23540MB
+Sampled CPU Usage: rust_verify: 39s, z3 children: 18s

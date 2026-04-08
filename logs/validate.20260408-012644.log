@@ -1,58 +1,6 @@
 Mode: isolate
-<<<<<<< HEAD
-Isolate: including Chap18 Chap02
-error: precondition not satisfied
-    --> src/Chap18/ArraySeqMtPer.rs:1401:51
-     |
-1401 |                 let (left_mapped, right_mapped) = join(fa, fb);
-     |                                                   ^^^^^^^^^^^^
-     |
-    ::: src/Chap02/HFSchedulerMtEph.rs:132:13
-     |
- 132 |             fa.requires(()),
-     |             --------------- failed precondition
-
-note: diagnostics via expansion
-   --> src/Chap02/HFSchedulerMtEph.rs:132:13
-    |
-132 |             fa.requires(()),
-    |             ^^^^^^^^^^^^^^^
-
-note: 
-
-ClosureReq(fa, ()) ✘
-ClosureReq(fb, ()) ✔
-
-note: recommendation not met
-    --> src/Chap18/ArraySeqMtPer.rs:1382:59
-     |
-1382 | ...                   ==> f1.ensures((&left_g[i],), r.seq@[i]),
-     |                                                     ^^^^^^^^^
-     |
-    --> vstd/seq.rs:62:12
-     |
-     = note: recommendation not met
-
-note: recommendation not met
-    --> src/Chap18/ArraySeqMtPer.rs:1396:60
-     |
-1396 | ...                   ==> f2.ensures((&right_g[i],), r.seq@[i]),
-     |                                                      ^^^^^^^^^
-     |
-    --> vstd/seq.rs:62:12
-     |
-     = note: recommendation not met
-
-verification results:: 1087 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 8s
-Sampled Memory Usage: peak rust_verify RSS: 2053MB, peak z3 RSS: 183MB, min free: 23616MB
-Sampled CPU Usage: rust_verify: 25s, z3 children: 3s
-=======
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 25s
-Sampled Memory Usage: peak rust_verify RSS: 4542MB, peak z3 RSS: 506MB, min free: 21092MB
-Sampled CPU Usage: rust_verify: 66s, z3 children: 46s
->>>>>>> agent4/ready
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap58 Chap59 Chap56 Chap57
+verification results:: 2726 verified, 0 errors
+Elapsed: 55s
+Sampled Memory Usage: peak rust_verify RSS: 6379MB, peak z3 RSS: 676MB, min free: 18893MB
+Sampled CPU Usage: rust_verify: 150s, z3 children: 122s

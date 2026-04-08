@@ -1,6 +1,43 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 25s
-Sampled Memory Usage: peak rust_verify RSS: 5259MB, peak z3 RSS: 926MB, min free: 20775MB
-Sampled CPU Usage: rust_verify: 102s, z3 children: 122s
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap47/ParaHashTableStEph.rs:554:17
+     |
+ 554 |                 resized@ == table@,
+     |                 ^^^^^^^^^^^^^^^^^^ failed this postcondition
+     |
+    ::: src/Chap47/QuadProbFlatHashTableStEph.rs:1239:13
+     |
+1239 |             new_table
+     |             --------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap47/ParaHashTableStEph.rs:554:17
+    |
+554 |                 resized@ == table@,
+    |                 ^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view() =~= old(table).view() ✘
+%return.current_size == old(new_size) ✔
+%return.table.view().len() == old(new_size) ✔
+spec_parahashtablesteph_wf(%return) ✔
+%return.spec_hash =~= old(table).spec_hash ✔
+
+note: recommendation not met
+    --> src/Chap47/QuadProbFlatHashTableStEph.rs:1141:28
+     |
+1141 |                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
+     |                            ^^^^^^^^^^^^^^^^^^^^
+     |
+    --> vstd/seq_lib.rs:492:12
+     |
+     = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3071MB, peak z3 RSS: 225MB, min free: 23676MB
+Sampled CPU Usage: rust_verify: 40s, z3 children: 18s

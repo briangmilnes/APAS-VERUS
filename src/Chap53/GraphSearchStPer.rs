@@ -179,8 +179,6 @@ pub mod GraphSearchStPer {
                 let seq = frontier.to_seq();
                 proof {
                     // Prove seq is non-empty from frontier being non-empty.
-                    assert(seq@.to_set() =~= frontier@);
-                    assert(frontier@.len() > 0);
                     if seq@.len() == 0 {
                         assert(seq@.to_set() =~= Set::<<V as View>::V>::empty());
                     }
@@ -188,15 +186,7 @@ pub mod GraphSearchStPer {
                 let first_ref = seq.nth(0);
                 let first = first_ref.clone();
                 proof { assert(cloned(*first_ref, first)); }
-                assert(seq@.to_set() =~= frontier@);
-                assert(frontier@.contains(first@));
                 let result = AVLTreeSetStPer::singleton(first);
-                assert(result@.subset_of(frontier@)) by {
-                    assert forall|a: <V as View>::V| result@.contains(a)
-                        implies frontier@.contains(a) by {
-                        assert(result@ == Set::<<V as View>::V>::empty().insert(first@));
-                    }
-                }
                 (result, false)
             }
         }
@@ -223,11 +213,6 @@ pub mod GraphSearchStPer {
     {
         let sources = AVLTreeSetStPer::singleton(source);
         proof {
-            assert(sources@.subset_of(vertex_universe)) by {
-                assert forall|a: <V as View>::V| sources@.contains(a) implies #[trigger] vertex_universe.contains(a) by {
-                    assert(sources@ == Set::<<V as View>::V>::empty().insert(source@));
-                }
-            }
         }
         graph_search_multi(graph, sources, strategy, Ghost(vertex_universe))
     }
@@ -316,16 +301,6 @@ pub mod GraphSearchStPer {
             let frontier_new = new_neighbors.difference(&visited_new);
 
             proof {
-                assert(visited_new@.subset_of(vertex_universe)) by {
-                    assert forall|a: <V as View>::V| visited_new@.contains(a)
-                        implies #[trigger] vertex_universe.contains(a) by {}
-                }
-                assert(frontier_new@.subset_of(vertex_universe)) by {
-                    assert forall|a: <V as View>::V| frontier_new@.contains(a)
-                        implies #[trigger] vertex_universe.contains(a) by {
-                        assert(new_neighbors@.contains(a));
-                    }
-                }
             }
 
             visited = visited_new;

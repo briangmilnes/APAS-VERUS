@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+   --> src/Chap45/LeftistHeapPQ.rs:518:42
+    |
+160 |                 requires self.spec_size() <= usize::MAX as nat,
+    |                          ------------------------------------- failed precondition
+...
+518 |                         let mut result = left.to_vec();
+    |                                          ^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+
+note: 
+
+left.spec_size() <= UnsignedMax.Exec(usize::BITS) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 6731MB, peak z3 RSS: 1035MB, min free: 16629MB
+Sampled CPU Usage: rust_verify: 125s, z3 children: 114s

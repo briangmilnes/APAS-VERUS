@@ -1,0 +1,31 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: precondition not satisfied
+    --> src/Chap45/BinaryHeapPQ.rs:1406:21
+     |
+ 196 | /                 forall|j: int| 0 <= j < a.len() ==>
+ 197 | |                     #[trigger] TotalOrder::le(min_elem, a[j]),
+     | |_____________________________________________________________- failed precondition
+...
+1406 |                       lemma_le_preserved_by_multiset_eq(min_element, new_elem_seq, heapified.seq@);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap45/BinaryHeapPQ.rs:197:32
+    |
+197 |                     #[trigger] TotalOrder::le(min_elem, a[j]),
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+new_elem_seq.to_multiset() =~= tmp%.to_multiset() ✔
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = new_elem_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% ==>
+        min_element.le(new_elem_seq.index(j)) ✘
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 27s
+Sampled Memory Usage: peak rust_verify RSS: 5851MB, peak z3 RSS: 721MB, min free: 17494MB
+Sampled CPU Usage: rust_verify: 154s, z3 children: 153s

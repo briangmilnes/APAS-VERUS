@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1356:32
+     |
+1356 |                         assert(new_elements.seq@[0] == last_element) by {
+     |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_elements.seq.view().index(0) == last_element 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 7051MB, peak z3 RSS: 772MB, min free: 16215MB
+Sampled CPU Usage: rust_verify: 177s, z3 children: 189s

@@ -100,11 +100,6 @@ pub mod LinProbFlatHashTableStEph {
         decreases table.len(),
     {
         if table.len() > 0 {
-            assert(table.last() == table[table.len() - 1]);
-            assert forall |j: int| 0 <= j < table.drop_last().len()
-                implies (#[trigger] table.drop_last()[j]) is Empty by {
-                assert(table.drop_last()[j] == table[j]);
-            }
             lemma_all_empties_count::<Key, Value>(table.drop_last());
         }
     }
@@ -118,12 +113,10 @@ pub mod LinProbFlatHashTableStEph {
         decreases table.len(),
     {
         if table.last() is Empty {
-            assert(table[table.len() - 1] is Empty);
         } else {
             lemma_empties_positive_implies_exists_empty::<Key, Value>(table.drop_last());
             let j = choose |j: int| 0 <= j < table.drop_last().len()
                 && (#[trigger] table.drop_last()[j]) is Empty;
-            assert(table[j] == table.drop_last()[j]);
         }
     }
 
@@ -143,24 +136,13 @@ pub mod LinProbFlatHashTableStEph {
         decreases old_table.len(),
     {
         if old_table.len() == 1 {
-            assert(old_table.drop_last().len() == 0);
             assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
-            assert(new_table.drop_last().len() == 0);
             assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
         } else if s == old_table.len() - 1 {
-            assert forall |j: int| 0 <= j < old_table.drop_last().len()
-                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
-                assert(new_table.drop_last()[j] == new_table[j]);
-                assert(old_table.drop_last()[j] == old_table[j]);
-            }
             assert(new_table.drop_last() =~= old_table.drop_last());
         } else {
-            assert(new_table.last() == old_table.last());
-            assert(s < old_table.drop_last().len());
             assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
                 implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
-                assert(new_table.drop_last()[j] == new_table[j]);
-                assert(old_table.drop_last()[j] == old_table[j]);
             }
             lemma_one_slot_change_empties::<Key, Value>(
                 old_table.drop_last(), new_table.drop_last(), s);
@@ -242,7 +224,6 @@ pub mod LinProbFlatHashTableStEph {
                         vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
                         vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
                     }
-                    assert(slot as int == (h as int + attempt as int) % (m as int));
                 }
                 let entry = table.table[slot].clone();
                 match entry {
@@ -261,22 +242,11 @@ pub mod LinProbFlatHashTableStEph {
                                     if spec_flat_has_key(old_table_seq[j], key) {}
                                 }
                                 let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
-                                assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                                 lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, new_entry, key, value);
                                 // Wf: no-dup.
-                                assert forall |i: int, j: int, k: Key|
-                                    0 <= i < m as int && 0 <= j < m as int && i != j
-                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
-                                    implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
-                                    if i == slot as int {
-                                        if k == key && j != slot as int {}
-                                    } else if j == slot as int {
-                                        if k == key {}
-                                    }
-                                }
                                 // Probe chain.
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
@@ -295,7 +265,6 @@ pub mod LinProbFlatHashTableStEph {
                                         let pos = (hk + d) % m as int;
                                         if pos == slot as int {
                                         } else {
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 }
@@ -305,8 +274,6 @@ pub mod LinProbFlatHashTableStEph {
                             return;
                         }
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                     FlatEntry::Empty => {
@@ -325,9 +292,6 @@ pub mod LinProbFlatHashTableStEph {
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(old_table_seq, key);
                             let new_entry = FlatEntry::<Key, Value>::Occupied(key, value);
-                            assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty().insert(key, value));
-                            assert(new_entry.spec_entry_to_map() =~=
-                                old_table_seq[slot as int].spec_entry_to_map().insert(key, value));
                             lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
                                 old_table_seq, slot as int, new_entry, key, value);
                             // Wf: no-dup.
@@ -337,20 +301,16 @@ pub mod LinProbFlatHashTableStEph {
                                 implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
                                 if i == slot as int {
                                     if k == key && j != slot as int {
-                                        assert(table.table@[j] == old_table_seq[j]);
                                         assert(!old_table_seq[j].spec_entry_to_map().dom().contains(key));
                                         if spec_flat_has_key(old_table_seq[j], key) {}
                                     }
                                 } else {
-                                    assert(table.table@[i] == old_table_seq[i]);
-                                    assert(spec_flat_has_key(old_table_seq[i], k));
                                     if j == slot as int {
                                         if k == key {
                                             assert(!old_table_seq[i].spec_entry_to_map().dom().contains(key));
                                             if spec_flat_has_key(old_table_seq[i], key) {}
                                         }
                                     } else {
-                                        assert(table.table@[j] == old_table_seq[j]);
                                     }
                                 }
                             }
@@ -378,13 +338,11 @@ pub mod LinProbFlatHashTableStEph {
                                                 vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
                                                 vstd::arithmetic::div_mod::lemma_small_mod(attempt as nat, m as nat);
                                             }
-                                            assert((slot as int - h as int + m as int) % m as int == attempt as int);
                                             let pos = (h as int + d) % m as int;
                                             if pos == slot as int {
                                                 vstd::arithmetic::div_mod::lemma_small_mod(d as nat, m as nat);
                                                 vstd::arithmetic::div_mod::lemma_small_mod(attempt as nat, m as nat);
                                             }
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 } else {
@@ -393,12 +351,10 @@ pub mod LinProbFlatHashTableStEph {
                                         let pos = (hk + d) % m as int;
                                         if pos == slot as int {
                                         } else {
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 }
                             }
-                            assert(old_table_seq =~= old(table).table@);
                             assert(spec_other_slots_preserved(
                                 old(table).table@, table.table@, slot as int));
                         }
@@ -407,8 +363,6 @@ pub mod LinProbFlatHashTableStEph {
                     FlatEntry::Deleted => {
                         // Skip Deleted: continue probing to avoid duplicates.
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                 }
@@ -422,9 +376,6 @@ pub mod LinProbFlatHashTableStEph {
                     implies !(#[trigger] table.table@[j] is Empty) by {
                     lemma_probe_mod_identity(h as int, j, m as int);
                 }
-                assert(table.table@.len() == m as int);
-                assert(table.table@ =~= old(table).table@);
-                assert(false);
             }
             diverge::<()>();
         }
@@ -462,7 +413,6 @@ pub mod LinProbFlatHashTableStEph {
                         vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
                         vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
                     }
-                    assert(slot as int == (h as int + attempt as int) % (m as int));
                 }
                 let entry = table.table[slot].clone();
                 match entry {
@@ -472,7 +422,6 @@ pub mod LinProbFlatHashTableStEph {
                         if eq {
                             proof {
                                 lemma_reveal_view_injective::<Key>();
-                                assert(spec_flat_has_key(table.table@[slot as int], *key));
                                 // No other slot has this key: contradiction via wf no-dup multi-trigger.
                                 assert forall |j: int| 0 <= j < table.table@.len() && j != slot as int
                                     implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
@@ -487,13 +436,10 @@ pub mod LinProbFlatHashTableStEph {
                             return Some(v);
                         }
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                     FlatEntry::Empty => {
                         proof {
-                            assert(table.table@[slot as int] is Empty);
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -513,8 +459,6 @@ pub mod LinProbFlatHashTableStEph {
                     }
                     FlatEntry::Deleted => {
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                 }
@@ -570,7 +514,6 @@ pub mod LinProbFlatHashTableStEph {
                         vstd::arithmetic::div_mod::lemma_mod_add_multiples_vanish(sum - m as int, m as int);
                         vstd::arithmetic::div_mod::lemma_small_mod((sum - m as int) as nat, m as nat);
                     }
-                    assert(slot as int == (h as int + attempt as int) % (m as int));
                 }
                 let entry = table.table[slot].clone();
                 match entry {
@@ -585,7 +528,6 @@ pub mod LinProbFlatHashTableStEph {
                             }
                             proof {
                                 lemma_reveal_view_injective::<Key>();
-                                assert(spec_flat_has_key(old_table_seq[slot as int], *key));
                                 // No other slot has *key (old wf no-dup).
                                 assert forall |j: int| 0 <= j < old_table_seq.len() && j != slot as int
                                     implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(*key) by {
@@ -595,8 +537,6 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                                 // Map update: Deleted has empty map = old entry map with key removed.
                                 let new_entry = FlatEntry::<Key, Value>::Deleted;
-                                assert(new_entry.spec_entry_to_map() =~= Map::<Key, Value>::empty());
-                                assert(old_table_seq[slot as int].spec_entry_to_map().dom().contains(*key));
                                 assert(new_entry.spec_entry_to_map() =~=
                                     old_table_seq[slot as int].spec_entry_to_map().remove(*key));
                                 lemma_table_to_map_update_remove::<Key, Value, FlatEntry<Key, Value>>(
@@ -605,19 +545,6 @@ pub mod LinProbFlatHashTableStEph {
                                 lemma_table_to_map_unique_entry_value::<Key, Value, FlatEntry<Key, Value>>(
                                     old_table_seq, slot as int, *key);
                                 // Wf preservation: no-dup.
-                                assert forall |i: int, j: int, k: Key|
-                                    0 <= i < m as int && 0 <= j < m as int && i != j
-                                    && #[trigger] spec_flat_has_key(table.table@[i], k)
-                                    implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
-                                    if i == slot as int {
-                                    } else {
-                                        assert(table.table@[i] == old_table_seq[i]);
-                                        assert(spec_flat_has_key(old_table_seq[i], k));
-                                        if j != slot as int {
-                                            assert(table.table@[j] == old_table_seq[j]);
-                                        }
-                                    }
-                                }
                                 // Wf preservation: probe chain integrity.
                                 assert forall |i: int, k: Key|
                                     0 <= i < m as int
@@ -627,9 +554,6 @@ pub mod LinProbFlatHashTableStEph {
                                         forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                             ==> !(#[trigger] table.table@[(hk + d) % m as int] is Empty)
                                     }) by {
-                                    assert(i != slot as int);
-                                    assert(table.table@[i] == old_table_seq[i]);
-                                    assert(spec_flat_has_key(old_table_seq[i], k));
                                     let hk = (table.spec_hash@)(k) as int % m as int;
                                     assert forall |d: int| 0 <= d < (i - hk + m as int) % m as int
                                         implies !(#[trigger] table.table@[(hk + d) % m as int] is Empty) by {
@@ -637,7 +561,6 @@ pub mod LinProbFlatHashTableStEph {
                                         if pos == slot as int {
                                             // Deleted is not Empty.
                                         } else {
-                                            assert(table.table@[pos] == old_table_seq[pos]);
                                         }
                                     }
                                 }
@@ -645,13 +568,10 @@ pub mod LinProbFlatHashTableStEph {
                             return true;
                         }
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                     FlatEntry::Empty => {
                         proof {
-                            assert(table.table@[slot as int] is Empty);
                             assert forall |j: int| 0 <= j < table.table@.len()
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {
                                 if spec_flat_has_key(table.table@[j], *key) {
@@ -660,14 +580,11 @@ pub mod LinProbFlatHashTableStEph {
                                 }
                             }
                             lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
-                            assert(table@ =~= old(table)@.remove(*key));
                         }
                         return false;
                     }
                     FlatEntry::Deleted => {
                         proof {
-                            assert(!spec_flat_has_key(table.table@[slot as int], *key));
-                            assert(!(table.table@[slot as int] is Empty));
                         }
                     }
                 }
@@ -682,7 +599,6 @@ pub mod LinProbFlatHashTableStEph {
                     }
                 }
                 lemma_table_to_map_not_contains::<Key, Value, FlatEntry<Key, Value>>(table.table@, *key);
-                assert(table@ =~= old(table)@.remove(*key));
             }
             false
         }
@@ -714,26 +630,16 @@ pub mod LinProbFlatHashTableStEph {
                     proof {
                         // Help Z3 unfold spec_seq_pairs_to_map after push.
                         assert(pairs@.drop_last() =~= old_pairs);
-                        assert(pairs@.last() == (k, v));
-                        assert(spec_seq_pairs_to_map(pairs@)
-                            =~= spec_seq_pairs_to_map(old_pairs).insert(k, v));
-                        assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
                         // Connect to spec_table_to_map via union_prefer_right.
                         let ghost entry_map = table.table@[i as int].spec_entry_to_map();
-                        assert(entry_map =~= Map::<Key, Value>::empty().insert(k, v));
-                        assert(old_map.insert(k, v)
-                            =~= old_map.union_prefer_right(entry_map));
                     }
                 } else {
                     proof {
-                        assert(table.table@[i as int].spec_entry_to_map()
-                            =~= Map::<Key, Value>::empty());
                     }
                 }
                 proof {
                     let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
                     assert(sub_next.drop_last() =~= table.table@.subrange(0, i as int));
-                    assert(sub_next.last() == table.table@[i as int]);
                 }
                 i = i + 1;
             }
@@ -774,16 +680,12 @@ pub mod LinProbFlatHashTableStEph {
                 _phantom: PhantomData,
             };
             proof {
-                assert forall |j: int| 0 <= j < new_table.table@.len()
-                    implies (#[trigger] new_table.table@[j]) is Empty by {}
                 assert(spec_linprobflathashsteph_wf(&new_table));
             }
 
             // Phase 3: reinsert all pairs.
             let mut j: usize = 0;
             proof {
-                assert forall |idx: int| 0 <= idx < new_table.table@.len()
-                    implies (#[trigger] new_table.table@[idx]) is Empty by {}
                 lemma_all_empties_count::<Key, Value>(new_table.table@);
             }
             while j < pairs.len()
@@ -807,11 +709,6 @@ pub mod LinProbFlatHashTableStEph {
                 let value = clone_elem(&pairs[j].1);
                 proof {
                     // Prove spec_has_insert_capacity: empties > 0 implies exists Empty slot.
-                    assert((new_size - j) as int > 0int) by {
-                        assert(j as int <= pairs@.len());
-                        assert(pairs@.len() <= table.current_size as int);
-                        assert(new_size as int > table.current_size as int);
-                    }
                     lemma_empties_positive_implies_exists_empty::<Key, Value>(
                         new_table.table@);
                 }
@@ -825,8 +722,6 @@ pub mod LinProbFlatHashTableStEph {
                         old_new_table_seq, new_table.table@, s);
                     assert(pairs@.subrange(0, (j + 1) as int).drop_last()
                         =~= pairs@.subrange(0, j as int));
-                    assert(pairs@.subrange(0, (j + 1) as int).last()
-                        == pairs@[j as int]);
                 }
                 j = j + 1;
             }

@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: assertion failed
+   --> src/Chap53/PQMinStPer.rs:417:32
+    |
+417 |                         assert(vertex_universe.contains(neighbor_entry@.1));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+vertex_universe.contains(neighbor_entry.view().1) 
+    function is uninterpreted
+
+verification results:: 2337 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5512MB, peak z3 RSS: 791MB, min free: 20832MB
+Sampled CPU Usage: rust_verify: 101s, z3 children: 102s

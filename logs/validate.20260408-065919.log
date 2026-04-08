@@ -1,6 +1,50 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-verification results:: 1958 verified, 0 errors
-Elapsed: 28s
-Sampled Memory Usage: peak rust_verify RSS: 5294MB, peak z3 RSS: 979MB, min free: 20379MB
-Sampled CPU Usage: rust_verify: 117s, z3 children: 138s
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap47/StructChainedHashTable.rs:690:21
+    |
+690 |                     by {
+    |                     ^^
+
+error[E0425]: cannot find type `Node` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:947:76
+    |
+947 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for Node<Key, Value> {
+    |                                                                            ^^^^ not found in this scope
+
+error[E0425]: cannot find type `Node` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:957:78
+    |
+957 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for Node<Key, Value> {
+    |                                                                              ^^^^ not found in this scope
+
+error[E0425]: cannot find type `ChainList` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:965:76
+    |
+965 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Debug for ChainList<Key, Value> {
+    |                                                                            ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `ChainList` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:973:78
+    |
+973 |     impl<Key: std::fmt::Debug, Value: std::fmt::Debug> std::fmt::Display for ChainList<Key, Value> {
+    |                                                                              ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StructChainedHashTableStEph` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:981:30
+    |
+981 |     impl std::fmt::Debug for StructChainedHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `StructChainedHashTableStEph` in this scope
+   --> src/Chap47/StructChainedHashTable.rs:987:32
+    |
+987 |     impl std::fmt::Display for StructChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 7 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 1868MB, peak z3 RSS: 0MB, min free: 24214MB
+Sampled CPU Usage: rust_verify: 34s, z3 children: 21s

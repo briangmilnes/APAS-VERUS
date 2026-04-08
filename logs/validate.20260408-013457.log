@@ -1,38 +1,21 @@
 Mode: isolate
-Isolate: including Chap18 Chap19 Chap02 Chap51
-error: unexpected token, expected `;`
-   --> src/Chap51/TopDownDPMtEph.rs:349:13
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap58 Chap59 Chap56 Chap57
+error: assertion failed
+   --> src/Chap59/JohnsonStEphF64.rs:333:20
     |
-349 |             memo@[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat)
-    |             ^^^^
+333 |             assert(mapped.to_set() =~= graph@.A);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
 
-error[E0425]: cannot find type `TopDownDPMtEphS` in this scope
-   --> src/Chap51/TopDownDPMtEph.rs:554:20
-    |
-554 |     impl Debug for TopDownDPMtEphS {
-    |                    ^^^^^^^^^^^^^^^ not found in this scope
+note: diagnostics via expansion
 
-error[E0425]: cannot find type `TopDownDPMtEphS` in this scope
-   --> src/Chap51/TopDownDPMtEph.rs:563:22
-    |
-563 |     impl Display for TopDownDPMtEphS {
-    |                      ^^^^^^^^^^^^^^^ not found in this scope
+note: 
 
-error[E0425]: cannot find type `TopDownDPMtEphInv` in this scope
-   --> src/Chap51/TopDownDPMtEph.rs:576:20
-    |
-576 |     impl Debug for TopDownDPMtEphInv {
-    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+mapped.to_set() =~= graph.view().A 
+    datatype is opaque here
 
-error[E0425]: cannot find type `TopDownDPMtEphInv` in this scope
-   --> src/Chap51/TopDownDPMtEph.rs:582:22
-    |
-582 |     impl Display for TopDownDPMtEphInv {
-    |                      ^^^^^^^^^^^^^^^^^ not found in this scope
+verification results:: 2725 verified, 1 errors
+error: aborting due to 1 previous error
 
-error: aborting due to 5 previous errors
-
-For more information about this error, try `rustc --explain E0425`.
-Elapsed: 2s
-Sampled Memory Usage: peak rust_verify RSS: 519MB, peak z3 RSS: 0MB, min free: 24809MB
-Sampled CPU Usage: rust_verify: 5s, z3 children: 0s
+Elapsed: 38s
+Sampled Memory Usage: peak rust_verify RSS: 5685MB, peak z3 RSS: 707MB, min free: 20530MB
+Sampled CPU Usage: rust_verify: 110s, z3 children: 86s

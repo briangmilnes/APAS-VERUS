@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:428:25
+    |
+428 |                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+    |                         ^^^^^^^
+
+error[E0425]: cannot find type `LinkedListChainedHashTableStEph` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:623:30
+    |
+623 |     impl std::fmt::Debug for LinkedListChainedHashTableStEph {
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `LinkedListChainedHashTableStEph` in this scope
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:629:32
+    |
+629 |     impl std::fmt::Display for LinkedListChainedHashTableStEph {
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 2s
+Sampled Memory Usage: peak rust_verify RSS: 2031MB, peak z3 RSS: 0MB, min free: 24425MB
+Sampled CPU Usage: rust_verify: 27s, z3 children: 22s

@@ -1,6 +1,60 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-verification results:: 945 verified, 0 errors
-Elapsed: 7s
-Sampled Memory Usage: peak rust_verify RSS: 3436MB, peak z3 RSS: 319MB, min free: 23049MB
-Sampled CPU Usage: rust_verify: 35s, z3 children: 15s
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:500:36
+    |
+500 | ...                   assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_seq_pairs_to_map(pairs.view()) =~= old_map.insert(k, v) 
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:503:36
+    |
+503 | ...                   assert(chain_sub_next.drop_last() =~= chain_sub);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:504:36
+    |
+504 | ...                   assert(chain_sub_next.last() == chain[j as int]);
+    |                              ^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:516:32
+    |
+516 |                         assert(sub_next.drop_last()
+    |                                ^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq_lib.rs:492:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:518:32
+    |
+518 |                         assert(sub_next.last() == table.table@[i as int]);
+    |                                ^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:154:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3797MB, peak z3 RSS: 511MB, min free: 22575MB
+Sampled CPU Usage: rust_verify: 56s, z3 children: 37s

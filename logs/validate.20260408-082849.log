@@ -1,0 +1,74 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap45/BinaryHeapPQ.rs:818:21
+    |
+818 | /                     !done ==> (
+819 | |                         (2 * ((i as int - 1) / 2) + 1 < n as int && 2 * ((i as int - 1) / 2) + 1 != i as int
+820 | |                             ==> TotalOrder::le(v@[(i as int - 1) / 2], v@[2 * ((i as int - 1) / 2) + 1]))
+821 | |                         && (2 * ((i as int - 1) / 2) + 2 < n as int && 2 * ((i as int - 1) / 2) + 2 != i as int
+822 | |                             ==> TotalOrder::le(v@[(i as int - 1) / 2], v@[2 * ((i as int - 1) / 2) + 2]))
+823 | |                     ),
+    | |_____________________^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap45/BinaryHeapPQ.rs:824:21
+    |
+824 | /                     !done ==> (
+825 | |                         (2 * (i as int) + 1 < n as int
+826 | |                             ==> TotalOrder::le(v@[(i as int - 1) / 2], v@[2 * (i as int) + 1]))
+827 | |                         && (2 * (i as int) + 2 < n as int
+828 | |                             ==> TotalOrder::le(v@[(i as int - 1) / 2], v@[2 * (i as int) + 2]))
+829 | |                     ),
+    | |_____________________^
+
+error: precondition not satisfied
+   --> src/Chap45/BinaryHeapPQ.rs:921:37
+    |
+921 | ...                   T::transitive(pre[gp], pre[pp], pre[2 * pp + 1]);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/total_order.rs:41:13
+    |
+ 41 |             Self::le(x, y),
+    |             -------------- failed precondition
+
+error: precondition not satisfied
+   --> src/Chap45/BinaryHeapPQ.rs:924:37
+    |
+924 | ...                   T::transitive(pre[gp], pre[pp], pre[2 * pp + 2]);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/total_order.rs:41:13
+    |
+ 41 |             Self::le(x, y),
+    |             -------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/total_order.rs:41:13
+   |
+41 |             Self::le(x, y),
+   |             ^^^^^^^^^^^^^^
+
+note: 
+
+tmp%.le(tmp%) ✘
+    trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+tmp%.le(tmp%) ✔
+
+note: recommendation not met
+   --> src/Chap45/BinaryHeapPQ.rs:856:41
+    |
+856 | ...                   implies #[trigger] view_seq[k] == v@[k]@ by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 29s
+Sampled Memory Usage: peak rust_verify RSS: 5837MB, peak z3 RSS: 764MB, min free: 19070MB
+Sampled CPU Usage: rust_verify: 142s, z3 children: 124s

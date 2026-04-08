@@ -44,11 +44,8 @@ pub mod ChainedHashTable {
         {
             if pairs.len() == 1 {
             } else if i == pairs.len() - 1 {
-                assert(pairs.remove(i) =~= pairs.drop_last());
             } else {
                 assert(pairs.remove(i).drop_last() =~= pairs.drop_last().remove(i));
-                assert(pairs.remove(i).last() == pairs.last());
-                assert(pairs.drop_last()[i] == pairs[i]);
                 lemma_seq_pairs_to_map_remove_preserves_other_keys(pairs.drop_last(), i, k);
             }
         }
@@ -71,7 +68,6 @@ pub mod ChainedHashTable {
             let removed = pairs.remove(i);
             let final_seq = removed.push((key, value));
             assert(final_seq.drop_last() == removed);
-            assert(final_seq.last() == (key, value));
             assert forall |k: Key| k != key implies
                 spec_seq_pairs_to_map(removed).dom().contains(k)
                     == spec_seq_pairs_to_map(pairs).dom().contains(k)
@@ -97,10 +93,6 @@ pub mod ChainedHashTable {
             decreases pairs.len(),
         {
             if pairs.len() > 0 {
-                assert forall |j: int| 0 <= j < pairs.drop_last().len()
-                    implies (#[trigger] pairs.drop_last()[j]).0 != key by {
-                    assert(pairs.drop_last()[j] == pairs[j]);
-                }
                 lemma_seq_pairs_no_key_not_in_map::<Key, Value>(pairs.drop_last(), key);
             }
         }
@@ -121,7 +113,6 @@ pub mod ChainedHashTable {
             if idx == pairs.len() - 1 {
                 // key is the last pair; map.insert(key, _) contains key.
             } else {
-                assert(pairs.drop_last()[idx] == pairs[idx]);
                 lemma_seq_pairs_has_key_in_map::<Key, Value>(pairs.drop_last(), key, idx);
             }
         }
@@ -146,11 +137,6 @@ pub mod ChainedHashTable {
                 // pairs.last() == (key, pairs[i].1).
                 // spec_seq_pairs_to_map inserts last pair, so map[key] == pairs[i].1.
             } else {
-                assert(pairs.drop_last()[i] == pairs[i]);
-                assert forall |j: int| i < j < pairs.drop_last().len()
-                    implies (#[trigger] pairs.drop_last()[j]).0 != key by {
-                    assert(pairs.drop_last()[j] == pairs[j]);
-                }
                 lemma_seq_pairs_last_key_gives_value::<Key, Value>(pairs.drop_last(), key, i);
                 // pairs.last().0 != key, so inserting it doesn't affect map[key].
             }

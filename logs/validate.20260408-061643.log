@@ -1,68 +1,56 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-   --> src/Chap37/BSTSplayMtEph.rs:748:37
+Isolate: including Chap47 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:626:33
     |
-748 | ...                   link_contains(Some(lr), x)
-    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+626 | / ...                   lemma_table_to_map_update_insert::<Key, Value, FlatEntry<Key, Value>>(
+627 | | ...                       old_table_seq, slot as int, new_entry, key, value);
+    | |____________________________________________________________________________^
+    |
+   ::: src/Chap47/ParaHashTableStEph.rs:245:13
+    |
+245 |               new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),
+    |               ------------------------------------------------------------------------------------ failed precondition
 
 note: diagnostics via expansion
-  --> src/Chap37/BSTSplayMtEph.rs:90:21
-   |
-90 |             None => false,
-   |                     ^^^^^
-...
-93 |                 || link_contains(node.right, target),
-   |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   --> src/Chap47/ParaHashTableStEph.rs:245:13
+    |
+245 |             new_entry.spec_entry_to_map() == table[index].spec_entry_to_map().insert(key, value),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 note: 
 
-link_contains(Some(lr), x)
-|   let tmp%% = Some(lr);
-|       tmp%% is None ==>
-|           false ✔
-|       !(tmp%% is None) ==>
-|           let node = tmp%%.0;
-|               !(node.key == x || link_contains(node.left, x)) ==>
-|                   link_contains(node.right, x)
-|                   |   let tmp%% = node.right;
-|                   |       tmp%% is None ==>
-|                   |           false ✔
-|                   |       !(tmp%% is None) ==>
-|                   |           let node = tmp%%.0;
-|                   |               !(node.key == x || link_contains(node.left, x)) ==>
-|                   |                   link_contains(node.right, x)
-|                   |                   |   let tmp%% = node.right;
-|                   |                   |       tmp%% is None ==>
-|                   |                   |           false ✘
-|                   |                   |       !(tmp%% is None) ==>
-|                   |                   |           let node = tmp%%.0;
-|                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
-|                   |                   |                   link_contains(node.right, x)
-|                   |                   |                   |   let tmp%% = node.right;
-|                   |                   |                   |       tmp%% is None ==>
-|                   |                   |                   |           false ✘
-|                   |                   |                   |       !(tmp%% is None) ==>
-|                   |                   |                   |           let node = tmp%%.0;
-|                   |                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
-|                   |                   |                   |                   link_contains(node.right, x)
-|                   |                   |                   |                   |   let tmp%% = node.right;
-|                   |                   |                   |                   |       tmp%% is None ==>
-|                   |                   |                   |                   |           false ✘
-|                   |                   |                   |                   |       !(tmp%% is None) ==>
-|                   |                   |                   |                   |           let node = tmp%%.0;
-|                   |                   |                   |                   |               !(node.key == x || link_contains(node.left, x)) ==>
-|                   |                   |                   |                   |                   link_contains(node.right, x) ✘
-|                   |                   |                   |                   |                       reached fuel limit for recursion
-|                   |                   |                   |                   +---
-|                   |                   |                   +---
-|                   |                   +---
-|                   +---
-+---
+let tmp%% = 0;
+    let tmp%% = slot;
+        let tmp%% = old_table_seq.len();
+            tmp%% <= tmp%% ✔
+            tmp%% < tmp%% ✔
+new_entry.spec_entry_to_map() == old_table_seq.index(slot).spec_entry_to_map().insert(key, value) ✘
+forall |j|
+    let tmp%% = 0 in let tmp%% = j in let tmp%% = old_table_seq.len() in tmp%% <= tmp%% && tmp%% < tmp%% && !(j == slot) ==>
+        !(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) ✔
 
-verification results:: 1957 verified, 1 errors
+note: recommendation not met: cannot prove that there exists values that satisfy the condition of the choose expression
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:806:29
+    |
+806 |                   let s_wit = choose |s: int| #![trigger old(table).table@[s]]
+    |  _____________________________^
+807 | |                     0 <= s < old(table).table@.len() && old(table).table@[s] is Empty;
+    | |_____________________________________________________________________________________^
+
+note: recommendation not met
+   --> src/Chap47/QuadProbFlatHashTableStEph.rs:808:24
+    |
+808 |                 assert(table.table@[s_wit] is Empty);
+    |                        ^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 1253 verified, 1 errors
 error: aborting due to 1 previous error
 
-Elapsed: 17s
-Sampled Memory Usage: peak rust_verify RSS: 3856MB, peak z3 RSS: 460MB, min free: 22893MB
-Sampled CPU Usage: rust_verify: 60s, z3 children: 47s
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3832MB, peak z3 RSS: 224MB, min free: 22943MB
+Sampled CPU Usage: rust_verify: 59s, z3 children: 47s

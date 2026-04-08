@@ -1,55 +1,6 @@
 Mode: isolate
-Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
-error: assertion failed
-   --> src/Chap37/BSTPlainMtEph.rs:492:57
-    |
-492 |   ...                   assert forall|x: T| old_left.tree_contains(x) ==
-    |  ___________________________________________^
-493 | | ...                       (node.tree_contains(x) && x != *target)
-    | |_________________________________________________________________^ assertion failed
-
-note: diagnostics via expansion
-   --> src/Chap37/BSTPlainStEph.rs:263:43
-    |
-263 |                 BalBinTree::Node(node) => BSTSpecFns::tree_contains(*node, value),
-    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    |
-   ::: src/Chap37/BSTPlainMtEph.rs:492:57
-    |
-492 | ...                   assert forall|x: T| old_left.tree_contains(x) ==
-    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
-493 | ...                       (node.tree_contains(x) && x != *target)
-    |                            ^^^^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^
-
-note: 
-
-old_left.tree_contains(x) == (node.tree_contains(x) && !(x == target))
-|   old_left.tree_contains(x) ==>
-|       node.tree_contains(x) ✘
-|       |   let tmp%% = node;
-|       |       tmp%% is Leaf ==>
-|       |           false ✔
-|       |       !(tmp%% is Leaf) ==>
-|       |           let node = tmp%%.0;
-|       |               node.tree_contains(x) ✘
-|       |                   reached fuel limit for recursion
-|       +---
-|       !(x == target) ✘
-|   node.tree_contains(x) && !(x == target) ==>
-|       old_left.tree_contains(x) ✘
-|       |   let tmp%% = old_left;
-|       |       tmp%% is Leaf ==>
-|       |           false ✔
-|       |       !(tmp%% is Leaf) ==>
-|       |           let node = tmp%%.0;
-|       |               node.tree_contains(x) ✘
-|       |                   reached fuel limit for recursion
-|       +---
-+---
-
-verification results:: 1957 verified, 1 errors
-error: aborting due to 1 previous error
-
-Elapsed: 24s
-Sampled Memory Usage: peak rust_verify RSS: 6426MB, peak z3 RSS: 686MB, min free: 20231MB
-Sampled CPU Usage: rust_verify: 139s, z3 children: 111s
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+verification results:: 2338 verified, 0 errors
+Elapsed: 37s
+Sampled Memory Usage: peak rust_verify RSS: 6441MB, peak z3 RSS: 730MB, min free: 20331MB
+Sampled CPU Usage: rust_verify: 136s, z3 children: 111s

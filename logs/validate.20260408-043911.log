@@ -1,13 +1,6 @@
 Mode: isolate
-Isolate: including Chap18 Chap19 Chap21 Chap02
-error: unexpected token, expected `;`
-   --> src/Chap21/Problem21_4.rs:154:61
-    |
-154 |                 (#[trigger] mapped[i]).len() == blen as int by {}
-    |                                                             ^^
-
-error: aborting due to 1 previous error
-
-Elapsed: 2s
-Sampled Memory Usage: peak rust_verify RSS: 1262MB, peak z3 RSS: 0MB, min free: 25166MB
-Sampled CPU Usage: rust_verify: 12s, z3 children: 0s
+Isolate: including Chap47 Chap18 Chap02
+verification results:: 1254 verified, 0 errors
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4810MB, peak z3 RSS: 382MB, min free: 21580MB
+Sampled CPU Usage: rust_verify: 76s, z3 children: 52s

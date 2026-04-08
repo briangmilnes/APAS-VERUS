@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/VecChainedHashTableStEph.rs:237:28
+    |
+237 |                       assert(spec_seq_pairs_to_map(new_bucket_seq)
+    |  ____________________________^
+238 | |                         =~= spec_seq_pairs_to_map(original).insert(key, value));
+    | |______________________________________________________________________________^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_seq_pairs_to_map(new_bucket_seq) =~= spec_seq_pairs_to_map(original).insert(key, value) 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 1969MB, peak z3 RSS: 182MB, min free: 22542MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 16s

@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/StructChainedHashTable.rs:834:28
+    |
+834 |                     assert(new_table@ =~= table@);
+    |                            ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_table.view() =~= table.view() 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 2791MB, peak z3 RSS: 307MB, min free: 23402MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 33s

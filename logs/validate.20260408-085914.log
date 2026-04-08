@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1346:37
+     |
+1346 | ...                   implies #[trigger] new_elements@[m] == self@[m] by {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+new_elements.view().index(m) == self.view().index(m) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 32s
+Sampled Memory Usage: peak rust_verify RSS: 7144MB, peak z3 RSS: 1200MB, min free: 15840MB
+Sampled CPU Usage: rust_verify: 180s, z3 children: 244s

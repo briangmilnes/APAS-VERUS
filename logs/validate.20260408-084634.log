@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1236:48
+     |
+1236 | ...                   implies #[trigger] BinaryHeapPQ::<T>::spec_exec_heap_inv_at(ne_seq, j) by {
+     |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+spec_exec_heap_inv_at(ne_seq, j) 
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 5863MB, peak z3 RSS: 1090MB, min free: 14657MB
+Sampled CPU Usage: rust_verify: 137s, z3 children: 163s

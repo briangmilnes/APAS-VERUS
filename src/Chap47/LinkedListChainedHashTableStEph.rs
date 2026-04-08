@@ -225,25 +225,18 @@ pub mod LinkedListChainedHashTableStEph {
                 let ghost new_bucket_seq = bucket_seq@;
 
                 proof {
-                    assert(new_bucket_seq == pre_push.push((key, value)));
                     if existed {
-                        assert(pre_push =~= original.remove(found_idx as int));
                         lemma_seq_pairs_remove_key_then_push::<Key, Value>(
                             original, found_idx as int, key, value);
                     } else {
-                        assert(pre_push =~= original);
                         assert(new_bucket_seq.drop_last() =~= original);
-                        assert(new_bucket_seq.last() == (key, value));
                     }
-                    assert(spec_seq_pairs_to_map(new_bucket_seq)
-                        =~= spec_seq_pairs_to_map(original).insert(key, value));
                 }
 
                 let new_entry = LinkedListStEphS { seq: bucket_seq };
                 table.table.set(index, new_entry);
 
                 proof {
-                    assert(table.table@[index as int].seq@ == new_bucket_seq);
                     assert(table.table@[index as int].spec_entry_to_map()
                         =~= old_table[index as int].spec_entry_to_map().insert(key, value));
 
@@ -253,18 +246,13 @@ pub mod LinkedListChainedHashTableStEph {
                     lemma_table_to_map_update_insert::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                         old_table, index as int, table.table@[index as int], key, value);
 
-                    assert(table.table@.len() == table.current_size as int);
-                    assert(table.current_size > 0);
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j != index as int {
-                            assert(table.table@[j] == old_table[j]);
                         }
                     }
                     // One-slot modification witness for trait ensures.
-                    assert(old_table =~= old(table).table@);
-                    assert(spec_other_slots_preserved(old(table).table@, table.table@, index as int));
                 }
 
                 if !existed {
@@ -284,7 +272,6 @@ pub mod LinkedListChainedHashTableStEph {
                 let ghost bv: Seq<(Key, Value)> = table.table@[index as int].seq@;
                 if bucket_len == 0 {
                     proof {
-                        assert(bv =~= Seq::<(Key, Value)>::empty());
                         lemma_seq_pairs_no_key_not_in_map::<Key, Value>(bv, *key);
                         lemma_table_to_map_not_contains::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                             table.table@, *key);
@@ -315,7 +302,6 @@ pub mod LinkedListChainedHashTableStEph {
                                 bv, *key, i as int);
                             // bv == table.table@[index].seq@ by definition, so
                             // spec_entry_to_map (= spec_seq_pairs_to_map(self.seq@)) matches.
-                            assert(table.table@[index as int].spec_entry_to_map().dom().contains(*key));
                             assert forall |j: int| 0 <= j < table.table@.len() && j != index as int
                                 implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(*key) by {}
                             lemma_table_to_map_unique_entry_value::<Key, Value, LinkedListStEphS<(Key, Value)>>(
@@ -374,8 +360,6 @@ pub mod LinkedListChainedHashTableStEph {
                     proof {
                         assert(original.subrange(0, (i + 1) as int).drop_last()
                             =~= original.subrange(0, i as int));
-                        assert(original.subrange(0, (i + 1) as int).last()
-                            == original[i as int]);
                     }
 
                     if !eq {
@@ -387,16 +371,11 @@ pub mod LinkedListChainedHashTableStEph {
                             let ghost pair_key = original[i as int].0;
                             let ghost pair_val = original[i as int].1;
                             assert(new_seq@.drop_last() =~= old_new_seq);
-                            assert(new_seq@.last() == (pair_key, pair_val));
-                            assert(prefix_map.insert(pair_key, pair_val).remove(*key)
-                                =~= prefix_map.remove(*key).insert(pair_key, pair_val));
                             prefix_map = prefix_map.insert(pair_key, pair_val);
                         }
                     } else {
                         proof {
                             let ghost pair_val = original[i as int].1;
-                            assert(prefix_map.insert(*key, pair_val).remove(*key)
-                                =~= prefix_map.remove(*key));
                             prefix_map = prefix_map.insert(original[i as int].0, original[i as int].1);
                         }
                         deleted = true;
@@ -412,8 +391,6 @@ pub mod LinkedListChainedHashTableStEph {
                 table.table.set(index, new_entry);
 
                 proof {
-                    assert(table.table@[index as int].spec_entry_to_map()
-                        =~= old_table[index as int].spec_entry_to_map().remove(*key));
 
                     assert forall |j: int| 0 <= j < old_table.len() && j != index as int
                         implies !#[trigger] old_table[j].spec_entry_to_map().dom().contains(*key) by {}
@@ -421,15 +398,12 @@ pub mod LinkedListChainedHashTableStEph {
                     lemma_table_to_map_update_remove::<Key, Value, LinkedListStEphS<(Key, Value)>>(
                         old_table, index as int, table.table@[index as int], *key);
 
-                    assert(table.table@.len() == table.current_size as int);
-                    assert(table.current_size > 0);
                     assert forall |j: int, k: Key| 0 <= j < table.table@.len()
                         && j != (table.spec_hash@)(k) as int % table.current_size as int
                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
                         if j == index as int {
                             assert(!old_table[j].spec_entry_to_map().dom().contains(k));
                         } else {
-                            assert(table.table@[j] == old_table[j]);
                         }
                     }
 
@@ -496,15 +470,10 @@ pub mod LinkedListChainedHashTableStEph {
                         pairs.push((k, v));
                         proof {
                             assert(pairs@.drop_last() =~= old_pairs);
-                            assert(pairs@.last() == (k, v));
-                            assert(spec_seq_pairs_to_map(pairs@) =~= old_map.insert(k, v));
                             let ghost chain_sub = chain.subrange(0, j as int);
                             let ghost chain_sub_next = chain.subrange(0, (j + 1) as int);
                             assert(chain_sub_next.drop_last() =~= chain_sub);
-                            assert(chain_sub_next.last() == chain[j as int]);
                             let ghost n = spec_seq_pairs_to_map(chain_sub);
-                            assert(outer_map.union_prefer_right(n).insert(k, v) =~=
-                                outer_map.union_prefer_right(n.insert(k, v)));
                         }
                         j = j + 1;
                     }
@@ -515,7 +484,6 @@ pub mod LinkedListChainedHashTableStEph {
                         let ghost sub_next = table.table@.subrange(0, (i + 1) as int);
                         assert(sub_next.drop_last()
                             =~= table.table@.subrange(0, i as int));
-                        assert(sub_next.last() == table.table@[i as int]);
                     }
                     i = i + 1;
                 }
@@ -564,7 +532,6 @@ pub mod LinkedListChainedHashTableStEph {
                             % new_table.current_size as int
                         implies !#[trigger] new_table.table@[idx]
                             .spec_entry_to_map().dom().contains(key) by {
-                        assert(new_table.table@[idx].seq@.len() == 0);
                     }
                     assert(spec_hashtable_wf(&new_table));
                 }
@@ -592,8 +559,6 @@ pub mod LinkedListChainedHashTableStEph {
                     proof {
                         assert(pairs@.subrange(0, (m + 1) as int).drop_last()
                             =~= pairs@.subrange(0, m as int));
-                        assert(pairs@.subrange(0, (m + 1) as int).last()
-                            == pairs@[m as int]);
                     }
                     m = m + 1;
                 }

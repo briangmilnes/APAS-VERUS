@@ -1,0 +1,34 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: postcondition not satisfied
+  --> src/Chap47/ChainedHashTable.rs:68:17
+   |
+68 | /                 spec_seq_pairs_to_map(pairs.remove(i).push((key, value)))
+69 | |                     =~= spec_seq_pairs_to_map(pairs).insert(key, value),
+   | |_______________________________________________________________________^ failed this postcondition
+...
+81 |               assert forall |k: Key| k != key && #[trigger] spec_seq_pairs_to_map(removed).dom().contains(k) implies
+   |               ------ at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+spec_seq_pairs_to_map(old(pairs).remove(old(i)).push((old(key), old(value)))) =~= spec_seq_pairs_to_map(old(pairs)).insert(old(key), old(value)) 
+
+note: recommendation not met
+  --> src/Chap47/ChainedHashTable.rs:74:20
+   |
+74 |             assert(final_seq.last() == (key, value));
+   |                    ^^^^^^^^^^^^^^^^
+   |
+  --> vstd/seq.rs:154:12
+   |
+   = note: recommendation not met
+
+verification results:: 1256 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 6272MB, peak z3 RSS: 881MB, min free: 19680MB
+Sampled CPU Usage: rust_verify: 116s, z3 children: 104s

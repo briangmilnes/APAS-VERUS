@@ -1,0 +1,26 @@
+Mode: isolate
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:305:45
+    |
+305 | ...                   implies !#[trigger] old_table_seq[j].spec_entry_to_map().dom().contains(key) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap47/DoubleHashFlatHashTableStEph.rs:318:45
+    |
+318 | ...                   implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(old_table_seq.index(j).spec_entry_to_map().dom().contains(key)) 
+
+verification results:: 1256 verified, 1 errors
+error: aborting due to 2 previous errors
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 5179MB, peak z3 RSS: 631MB, min free: 21016MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 75s

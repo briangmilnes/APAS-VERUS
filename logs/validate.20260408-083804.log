@@ -1,0 +1,22 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+    --> src/Chap45/BinaryHeapPQ.rs:1185:32
+     |
+1185 |                         assert(self@.contains(root@));
+     |                                ^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(root.view())
+|   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = self.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && self.view().index(i) == root.view()) 
++---
+
+verification results:: 2127 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 26s
+Sampled Memory Usage: peak rust_verify RSS: 5098MB, peak z3 RSS: 514MB, min free: 17123MB
+Sampled CPU Usage: rust_verify: 123s, z3 children: 126s

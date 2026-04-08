@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02 Chap53
+error: assertion failed
+   --> src/Chap53/PQMinStEph.rs:315:20
+    |
+315 |             assert(seq@.len() > 0) by {
+    |                    ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+seq.view().len() > 0 
+
+verification results:: 2337 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 31s
+Sampled Memory Usage: peak rust_verify RSS: 7260MB, peak z3 RSS: 851MB, min free: 18814MB
+Sampled CPU Usage: rust_verify: 157s, z3 children: 161s

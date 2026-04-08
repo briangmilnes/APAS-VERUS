@@ -1,6 +1,76 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-verification results:: 945 verified, 0 errors
-Elapsed: 8s
-Sampled Memory Usage: peak rust_verify RSS: 2998MB, peak z3 RSS: 220MB, min free: 23640MB
-Sampled CPU Usage: rust_verify: 45s, z3 children: 21s
+Isolate: including Chap47 Chap18 Chap02
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:362:25
+    |
+362 |                         spec_seq_pairs_to_map(new_seq@) =~= prefix_map.remove(*key),
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: invariant not satisfied at end of loop body
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:365:25
+    |
+365 | /                         deleted ==> exists |j: int| 0 <= j < i as int
+366 | |                             && (#[trigger] original[j]).0 == *key,
+    | |_________________________________________________________________^
+
+error: precondition not satisfied
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:372:30
+    |
+372 |                     let eq = feq(&bucket_seq[i].0, key);
+    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/vstdplus/feq.rs:289:18
+    |
+289 |         requires obeys_feq_full::<T>()
+    |                  --------------------- failed precondition
+
+note: diagnostics via expansion
+  --> src/vstdplus/feq.rs:50:13
+   |
+50 |         &&& feq_reflexive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+51 |         &&& feq_symmetric::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^
+52 |         &&& feq_transitive::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+...
+77 |         &&& obeys_feq_properties::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+78 |         &&& obeys_feq_view::<T>()
+   |             ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+obeys_feq_full()
+|   obeys_feq_properties() ✘
+|   |   feq_reflexive() ✘
+|   |   |   forall |x|
+|   |   |       x.eq_spec(x) 
+|   |   +---
+|   |   feq_symmetric() ✘
+|   |   |   forall |x, y|
+|   |   |       x.eq_spec(y) == y.eq_spec(x) 
+|   |   +---
+|   |   feq_transitive() ✘
+|   |   |   forall |x, y, z|
+|   |   |       x.eq_spec(y) && y.eq_spec(z) ==>
+|   |   |           x.eq_spec(z) 
+|   |   |               trait function (note: expand-errors is currently limited in its support for resolving generic trait functions)
+|   |   +---
+|   +---
+|   obeys_feq_view() ✘
+|   |   forall |x, y|
+|   |       x.eq_spec(y) ==>
+|   |           x.view() == y.view() 
+|   +---
+|   obeys_feq_view_injective() 
+|   obeys_feq_clone() 
+|   obeys_feq_eq() 
++---
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 2770MB, peak z3 RSS: 286MB, min free: 23786MB
+Sampled CPU Usage: rust_verify: 42s, z3 children: 21s

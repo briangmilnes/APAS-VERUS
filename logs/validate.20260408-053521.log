@@ -1,6 +1,20 @@
 Mode: isolate
-Isolate: including Chap19 Chap27 Chap02
-verification results:: 945 verified, 0 errors
-Elapsed: 7s
-Sampled Memory Usage: peak rust_verify RSS: 3503MB, peak z3 RSS: 347MB, min free: 23142MB
-Sampled CPU Usage: rust_verify: 30s, z3 children: 6s
+Isolate: including Chap47 Chap18 Chap02
+error: assertion failed
+   --> src/Chap47/LinkedListChainedHashTableStEph.rs:428:33
+    |
+428 |                         implies !#[trigger] table.table@[j].spec_entry_to_map().dom().contains(k) by {
+    |                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(table.table.view().index(j).spec_entry_to_map().dom().contains(k)) 
+
+verification results:: 1253 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3496MB, peak z3 RSS: 321MB, min free: 22922MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 16s
