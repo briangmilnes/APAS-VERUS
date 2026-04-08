@@ -71,6 +71,56 @@ broadcast use {
 
         proof fn _sorted_list_pq_verified() {}
 
+    /// After `result = ArraySeqStPerS::append(&old_result, &single_seq)` where
+    /// `single_seq` is a singleton holding `elem_raw`, proves that the seq@ and @
+    /// views of `result` equal the old views with `elem_raw`/`elem_view` pushed.
+    /// Consolidates the 18-line dual forall bridge repeated in each meld loop iteration.
+        proof fn lemma_append_push_bridge<T: View>(
+            result: &ArraySeqStPerS<T>,
+            old_result_seq: Seq<T>,
+            old_result_view: Seq<T::V>,
+            elem_raw: T,
+            elem_view: T::V,
+            single_seq: &ArraySeqStPerS<T>,
+        )
+            requires
+                result.seq@.len() == old_result_seq.len() + 1,
+                forall|k: int| 0 <= k < old_result_seq.len()
+                    ==> #[trigger] result.spec_index(k) == old_result_seq[k],
+                result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0],
+                single_seq.seq@[0] == elem_raw,
+                old_result_view.len() == old_result_seq.len(),
+                elem_view == elem_raw@,
+                forall|k: int| 0 <= k < old_result_seq.len()
+                    ==> #[trigger] old_result_seq[k]@ == old_result_view[k],
+            ensures
+                result.seq@ =~= old_result_seq.push(elem_raw),
+                result.seq@.last() == elem_raw,
+                result@ =~= old_result_view.push(elem_view),
+        {
+            assert forall|k: int| 0 <= k < result.seq@.len()
+                implies #[trigger] result.seq@[k] == old_result_seq.push(elem_raw)[k]
+            by {
+                if k < old_result_seq.len() as int {
+                    assert(result.spec_index(k) == old_result_seq[k]);
+                } else {
+                    assert(result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0]);
+                    assert(single_seq.seq@[0] == elem_raw);
+                }
+            };
+            assert(result.seq@ =~= old_result_seq.push(elem_raw));
+            assert forall|k: int| 0 <= k < result@.len()
+                implies #[trigger] result@[k] == old_result_view.push(elem_view)[k]
+            by {
+                if k < old_result_view.len() {
+                    assert(result.spec_index(k) == old_result_seq[k]);
+                } else {
+                    assert(result.spec_index(old_result_seq.len() as int) == single_seq.seq@[0]);
+                    assert(single_seq.seq@[0] == elem_raw);
+                }
+            };
+        }
+
     //		Section 8. traits
 
 
@@ -608,53 +658,17 @@ broadcast use {
                                 axiom_cloned_implies_eq_owned(
                                     self.elements.seq@[i as int],
                                     single_seq.seq@[0]);
-                                // Raw push for sorted proof.
-                                // Veracity: NEEDED assert
-                                assert forall|k: int|
-                                    0 <= k < result.seq@.len() implies
-                                    #[trigger] result.seq@[k] == old_result_seq.push(
-                                        self.elements.seq@[i as int])[k]
-                                by {
-                                    if k < old_result_seq.len() as int {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(k)
-                                            == old_result_seq[k]);
-                                    } else {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(
-                                            old_result_seq.len() as int + 0)
-                                            == single_seq.seq@[0]);
-                                    }
-                                }
-                                // Veracity: NEEDED assert
+                                lemma_append_push_bridge(
+                                    &result, old_result_seq, old_result_view,
+                                    self.elements.seq@[i as int], self@[i as int],
+                                    &single_seq);
                                 assert(result.seq@ =~= old_result_seq.push(
                                     self.elements.seq@[i as int]));
                                 Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     self.elements.seq@[i as int]);
-                                // Veracity: NEEDED assert
                                 assert(result.seq@.last()
                                     == self.elements.seq@[i as int]);
-                                // View push for multiset proof.
-                                // Veracity: NEEDED assert
-                                assert forall|k: int|
-                                    0 <= k < result@.len() implies
-                                    #[trigger] result@[k]
-                                        == old_result_view.push(
-                                            self@[i as int])[k]
-                                by {
-                                    if k < old_result_view.len() {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(k)
-                                            == old_result_seq[k]);
-                                    } else {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(
-                                            old_result_seq.len() as int + 0)
-                                            == single_seq.seq@[0]);
-                                    }
-                                }
-                                // Veracity: NEEDED assert
                                 assert(result@ =~= old_result_view.push(
                                     self@[i as int]));
                                 self@.lemma_take_succ_push(i as int);
@@ -675,53 +689,17 @@ broadcast use {
                                 axiom_cloned_implies_eq_owned(
                                     other.elements.seq@[j as int],
                                     single_seq.seq@[0]);
-                                // Raw push for sorted proof.
-                                // Veracity: NEEDED assert
-                                assert forall|k: int|
-                                    0 <= k < result.seq@.len() implies
-                                    #[trigger] result.seq@[k] == old_result_seq.push(
-                                        other.elements.seq@[j as int])[k]
-                                by {
-                                    if k < old_result_seq.len() as int {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(k)
-                                            == old_result_seq[k]);
-                                    } else {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(
-                                            old_result_seq.len() as int + 0)
-                                            == single_seq.seq@[0]);
-                                    }
-                                }
-                                // Veracity: NEEDED assert
+                                lemma_append_push_bridge(
+                                    &result, old_result_seq, old_result_view,
+                                    other.elements.seq@[j as int], other@[j as int],
+                                    &single_seq);
                                 assert(result.seq@ =~= old_result_seq.push(
                                     other.elements.seq@[j as int]));
                                 Self::lemma_push_preserves_sorted(
                                     old_result_seq,
                                     other.elements.seq@[j as int]);
-                                // Veracity: NEEDED assert
                                 assert(result.seq@.last()
                                     == other.elements.seq@[j as int]);
-                                // View push for multiset proof.
-                                // Veracity: NEEDED assert
-                                assert forall|k: int|
-                                    0 <= k < result@.len() implies
-                                    #[trigger] result@[k]
-                                        == old_result_view.push(
-                                            other@[j as int])[k]
-                                by {
-                                    if k < old_result_view.len() {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(k)
-                                            == old_result_seq[k]);
-                                    } else {
-                                        // Veracity: NEEDED assert
-                                        assert(result.spec_index(
-                                            old_result_seq.len() as int + 0)
-                                            == single_seq.seq@[0]);
-                                    }
-                                }
-                                // Veracity: NEEDED assert
                                 assert(result@ =~= old_result_view.push(
                                     other@[j as int]));
                                 other@.lemma_take_succ_push(j as int);
@@ -765,51 +743,17 @@ broadcast use {
                         axiom_cloned_implies_eq_owned(
                             self.elements.seq@[i as int],
                             single_seq.seq@[0]);
-                        // Veracity: NEEDED assert
-                        assert forall|k: int|
-                            0 <= k < result.seq@.len() implies
-                            #[trigger] result.seq@[k] == old_result_seq.push(
-                                self.elements.seq@[i as int])[k]
-                        by {
-                            if k < old_result_seq.len() as int {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(k)
-                                    == old_result_seq[k]);
-                            } else {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(
-                                    old_result_seq.len() as int + 0)
-                                    == single_seq.seq@[0]);
-                            }
-                        }
-                        // Veracity: NEEDED assert
+                        lemma_append_push_bridge(
+                            &result, old_result_seq, old_result_view,
+                            self.elements.seq@[i as int], self@[i as int],
+                            &single_seq);
                         assert(result.seq@ =~= old_result_seq.push(
                             self.elements.seq@[i as int]));
                         Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             self.elements.seq@[i as int]);
-                        // Veracity: NEEDED assert
                         assert(result.seq@.last()
                             == self.elements.seq@[i as int]);
-                        // Veracity: NEEDED assert
-                        assert forall|k: int|
-                            0 <= k < result@.len() implies
-                            #[trigger] result@[k]
-                                == old_result_view.push(
-                                    self@[i as int])[k]
-                        by {
-                            if k < old_result_view.len() {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(k)
-                                    == old_result_seq[k]);
-                            } else {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(
-                                    old_result_seq.len() as int + 0)
-                                    == single_seq.seq@[0]);
-                            }
-                        }
-                        // Veracity: NEEDED assert
                         assert(result@ =~= old_result_view.push(
                             self@[i as int]));
                         self@.lemma_take_succ_push(i as int);
@@ -847,51 +791,17 @@ broadcast use {
                         axiom_cloned_implies_eq_owned(
                             other.elements.seq@[j as int],
                             single_seq.seq@[0]);
-                        // Veracity: NEEDED assert
-                        assert forall|k: int|
-                            0 <= k < result.seq@.len() implies
-                            #[trigger] result.seq@[k] == old_result_seq.push(
-                                other.elements.seq@[j as int])[k]
-                        by {
-                            if k < old_result_seq.len() as int {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(k)
-                                    == old_result_seq[k]);
-                            } else {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(
-                                    old_result_seq.len() as int + 0)
-                                    == single_seq.seq@[0]);
-                            }
-                        }
-                        // Veracity: NEEDED assert
+                        lemma_append_push_bridge(
+                            &result, old_result_seq, old_result_view,
+                            other.elements.seq@[j as int], other@[j as int],
+                            &single_seq);
                         assert(result.seq@ =~= old_result_seq.push(
                             other.elements.seq@[j as int]));
                         Self::lemma_push_preserves_sorted(
                             old_result_seq,
                             other.elements.seq@[j as int]);
-                        // Veracity: NEEDED assert
                         assert(result.seq@.last()
                             == other.elements.seq@[j as int]);
-                        // Veracity: NEEDED assert
-                        assert forall|k: int|
-                            0 <= k < result@.len() implies
-                            #[trigger] result@[k]
-                                == old_result_view.push(
-                                    other@[j as int])[k]
-                        by {
-                            if k < old_result_view.len() {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(k)
-                                    == old_result_seq[k]);
-                            } else {
-                                // Veracity: NEEDED assert
-                                assert(result.spec_index(
-                                    old_result_seq.len() as int + 0)
-                                    == single_seq.seq@[0]);
-                            }
-                        }
-                        // Veracity: NEEDED assert
                         assert(result@ =~= old_result_view.push(
                             other@[j as int]));
                         other@.lemma_take_succ_push(j as int);

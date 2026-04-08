@@ -26,7 +26,7 @@ pub mod CycleDetectStEph {
     use vstd::prelude::*;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
     #[cfg(verus_keep_ghost)]
-    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq};
+    use crate::Chap55::TopoSortStEph::TopoSortStEph::{spec_num_false, spec_toposortsteph_wf, spec_is_dag, spec_has_edge, spec_is_path, lemma_set_true_decreases_num_false, lemma_set_true_num_false_eq, lemma_bool_view_eq_spec_index, lemma_bool_array_set_view};
     use crate::Types::Types::*;
 
     verus! 
@@ -92,13 +92,6 @@ broadcast use vstd::seq::group_seq_axioms;
 
     //		Section 7. proof fns/broadcast groups
 
-
-    /// Bridge: for ArraySeqStEphS<bool>, view index equals spec_index.
-    proof fn lemma_bool_view_eq_spec_index(a: &ArraySeqStEphS<bool>)
-        ensures forall|j: int| 0 <= j < a@.len() ==> #[trigger] a@[j] == a.spec_index(j),
-    {
-        assert forall|j: int| 0 <= j < a@.len() implies #[trigger] a@[j] == a.spec_index(j) by {}
-    }
 
     /// Bridge: for ArraySeqStEphS<usize>, view index equals spec_index.
     proof fn lemma_usize_view_eq_spec_index(a: &ArraySeqStEphS<usize>)
@@ -374,6 +367,11 @@ broadcast use vstd::seq::group_seq_axioms;
         assert(!old(ancestors)@[vertex as int]);
         assert(vertex < visited.spec_len());
         assert(vertex < ancestors.spec_len());
+        // Pre-set bridge: lets Z3 connect old state spec_index to old state view.
+        proof {
+            lemma_bool_view_eq_spec_index(visited);
+            lemma_bool_view_eq_spec_index(ancestors);
+        }
         let ok1 = visited.set(vertex, true);
         let ok2 = ancestors.set(vertex, true);
         proof {
@@ -382,18 +380,7 @@ broadcast use vstd::seq::group_seq_axioms;
         }
 
         // Establish visited@ == old(visited)@.update(vertex, true) after BOTH sets.
-        proof { lemma_bool_view_eq_spec_index(visited); }
-
-        // Bridge visited@ to old(visited)@.update.
-        assert forall|j: int| 0 <= j < visited@.len()
-            implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
-            assert(visited@[j] == visited.spec_index(j));
-            if j == vertex as int {
-                assert(visited.spec_index(j) == true);
-            } else {
-                assert(visited.spec_index(j) == old(visited).spec_index(j));
-            }
-        };
+        proof { lemma_bool_array_set_view(visited, old(visited)@, vertex as int, true); }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
         assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
 
@@ -402,16 +389,7 @@ broadcast use vstd::seq::group_seq_axioms;
             implies visited@[j] by {};
 
         // Bridge ancestors@ after set.
-        proof { lemma_bool_view_eq_spec_index(ancestors); }
-        assert forall|j: int| 0 <= j < ancestors@.len()
-            implies #[trigger] ancestors@[j] == old(ancestors)@.update(vertex as int, true)[j] by {
-            assert(ancestors@[j] == ancestors.spec_index(j));
-            if j == vertex as int {
-                assert(ancestors.spec_index(j) == true);
-            } else {
-                assert(ancestors.spec_index(j) == old(ancestors).spec_index(j));
-            }
-        };
+        proof { lemma_bool_array_set_view(ancestors, old(ancestors)@, vertex as int, true); }
         assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
 
         // Ghost: extended path includes vertex.
@@ -646,22 +624,16 @@ broadcast use vstd::seq::group_seq_axioms;
         }
 
         // Restore ancestors[vertex] = false.
-        proof {
-            lemma_bool_view_eq_spec_index(ancestors);
-            assert forall|j: int| 0 <= j < ancestors@.len() && j != vertex as int
-                implies #[trigger] ancestors.spec_index(j) == #[trigger] old(ancestors)@[j] by {
-                assert(ancestors.spec_index(j) == ancestors@[j]);
-            };
-        }
+        // Pre-set bridge: lets Z3 connect spec_index to view for the pre-restore state.
+        proof { lemma_bool_view_eq_spec_index(ancestors); }
         let ghost pre_set_view = ancestors@;
         let ok3 = ancestors.set(vertex, false);
         proof {
-            lemma_bool_view_eq_spec_index(ancestors);
+            lemma_bool_array_set_view(ancestors, pre_set_view, vertex as int, false);
+            assert(ancestors@ =~= pre_set_view.update(vertex as int, false));
             assert forall|j: int| 0 <= j < ancestors@.len()
                 implies #[trigger] ancestors@[j] == old(ancestors)@[j] by {
-                assert(ancestors@[j] == ancestors.spec_index(j));
                 if j == vertex as int {
-                    assert(ancestors.spec_index(j as int) == false);
                     assert(!old(ancestors)@[vertex as int]);
                 } else {
                     assert(pre_set_view[j] == old(ancestors)@[j]);
