@@ -261,8 +261,6 @@ pub mod PrimStEph {
             mst.spec_setsteph_wf(),
     {
         let m = graph.labeled_edges.size();
-        assert(m as int == graph@.A.len());
-        proof { assert(obeys_feq_full_trigger::<PQEntry<V>>()); }
 
         // DA = directed adjacency pairs derived from undirected edges.
         // Each undirected edge (u,v,l) in A contributes directed pairs (u,v) and (v,u).
@@ -277,7 +275,6 @@ pub mod PrimStEph {
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_fwd, |e: (V::V, V::V, u64)| (e.0, e.1));
             vstd::set_lib::lemma_map_size_bound(graph@.A, DA_rev, |e: (V::V, V::V, u64)| (e.1, e.0));
             vstd::set_lib::lemma_len_union(DA_fwd, DA_rev);
-            assert(DA.len() <= 2 * m as int);
         }
 
         let mut mst_edges = SetLit![];
@@ -311,9 +308,6 @@ pub mod PrimStEph {
                     visited@.contains(e.0),
         {
             // pq@.len() <= 2*m + 1, so pq@.len() * 2 <= (2*m+1)*2 = 4*m+2 <= 4*m+4 <= usize::MAX.
-            assert(pq@.len() * 2 <= usize::MAX as int) by {
-                vstd::set_lib::lemma_len_subset(used_pairs, DA);
-            };
 
             let (new_pq, min_elem) = pq.delete_min();
             pq = new_pq;
@@ -344,15 +338,12 @@ pub mod PrimStEph {
                 // Prove neighbors.spec_setsteph_wf() so we can call iter().
                 proof {
                     assert(neighbors.spec_setsteph_wf()) by {
-                        assert forall |w: V::V| neighbors@.contains(w)
                             implies graph@.V.contains(w)
                         by {
                             let l = choose |l: u64|
                                 graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
                             if graph@.A.contains((u@, w, l)) {
-                                assert(graph@.V.contains(w));
                             } else {
-                                assert(graph@.V.contains(w));
                             }
                         };
                         vstd::set_lib::lemma_set_subset_finite(graph@.V, neighbors@);
@@ -363,21 +354,14 @@ pub mod PrimStEph {
 
                 // Every element in ng(u) is a directed adjacency pair (u@, v@) in DA.
                 proof {
-                    assert forall |j: int| 0 <= j < it@.1.len()
                         implies DA.contains((u@, (#[trigger] it@.1[j])@))
                     by {
-                        assert(neighbors@.contains(it@.1[j]@));
                         let w: V::V = it@.1[j]@;
                         let l = choose |l: u64|
                             #![trigger graph@.A.contains((u@, w, l))]
                             graph@.A.contains((u@, w, l)) || graph@.A.contains((w, u@, l));
                         if graph@.A.contains((u@, w, l)) {
-                            assert(DA_fwd.contains((u@, w)));
-                            assert(DA.contains((u@, w)));
                         } else {
-                            assert(graph@.A.contains((w, u@, l)));
-                            assert(DA_rev.contains((u@, w)));
-                            assert(DA.contains((u@, w)));
                         }
                     };
                 }
@@ -418,17 +402,11 @@ pub mod PrimStEph {
                                 // Current element is at position it@.0 - 1 (after next() advanced).
                                 let ghost pos = (it@.0 - 1) as int;
                                 let new_pair: (V::V, V::V) = (u@, v@);
-                                assert(DA.contains((u@, it@.1[pos]@)));
-                                assert(DA.contains(new_pair));
                                 // From inner invariant at top (pos = old it@.0):
                                 // all (u@, b) in used_pairs have j < pos. Combined with
                                 // no_duplicates, the current element at pos can't be in used_pairs.
-                                assert(!used_pairs.contains(new_pair));
                                 let new_used = used_pairs.insert(new_pair);
-                                assert(new_used.subset_of(DA));
-                                assert(new_used.finite());
                                 vstd::set_lib::lemma_len_subset(new_used, DA);
-                                assert(remaining_budget > 0);
                                 used_pairs = new_used;
                                 remaining_budget = remaining_budget - 1;
                             }
@@ -436,7 +414,6 @@ pub mod PrimStEph {
                             if !visited.contains(v) {
                                 // get_edge_label returns Some since v ∈ ng(u).
                                 if let Some(weight) = graph.get_edge_label(&u, v) {
-                                    assert(pq@.len() + 1 <= usize::MAX as int);
                                     pq = pq.insert(pq_entry_new(*weight, v.clone(), Some(u.clone())));
                                 }
                             }

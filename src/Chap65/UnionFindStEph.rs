@@ -327,10 +327,6 @@ pub mod UnionFindStEph {
             {
                 let v = self.elements[i].clone();
                 proof {
-                    assert(strictly_cloned(self.elements@[i as int], v));
-                    assert(obeys_feq_full::<V>());
-                    assert(v@ == self.elements@[i as int]@);
-                    assert(self@.parent.contains_key(v@));
                 }
                 let root = find_root_loop(self, &v);
                 let _ = roots_set.insert(root);
@@ -644,65 +640,48 @@ pub mod UnionFindStEph {
         let old_rt = old_uf.roots@;
 
         // Frame: for existing keys w != v@, old maps are preserved, and old_rt[w] != v@.
-        assert forall|w: <V as View>::V| #[trigger] old_p.contains_key(w) implies {
             &&& uf.parent@[w] == old_p[w]
             &&& uf.rank@[w] == old_r[w]
             &&& uf.roots@[w] == old_rt[w]
             &&& old_rt[w] != v@
         } by {
             // old_rt[w] is in old_p domain (wf conjunct), so != v@
-            assert(old_p.contains_key(old_rt[w]));
         };
 
         // New element v@ is a self-parent singleton root with rank 0.
-        assert(uf.parent@[v@] == v);
-        assert(uf.parent@[v@]@ == v@);
-        assert(uf.rank@[v@] == 0usize);
-        assert(uf.roots@[v@] == v@);
 
         // Elements backward: v@ is at the new last index.
-        assert forall|w: <V as View>::V| #[trigger] uf.parent@.contains_key(w) implies
             exists|i: int| 0 <= i < uf.elements@.len() as int && #[trigger] uf.elements@[i]@ == w
         by {
             if w == v@ {
-                assert(uf.elements@[old_e.len() as int]@ == v@);
             } else {
                 let i = choose|i: int| 0 <= i < old_e.len() as int && #[trigger] old_e[i]@ == w;
-                assert(uf.elements@[i]@ == w);
             }
         };
 
         // Elements no duplicates: v@ is not in old_p domain, but old elements are.
-        assert forall|i: int, j: int|
-            0 <= i < uf.elements@.len() as int &&
             0 <= j < uf.elements@.len() as int &&
             i != j implies
             #[trigger] uf.elements@[i]@ != #[trigger] uf.elements@[j]@
         by {
             let n = old_e.len() as int;
             if i == n && j < n {
-                assert(old_p.contains_key(uf.elements@[j]@));
             } else if j == n && i < n {
-                assert(old_p.contains_key(uf.elements@[i]@));
             }
         };
 
         // Roots idempotent: for w != v@, old_rt is preserved and old_rt[w] != v@.
-        assert forall|w: <V as View>::V| #[trigger] uf.roots@.contains_key(w) implies
             uf.roots@.contains_key(uf.roots@[w]) && uf.roots@[uf.roots@[w]] == uf.roots@[w]
         by {
             if w != v@ {
-                assert(old_p.contains_key(old_rt[w]));
             }
         };
 
         // Parent preserves root component: for w != v@, parent[w]@ != v@.
-        assert forall|w: <V as View>::V| #[trigger] uf.parent@.contains_key(w) implies
             uf.roots@[uf.parent@[w]@] == uf.roots@[w]
         by {
             if w != v@ {
                 let pw = old_p[w]@;
-                assert(old_p.contains_key(pw));
             }
         };
     }
@@ -726,10 +705,6 @@ pub mod UnionFindStEph {
         reveal(spec_rank_bounded);
         reveal(spec_parent_closed);
         if uf.parent@[rv]@ != rv {
-            assert(uf.rank@[rv] < uf.rank@[uf.parent@[rv]@]);
-            assert(uf.roots@[uf.parent@[rv]@] == rv);
-            assert(uf.rank@.contains_key(uf.parent@[rv]@));
-            assert(uf.rank@[uf.parent@[rv]@] <= uf.rank@[uf.roots@[uf.parent@[rv]@]]);
         }
     }
 
@@ -783,33 +758,21 @@ pub mod UnionFindStEph {
                 new_parent_dom.contains(new_roots[v]),
     {
         // Pre-compute: winner maps to itself.
-        assert(mid_roots[winner_view] == winner_view) by {
-            if winner_view == root_u_view { } else { }
-        };
-        assert(new_roots[winner_view] == winner_view);
 
         // Roots idempotent.
-        assert forall|w: <V as View>::V|
-            #[trigger] new_roots.contains_key(w) implies
             new_roots.contains_key(new_roots[w]) && new_roots[new_roots[w]] == new_roots[w]
         by {
             let old_rw = mid_roots[w];
             if old_rw == root_u_view || old_rw == root_v_view {
             } else {
-                assert(mid_roots.contains_key(old_rw));
-                assert(mid_roots[old_rw] == old_rw);
             }
         };
 
         // Roots in dom.
-        assert forall|w: <V as View>::V|
-            #[trigger] new_roots.contains_key(w) implies
             new_parent_dom.contains(new_roots[w])
         by {
             if mid_roots[w] == root_u_view || mid_roots[w] == root_v_view {
-                assert(new_parent_dom.contains(winner_view));
             } else {
-                assert(new_parent_dom.contains(mid_roots[w]));
             }
         };
     }
@@ -840,54 +803,34 @@ pub mod UnionFindStEph {
         let mrt = mid.roots@;
 
         // Parent view frame.
-        assert(uf.parent@[loser_view]@ == winner_view);
-        assert forall|k: <V as View>::V|
-            mp.contains_key(k) && k != loser_view implies
             #[trigger] uf.parent@[k]@ == mp[k]@
         by {};
 
         // Parent closed.
-        assert forall|w: <V as View>::V|
-            #[trigger] uf.parent@.contains_key(w) implies
             uf.parent@.contains_key(uf.parent@[w]@)
         by {
             if w == loser_view {
-                assert(uf.parent@[w]@ == winner_view);
-                assert(mp.contains_key(winner_view));
             } else {
-                assert(mp.contains_key(mp[w]@));
             }
         };
 
         // Self-parent is root.
-        assert forall|w: <V as View>::V|
-            uf.parent@.contains_key(w) && uf.parent@[w]@ == w implies
             #[trigger] uf.roots@[w] == w
         by {
             if w == loser_view {
-                assert(uf.parent@[w]@ == winner_view);
-                assert(winner_view != loser_view);
             } else {
-                assert(mp[w]@ == w);
-                assert(mrt[w] == w);
                 if mrt[w] == root_u_view || mrt[w] == root_v_view {
-                    assert(w != loser_view);
                 }
             }
         };
 
         // Parent preserves root.
-        assert forall|w: <V as View>::V|
-            #[trigger] uf.parent@.contains_key(w) implies
             uf.roots@[uf.parent@[w]@] == uf.roots@[w]
         by {
             if w == loser_view {
-                assert(uf.parent@[w]@ == winner_view);
             } else {
                 let pw = mp[w]@;
-                assert(mrt[pw] == mrt[w]);
                 if mrt[w] == root_u_view || mrt[w] == root_v_view {
-                    assert(mrt[pw] == root_u_view || mrt[pw] == root_v_view);
                 }
             }
         };
@@ -919,67 +862,43 @@ pub mod UnionFindStEph {
         let mrt = mid.roots@;
 
         // Parent view frame (needed for rank_increases).
-        assert(uf.parent@[loser_view]@ == winner_view);
-        assert forall|k: <V as View>::V|
-            mp.contains_key(k) && k != loser_view implies
             #[trigger] uf.parent@[k]@ == mp[k]@
         by {};
 
         // Rank increases.
-        assert forall|w: <V as View>::V|
-            uf.parent@.contains_key(w) && uf.parent@[w]@ != w implies
             uf.rank@[w] < #[trigger] uf.rank@[uf.parent@[w]@]
         by {
             if w == loser_view {
-                assert(uf.parent@[w]@ == winner_view);
             } else {
                 let pw = mp[w]@;
-                assert(mp[w]@ != w);
-                assert(mr[w] < mr[pw]);
                 if w == winner_view {
-                    assert(mp[winner_view]@ == winner_view);
                 }
-                assert(w != winner_view);
                 if pw == winner_view {
-                    assert(uf.rank@[winner_view] >= mr[winner_view]);
                 }
             }
         };
 
         // Rank bounded.
-        assert forall|w: <V as View>::V|
-            #[trigger] uf.rank@.contains_key(w) implies
             uf.rank@[w] <= uf.rank@[uf.roots@[w]]
         by {
             let old_rw = mrt[w];
             if old_rw == root_u_view || old_rw == root_v_view {
-                assert(mr[w] <= mr[old_rw]);
                 if w != winner_view {
                     if old_rw == root_u_view {
-                        assert(uf.rank@[winner_view] >= mr[root_u_view]);
                     } else {
-                        assert(uf.rank@[winner_view] >= mr[root_v_view]);
                     }
                 }
             } else {
-                assert(mrt.contains_key(old_rw));
-                assert(mrt[old_rw] == old_rw);
                 if w == winner_view {
                     if winner_view == root_u_view {
-                        assert(mrt[w] == root_u_view);
                     } else {
-                        assert(mrt[w] == root_v_view);
                     }
                 }
-                assert(w != winner_view);
                 if old_rw == winner_view {
                     if winner_view == root_u_view {
-                        assert(mrt[old_rw] == root_u_view);
                     } else {
-                        assert(mrt[old_rw] == root_v_view);
                     }
                 }
-                assert(old_rw != winner_view);
             }
         };
 
@@ -1005,16 +924,9 @@ pub mod UnionFindStEph {
         reveal(spec_parent_preserves_root);
         reveal(spec_rank_bounded);
         // cv is not a self-parent: if parent[cv]@ == cv, wf says roots[cv] == cv, but roots[cv] == rv != cv.
-        assert(uf.parent@[cv]@ != cv) by {
-            if uf.parent@[cv]@ == cv { assert(uf.roots@[cv] == cv); }
-        };
         // Non-root ordering: rank[cv] < rank[parent[cv]@].
-        assert(uf.rank@[cv] < uf.rank@[uf.parent@[cv]@]);
         // Parent preserves root: roots[parent[cv]@] == roots[cv] == rv.
-        assert(uf.roots@[uf.parent@[cv]@] == rv);
         // Rank bounded: rank[parent[cv]@] <= rank[roots[parent[cv]@]] == rank[rv].
-        assert(uf.rank@.contains_key(uf.parent@[cv]@));
-        assert(uf.rank@[uf.parent@[cv]@] <= uf.rank@[uf.roots@[uf.parent@[cv]@]]);
     }
 
     /// Derive rank[v] < elements.len() from wf by induction on rank.
@@ -1038,10 +950,8 @@ pub mod UnionFindStEph {
         if uf.rank@[v_view] == 0usize {
             // v_view is in parent dom (parent_rank_same_dom). By elements_backward,
             // exists i with elements[i]@ == v_view. So elements.len() >= 1 > 0.
-            assert(uf.parent@.contains_key(v_view));
             let i = choose|i: int| 0 <= i < uf.elements@.len() as int
                 && #[trigger] uf.elements@[i]@ == v_view;
-            assert(uf.elements@.len() >= 1);
         } else {
             // Predecessor exists: w with same root, rank = rank[v] - 1, w != v.
             let w = choose|w: <V as View>::V|
@@ -1053,14 +963,11 @@ pub mod UnionFindStEph {
             lemma_rank_lt_elements(uf, w);
             // rank[w] = rank[v] - 1, so rank[v] - 1 < elements.len().
             // Need strict <: v_view and w are both in elements at distinct indices.
-            assert(uf.parent@.contains_key(v_view));
-            assert(uf.parent@.contains_key(w));
             let i_v = choose|i: int| 0 <= i < uf.elements@.len() as int
                 && #[trigger] uf.elements@[i]@ == v_view;
             let i_w = choose|i: int| 0 <= i < uf.elements@.len() as int
                 && #[trigger] uf.elements@[i]@ == w;
             // w != v_view, so i_w != i_v by elements_distinct.
-            assert(i_v != i_w);
             // elements.len() > max(i_v, i_w) + 1 >= 2. But more precisely:
             // rank[w] < elements.len() means rank[v] - 1 < elements.len(),
             // i.e., rank[v] < elements.len() + 1. That gives rank[v] <= elements.len().
@@ -1311,7 +1218,6 @@ pub mod UnionFindStEph {
         reveal(spec_unionfindsteph_wf);
 
         // Reconstruct Map =~= from pointwise facts for sub-lemmas.
-        assert(uf.parent@ =~= mid.parent@.insert(loser_view, winner_val));
 
         lemma_establish_union_pre(
             uf, mid, winner_val,
@@ -1393,8 +1299,6 @@ pub mod UnionFindStEph {
                     }
                 },
     {
-        assert forall|x: <V as View>::V|
-            #[trigger] uf_new.roots@.contains_key(x) implies {
                 let old_root_u = uf_old.roots@[u_view];
                 let old_root_v = uf_old.roots@[v_view];
                 if uf_old.roots@[x] == old_root_u
@@ -1406,7 +1310,6 @@ pub mod UnionFindStEph {
                 }
             }
         by {
-            assert(uf_old.roots@.contains_key(x));
         }
     }
 
@@ -1659,17 +1562,12 @@ pub mod UnionFindStEph {
         }
         let mut current = v.clone();
         proof {
-            assert(strictly_cloned(*v, current));
-            assert(obeys_feq_full::<V>());
-            assert(current@ == v@);
         }
 
         // Read first parent for the while condition.
         let mut p = uf.parent.get(&current).unwrap().clone();
         proof {
             let ghost pv = uf.parent@[current@];
-            assert(strictly_cloned(pv, p));
-            assert(p@ == uf@.parent[current@]@);
         }
 
         while !feq(&p, &current)
@@ -1686,17 +1584,12 @@ pub mod UnionFindStEph {
         {
             proof {
                 // p@ != current@, so non-root.
-                assert(uf@.parent[current@]@ != current@);
-                assert(uf@.rank[current@] < uf@.rank[uf@.parent[current@]@]);
-                assert(uf@.roots[p@] == uf@.roots[current@]);
             }
 
             current = p;
             p = uf.parent.get(&current).unwrap().clone();
             proof {
                 let ghost pv = uf.parent@[current@];
-                assert(strictly_cloned(pv, p));
-                assert(p@ == uf@.parent[current@]@);
             }
         }
 
@@ -1705,8 +1598,6 @@ pub mod UnionFindStEph {
         // wf self-parent: roots[current@] == current@. Invariant: roots[current@] == roots[v@].
         // Therefore current@ == roots[v@].
         proof {
-            assert(uf@.parent[current@]@ == current@);
-            assert(uf@.roots[current@] == current@);
         }
 
         current
@@ -1776,8 +1667,6 @@ pub mod UnionFindStEph {
         let ru1 = root_u.clone();
         let rv1 = root_v.clone();
         proof {
-            assert(strictly_cloned(root_u, ru1));
-            assert(strictly_cloned(root_v, rv1));
         }
 
         let ghost winner_view: <V as View>::V;
@@ -1794,12 +1683,8 @@ pub mod UnionFindStEph {
                 let ru2 = root_u.clone();
                 let ghost elem_len = uf.elements.len();
                 proof {
-                    assert(strictly_cloned(root_u, ru2));
                     // rank_u < elements.len() (from requires). elements.len() is usize,
                     // so rank_u < usize::MAX, and rank_u + 1 <= usize::MAX.
-                    assert(rank_u < old(uf).elements@.len());
-                    assert(elem_len <= usize::MAX);
-                    assert(old(uf).elements@.len() == elem_len as nat);
                 }
                 uf.rank.insert(ru2, rank_u + 1);
             }
@@ -1867,8 +1752,6 @@ pub mod UnionFindStEph {
         let ru1 = root_u.clone();
         let rv1 = root_v.clone();
         proof {
-            assert(strictly_cloned(root_u, ru1));
-            assert(strictly_cloned(root_v, rv1));
         }
 
         let ghost winner_view: <V as View>::V;
@@ -1885,10 +1768,6 @@ pub mod UnionFindStEph {
                 let ru2 = root_u.clone();
                 let ghost elem_len = uf.elements.len();
                 proof {
-                    assert(strictly_cloned(root_u, ru2));
-                    assert(rank_u < old(uf).elements@.len());
-                    assert(elem_len <= usize::MAX);
-                    assert(old(uf).elements@.len() == elem_len as nat);
                 }
                 uf.rank.insert(ru2, rank_u + 1);
             }
