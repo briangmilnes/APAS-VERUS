@@ -495,14 +495,12 @@ broadcast use {
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited.spec_len() == visited@.len());
         if *visited.nth(vertex) {
             return;
         }
         assert(!old(visited)@[vertex as int]);
         assert(vertex < visited.spec_len());
         let set_ok = visited.set(vertex, true);
-        assert(set_ok.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
@@ -520,22 +518,10 @@ broadcast use {
             }
         };
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
-        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
-        assert(visited@.len() == graph@.len());
 
-        // Monotonicity.
-        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
-            implies visited@[j] by {};
-
-        // visited@[vertex as int] is true.
-        assert(visited@[vertex as int]);
-
-        assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
-        assert(neighbors_len as int == neighbors.spec_len());
 
         // Bridge neighbors to graph view.
         assert(*neighbors == graph.spec_index(vertex as int));
@@ -629,9 +615,6 @@ broadcast use {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
             let ghost fo_pre = finish_order@;
             let ghost vis_pre = visited@;
             assert(spec_has_edge(graph, vertex as int, neighbor as int)) by {
@@ -794,8 +777,6 @@ broadcast use {
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited.spec_len() == visited@.len());
-        assert(rec_stack.spec_len() == rec_stack@.len());
         if *rec_stack.nth(vertex) {
             return false;
         }
@@ -807,9 +788,7 @@ broadcast use {
         assert(vertex < visited.spec_len());
         assert(vertex < rec_stack.spec_len());
         let ok1 = visited.set(vertex, true);
-        assert(ok1.is_ok());
         let ok2 = rec_stack.set(vertex, true);
-        assert(ok2.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
@@ -817,8 +796,6 @@ broadcast use {
 
         // Establish visited@ after both sets.
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited.spec_len() == old(visited).spec_len());
-        assert(rec_stack.spec_len() == old(rec_stack).spec_len());
         assert forall|j: int| 0 <= j < visited@.len()
             implies #[trigger] visited@[j] == old(visited)@.update(vertex as int, true)[j] by {
             assert(visited@[j] == visited.spec_index(j));
@@ -829,19 +806,10 @@ broadcast use {
             }
         };
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
-        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(visited@.len() == graph@.len());
-        assert(rec_stack@.len() == graph@.len());
 
-        // Monotonicity.
-        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
-            implies visited@[j] by {};
-
-        assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
-        assert(neighbors_len as int == neighbors.spec_len());
 
         // Bridge neighbors to graph view.
         assert(*neighbors == graph.spec_index(vertex as int));
@@ -874,20 +842,13 @@ broadcast use {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }
             i = i + 1;
         }
 
-        assert(vertex < rec_stack.spec_len());
         let ok3 = rec_stack.set(vertex, false);
-        assert(ok3.is_ok());
-        assert(rec_stack@.len() == rec_stack.spec_len());
-        assert(rec_stack@.len() == graph@.len());
         finish_order.push(vertex);
         true
     }

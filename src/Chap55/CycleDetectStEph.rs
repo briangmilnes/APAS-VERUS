@@ -347,8 +347,6 @@ broadcast use vstd::seq::group_seq_axioms;
         decreases spec_num_false(old(visited)@),
     {
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited.spec_len() == visited@.len());
-        assert(ancestors.spec_len() == ancestors@.len());
 
         if *ancestors.nth(vertex) {
             // ancestors[vertex] is true → vertex is in dfs_path → cycle exists.
@@ -374,13 +372,10 @@ broadcast use vstd::seq::group_seq_axioms;
         // vertex is not an ancestor and not visited.
         assert(!old(visited)@[vertex as int]);
         assert(!old(ancestors)@[vertex as int]);
-        assert(!spec_in_path(dfs_path, vertex as int));
         assert(vertex < visited.spec_len());
         assert(vertex < ancestors.spec_len());
         let ok1 = visited.set(vertex, true);
-        assert(ok1.is_ok());
         let ok2 = ancestors.set(vertex, true);
-        assert(ok2.is_ok());
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
@@ -388,10 +383,6 @@ broadcast use vstd::seq::group_seq_axioms;
 
         // Establish visited@ == old(visited)@.update(vertex, true) after BOTH sets.
         proof { lemma_bool_view_eq_spec_index(visited); }
-        assert(visited@.len() == old(visited)@.len());
-        assert(ancestors@.len() == old(ancestors)@.len());
-        assert(visited.spec_len() == old(visited).spec_len());
-        assert(ancestors.spec_len() == old(ancestors).spec_len());
 
         // Bridge visited@ to old(visited)@.update.
         assert forall|j: int| 0 <= j < visited@.len()
@@ -461,11 +452,9 @@ broadcast use vstd::seq::group_seq_axioms;
             };
         }
 
-        assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
-        assert(neighbors_len as int == neighbors.spec_len());
 
         // Bridge neighbors to graph view.
         assert(*neighbors == graph.spec_index(vertex as int));
@@ -546,9 +535,6 @@ broadcast use vstd::seq::group_seq_axioms;
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
             // Edge vertex → neighbor for ghost path last-to-vertex requires.
             proof {
                 assert(spec_has_edge(graph, vertex as int, neighbor as int));
@@ -556,25 +542,11 @@ broadcast use vstd::seq::group_seq_axioms;
                 assert(ext_path.len() == dfs_path.len() + 1);
                 assert(ext_path[ext_path.len() - 1] == vertex as int);
             }
-            // Prove ordering requires for recursive call.
-            proof {
-                // cur_ord keys are visited non-ancestor vertices.
-                // ancestors biconditional holds for current ancestors state.
-                // Establish: visited[v] && !ancestors[v] ==> cur_ord.contains_key(v).
-                // Already a loop invariant. ✓
-            }
             // Snapshot visited for monotonicity proof after the call.
             let ghost visited_pre_call = visited@;
             if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path), Ghost(cur_ord), Ghost(cur_next)) {
                 // Cycle found. dfs_check_cycle ensures !spec_is_dag(graph).
-                assert(visited@.len() == graph@.len());
-                assert(ancestors@.len() == graph@.len());
-                assert(vertex < ancestors.spec_len());
                 let ok3 = ancestors.set(vertex, false);
-                assert(ok3.is_ok());
-                assert(ancestors@.len() == ancestors.spec_len());
-                assert(ancestors@.len() == graph@.len());
-                assert(visited@.len() == graph@.len());
                 return true;
             }
             // dfs_check_cycle returned false: ancestors restored, vertex visited.
@@ -634,9 +606,6 @@ broadcast use vstd::seq::group_seq_axioms;
                 cur_ord = new_ord;
                 cur_next = new_next;
             }
-            // Help Z3 maintain loop invariants.
-            assert(visited@[graph@[vertex as int][i as int] as int]);
-            assert(visited@[vertex as int]);
             // Monotonicity for previously processed neighbors.
             proof {
                 assert forall|k: int| 0 <= k < i as int
@@ -677,7 +646,6 @@ broadcast use vstd::seq::group_seq_axioms;
         }
 
         // Restore ancestors[vertex] = false.
-        assert(vertex < ancestors.spec_len());
         proof {
             lemma_bool_view_eq_spec_index(ancestors);
             assert forall|j: int| 0 <= j < ancestors@.len() && j != vertex as int
@@ -687,7 +655,6 @@ broadcast use vstd::seq::group_seq_axioms;
         }
         let ghost pre_set_view = ancestors@;
         let ok3 = ancestors.set(vertex, false);
-        assert(ok3.is_ok());
         proof {
             lemma_bool_view_eq_spec_index(ancestors);
             assert forall|j: int| 0 <= j < ancestors@.len()
