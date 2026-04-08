@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/SetStEph.rs:350:29
+    |
+350 |                     implies self@.contains(#[trigger] inner@.1[j]@)
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(inner.view().1.index(j).view()) 
+    function is uninterpreted
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 8s
+Sampled Memory Usage: peak rust_verify RSS: 3096MB, peak z3 RSS: 566MB, min free: 22236MB
+Sampled CPU Usage: rust_verify: 46s, z3 children: 47s

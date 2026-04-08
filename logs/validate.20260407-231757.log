@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/MappingStEph.rs:296:32
+    |
+296 |                         assert(the_seq.to_set().contains(v@[witness_k]@));
+    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+the_seq.to_set().contains(v.view().index(witness_k).view()) 
+    function is uninterpreted
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 940MB, peak z3 RSS: 52MB, min free: 23291MB
+Sampled CPU Usage: rust_verify: 9s, z3 children: 4s

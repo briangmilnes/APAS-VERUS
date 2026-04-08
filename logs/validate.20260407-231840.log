@@ -1,0 +1,36 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap05/MappingStEph.rs:164:21
+    |
+164 |             ensures functional == is_functional_set(s@);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+372 |                             return false;
+    |                             ------------ at this exit
+
+note: diagnostics via expansion
+   --> src/Chap05/MappingStEph.rs:164:21
+    |
+164 |             ensures functional == is_functional_set(s@);
+    |                     ^^^^^^^^^^    ^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+%return == is_functional_set(old(s).view())
+|   %return ==>
+|       is_functional_set(old(s).view()) ✘
+|       |   forall |x, y1, y2|
+|       |       old(s).view().contains((x, y1)) && old(s).view().contains((x, y2)) ==>
+|       |           y1 == y2 
+|       +---
+|   is_functional_set(old(s).view()) ==>
+|       %return ✘
++---
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 5s
+Sampled Memory Usage: peak rust_verify RSS: 2374MB, peak z3 RSS: 218MB, min free: 23175MB
+Sampled CPU Usage: rust_verify: 28s, z3 children: 19s

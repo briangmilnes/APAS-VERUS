@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/SetMtEph.rs:701:24
+    |
+701 |                 assert(joined_views == s1_view) by {
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+joined_views =~= s1_view 
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:578:76
+    |
+578 |                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                                            ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:643:76
+    |
+643 |                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                                            ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2616MB, peak z3 RSS: 270MB, min free: 22922MB
+Sampled CPU Usage: rust_verify: 33s, z3 children: 25s

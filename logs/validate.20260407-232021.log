@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: assertion failed
+   --> src/Chap05/MappingStEph.rs:470:21
+    |
+470 |                     (exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y) by {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |x| ) 
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 6s
+Sampled Memory Usage: peak rust_verify RSS: 2578MB, peak z3 RSS: 348MB, min free: 22967MB
+Sampled CPU Usage: rust_verify: 36s, z3 children: 33s

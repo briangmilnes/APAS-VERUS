@@ -1,0 +1,384 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap05/SetStEph.rs:350:29
+    |
+350 |                     implies self@.contains(#[trigger] inner@.1[j]@)
+    |                             ^^^^
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/SetStEph.rs:970:48
+    |
+970 |      impl<T: StT + Hash> std::fmt::Display for SetStEph<T> {
+    |                                                ^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+   --> src/Chap05/SetStEph.rs:970:14
+    |
+970 |      impl<T: StT + Hash> std::fmt::Display for SetStEph<T> {
+    |              ^^^ not found in this scope
+    |
+help: consider importing this trait
+    |
+ 27 +     use crate::Types::Types::StT;
+    |
+
+error[E0404]: expected trait, found derive macro `Hash`
+   --> src/Chap05/SetStEph.rs:970:20
+    |
+970 |      impl<T: StT + Hash> std::fmt::Display for SetStEph<T> {
+    |                    ^^^^ not a trait
+    |
+help: consider importing this trait instead
+    |
+ 27 +     use std::hash::Hash;
+    |
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/SetStEph.rs:976:45
+    |
+976 |     impl<T: StT + Hash> std::fmt::Debug for SetStEph<T> {
+    |                                             ^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+   --> src/Chap05/SetStEph.rs:976:13
+    |
+976 |     impl<T: StT + Hash> std::fmt::Debug for SetStEph<T> {
+    |             ^^^ not found in this scope
+    |
+help: consider importing this trait
+    |
+ 27 +     use crate::Types::Types::StT;
+    |
+
+error[E0404]: expected trait, found derive macro `Hash`
+   --> src/Chap05/SetStEph.rs:976:19
+    |
+976 |     impl<T: StT + Hash> std::fmt::Debug for SetStEph<T> {
+    |                   ^^^^ not a trait
+    |
+help: consider importing this trait instead
+    |
+ 27 +     use std::hash::Hash;
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap05/SetStEph.rs:982:49
+    |
+982 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphIter<'a, T> {
+    |                                                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+   --> src/Chap05/SetStEph.rs:982:17
+    |
+982 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphIter<'a, T> {
+    |                 ^^^ not found in this scope
+    |
+help: consider importing this trait
+    |
+ 27 +     use crate::Types::Types::StT;
+    |
+
+error[E0404]: expected trait, found derive macro `Hash`
+   --> src/Chap05/SetStEph.rs:982:23
+    |
+982 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphIter<'a, T> {
+    |                       ^^^^ not a trait
+    |
+help: consider importing this trait instead
+    |
+ 27 +     use std::hash::Hash;
+    |
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap05/SetStEph.rs:988:51
+    |
+988 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphIter<'a, T> {
+    |                                                   ^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+   --> src/Chap05/SetStEph.rs:988:17
+    |
+988 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphIter<'a, T> {
+    |                 ^^^ not found in this scope
+    |
+help: consider importing this trait
+    |
+ 27 +     use crate::Types::Types::StT;
+    |
+
+error[E0404]: expected trait, found derive macro `Hash`
+   --> src/Chap05/SetStEph.rs:988:23
+    |
+988 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphIter<'a, T> {
+    |                       ^^^^ not a trait
+    |
+help: consider importing this trait instead
+    |
+ 27 +     use std::hash::Hash;
+    |
+
+error[E0425]: cannot find type `SetStEphGhostIterator` in this scope
+   --> src/Chap05/SetStEph.rs:994:49
+    |
+994 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphGhostIterator<'a, T> {
+    |                                                 ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+   --> src/Chap05/SetStEph.rs:994:17
+    |
+994 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphGhostIterator<'a, T> {
+    |                 ^^^ not found in this scope
+    |
+help: consider importing this trait
+    |
+ 27 +     use crate::Types::Types::StT;
+    |
+
+error[E0404]: expected trait, found derive macro `Hash`
+   --> src/Chap05/SetStEph.rs:994:23
+    |
+994 |     impl<'a, T: StT + Hash> std::fmt::Debug for SetStEphGhostIterator<'a, T> {
+    |                       ^^^^ not a trait
+    |
+help: consider importing this trait instead
+    |
+ 27 +     use std::hash::Hash;
+    |
+
+error[E0425]: cannot find type `SetStEphGhostIterator` in this scope
+    --> src/Chap05/SetStEph.rs:1000:51
+     |
+1000 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphGhostIterator<'a, T> {
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0405]: cannot find trait `StT` in this scope
+    --> src/Chap05/SetStEph.rs:1000:17
+     |
+1000 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphGhostIterator<'a, T> {
+     |                 ^^^ not found in this scope
+     |
+help: consider importing this trait
+     |
+  27 +     use crate::Types::Types::StT;
+     |
+
+error[E0404]: expected trait, found derive macro `Hash`
+    --> src/Chap05/SetStEph.rs:1000:23
+     |
+1000 |     impl<'a, T: StT + Hash> std::fmt::Display for SetStEphGhostIterator<'a, T> {
+     |                       ^^^^ not a trait
+     |
+help: consider importing this trait instead
+     |
+  27 +     use std::hash::Hash;
+     |
+
+error[E0425]: cannot find value `group_set_st_eph_lemmas` in module `crate::Chap05::SetStEph::SetStEph`
+  --> src/Chap05/RelationStEph.rs:68:44
+   |
+68 |         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap05::SetStEph::SetStEph`
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap05/RelationStEph.rs:78:20
+   |
+78 |         pub pairs: SetStEph<Pair<A, B>>,
+   |                    ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:111:28
+    |
+111 |         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> (relation: Self)
+    |                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:129:38
+    |
+129 |         fn domain(&self) -> (domain: SetStEph<X>)
+    |                                      ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:135:36
+    |
+135 |         fn range(&self) -> (range: SetStEph<Y>)
+    |                                    ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:181:28
+    |
+181 |         fn from_set(pairs: SetStEph<Pair<X, Y>>) -> RelationStEph<X, Y> { RelationStEph { pairs } }
+    |                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:191:29
+    |
+191 |         fn domain(&self) -> SetStEph<X> {
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/RelationStEph.rs:232:28
+    |
+232 |         fn range(&self) -> SetStEph<Y> {
+    |                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEphIter` in this scope
+   --> src/Chap05/RelationStEph.rs:295:20
+    |
+295 |         pub inner: SetStEphIter<'a, Pair<X, Y>>,
+    |                    ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `group_set_st_eph_lemmas` in module `crate::Chap05::SetStEph::SetStEph`
+  --> src/Chap05/MappingStEph.rs:72:44
+   |
+72 |         crate::Chap05::SetStEph::SetStEph::group_set_st_eph_lemmas,
+   |                                            ^^^^^^^^^^^^^^^^^^^^^^^ not found in `crate::Chap05::SetStEph::SetStEph`
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:156:42
+    |
+156 |         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool)
+    |                                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:162:39
+    |
+162 |         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool)
+    |                                       ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:206:38
+    |
+206 |         fn domain(&self) -> (domain: SetStEph<X>)
+    |                                      ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:213:36
+    |
+213 |         fn range(&self) -> (range: SetStEph<Y>)
+    |                                    ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:306:42
+    |
+306 |         fn is_functional_SetStEph_at(s: &SetStEph<Pair<X, Y>>, p: &Pair<X, Y>) -> (functional: bool) {
+    |                                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:338:39
+    |
+338 |         fn is_functional_SetStEph(s: &SetStEph<Pair<X, Y>>) -> (functional: bool) {
+    |                                       ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:463:29
+    |
+463 |         fn domain(&self) -> SetStEph<X> { self.mapping.domain() }
+    |                             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/MappingStEph.rs:466:28
+    |
+466 |         fn range(&self) -> SetStEph<Y> {
+    |                            ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+  --> src/Chap05/KleeneStPer.rs:53:23
+   |
+53 |         pub alphabet: SetStEph<T>,
+   |                       ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/KleeneStPer.rs:199:26
+    |
+199 |         fn new(alphabet: SetStEph<T>) -> (kleene: Self)
+    |                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/KleeneStPer.rs:220:40
+    |
+220 |         fn alphabet(&self) -> (alpha: &SetStEph<T>)
+    |                                        ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `valid_key_type` in this scope
+   --> src/Chap05/KleeneStPer.rs:232:16
+    |
+232 |             && valid_key_type::<T>()
+    |                ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap05::SetMtEph::SetMtEph::valid_key_type;
+    |
+
+error[E0425]: cannot find function `valid_key_type` in this scope
+   --> src/Chap05/KleeneStPer.rs:236:13
+    |
+236 |             valid_key_type::<T>()
+    |             ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap05::SetMtEph::SetMtEph::valid_key_type;
+    |
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/KleeneStPer.rs:240:26
+    |
+240 |         fn new(alphabet: SetStEph<T>) -> (kleene: Self) {
+    |                          ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `valid_key_type` in this scope
+   --> src/Chap05/KleeneStPer.rs:248:21
+    |
+248 |                     valid_key_type::<T>(),
+    |                     ^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap05::SetMtEph::SetMtEph::valid_key_type;
+    |
+
+error[E0425]: cannot find type `SetStEph` in this scope
+   --> src/Chap05/KleeneStPer.rs:284:40
+    |
+284 |         fn alphabet(&self) -> (alpha: &SetStEph<T>) {
+    |                                        ^^^^^^^^ not found in this scope
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap05/RelationStEph.rs:178:68
+    |
+178 |         fn empty() -> RelationStEph<X, Y> { RelationStEph { pairs: SetStEph::empty() }}
+    |                                                                    ^^^^^^^^ use of undeclared type `SetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap05/RelationStEph.rs:185:36
+    |
+185 |             RelationStEph { pairs: SetStEph::from_vec(v), } }
+    |                                    ^^^^^^^^ use of undeclared type `SetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap05/RelationStEph.rs:192:27
+    |
+192 |             let mut out = SetStEph::<X>::empty();
+    |                           ^^^^^^^^ use of undeclared type `SetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap05/RelationStEph.rs:233:27
+    |
+233 |             let mut out = SetStEph::<Y>::empty();
+    |                           ^^^^^^^^ use of undeclared type `SetStEph`
+
+error[E0433]: failed to resolve: use of undeclared type `SetStEph`
+   --> src/Chap05/MappingStEph.rs:398:25
+    |
+398 |             let pairs = SetStEph::from_vec(v);
+    |                         ^^^^^^^^ use of undeclared type `SetStEph`
+
+error: aborting due to 50 previous errors
+
+Some errors have detailed explanations: E0404, E0405, E0425, E0433.
+For more information about an error, try `rustc --explain E0404`.
+Elapsed: 1s
+Sampled Memory Usage: peak rust_verify RSS: 0MB, peak z3 RSS: 0MB, min free: 24686MB
+Sampled CPU Usage: rust_verify: 0s, z3 children: 0s

@@ -383,17 +383,14 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(1), Span O(1) — empty collection.
         fn empty() -> MappingStEph<X, Y> {
-                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: RelationStEph::empty() };
             proof { 
-               assert(result@.dom() =~= Set::empty());
             }
             result
         }
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|v|), Span O(|v|) — delegates to SetStEph::from_vec + RelationStEph::from_set.
         fn from_vec(v: Vec<Pair<X, Y>>) -> MappingStEph<X, Y> {
-                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let ghost v_seq = v@;
             let pairs = SetStEph::from_vec(v);
             let result = MappingStEph { mapping: RelationStEph::from_set(pairs) };
@@ -401,16 +398,13 @@ verus!
                 // result.mapping@ == pairs@ == v_seq.map(|i, p: Pair<X, Y>| p@).to_set()
                 // is_functional_seq(v_seq) == is_functional_set(v_seq.map(|i, p| p@).to_set())
                 //                          == is_functional_set(result.mapping@)
-                assert(result.mapping@ =~= v_seq.map(|i: int, p: Pair<X, Y>| p@).to_set());
                 // Prove the domain/value ensures for each index.
                 assert forall |i: int| #![trigger v_seq[i]] 0 <= i < v_seq.len() implies
                     result@.dom().contains(v_seq[i]@.0) && result@[v_seq[i]@.0] == v_seq[i]@.1 by {
                     // v_seq[i]@ is in the mapped-to-set.
                     lemma_seq_index_in_map_to_set(v_seq, i);
                     let pair_view = v_seq[i]@;
-                    assert(result.mapping@.contains(pair_view));
                     // So exists y such that (x, y) in mapping@ — domain containment.
-                    assert(result@.dom().contains(pair_view.0));
                     // The chosen y must equal pair_view.1 by functionality.
                     let chosen_y = choose |y: Y::V| result.mapping@.contains((pair_view.0, y));
                     // is_functional_set gives y uniqueness.
@@ -421,7 +415,6 @@ verus!
 
         /// - Alg Analysis: Code review (Claude Opus 4.6): Work O(|r|), Span O(|r|) — clones the relation.
         fn from_relation(r: &RelationStEph<X, Y>) -> MappingStEph<X, Y> {
-                      assert(obeys_feq_full_trigger::<Pair<X, Y>>());
             let result = MappingStEph { mapping: r.clone() };
             proof {
                 // result.mapping@ == r@ (from clone ensures).
@@ -429,8 +422,6 @@ verus!
                 // Prove domain/value ensures.
                 assert forall |x: X::V, y: Y::V| r@.contains((x, y)) implies
                     result@.dom().contains(x) && result@[x] == y by {
-                    assert(result.mapping@.contains((x, y)));
-                    assert(result@.dom().contains(x));
                     // By functionality, the chosen y' must equal y.
                     let chosen = choose |y2: Y::V| result.mapping@.contains((x, y2));
                 }
@@ -450,7 +441,6 @@ verus!
                     implies p1 == p2 by {
                     // p1.0 == p2.0. By functionality, p1.1 == p2.1. So p1 == p2.
                 }
-                assert(vstd::relations::injective_on(proj, s));
                 // s.map(proj) == self@.dom()
                 assert(s.map(proj) =~= self@.dom());
                 vstd::set_lib::lemma_map_size(s, self@.dom(), proj);
@@ -636,8 +626,6 @@ verus!
             let r = self.mapping == other.mapping;
             proof {
                 if r {
-                    assert(self.mapping@ == other.mapping@);
-                    assert(self@ =~= other@);
                 }
             }
             // Verus BUG is preventing this as of Version: 0.2026.02.05.80fb5a4.

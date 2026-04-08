@@ -1,0 +1,58 @@
+Mode: isolate
+Isolate: including Chap05 Chap02
+error: postcondition not satisfied
+   --> src/Chap05/SetMtEph.rs:259:17
+    |
+259 |                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+716 |             product
+    |             ------- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap05/SetMtEph.rs:259:45
+    |
+259 |                 forall |av: T::V, bv: U::V| product@.contains((av, bv)) <==> (self@.contains(av) && s2@.contains(bv));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^       ^^^^^^^^^^^^^^^^^^    ^^^^^^^^^^^^^^^^
+
+note: 
+
+spec_setmteph_wf_generic(%return) ✔
+forall |av, bv|
+    %return.view().contains((av, bv)) == (old(self).view().contains(av) && old(s2).view().contains(bv)) ✘
+    |   %return.view().contains((av, bv)) ==>
+    |       old(self).view().contains(av) ✘
+    |           function is uninterpreted
+    |       old(s2).view().contains(bv) ✘
+    |           function is uninterpreted
+    |   old(self).view().contains(av) && old(s2).view().contains(bv) ==>
+    |       %return.view().contains((av, bv)) ✘
+    |           function is uninterpreted
+    +---
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:578:76
+    |
+578 |                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                                            ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+note: recommendation not met
+   --> src/Chap05/SetMtEph.rs:643:76
+    |
+643 |                     forall |i: int, ret: SetMtEph<Pair<T, U>>| (#[trigger] handles@[i].predicate(ret) && 0 <= i < handles@.len()) ==> (
+    |                                                                            ^^^^^^^^^^^
+    |
+   --> vstd/seq.rs:62:12
+    |
+    = note: recommendation not met
+
+verification results:: 826 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 1363MB, peak z3 RSS: 0MB, min free: 24234MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 5s
