@@ -64,6 +64,12 @@ pub mod BSTTreapStEph {
     use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::lemma_joined_right_gt_lk as lemma_joined_right_gt_lk_st;
     #[cfg(verus_keep_ghost)]
     use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::lemma_joined_left_lt_rk as lemma_joined_left_lt_rk_st;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::lemma_split_result_subset as lemma_split_result_subset_st;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::lemma_union_part_subset as lemma_union_part_subset_st;
+    #[cfg(verus_keep_ghost)]
+    use crate::Chap39::BSTTreapSpecsAndLemmas::BSTTreapSpecsAndLemmas::lemma_halves_cross_ordered as lemma_halves_cross_ordered_st;
     use crate::Types::Types::*;
     use crate::vstdplus::accept::accept;
     use crate::vstdplus::total_order::total_order::IsLtTransitive;
@@ -2105,16 +2111,7 @@ pub mod BSTTreapStEph {
                         let ghost lrv = lr@;
                         // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert forall|x| lrv.contains(x) implies lv.contains(x) by {
-                                // Veracity: NEEDED assert
-                                assert(llv.union(lrv).contains(x));
-                            };
-                            // Veracity: NEEDED assert
-                            assert forall|x| llv.contains(x) implies lv.contains(x) by {
-                                // Veracity: NEEDED assert
-                                assert(llv.union(lrv).contains(x));
-                            };
+                            lemma_split_result_subset_st(llv, lrv, lv, key@);
                             vstd::set_lib::lemma_len_subset(lrv, lv);
                         }
                         let rebuilt = join_with_priority_st(lr, root_key, root_pri, right);
@@ -2161,16 +2158,7 @@ pub mod BSTTreapStEph {
                         let ghost rrv = rr@;
                         // Veracity: NEEDED proof block
                         proof {
-                            // Veracity: NEEDED assert
-                            assert forall|x| rlv.contains(x) implies rv.contains(x) by {
-                                // Veracity: NEEDED assert
-                                assert(rlv.union(rrv).contains(x));
-                            };
-                            // Veracity: NEEDED assert
-                            assert forall|x| rrv.contains(x) implies rv.contains(x) by {
-                                // Veracity: NEEDED assert
-                                assert(rlv.union(rrv).contains(x));
-                            };
+                            lemma_split_result_subset_st(rlv, rrv, rv, key@);
                             vstd::set_lib::lemma_len_subset(rlv, rv);
                         }
                         let rebuilt = join_with_priority_st(left, root_key, root_pri, rl);
@@ -2297,22 +2285,8 @@ pub mod BSTTreapStEph {
                 let ghost srv = split_right@;
                 // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
-                    assert(slv.subset_of(lv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] slv.contains(x) implies lv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(slv.union(srv).contains(x));
-                        };
-                    };
-                    // Veracity: NEEDED assert
-                    assert(srv.subset_of(lv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] srv.contains(x) implies lv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(slv.union(srv).contains(x));
-                        };
-                    };
+                    // split ensures: slv.union(srv) =~= lv.remove(rkv), and rkv ∉ lv.
+                    lemma_split_result_subset_st(slv, srv, lv, rkv);
                     vstd::set_lib::lemma_len_subset(slv, lv);
                     vstd::set_lib::lemma_len_subset(srv, lv);
                     // Veracity: NEEDED assert
@@ -2379,22 +2353,7 @@ pub mod BSTTreapStEph {
                 let ghost brv = br@;
                 // Veracity: NEEDED proof block
                 proof {
-                    // Veracity: NEEDED assert
-                    assert(blv.subset_of(bv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] blv.contains(x) implies bv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
-                    // Veracity: NEEDED assert
-                    assert(brv.subset_of(bv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] brv.contains(x) implies bv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
+                    lemma_split_result_subset_st(blv, brv, bv, akv);
                     vstd::set_lib::lemma_len_subset(blv, bv);
                     vstd::set_lib::lemma_len_subset(brv, bv);
                 }
@@ -2486,6 +2445,7 @@ pub mod BSTTreapStEph {
                     lemma_wf_view_all_inhabited_st::<T>(&ar.root);
                     lemma_wf_view_all_inhabited_st::<T>(&bl.root);
                     lemma_wf_view_all_inhabited_st::<T>(&br.root);
+                    lemma_split_result_subset_st(blv, brv, bv, akv);
                 }
                 let left_res = intersect_inner_st(al, bl);
                 let right_res = intersect_inner_st(ar, br);
@@ -2525,15 +2485,7 @@ pub mod BSTTreapStEph {
                             }
                         }
                     };
-                    // Veracity: NEEDED assert
-                    assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
-                        if lrv.contains(s@) && rrv.contains(o@) {
-// Veracity: TESTING assert                             assert(o.cmp_spec(&ak) == Greater);
-                            lemma_cmp_antisymmetry_st(o, ak);
-                            lemma_cmp_transitivity_st(s, ak, o);
-                        }
-                    };
+                    lemma_halves_cross_ordered_st(lrv, rrv, ak);
                     vstd::set_lib::lemma_len_subset(lrv, alv);
                     vstd::set_lib::lemma_len_subset(rrv, arv);
                     vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
@@ -2594,26 +2546,7 @@ pub mod BSTTreapStEph {
                     lemma_wf_view_all_inhabited_st::<T>(&ar.root);
                     lemma_wf_view_all_inhabited_st::<T>(&bl.root);
                     lemma_wf_view_all_inhabited_st::<T>(&br.root);
-                    // Veracity: NEEDED assert
-                    assert(blv.subset_of(bv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] blv.contains(x) implies bv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(blv.union(brv).contains(x));
-                            // Veracity: NEEDED assert
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
-                    // Veracity: NEEDED assert
-                    assert(brv.subset_of(bv)) by {
-                        // Veracity: NEEDED assert
-                        assert forall|x: T::V| #[trigger] brv.contains(x) implies bv.contains(x) by {
-                            // Veracity: NEEDED assert
-                            assert(blv.union(brv).contains(x));
-                            // Veracity: NEEDED assert
-                            assert(bv.remove(akv).contains(x));
-                        };
-                    };
+                    lemma_split_result_subset_st(blv, brv, bv, akv);
                     // Veracity: NEEDED assert
                     assert forall|t: T| #[trigger] alv.contains(t@) implies t.cmp_spec(&ak) == Less by {
                         // Veracity: NEEDED assert
@@ -2745,18 +2678,7 @@ pub mod BSTTreapStEph {
                     assert(!rrv.contains(akv));
                     // Veracity: NEEDED assert
                     assert(lrv.disjoint(rrv));
-                    // Veracity: NEEDED assert
-                    assert forall|s: T, o: T| #![trigger lrv.contains(s@), rrv.contains(o@)]
-                        lrv.contains(s@) && rrv.contains(o@) implies s.cmp_spec(&o) == Less by {
-                        if lrv.contains(s@) && rrv.contains(o@) {
-                            // Veracity: NEEDED assert
-                            assert(s.cmp_spec(&ak) == Less);
-                            // Veracity: NEEDED assert
-                            assert(o.cmp_spec(&ak) == Greater);
-                            lemma_cmp_antisymmetry_st(o, ak);
-                            lemma_cmp_transitivity_st(s, ak, o);
-                        }
-                    };
+                    lemma_halves_cross_ordered_st(lrv, rrv, ak);
                     vstd::set_lib::lemma_len_subset(lrv, alv);
                     vstd::set_lib::lemma_len_subset(rrv, arv);
                     vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
@@ -2849,18 +2771,7 @@ pub mod BSTTreapStEph {
                     assert(lv.disjoint(rv));
                     // Veracity: NEEDED assert
                     assert(left_filtered@.disjoint(right_filtered@));
-                    // Veracity: NEEDED assert
-                    assert forall|s: T, o: T| #![trigger left_filtered@.contains(s@), right_filtered@.contains(o@)]
-                        left_filtered@.contains(s@) && right_filtered@.contains(o@) implies s.cmp_spec(&o) == Less by {
-                        if left_filtered@.contains(s@) && right_filtered@.contains(o@) {
-                            // Veracity: NEEDED assert
-                            assert(s.cmp_spec(&key) == Less);
-                            // Veracity: NEEDED assert
-                            assert(o.cmp_spec(&key) == Greater);
-                            lemma_cmp_antisymmetry_st(o, key);
-                            lemma_cmp_transitivity_st(s, key, o);
-                        }
-                    };
+                    lemma_halves_cross_ordered_st(left_filtered@, right_filtered@, key);
                     vstd::set_lib::lemma_len_subset(left_filtered@, lv);
                     vstd::set_lib::lemma_len_subset(right_filtered@, rv);
                     vstd::set_lib::lemma_set_disjoint_lens(lv, rv);

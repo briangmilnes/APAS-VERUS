@@ -1,0 +1,70 @@
+Mode: isolate
+Isolate: including Chap39 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2114:29
+     |
+2114 | ...                   lemma_union_part_subset_st(llv, lrv, lv);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap39/BSTTreapSpecsAndLemmas.rs:207:18
+     |
+ 207 |         requires a.union(b) =~= whole,
+     |                  -------------------- failed precondition
+
+error: precondition not satisfied
+    --> src/Chap39/BSTTreapStEph.rs:2161:29
+     |
+2161 | ...                   lemma_union_part_subset_st(rlv, rrv, rv);
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap39/BSTTreapSpecsAndLemmas.rs:207:18
+     |
+ 207 |         requires a.union(b) =~= whole,
+     |                  -------------------- failed precondition
+
+note: diagnostics via expansion
+
+note: 
+
+llv.union(lrv) =~= lv 
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2457:38
+     |
+2457 |                       assert forall|x| #[trigger] av.intersect(bv).contains(x) <==>
+     |  ______________________________________^
+2458 | |                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
+2459 | |                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
+     | |_______________________________________________________________________________________________^ assertion failed
+
+error: assertion failed
+    --> src/Chap39/BSTTreapStEph.rs:2470:40
+     |
+2470 | ...                   assert(brv.contains(x)) by {
+     |                              ^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap39/BSTTreapStEph.rs:2457:38
+     |
+2457 |                       assert forall|x| #[trigger] av.intersect(bv).contains(x) <==>
+     |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2458 | /                         lrv.union(rrv).union(if found { Set::<<T as View>::V>::empty().insert(akv) }
+2459 | |                                            else { Set::<<T as View>::V>::empty() }).contains(x) by {
+     | |_______________________________________________________________________________________________^
+
+note: 
+
+av.intersect(bv).contains(x) == lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x)
+|   av.intersect(bv).contains(x) ==>
+|       lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x) ✘
+|           function is uninterpreted
+|   lrv.union(rrv).union(if found { empty().insert(akv) } else { empty() }).contains(x) ==>
+|       av.intersect(bv).contains(x) ✘
++---
+
+verification results:: 1293 verified, 2 errors
+error: aborting due to 4 previous errors
+
+Elapsed: 15s
+Sampled Memory Usage: peak rust_verify RSS: 2266MB, peak z3 RSS: 386MB, min free: 21481MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 41s

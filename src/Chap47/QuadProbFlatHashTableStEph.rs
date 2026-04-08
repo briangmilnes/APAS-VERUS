@@ -98,17 +98,6 @@ pub mod QuadProbFlatHashTableStEph {
             })
     }
 
-    /// Counts the number of Empty entries in a flat hash table sequence.
-    pub open spec fn spec_count_empties<Key, Value>(
-        table: Seq<FlatEntry<Key, Value>>,
-    ) -> int
-        decreases table.len(),
-    {
-        if table.len() == 0 { 0 }
-        else if table.last() is Empty { spec_count_empties(table.drop_last()) + 1 }
-        else { spec_count_empties(table.drop_last()) }
-    }
-
     //		Section 7. proof fns/broadcast groups
 
 
@@ -426,65 +415,6 @@ pub mod QuadProbFlatHashTableStEph {
     }
 
     /// An all-Empty sequence has empties count equal to its length.
-    pub proof fn lemma_all_empties_count<Key, Value>(table: Seq<FlatEntry<Key, Value>>)
-        requires forall |j: int| 0 <= j < table.len() ==> (#[trigger] table[j]) is Empty,
-        ensures spec_count_empties(table) == table.len(),
-        decreases table.len(),
-    {
-        if table.len() > 0 {
-            lemma_all_empties_count::<Key, Value>(table.drop_last());
-        }
-    }
-
-    /// If empties count > 0, there exists an Empty slot.
-    pub proof fn lemma_empties_positive_implies_exists_empty<Key, Value>(
-        table: Seq<FlatEntry<Key, Value>>,
-    )
-        requires spec_count_empties(table) > 0,
-        ensures exists |j: int| 0 <= j < table.len() && (#[trigger] table[j]) is Empty,
-        decreases table.len(),
-    {
-        if table.last() is Empty {
-        } else {
-            lemma_empties_positive_implies_exists_empty::<Key, Value>(table.drop_last());
-            let j = choose |j: int| 0 <= j < table.drop_last().len()
-                && (#[trigger] table.drop_last()[j]) is Empty;
-        }
-    }
-
-    /// Changing one slot decreases empties by at most 1.
-    pub proof fn lemma_one_slot_change_empties<Key, Value>(
-        old_table: Seq<FlatEntry<Key, Value>>,
-        new_table: Seq<FlatEntry<Key, Value>>,
-        s: int,
-    )
-        requires
-            old_table.len() == new_table.len(),
-            0 <= s < old_table.len(),
-            forall |j: int| 0 <= j < old_table.len() && j != s
-                ==> #[trigger] new_table[j] == old_table[j],
-        ensures
-            spec_count_empties(new_table) >= spec_count_empties(old_table) - 1,
-        decreases old_table.len(),
-    {
-        if old_table.len() == 1 {
-            // Veracity: NEEDED assert
-            assert(spec_count_empties::<Key, Value>(old_table.drop_last()) == 0);
-            // Veracity: NEEDED assert
-            assert(spec_count_empties::<Key, Value>(new_table.drop_last()) == 0);
-        } else if s == old_table.len() - 1 {
-            // Veracity: NEEDED assert
-            assert(new_table.drop_last() =~= old_table.drop_last());
-        } else {
-            // Veracity: NEEDED assert
-            assert forall |j: int| 0 <= j < old_table.drop_last().len() && j != s
-                implies #[trigger] new_table.drop_last()[j] == old_table.drop_last()[j] by {
-            }
-            lemma_one_slot_change_empties::<Key, Value>(
-                old_table.drop_last(), new_table.drop_last(), s);
-        }
-    }
-
     //		Section 9. impls
 
 
