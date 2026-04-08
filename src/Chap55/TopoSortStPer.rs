@@ -362,38 +362,28 @@ pub mod TopoSortStPer {
                     ==> spec_reachable_per(graph, vertex as int, #[trigger] finish_order@[k] as int)),
         decreases spec_num_false(old(visited)@),
     {
-        assert(vertex < visited.len());
         if visited[vertex] {
             return;
         }
-        assert(!old(visited)@[vertex as int]);
         visited.set(vertex, true);
         proof {
             lemma_set_true_decreases_num_false(old(visited)@, vertex as int);
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
-        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(spec_num_false(visited@) == spec_num_false(old(visited)@) - 1);
-        assert(visited@.len() == graph@.len());
 
         // Monotonicity.
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
-        assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
-        assert(neighbors_len as int == neighbors.spec_len());
 
         // Bridge neighbors to graph view.
         assert(*neighbors == graph.spec_index(vertex as int));
         proof { lemma_graph_per_view_bridge(graph, neighbors, vertex as int); }
         assert(neighbors@ =~= graph@[vertex as int]);
-
-        // After set: visited@[vertex as int] is true.
-        assert(visited@[vertex as int]);
 
         // Establish neighbors_explored at loop entry.
         proof {
@@ -482,9 +472,6 @@ pub mod TopoSortStPer {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_per_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
             let ghost fo_pre = finish_order@;
             let ghost vis_pre = visited@;
             assert(spec_has_edge_per(graph, vertex as int, neighbor as int)) by {
@@ -627,8 +614,6 @@ pub mod TopoSortStPer {
                 old(finish_order)@.len() + spec_num_false(old(visited)@),
         decreases spec_num_false(old(visited)@),
     {
-        assert(vertex < rec_stack.len());
-        assert(vertex < visited.len());
         if rec_stack[vertex] {
             return false;
         }
@@ -644,19 +629,14 @@ pub mod TopoSortStPer {
             lemma_set_true_num_false_eq(old(visited)@, vertex as int);
         }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
-        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(visited@.len() == graph@.len());
-        assert(rec_stack@.len() == graph@.len());
 
         // Monotonicity.
         assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
             implies visited@[j] by {};
 
-        assert((vertex as int) < graph@.len());
         assert(vertex < graph.spec_len());
         let neighbors = graph.nth(vertex);
         let neighbors_len = neighbors.length();
-        assert(neighbors_len as int == neighbors.spec_len());
 
         // Bridge neighbors to graph view.
         assert(*neighbors == graph.spec_index(vertex as int));
@@ -686,9 +666,6 @@ pub mod TopoSortStPer {
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_per_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
             if !dfs_finish_order_cycle_detect(graph, visited, rec_stack, finish_order, neighbor) {
                 return false;
             }

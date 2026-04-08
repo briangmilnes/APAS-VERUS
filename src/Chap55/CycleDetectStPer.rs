@@ -331,26 +331,17 @@ broadcast use vstd::seq::group_seq_axioms;
         decreases spec_num_false(old(visited)@),
     {
         if ancestors[vertex] {
-            proof {
-                assert(old(ancestors)@[vertex as int]);
-                assert(spec_in_path(dfs_path, vertex as int));
-                lemma_cycle_not_dag_per(graph, dfs_path, vertex as int);
-            }
+            proof { lemma_cycle_not_dag_per(graph, dfs_path, vertex as int); }
             return true;
         }
         if visited[vertex] {
             proof {
-                assert(old(visited)@[vertex as int]);
-                assert(!old(ancestors)@[vertex as int]);
-                assert(ord.contains_key(vertex as int));
                 assert(spec_is_valid_ord_per(graph, visited@, ancestors@, ord, next_time, ord));
             }
             return false;
         }
 
         assert(!old(visited)@[vertex as int]);
-        assert(!old(ancestors)@[vertex as int]);
-        assert(!spec_in_path(dfs_path, vertex as int));
         visited.set(vertex, true);
         ancestors.set(vertex, true);
         proof {
@@ -359,12 +350,6 @@ broadcast use vstd::seq::group_seq_axioms;
         }
         assert(visited@ =~= old(visited)@.update(vertex as int, true));
         assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
-        assert(spec_num_false(visited@) < spec_num_false(old(visited)@));
-        assert(visited@.len() == graph@.len());
-        assert(ancestors@.len() == graph@.len());
-
-        assert forall|j: int| 0 <= j < visited@.len() && #[trigger] old(visited)@[j]
-            implies visited@[j] by {};
 
         let ghost ext_path = dfs_path.push(vertex as int);
 
@@ -464,20 +449,11 @@ broadcast use vstd::seq::group_seq_axioms;
             let neighbor = *neighbors.nth(i);
             proof { lemma_usize_per_view_eq_spec_index(neighbors); }
             assert(neighbor == neighbors@[i as int]);
-            assert(neighbor == graph@[vertex as int][i as int]);
-            assert(graph@[vertex as int][i as int] < graph@.len());
-            assert(neighbor < graph@.len());
-            proof {
-                assert(spec_has_edge_per(graph, vertex as int, neighbor as int));
-                assert(ext_path.len() == dfs_path.len() + 1);
-                assert(ext_path[ext_path.len() - 1] == vertex as int);
-            }
             let ghost visited_pre_call = visited@;
             if dfs_check_cycle(graph, visited, ancestors, neighbor, Ghost(ext_path), Ghost(cur_ord), Ghost(cur_next)) {
                 ancestors.set(vertex, false);
                 return true;
             }
-            assert(ancestors@ =~= old(ancestors)@.update(vertex as int, true));
             assert(visited@[neighbor as int]);
             proof {
                 // neighbor is not vertex (self-loop would cause back-edge detection).
@@ -514,8 +490,6 @@ broadcast use vstd::seq::group_seq_axioms;
                 cur_ord = new_ord;
                 cur_next = new_next;
             }
-            assert(visited@[graph@[vertex as int][i as int] as int]);
-            assert(visited@[vertex as int]);
             // Monotonicity for previously processed neighbors.
             proof {
                 assert forall|k: int| 0 <= k < i as int
