@@ -158,7 +158,6 @@ pub mod ETSPStEph {
         let j = choose|j: int| #![trigger sub[j]] 0 <= j < sub.len() && spec_point_eq(p, sub[j]);
         assert(spec_point_in_seq(sub[j], sup));
         let k = choose|k: int| #![trigger sup[k]] 0 <= k < sup.len() && spec_point_eq(sub[j], sup[k]);
-        assert(spec_point_eq(p, sup[k]));
     }
 
     /// An edge from a sub-tour whose points are a subset of the master points
@@ -220,101 +219,57 @@ pub mod ETSPStEph {
 
             if i + 1 < n {
                 vstd::arithmetic::div_mod::lemma_small_mod((i + 1) as nat, n as nat);
-                assert(next_i == i + 1);
             } else {
                 vstd::arithmetic::div_mod::lemma_mod_self_0(n);
-                assert(next_i == 0);
             }
 
             if i < ln_i - 1 {
                 // Left-tour segment.
                 let k = i;
-                assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
                 let li = (best_li + 1 + k) % ln_i;
                 // Selectively reveal lt's cycle at index li (no matching loop).
                 lemma_next_edge_from_eq(lt, li);
-                assert(spec_point_eq(lt[li].to, lt[((li + 1) % ln_i)].from));
-                assert(combined[i] == lt[li]);
                 if i < ln_i - 2 {
                     lemma_small_mod(1, ln_i as nat);
                     lemma_add_mod_noop(best_li + 1 + i, 1, ln_i);
-                    assert(combined[(i + 1)] == lt[((best_li + 1 + (i + 1)) % ln_i)]);
-                    assert((best_li + 1 + (i + 1)) % ln_i == (li + 1) % ln_i);
-                    assert(combined[next_i] == lt[((li + 1) % ln_i)]);
                 } else {
                     assert(i == ln_i - 2);
-                    assert(next_i == ln_i - 1);
-                    assert(combined[next_i] == (Edge { from: el_from, to: er_to }));
-                    assert(el_from == lt[best_li].from);
                     lemma_small_mod(1, ln_i as nat);
                     lemma_add_mod_noop(best_li + ln_i - 1, 1, ln_i);
                     lemma_mod_multiples_vanish(1, best_li, ln_i);
                     lemma_small_mod(best_li as nat, ln_i as nat);
                     assert((li + 1) % ln_i == best_li);
-                    assert(spec_point_eq(lt[li].to, lt[best_li].from));
                 }
-                assert(combined[i].to == lt[li].to);
-                assert(combined[next_i].from == lt[((li + 1) % ln_i)].from);
-                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             } else if i == ln_i - 1 {
                 // Bridge: left -> right.
-                assert(combined[i].to == er_to);
-                assert(er_to == rt[best_ri].to);
                 // Selectively reveal rt's cycle at best_ri.
                 lemma_next_edge_from_eq(rt, best_ri);
-                assert(spec_point_eq(rt[best_ri].to, rt[((best_ri + 1) % rn_i)].from));
-                assert(next_i == ln_i);
                 let m: int = 0;
-                assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
                 assert(combined[next_i] == combined[(ln_i + 0)]);
-                assert(combined[next_i].from == rt[((best_ri + 1) % rn_i)].from);
-                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             } else if i < ln_i + rn_i - 1 {
                 // Right-tour segment.
                 let m = i - ln_i;
-                assert(combined[(ln_i + m)] == rt[((best_ri + 1 + m) % rn_i)]);
                 let ri = (best_ri + 1 + m) % rn_i;
                 // Selectively reveal rt's cycle at ri.
                 lemma_next_edge_from_eq(rt, ri);
-                assert(spec_point_eq(rt[ri].to, rt[((ri + 1) % rn_i)].from));
                 assert(combined[(ln_i + m)] == rt[ri]);
                 if m < rn_i - 2 {
                     let m1 = m + 1;
-                    assert(0 <= m1 && m1 < rn_i - 1);
                     assert(combined[(ln_i + m1)] == rt[((best_ri + 1 + m1) % rn_i)]);
                     lemma_small_mod(1, rn_i as nat);
                     lemma_add_mod_noop(best_ri + 1 + m, 1, rn_i);
-                    assert((best_ri + 1 + m1) % rn_i == (ri + 1) % rn_i);
-                    assert(combined[next_i] == rt[((ri + 1) % rn_i)]);
                 } else {
-                    assert(m == rn_i - 2);
-                    assert(next_i == ln_i + rn_i - 1);
-                    assert(combined[next_i] == (Edge { from: er_from, to: el_to }));
-                    assert(er_from == rt[best_ri].from);
                     lemma_small_mod(1, rn_i as nat);
                     lemma_add_mod_noop(best_ri + rn_i - 1, 1, rn_i);
                     lemma_mod_multiples_vanish(1, best_ri, rn_i);
                     lemma_small_mod(best_ri as nat, rn_i as nat);
-                    assert((ri + 1) % rn_i == best_ri);
-                    assert(spec_point_eq(rt[ri].to, rt[best_ri].from));
                 }
-                assert(combined[i].to == rt[ri].to);
-                assert(combined[next_i].from == rt[((ri + 1) % rn_i)].from);
-                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             } else {
                 // Bridge: right -> left (wraps to index 0).
-                assert(i == ln_i + rn_i - 1);
-                assert(combined[i].to == el_to);
-                assert(el_to == lt[best_li].to);
                 // Selectively reveal lt's cycle at best_li.
                 lemma_next_edge_from_eq(lt, best_li);
-                assert(spec_point_eq(lt[best_li].to, lt[((best_li + 1) % ln_i)].from));
-                assert(next_i == 0);
                 let k: int = 0;
-                assert(combined[k] == lt[((best_li + 1 + k) % ln_i)]);
-                assert(combined[next_i] == combined[0]);
                 assert(combined[next_i].from == lt[((best_li + 1) % ln_i)].from);
-                assert(spec_point_eq(combined[i].to, combined[next_i].from));
             }
         }
     }
@@ -361,12 +316,6 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[1], to: points[0] });
             proof {
                 reveal(spec_next_edge_from);
-                assert(spec_point_eq(tour@[0].from, points@[0]));
-                assert(spec_point_eq(tour@[0].to, points@[1]));
-                assert(spec_point_eq(tour@[1].from, points@[1]));
-                assert(spec_point_eq(tour@[1].to, points@[0]));
-                assert(spec_point_eq(tour@[0].to, tour@[1].from));
-                assert(spec_point_eq(tour@[1].to, tour@[0].from));
             }
             return tour;
         }
@@ -379,24 +328,13 @@ pub mod ETSPStEph {
             tour.push(Edge { from: points[2], to: points[0] });
             proof {
                 reveal(spec_next_edge_from);
-                assert(spec_point_eq(tour@[0].from, points@[0]));
-                assert(spec_point_eq(tour@[0].to, points@[1]));
-                assert(spec_point_eq(tour@[1].from, points@[1]));
-                assert(spec_point_eq(tour@[1].to, points@[2]));
-                assert(spec_point_eq(tour@[2].from, points@[2]));
-                assert(spec_point_eq(tour@[2].to, points@[0]));
-                assert(spec_point_eq(tour@[0].to, tour@[1].from));
-                assert(spec_point_eq(tour@[1].to, tour@[2].from));
-                assert(spec_point_eq(tour@[2].to, tour@[0].from));
                 // Conjunction flakiness fix: assert each conjunct then the whole.
                 let c1 = tour@.len() == points@.len();
                 let c2 = spec_sources_valid(tour@, points@);
                 let c3 = spec_targets_valid(tour@, points@);
                 let c4 = spec_edges_form_cycle(tour@);
                 assert(c1);
-                assert(c2);
-                assert(c3);
-                assert(c4);
+// Veracity: TESTING assert                 assert(c4);
                 assert(spec_etsp(tour@, points@) == (c1 && c2 && c3 && c4));
             }
             return tour;
