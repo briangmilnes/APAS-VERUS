@@ -182,5 +182,61 @@ pub mod BSTTreapSpecsAndLemmas {
         }
     }
 
+    /// After split, both result halves are subsets of the original set.
+    /// Given split produces left.union(right) =~= whole.remove(key),
+    /// proves left ⊆ whole and right ⊆ whole.
+    pub proof fn lemma_split_result_subset<V>(
+        left_part: Set<V>, right_part: Set<V>, whole: Set<V>, key: V,
+    )
+        requires
+            left_part.union(right_part) =~= whole.remove(key),
+        ensures
+            left_part.subset_of(whole),
+            right_part.subset_of(whole),
+    {
+        assert forall|x: V| #[trigger] left_part.contains(x) implies whole.contains(x) by {
+            assert(whole.remove(key).contains(x));
+        };
+        assert forall|x: V| #[trigger] right_part.contains(x) implies whole.contains(x) by {
+            assert(whole.remove(key).contains(x));
+        };
+    }
+
+    /// Both halves of a union are subsets of the whole.
+    pub proof fn lemma_union_part_subset<V>(a: Set<V>, b: Set<V>, whole: Set<V>)
+        requires a.union(b) =~= whole,
+        ensures a.subset_of(whole), b.subset_of(whole),
+    {
+        assert forall|x: V| #[trigger] a.contains(x) implies whole.contains(x) by {
+            assert(a.union(b).contains(x));
+        };
+        assert forall|x: V| #[trigger] b.contains(x) implies whole.contains(x) by {
+            assert(a.union(b).contains(x));
+        };
+    }
+
+    /// Given two sets separated by a key (left < key < right),
+    /// proves every element of left is less than every element of right.
+    pub proof fn lemma_halves_cross_ordered<T: View + Ord>(
+        left: Set<T::V>, right: Set<T::V>, key: T,
+    )
+        requires
+            vstd::laws_cmp::obeys_cmp_spec::<T>(),
+            view_ord_consistent::<T>(),
+            forall|t: T| (#[trigger] left.contains(t@)) ==> t.cmp_spec(&key) == Less,
+            forall|t: T| (#[trigger] right.contains(t@)) ==> t.cmp_spec(&key) == Greater,
+        ensures
+            forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
+                left.contains(s@) && right.contains(o@) ==> s.cmp_spec(&o) == Less,
+    {
+        assert forall|s: T, o: T| #![trigger left.contains(s@), right.contains(o@)]
+            left.contains(s@) && right.contains(o@) implies s.cmp_spec(&o) == Less by {
+            if left.contains(s@) && right.contains(o@) {
+                lemma_cmp_antisymmetry(o, key);
+                lemma_cmp_transitivity(s, key, o);
+            }
+        };
+    }
+
     } // verus!
 } // pub mod BSTTreapSpecsAndLemmas
