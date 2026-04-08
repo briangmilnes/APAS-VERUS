@@ -1,0 +1,505 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02 Chap52
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:132:13
+    |
+132 |             spec_keys_no_dups(entries),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `spec_entries_to_map` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:135:17
+    |
+135 |                 spec_entries_to_map(entries.subrange(0, n)))
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_entries_to_map;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:138:9
+    |
+138 |         lemma_entries_to_map_finite::<VV, Set<VV>>(entries.subrange(0, n));
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:145:20
+    |
+145 |             assert(spec_keys_no_dups::<VV, Set<VV>>(sub_n)) by {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:153:20
+    |
+153 |             assert(spec_keys_no_dups::<VV, Set<VV>>(sub_prev)) by {
+    |                    ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `spec_entries_to_map` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:166:30
+    |
+166 |             let prefix_map = spec_entries_to_map(sub_prev);
+    |                              ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_entries_to_map;
+    |
+
+error[E0425]: cannot find function `spec_entries_to_map` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:167:28
+    |
+167 |             let full_map = spec_entries_to_map(sub_n);
+    |                            ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_entries_to_map;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_no_key` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:181:13
+    |
+181 |             lemma_entries_to_map_no_key::<VV, Set<VV>>(sub_prev, key);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_no_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:188:13
+    |
+188 |             lemma_entries_to_map_finite::<VV, Set<VV>>(sub_n);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_contains_key` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:189:13
+    |
+189 |             lemma_entries_to_map_contains_key::<VV, Set<VV>>(sub_n, n - 1);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_contains_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_get` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:193:13
+    |
+193 |             lemma_entries_to_map_get::<VV, Set<VV>>(sub_n, n - 1);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_get;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:196:13
+    |
+196 |             lemma_entries_to_map_finite::<VV, Set<VV>>(sub_prev);
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:323:16
+    |
+323 |             && spec_keys_no_dups::<V::V, Set<V::V>>(self.adj.entries@)
+    |                ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_len` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:382:17
+    |
+382 |                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_len;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_contains_key` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:405:21
+    |
+405 |                     lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_contains_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_get` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:410:21
+    |
+410 |                     lemma_entries_to_map_get::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_get;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_len` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:426:17
+    |
+426 |                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_len;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_key_in_seq` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:472:21
+    |
+472 |                     lemma_entries_to_map_key_in_seq::<V::V, Set<V::V>>(self.adj.entries@, k);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_key_in_seq;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_contains_key` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:481:21
+    |
+481 |                     lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(self.adj.entries@, j);
+    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_contains_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStEph.rs:770:25
+    |
+770 |                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 24 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error[E0425]: cannot find function `spec_entries_to_map` in this scope
+  --> src/Chap52/AdjTableGraphStPer.rs:87:17
+   |
+87 |           ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+   |                   ^^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/Chap42/TableCommon.rs:30:5
+   |
+30 | /     pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
+31 | |         decreases entries.len()
+32 | |     {
+33 | |         if entries.len() == 0 {
+...  |
+39 | |     }
+   | |_____- similarly named function `steph_entries_to_map` defined here
+   |
+help: a function with a similar name exists
+   |
+87 -         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+87 +         ensures steph_entries_to_map(entries) == steph_entries_to_map(entries)
+   |
+help: consider importing this function
+   |
+26 +     use crate::Chap42::TableCommon::TableCommon::spec_entries_to_map;
+   |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+  --> src/Chap52/AdjTableGraphStPer.rs:98:13
+   |
+98 |             spec_keys_no_dups(entries)
+   |             ^^^^^^^^^^^^^^^^^ not found in this scope
+   |
+help: consider importing this function
+   |
+26 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+   |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:106:13
+    |
+106 |             spec_keys_no_dups(entries),
+    |             ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `spec_entries_to_map` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:109:17
+    |
+109 |                   spec_entries_to_map(entries.subrange(0, n)))
+    |                   ^^^^^^^^^^^^^^^^^^^
+    |
+   ::: src/Chap42/TableCommon.rs:30:5
+    |
+ 30 | /     pub open spec fn spec_entries_to_map<KV, VV>(entries: Seq<(KV, VV)>) -> Map<KV, VV>
+ 31 | |         decreases entries.len()
+ 32 | |     {
+ 33 | |         if entries.len() == 0 {
+...   |
+ 39 | |     }
+    | |_____- similarly named function `steph_entries_to_map` defined here
+    |
+help: a function with a similar name exists
+    |
+109 -                 spec_entries_to_map(entries.subrange(0, n)))
+109 +                 steph_entries_to_map(entries.subrange(0, n)))
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::spec_entries_to_map;
+    |
+
+error[E0425]: cannot find function `spec_keys_no_dups` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:223:16
+    |
+223 |             && spec_keys_no_dups::<V::V, Set<V::V>>(self.adj.entries@)
+    |                ^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::spec_keys_no_dups;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_len` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:283:17
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+283 |                   lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+283 -                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+283 +                 lemma_entries_to_map_eq::<V::V, Set<V::V>>(self.adj.entries@);
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_len;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_contains_key` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:305:21
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+305 |                       lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+305 -                     lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+305 +                     lemma_entries_to_map_eq::<V::V, Set<V::V>>(
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_contains_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_get` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:310:21
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+310 |                       lemma_entries_to_map_get::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+310 -                     lemma_entries_to_map_get::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+310 +                     lemma_entries_to_map_eq::<V::V, Set<V::V>>(self.adj.entries@, i as int);
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_get;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_len` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:323:17
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+323 |                   lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+323 -                 lemma_entries_to_map_len::<V::V, Set<V::V>>(self.adj.entries@);
+323 +                 lemma_entries_to_map_eq::<V::V, Set<V::V>>(self.adj.entries@);
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_len;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_contains_key` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:385:25
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+385 |                           lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+385 -                         lemma_entries_to_map_contains_key::<V::V, Set<V::V>>(
+385 +                         lemma_entries_to_map_eq::<V::V, Set<V::V>>(
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_contains_key;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_key_in_seq` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:389:25
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+389 |                           lemma_entries_to_map_key_in_seq::<V::V, Set<V::V>>(
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+389 -                         lemma_entries_to_map_key_in_seq::<V::V, Set<V::V>>(
+389 +                         lemma_entries_to_map_eq::<V::V, Set<V::V>>(
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_key_in_seq;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:395:17
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+395 |                   lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+395 -                 lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+395 +                 lemma_entries_to_map_eq::<V::V, Set<V::V>>(self.adj.entries@);
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error[E0425]: cannot find function `lemma_entries_to_map_finite` in this scope
+   --> src/Chap52/AdjTableGraphStPer.rs:687:25
+    |
+ 86 |       proof fn lemma_entries_to_map_eq<KV, VV>(entries: Seq<(KV, VV)>)
+    |  ___________-
+ 87 | |         ensures spec_entries_to_map(entries) == steph_entries_to_map(entries)
+ 88 | |         decreases entries.len()
+...   |
+ 93 | |     }
+    | |_____- similarly named function `lemma_entries_to_map_eq` defined here
+...
+687 |                           lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+help: a function with a similar name exists
+    |
+687 -                         lemma_entries_to_map_finite::<V::V, Set<V::V>>(self.adj.entries@);
+687 +                         lemma_entries_to_map_eq::<V::V, Set<V::V>>(self.adj.entries@);
+    |
+help: consider importing this function
+    |
+ 26 +     use crate::Chap42::TableCommon::TableCommon::lemma_entries_to_map_finite;
+    |
+
+error: aborting due to 33 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3492MB, peak z3 RSS: 35MB, min free: 19354MB
+Sampled CPU Usage: rust_verify: 14s, z3 children: 0s
