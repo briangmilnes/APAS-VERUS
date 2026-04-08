@@ -72,9 +72,6 @@ pub mod QuickSortMtEph {
         ensures total_ordering(spec_leq::<T>())
     {
         let leq = spec_leq::<T>();
-// Veracity: UNNEEDED assert         assert(reflexive(leq)) by {
-// Veracity: UNNEEDED assert // Veracity: UNNEEDED assert             assert forall|x: T| #[trigger] leq(x, x) by { T::reflexive(x); }
-// Veracity: UNNEEDED assert         };
         assert(antisymmetric(leq)) by {
             assert forall|x: T, y: T|
                 #[trigger] leq(x, y) && #[trigger] leq(y, x) implies x == y by
@@ -126,15 +123,11 @@ pub mod QuickSortMtEph {
         right_view.lemma_sort_by_ensures(leq);
         original.lemma_sort_by_ensures(leq);
 
-// Veracity: UNNEEDED assert         assert(sorted_left.to_multiset() =~= left_view.to_multiset());
-// Veracity: UNNEEDED assert         assert(sorted_right.to_multiset() =~= right_view.to_multiset());
 
         assert forall|j: int| 0 <= j < sorted_left.len() implies
             T::le(#[trigger] sorted_left[j], pivot) && sorted_left[j] != pivot by
         {
-// Veracity: UNNEEDED assert             assert(sorted_left.to_multiset().count(sorted_left[j]) > 0);
             assert(left_view.to_multiset().count(sorted_left[j]) > 0);
-// Veracity: UNNEEDED assert             assert(left_view.contains(sorted_left[j]));
             let idx = choose|idx: int|
                 0 <= idx < left_view.len() && left_view[idx] == sorted_left[j];
         };
@@ -143,7 +136,6 @@ pub mod QuickSortMtEph {
             T::le(pivot, #[trigger] sorted_right[j]) && sorted_right[j] != pivot by
         {
             assert(sorted_right.to_multiset().count(sorted_right[j]) > 0);
-// Veracity: UNNEEDED assert             assert(right_view.to_multiset().count(sorted_right[j]) > 0);
             assert(right_view.contains(sorted_right[j]));
             let idx = choose|idx: int|
                 0 <= idx < right_view.len() && right_view[idx] == sorted_right[j];
@@ -158,26 +150,18 @@ pub mod QuickSortMtEph {
                 let ell = eq_view.len();
                 if ai < ll && bi < ll {
                 } else if ai < ll && bi < ll + ell {
-// Veracity: UNNEEDED assert                     assert(candidate[bi] == pivot);
                 } else if ai < ll && bi >= ll + ell {
                     T::transitive(candidate[ai], pivot, candidate[bi]);
                 } else if ai >= ll && ai < ll + ell && bi >= ll && bi < ll + ell {
-// Veracity: UNNEEDED assert                     assert(candidate[ai] == pivot && candidate[bi] == pivot);
                     T::reflexive(pivot);
                 } else if ai >= ll && ai < ll + ell && bi >= ll + ell {
-// Veracity: UNNEEDED assert                     assert(candidate[ai] == pivot);
                 } else {
-// Veracity: UNNEEDED assert                     assert(ai >= ll + ell && bi >= ll + ell);
                 }
             };
         };
 
         vstd::seq_lib::lemma_multiset_commutative(sorted_left, eq_view);
         vstd::seq_lib::lemma_multiset_commutative(sorted_left + eq_view, sorted_right);
-// Veracity: UNNEEDED assert         assert(candidate.to_multiset() =~=
-// Veracity: UNNEEDED assert             sorted_left.to_multiset().add(eq_view.to_multiset()).add(sorted_right.to_multiset()));
-// Veracity: UNNEEDED assert         assert(candidate.to_multiset() =~=
-// Veracity: UNNEEDED assert             left_view.to_multiset().add(eq_view.to_multiset()).add(right_view.to_multiset()));
         assert(candidate.to_multiset() =~= original.to_multiset());
 
         vstd::seq_lib::lemma_sorted_unique(original.sort_by(leq), candidate, leq);
@@ -377,21 +361,16 @@ pub mod QuickSortMtEph {
                 let ghost m = mid.seq@;
                 let ghost r = right.seq@;
                 let ghost target = l + m + r;
-// Veracity: UNNEEDED assert                 assert(out@.len() == target.len());
                 assert forall|k: int| 0 <= k < out@.len()
                     implies out@[k] == #[trigger] target[k] by
                 {
                     if k < sl as int {
-// Veracity: UNNEEDED assert                         assert(out@[k] == left.seq@[k]);
-// Veracity: UNNEEDED assert                         assert(target[k] == l[k]);
                     } else if k < (sl + el) as int {
                         let kp = k - sl as int;
                         assert(out@[(sl as int + kp)] == mid.seq@[kp]);
-// Veracity: UNNEEDED assert                         assert(target[k] == m[kp]);
                     } else {
                         let kp = k - sl as int - el as int;
                         assert(out@[(sl as int + el as int + kp)] == right.seq@[kp]);
-// Veracity: UNNEEDED assert                         assert(target[k] == r[kp]);
                     }
                 };
             }
@@ -411,12 +390,8 @@ pub mod QuickSortMtEph {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-// Veracity: UNNEEDED assert                         assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-// Veracity: UNNEEDED assert                         assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-// Veracity: UNNEEDED assert                         assert(s.sort_by(leq).len() == s.len());
                     } else {
-// Veracity: UNNEEDED assert                         assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -455,11 +430,9 @@ pub mod QuickSortMtEph {
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
-// Veracity: UNNEEDED assert                         proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                     },
                     core::cmp::Ordering::Greater => {
-// Veracity: UNNEEDED assert                         proof { assert(T::le(pivot, elem)); assert(elem != pivot); }
                         right.push(elem);
                     },
                     core::cmp::Ordering::Equal => {
@@ -471,8 +444,6 @@ pub mod QuickSortMtEph {
 
             proof {
                 assert(s.subrange(0, n as int) =~= s);
-// Veracity: UNNEEDED assert                 assert(left@.len() + right@.len() < n);
-// Veracity: UNNEEDED assert                 assert(equals@.len() >= 1);
             }
 
             let ghost left_view = left@;
@@ -502,8 +473,6 @@ pub mod QuickSortMtEph {
                 lemma_total_ordering::<T>();
                 left_view.lemma_sort_by_ensures(leq);
                 right_view.lemma_sort_by_ensures(leq);
-// Veracity: UNNEEDED assert                 assert(sorted_left_a.seq@.len() == left_view.len());
-// Veracity: UNNEEDED assert                 assert(sorted_right_a.seq@.len() == right_view.len());
             }
 
             let sorted = Self::concat_three(&sorted_left_a, &equals_a, &sorted_right_a);
@@ -528,12 +497,8 @@ pub mod QuickSortMtEph {
                     lemma_total_ordering::<T>();
                     s.lemma_sort_by_ensures(leq);
                     if s.len() == 0 {
-// Veracity: UNNEEDED assert                         assert(s.to_multiset().len() == s.len());
                         assert(s.sort_by(leq).to_multiset().len() == s.sort_by(leq).len());
-// Veracity: UNNEEDED assert                         assert(s.sort_by(leq).to_multiset() =~= s.to_multiset());
-// Veracity: UNNEEDED assert                         assert(s.sort_by(leq).len() == s.len());
                     } else {
-// Veracity: UNNEEDED assert                         assert(sorted_by(s, leq));
                         vstd::seq_lib::lemma_sorted_unique(s, s.sort_by(leq), leq);
                     }
                 }
@@ -572,7 +537,7 @@ pub mod QuickSortMtEph {
                 }
                 match TotalOrder::cmp(&elem, &pivot) {
                     core::cmp::Ordering::Less => {
-// Veracity: TESTING assert                         proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
+proof { assert(T::le(elem, pivot)); assert(elem != pivot); }
                         left.push(elem);
                         proof {
                             let li = (left@.len() - 1) as int;
