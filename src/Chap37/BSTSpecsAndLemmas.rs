@@ -25,6 +25,75 @@ pub mod BSTSpecsAndLemmas {
     //		Section 7. proof fns
 
 
+    /// Decomposes tree_contains through the two-level BalBinTree/BalBinNode trait dispatch.
+    pub proof fn lemma_node_contains<T: TotalOrder>(
+        left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+    )
+        ensures
+            BalBinTree::<T>::Node(Box::new(BalBinNode { left: left, value: val, right: right }))
+                .tree_contains(x)
+                == (val == x || left.tree_contains(x) || right.tree_contains(x)),
+    {}
+
+    /// BST ordering: left child element is less than and not equal to the root.
+    pub proof fn lemma_bst_left<T: TotalOrder>(
+        left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+    )
+        requires
+            BalBinTree::<T>::Node(Box::new(BalBinNode { left: left, value: val, right: right }))
+                .tree_is_bst(),
+            left.tree_contains(x),
+        ensures
+            T::le(x, val),
+            x != val,
+    {}
+
+    /// BST ordering: right child element is greater than and not equal to the root.
+    pub proof fn lemma_bst_right<T: TotalOrder>(
+        left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+    )
+        requires
+            BalBinTree::<T>::Node(Box::new(BalBinNode { left: left, value: val, right: right }))
+                .tree_is_bst(),
+            right.tree_contains(x),
+        ensures
+            T::le(val, x),
+            x != val,
+    {}
+
+    /// When a left subtree is modified (insert/delete), BST ordering wrt the node value
+    /// is preserved if every new element satisfies the ordering.
+    pub proof fn lemma_modified_left_preserves_bst<T: TotalOrder>(
+        old_left: BalBinTree<T>,
+        new_left: BalBinTree<T>,
+        node_val: T,
+    )
+        requires
+            forall|x: T| (#[trigger] old_left.tree_contains(x)) ==>
+                T::le(x, node_val) && x != node_val,
+            forall|x: T| (#[trigger] new_left.tree_contains(x)) ==>
+                (old_left.tree_contains(x) || (T::le(x, node_val) && x != node_val)),
+        ensures
+            forall|x: T| (#[trigger] new_left.tree_contains(x)) ==>
+                T::le(x, node_val) && x != node_val,
+    {}
+
+    /// Mirror of lemma_modified_left_preserves_bst for right subtree modifications.
+    pub proof fn lemma_modified_right_preserves_bst<T: TotalOrder>(
+        old_right: BalBinTree<T>,
+        new_right: BalBinTree<T>,
+        node_val: T,
+    )
+        requires
+            forall|x: T| (#[trigger] old_right.tree_contains(x)) ==>
+                T::le(node_val, x) && x != node_val,
+            forall|x: T| (#[trigger] new_right.tree_contains(x)) ==>
+                (old_right.tree_contains(x) || (T::le(node_val, x) && x != node_val)),
+        ensures
+            forall|x: T| (#[trigger] new_right.tree_contains(x)) ==>
+                T::le(node_val, x) && x != node_val,
+    {}
+
     /// Decomposes tree_is_bst two levels deep, exposing children and grandchildren BST
     /// facts plus all ordering quantifiers. Used by rotation proofs in AVL and RB trees.
     pub proof fn lemma_bst_deep<T: TotalOrder>(tree: BalBinTree<T>)

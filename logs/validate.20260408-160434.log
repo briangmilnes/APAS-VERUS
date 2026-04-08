@@ -1,0 +1,89 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error[E0603]: function import `lemma_node_contains` is private
+  --> src/Chap37/BSTBBAlphaStEph.rs:36:55
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
+   |                                                       ^^^^^^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `lemma_node_contains` is defined here...
+  --> src/Chap37/BSTPlainStEph.rs:33:9
+   |
+33 |     use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `lemma_node_contains` which is defined here
+  --> src/Chap37/BSTSpecsAndLemmas.rs:29:5
+   |
+29 | /     pub proof fn lemma_node_contains<T: TotalOrder>(
+30 | |         left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+31 | |     )
+32 | |         ensures
+...  |
+35 | |                 == (val == x || left.tree_contains(x) || right.tree_contains(x)),
+36 | |     {}
+   | |______^ you could import this directly
+help: import `lemma_node_contains` directly
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::lemma_node_contains, lemma_bst_left, lemma_bst_right};
+   |                                                       ++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0603]: function import `lemma_bst_left` is private
+  --> src/Chap37/BSTBBAlphaStEph.rs:36:76
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
+   |                                                                            ^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `lemma_bst_left` is defined here...
+  --> src/Chap37/BSTPlainStEph.rs:33:9
+   |
+33 |     use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `lemma_bst_left` which is defined here
+  --> src/Chap37/BSTSpecsAndLemmas.rs:39:5
+   |
+39 | /     pub proof fn lemma_bst_left<T: TotalOrder>(
+40 | |         left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+41 | |     )
+42 | |         requires
+...  |
+48 | |             x != val,
+49 | |     {}
+   | |______^ you could import this directly
+help: import `lemma_bst_left` directly
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::lemma_bst_left, lemma_bst_right};
+   |                                                                            ++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0603]: function import `lemma_bst_right` is private
+  --> src/Chap37/BSTBBAlphaStEph.rs:36:92
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, lemma_bst_right};
+   |                                                                                            ^^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `lemma_bst_right` is defined here...
+  --> src/Chap37/BSTPlainStEph.rs:33:9
+   |
+33 |     use crate::Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `lemma_bst_right` which is defined here
+  --> src/Chap37/BSTSpecsAndLemmas.rs:52:5
+   |
+52 | /     pub proof fn lemma_bst_right<T: TotalOrder>(
+53 | |         left: BalBinTree<T>, val: T, right: BalBinTree<T>, x: T,
+54 | |     )
+55 | |         requires
+...  |
+61 | |             x != val,
+62 | |     {}
+   | |______^ you could import this directly
+help: import `lemma_bst_right` directly
+   |
+36 |     use crate::Chap37::BSTPlainStEph::BSTPlainStEph::{lemma_node_contains, lemma_bst_left, Chap37::BSTSpecsAndLemmas::BSTSpecsAndLemmas::lemma_bst_right};
+   |                                                                                            ++++++++++++++++++++++++++++++++++++++++++++++
+
+error: aborting due to 3 previous errors
+
+For more information about this error, try `rustc --explain E0603`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 926MB, peak z3 RSS: 0MB, min free: 22924MB
+Sampled CPU Usage: rust_verify: 11s, z3 children: 0s
