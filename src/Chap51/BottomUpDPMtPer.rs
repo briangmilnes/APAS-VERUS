@@ -33,6 +33,7 @@ pub mod BottomUpDPMtPer {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap18::ArraySeqMtPer::ArraySeqMtPer::*;
+    use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
 
     verus! {
@@ -41,11 +42,6 @@ pub mod BottomUpDPMtPer {
     pub struct BottomUpDPMtPerS {
         pub seq_s: ArraySeqMtPerS<char>,
         pub seq_t: ArraySeqMtPerS<char>,
-    }
-
-
-    pub open spec fn spec_min(a: nat, b: nat) -> nat {
-        if a <= b { a } else { b }
     }
 
 

@@ -28,6 +28,7 @@ pub mod ReduceContractMtEph {
 
 
     use crate::Chap19::ArraySeqMtEph::ArraySeqMtEph::*;
+    use crate::Chap27::ContractSpecsAndLemmas::ContractSpecsAndLemmas::*;
     use crate::Concurrency::Concurrency::StTInMtT;
     use crate::vstdplus::monoid::monoid::*;
     use crate::vstdplus::smart_ptrs::smart_ptrs::call_f;
@@ -44,95 +45,6 @@ pub mod ReduceContractMtEph {
         vstd::seq_lib::group_seq_properties,
         vstd::seq_lib::group_to_multiset_ensures,
     };
-
-    //		Section 7. proof fns/broadcast groups
-
-
-    /// Monoid fold_left lemma: fold_left(s, x, f) == f(x, fold_left(s, id, f))
-    /// when (f, id) is a monoid.
-    proof fn lemma_fold_left_monoid<T>(s: Seq<T>, x: T, f: spec_fn(T, T) -> T, id: T)
-        requires spec_monoid(f, id),
-        ensures s.fold_left(x, f) == f(x, s.fold_left(id, f)),
-        decreases s.len(),
-    {
-        if s.len() == 0 {
-        } else {
-            lemma_fold_left_monoid::<T>(s.drop_last(), x, f, id);
-            lemma_fold_left_monoid::<T>(s.drop_last(), id, f, id);
-        }
-    }
-
-    /// Helper: fold_left of a 2-element sequence equals f(a, b) under a monoid.
-    proof fn lemma_fold_left_pair<T>(a: T, b: T, f: spec_fn(T, T) -> T, id: T)
-        requires spec_monoid(f, id),
-        ensures seq![a, b].fold_left(id, f) == f(a, b),
-    {
-        let s = seq![a, b];
-        reveal_with_fuel(Seq::fold_left, 3);
-    }
-
-    /// Helper: fold_left of a 1-element sequence equals f(id, a) = a.
-    proof fn lemma_fold_left_singleton<T>(a: T, f: spec_fn(T, T) -> T, id: T)
-        requires spec_monoid(f, id),
-        ensures seq![a].fold_left(id, f) == a,
-    {
-        reveal_with_fuel(Seq::fold_left, 2);
-    }
-
-    /// Contraction lemma: for an even-length sequence, folding the original equals
-    /// folding the contracted (pairwise-combined) sequence under a monoid.
-    proof fn lemma_contraction_even<T>(s: Seq<T>, f: spec_fn(T, T) -> T, id: T)
-        requires
-            spec_monoid(f, id),
-            s.len() >= 2,
-            s.len() % 2 == 0,
-        ensures
-            s.fold_left(id, f) == Seq::new(
-                (s.len() / 2) as nat,
-                |i: int| f(s[2 * i], s[2 * i + 1]),
-            ).fold_left(id, f),
-        decreases s.len(),
-    {
-        let n = s.len();
-        let half = (n / 2) as nat;
-        let b = Seq::new(half, |i: int| f(s[2 * i], s[2 * i + 1]));
-
-        if n == 2 {
-            lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-            // Veracity: NEEDED assert
-            assert(b =~= seq![f(s[0], s[1])]);
-            lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
-        } else {
-            let s_tail = s.subrange(2, n as int);
-            let b_tail = b.subrange(1, b.len() as int);
-
-            s.lemma_fold_left_split(id, f, 2);
-            let s_head = s.subrange(0, 2);
-            // Veracity: NEEDED assert
-            assert(s_head =~= seq![s[0], s[1]]);
-
-            lemma_fold_left_pair::<T>(s[0], s[1], f, id);
-
-            lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
-            let s_tail_result = s_tail.fold_left(id, f);
-
-            // Veracity: NEEDED assert
-            assert(b_tail =~= Seq::new(
-                (s_tail.len() / 2) as nat,
-                |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
-            ));
-
-            lemma_contraction_even::<T>(s_tail, f, id);
-            let b_tail_result = b_tail.fold_left(id, f);
-
-            lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
-
-            b.lemma_fold_left_split(id, f, 1);
-            // Veracity: NEEDED assert
-            assert(b.subrange(0, 1) =~= seq![b[0]]);
-            lemma_fold_left_singleton::<T>(b[0], f, id);
-        }
-    }
 
     //		Section 8. traits
 

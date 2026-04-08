@@ -37,6 +37,7 @@ pub mod TopDownDPStEph {
     #[cfg(verus_keep_ghost)]
     use vstd::std_specs::cmp::PartialEqSpecImpl;
     use crate::Chap19::ArraySeqStEph::ArraySeqStEph::*;
+    use crate::Chap51::SeqSpecsAndLemmas::SeqSpecsAndLemmas::*;
     use crate::Types::Types::*;
     use crate::vstdplus::hash_map_with_view_plus::hash_map_with_view_plus::*;
 
@@ -54,40 +55,6 @@ pub mod TopDownDPStEph {
         pub seq_s: ArraySeqStEphS<char>,
         pub seq_t: ArraySeqStEphS<char>,
         pub memo_table: HashMapWithViewPlus<Pair<usize, usize>, usize>,
-    }
-
-
-    pub open spec fn spec_min(a: nat, b: nat) -> nat {
-        if a <= b { a } else { b }
-    }
-
-    /// Minimum edit distance spec — standalone so SMT congruence works across state changes.
-    pub open spec fn spec_med_fn(s: Seq<char>, t: Seq<char>, i: nat, j: nat) -> nat
-        decreases i + j,
-    {
-        if i == 0 { j }
-        else if j == 0 { i }
-        else if s[i as int - 1] == t[j as int - 1] {
-            spec_med_fn(s, t, (i - 1) as nat, (j - 1) as nat)
-        } else {
-            let del = spec_med_fn(s, t, (i - 1) as nat, j);
-            let ins = spec_med_fn(s, t, i, (j - 1) as nat);
-            1 + spec_min(del, ins)
-        }
-    }
-
-
-    pub proof fn lemma_spec_med_fn_bounded(s: Seq<char>, t: Seq<char>, i: nat, j: nat)
-        ensures spec_med_fn(s, t, i, j) <= i + j,
-        decreases i + j,
-    {
-        if i == 0 || j == 0 {
-        } else if s[i as int - 1] == t[j as int - 1] {
-            lemma_spec_med_fn_bounded(s, t, (i - 1) as nat, (j - 1) as nat);
-        } else {
-            lemma_spec_med_fn_bounded(s, t, (i - 1) as nat, j);
-            lemma_spec_med_fn_bounded(s, t, i, (j - 1) as nat);
-        }
     }
 
 

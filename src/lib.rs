@@ -374,6 +374,7 @@ pub mod Chap26 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap27")))]
 pub mod Chap27 {
+    pub mod ContractSpecsAndLemmas;
     pub mod ReduceContractStEph;
     pub mod ReduceContractMtEph;
     pub mod ScanContractStEph;
@@ -553,6 +554,7 @@ pub mod Chap50 {
 
 #[cfg(all(not(feature = "experiments_only"), any(not(feature = "isolate"), feature = "Chap51")))]
 pub mod Chap51 {
+    pub mod SeqSpecsAndLemmas;
     pub mod BottomUpDPStEph;
     pub mod BottomUpDPStPer;
     pub mod BottomUpDPMtEph;
