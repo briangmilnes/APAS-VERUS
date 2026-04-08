@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap18 Chap19 Chap02 Chap51
+error: assertion failed
+   --> src/Chap51/BottomUpDPStPer.rs:322:28
+    |
+322 |                     assert(val as nat == self.spec_med(i as nat, j as nat));
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+val == self.spec_med(i, j) 
+
+verification results:: 1431 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 4677MB, peak z3 RSS: 407MB, min free: 21760MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 14s

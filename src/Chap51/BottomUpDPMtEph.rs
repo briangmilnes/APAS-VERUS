@@ -248,9 +248,6 @@ pub mod BottomUpDPMtEph {
                 jj = jj + 1;
             }
             table.push(first_row);
-            assert(table@.len() == 1);
-            assert(table@[0]@.len() == t_len as nat + 1);
-            assert(forall|c: int| 0 <= c <= t_len as int ==> table@[0]@[c] == c as nat);
 
             // Rows 1..=s_len: build each row using previous row.
             let mut i: usize = 1;
@@ -328,12 +325,10 @@ pub mod BottomUpDPMtEph {
                         if (i - 1) as nat == 0 {
                         } else {
                         }
-                        assert(above as nat == self.spec_med((i - 1) as nat, j as nat));
 
                         if (j - 1) as nat == 0 {
                         } else {
                         }
-                        assert(left as nat == self.spec_med(i as nat, (j - 1) as nat));
 
                         self.lemma_spec_med_bounded((i - 1) as nat, j as nat);
                         self.lemma_spec_med_bounded(i as nat, (j - 1) as nat);
@@ -345,13 +340,10 @@ pub mod BottomUpDPMtEph {
                         1 + if above <= left { above } else { left }
                     };
 
-                    assert(val as nat == self.spec_med(i as nat, j as nat));
                     row.push(val);
                     j = j + 1;
                 }
 
-                assert(row@.len() == t_len as nat + 1);
-                assert(row@[0] == i as nat);
                 table.push(row);
                 i = i + 1;
             }

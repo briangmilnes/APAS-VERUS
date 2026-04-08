@@ -358,7 +358,6 @@ pub mod TopDownDPStEph {
 
             let ghost s = self.seq_s@;
             let ghost t = self.seq_t@;
-            assert(result as nat == spec_med_fn(s, t, i as nat, j as nat));
             let ghost pre_memo = self.memo_table@;
             proof {
                 assert forall|a: usize, b: usize| pre_memo.contains_key((a, b))
@@ -375,7 +374,6 @@ pub mod TopDownDPStEph {
             by {
                 if a == i && b == j {
                 } else if pre_memo.contains_key((a, b)) {
-                    assert(pre_memo[(a, b)] as nat == spec_med_fn(s, t, a as nat, b as nat));
                 }
             };
             result

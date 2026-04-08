@@ -1,14 +1,19 @@
     Spec/   Proof/    Exec/    Rust File
 --------------------------------------------
-      24/      33/     157/      30 DijkstraStEphF64.rs
-      24/      36/     144/      29 DijkstraStEphU64.rs
-      34/       0/      24/      16 StackStEph.rs
+     107/      36/     241/      26 BottomUpDPMtEph.rs
+      94/      36/     233/      26 BottomUpDPMtPer.rs
+     107/      47/     248/      26 BottomUpDPStEph.rs
+      94/      40/     240/      26 BottomUpDPStPer.rs
+     121/      46/     203/      42 TopDownDPMtEph.rs
+      97/      46/     199/      42 TopDownDPMtPer.rs
+     118/      29/     126/      29 TopDownDPStEph.rs
+      94/      34/     118/      29 TopDownDPStPer.rs
 --------------------------------------------
     spec    proof     exec     rust
-      82/      69/     325/      75 Total
-     911 total lines
-3 files analyzed
-6ms
+     832/     314/   1,608/     246 Total
+   4,056 total lines
+8 files analyzed
+39ms
 
 Proof Lines Per Function
 ========================
@@ -16,35 +21,40 @@ Proof Lines Per Function
 By chapter:
 |   # | Chapter    |  PrfTot |  InSpec |  InExec | InProof | ExecLOC |  Prf/Ex |
 | --- | ---------- | ------- | ------- | ------- | ------- | ------- | ------- |
-|   1 | root       |     150 |      18 |     122 |      10 |     325 |    0.46 |
+|   1 | root       |   1,097 |     226 |     751 |     120 |   1,608 |    0.68 |
 
-1 chapters, 150 proof lines, 325 exec lines, ratio 0.46
-150 min  150 max  150.0 avg  150.0 median (proof lines)
+1 chapters, 1,097 proof lines, 1,608 exec lines, ratio 0.68
+1,097 min  1,097 max  1097.0 avg  1097.0 median (proof lines)
 
 By module:
 |   # | Chap       | Module                         |  PrfTot |  InSpec |  InExec | InProof | ExecLOC | Prf/Ex |
 | --- | ---------- | ------------------------------ | ------- | ------- | ------- | ------- | ------- | ------ |
-|   1 | root       | DijkstraStEphU64               |      60 |       6 |      50 |       4 |     144 |   0.42 |
-|   2 | root       | DijkstraStEphF64               |      57 |       6 |      45 |       6 |     157 |   0.36 |
-|   3 | root       | StackStEph                     |      33 |       6 |      27 |       0 |      24 |   1.38 |
+|   1 | root       | TopDownDPMtEph                 |     167 |      34 |     117 |      16 |     203 |   0.82 |
+|   2 | root       | BottomUpDPStEph                |     145 |      23 |     109 |      13 |     248 |   0.58 |
+|   3 | root       | TopDownDPStEph                 |     145 |      33 |      94 |      18 |     126 |   1.15 |
+|   4 | root       | TopDownDPMtPer                 |     143 |      34 |      93 |      16 |     199 |   0.72 |
+|   5 | root       | BottomUpDPMtEph                |     134 |      23 |      98 |      13 |     241 |   0.56 |
+|   6 | root       | BottomUpDPStPer                |     125 |      23 |      89 |      13 |     240 |   0.52 |
+|   7 | root       | BottomUpDPMtPer                |     121 |      23 |      85 |      13 |     233 |   0.52 |
+|   8 | root       | TopDownDPStPer                 |     117 |      33 |      66 |      18 |     118 |   0.99 |
 
-3 modules, 150 proof lines, 325 exec lines, ratio 0.46
-33 min  60 max  50.0 avg  57.0 median (proof lines)
+8 modules, 1,097 proof lines, 1,608 exec lines, ratio 0.68
+117 min  167 max  137.1 avg  138.5 median (proof lines)
 
 Per exec function (proof lines within exec fns):
-  28 exec functions total, 22 with proof lines
-  122 total proof lines in exec fns
-  1 min  40 max  5.5 avg  1.0 median
+  168 exec functions total, 116 with proof lines
+  751 total proof lines in exec fns
+  1 min  32 max  6.5 avg  4.0 median
 
 Per proof function:
-  10 proof functions
-  10 total proof lines in proof fns
-  1 min  1 max  1.0 avg  1.0 median
+  20 proof functions
+  120 total proof lines in proof fns
+  1 min  12 max  6.0 avg  4.0 median
 
 Grand total:
-  49 total functions, 42 with proof lines (86%)
-  150 total proof lines, 325 exec lines, ratio 0.46
-  1 min  40 max  3.6 avg  1.0 median (proof lines per fn)
+  324 total functions, 220 with proof lines (68%)
+  1,097 total proof lines, 1,608 exec lines, ratio 0.68
+  1 min  32 max  5.0 avg  3.0 median (proof lines per fn)
 
 Outliers (>= 50 proof lines):
   (none)
