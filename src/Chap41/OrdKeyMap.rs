@@ -600,6 +600,95 @@ pub mod OrdKeyMap {
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
     }
 
+    /// Combined post-insert invariants: view-generation, key-uniqueness, map-containment,
+    /// and domain monotonicity. Replaces the 4-lemma block that follows every BST insert
+    /// in iterate-and-insert operations.
+    proof fn lemma_post_insert_invariants<K: View, V: View>(
+        old_set: Set<(K::V, V::V)>,
+        pair: Pair<K, V>,
+    )
+        requires
+            spec_key_unique_pairs_set(old_set),
+            old_set.finite(),
+            !spec_pair_set_to_map(old_set).dom().contains(pair@.0),
+            spec_set_pair_view_generated::<K, V>(old_set),
+        ensures
+            spec_set_pair_view_generated::<K, V>(old_set.insert(pair@)),
+            spec_key_unique_pairs_set(old_set.insert(pair@)),
+            spec_pair_set_to_map(old_set.insert(pair@)).dom().contains(pair@.0),
+            spec_pair_set_to_map(old_set.insert(pair@))[pair@.0] == pair@.1,
+            forall|k: K::V| spec_pair_set_to_map(old_set).dom().contains(k) ==>
+                #[trigger] spec_pair_set_to_map(old_set.insert(pair@)).dom().contains(k),
+    {
+        lemma_view_gen_insert::<K, V>(old_set, pair);
+        lemma_key_unique_insert(old_set, pair@.0, pair@.1);
+        let new_set = old_set.insert(pair@);
+        lemma_pair_in_set_map_contains(new_set, pair@.0, pair@.1);
+        lemma_map_dom_preserved_by_superset(old_set, new_set);
+    }
+
+    /// Extracts the type-level axioms from an OrdKeyMap's well-formedness predicate.
+    /// Replaces the 4-assertion block at the end of iterate-and-insert functions.
+    proof fn lemma_ordkeymap_wf_type_axioms<K: StT + Ord, V: StT + Ord>(m: &OrdKeyMap<K, V>)
+        requires m.spec_ordkeymap_wf()
+        ensures
+            spec_pair_key_determines_order::<K, V>(),
+            vstd::laws_cmp::obeys_cmp_spec::<K>(),
+            view_ord_consistent::<K>(),
+            obeys_feq_fulls::<K, V>(),
+            obeys_feq_full::<Pair<K, V>>(),
+            vstd::laws_cmp::obeys_cmp_spec::<Pair<K, V>>(),
+            view_ord_consistent::<Pair<K, V>>(),
+    {
+    }
+
+    /// Values are preserved when one pair-set is a subset of another with key uniqueness.
+    /// Replaces the 7-line value-preservation proof block in filter-like operations.
+    proof fn lemma_values_preserved_from_subset<KV, VV>(
+        sub: Set<(KV, VV)>,
+        sup: Set<(KV, VV)>,
+    )
+        requires
+            sub.subset_of(sup),
+            spec_key_unique_pairs_set(sub),
+            spec_key_unique_pairs_set(sup),
+        ensures
+            forall|k: KV| #[trigger] spec_pair_set_to_map(sub).contains_key(k) ==>
+                spec_pair_set_to_map(sub)[k] == spec_pair_set_to_map(sup)[k]
+    {
+        assert forall|k: KV| #[trigger] spec_pair_set_to_map(sub).contains_key(k) implies
+            spec_pair_set_to_map(sub)[k] == spec_pair_set_to_map(sup)[k]
+        by {
+            lemma_map_contains_pair_in_set(sub, k);
+            let v: VV = choose|v: VV| sub.contains((k, v));
+            lemma_pair_in_set_map_contains(sub, k, v);
+            lemma_pair_in_set_map_contains(sup, k, v);
+        };
+    }
+
+    /// Combined loop initialization: pairwise distinct keys from sorted + empty-set invariants.
+    /// Replaces the 3-lemma setup block before iterate-and-insert while loops.
+    proof fn lemma_loop_init_sorted<K: View, V: View>(
+        tree: Set<(K::V, V::V)>,
+        sorted: Seq<(K::V, V::V)>,
+    )
+        requires
+            tree.finite(),
+            spec_key_unique_pairs_set(tree),
+            forall|v: (K::V, V::V)| tree.contains(v) <==> sorted.contains(v),
+            sorted.len() == tree.len(),
+        ensures
+            forall|ii: int, jj: int|
+                0 <= ii < sorted.len() && 0 <= jj < sorted.len() && ii != jj
+                ==> (#[trigger] sorted[ii]).0 != (#[trigger] sorted[jj]).0,
+            spec_key_unique_pairs_set::<K::V, V::V>(Set::empty()),
+            spec_set_pair_view_generated::<K, V>(Set::empty()),
+    {
+        lemma_sorted_keys_pairwise_distinct(tree, sorted);
+        lemma_key_unique_empty::<K::V, V::V>();
+        lemma_view_gen_empty::<K, V>();
+    }
+
     //		Section 8. traits
 
 
@@ -2576,9 +2665,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(self_tree, self_sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
-                lemma_view_gen_empty::<K, V>();
+                lemma_loop_init_sorted::<K, V>(self_tree, self_sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
@@ -2639,10 +2726,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(Pair(key_clone, ov));
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, ov));
-                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, ov@);
-                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, ov@);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, Pair(key_clone, ov));
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
@@ -2662,10 +2746,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(cloned);
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
-                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, cloned);
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 self_map.dom().contains(p.0) &&
@@ -2771,10 +2852,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(cloned);
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
-                            lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
-                            lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, cloned);
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
                                 (self_map.dom().contains(p.0) &&
@@ -2859,9 +2937,7 @@ pub mod OrdKeyMap {
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(self_tree);
-                lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
-                lemma_view_gen_empty::<K, V>();
+                lemma_loop_init_sorted::<K, V>(self_tree, sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
@@ -2923,14 +2999,11 @@ pub mod OrdKeyMap {
                         new_tree.insert(cloned);
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, cloned);
                             // Veracity: NEEDED assert
                             assert(new_tree@.len() <= i as nat + 1);
                             // Veracity: NEEDED assert
                             assert(new_tree@.len() < usize::MAX as nat);
-                            lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, sorted@[i as int].1);
-                            lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, sorted@[i as int].1);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
                             // Veracity: NEEDED assert
                             assert(new_tree@.contains(sorted@[i as int]));
                         }
@@ -2976,28 +3049,11 @@ pub mod OrdKeyMap {
                     };
                 };
                 // Value proof: values come from self.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger] common@.contains_key(k)
-                    implies common@[k] == self_map[k]
-                by {
-                    lemma_map_contains_pair_in_set(new_tree@, k);
-                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
-                    assert(self_tree.contains((k, v)));
-                    lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    lemma_pair_in_set_map_contains(self_tree, k, v);
-                };
+                lemma_values_preserved_from_subset(new_tree@, self_tree);
                 // WF.
                 // Veracity: NEEDED assert
                 assert(new_tree@.len() < usize::MAX as nat);
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_ordkeymap_wf_type_axioms(self);
             }
             common
         }
@@ -3020,8 +3076,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(self_tree, self_sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
+                lemma_loop_init_sorted::<K, V>(self_tree, self_sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
@@ -3089,10 +3144,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(Pair(key_clone, combined_v));
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
-                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, combined_v@);
-                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, combined_v@);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
                             // Value tracking maintenance.
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
@@ -3116,10 +3168,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(cloned);
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
-                            lemma_key_unique_insert(old_new_tree_view, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            lemma_pair_in_set_map_contains(new_tree@, self_sorted@[i as int].0, self_sorted@[i as int].1);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, cloned);
                             // Value tracking maintenance: self-only entry.
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
@@ -3227,17 +3276,7 @@ pub mod OrdKeyMap {
                         new_tree.insert(cloned);
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, cloned);
-                            lemma_key_unique_insert(old_new_tree_view, other_sorted@[j as int].0, other_sorted@[j as int].1);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
-                            // Veracity: NEEDED assert
-                            assert(other_sorted@.contains(other_sorted@[j as int])) by {
-                                // Veracity: NEEDED assert
-                                assert(other_sorted@[j as int] == other_sorted@[j as int]);
-                            };
-                            // Veracity: NEEDED assert
-                            assert(other.inner@.contains(other_sorted@[j as int]));
-                            lemma_pair_in_set_map_contains(new_tree@, other_sorted@[j as int].0, other_sorted@[j as int].1);
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, cloned);
                             // Value tracking maintenance.
                             // Veracity: NEEDED assert
                             assert forall|p: (K::V, V::V)| #[trigger] new_tree@.contains(p) implies
@@ -3367,9 +3406,7 @@ pub mod OrdKeyMap {
                 // Veracity: NEEDED assert
                 assert(obeys_feq_full_trigger::<K>());
                 lemma_pair_set_to_map_dom_finite(self_tree);
-                lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
-                lemma_view_gen_empty::<K, V>();
+                lemma_loop_init_sorted::<K, V>(self_tree, sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
@@ -3444,19 +3481,11 @@ pub mod OrdKeyMap {
                         new_tree.insert(Pair(key_clone, combined_v));
                         // Veracity: NEEDED proof block
                         proof {
-                            lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
+                            lemma_post_insert_invariants::<K, V>(old_new_tree_view, Pair(key_clone, combined_v));
                             // Veracity: NEEDED assert
                             assert(new_tree@.len() <= i as nat + 1);
                             // Veracity: NEEDED assert
                             assert(new_tree@.len() < usize::MAX as nat);
-                            lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, combined_v@);
-                            lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined_v@);
-                            lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
-                            // Value tracking for new key.
-                            // Veracity: NEEDED assert
-                            assert(spec_pair_set_to_map(new_tree@)[sorted@[i as int].0] == combined_v@) by {
-                                lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, combined_v@);
-                            };
                             // Veracity: NEEDED assert
                             assert(pair.1@ == self_map[sorted@[i as int].0]);
                             // Veracity: NEEDED assert
@@ -3551,14 +3580,7 @@ pub mod OrdKeyMap {
                 // WF.
                 // Veracity: NEEDED assert
                 assert(new_tree@.len() < usize::MAX as nat);
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_ordkeymap_wf_type_axioms(self);
             }
             common
         }
@@ -3575,8 +3597,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(self_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
+                lemma_loop_init_sorted::<K, V>(self_tree, sorted@);
                 // Veracity: NEEDED assert
                 assert(obeys_view_eq_trigger::<K>());
             }
@@ -3687,27 +3708,9 @@ pub mod OrdKeyMap {
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
-                // Prove: values preserved from self.
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger] remaining@.contains_key(k)
-                    implies remaining@[k] == self_map[k]
-                by {
-                    lemma_map_contains_pair_in_set(new_tree@, k);
-                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
-                    assert(self_tree.contains((k, v)));
-                    lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    lemma_pair_in_set_map_contains(self_tree, k, v);
-                };
-                // Type axioms flow from self.spec_ordkeymap_wf().
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                // Values preserved from self.
+                lemma_values_preserved_from_subset(new_tree@, self_tree);
+                lemma_ordkeymap_wf_type_axioms(self);
             }
             remaining
         }
@@ -4199,17 +4202,7 @@ pub mod OrdKeyMap {
                         lemma_pair_in_set_map_contains(self.inner@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger] filtered@.contains_key(k)
-                    implies filtered@[k] == self@[k]
-                by {
-                    lemma_map_contains_pair_in_set(filtered_tree@, k);
-                    let v: V::V = choose|v: V::V| filtered_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
-                    assert(self.inner@.contains((k, v)));
-                    lemma_pair_in_set_map_contains(self.inner@, k, v);
-                    lemma_pair_in_set_map_contains(filtered_tree@, k, v);
-                };
+                lemma_values_preserved_from_subset(filtered_tree@, self.inner@);
                 // Veracity: NEEDED assert
                 assert forall|k: K::V| self@.dom().contains(k) && spec_pred(k, self@[k])
                     implies #[trigger] filtered@.dom().contains(k)
@@ -4225,14 +4218,7 @@ pub mod OrdKeyMap {
                     lemma_pair_in_set_map_contains(filtered_tree@, k, v);
                 };
                 vstd::set_lib::lemma_len_subset(filtered_tree@, self.inner@);
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_ordkeymap_wf_type_axioms(self);
                 lemma_view_gen_subset::<K, V>(filtered_tree@, self.inner@);
             }
             filtered
@@ -4247,9 +4233,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(self.inner@, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
-                lemma_view_gen_empty::<K, V>();
+                lemma_loop_init_sorted::<K, V>(self.inner@, sorted@);
             }
             while i < len
                 invariant
@@ -4288,14 +4272,11 @@ pub mod OrdKeyMap {
                 new_tree.insert(Pair(k_clone, new_val));
                 // Veracity: NEEDED proof block
                 proof {
-                    lemma_view_gen_insert::<K, V>(old_new_tree_view, Pair(k_clone, new_val));
+                    lemma_post_insert_invariants::<K, V>(old_new_tree_view, Pair(k_clone, new_val));
                     // Veracity: NEEDED assert
                     assert(new_tree@.len() == i as nat + 1);
                     // Veracity: NEEDED assert
                     assert(new_tree@.len() < usize::MAX as nat);
-                    lemma_key_unique_insert(old_new_tree_view, sorted@[i as int].0, new_val@);
-                    lemma_pair_in_set_map_contains(new_tree@, sorted@[i as int].0, new_val@);
-                    lemma_map_dom_preserved_by_superset(old_new_tree_view, new_tree@);
                 }
                 i = i + 1;
             }
@@ -4332,14 +4313,7 @@ pub mod OrdKeyMap {
                         assert(sorted@[j].0 == key);
                     };
                 };
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_ordkeymap_wf_type_axioms(self);
             }
             mapped
         }
@@ -4615,8 +4589,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
+                lemma_loop_init_sorted::<K, V>(old_tree, sorted@);
             }
             while i < len
                 invariant
@@ -4711,25 +4684,8 @@ pub mod OrdKeyMap {
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger] restricted@.contains_key(k)
-                    implies restricted@[k] == old_map[k]
-                by {
-                    lemma_map_contains_pair_in_set(new_tree@, k);
-                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
-                    assert(old_tree.contains((k, v)));
-                    lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    lemma_pair_in_set_map_contains(old_tree, k, v);
-                };
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_values_preserved_from_subset(new_tree@, old_tree);
+                lemma_ordkeymap_wf_type_axioms(self);
                 lemma_view_gen_subset::<K, V>(new_tree@, old_tree);
             }
             restricted
@@ -4747,8 +4703,7 @@ pub mod OrdKeyMap {
             let mut i: usize = 0;
             // Veracity: NEEDED proof block
             proof {
-                lemma_sorted_keys_pairwise_distinct(old_tree, sorted@);
-                lemma_key_unique_empty::<K::V, V::V>();
+                lemma_loop_init_sorted::<K, V>(old_tree, sorted@);
             }
             while i < len
                 invariant
@@ -4843,25 +4798,8 @@ pub mod OrdKeyMap {
                         lemma_pair_in_set_map_contains(new_tree@, k, v);
                     };
                 };
-                // Veracity: NEEDED assert
-                assert forall|k: K::V| #[trigger] remaining@.contains_key(k)
-                    implies remaining@[k] == old_map[k]
-                by {
-                    lemma_map_contains_pair_in_set(new_tree@, k);
-                    let v: V::V = choose|v: V::V| new_tree@.contains((k, v));
-                    // Veracity: NEEDED assert
-                    assert(old_tree.contains((k, v)));
-                    lemma_pair_in_set_map_contains(new_tree@, k, v);
-                    lemma_pair_in_set_map_contains(old_tree, k, v);
-                };
-                // Veracity: NEEDED assert
-                assert(spec_pair_key_determines_order::<K, V>());
-                // Veracity: NEEDED assert
-                assert(vstd::laws_cmp::obeys_cmp_spec::<K>());
-                // Veracity: NEEDED assert
-                assert(view_ord_consistent::<K>());
-                // Veracity: NEEDED assert
-                assert(obeys_feq_fulls::<K, V>());
+                lemma_values_preserved_from_subset(new_tree@, old_tree);
+                lemma_ordkeymap_wf_type_axioms(self);
                 lemma_view_gen_subset::<K, V>(new_tree@, old_tree);
             }
             remaining
