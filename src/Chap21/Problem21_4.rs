@@ -63,6 +63,7 @@ pub mod Problem21_4 {
             decreases alen - i,
         {
             let mut j: usize = 0;
+            // Veracity: NEEDED assert
             assert((i as int + 1) * blen as int <= cap as int) by (nonlinear_arith)
                 requires i < alen, cap == alen * blen;
             while j < blen
@@ -79,6 +80,7 @@ pub mod Problem21_4 {
                 v.push(Pair(*a.nth(i), *b.nth(j)));
                 j = j + 1;
             }
+            // Veracity: NEEDED assert
             assert((i as int + 1) * blen as int == i as int * blen as int + blen as int)
                 by (nonlinear_arith);
             i = i + 1;
@@ -148,6 +150,7 @@ pub mod Problem21_4 {
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<Pair<usize, usize>>| inner.seq@);
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == blen as int by {}
             lemma_flatten_uniform_len(mapped, blen as int);
@@ -155,10 +158,12 @@ pub mod Problem21_4 {
             let ghost pred = |p: Pair<usize, usize>|
                 a.seq@.contains(p.0) && b.seq@.contains(p.1);
             lemma_flatten_all(mapped, pred);
+            // Veracity: NEEDED assert
             assert forall|k: int| 0 <= k < pairs.seq@.len() implies (
                 a.seq@.contains((#[trigger] pairs.seq@[k]).0)
                 && b.seq@.contains(pairs.seq@[k].1)
             ) by {
+                // Veracity: NEEDED assert
                 assert(pred(mapped.flatten()[k]));
             }
         }

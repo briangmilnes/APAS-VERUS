@@ -434,18 +434,22 @@ pub mod MathSeq {
                             let f = |t: T| t@;
                             old_out.lemma_push_map_commute(f, x);
                             let new_mapped = out@.map_values(f);
+                            // Veracity: NEEDED assert
                             assert(out@.map(|_j: int, t: T| t@) =~= new_mapped);
 
+                            // Veracity: NEEDED assert
                             assert forall|v: T::V| seen@.contains(v) <==> out@.map(|_j: int, t: T| t@).contains(v) by {
                                 if v == x@ {
                                 } else {
                                     if old_out_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < old_out_mapped.len() && old_out_mapped[i] == v;
+                                        // Veracity: NEEDED assert
                                         assert(new_mapped[wit] == v);
                                     }
                                     if new_mapped.contains(v) {
                                         let wit = choose|i: int| 0 <= i < new_mapped.len() && new_mapped[i] == v;
                                         if wit < old_out_mapped.len() {
+                                            // Veracity: NEEDED assert
                                             assert(old_out_mapped[wit] == v);
                                         } else {
                                         }
@@ -492,6 +496,7 @@ pub mod MathSeq {
                     } else {
                         let x2 = x.clone();
                         proof {
+                            // Veracity: NEEDED assert
                             assert(cloned(x, x2));
                         }
                         counts.insert(x2, 1);
@@ -522,6 +527,7 @@ pub mod MathSeq {
                 {
                     let x = order[j].clone();
                     proof {
+                        // Veracity: NEEDED assert
                         assert(cloned(order@[j as int], x));
                     }
                     let opt_count = counts.get(&x);

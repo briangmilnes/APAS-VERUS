@@ -76,6 +76,7 @@ pub mod Algorithm21_2 {
                 {
                     proof {
                         // Trigger Pair feq axioms for the nested Pair type.
+                        // Veracity: NEEDED assert
                         assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
                     }
                     // For each y in 0..n, tabulate z values.
@@ -105,6 +106,7 @@ pub mod Algorithm21_2 {
                     let flat_mid = ArraySeqStPerS::flatten(&mid);
                     proof {
                         let ghost mapped = mid.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < mapped.len() implies
                             (#[trigger] mapped[i]).len() == n as int by {}
                         lemma_flatten_uniform_len(mapped, n as int);
@@ -116,12 +118,14 @@ pub mod Algorithm21_2 {
             );
 
         proof {
+            // Veracity: NEEDED assert
             assert(Pair_feq_trigger::<usize, Pair<usize, usize>>());
         }
         let flattened = ArraySeqStPerS::flatten(&outer);
         proof {
             let ghost n2 = pow(n as int, 2);
             let ghost mapped = outer.seq@.map_values(|inner: ArraySeqStPerS<Pair<usize, Pair<usize, usize>>>| inner.seq@);
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == n2 by {}
             lemma_flatten_uniform_len(mapped, n2);

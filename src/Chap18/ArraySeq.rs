@@ -260,6 +260,7 @@ pub mod ArraySeq {
     {
         lemma_find_key_index_bounds(old_dv, k, idx);
         let extended = pairs_prefix.push((k, v));
+        // Veracity: NEEDED assert
         assert(extended.drop_last() =~= pairs_prefix);
         reveal(spec_collect);
     }
@@ -279,6 +280,7 @@ pub mod ArraySeq {
                 =~= old_dv.push((k, seq![v])),
     {
         let extended = pairs_prefix.push((k, v));
+        // Veracity: NEEDED assert
         assert(extended.drop_last() =~= pairs_prefix);
         reveal(spec_collect);
     }
@@ -293,6 +295,7 @@ pub mod ArraySeq {
         ensures
             spec_find_key_index(s.deep_view(), k.deep_view()) == Some(idx as int),
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| #![trigger s.deep_view()[j]]
             0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
         by {
@@ -309,6 +312,7 @@ pub mod ArraySeq {
         ensures
             spec_find_key_index(s.deep_view(), k.deep_view()) == None::<int>,
     {
+        // Veracity: NEEDED assert
         assert forall|j: int| #![trigger s.deep_view()[j]]
             0 <= j < s.deep_view().len() implies s.deep_view()[j].0 == s@[j].0
         by {
@@ -759,8 +763,10 @@ pub mod ArraySeq {
                     a.lemma_spec_index(i as int);
                 }
                 // Extending the subrange by one element lets the multiset axioms advance the invariant.
+                // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
                 // spec_filter_len unfolds via drop_last: subrange(0,i+1).drop_last() == subrange(0,i)
+                // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
                     let elem = a.seq[i].clone();
@@ -775,7 +781,9 @@ pub mod ArraySeq {
             let filtered = ArraySeqS { seq };
             proof {
                 // Bridge from the concrete seq@ to the abstract Seq::new(spec_len, spec_index).
+                // Veracity: NEEDED assert
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                // Veracity: NEEDED assert
                 assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
             }
             filtered
@@ -852,6 +860,7 @@ pub mod ArraySeq {
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -890,6 +899,7 @@ pub mod ArraySeq {
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -934,6 +944,7 @@ pub mod ArraySeq {
                 proof {
                     // Help the solver unfold fold_left on take(i+1).
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -951,6 +962,7 @@ pub mod ArraySeq {
             let scanned_seq = ArraySeqS { seq };
             proof {
                 // Bridge from seq@ indices to spec_index for the prefix sum postcondition.
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
@@ -1014,6 +1026,7 @@ pub mod ArraySeq {
                 proof {
                     // Help the solver unfold spec_inject one step.
                     let ghost sub = u.subrange(i as int, ulen as int);
+                    // Veracity: NEEDED assert
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
@@ -1024,8 +1037,10 @@ pub mod ArraySeq {
             let injected = ArraySeqS { seq: result_vec };
             proof {
                 // Bridge result to the abstract ensures form.
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
                 by { a.lemma_spec_index(j); }
+                // Veracity: NEEDED assert
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
             }
             injected
@@ -1060,6 +1075,7 @@ pub mod ArraySeq {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -1072,6 +1088,7 @@ pub mod ArraySeq {
             }
             let scanned = ArraySeqS { seq };
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger scanned.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
@@ -1180,6 +1197,7 @@ pub mod ArraySeq {
             {
                 proof {
                     let ghost t = pairs.seq@.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= pairs.seq@.take(i as int));
                     reveal(spec_collect);
                 }
@@ -1202,6 +1220,7 @@ pub mod ArraySeq {
                         collected.seq.insert(idx, entry);
                         proof {
                             lemma_deep_view_len(&collected.seq);
+                            // Veracity: NEEDED assert
                             assert forall|j: int| 0 <= j < collected.seq.deep_view().len()
                                 implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
                             by {
@@ -1218,6 +1237,7 @@ pub mod ArraySeq {
                         collected.seq.push((k, ArraySeqS { seq: vec![v] }));
                         proof {
                             lemma_deep_view_len(&collected.seq);
+                            // Veracity: NEEDED assert
                             assert forall|j: int| 0 <= j < collected.seq.deep_view().len()
                                 implies #[trigger] collected.seq.deep_view()[j] =~= new_collected_dv[j]
                             by {
@@ -1340,6 +1360,7 @@ pub mod ArraySeq {
             }
             proof {
                 let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqS<T>| inner.seq@);
+                // Veracity: NEEDED assert
                 assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqS<T>| inner.seq@)
                     =~= prefix.push(a.seq@[i as int].seq@));
                 prefix.lemma_flatten_push(a.seq@[i as int].seq@);
@@ -1406,6 +1427,7 @@ pub mod ArraySeq {
             proof {
                 // Help the solver unfold fold_left on take(i+1).
                 let ghost t = s.take(i as int + 1);
+                // Veracity: NEEDED assert
                 assert(t.drop_last() =~= s.take(i as int));
                 reveal(Seq::fold_left);
             }
@@ -1417,6 +1439,7 @@ pub mod ArraySeq {
         let prefixes = ArraySeqS { seq };
         proof {
             // Bridge seq@ indices to spec_index for the ensures.
+            // Veracity: NEEDED assert
             assert forall|i: int| #![trigger prefixes.spec_index(i)] 0 <= i < a.spec_len() implies
                 prefixes.spec_index(i) == spec_iterate_prefixes(s, spec_f, start_x).0[i]
             by {

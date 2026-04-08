@@ -130,6 +130,7 @@ broadcast use {
         }
 
         // Part (b): max_sum is maximal.
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= n
@@ -247,6 +248,7 @@ broadcast use {
             }
 
             // (b) Maximal: for all lo in 0..n: range_sum(a, lo, n) <= total - min_prefix.
+            // Veracity: NEEDED assert
             assert forall|lo: int|
                 #![trigger spec_range_sum(a.seq@, lo, a.seq@.len() as int)]
                 0 <= lo < a.seq@.len() as int
@@ -326,11 +328,13 @@ broadcast use {
             let right = a.subseq_copy(mid, n - mid);
 
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger left.seq@[i]]
                     0 <= i < left.seq@.len() implies left.seq@[i] == a.seq@[i]
                 by { assert(left.spec_index(i) == a.spec_index(0 + i)); };
                 lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
 
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger right.seq@[i]]
                     0 <= i < right.seq@.len() implies right.seq@[i] == a.seq@[mid as int + i]
                 by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };

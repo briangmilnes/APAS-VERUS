@@ -123,6 +123,7 @@ pub mod Exercise21_8 {
             let s = Seq::new(k as nat, |i: int| (n % (i + 1) == 0));
             let s_prev = Seq::new((k - 1) as nat, |i: int| (n % (i + 1) == 0));
             let pred = |v: bool| v;
+            // Veracity: NEEDED assert
             assert(s.drop_last() =~= s_prev);
 
             // Unfold spec_divisor_count from the top: range [1, k+1) = [1, k) ++ {k}
@@ -148,6 +149,7 @@ pub mod Exercise21_8 {
             // count(n, from+1, from+1) = 0 (base case from >= to).
             // count(n, from, from) = 0 (base case).
             // So count(n, from, from+1) = (if n%from==0 {1} else {0}) + 0.
+            // Veracity: NEEDED assert
             assert(spec_divisor_count(n, from + 1, to) == 0);
         } else {
             lemma_divisor_count_split_last(n, from + 1, to);
@@ -217,6 +219,7 @@ pub mod Exercise21_8 {
 
             // 1 always divides n (n >= 2 > 0).
             // k = isqrt(n) >= 1 when n >= 2: if k == 0 then (k+1)^2 = 1 > n, contradicting n >= 2.
+            // Veracity: NEEDED assert
             assert(1 < k as int + 1) by (nonlinear_arith)
                 requires n >= 2int, k as int * k as int <= n as int,
                          (k as int + 1) * (k as int + 1) > n as int;
@@ -229,6 +232,7 @@ pub mod Exercise21_8 {
             lemma_filter_len_eq_divisor_count(n as int, k as int);
             // The filter ensures ones.spec_len() == spec_filter_len(Seq::new(k, |i| all@[i]), id).
             // tabulate ensures all.seq@[i] == (n%(i+1)==0), so the sequences match.
+            // Veracity: NEEDED assert
             assert(Seq::new(all.seq@.len(), |i: int| all.seq@[i])
                 =~= Seq::new(k as nat, |i: int| (n as int % (i + 1) == 0)));
 
@@ -246,10 +250,12 @@ pub mod Exercise21_8 {
                 // forall i: 2 <= i < k+1 ==> n%i != 0
 
                 // Lift to spec_is_prime: if i*i <= n then i <= k (since (k+1)^2 > n).
+                // Veracity: NEEDED assert
                 assert forall|i: int| 2 <= i && i * i <= n as int
                     implies #[trigger] (n as int % i) != 0 by
                 {
                     if i >= k as int + 1 {
+                        // Veracity: NEEDED assert
                         assert(i * i >= (k as int + 1) * (k as int + 1)) by (nonlinear_arith)
                             requires i >= k as int + 1, i >= 2;
                         // Contradiction: i*i >= (k+1)^2 > n >= i*i
@@ -266,9 +272,11 @@ pub mod Exercise21_8 {
                 if forall|i: int| 2 <= i && i * i <= n as int ==> #[trigger] (n as int % i) != 0 {
                     // Then in particular, forall i: 2 <= i <= k ==> n%i != 0.
                     // Because i <= k implies i*i <= k*k <= n.
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 2 <= i < k as int + 1
                         implies #[trigger] (n as int % i) != 0 by
                     {
+                        // Veracity: NEEDED assert
                         assert(i * i <= k as int * k as int) by (nonlinear_arith)
                             requires i <= k as int, i >= 2;
                     }

@@ -230,6 +230,7 @@ broadcast use {
     {
         reveal_with_fuel(spec_min_prefix_sum, 2);
         if k == 0 {
+            // Veracity: NEEDED assert
             assert(spec_prefix_sum(s, 0) == spec_min_prefix_sum(s, 0));
         } else {
             lemma_min_prefix_sum_achieved(s, k - 1);
@@ -280,6 +281,7 @@ broadcast use {
         ensures
             sums_fit_i32(sub),
     {
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(sub, lo, hi)]
             0 <= lo <= hi <= sub.len()

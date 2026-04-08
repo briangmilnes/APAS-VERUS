@@ -80,6 +80,7 @@ broadcast use {
         lemma_range_sum_via_prefix(s, lo_w, hi_w);
 
         // Part (b): maximal.
+        // Veracity: NEEDED assert
         assert forall|lo: int, hi: int|
             #![trigger spec_range_sum(s, lo, hi)]
             0 <= lo < hi <= s.len()

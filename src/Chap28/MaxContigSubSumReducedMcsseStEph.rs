@@ -161,6 +161,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                 proof {
                     // mcsse_j == prefix_sum(j+1) - min_prefix_sum(j)
                     // Show mcsse_j >= all range_sum(a, lo, j+1) for lo in 0..=j
+                    // Veracity: NEEDED assert
                     assert forall|lo: int|
                         #![trigger spec_range_sum(a.seq@, lo, (j + 1) as int)]
                         0 <= lo <= j
@@ -184,6 +185,7 @@ pub mod MaxContigSubSumReducedMcsseStEph {
                 proof {
                     // Extend forall to cover ranges ending at j+1
                     if j > 0 {
+                        // Veracity: NEEDED assert
                         assert forall|lo: int, hi: int|
                             #![trigger spec_range_sum(a.seq@, lo, hi)]
                             0 <= lo < hi <= (j + 1) as int

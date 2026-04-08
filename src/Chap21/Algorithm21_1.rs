@@ -78,9 +78,11 @@ pub mod Algorithm21_1 {
     {
         if k > 0 {
             lemma_sum_inner_lens_uniform(ss, k - 1, m);
+            // Veracity: NEEDED assert
             assert((k - 1) * m + m == k * m) by (nonlinear_arith)
                 requires k > 0;
         } else {
+            // Veracity: NEEDED assert
             assert(k * m == 0) by (nonlinear_arith)
                 requires k == 0;
         }

@@ -104,6 +104,7 @@ pub mod MaxContigSubSumOptMtEph {
                 if cur < rmin { rmin = cur; }
                 proof {
                     reveal_with_fuel(spec_min_prefix_sum, 2);
+                    // Veracity: NEEDED assert
                     assert(rmin as int == spec_min_prefix_sum(a.seq@, j as int));
                 }
                 mv.push(rmin);

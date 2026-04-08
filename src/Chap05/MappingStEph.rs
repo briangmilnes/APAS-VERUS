@@ -290,9 +290,13 @@ verus!
                         let pi = v@[i as int]@;
                         let witness_k = choose |k: int| #![trigger v@[k]] 0 <= k < v@.len() && v@[k]@.0 == pi.0 && v@[k]@.1 != pi.1;
                         let the_seq = v@.map(|idx: int, p: Pair<X, Y>| p@);
+                        // Veracity: NEEDED assert
                         assert(the_seq[i as int] == pi);
+                        // Veracity: NEEDED assert
                         assert(the_seq[witness_k] == v@[witness_k]@);
+                        // Veracity: NEEDED assert
                         assert(the_seq.to_set().contains(pi));
+                        // Veracity: NEEDED assert
                         assert(the_seq.to_set().contains(v@[witness_k]@));
                     }
                     return false;
@@ -323,7 +327,9 @@ verus!
                                 proof {
                                     let idx = iter@.0 - 1;
                                     let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
+                                    // Veracity: NEEDED assert
                                     assert(mapped[idx] == q@);
+                                    // Veracity: NEEDED assert
                                     assert(mapped.to_set().contains(q@));
                                 }
                                 return false;
@@ -350,6 +356,7 @@ verus!
                 match outer_iter.next() {
                     None => {
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |x: X::V, y1: Y::V, y2: Y::V|
                                 #![trigger s@.contains((x, y1)), s@.contains((x, y2))]
                                 s@.contains((x, y1)) && s@.contains((x, y2)) implies y1 == y2 by {
@@ -366,7 +373,9 @@ verus!
                             proof {
                                 let idx = outer_iter@.0 - 1;
                                 let mapped = the_seq.map(|i: int, pair: Pair<X,Y>| pair@);
+                                // Veracity: NEEDED assert
                                 assert(mapped[idx] == p@);
+                                // Veracity: NEEDED assert
                                 assert(mapped.to_set().contains(p@));
                             }
                             return false;
@@ -399,6 +408,7 @@ verus!
                 // is_functional_seq(v_seq) == is_functional_set(v_seq.map(|i, p| p@).to_set())
                 //                          == is_functional_set(result.mapping@)
                 // Prove the domain/value ensures for each index.
+                // Veracity: NEEDED assert
                 assert forall |i: int| #![trigger v_seq[i]] 0 <= i < v_seq.len() implies
                     result@.dom().contains(v_seq[i]@.0) && result@[v_seq[i]@.0] == v_seq[i]@.1 by {
                     // v_seq[i]@ is in the mapped-to-set.
@@ -420,6 +430,7 @@ verus!
                 // result.mapping@ == r@ (from clone ensures).
                 // is_functional_relation(*r) == is_functional_set(r@) == is_functional_set(result.mapping@).
                 // Prove domain/value ensures.
+                // Veracity: NEEDED assert
                 assert forall |x: X::V, y: Y::V| r@.contains((x, y)) implies
                     result@.dom().contains(x) && result@[x] == y by {
                     // By functionality, the chosen y' must equal y.
@@ -436,12 +447,14 @@ verus!
                 let s = self.mapping@;
                 let proj = |p: (X::V, Y::V)| -> X::V { p.0 };
                 // Projection is injective on s because is_functional_set(s).
+                // Veracity: NEEDED assert
                 assert forall |p1: (X::V, Y::V), p2: (X::V, Y::V)|
                     s.contains(p1) && s.contains(p2) && #[trigger] proj(p1) == #[trigger] proj(p2)
                     implies p1 == p2 by {
                     // p1.0 == p2.0. By functionality, p1.1 == p2.1. So p1 == p2.
                 }
                 // s.map(proj) == self@.dom()
+                // Veracity: NEEDED assert
                 assert(s.map(proj) =~= self@.dom());
                 vstd::set_lib::lemma_map_size(s, self@.dom(), proj);
             }
@@ -456,11 +469,13 @@ verus!
         fn range(&self) -> SetStEph<Y> {
             let result = self.mapping.range();
             proof {
+                // Veracity: NEEDED assert
                 assert forall |y: Y::V| result@.contains(y) implies 
                     (exists |x: X::V| #![trigger self@[x]] self@.dom().contains(x) && self@[x] == y) by {
                     if result@.contains(y) {
                         let witness_x = choose |x: X::V| self.mapping@.contains((x, y));
                         let chosen_y = choose |y_prime: Y::V| self.mapping@.contains((witness_x, y_prime));
+                        // Veracity: NEEDED assert
                         assert(self@[witness_x] == chosen_y);
                     }
                 }

@@ -112,11 +112,13 @@ pub mod MaxContigSubSumDivConOptMtEph {
         let right = a.subseq_copy(mid, n - mid);
 
         proof {
+            // Veracity: NEEDED assert
             assert forall|i: int| #![trigger left.seq@[i]]
                 0 <= i < left.seq@.len() implies left.seq@[i] == a.seq@[i]
             by { assert(left.spec_index(i) == a.spec_index(0 + i)); };
             lemma_sums_fit_subseq(a.seq@, left.seq@, 0);
 
+            // Veracity: NEEDED assert
             assert forall|i: int| #![trigger right.seq@[i]]
                 0 <= i < right.seq@.len() implies right.seq@[i] == a.seq@[mid as int + i]
             by { assert(right.spec_index(i) == a.spec_index(mid as int + i)); };

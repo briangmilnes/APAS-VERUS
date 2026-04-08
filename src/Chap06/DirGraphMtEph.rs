@@ -589,6 +589,7 @@ pub mod DirGraphMtEph {
 
                 let out_neighbors = left_neighbors.union(&right_neighbors);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger out_neighbors@.contains(w)] self.spec_n_plus_of_vertices_from_set(verts@).contains(w)
                         <==> out_neighbors@.contains(w) by {
                         if self.spec_n_plus_of_vertices_from_set(verts@).contains(w) {
@@ -600,9 +601,11 @@ pub mod DirGraphMtEph {
                         if out_neighbors@.contains(w) {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_n_plus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_n_plus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
                         }
@@ -642,6 +645,7 @@ pub mod DirGraphMtEph {
 
                 let in_neighbors = left_neighbors.union(&right_neighbors);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger in_neighbors@.contains(w)] self.spec_n_minus_of_vertices_from_set(verts@).contains(w)
                         <==> in_neighbors@.contains(w) by {
                         if self.spec_n_minus_of_vertices_from_set(verts@).contains(w) {
@@ -653,9 +657,11 @@ pub mod DirGraphMtEph {
                         if in_neighbors@.contains(w) {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_n_minus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_n_minus(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
                         }
@@ -695,6 +701,7 @@ pub mod DirGraphMtEph {
 
                 let neighbors = left_neighbors.union(&right_neighbors);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
                         <==> neighbors@.contains(w) by {
                         if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
@@ -706,9 +713,11 @@ pub mod DirGraphMtEph {
                         if neighbors@.contains(w) {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
                         }

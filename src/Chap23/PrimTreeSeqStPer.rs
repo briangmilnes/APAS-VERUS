@@ -364,7 +364,9 @@ pub mod PrimTreeSeqStPer {
             let mut seq: Vec<U> = Vec::with_capacity(len);
             let mut i: usize = 0;
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] f.requires((&a.seq@[j],)) by {
+                    // Veracity: NEEDED assert
                     assert(a.seq@[j] == a.spec_index(j));
                 }
             }
@@ -410,7 +412,9 @@ pub mod PrimTreeSeqStPer {
             let mut seq: Vec<T> = Vec::new();
             let mut i: usize = 0;
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.seq@.len() implies #[trigger] pred.requires((&a.seq@[j],)) by {
+                    // Veracity: NEEDED assert
                     assert(a.seq@[j] == a.spec_index(j));
                 }
                 broadcast use vstd::seq_lib::group_to_multiset_ensures;
@@ -431,7 +435,9 @@ pub mod PrimTreeSeqStPer {
                 proof {
                     broadcast use vstd::seq_lib::group_to_multiset_ensures;
                 }
+                // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1) =~= a.seq@.subrange(0, i as int).push(a.seq@[i as int]));
+                // Veracity: NEEDED assert
                 assert(a.seq@.subrange(0, i as int + 1).drop_last() =~= a.seq@.subrange(0, i as int));
                 if pred(&a.seq[i]) {
                     let elem = a.seq[i].clone();
@@ -444,7 +450,9 @@ pub mod PrimTreeSeqStPer {
             }
             let filtered = PrimTreeSeqStS { seq };
             proof {
+                // Veracity: NEEDED assert
                 assert(a.seq@ =~= Seq::new(a.spec_len(), |i: int| a.spec_index(i)));
+                // Veracity: NEEDED assert
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
             }
             filtered
@@ -496,6 +504,7 @@ pub mod PrimTreeSeqStPer {
                 }
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@);
+                    // Veracity: NEEDED assert
                     assert(a.seq@.take(i as int + 1).map_values(|inner: PrimTreeSeqStS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
                     prefix.lemma_flatten_push(a.seq@[i as int].seq@);

@@ -224,6 +224,7 @@ broadcast use {
 
                     lemma_max_ending_at_achieved(a.seq@, i as int);
                     // Prove forall for ranges ending at i+1
+                    // Veracity: NEEDED assert
                     assert forall|lo: int, hi: int|
                         #![trigger spec_range_sum(a.seq@, lo, hi)]
                         0 <= lo < hi <= (i + 1)

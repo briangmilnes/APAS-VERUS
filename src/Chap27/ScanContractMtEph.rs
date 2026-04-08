@@ -100,6 +100,7 @@ pub mod ScanContractMtEph {
 
         if n == 2 {
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+            // Veracity: NEEDED assert
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
         } else {
@@ -108,6 +109,7 @@ pub mod ScanContractMtEph {
 
             s.lemma_fold_left_split(id, f, 2);
             let s_head = s.subrange(0, 2);
+            // Veracity: NEEDED assert
             assert(s_head =~= seq![s[0], s[1]]);
 
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
@@ -115,6 +117,7 @@ pub mod ScanContractMtEph {
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
 
+            // Veracity: NEEDED assert
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -148,6 +151,7 @@ pub mod ScanContractMtEph {
             (prefix.len() / 2) as nat,
             |i: int| f(prefix[2 * i], prefix[2 * i + 1]),
         );
+        // Veracity: NEEDED assert
         assert(contracted =~= b.take(k));
     }
 
@@ -180,6 +184,7 @@ pub mod ScanContractMtEph {
     {
         let take_2j1 = s.take(2 * j + 1);
         take_2j1.lemma_fold_left_split(id, f, 2 * j);
+        // Veracity: NEEDED assert
         assert(take_2j1.subrange(0, 2 * j) =~= s.take(2 * j));
         reveal(Seq::fold_left);
     }
@@ -310,6 +315,7 @@ pub mod ScanContractMtEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| #![trigger b_seq[j]] 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
@@ -322,6 +328,7 @@ pub mod ScanContractMtEph {
 
             proof {
                 let ghost b_view = Seq::new(b.spec_len(), |j: int| b.spec_index(j));
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger c.spec_index(k)] 0 <= k < half as int implies
                     c.spec_index(k) == b_seq.take(k).fold_left(id, spec_f)
                 by {
@@ -332,6 +339,7 @@ pub mod ScanContractMtEph {
             let result_vec = Self::expand_scan_parallel(a, &b, &c, &f, Ghost(spec_f), &id, n, half);
             let scanned = ArraySeqMtEphS { seq: result_vec };
             proof {
+                // Veracity: NEEDED assert
                 assert forall|k: int| #![trigger scanned.spec_index(k)]
                     0 <= k < n as int implies
                     scanned.spec_index(k) == s.take(k).fold_left(id, spec_f)

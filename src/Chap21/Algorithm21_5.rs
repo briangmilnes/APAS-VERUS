@@ -83,12 +83,15 @@ pub mod Algorithm21_5 {
             let ghost all_seq = Seq::new(all.seq@.len(), |i: int| all.seq@[i]);
             let ghost filt_seq = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
             // Filter ensures: filt_seq.to_multiset() =~= all_seq.to_multiset().filter(spec_pred)
+            // Veracity: NEEDED assert
             assert forall|p: int| 2 <= p < n as int && spec_is_prime(p) implies
                 filt_seq.contains(#[trigger] (p as usize)) by {
                 let idx = (p - 2) as int;
+                // Veracity: NEEDED assert
                 assert(all_seq[idx] == p as usize);
                 all_seq.to_multiset_ensures();
                 // axiom_filter_count: m.filter(f).count(v) == if f(v) { m.count(v) } else { 0 }
+                // Veracity: NEEDED assert
                 assert(filt_seq.to_multiset().count(p as usize) > 0);
                 filt_seq.to_multiset_ensures();
             }

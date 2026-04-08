@@ -99,6 +99,7 @@ pub mod ReduceContractMtEph {
 
         if n == 2 {
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+            // Veracity: NEEDED assert
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
         } else {
@@ -107,6 +108,7 @@ pub mod ReduceContractMtEph {
 
             s.lemma_fold_left_split(id, f, 2);
             let s_head = s.subrange(0, 2);
+            // Veracity: NEEDED assert
             assert(s_head =~= seq![s[0], s[1]]);
 
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
@@ -114,6 +116,7 @@ pub mod ReduceContractMtEph {
             lemma_fold_left_monoid::<T>(s_tail, b[0], f, id);
             let s_tail_result = s_tail.fold_left(id, f);
 
+            // Veracity: NEEDED assert
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -125,6 +128,7 @@ pub mod ReduceContractMtEph {
             lemma_fold_left_monoid::<T>(b_tail, b[0], f, id);
 
             b.lemma_fold_left_split(id, f, 1);
+            // Veracity: NEEDED assert
             assert(b.subrange(0, 1) =~= seq![b[0]]);
             lemma_fold_left_singleton::<T>(b[0], f, id);
         }
@@ -189,6 +193,7 @@ pub mod ReduceContractMtEph {
         // Clone array into Arc for sharing between closures
         let a_cloned = a.clone();
         proof {
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < a.spec_len() implies
                 a_cloned.spec_index(i) == a.spec_index(i)
             by {
@@ -299,6 +304,7 @@ pub mod ReduceContractMtEph {
 
         proof {
             // b_vec@ == left_snap + right_snap (from vstd Vec::append spec)
+            // Veracity: NEEDED assert
             assert forall|j: int| #![trigger b.spec_index(j)] 0 <= j < half as int implies {
                 &&& 2 * j + 1 < a.spec_len()
                 &&& b.spec_index(j) == spec_f(a.spec_index(2 * j), a.spec_index(2 * j + 1))
@@ -348,6 +354,7 @@ pub mod ReduceContractMtEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
@@ -368,6 +375,7 @@ pub mod ReduceContractMtEph {
                     let s_last_part = s.subrange((n - 1) as int, n as int);
 
                     s.lemma_fold_left_split(id, spec_f, (n - 1) as int);
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
@@ -377,6 +385,7 @@ pub mod ReduceContractMtEph {
                 reduced
             } else {
                 proof {
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s.len() / 2) as nat,
                         |i: int| spec_f(s[2 * i], s[2 * i + 1]),

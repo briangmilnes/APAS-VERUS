@@ -104,8 +104,10 @@ pub mod ReduceContractStEph {
         let b = Seq::new(half, |i: int| f(s[2 * i], s[2 * i + 1]));
 
         if n == 2 {
+            // Veracity: NEEDED assert
             assert(s =~= seq![s[0], s[1]]);
             lemma_fold_left_pair::<T>(s[0], s[1], f, id);
+            // Veracity: NEEDED assert
             assert(b =~= seq![f(s[0], s[1])]);
             lemma_fold_left_singleton::<T>(f(s[0], s[1]), f, id);
         } else {
@@ -115,6 +117,7 @@ pub mod ReduceContractStEph {
             // (A) Split s at position 2
             s.lemma_fold_left_split(id, f, 2);
             let s_head = s.subrange(0, 2);
+            // Veracity: NEEDED assert
             assert(s_head =~= seq![s[0], s[1]]);
 
             // (B) s_head.fold_left(id, f) == f(s[0], s[1]) == b[0]
@@ -125,6 +128,7 @@ pub mod ReduceContractStEph {
             let s_tail_result = s_tail.fold_left(id, f);
 
             // (D) b_tail corresponds to contraction of s_tail
+            // Veracity: NEEDED assert
             assert(b_tail =~= Seq::new(
                 (s_tail.len() / 2) as nat,
                 |i: int| f(s_tail[2 * i], s_tail[2 * i + 1]),
@@ -139,6 +143,7 @@ pub mod ReduceContractStEph {
 
             // (G) Connect b_tail.fold_left(b[0], f) to b.fold_left(id, f) via split at 1
             b.lemma_fold_left_split(id, f, 1);
+            // Veracity: NEEDED assert
             assert(b.subrange(0, 1) =~= seq![b[0]]);
             lemma_fold_left_singleton::<T>(b[0], f, id);
             // b.fold_left(id, f) == b_tail.fold_left(seq![b[0]].fold_left(id, f), f)
@@ -232,6 +237,7 @@ pub mod ReduceContractStEph {
 
             let ghost b_seq = Seq::new(b.spec_len(), |i: int| b.spec_index(i));
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < half as int implies {
                     &&& 2 * j + 1 < s.len()
                     &&& b_seq[j] == spec_f(s[2 * j], s[2 * j + 1])
@@ -257,6 +263,7 @@ pub mod ReduceContractStEph {
                     reveal(Seq::fold_left);
 
                     // s_even.fold_left(id, f) == b_seq.fold_left(id, f) by contraction
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s_even.len() / 2) as nat,
                         |i: int| spec_f(s_even[2 * i], s_even[2 * i + 1]),
@@ -266,6 +273,7 @@ pub mod ReduceContractStEph {
                 reduced
             } else {
                 proof {
+                    // Veracity: NEEDED assert
                     assert(b_seq =~= Seq::new(
                         (s.len() / 2) as nat,
                         |i: int| spec_f(s[2 * i], s[2 * i + 1]),

@@ -323,6 +323,7 @@ pub mod LabDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| #[trigger] arcs@.contains(e) implies 
                                 (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) by {
                                 if arcs@.contains(e) {
@@ -330,6 +331,7 @@ pub mod LabDirGraphMtEph {
                                     lemma_seq_index_in_map_to_set(la_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)|
                                 (exists |l: L::V| #![trigger self@.A.contains((e.0, e.1, l))] self@.A.contains((e.0, e.1, l))) implies
                                 arcs@.contains(e) by {
@@ -458,9 +460,11 @@ pub mod LabDirGraphMtEph {
                 let LabEdge(from, to, label) = arcs.choose();
                 if feq(&from, &v) {
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] Set::empty().insert(to@).contains(w) implies
                             self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
                         }
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(to@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains(w) implies
                             Set::empty().insert(to@).contains(w) by {
                             let l = choose |l: L::V| arcs@.contains((v@, w, l));
@@ -494,16 +498,20 @@ pub mod LabDirGraphMtEph {
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
                         self.spec_n_plus_from_set(v@, arcs@).contains(w) by {
                         if left_neighbors@.contains(w) {
                             let l = choose |l: L::V| left_arcs@.contains((v@, w, l));
+                            // Veracity: NEEDED assert
                             assert(arcs@.contains((v@, w, l)));
                         } else {
                             let l = choose |l: L::V| right_arcs@.contains((v@, w, l));
+                            // Veracity: NEEDED assert
                             assert(arcs@.contains((v@, w, l)));
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] self.spec_n_plus_from_set(v@, arcs@).contains(w) implies
                         left_neighbors@.union(right_neighbors@).contains(w) by {
                         let l = choose |l: L::V| arcs@.contains((v@, w, l));
@@ -529,9 +537,11 @@ pub mod LabDirGraphMtEph {
                 let LabEdge(from, to, label) = arcs.choose();
                 if feq(&to, &v) {
                     proof {
+                        // Veracity: NEEDED assert
                         assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] Set::empty().insert(from@).contains(u) implies
                             self.spec_n_minus_from_set(v@, arcs@).contains(u) by {
                         }
+                        // Veracity: NEEDED assert
                         assert forall |u: V::V| #![trigger Set::empty().insert(from@).contains(u)] self.spec_n_minus_from_set(v@, arcs@).contains(u) implies
                             Set::empty().insert(from@).contains(u) by {
                             let l = choose |l: L::V| arcs@.contains((u, v@, l));
@@ -565,16 +575,20 @@ pub mod LabDirGraphMtEph {
                 let Pair(left_neighbors, right_neighbors) = ParaPair!(f1, f2);
 
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] left_neighbors@.union(right_neighbors@).contains(u) implies
                         self.spec_n_minus_from_set(v@, arcs@).contains(u) by {
                         if left_neighbors@.contains(u) {
                             let l = choose |l: L::V| left_arcs@.contains((u, v@, l));
+                            // Veracity: NEEDED assert
                             assert(arcs@.contains((u, v@, l)));
                         } else {
                             let l = choose |l: L::V| right_arcs@.contains((u, v@, l));
+                            // Veracity: NEEDED assert
                             assert(arcs@.contains((u, v@, l)));
                         }
                     }
+                    // Veracity: NEEDED assert
                     assert forall |u: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(u)] self.spec_n_minus_from_set(v@, arcs@).contains(u) implies
                         left_neighbors@.union(right_neighbors@).contains(u) by {
                         let l = choose |l: L::V| arcs@.contains((u, v@, l));

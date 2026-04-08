@@ -349,9 +349,12 @@ pub mod ArraySeqMtEph {
             proof {
                 // Bridge filter_dc ensures (a.seq@) to trait ensures (Seq::new(...)).
                 let ghost s = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
+                // Veracity: NEEDED assert
                 assert(s =~= a.seq@);
                 let ghost fs = Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i));
+                // Veracity: NEEDED assert
                 assert(fs =~= filtered.seq@) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < fs.len() implies #[trigger] fs[i] == filtered.seq@[i]
                     by { filtered.lemma_spec_index(i); }
                 }
@@ -447,6 +450,7 @@ pub mod ArraySeqMtEph {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
+                    // Veracity: NEEDED assert
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
@@ -456,8 +460,10 @@ pub mod ArraySeqMtEph {
             }
             let injected = ArraySeqMtEphS { seq: result_vec };
             proof {
+                // Veracity: NEEDED assert
                 assert forall|j: int| 0 <= j < a.spec_len() implies #[trigger] a.spec_index(j) == s[j]
                 by { a.lemma_spec_index(j); }
+                // Veracity: NEEDED assert
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= s);
             }
             injected
@@ -477,6 +483,7 @@ pub mod ArraySeqMtEph {
                 let ghost u = updates@;
                 // inject ensures r =~= spec_inject(s, u), so r.len() == s.len().
                 // For each position, spec_inject either leaves s[i] or applies some update.
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < s.len() implies
                     #[trigger] r[i] == s[i]
                     || exists|j: int| #![trigger u[j]] 0 <= j < u.len()
@@ -520,6 +527,7 @@ pub mod ArraySeqMtEph {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -566,6 +574,7 @@ pub mod ArraySeqMtEph {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = s.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= s.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -580,6 +589,7 @@ pub mod ArraySeqMtEph {
             }
             let scanned_seq = ArraySeqMtEphS { seq };
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger scanned_seq.spec_index(i)] 0 <= i < a.spec_len() implies
                     scanned_seq.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
                 by {
@@ -652,6 +662,7 @@ pub mod ArraySeqMtEph {
                 }
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@);
+                    // Veracity: NEEDED assert
                     assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqMtEphS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
                     prefix.lemma_flatten_push(a.seq@[i as int].seq@);
@@ -710,10 +721,12 @@ pub mod ArraySeqMtEph {
                 let f1 = clone_fn(&f);
                 let f2 = f;
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] f1.requires((&left_seq.seq@[i],)) by {
                         a.lemma_spec_index(0 + i);
                         left_seq.lemma_spec_index(i);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] f2.requires((&right_seq.seq@[i],)) by {
                         a.lemma_spec_index(mid as int + i);
                         right_seq.lemma_spec_index(i);
@@ -765,10 +778,12 @@ pub mod ArraySeqMtEph {
                 let p1 = clone_pred(&pred);
                 let p2 = pred;
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies #[trigger] p1.requires((&left_seq.seq@[i],)) by {
                         a.lemma_spec_index(0 + i);
                         left_seq.lemma_spec_index(i);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < right_seq.seq@.len() implies #[trigger] p2.requires((&right_seq.seq@[i],)) by {
                         a.lemma_spec_index(mid as int + i);
                         right_seq.lemma_spec_index(i);
@@ -889,7 +904,9 @@ pub mod ArraySeqMtEph {
                 let (left, right) = join(fa, fb);
                 let combined = f(&left, &right);
                 proof {
+                    // Veracity: NEEDED assert
                     assert(left_s =~= s.subrange(0, mid as int));
+                    // Veracity: NEEDED assert
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
@@ -974,7 +991,9 @@ pub mod ArraySeqMtEph {
                 let (left, right) = join(fa, fb);
                 let combined = f(&left, &right);
                 proof {
+                    // Veracity: NEEDED assert
                     assert(left_s =~= s.subrange(0, mid as int));
+                    // Veracity: NEEDED assert
                     assert(right_s =~= s.subrange(mid as int, len as int));
                     s.lemma_fold_left_split(id, spec_f, mid as int);
                     Self::lemma_monoid_fold_left(right_s, spec_f, id, left);
@@ -1021,24 +1040,28 @@ pub mod ArraySeqMtEph {
 
                 proof {
                     // Pre-establish ghost connections before left_seq/right_seq are moved.
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_view.len() implies
                         #[trigger] left_view[i] == a_view[i]
                     by {
                         a.lemma_spec_index(i);
                         left_seq.lemma_spec_index(i);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < right_view.len() implies
                         #[trigger] right_view[j] == a_view[mid as int + j]
                     by {
                         a.lemma_spec_index(mid as int + j);
                         right_seq.lemma_spec_index(j);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies
                         #[trigger] f1.requires((&left_seq.seq@[i],))
                     by {
                         a.lemma_spec_index(i);
                         left_seq.lemma_spec_index(i);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < right_seq.seq@.len() implies
                         #[trigger] f2.requires((&right_seq.seq@[i],))
                     by {
@@ -1077,6 +1100,7 @@ pub mod ArraySeqMtEph {
                     // left_view[i] == a_view[i] was established before the join.
                     // right_view[j] == a_view[mid + j] was established before the join.
                     // f1/f2 ensures match f ensures from clone_fn.
+                    // Veracity: NEEDED assert
                     assert forall|i: int| #![trigger mapped.seq@[i]] 0 <= i < a.seq@.len() implies
                         f.ensures((&a.seq@[i],), mapped.seq@[i])
                     by {
@@ -1138,6 +1162,7 @@ pub mod ArraySeqMtEph {
                     let filtered = ArraySeqMtEphS { seq };
                     proof {
                         broadcast use vstd::multiset::group_multiset_axioms;
+                        // Veracity: NEEDED assert
                         assert(filtered.seq@ =~= a.seq@);
                     }
                     filtered
@@ -1163,12 +1188,14 @@ pub mod ArraySeqMtEph {
 
                 proof {
                     // Pre-establish pred.requires for left and right sub-sequences.
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < left_seq.seq@.len() implies
                         #[trigger] p1.requires((&left_seq.seq@[i],))
                     by {
                         a.lemma_spec_index(i);
                         left_seq.lemma_spec_index(i);
                     }
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < right_seq.seq@.len() implies
                         #[trigger] p2.requires((&right_seq.seq@[i],))
                     by {
@@ -1176,16 +1203,21 @@ pub mod ArraySeqMtEph {
                         right_seq.lemma_spec_index(i);
                     }
                     // Connect sub-sequence views to a.seq@.
+                    // Veracity: NEEDED assert
                     assert(left_view =~= a.seq@.subrange(0, mid as int)) by {
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < left_view.len() implies
                             #[trigger] left_view[i] == a.seq@.subrange(0, mid as int)[i]
                         by { left_seq.lemma_spec_index(i); a.lemma_spec_index(i); }
                     }
+                    // Veracity: NEEDED assert
                     assert(right_view =~= a.seq@.subrange(mid as int, len as int)) by {
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < right_view.len() implies
                             #[trigger] right_view[i] == a.seq@.subrange(mid as int, len as int)[i]
                         by { right_seq.lemma_spec_index(i); a.lemma_spec_index(mid as int + i); }
                     }
+                    // Veracity: NEEDED assert
                     assert(a.seq@ =~= left_view + right_view);
                 }
 
@@ -1233,7 +1265,9 @@ pub mod ArraySeqMtEph {
                     lemma_seq_concat_to_multiset_filter(left_view, right_view, spec_pred);
 
                     // filtered.seq@ =~= left.seq@ + right.seq@ (from append ensures).
+                    // Veracity: NEEDED assert
                     assert(filtered.seq@ =~= left.seq@ + right.seq@) by {
+                        // Veracity: NEEDED assert
                         assert forall|i: int| 0 <= i < filtered.seq@.len() implies
                             #[trigger] filtered.seq@[i] == (left.seq@ + right.seq@)[i]
                         by {
@@ -1257,6 +1291,7 @@ pub mod ArraySeqMtEph {
                     vstd::seq_lib::lemma_multiset_commutative(left.seq@, right.seq@);
 
                     // Prove pred.ensures for all filtered elements.
+                    // Veracity: NEEDED assert
                     assert forall|i: int| #![trigger filtered.spec_index(i)]
                         0 <= i < filtered.spec_len() implies
                         pred.ensures((&filtered.spec_index(i),), true)
@@ -1297,6 +1332,7 @@ pub mod ArraySeqMtEph {
             let buf = a.seq.clone();
             proof {
                 broadcast use group_feq_axioms;
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < a.seq@.len() implies #[trigger] buf@[i] == a.seq@[i]
                 by {
                 }
@@ -1344,6 +1380,7 @@ pub mod ArraySeqMtEph {
             let ghost rv = right@;
 
             proof {
+                // Veracity: NEEDED assert
                 assert(pred.updates =~= updates@);
             }
 
@@ -1367,6 +1404,7 @@ pub mod ArraySeqMtEph {
             let r = result_vec.clone();
             proof {
                 broadcast use group_feq_axioms;
+                // Veracity: NEEDED assert
                 assert forall|i: int| 0 <= i < result_vec@.len() implies #[trigger] r@[i] == result_vec@[i]
                 by {
                 }
@@ -1839,6 +1877,7 @@ pub mod ArraySeqMtEph {
                     let witness = choose|j: int| #![trigger pred.updates[j]]
                         0 <= j < pred.updates.len()
                         && pred.updates[j] == updates@[i as int];
+                    // Veracity: NEEDED assert
                     assert forall|p: int| #![trigger buf@[p]] 0 <= p < buf@.len() implies {
                         buf@[p] == pred.source[p]
                         || exists|j: int| #![trigger pred.updates[j]] 0 <= j < pred.updates.len()

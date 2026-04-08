@@ -238,6 +238,7 @@ verus!
                 decreases s.len() - i,
             {
                 if !self.alphabet.mem(&s[i]) {
+                    // Veracity: NEEDED assert
                     assert(viewed::<T>(s@)[i as int] == s@[i as int]@);
                     return false;
                 }

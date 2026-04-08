@@ -294,6 +294,7 @@ pub mod ArraySeqMtEphSlice {
             reveal(Seq::fold_left);
             if n > 0 {
                 lemma_prefix_fold_eq_fold_left(s, seq_fn, spec_f, id, n - 1);
+                // Veracity: NEEDED assert
                 assert(s.take(n).drop_last() =~= s.take(n - 1));
             }
         }
@@ -747,6 +748,7 @@ pub mod ArraySeqMtEphSlice {
                 let ghost a_fn = |i: int| self.spec_index(i);
                 let result = Self::from_vec(v);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| #![trigger result.spec_index(i)]
                         0 <= i < self.spec_len() implies
                         result.spec_index(i) == s.take(i + 1).fold_left(id, spec_f)
@@ -816,6 +818,7 @@ pub mod ArraySeqMtEphSlice {
             let ghost old_v = v@;
             let result = Self::from_vec(v);
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger result.spec_index(i)]
                     0 <= i < self.spec_len() && i != index as int
                 implies result.spec_index(i) == self.spec_index(i)
@@ -879,12 +882,14 @@ pub mod ArraySeqMtEphSlice {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
+                    // Veracity: NEEDED assert
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
             }
 
             proof {
+                // Veracity: NEEDED assert
                 assert(u.subrange(0, ulen as int) =~= u);
             }
             let injected = Self::from_vec(result_vec);
@@ -901,6 +906,7 @@ pub mod ArraySeqMtEphSlice {
                 let ghost s = Seq::new(self.spec_len(), |i: int| self.spec_index(i));
                 let ghost r = Seq::new(result.spec_len(), |i: int| result.spec_index(i));
                 lemma_spec_inject_len(s, updates@);
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger r[i]] 0 <= i < s.len() implies {
                     r[i] == s[i]
                     || exists|j: int| #![trigger updates@[j]] 0 <= j < updates@.len()
@@ -957,18 +963,24 @@ pub mod ArraySeqMtEphSlice {
                 // Prove backing seq relationships while left/right are still accessible.
                 proof {
                     // left_backing[i] == left.spec_index(i) == a.spec_index(i) == s[i]
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < mid implies
                         #[trigger] left_backing[i] == s.subrange(0, mid as int)[i]
                     by {
+                        // Veracity: NEEDED assert
                         assert(left_backing[i] == left.spec_index(i));
                     }
+                    // Veracity: NEEDED assert
                     assert(left_backing =~= s.subrange(0, mid as int));
                     // right_backing[i] == right.spec_index(i) == a.spec_index(mid+i) == s[mid+i]
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < (len - mid) as int implies
                         #[trigger] right_backing[i] == s.subrange(mid as int, len as int)[i]
                     by {
+                        // Veracity: NEEDED assert
                         assert(right_backing[i] == right.spec_index(i));
                     }
+                    // Veracity: NEEDED assert
                     assert(right_backing =~= s.subrange(mid as int, len as int));
                 }
 
@@ -1242,12 +1254,14 @@ pub mod ArraySeqMtEphSlice {
                     i = i + 1;
                 }
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall|j: int| 0 <= j < count implies
                         #[trigger] f.ensures(((start as int + j) as usize,), left_v@[j])
                     by {
                         if j < left_len as int {
                         } else {
                             let k = j - left_len as int;
+                            // Veracity: NEEDED assert
                             assert(left_v@[left_len as int + k] == right_v@[k]);
                         }
                     }
@@ -1286,6 +1300,7 @@ pub mod ArraySeqMtEphSlice {
                     axiom_cloned_implies_eq_owned(elem, elem2);
                     // spec_prefix_fold(a_fn, f, id, 1) = f(prefix_fold(a_fn, f, id, 0), a_fn(0)) = f(id, a[0]) = a[0].
                     // Unfold one step: n=1 > 0 so prefix_fold(1) = f(prefix_fold(0), a_fn(0)) = f(id, a[0]).
+                    // Veracity: NEEDED assert
                     assert(spec_prefix_fold(a_fn, spec_f, id, 1int)
                         == spec_f(spec_prefix_fold(a_fn, spec_f, id, 0int), a_fn(0int)));
                 }
@@ -1467,6 +1482,7 @@ pub mod ArraySeqMtEphSlice {
         } else if len == 1 {
             let backing: &Vec<ArraySeqMtEphSliceS<T>> = arc_deref(&a.data);
             let inner: &ArraySeqMtEphSliceS<T> = &backing[a.start];
+            // Veracity: NEEDED assert
             assert(inner == (*a.data)@[a.start as int + 0]);
             let v = inner.to_vec();
             proof {
@@ -1475,6 +1491,7 @@ pub mod ArraySeqMtEphSlice {
                 let rest = ArraySeqMtEphSliceS::<ArraySeqMtEphSliceS<T>> {
                     data: a.data, start: (a.start + 1) as usize, len: 0usize,
                 };
+                // Veracity: NEEDED assert
                 assert(spec_sum_inner_lens(a) == inner.len as nat + spec_sum_inner_lens(&rest));
             }
             v
@@ -1497,6 +1514,7 @@ pub mod ArraySeqMtEphSlice {
 
             // Propagate nested wf to left and right halves.
             proof {
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger (*left.data)@[left.start as int + i]]
                     0 <= i < left.len as int implies {
                     let inner = (*left.data)@[left.start as int + i];
@@ -1504,17 +1522,21 @@ pub mod ArraySeqMtEphSlice {
                     &&& inner.start + inner.len <= usize::MAX
                 } by {
                 }
+                // Veracity: NEEDED assert
                 assert(spec_nested_wf(&left));
 
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger (*right.data)@[right.start as int + i]]
                     0 <= i < right.len as int implies {
                     let inner = (*right.data)@[right.start as int + i];
                     &&& inner.start + inner.len <= (*inner.data)@.len()
                     &&& inner.start + inner.len <= usize::MAX
                 } by {
+                    // Veracity: NEEDED assert
                     assert((*right.data)@[right.start as int + i]
                         == (*a.data)@[a.start as int + (mid as int + i)]);
                 }
+                // Veracity: NEEDED assert
                 assert(spec_nested_wf(&right));
 
                 // Connect Arc::clone-based split to a.data-based split for the lemma.

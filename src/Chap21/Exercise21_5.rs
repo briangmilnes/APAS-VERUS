@@ -56,10 +56,12 @@ pub mod Exercise21_5 {
         decreases n
     {
         if n > 0 {
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < ss.drop_first().len() implies
                 (#[trigger] ss.drop_first()[i]).len() == (n - 1) - i by {
             }
             lemma_inner_lens_sum_triangular(ss.drop_first(), n - 1);
+            // Veracity: NEEDED assert
             assert(spec_inner_lens_sum(ss) * 2 == n * (n + 1)) by (nonlinear_arith)
                 requires
                     spec_inner_lens_sum(ss) == ss.first().len() + spec_inner_lens_sum::<A>(ss.drop_first()),
@@ -109,6 +111,7 @@ pub mod Exercise21_5 {
         proof {
             let ghost mapped = nested.seq@.map_values(
                 |inner: ArraySeqStPerS<ArraySeqStPerS<usize>>| inner.seq@);
+            // Veracity: NEEDED assert
             assert forall|i: int| 0 <= i < mapped.len() implies
                 (#[trigger] mapped[i]).len() == n as int - i by {}
             lemma_flatten_len_is_inner_lens_sum(mapped);

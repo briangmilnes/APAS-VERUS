@@ -257,6 +257,7 @@ verus!
                 match it.next() {
                     None => {
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] ng@.contains(w) implies 
                                 self.spec_ng(v_view).contains(w) by {
                                 if ng@.contains(w) {
@@ -266,6 +267,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(edges_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng(v_view).contains(w) implies 
                                 ng@.contains(w) by {
                                 if self.spec_ng(v_view).contains(w) {
@@ -313,6 +315,7 @@ verus!
                 match it.next() {
                     None => {
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] neighbors@.contains(w) implies 
                                 self.spec_ng_of_vertices(vertices_view).contains(w) by {
                                 if neighbors@.contains(w) {
@@ -320,6 +323,7 @@ verus!
                                     lemma_seq_index_in_map_to_set(u_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert forall |w: V::V| #[trigger] self.spec_ng_of_vertices(vertices_view).contains(w) implies 
                                 neighbors@.contains(w) by {
                                 if self.spec_ng_of_vertices(vertices_view).contains(w) {

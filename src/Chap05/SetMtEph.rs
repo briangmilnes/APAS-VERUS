@@ -365,9 +365,11 @@ verus!
             proof {
                 lemma_seq_map_to_set_equality(inner@.1, self@);
                 // Derive element-wise membership from HashSetWithViewPlus iter postcondition.
+                // Veracity: NEEDED assert
                 assert forall |j: int| 0 <= j < inner@.1.len()
                     implies self@.contains(#[trigger] inner@.1[j]@)
                 by {
+                    // Veracity: NEEDED assert
                     assert(inner@.1.contains(inner@.1[j]));
                 };
             }
@@ -659,6 +661,7 @@ verus!
                     // Therefore: thread_result@.finite() && forall av, bv: ret@.contains((av, bv)) <==> ...
 
                     // Prove a_view is not in the joined_views.
+                    // Veracity: NEEDED assert
                     assert(!joined_views.contains(a_view)) by {
                         lemma_reveal_view_injective::<T>();
                         if joined_views.contains(a_view) {
@@ -680,10 +683,13 @@ verus!
             proof {
                 // Prove joined_views == s1_view
                 // At loop end: handles@.len() == 0, so joined_views contains spawned_views[0..n]
+                // Veracity: NEEDED assert
                 assert(joined_views == s1_view) by {
+                    // Veracity: NEEDED assert
                     assert forall |v: T::V| s1_view.contains(v) implies joined_views.contains(v) by {
                         lemma_map_to_set_contains_index(it_seq, v);
                         let j = choose |j: int| #![trigger it_seq[j]] 0 <= j < it_seq.len() && v == it_seq[j]@;
+                        // Veracity: NEEDED assert
                         assert(v == spawned_views[j]);
                     }
                 }
@@ -860,6 +866,7 @@ verus!
             {
                 proof {
                     lemma_take_one_more_extends_the_seq_set_with_view(iter_seq, iter.pos);
+                    // Veracity: NEEDED assert
                     assert(!iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@)) by {
                         lemma_reveal_view_injective::<T>();
                         if iter_seq.take(iter.pos).map(|_i: int, k: T| k@).to_set().contains(x@) {
@@ -897,6 +904,7 @@ verus!
             proof {
                 // next() ensures element_ref == s[0]
                 // Since 0 < s.len(), s.contains(element_ref)
+                // Veracity: NEEDED assert
                 assert(s.contains(*element_ref)) by {
                 }
                 // From iter ensures: s.contains(k) ==> self@.contains(k@)

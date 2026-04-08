@@ -227,6 +227,7 @@ verus!
                 match it.next() {
                     None => {
                         proof {
+// Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                 (exists |w: f64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
@@ -234,6 +235,7 @@ assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w) implies
                                 neighbors@.contains(p) by {
                                 if exists |w: f64| #![trigger wa_view.contains((v_view, p.0, w))] wa_view.contains((v_view, p.0, w)) && p.1 == w {
@@ -277,6 +279,7 @@ assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((v_v
                 match it.next() {
                     None => {
                         proof {
+// Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                 (exists |w: f64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) by {
                                 if neighbors@.contains(p) {
@@ -284,6 +287,7 @@ assert forall |p: (V::V, f64)| neighbors@.contains(p) implies
                                     lemma_seq_index_in_map_to_set(wa_seq, i);
                                 }
                             }
+// Veracity: NEEDED assert
 assert forall |p: (V::V, f64)| (exists |w: f64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w) implies
                                 neighbors@.contains(p) by {
                                 if exists |w: f64| #![trigger wa_view.contains((p.0, v_view, w))] wa_view.contains((p.0, v_view, w)) && p.1 == w {

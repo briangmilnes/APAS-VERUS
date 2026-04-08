@@ -118,6 +118,7 @@ pub mod ArraySeqStPer {
             let prefix = ss.drop_last();
             lemma_flatten_bounded_by_outer_len::<T>(prefix);
             prefix.lemma_flatten_push(ss.last());
+            // Veracity: NEEDED assert
             assert(ss =~= prefix.push(ss.last()));
         }
     }
@@ -135,6 +136,7 @@ pub mod ArraySeqStPer {
             let last = ss.last();
             lemma_flatten_all_satisfy::<T>(prefix, p);
             prefix.lemma_flatten_push(last);
+            // Veracity: NEEDED assert
             assert(ss =~= prefix.push(last));
         }
     }
@@ -610,6 +612,7 @@ pub mod ArraySeqStPer {
 
                 // Every element in every inner seq satisfies pred.
                 let ghost p = |x: T| pred.ensures((&x,), true);
+                // Veracity: NEEDED assert
                 assert forall|j: int, k: int| #![trigger ss[j][k]]
                     0 <= j < ss.len() && 0 <= k < ss[j].len()
                     implies p(ss[j][k])
@@ -619,6 +622,7 @@ pub mod ArraySeqStPer {
 
                 // Connect flatten length to spec_filter_len via the 0-or-1 lemma.
                 let ghost s_view = Seq::new(a.seq@.len(), |i: int| a.seq@[i]);
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger ss[i]] 0 <= i < a.seq@.len()
                     implies (ss[i].len() == 1 <==> spec_pred(a.seq@[i]))
                 by {
@@ -626,6 +630,7 @@ pub mod ArraySeqStPer {
                 lemma_flatten_01_eq_spec_filter_len(a.seq@, ss, spec_pred);
 
                 // Connect flatten multiset to input multiset filtered by spec_pred.
+                // Veracity: NEEDED assert
                 assert forall|i: int| #![trigger ss[i]]
                     0 <= i < a.seq@.len() && ss[i].len() == 1
                     implies ss[i][0] == a.seq@[i]
@@ -633,7 +638,9 @@ pub mod ArraySeqStPer {
                 };
                 lemma_flatten_01_multiset_eq_filter(a.seq@, ss, spec_pred);
 
+                // Veracity: NEEDED assert
                 assert(filtered.seq@ =~= Seq::new(filtered.spec_len(), |i: int| filtered.spec_index(i)));
+                // Veracity: NEEDED assert
                 assert(a.seq@ =~= Seq::new(a.seq@.len(), |i: int| a.seq@[i]));
             }
             filtered
@@ -725,6 +732,7 @@ pub mod ArraySeqStPer {
                 }
                 proof {
                     let ghost sub = u.subrange(i as int, ulen as int);
+                    // Veracity: NEEDED assert
                     assert(sub.drop_first() =~= u.subrange(i as int + 1, ulen as int));
                     reveal(spec_inject);
                 }
@@ -734,7 +742,9 @@ pub mod ArraySeqStPer {
             }
             let injected = ArraySeqStPerS { seq: result_vec };
             proof {
+                // Veracity: NEEDED assert
                 assert(Seq::new(a.spec_len(), |i: int| a.spec_index(i)) =~= a.seq@) by {
+                    // Veracity: NEEDED assert
                     assert forall|i: int| 0 <= i < a.spec_len() implies
                         Seq::new(a.spec_len(), |j: int| a.spec_index(j))[i] == a.seq@[i]
                     by {
@@ -777,6 +787,7 @@ pub mod ArraySeqStPer {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -818,6 +829,7 @@ pub mod ArraySeqStPer {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -865,6 +877,7 @@ pub mod ArraySeqStPer {
                 acc = f(&acc, &a.seq[i]);
                 proof {
                     let ghost t = a.seq@.take(i as int + 1);
+                    // Veracity: NEEDED assert
                     assert(t.drop_last() =~= a.seq@.take(i as int));
                     reveal(Seq::fold_left);
                 }
@@ -953,6 +966,7 @@ pub mod ArraySeqStPer {
                 }
                 proof {
                     let ghost prefix = a.seq@.take(i as int).map_values(|inner: ArraySeqStPerS<T>| inner.seq@);
+                    // Veracity: NEEDED assert
                     assert(a.seq@.take(i as int + 1).map_values(|inner: ArraySeqStPerS<T>| inner.seq@)
                         =~= prefix.push(a.seq@[i as int].seq@));
                     prefix.lemma_flatten_push(a.seq@[i as int].seq@);

@@ -210,6 +210,7 @@ verus!
 
             proof {
                 // Connect invariant to postcondition
+                // Veracity: NEEDED assert
                 assert forall |x: X::V| out@.contains(x) implies 
                     (exists |y: Y::V| self@.contains((x, y))) by {
                     if out@.contains(x) {
@@ -217,6 +218,7 @@ verus!
                         lemma_seq_index_in_map_to_set(pairs_seq, i);
                     }
                 }
+                // Veracity: NEEDED assert
                 assert forall |x: X::V| (exists |y: Y::V| self@.contains((x, y))) implies 
                     out@.contains(x) by {
                     if exists |y: Y::V| self@.contains((x, y)) {
@@ -250,6 +252,7 @@ verus!
             }
 
             proof {
+                // Veracity: NEEDED assert
                 assert forall |y: Y::V| out@.contains(y) implies 
                     (exists |x: X::V| self@.contains((x, y))) by {
                     if out@.contains(y) {
@@ -257,6 +260,7 @@ verus!
                         lemma_seq_index_in_map_to_set(pairs_seq, i);
                     }
                 }
+                // Veracity: NEEDED assert
                 assert forall |y: Y::V| (exists |x: X::V| self@.contains((x, y))) implies 
                     out@.contains(y) by {
                     if exists |x: X::V| self@.contains((x, y)) {

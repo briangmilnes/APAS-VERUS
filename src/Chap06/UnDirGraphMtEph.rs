@@ -407,6 +407,7 @@ pub mod UnDirGraphMtEph {
 
                 let neighbors = left_neighbors.union(&right_neighbors);
                 proof {
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger neighbors@.contains(w)] self.spec_ng_of_vertices_from_set(verts@).contains(w)
                         <==> neighbors@.contains(w) by {
                         if self.spec_ng_of_vertices_from_set(verts@).contains(w) {
@@ -418,9 +419,11 @@ pub mod UnDirGraphMtEph {
                         if neighbors@.contains(w) {
                             if left_neighbors@.contains(w) {
                                 let v_wit: V::V = choose |v: V::V| #![trigger left_verts@.contains(v)] left_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             } else {
                                 let v_wit: V::V = choose |v: V::V| #![trigger right_verts@.contains(v)] right_verts@.contains(v) && self.spec_ng(v).contains(w);
+                                // Veracity: NEEDED assert
                                 assert(verts@.contains(v_wit));
                             }
                         }

@@ -290,6 +290,7 @@ pub mod LabUnDirGraphMtEph {
                 match it.next() {
                     None => {
                         proof {
+                            // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| edges@.contains(e) implies
                                 (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) by {
                                 if edges@.contains(e) {
@@ -297,6 +298,7 @@ pub mod LabUnDirGraphMtEph {
                                     lemma_seq_index_in_map_to_set(le_seq, i);
                                 }
                             }
+                            // Veracity: NEEDED assert
                             assert forall |e: (V::V, V::V)| (exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l))) implies 
                                 edges@.contains(e) by {
                                 if exists |l: L::V| #![trigger le_view.contains((e.0, e.1, l))] le_view.contains((e.0, e.1, l)) {
@@ -437,9 +439,11 @@ pub mod LabUnDirGraphMtEph {
                         //   (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ == v@ and v@ == b@
                         // So the only neighbor is b@ (and possibly v@ if v@ == b@, but that's still just b@)
 
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] Set::empty().insert(b@).contains(w) implies
                             self.spec_ng_from_set(v@, edges@).contains(w) by {
                         }
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(b@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) implies
                             Set::empty().insert(b@).contains(w) by {
                             let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
@@ -460,9 +464,11 @@ pub mod LabUnDirGraphMtEph {
                         // (w, v@, l) in edges@ iff (w, v@, l) == (a@, b@, label@) iff w == a@ and v@ == b@ (true)
                         // So the only neighbor is a@
 
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] Set::empty().insert(a@).contains(w) implies
                             self.spec_ng_from_set(v@, edges@).contains(w) by {
                         }
+                        // Veracity: NEEDED assert
                         assert forall |w: V::V| #![trigger Set::empty().insert(a@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) implies
                             Set::empty().insert(a@).contains(w) by {
                             let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));
@@ -508,18 +514,22 @@ pub mod LabUnDirGraphMtEph {
 
                 proof {
                     // Prove subset in one direction
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] left_neighbors@.union(right_neighbors@).contains(w) implies
                         self.spec_ng_from_set(v@, edges@).contains(w) by {
                         if left_neighbors@.contains(w) {
                             let l = choose |l: L::V| left_edges@.contains((v@, w, l)) || left_edges@.contains((w, v@, l));
+                            // Veracity: NEEDED assert
                             assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
                         } else {
                             let l = choose |l: L::V| right_edges@.contains((v@, w, l)) || right_edges@.contains((w, v@, l));
+                            // Veracity: NEEDED assert
                             assert(edges@.contains((v@, w, l)) || edges@.contains((w, v@, l)));
                         }
                     }
 
                     // Prove subset in other direction
+                    // Veracity: NEEDED assert
                     assert forall |w: V::V| #![trigger left_neighbors@.union(right_neighbors@).contains(w)] self.spec_ng_from_set(v@, edges@).contains(w) implies
                         left_neighbors@.union(right_neighbors@).contains(w) by {
                         let l = choose |l: L::V| edges@.contains((v@, w, l)) || edges@.contains((w, v@, l));

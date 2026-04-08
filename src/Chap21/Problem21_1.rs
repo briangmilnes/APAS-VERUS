@@ -78,6 +78,7 @@ pub mod Problem21_1 {
                 v.push(Pair(x, y));
                 y = y + 1;
             }
+            // Veracity: NEEDED assert
             assert((x as int + 1) * (n as int - 1) == x as int * (n as int - 1) + (n as int - 1))
                 by (nonlinear_arith);
             x = x + 1;
