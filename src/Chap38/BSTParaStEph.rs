@@ -147,8 +147,6 @@ pub mod BSTParaStEph {
             | Exposed::Node(left, key, right) => {
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(!left@.union(right@).contains(key@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 let left_filtered = filter_inner(&left, predicate, Ghost(spec_pred));
                 let right_filtered = filter_inner(&right, predicate, Ghost(spec_pred));
@@ -157,15 +155,11 @@ pub mod BSTParaStEph {
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Disjointness: subsets of disjoint sets.
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         // Ordering: left_filtered ⊆ left (< key), right_filtered ⊆ right (> key).
-                        assert forall|t: T| (#[trigger] left_filtered@.contains(t@)) implies t.cmp_spec(&key) == Less by {};
-                        assert forall|t: T| (#[trigger] right_filtered@.contains(t@)) implies t.cmp_spec(&key) == Greater by {};
                     }
                     ParamBST::join_m(left_filtered, key, right_filtered)
                 } else {
                     proof {
-                        assert forall|x| !(left_filtered@.contains(x) && right_filtered@.contains(x)) by {};
                         vstd::set_lib::lemma_len_subset(left_filtered@, left@);
                         vstd::set_lib::lemma_len_subset(right_filtered@, right@);
                         // Ordering: left_filtered ⊆ left < key < right ⊇ right_filtered.
@@ -200,8 +194,6 @@ pub mod BSTParaStEph {
             | Exposed::Node(left, key, right) => {
                 proof {
                     vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                    assert(!left@.union(right@).contains(key@));
-                    assert(tree@.len() == left@.len() + right@.len() + 1);
                 }
                 let left_acc = reduce_inner(&left, op, identity.clone());
                 let right_acc = reduce_inner(&right, op, identity);
@@ -333,7 +325,6 @@ pub mod BSTParaStEph {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
         // a@ == b@ from view_ord_consistent + Equal(a,b).
-        assert(a@ == b@);
         // Mismatch cases (a cmp c) != (b cmp c) all lead to contradiction:
         // (L,G) or (G,L): transitivity gives Less(a,b) or Less(b,a),
         //   contradicting Equal(a,b).
@@ -352,7 +343,6 @@ pub mod BSTParaStEph {
     {
         reveal(vstd::laws_cmp::obeys_cmp_ord);
         reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        assert(b@ == c@);
     }
 
     //		Section 8d. traits
@@ -613,7 +603,6 @@ pub mod BSTParaStEph {
                 tree@.finite(),
                 tree.spec_bstparasteph_wf()
         {
-                      assert(obeys_feq_full_trigger::<T>());
             let left: Self = Self::new();
             let right: Self = Self::new();
             Self::join_mid(Exposed::Node(left, key, right))
@@ -647,8 +636,6 @@ pub mod BSTParaStEph {
                 | Some(node) => {
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(node.left@, node.right@);
-                        assert(node.left@.len() < self@.len());
-                        assert(node.right@.len() < self@.len());
                     }
                     let l = node.left.clone();
                     let k = clone_elem(&node.key);
@@ -657,14 +644,6 @@ pub mod BSTParaStEph {
                         // k == node.key from clone_elem ensures.
                         // l@ == node.left@ and r@ == node.right@ from ParamBST::clone ensures.
                         // Ordering transfers: spec fn on equal args yields equal results.
-                        assert forall |t: T| (#[trigger] l@.contains(t@))
-                            implies t.cmp_spec(&k) == Less by {
-                            assert(node.left@.contains(t@));
-                        }
-                        assert forall |t: T| (#[trigger] r@.contains(t@))
-                            implies t.cmp_spec(&k) == Greater by {
-                            assert(node.right@.contains(t@));
-                        }
                     }
                     Exposed::Node(l, k, r)
                 }
@@ -688,22 +667,9 @@ pub mod BSTParaStEph {
                     let ghost contents = lv.union(rv).insert(kv);
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-                        assert(!lv.union(rv).contains(kv));
-                        assert(contents.len() == size as nat);
                         // Witness property: every view in contents has a T witness.
                         use_type_invariant(&left);
                         use_type_invariant(&right);
-                        assert forall|v: <T as View>::V| contents.contains(v)
-                            implies exists|t: T| t@ == v by {
-                            if lv.contains(v) {
-                                // From left's type_invariant.
-                            } else if rv.contains(v) {
-                                // From right's type_invariant.
-                            } else {
-                                assert(v == kv);
-                                assert(key@ == v);
-                            }
-                        };
                     }
                     new_param_bst(
                         Some(Box::new(NodeInner { key, size, left, right })),
@@ -753,10 +719,7 @@ pub mod BSTParaStEph {
                 // left@ ∪ right@ =~= old_view.remove(kv), disjoint.
                 // disjoint_lens: left@.len() + right@.len() == old_view.remove(kv).len().
                 // old_view.remove(kv).len() ≤ old_view.len() < usize::MAX (from requires).
-                assert(left@.union(right@) =~= old_view.remove(kv));
-                assert(old_view.remove(kv).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kv), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
             }
             *self = Self::join_m(left, key, right);
         }
@@ -768,10 +731,7 @@ pub mod BSTParaStEph {
             let (left, _, right) = self.split(key);
             proof {
                 vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                assert(left@.union(right@) =~= old_view.remove(kref@));
-                assert(old_view.remove(kref@).subset_of(old_view));
                 vstd::set_lib::lemma_len_subset(old_view.remove(kref@), old_view);
-                assert(left@.len() + right@.len() < usize::MAX as nat);
                 assert forall|s: T, o: T| #![trigger left@.contains(s@), right@.contains(o@)]
                     left@.contains(s@) && right@.contains(o@) implies
                     s.cmp_spec(&o) == Less by {
@@ -793,8 +753,6 @@ pub mod BSTParaStEph {
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(root_key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match key.cmp(&root_key) {
                         | Less => left.find(key),
@@ -826,8 +784,6 @@ pub mod BSTParaStEph {
                     proof {
                         reveal(vstd::laws_cmp::obeys_cmp_ord);
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(root_key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     let ghost rk = root_key;
                     let ghost kval = *key;
@@ -852,7 +808,6 @@ pub mod BSTParaStEph {
                             proof {
                                 assert forall|x| #[trigger] (llv.union(rebuilt@)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if llv.contains(x) {
-                                        assert(llv.union(lrv).contains(x));
                                     }
                                     if lv.contains(x) && x != key@ {
                                         assert(llv.union(lrv).contains(x));
@@ -899,7 +854,6 @@ pub mod BSTParaStEph {
                             proof {
                                 assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
                                     if rrv.contains(x) {
-                                        assert(rlv.union(rrv).contains(x));
                                     }
                                     if rv.contains(x) && x != key@ {
                                         assert(rlv.union(rrv).contains(x));
@@ -961,8 +915,6 @@ pub mod BSTParaStEph {
                 | Exposed::Node(left, key, right) => {
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match left.min_key() {
                         | Some(rec) => {
@@ -1019,8 +971,6 @@ pub mod BSTParaStEph {
                 | Exposed::Node(left, key, right) => {
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     match right.max_key() {
                         | Some(rec) => {
@@ -1072,7 +1022,6 @@ pub mod BSTParaStEph {
         {
             match other.expose() {
                 | Exposed::Leaf => {
-                    proof { assert(self@.union(other@) =~= self@); }
                     self.clone()
                 }
                 | Exposed::Node(left, key, right) => {
@@ -1083,27 +1032,16 @@ pub mod BSTParaStEph {
                     let ghost kv = key@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(lv, rv);
-                        assert(!lv.union(rv).contains(kv));
-                        assert(ov.len() == lv.len() + rv.len() + 1);
                         // self ⊥ left: left ⊆ other and self ⊥ other.
                         assert forall|x| lv.contains(x) implies ov.contains(x) by {};
-                        assert(sv.disjoint(lv));
-                        assert(sv.len() + lv.len() < usize::MAX as nat);
                     }
                     let merged = self.join_pair(left);
                     proof {
                         let ghost mv = merged@;
                         // merged ⊥ right.
-                        assert forall|x| !(mv.contains(x) && rv.contains(x)) by {
-                            if rv.contains(x) { assert(ov.contains(x)); }
-                        };
                         // key ∉ merged.
-                        assert(ov.contains(kv));
-                        assert(!mv.contains(kv));
                         // Size bound.
                         vstd::set_lib::lemma_set_disjoint_lens(sv, lv);
-                        assert(mv.len() == sv.len() + lv.len());
-                        assert(mv.len() + rv.len() < usize::MAX as nat);
                     }
                     Self::join_m(merged, key, right)
                 }
@@ -1130,8 +1068,6 @@ pub mod BSTParaStEph {
                     let ghost akv = ak@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
-                        assert(!alv.union(arv).contains(akv));
-                        assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, _, br) = other.split(&ak);
                     let ghost blv = bl@;
@@ -1139,7 +1075,6 @@ pub mod BSTParaStEph {
                     proof {
                         // Recursive call bounds: al@.len() + bl@.len() <= usize::MAX.
                         // bl ⊂ other (from split), so bl.len() ≤ other.len().
-                        assert(blv.subset_of(other@.remove(akv)));
                         assert(other@.remove(akv).subset_of(other@));
                         vstd::set_lib::lemma_len_subset(blv, other@);
                         vstd::set_lib::lemma_len_subset(brv, other@);
@@ -1150,41 +1085,15 @@ pub mod BSTParaStEph {
                     let ghost ruv = right_union@;
                     proof {
                         // Ordering: luv = alv ∪ blv (all < ak), ruv = arv ∪ brv (all > ak).
-                        assert forall|t: T| (#[trigger] luv.contains(t@))
-                            implies t.cmp_spec(&ak) == Less by {};
-                        assert forall|t: T| (#[trigger] ruv.contains(t@))
-                            implies t.cmp_spec(&ak) == Greater by {};
                         // Disjointness via witness property: every view in al@/bl@ has a T witness.
                         use_type_invariant(&al);
                         use_type_invariant(&bl);
-                        assert forall|x| !(luv.contains(x) && ruv.contains(x)) by {
-                            if luv.contains(x) && ruv.contains(x) {
-                                // x ∈ luv = alv ∪ blv → has T witness from type_invariant.
-                                assert(alv.contains(x) || blv.contains(x));
-                                assert(exists|t: T| t@ == x);
-                                let ghost t: T = choose|t: T| t@ == x;
-                                assert(t.cmp_spec(&ak) == Less);
-                                assert(t.cmp_spec(&ak) == Greater);
-                            }
-                        };
                         // Size: luv ∪ ruv ∪ {akv} ⊆ self@ ∪ other@, with akv ∉ luv ∪ ruv.
                         // So luv.len() + ruv.len() + 1 ≤ (self@ ∪ other@).len() ≤ usize::MAX.
                         vstd::set_lib::lemma_set_disjoint_lens(luv, ruv);
                         let ghost luv_ruv = luv.union(ruv);
-                        assert forall|x| #[trigger] luv_ruv.insert(akv).contains(x)
-                            implies sv.union(other@).contains(x) by {
-                            if x == akv { assert(sv.contains(akv)); }
-                            else if luv.contains(x) {
-                                if alv.contains(x) { assert(sv.contains(x)); }
-                                else { assert(other@.contains(x)); }
-                            } else {
-                                if arv.contains(x) { assert(sv.contains(x)); }
-                                else { assert(other@.contains(x)); }
-                            }
-                        };
                         vstd::set_lib::lemma_len_union(sv, other@);
                         vstd::set_lib::lemma_len_subset(luv_ruv.insert(akv), sv.union(other@));
-                        assert(luv.len() + ruv.len() < usize::MAX as nat);
                     }
                     let result = Self::join_m(left_union, ak, right_union);
                     proof {
@@ -1197,7 +1106,6 @@ pub mod BSTParaStEph {
                         assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
                             result@.contains(x) by {
                             if blv.contains(x) || brv.contains(x) {
-                                assert(other@.contains(x));
                             }
                             if other@.contains(x) && x != akv {
                                 assert(blv.union(brv).contains(x));
@@ -1226,7 +1134,6 @@ pub mod BSTParaStEph {
                     let ghost akv = ak@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
-                        assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, found, br) = other.split(&ak);
                     let ghost blv = bl@;
@@ -1238,17 +1145,10 @@ pub mod BSTParaStEph {
                     if found {
                         proof {
                             // Disjoint: subsets of disjoint sets.
-                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
-                                if lrv.contains(x) && rrv.contains(x) {
-                                    assert(alv.contains(x) && arv.contains(x));
-                                }
-                            };
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
-                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
                         proof {
@@ -1259,28 +1159,15 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.intersect(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) && x != akv {
-                                    assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
-                                        assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(t.cmp_spec(&ak) == Less);
-                                        assert(!brv.contains(x));
-                                        assert(blv.contains(x));
-                                        assert(lrv.contains(x));
                                     } else {
-                                        assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(t.cmp_spec(&ak) == Greater);
-                                        assert(!blv.contains(x));
-                                        assert(brv.contains(x));
-                                        assert(rrv.contains(x));
                                     }
                                 }
                             };
@@ -1289,11 +1176,6 @@ pub mod BSTParaStEph {
                     } else {
                         proof {
                             // Disjoint: subsets of disjoint sets.
-                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
-                                if lrv.contains(x) && rrv.contains(x) {
-                                    assert(alv.contains(x) && arv.contains(x));
-                                }
-                            };
                             // Finite: from intersect ensures.
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
@@ -1316,24 +1198,16 @@ pub mod BSTParaStEph {
                                     assert(other@.remove(akv).contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(other@.remove(akv).contains(x));
                                 }
                                 if sv.contains(x) && other@.contains(x) {
                                     assert(blv.union(brv).contains(x));
                                     // Route x to matching child via ordering witness.
                                     if alv.contains(x) {
-                                        assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
-                                        assert(t.cmp_spec(&ak) == Less);
-                                        assert(!brv.contains(x));
-                                        assert(blv.contains(x));
-                                        assert(lrv.contains(x));
                                     } else {
                                         assert(exists|t: T| t@ == x);
                                         let ghost t: T = choose|t: T| t@ == x;
                                         assert(t.cmp_spec(&ak) == Greater);
-                                        assert(!blv.contains(x));
-                                        assert(brv.contains(x));
                                         assert(rrv.contains(x));
                                     }
                                 }
@@ -1365,7 +1239,6 @@ pub mod BSTParaStEph {
                     let ghost akv = ak@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(alv, arv);
-                        assert(sv.len() == alv.len() + arv.len() + 1);
                     }
                     let (bl, found, br) = other.split(&ak);
                     let ghost blv = bl@;
@@ -1377,11 +1250,6 @@ pub mod BSTParaStEph {
                     if found {
                         proof {
                             // Disjoint: subsets of disjoint sets are disjoint.
-                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
-                                if lrv.contains(x) && rrv.contains(x) {
-                                    assert(alv.contains(x) && arv.contains(x));
-                                }
-                            };
                             // Finite: from difference ensures.
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
@@ -1402,22 +1270,14 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(t.cmp_spec(&ak) == Less);
-                                    assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(t.cmp_spec(&ak) == Greater);
-                                    assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) {
                                     if alv.contains(x) {
-                                        assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
-                                        assert(arv.difference(brv).contains(x));
                                     }
                                 }
                             };
@@ -1426,17 +1286,10 @@ pub mod BSTParaStEph {
                     } else {
                         proof {
                             // Disjoint: subsets of disjoint sets.
-                            assert forall|x| !(lrv.contains(x) && rrv.contains(x)) by {
-                                if lrv.contains(x) && rrv.contains(x) {
-                                    assert(alv.contains(x) && arv.contains(x));
-                                }
-                            };
                             // Size: subset lens bounded by parent lens.
                             vstd::set_lib::lemma_len_subset(lrv, alv);
                             vstd::set_lib::lemma_len_subset(rrv, arv);
                             // Ordering: lrv ⊂ al@ (< ak), rrv ⊂ ar@ (> ak).
-                            assert forall|t: T| (#[trigger] lrv.contains(t@)) implies t.cmp_spec(&ak) == Less by {};
-                            assert forall|t: T| (#[trigger] rrv.contains(t@)) implies t.cmp_spec(&ak) == Greater by {};
                         }
                         let result = Self::join_m(left_res, ak, right_res);
                         proof {
@@ -1448,22 +1301,14 @@ pub mod BSTParaStEph {
                             assert forall|x| #[trigger] sv.difference(other@).contains(x) <==>
                                 result@.contains(x) by {
                                 if lrv.contains(x) {
-                                    assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(t.cmp_spec(&ak) == Less);
-                                    assert(!other@.contains(x));
                                 }
                                 if rrv.contains(x) {
-                                    assert(exists|t: T| t@ == x);
                                     let ghost t: T = choose|t: T| t@ == x;
-                                    assert(t.cmp_spec(&ak) == Greater);
-                                    assert(!other@.contains(x));
                                 }
                                 if sv.contains(x) && !other@.contains(x) && x != akv {
                                     if alv.contains(x) {
-                                        assert(alv.difference(blv).contains(x));
                                     } else if arv.contains(x) {
-                                        assert(arv.difference(brv).contains(x));
                                     }
                                 }
                             };
@@ -1509,8 +1354,6 @@ pub mod BSTParaStEph {
                     let ghost out_0 = out@;
                     proof {
                         vstd::set_lib::lemma_set_disjoint_lens(left@, right@);
-                        assert(!left@.union(right@).contains(key@));
-                        assert(self@.len() == left@.len() + right@.len() + 1);
                     }
                     left.collect_in_order(out);
                     let ghost g1 = out@.len();
@@ -1524,11 +1367,8 @@ pub mod BSTParaStEph {
                         assert forall|i: int| #![trigger out@[i]] g0 <= i < out@.len() implies
                             self@.contains(out@[i]@) by {
                             if i < g1 as int {
-                                assert(left@.contains(out@[i]@));
                             } else if i == g1 as int {
-                                assert(out@[i]@ == key@);
                             } else {
-                                assert(right@.contains(out@[i]@));
                             }
                         };
                         // Completeness: all elements of self@ appear.
@@ -1540,32 +1380,14 @@ pub mod BSTParaStEph {
                             } else if v == key@ {
                                 assert(out@[g1 as int]@ == key@);
                             } else {
-                                assert(right@.contains(v));
                             }
                         };
                         // Preservation: old elements unchanged.
                         assert forall|i: int| #![trigger out@[i]] 0 <= i < g0 implies out@[i] == out_0[i] by {
-                            assert(out_1[i] == out_0[i]);
                         };
                         // No duplicate views in the new portion.
                         // Left portion has views in left@, key has view key@, right portion has views in right@.
                         // These three regions are pairwise disjoint by BST invariant.
-                        assert forall|i: int, j: int| #![trigger out@[i], out@[j]] g0 <= i < j < out@.len()
-                            implies out@[i]@ != out@[j]@ by {
-                            if i < g1 as int && j < g1 as int {
-                            } else if i < g1 as int && j == g1 as int {
-                                assert(left@.contains(out@[i]@));
-                                assert(!left@.contains(key@));
-                            } else if i < g1 as int && j >= g2 as int {
-                                assert(left@.contains(out@[i]@));
-                                assert(right@.contains(out@[j]@));
-                            } else if i == g1 as int && j >= g2 as int {
-                                assert(out@[i]@ == key@);
-                                assert(right@.contains(out@[j]@));
-                                assert(!right@.contains(key@));
-                            } else if i >= g2 as int && j >= g2 as int {
-                            }
-                        };
                     }
                 }
             }
@@ -1583,19 +1405,16 @@ pub mod BSTParaStEph {
                 assert forall|v: T::V| self@.contains(v) implies result@.contains(v) by {
                     let i = choose|i: int| #![trigger out@[i]] 0 <= i < out@.len() && out@[i]@ == v;
                     assert(result@[i] == result.spec_index(i)@);
-                    assert(result.spec_index(i) == out@[i]);
                 };
                 assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
                     let i = choose|i: int| 0 <= i < result@.len() && result@[i] == v;
                     assert(result.spec_index(i) == out@[i]);
-                    assert(self@.contains(out@[i]@));
                 };
                 // No duplicates: collect_in_order gives view-level no-dups, lift to result@.
                 assert forall|i: int, j: int| 0 <= i < result@.len() && 0 <= j < result@.len() && i != j
                     implies result@[i] != result@[j] by {
                     assert(result.spec_index(i) == out@[i]);
                     assert(result.spec_index(j) == out@[j]);
-                    if i < j { } else { assert(out@[j]@ != out@[i]@); }
                 };
             }
             result

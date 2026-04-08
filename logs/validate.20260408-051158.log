@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1588:68
+     |
+1588 |                 assert forall|v: T::V| result@.contains(v) implies self@.contains(v) by {
+     |                                                                    ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(v) 
+    function is uninterpreted
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 5220MB, peak z3 RSS: 578MB, min free: 20807MB
+Sampled CPU Usage: rust_verify: 107s, z3 children: 116s

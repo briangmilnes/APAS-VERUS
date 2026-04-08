@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+   --> src/Chap38/BSTParaMtEph.rs:866:29
+    |
+866 |                     implies result@[i] != result@[j] by {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(result.view().index(i) == result.view().index(j)) 
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 5342MB, peak z3 RSS: 410MB, min free: 20967MB
+Sampled CPU Usage: rust_verify: 126s, z3 children: 112s

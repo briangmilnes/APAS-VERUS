@@ -1,0 +1,23 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: postcondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:113:17
+    |
+113 |         ensures c == *x,
+    |                 ^^^^^^^ failed this postcondition
+...
+117 |         c
+    |         - at the end of the function body
+
+note: diagnostics via expansion
+
+note: 
+
+c == old(x) 
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 4652MB, peak z3 RSS: 177MB, min free: 21922MB
+Sampled CPU Usage: rust_verify: 104s, z3 children: 124s

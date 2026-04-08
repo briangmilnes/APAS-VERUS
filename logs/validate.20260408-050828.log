@@ -1,0 +1,20 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1536:29
+     |
+1536 | ...                   exists|i: int| #![trigger out@[i]] g0 <= i < out@.len() && out@[i]@ == v by {
+     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+(exists |i| ) 
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4570MB, peak z3 RSS: 804MB, min free: 21480MB
+Sampled CPU Usage: rust_verify: 57s, z3 children: 33s

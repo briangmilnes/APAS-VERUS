@@ -1,0 +1,37 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: postcondition not satisfied
+    --> src/Chap38/BSTParaStEph.rs:574:17
+     |
+ 574 |                 forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+     |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ failed this postcondition
+...
+1601 |             result
+     |             ------ at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:574:56
+    |
+574 |                 forall|v: T::V| self@.contains(v) <==> seq@.contains(v),
+    |                                                        ^^^^^^^^^^^^^^^^
+
+note: 
+
+%return.view().len() == old(self).view().len() ✔
+forall |v|
+    old(self).view().contains(v) == %return.view().contains(v) ✘
+    |   old(self).view().contains(v) ==>
+    |       %return.view().contains(v) ✘
+    |       |   (exists |i| let tmp%% = 0 in let tmp%% = i in let tmp%% = %return.view().len() in tmp%% <= tmp%% && tmp%% < tmp%% && %return.view().index(i) == v) 
+    |       +---
+    |   %return.view().contains(v) ==>
+    |       old(self).view().contains(v) ✔
+    +---
+%return.view().no_duplicates() ✔
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3266MB, peak z3 RSS: 709MB, min free: 23081MB
+Sampled CPU Usage: rust_verify: 51s, z3 children: 35s

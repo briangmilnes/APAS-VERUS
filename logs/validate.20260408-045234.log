@@ -1,0 +1,38 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: precondition not satisfied
+    --> src/Chap38/BSTParaStEph.rs:1308:38
+     |
+ 504 | ...   forall|s: T, o: T| #![trigger self@.contains(s@), other@.contains(o@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
+     |       ------------------------------------------------------------------------------------------------------------------------------------------- failed precondition
+...
+1308 | ...           let result = left_res.join_pair(right_res);
+     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+note: diagnostics via expansion
+   --> src/Chap38/BSTParaStEph.rs:504:152
+    |
+504 | ...@)] self@.contains(s@) && other@.contains(o@) ==> s.cmp_spec(&o) == Less,
+    |                                                                        ^^^^
+
+note: 
+
+obeys_cmp_spec() ✔
+view_ord_consistent() ✔
+left_res.view().disjoint(right_res.view()) ✔
+left_res.view().finite() ✔
+right_res.view().finite() ✔
+clip(nat, left_res.view().len() + right_res.view().len()) < UnsignedMax.Exec(usize::BITS) ✔
+forall |s, o|
+    left_res.view().contains(s.view()) && right_res.view().contains(o.view()) ==>
+        s.cmp_spec(o) == Less ✘
+        |   !(s.cmp_spec(o) is Equal) ✔
+        |   !(s.cmp_spec(o) is Greater) ✘
+        +---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 12s
+Sampled Memory Usage: peak rust_verify RSS: 4081MB, peak z3 RSS: 375MB, min free: 22271MB
+Sampled CPU Usage: rust_verify: 73s, z3 children: 57s

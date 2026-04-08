@@ -1,0 +1,52 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: precondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:896:33
+    |
+896 | ...                   vstd::set_lib::lemma_len_subset(rlv, rv);
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+   --> vstd/set_lib.rs:1099:8
+    |
+    = note: failed precondition
+
+error: precondition not satisfied
+   --> src/Chap38/BSTParaStEph.rs:898:43
+    |
+396 | /                 exposed matches Exposed::Node(l, k, r) ==> {
+397 | |                     l@.finite() && r@.finite()
+398 | |                     && l@.disjoint(r@)
+399 | |                     && !l@.contains(k@)
+...   |
+403 | |                     && (forall|t: T| (#[trigger] r@.contains(t@)) ==> t.cmp_spec(&k) == Greater)
+404 | |                 },
+    | |_________________- failed precondition
+...
+898 |                               let rebuilt = Self::join_mid(Exposed::Node(left, root_key, rl));
+    |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: assertion failed
+   --> src/Chap38/BSTParaStEph.rs:900:50
+    |
+900 | ...                   assert forall|x| #[trigger] (rebuilt@.union(rrv)).contains(x) <==> self@.remove(key@).contains(x) by {
+    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+ --> vstd/set_lib.rs:1099:8
+
+note: 
+
+rv.finite() ✔
+rlv.subset_of(rv) ✘
+|   forall |a|
+|       rlv.contains(a) ==>
+|           rv.contains(a) 
+|               function is uninterpreted
++---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 3565MB, peak z3 RSS: 886MB, min free: 22456MB
+Sampled CPU Usage: rust_verify: 48s, z3 children: 39s

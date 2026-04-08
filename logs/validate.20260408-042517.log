@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+   --> src/Chap38/BSTParaStEph.rs:893:74
+    |
+893 | ...                   assert forall|x| rrv.contains(x) implies rv.contains(x) by {
+    |                                                                ^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+rv.contains(x) 
+    function is uninterpreted
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 3208MB, peak z3 RSS: 406MB, min free: 23077MB
+Sampled CPU Usage: rust_verify: 43s, z3 children: 26s

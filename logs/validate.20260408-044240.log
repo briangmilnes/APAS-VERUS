@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error: assertion failed
+    --> src/Chap38/BSTParaStEph.rs:1197:42
+     |
+1197 |                           assert forall|x| #[trigger] sv.union(other@).contains(x) <==>
+     |  __________________________________________^
+1198 | |                             result@.contains(x) by {
+     | |_______________________________________________^ assertion failed
+
+note: diagnostics via expansion
+    --> src/Chap38/BSTParaStEph.rs:1198:29
+     |
+1198 | ...                   result@.contains(x) by {
+     |                       ^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+sv.union(other.view()).contains(x) == result.view().contains(x)
+|   sv.union(other.view()).contains(x) ==>
+|       result.view().contains(x) ✘
+|           function is uninterpreted
+|   result.view().contains(x) ==>
+|       sv.union(other.view()).contains(x) ✔
++---
+
+verification results:: 1167 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 11s
+Sampled Memory Usage: peak rust_verify RSS: 3840MB, peak z3 RSS: 940MB, min free: 22102MB
+Sampled CPU Usage: rust_verify: 49s, z3 children: 31s
