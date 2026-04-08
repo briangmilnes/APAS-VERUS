@@ -129,19 +129,13 @@ pub mod JohnsonStEphF64 {
             decreases (max_val + 1) - i,
         {
             proof {
-                assert(!vertices@.contains(i));
             }
             let _ = vertices.insert(i);
             proof {
-                assert(vertices@.len() == (i + 1) as nat);
-                assert(forall|k: usize| vertices@.contains(k) <==> k < i + 1);
             }
             i = i + 1;
         }
         proof {
-            assert(i == max_val + 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k < max_val + 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k <= max_val);
         }
         vertices
     }
@@ -270,9 +264,6 @@ pub mod JohnsonStEphF64 {
     {
         let vertices = build_vertex_set(n - 1);
         proof {
-            assert(vertices@.len() == n as nat);
-            assert(forall|k: usize| vertices@.contains(k) <==> k <= n - 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k < n);
         }
 
         let mut edges = SetStEph::<WeightedEdge<usize, WrappedF64>>::empty();
@@ -321,7 +312,6 @@ pub mod JohnsonStEphF64 {
 
         let result = WeightedDirGraphStEphF64::from_weighed_edges(vertices, edges);
         proof {
-            assert(result@.V.len() == n as nat);
             let view_fn = |k: LabEdge<usize, WrappedF64>| k@;
             assert forall|x: LabEdge<usize, WrappedF64>, y: LabEdge<usize, WrappedF64>|
                 #[trigger] view_fn(x) == #[trigger] view_fn(y) implies x == y
@@ -330,9 +320,6 @@ pub mod JohnsonStEphF64 {
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@));
-            assert(mapped.to_set() =~= graph@.A);
-            assert(arcs_seq.len() == graph@.A.len());
-            assert(result@.A.len() <= graph@.A.len());
         }
         result
     }
@@ -372,14 +359,9 @@ pub mod JohnsonStEphF64 {
             apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
-        assert(n as nat == graph@.V.len());
-        assert(n > 0);
-        assert(n < usize::MAX);
 
         // Phase 1: Bellman-Ford on augmented graph to compute potentials.
         let augmented = add_dummy_source(graph, n);
-        assert(augmented@.V.len() == (n + 1) as nat);
-        assert(n < augmented@.V.len());
 
         let bf_result = match bellman_ford(&augmented, n) {
             Ok(sssp) => sssp,
@@ -404,9 +386,7 @@ pub mod JohnsonStEphF64 {
 
         // Phase 2: Reweight graph edges.
         let reweighted = reweight_graph(graph, &potentials, n);
-        assert(reweighted@.V.len() == n as nat);
         assert(spec_labgraphview_wf(reweighted@));
-        assert(reweighted@.A.len() * 2 + 2 <= usize::MAX as int);
 
         // Phase 3: Run Dijkstra from each vertex, adjust distances back.
         let mut result = AllPairsResultStEphF64::new(n);

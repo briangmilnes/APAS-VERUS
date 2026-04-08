@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap37 Chap45 Chap18 Chap19 Chap23 Chap06 Chap05 Chap02 Chap58 Chap59 Chap56 Chap57
+error: assertion failed
+   --> src/Chap59/JohnsonStEphI64.rs:342:20
+    |
+342 |             assert(mapped.to_set() =~= graph@.A);
+    |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+mapped.to_set() =~= graph.view().A 
+    datatype is opaque here
+
+verification results:: 2725 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 6564MB, peak z3 RSS: 944MB, min free: 19527MB
+Sampled CPU Usage: rust_verify: 127s, z3 children: 116s

@@ -128,9 +128,6 @@ pub mod JohnsonMtEphF64 {
             apsp.spec_n() as nat == graph@.V.len(),
     {
         let n = graph.vertices().size();
-        assert(n as nat == graph@.V.len());
-        assert(n > 0);
-        assert(n < usize::MAX);
 
         let (graph_with_dummy, dummy_idx) = add_dummy_source(graph, n);
 
@@ -148,8 +145,6 @@ pub mod JohnsonMtEphF64 {
 
         let reweighted_graph = reweight_graph(graph, &potentials, n);
         proof {
-            assert(reweighted_graph@.A.len() <= graph@.A.len());
-            assert(reweighted_graph@.A.len() * 2 + 2 <= usize::MAX as int);
         }
 
         let (all_distances, all_predecessors) = parallel_dijkstra_all(&reweighted_graph, &potentials, 0, n, n);
@@ -311,13 +306,10 @@ pub mod JohnsonMtEphF64 {
                 n < usize::MAX,
             decreases (n + 1) - i,
         {
-            proof { assert(!vertices@.contains(i)); }
             let _ = vertices.insert(i);
             i = i + 1;
         }
         proof {
-            assert(i == n + 1);
-            assert(forall|k: usize| vertices@.contains(k) <==> k <= n);
         }
 
         // Copy original edges.
@@ -413,13 +405,10 @@ pub mod JohnsonMtEphF64 {
                 n < usize::MAX,
             decreases n - i,
         {
-            proof { assert(!vertices@.contains(i)); }
             let _ = vertices.insert(i);
             i = i + 1;
         }
         proof {
-            assert(vertices@.len() == n as nat);
-            assert(forall|k: usize| vertices@.contains(k) <==> k < n);
         }
 
         // Reweight edges.
@@ -467,13 +456,10 @@ pub mod JohnsonMtEphF64 {
             let mapped = arcs_seq.map_values(view_fn);
             mapped.unique_seq_to_set();
             assert(mapped =~= arcs_seq.map(|i: int, k: LabEdge<usize, WrappedF64>| k@));
-            assert(mapped.to_set() =~= graph@.A);
-            assert(arcs_seq.len() == graph@.A.len());
         }
 
         let result = WeightedDirGraphStEphF64::from_weighed_edges(vertices, reweighted_edges);
         proof {
-            assert(result@.A.len() <= graph@.A.len());
         }
         result
     }
