@@ -1,0 +1,252 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: unexpected token, expected `;`
+   --> src/Chap43/OrderedSetStEph.rs:744:33
+    |
+744 |                         implies t.cmp_spec(&v) == Less || v@ == t@ by {
+    |                                 ^
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1167:49
+     |
+1167 |     impl<T: StT + Ord + TotalOrder> Default for OrderedSetStEph<T> {
+     |                                                 ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1167 -     impl<T: StT + Ord + TotalOrder> Default for OrderedSetStEph<T> {
+1167 +     impl<T: StT + Ord + TotalOrder> Default for AVLTreeSetStEph<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1171:51
+     |
+1171 |     impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStEph<T> {
+     |                                                   ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1171 -     impl<T: StT + Ord + TotalOrder> PartialEq for OrderedSetStEph<T> {
+1171 +     impl<T: StT + Ord + TotalOrder> PartialEq for AVLTreeSetStEph<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1185:52
+     |
+1185 |     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEph<T> {
+     |                                                    ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1185 -     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEph<T> {
+1185 +     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSetStEph<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1198:54
+     |
+1198 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEph<T> {
+     |                                                      ^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap41/AVLTreeSetStEph.rs:66:5
+     |
+  66 |     pub struct AVLTreeSetStEph<T: StT + Ord + TotalOrder> {
+     |     ----------------------------------------------------- similarly named struct `AVLTreeSetStEph` defined here
+     |
+help: a struct with a similar name exists
+     |
+1198 -     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEph<T> {
+1198 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSetStEph<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEphIter` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1211:65
+     |
+1211 |     impl<T: StT + Ord + TotalOrder + fmt::Debug> fmt::Debug for OrderedSetStEphIter<T> {
+     |                                                                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedSetStEphIter` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1217:54
+     |
+1217 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphIter<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedSetStEphGhostIterator` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1223:52
+     |
+1223 |     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEphGhostIterator<T> {
+     |                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:960:5
+     |
+ 960 |     pub struct AVLTreeSeqStPerGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStPerGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1223 -     impl<T: StT + Ord + TotalOrder> fmt::Debug for OrderedSetStEphGhostIterator<T> {
+1223 +     impl<T: StT + Ord + TotalOrder> fmt::Debug for AVLTreeSeqStPerGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEphGhostIterator` in this scope
+    --> src/Chap43/OrderedSetStEph.rs:1229:54
+     |
+1229 |     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphGhostIterator<T> {
+     |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+    ::: src/Chap37/AVLTreeSeqStPer.rs:960:5
+     |
+ 960 |     pub struct AVLTreeSeqStPerGhostIterator<'a, T: StT> {
+     |     --------------------------------------------------- similarly named struct `AVLTreeSeqStPerGhostIterator` defined here
+     |
+help: a struct with a similar name exists
+     |
+1229 -     impl<T: StT + Ord + TotalOrder> fmt::Display for OrderedSetStEphGhostIterator<T> {
+1229 +     impl<T: StT + Ord + TotalOrder> fmt::Display for AVLTreeSeqStPerGhostIterator<T> {
+     |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+  --> src/Chap43/OrderedSetMtEph.rs:70:56
+   |
+70 |     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
+   |                                                        ^^^^^^^^^^^^^^^
+...
+86 |     pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
+   |     ----------------------------------------------------------- similarly named struct `OrderedSetMtEph` defined here
+   |
+help: a struct with a similar name exists
+   |
+70 -     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetStEph<T>) -> (s: OrderedSetMtEph<T>)
+70 +     fn from_st<T: MtKey + TotalOrder + 'static>(inner: OrderedSetMtEph<T>) -> (s: OrderedSetMtEph<T>)
+   |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+  --> src/Chap43/OrderedSetMtEph.rs:87:39
+   |
+87 |         pub(crate) locked_set: RwLock<OrderedSetStEph<T>, OrderedSetMtEphInv>,
+   |                                       ^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+   --> src/Chap43/OrderedSetMtEph.rs:640:59
+    |
+ 86 |     pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
+    |     ----------------------------------------------------------- similarly named struct `OrderedSetMtEph` defined here
+...
+640 |     impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
+    |                                                           ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+640 -     impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetStEph<T>> for OrderedSetMtEphInv {
+640 +     impl<T: MtKey + TotalOrder + 'static> RwLockPredicate<OrderedSetMtEph<T>> for OrderedSetMtEphInv {
+    |
+
+error[E0425]: cannot find type `OrderedSetStEph` in this scope
+   --> src/Chap43/OrderedSetMtEph.rs:641:35
+    |
+ 86 |     pub struct OrderedSetMtEph<T: MtKey + TotalOrder + 'static> {
+    |     ----------------------------------------------------------- similarly named struct `OrderedSetMtEph` defined here
+...
+641 |         open spec fn inv(self, v: OrderedSetStEph<T>) -> bool {
+    |                                   ^^^^^^^^^^^^^^^
+    |
+help: a struct with a similar name exists
+    |
+641 -         open spec fn inv(self, v: OrderedSetStEph<T>) -> bool {
+641 +         open spec fn inv(self, v: OrderedSetMtEph<T>) -> bool {
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:329:25
+    |
+329 |             let inner = OrderedSetStEph::empty();
+    |                         ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+329 -             let inner = OrderedSetStEph::empty();
+329 +             let inner = OrderedSetMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:340:25
+    |
+340 |             let inner = OrderedSetStEph::singleton(x);
+    |                         ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+340 -             let inner = OrderedSetStEph::singleton(x);
+340 +             let inner = OrderedSetMtEph::singleton(x);
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:477:29
+    |
+477 |             let mut inner = OrderedSetStEph::empty();
+    |                             ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+477 -             let mut inner = OrderedSetStEph::empty();
+477 +             let mut inner = OrderedSetMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:553:29
+    |
+553 |             let empty_val = OrderedSetStEph::empty();
+    |                             ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+553 -             let empty_val = OrderedSetStEph::empty();
+553 +             let empty_val = OrderedSetMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:568:31
+    |
+568 |             let empty_other = OrderedSetStEph::empty();
+    |                               ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+568 -             let empty_other = OrderedSetStEph::empty();
+568 +             let empty_other = OrderedSetMtEph::empty();
+    |
+
+error[E0433]: failed to resolve: use of undeclared type `OrderedSetStEph`
+   --> src/Chap43/OrderedSetMtEph.rs:626:29
+    |
+626 |             let empty_val = OrderedSetStEph::empty();
+    |                             ^^^^^^^^^^^^^^^ use of undeclared type `OrderedSetStEph`
+    |
+help: a struct with a similar name exists
+    |
+626 -             let empty_val = OrderedSetStEph::empty();
+626 +             let empty_val = OrderedSetMtEph::empty();
+    |
+
+error: aborting due to 19 previous errors
+
+Some errors have detailed explanations: E0425, E0433.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 10s
+Sampled Memory Usage: peak rust_verify RSS: 4157MB, peak z3 RSS: 441MB, min free: 16874MB
+Sampled CPU Usage: rust_verify: 106s, z3 children: 98s

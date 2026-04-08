@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:916:66
+    |
+916 |                 assert forall|v: T::V| left@.contains(v) implies self@.contains(v) by {
+    |                                                                  ^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+self.view().contains(v) 
+    function is uninterpreted
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 37s
+Sampled Memory Usage: peak rust_verify RSS: 5200MB, peak z3 RSS: 610MB, min free: 18796MB
+Sampled CPU Usage: rust_verify: 114s, z3 children: 138s

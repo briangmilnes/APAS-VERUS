@@ -1,0 +1,21 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap43/OrderedSetStEph.rs:795:32
+    |
+795 |                         assert(right@.contains(t@));
+    |                                ^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+right.view().contains(t.view()) 
+    function is uninterpreted
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 43s
+Sampled Memory Usage: peak rust_verify RSS: 5852MB, peak z3 RSS: 651MB, min free: 17881MB
+Sampled CPU Usage: rust_verify: 109s, z3 children: 104s

@@ -1,0 +1,40 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap43 Chap42 Chap41 Chap18 Chap19 Chap23 Chap02
+error: postcondition not satisfied
+   --> src/Chap43/OrderedSetStPer.rs:425:13
+    |
+425 | /             maximum.is_some() ==> forall|t: T| (#[trigger] tree@.contains(t@)) ==>
+426 | |                 t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@,
+    | |________________________________________________________________________________^ failed this postcondition
+...
+429 | /         match tree.expose() {
+430 | |             Exposed::Leaf => None,
+431 | |             Exposed::Node(left, key, right) => {
+432 | |                 proof {
+...   |
+468 | |         }
+    | |_________- at the end of the function body
+
+note: diagnostics via expansion
+   --> src/Chap43/OrderedSetStPer.rs:426:58
+    |
+426 |                 t.cmp_spec(&maximum.unwrap()) == Less || maximum.unwrap()@ == t@,
+    |                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+
+note: 
+
+(old(tree).view().len() == 0) == maximum is None ✔
+maximum is Some ==>
+    old(tree).view().contains(maximum.0.view()) ✔
+maximum is Some ==>
+    forall |t|
+        old(tree).view().contains(t.view()) ==>
+            !(t.cmp_spec(maximum.0) == Less) ==>
+                maximum.0.view() == t.view() ✘
+
+verification results:: 2803 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 41s
+Sampled Memory Usage: peak rust_verify RSS: 5994MB, peak z3 RSS: 546MB, min free: 17714MB
+Sampled CPU Usage: rust_verify: 133s, z3 children: 123s

@@ -1,0 +1,32 @@
+Mode: isolate
+Isolate: including Chap37 Chap18 Chap19 Chap23 Chap02
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:228:40
+    |
+228 | ...                   assert(left_key != root_key);
+    |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:285:40
+    |
+285 | ...                   assert(left_key != root_key);
+    |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+error: assertion failed
+   --> src/Chap37/BSTSplayStEph.rs:423:40
+    |
+423 | ...                   assert(left_key != root_key);
+    |                              ^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(left_key == root_key) 
+
+verification results:: 1959 verified, 1 errors
+error: aborting due to 3 previous errors
+
+Elapsed: 16s
+Sampled Memory Usage: peak rust_verify RSS: 1331MB, peak z3 RSS: 386MB, min free: 20703MB
+Sampled CPU Usage: rust_verify: 22s, z3 children: 22s
