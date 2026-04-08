@@ -1,0 +1,117 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:229:17
+    |
+229 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:244:17
+    |
+244 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:263:17
+    |
+263 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:287:17
+    |
+287 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:299:17
+    |
+299 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:308:17
+    |
+308 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:319:17
+    |
+319 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:330:17
+    |
+330 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:338:17
+    |
+338 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:349:17
+    |
+349 |                 view_ord_consistent::<T>(),
+    |          

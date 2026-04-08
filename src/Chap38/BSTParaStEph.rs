@@ -52,11 +52,12 @@ pub mod BSTParaStEph {
     use crate::vstdplus::feq::feq::obeys_feq_full_trigger;
 
     use crate::Chap18::ArraySeqStPer::ArraySeqStPer::*;
+    use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::*;
     use crate::Types::Types::*;
     #[cfg(verus_keep_ghost)]
     use crate::vstdplus::feq::feq::obeys_feq_full;
 
-    verus! 
+    verus!
 {
 
     //		Section 3. broadcast use
@@ -268,89 +269,13 @@ pub mod BSTParaStEph {
 
     //		Section 6d. spec fns
 
-
-    /// View-consistent ordering: elements with the same view compare Equal.
-    pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
-        forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
-    }
+    // view_ord_consistent defined in BSTParaSpecsAndLemmas, re-exported here.
+    #[cfg(verus_keep_ghost)]
+    pub use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
 
     //		Section 7d. proof fns/broadcast groups
 
-
-    /// cmp_spec antisymmetry: Greater(a,b) implies Less(b,a).
-    proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Greater,
-        ensures
-            b.cmp_spec(&a) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// cmp_spec transitivity: Less(a,b) and Less(b,c) implies Less(a,c).
-    proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Less,
-        ensures
-            a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
-
-    /// Equal-substitution: Less(a,b) and Equal(b,c) implies Less(a,c).
-    proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Less,
-            b.cmp_spec(&c) == Equal,
-        ensures
-            a.cmp_spec(&c) == Less,
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        // Greater: c < a, with a < b gives c < b (transitivity),
-        // so b > c, contradicting Equal(b,c). Solver handles.
-        // Equal: a@ == c@ (view_ord_consistent), b@ == c@ (same),
-        // so a@ == b@, hence Equal(a,b), contradicting Less(a,b).
-    }
-
-    /// Left congruence: Equal(a,b) implies a and b compare the same way to c.
-    proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            a.cmp_spec(&b) == Equal,
-        ensures
-            a.cmp_spec(&c) == b.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-        // a@ == b@ from view_ord_consistent + Equal(a,b).
-        // Mismatch cases (a cmp c) != (b cmp c) all lead to contradiction:
-        // (L,G) or (G,L): transitivity gives Less(a,b) or Less(b,a),
-        //   contradicting Equal(a,b).
-        // (L,E) or (E,L) or (G,E) or (E,G): view_ord_consistent chains
-        //   a@ == b@ == c@ or a@ == c@ == b@, collapsing to Equal on both.
-    }
-
-    /// Right congruence: Equal(b,c) implies any a compares the same way to b and c.
-    proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
-        requires
-            vstd::laws_cmp::obeys_cmp_spec::<T>(),
-            view_ord_consistent::<T>(),
-            b.cmp_spec(&c) == Equal,
-        ensures
-            a.cmp_spec(&b) == a.cmp_spec(&c),
-    {
-        reveal(vstd::laws_cmp::obeys_cmp_ord);
-        reveal(vstd::laws_cmp::obeys_partial_cmp_spec_properties);
-    }
+    // cmp lemmas moved to BSTParaSpecsAndLemmas.
 
     //		Section 8d. traits
 

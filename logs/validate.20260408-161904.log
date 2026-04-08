@@ -1,0 +1,889 @@
+Mode: isolate
+Isolate: including Chap38 Chap37 Chap41 Chap18 Chap19 Chap23 Chap02
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:263:13
+    |
+263 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:594:13
+    |
+594 |             view_ord_consistent::<T>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:637:13
+    |
+637 |             view_ord_consistent::<K>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:641:13
+    |
+641 |             view_ord_consistent::<Pair<K, V>>(),
+    |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:705:17
+    |
+705 |                 view_ord_consistent::<Pair<K, V>>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/OrdKeyMap.rs:708:17
+    |
+708 |                 view_ord_consistent::<K>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1003:17
+     |
+1003 |                 view_ord_consistent::<Pair<K, V>>(),
+     |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1006:17
+     |
+1006 |                 view_ord_consistent::<K>(),
+     |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1047:13
+     |
+1047 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1051:13
+     |
+1051 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1146:13
+     |
+1146 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1150:13
+     |
+1150 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1305:13
+     |
+1305 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1309:13
+     |
+1309 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1560:13
+     |
+1560 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1564:13
+     |
+1564 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1819:13
+     |
+1819 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:1824:13
+     |
+1824 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2054:13
+     |
+2054 |             view_ord_consistent::<K>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2059:13
+     |
+2059 |             view_ord_consistent::<Pair<K, V>>(),
+     |             ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2365:16
+     |
+2365 |             && view_ord_consistent::<Pair<K, V>>()
+     |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2368:16
+     |
+2368 |             && view_ord_consistent::<K>()
+     |                ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2692:21
+     |
+2692 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2814:21
+     |
+2814 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:2960:21
+     |
+2960 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:3104:21
+     |
+3104 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:3236:21
+     |
+3236 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:3430:21
+     |
+3430 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:3632:21
+     |
+3632 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4247:21
+     |
+4247 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4456:21
+     |
+4456 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4618:21
+     |
+4618 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+    --> src/Chap41/OrdKeyMap.rs:4732:21
+     |
+4732 |                     view_ord_consistent::<Pair<K, V>>(),
+     |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+     |
+help: consider importing this function
+     |
+  25 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+     |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:229:17
+    |
+229 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:244:17
+    |
+244 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:263:17
+    |
+263 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:275:17
+    |
+275 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:287:17
+    |
+287 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:299:17
+    |
+299 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:308:17
+    |
+308 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:319:17
+    |
+319 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:330:17
+    |
+330 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:338:17
+    |
+338 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:349:17
+    |
+349 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:363:17
+    |
+363 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:381:17
+    |
+381 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:392:17
+    |
+392 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:404:17
+    |
+404 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:422:17
+    |
+422 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:435:17
+    |
+435 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:451:17
+    |
+451 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:471:17
+    |
+471 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:484:17
+    |
+484 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:497:17
+    |
+497 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:570:21
+    |
+570 |                     view_ord_consistent::<T>(),
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStEph.rs:826:24
+    |
+826 |                 assume(view_ord_consistent::<T>());
+    |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:221:17
+    |
+221 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:236:17
+    |
+236 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:255:17
+    |
+255 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:267:17
+    |
+267 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:279:17
+    |
+279 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:291:17
+    |
+291 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:300:17
+    |
+300 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:311:17
+    |
+311 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:322:17
+    |
+322 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:330:17
+    |
+330 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:341:17
+    |
+341 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:355:17
+    |
+355 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:373:17
+    |
+373 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:384:17
+    |
+384 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:396:17
+    |
+396 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:414:17
+    |
+414 |                 view_ord_consistent::<T>(),
+    |                 ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:476:21
+    |
+476 |                     view_ord_consistent::<T>(),
+    |                     ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0425]: cannot find function `view_ord_consistent` in this scope
+   --> src/Chap41/AVLTreeSetStPer.rs:703:24
+    |
+703 |                 assume(view_ord_consistent::<T>());
+    |                        ^^^^^^^^^^^^^^^^^^^ not found in this scope
+    |
+help: consider importing this function
+    |
+ 33 +     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+    |
+
+error[E0603]: function import `view_ord_consistent` is private
+  --> src/Chap41/AVLTreeSetMtEph.rs:41:52
+   |
+41 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |                                                    ^^^^^^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `view_ord_consistent` is defined here...
+  --> src/Chap38/BSTParaStEph.rs:55:9
+   |
+55 |     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `view_ord_consistent` which is defined here
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:33:5
+   |
+33 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: import `view_ord_consistent` directly
+   |
+41 -     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+41 +     use Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+   |
+
+error[E0603]: function import `view_ord_consistent` is private
+  --> src/Chap41/AVLTreeSetMtPer.rs:37:52
+   |
+37 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |                                                    ^^^^^^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `view_ord_consistent` is defined here...
+  --> src/Chap38/BSTParaStEph.rs:55:9
+   |
+55 |     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `view_ord_consistent` which is defined here
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:33:5
+   |
+33 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: import `view_ord_consistent` directly
+   |
+37 -     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+37 +     use Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+   |
+
+error[E0603]: function import `view_ord_consistent` is private
+  --> src/Chap41/Example41_3.rs:7:52
+   |
+ 7 |     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+   |                                                    ^^^^^^^^^^^^^^^^^^^ private function import
+   |
+note: the function import `view_ord_consistent` is defined here...
+  --> src/Chap38/BSTParaStEph.rs:55:9
+   |
+55 |     use crate::Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::*;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: ...and refers to the function `view_ord_consistent` which is defined here
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:33:5
+   |
+33 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: import `view_ord_consistent` directly
+   |
+ 7 -     use crate::Chap38::BSTParaStEph::BSTParaStEph::view_ord_consistent;
+ 7 +     use Chap38::BSTParaSpecsAndLemmas::BSTParaSpecsAndLemmas::view_ord_consistent;
+   |
+
+error: aborting due to 77 previous errors
+
+Some errors have detailed explanations: E0425, E0603.
+For more information about an error, try `rustc --explain E0425`.
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 4161MB, peak z3 RSS: 107MB, min free: 21367MB
+Sampled CPU Usage: rust_verify: 75s, z3 children: 0s

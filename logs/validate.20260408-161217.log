@@ -1,0 +1,209 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error[E0425]: cannot find value `Equal` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:30:73
+   |
+30 |         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+   |                                                                         ^^^^^
+   |
+  --> builtin/src/lib.rs:263:0
+   |
+   = note: similarly named function `equal` defined here
+help: a function with a similar name exists
+   |
+30 -         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+30 +         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == equal
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Equal;
+   |
+
+error[E0425]: cannot find value `Greater` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:40:31
+   |
+40 |             a.cmp_spec(&b) == Greater,
+   |                               ^^^^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Greater;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:42:31
+   |
+42 |             b.cmp_spec(&a) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:52:31
+   |
+52 |             a.cmp_spec(&b) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:53:31
+   |
+53 |             b.cmp_spec(&c) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:55:31
+   |
+55 |             a.cmp_spec(&c) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:66:31
+   |
+66 |             a.cmp_spec(&b) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Equal` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:67:31
+   |
+67 |             b.cmp_spec(&c) == Equal,
+   |                               ^^^^^
+   |
+  --> builtin/src/lib.rs:263:0
+   |
+   = note: similarly named function `equal` defined here
+help: a function with a similar name exists
+   |
+67 -             b.cmp_spec(&c) == Equal,
+67 +             b.cmp_spec(&c) == equal,
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Equal;
+   |
+
+error[E0425]: cannot find value `Less` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:69:31
+   |
+69 |             a.cmp_spec(&c) == Less,
+   |                               ^^^^ not found in this scope
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Less;
+   |
+
+error[E0425]: cannot find value `Equal` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:80:31
+   |
+80 |             a.cmp_spec(&b) == Equal,
+   |                               ^^^^^
+   |
+  --> builtin/src/lib.rs:263:0
+   |
+   = note: similarly named function `equal` defined here
+help: a function with a similar name exists
+   |
+80 -             a.cmp_spec(&b) == Equal,
+80 +             a.cmp_spec(&b) == equal,
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Equal;
+   |
+
+error[E0425]: cannot find value `Equal` in this scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:93:31
+   |
+93 |             b.cmp_spec(&c) == Equal,
+   |                               ^^^^^
+   |
+  --> builtin/src/lib.rs:263:0
+   |
+   = note: similarly named function `equal` defined here
+help: a function with a similar name exists
+   |
+93 -             b.cmp_spec(&c) == Equal,
+93 +             b.cmp_spec(&c) == equal,
+   |
+help: consider importing this unit variant
+   |
+19 +     use std::cmp::Ordering::Equal;
+   |
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+   --> src/Chap38/BSTParaMtEph.rs:544:17
+    |
+544 |                 lemma_cmp_order_axioms::<T>();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+   --> src/Chap38/BSTParaMtEph.rs:612:17
+    |
+612 |                 lemma_cmp_order_axioms::<T>();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+   --> src/Chap38/BSTParaMtEph.rs:861:13
+    |
+861 |             lemma_cmp_order_axioms::<T>();
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+   --> src/Chap38/BSTParaMtEph.rs:983:13
+    |
+983 |             lemma_cmp_order_axioms::<T>();
+    |             ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1106:25
+     |
+1106 |                         lemma_cmp_order_axioms::<T>();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1159:25
+     |
+1159 |                         lemma_cmp_order_axioms::<T>();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1274:25
+     |
+1274 |                         lemma_cmp_order_axioms::<T>();
+     |                         ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `lemma_cmp_order_axioms` in this scope
+    --> src/Chap38/BSTParaMtEph.rs:1404:21
+     |
+1404 |                     lemma_cmp_order_axioms::<T>();
+     |                     ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 19 previous errors
+
+For more information about this error, try `rustc --explain E0425`.
+Elapsed: 4s
+Sampled Memory Usage: peak rust_verify RSS: 9839MB, peak z3 RSS: 188MB, min free: 13919MB
+Sampled CPU Usage: rust_verify: 89s, z3 children: 16s

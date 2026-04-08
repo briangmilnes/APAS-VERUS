@@ -1,0 +1,352 @@
+Mode: isolate
+Isolate: including Chap38 Chap18 Chap02
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:32:56
+   |
+31 |     pub open spec fn view_ord_consistent<T: StT + Ord>() -> bool {
+   |                                          - method `cmp_spec` not found for this type parameter
+32 |         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.cmp_spec(&b)) == Equal
+   |                                                        ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+32 |         forall|a: T, b: T| a@ == b@ <==> (#[trigger] a.partial_cmp_spec(&b)) == Equal
+   |                                                        ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:42:15
+   |
+39 |     pub proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+   |                                         - method `cmp_spec` not found for this type parameter
+...
+42 |             a.cmp_spec(&b) == Greater,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+42 |             a.partial_cmp_spec(&b) == Greater,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:44:15
+   |
+39 |     pub proof fn lemma_cmp_antisymmetry<T: StT + Ord>(a: T, b: T)
+   |                                         - method `cmp_spec` not found for this type parameter
+...
+44 |             b.cmp_spec(&a) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+44 |             b.partial_cmp_spec(&a) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:54:15
+   |
+51 |     pub proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+   |                                         - method `cmp_spec` not found for this type parameter
+...
+54 |             a.cmp_spec(&b) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+54 |             a.partial_cmp_spec(&b) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:55:15
+   |
+51 |     pub proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+   |                                         - method `cmp_spec` not found for this type parameter
+...
+55 |             b.cmp_spec(&c) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+55 |             b.partial_cmp_spec(&c) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:57:15
+   |
+51 |     pub proof fn lemma_cmp_transitivity<T: StT + Ord>(a: T, b: T, c: T)
+   |                                         - method `cmp_spec` not found for this type parameter
+...
+57 |             a.cmp_spec(&c) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+57 |             a.partial_cmp_spec(&c) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:68:15
+   |
+64 |     pub proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
+   |                                     - method `cmp_spec` not found for this type parameter
+...
+68 |             a.cmp_spec(&b) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+68 |             a.partial_cmp_spec(&b) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:69:15
+   |
+64 |     pub proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
+   |                                     - method `cmp_spec` not found for this type parameter
+...
+69 |             b.cmp_spec(&c) == Equal,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+69 |             b.partial_cmp_spec(&c) == Equal,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:71:15
+   |
+64 |     pub proof fn lemma_cmp_eq_subst<T: StT + Ord>(a: T, b: T, c: T)
+   |                                     - method `cmp_spec` not found for this type parameter
+...
+71 |             a.cmp_spec(&c) == Less,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+71 |             a.partial_cmp_spec(&c) == Less,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:82:15
+   |
+78 |     pub proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+   |                                            - method `cmp_spec` not found for this type parameter
+...
+82 |             a.cmp_spec(&b) == Equal,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+82 |             a.partial_cmp_spec(&b) == Equal,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:84:15
+   |
+78 |     pub proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+   |                                            - method `cmp_spec` not found for this type parameter
+...
+84 |             a.cmp_spec(&c) == b.cmp_spec(&c),
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+84 |             a.partial_cmp_spec(&c) == b.cmp_spec(&c),
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:84:33
+   |
+78 |     pub proof fn lemma_cmp_equal_congruent<T: StT + Ord>(a: T, b: T, c: T)
+   |                                            - method `cmp_spec` not found for this type parameter
+...
+84 |             a.cmp_spec(&c) == b.cmp_spec(&c),
+   |                                 ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+84 |             a.cmp_spec(&c) == b.partial_cmp_spec(&c),
+   |                                 ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:95:15
+   |
+91 |     pub proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
+   |                                                  - method `cmp_spec` not found for this type parameter
+...
+95 |             b.cmp_spec(&c) == Equal,
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+95 |             b.partial_cmp_spec(&c) == Equal,
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:97:15
+   |
+91 |     pub proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
+   |                                                  - method `cmp_spec` not found for this type parameter
+...
+97 |             a.cmp_spec(&b) == a.cmp_spec(&c),
+   |               ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+97 |             a.partial_cmp_spec(&b) == a.cmp_spec(&c),
+   |               ++++++++
+
+error[E0599]: no method named `cmp_spec` found for type parameter `T` in the current scope
+  --> src/Chap38/BSTParaSpecsAndLemmas.rs:97:33
+   |
+91 |     pub proof fn lemma_cmp_equal_congruent_right<T: StT + Ord>(a: T, b: T, c: T)
+   |                                                  - method `cmp_spec` not found for this type parameter
+...
+97 |             a.cmp_spec(&b) == a.cmp_spec(&c),
+   |                                 ^^^^^^^^
+   |
+  --> vstd/std_specs/cmp.rs:121:12
+   |
+   = note: the method is available for `T` here
+   |
+   = help: items from traits can only be used if the trait is in scope
+help: trait `OrdSpec` which provides `cmp_spec` is implemented but not in scope; perhaps you want to import it
+   |
+19 +     use vstd::std_specs::cmp::OrdSpec;
+   |
+help: there is a method `partial_cmp_spec` with a similar name
+   |
+97 |             a.cmp_spec(&b) == a.partial_cmp_spec(&c),
+   |                                 ++++++++
+
+error: aborting due to 15 previous errors
+
+For more information about this error, try `rustc --explain E0599`.
+Elapsed: 9s
+Sampled Memory Usage: peak rust_verify RSS: 11276MB, peak z3 RSS: 968MB, min free: 12908MB
+Sampled CPU Usage: rust_verify: 221s, z3 children: 140s
