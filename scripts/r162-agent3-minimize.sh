@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # R162 Agent3 sequential veracity-minimize-lib loop.
 #
-# Chapters (rows 1-13 from timing table, skipping done/running):
-#   05 06 17 18 19 21 23 27 28 37
+# Chapters (rows 1-12 from timing table, skipping done/running):
+#   05 06 17 18 19 21 23 27 28
 #
 # Skipped:
 #   26 — veracity running
 #   35 — agent2 running
 #   36 — done (-219 asserts)
+#   37 — deferred (335 min alone, run separately)
 #
-# Estimated runtime: ~522 min (~8.7 hours sequential).
-# Chap37 alone accounts for ~335 min (5.5 hours).
+# Estimated runtime: ~187 min (~3 hours sequential).
 
 set -uo pipefail
 
@@ -18,7 +18,7 @@ AGENT="/home/milnes/projects/APAS-VERUS-agent3"
 VERACITY="/home/milnes/projects/veracity/target/release/veracity-minimize-lib"
 VERACITY_DIR="/home/milnes/projects/veracity"
 
-CHAPTERS=(05 06 17 18 19 21 23 27 28 37)
+CHAPTERS=(05 06 17 18 19 21 23 27 28)
 
 log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
