@@ -1,0 +1,18 @@
+error: assertion failed
+   --> src/Chap47/LinProbFlatHashTableStEph.rs:337:41
+    |
+337 | ...                   implies !#[trigger] spec_flat_has_key(table.table@[j], k) by {
+    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ assertion failed
+
+note: diagnostics via expansion
+
+note: 
+
+!(spec_flat_has_key(table.table.view().index(j), k)) 
+
+verification results:: 1256 verified, 1 errors
+error: aborting due to 1 previous error
+
+Elapsed: 13s
+Sampled Memory Usage: peak rust_verify RSS: 12290MB, peak z3 RSS: 285MB, min free: 11454MB
+Sampled CPU Usage: rust_verify: 120s, z3 children: 64s
